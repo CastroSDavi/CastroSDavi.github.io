@@ -1,0 +1,62 @@
+main {
+   
+}
+
+#aboutMe {
+    background-color: var(--background);
+}
+
+.section-content{
+    display: flex;
+    padding: 20px;
+    margin: auto;
+    max-width: 1200px;
+}
+
+#aboutMe > .section-content{
+    height: 580px;
+    background-image: url("imagens/medica_2.png");
+    background-position: center right;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.about_me-text {
+    height: 580px;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+}
+
+.button-consulta-wrapper-main {
+    margin: 30px 0px;
+}
+
+.button-consulta-link-about_me {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    background-color: var(--button-color);
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.doctor-name {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 3rem;
+    font-weight: 800;
+    color: var();
+}
+
+.doctor-specialty {
+    font-family: "Cormorant Garamond", serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
+    color: var(--secondary-color);
+}
+
+#services {
+    background-color: white;
+}

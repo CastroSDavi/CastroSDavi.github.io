@@ -1,0 +1,15 @@
+*{
+    padding: 0%;
+    margin: 0%;
+    box-sizing: border-box;
+}
+:root {
+    --background: #F9F7F5;
+    --primary-color: #2C3E50; /* Midnight Blue */
+    --secondary-color: #747473; /* Gray */
+    --accent-color: #A38671; /* Muted Brown */
+    --highlight-color: #B388EB; /* Lavender */
+    --rich-brown: #5D3A3A; /* Rich Brown */
+    --deep-blue: #0A174E; /* Deep Blue */
+    --button-color: var(--primary-color)
+}

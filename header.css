@@ -1,0 +1,33 @@
+header {
+    padding: 0 30px;
+    background-color: var(--background);
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    font-family: "lora", serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(116, 116, 115, 0.15);
+}
+
+.title-link {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.button-consulta-link-header {
+    background-color: var(--button-color);
+    padding: 10px 15px;
+}
+
+.button-consulta-link {
+    color:white;
+    text-decoration: none;
+    border-radius: 20px;
+}
+
+.icon-whatsapp {
+    margin-right: 5px;
+}

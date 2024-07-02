@@ -134,7 +134,7 @@ main {
 .doctor-name-description {
     color: var(--primary-color);
     max-width: 300px;
-    font: normal 700 2.3rem "lora";
+    font: normal 400 2.3rem "lora";
 }
 
 .bio {

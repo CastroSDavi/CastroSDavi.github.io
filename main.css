@@ -84,6 +84,7 @@ main {
 }
 
 .circle-card-container {
+    gap: 20px;
     align-self: center;
     display: flex;
     flex-wrap: wrap

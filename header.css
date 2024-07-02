@@ -31,3 +31,14 @@ header {
 .icon-whatsapp {
     margin-right: 5px;
 }
+
+@media only screen and (max-width: 600px) {
+
+    header {
+        gap: 10px;
+    }
+
+    .button-consulta-link {
+        padding: 10px 10px;
+    }
+}

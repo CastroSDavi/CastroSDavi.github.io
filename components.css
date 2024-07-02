@@ -63,7 +63,7 @@
     font-family: "Lora";
     font-weight: 400;
     font-size: 1.2rem;
-    width: 200px;
+    max-width: 190px;
     text-align: center;
 }
 

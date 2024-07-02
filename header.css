@@ -1,5 +1,5 @@
 header {
-    padding: 0 30px;
+    padding: 0 20px;
     background-color: var(--background);
     height: 80px;
     display: flex;
@@ -34,11 +34,13 @@ header {
 
 @media only screen and (max-width: 600px) {
 
-    header {
+    header{
         gap: 10px;
     }
 
-    .button-consulta-link {
+    .button-consulta-link-header{
+        font-size: 0.85rem;
         padding: 10px 10px;
     }
+
 }

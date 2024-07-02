@@ -47,15 +47,15 @@
 }
 
 .circle-img > img {
-    width: 120%;
+    width: 100%;
     height: 100%;
     object-fit: cover;    
 }
 
 .circle-card  {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    margin: 0 20px;
     gap: 20px;
 }
 
@@ -63,7 +63,7 @@
     font-family: "Lora";
     font-weight: 400;
     font-size: 1.2rem;
-    max-width: 200px;
+    max-width: 160px;
     text-align: center;
 }
 
@@ -110,10 +110,11 @@
 @media only screen and (max-width: 600px) {
     
     .text-logo {
-        font-size: 4vw;
+        font-size: 8vw;
     }
 
     .circle-card {
+        gap: 20px;
         flex-direction: row;
         align-items: center;
     }
@@ -121,8 +122,8 @@
     .circle-img {
         position: relative;
         background-color: black;
-        height: 150px;
-        width: 150px;
+        height: 140px;
+        width: 140px;
         border-radius: 50%;
         overflow: hidden;
     }

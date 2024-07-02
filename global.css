@@ -3,8 +3,10 @@
     margin: 0%;
     box-sizing: border-box;
 }
+
 :root {
-    --background: #F9F7F5;
+    --background: rgb(249, 247, 239);
+    --background-2: #F9F1E9;
     --primary-color: #2C3E50; /* Midnight Blue */
     --secondary-color: #747473; /* Gray */
     --accent-color: #A38671; /* Muted Brown */

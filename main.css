@@ -3,22 +3,19 @@ main {
 }
 
 #aboutMe {
-    background-color: var(--background);
+    background: linear-gradient(to right, rgb(249, 247, 239, 1), rgb(249, 247, 239, 0.5)), url("imagens/medico_3.jpg") center right no-repeat;
+    background-size: cover;
 }
 
-.section-content{
+.section-content{ 
     display: flex;
-    padding: 20px;
+    padding: 100px 20px;
     margin: auto;
     max-width: 1200px;
 }
 
 #aboutMe > .section-content{
-    height: 580px;
-    background-image: url("imagens/medica_2.png");
-    background-position: center right;
-    background-repeat: no-repeat;
-    background-size: contain;
+    height: 590px;
 }
 
 .about_me-text {
@@ -33,8 +30,8 @@ main {
 }
 
 .button-consulta-link-about_me {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.1rem;
+    font-family: "Lora", serif;
+    font-size: 0.9rem;
     font-weight: 600;
     padding: 10px 20px;
     background-color: var(--button-color);
@@ -43,20 +40,105 @@ main {
 }
 
 .doctor-name {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 3rem;
+    font-family: "Lora", serif;
+    font-size: 2rem;
     font-weight: 800;
     color: var();
 }
 
 .doctor-specialty {
-    font-family: "Cormorant Garamond", serif;
-    font-size: 1.9rem;
+    font-family: "Lora", serif;
+    font-size: 1.6rem;
     font-weight: 700;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.15);
     color: var(--secondary-color);
 }
 
 #services {
-    background-color: white;
+    background-color: var(--background);
 }
+
+#services > .section-content {
+    min-height: 650px;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.services-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 400px;
+    gap: 20px;
+}
+
+#services > .section-content > .services-text p {
+    font: normal 400 1.2rem "lora";
+    text-align: justify;
+}
+
+.section-title {
+    font: normal 400 2.3rem "Lora";
+    color: var(--primary-color);
+}
+
+.circle-card-container {
+    align-self: center;
+    display: flex;
+    flex-wrap: wrap
+}
+
+.fa-arrow-right {
+    color: white;
+}
+
+#description {
+    background-color: var(--background);
+}
+
+#description > .section-content {
+    border-top: 2px solid rgba(93, 58, 58, 0.5);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap:20px;
+}
+
+.description-img {
+    border-radius: 30px;
+    overflow: hidden;
+    height: auto;
+    width: 500px;
+}
+
+.description-img > img{
+    height: auto;
+    height: 100%;
+    width: 120%;
+}
+
+.description-text {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+    max-width: 400px;
+}
+
+#contact {
+    display: none;
+    background-color: var(--background);
+}
+
+.doctor-name-description {
+    max-width: 300px;
+    font: normal 700 2.3rem "lora";
+}
+
+.bio {
+    padding: 20px 0;
+    font: normal 400 1.2rem "Lora";
+    text-align: justify;
+}
+

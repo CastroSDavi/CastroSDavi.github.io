@@ -110,11 +110,20 @@
 @media only screen and (max-width: 600px) {
     
     .text-logo {
-        font-size: 2.3rem;
+        font-size: 4vw;
     }
 
     .circle-card {
         flex-direction: row;
         align-items: center;
+    }
+
+    .circle-img {
+        position: relative;
+        background-color: black;
+        height: 150px;
+        width: 150px;
+        border-radius: 50%;
+        overflow: hidden;
     }
 }

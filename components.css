@@ -117,6 +117,7 @@
         gap: 20px;
         flex-direction: row;
         align-items: center;
+        justify-content: ;
     }
 
     .circle-img {
@@ -127,4 +128,9 @@
         border-radius: 50%;
         overflow: hidden;
     }
+
+    .circle-card > p {
+        text-align: start;
+    }
+
 }

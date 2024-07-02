@@ -99,7 +99,6 @@ main {
 }
 
 #description > .section-content {
-    border-top: 2px solid rgba(93, 58, 58, 0.5);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;

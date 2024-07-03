@@ -67,8 +67,8 @@
     text-align: center;
 }
 
-
 .cta-text .cta-link {
+    font-family: "Lora";
     font-size: 1.2rem;
     display: inline-flex;
     align-items: center;

@@ -6,7 +6,7 @@ header {
     align-items: center;
     justify-content: space-between;
     gap: 20px;
-    font-family: "lora", serif;
+    font-family: var(--primary-font);
     font-size: 0.9rem;
     font-weight: 500;
     border-bottom: 1px solid rgba(116, 116, 115, 0.15);
@@ -19,7 +19,7 @@ header {
 
 .button-consulta-link-header {
     background-color: var(--button-color);
-    padding: 10px 15px;
+    padding: 10px 20px;
 }
 
 .button-consulta-link {

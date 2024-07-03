@@ -12,5 +12,7 @@
     --highlight-color: #B388EB; /* Lavender */
     --rich-brown: #5D3A3A; /* Rich Brown */
     --deep-blue: #0A174E; /* Deep Blue */
-    --button-color: var(--primary-color)
+    --button-color: var(--primary-color);
+    --button-color-hover: #1f2c3b;
+    --primary-font: "Lora", serif;
 }

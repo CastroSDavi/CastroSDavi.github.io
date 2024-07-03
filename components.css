@@ -1,12 +1,34 @@
 .text-logo{
     font-family: "Sacramento", cursive;
-    font-size: 2.7rem;
+    font-size: 3rem;
     font-weight: 400;
 }
 
 .button-consulta-wrapper {
+    color: transparent;
     display: flex;
     border-radius: 20px;
+}
+
+.button-consulta-wrapper-main {
+    margin: 30px 0px;
+}
+
+.button-consulta-link-main {
+    font-family: var(--primary-font);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    background-color: var(--button-color);
+    color: white;
+    box-shadow:2px 2px 5px rgba(255, 255, 255, 0.2);
+}
+
+.button-consulta-link:hover {
+    transition: 300ms all ease-in;
+    background-color: var(--button-color-hover);
+    color: white;
+    box-shadow:2px 2px 5px rgba(255, 255, 255, 0.2);
 }
 
 .social-medias{
@@ -60,16 +82,14 @@
 }
 
 .circle-card > p {
-    font-family: "Lora";
-    font-weight: 400;
-    font-size: 1.2rem;
+    color: var(--primary-color);
+    font: normal 500 1.2rem var(--primary-font);
     max-width: 160px;
     text-align: center;
 }
 
 .cta-text .cta-link {
-    font-family: "Lora";
-    font-size: 1.2rem;
+    font: normal 600 1.2rem var(--primary-font);
     display: inline-flex;
     align-items: center;
     padding: 20px 0;
@@ -118,7 +138,6 @@
         gap: 20px;
         flex-direction: row;
         align-items: center;
-        justify-content: ;
     }
 
     .circle-img {

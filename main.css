@@ -3,7 +3,7 @@ main {
 }
 
 #aboutMe {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.302), rgb(249, 247, 239, 0.2)), url("imagens/medica_3_horizontal.jpg") no-repeat;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgb(249, 247, 239, 0.2)), url("imagens/medica_3_horizontal.jpg") no-repeat;
     background-size: cover;
     background-attachment: fixed;
 }
@@ -26,23 +26,9 @@ main {
     justify-content: center;
 }
 
-.button-consulta-wrapper-main {
-    margin: 30px 0px;
-}
-
-.button-consulta-link-about_me {
-    font-family: "Lora", serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 10px 20px;
-    background-color: var(--button-color);
-    color: white;
-    box-shadow:2px 2px 5px rgba(255, 255, 255, 0.2);
-}
-
 .doctor-name {
     margin-bottom: 5px;
-    font-family: "Lora", serif;
+    font-family: var(--primary-font);
     font-size: 2.2rem;
     font-weight: 800;
     color: white;
@@ -51,7 +37,7 @@ main {
 }
 
 .doctor-specialty {
-    font-family: "Lora", serif;
+    font-family: var(--primary-font);
     font-size: 1.8rem;
     font-weight: 700;
     color: white;
@@ -78,12 +64,12 @@ main {
 }
 
 #services > .section-content > .services-text p {
-    font: normal 400 1.2rem "lora";
+    font: normal 400 1.2rem var(--primary-font);
     text-align: justify;
 }
 
 .section-title {
-    font: normal 400 2.3rem "Lora";
+    font: normal 800 3rem var(--primary-font);
     color: var(--primary-color);
 }
 
@@ -134,11 +120,11 @@ main {
 .doctor-name-description {
     color: var(--primary-color);
     max-width: 400px;
-    font: normal 400 2.3rem "lora";
+    font: normal 800 3rem var(--primary-font);
 }
 
 .bio {
-    font: normal 400 1.2rem "Lora";
+    font: normal 400 1.2rem var(--primary-font);
     text-align: justify;
 }
 
@@ -151,7 +137,7 @@ main {
 
     .doctor-name {
         margin-bottom: 5px;
-        font-family: "Lora", serif;
+        font-family: var(--primary-font);
         font-size: 1.7rem;
         font-weight: 800;
         color: white;
@@ -160,7 +146,7 @@ main {
     }
     
     .doctor-specialty {
-        font-family: "Lora", serif;
+        font-family: var(--primary-font);
         font-size: 1.4rem;
         font-weight: 700;
         color: white;

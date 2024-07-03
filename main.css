@@ -3,7 +3,7 @@ main {
 }
 
 #aboutMe {
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.302), rgb(249, 247, 239, 0.4)), url("imagens/medica_3_horizontal.jpg")no-repeat;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.302), rgb(249, 247, 239, 0.2)), url("imagens/medica_3_horizontal.jpg") no-repeat;
     background-size: cover;
     background-attachment: fixed;
 }
@@ -94,26 +94,22 @@ main {
     flex-wrap: wrap
 }
 
-.fa-arrow-right {
-    color: white;
-}
-
 #description {
-    background-color: var(--background);
+    background-color: white;
 }
 
 #description > .section-content {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: space-evenly;
     gap:20px;
 }
 
 .description-img {
-    border-radius: 30px;
+    border-radius: 100px 10px;
     overflow: hidden;
+    max-width: 500px;
     height: auto;
-    width: 500px;
 }
 
 .description-img > img{
@@ -127,7 +123,7 @@ main {
     display: flex;
     flex-direction: column;
     gap:20px;
-    max-width: 400px;
+    max-width: 500px;
 }
 
 #contact {
@@ -137,12 +133,11 @@ main {
 
 .doctor-name-description {
     color: var(--primary-color);
-    max-width: 300px;
+    max-width: 400px;
     font: normal 400 2.3rem "lora";
 }
 
 .bio {
-    padding: 20px 0;
     font: normal 400 1.2rem "Lora";
     text-align: justify;
 }
@@ -170,5 +165,12 @@ main {
         font-weight: 700;
         color: white;
         text-shadow: 2px 2px 3px rgba(75, 73, 73, 0.9);
+    }
+
+    .description-img {
+        border-radius: 30px;
+        overflow: hidden;
+        max-width: 500px;
+        height: auto;
     }
 }

@@ -74,10 +74,13 @@
             <section id="cranio">
                 <h2>Crânio</h2>
                 <div class="question-wrap">
-                    <h3>Questão</h3>
+                    <h3>1 - Questão</h3>
+                    <div class="question-text">
+                        <p id="pergunta-texto"></p>
+                    </div>
                     <div class="question">
                         <div class="image-question-wrap">
-                            <img src="imagens/cranio/osso_temporal.jpg" alt="">
+                            <img src="imagens/cranio/ossos_do_cranio_separados_grays.jpg" alt="">
                         </div>
                         <div class="answers-wrap">
                             <p class="answer">
@@ -109,51 +112,126 @@
         </p>
     </footer>
     <script>
-
         class Usuario {
-            constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
-                this._nome = nome;
-                this._acertos = acertos;
-                this._erros = erros;
-                this._pontos = pontos
-            }
+    constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
+        this._nome = nome;
+        this._acertos = acertos;
+        this._erros = erros;
+        this._pontos = pontos + (15 * this._acertos) - (5 * this._erros)
+    }
 
-            get acertos() {
-                return this._acertos
-            }
+    get acertos() {
+        return this._acertos;
+    }
 
-            get erros() {
-                return this._erros
-            }
+    get erros() {
+        return this._erros;
+    }
 
-            get pontos() {
-                return this._pontos
-            }
+    get pontos() {
+        return this._pontos;
+    }
 
-            set acertos(acertos) {
-                this._acertos = acertos
-            }
+    set acertos(acertos) {
+        this._acertos = acertos;
+    }
 
-            set erros(erros) {
-                this._erros = erros
-            }
+    set erros(erros) {
+        this._erros = erros;
+    }
 
-            set pontos(pontos) {
-                this._pontos = pontos
-            }
-        }
+    set pontos(pontos) {
+        this._pontos = pontos;
+    }
 
-        let usuario = new Usuario()
+    atualizar_pontos() {
+        this._pontos = (15 * this._acertos) - (5 * this._erros);
+    }
+}
 
-        function atualizar_pontuacao() {
-            let pontuacao = window.document.getElementById('pontuacao')
-            pontuacao.innerHTML = usuario.pontos
-            let erros = window.document.getElementById('erros-numero')
-            erros.innerHTML = usuario.erros
-            let acertos = window.document.getElementById('acertos-numero')
-            acertos.innerHTML = usuario.acertos
-        }
+const perguntas = [
+    {
+        id: 1,
+        pergunta: "Qual o osso em azul na imagem?",
+        imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
+        respostas: ["Esfenoide", "Occipital", "Temporal", "Parietal"],
+        correta: "Occipital"
+    },
+    {
+        id: 2,
+        pergunta: "Qual o osso em roxo na imagem?",
+        imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
+        respostas: ["Frontal", "Maxila", "Esfenoide", "Parietal"],
+        correta: "Parietal"
+    },
+    {
+        id: 3,
+        pergunta: "Qual o osso em amarelo na imagem?",
+        imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
+        respostas: ["Frontal", "Parietal", "Esfenóide", "Nasal"],
+        correta: "Esfenóide"
+    }
+];
 
+let perguntaAtual = 0;
+
+function carregarPergunta() {
+    const pergunta = perguntas[perguntaAtual];
+    const imagem = document.querySelector(".image-question-wrap img");
+    const respostas = document.querySelectorAll(".answer");
+    const perguntaTexto = document.getElementById("pergunta-texto");
+
+    perguntaTexto.innerText = pergunta.pergunta;
+    imagem.src = pergunta.imagem;
+
+    respostas.forEach((resposta, index) => {
+        resposta.innerText = pergunta.respostas[index];
+        resposta.onclick = () => verificarResposta(resposta);
+    });
+}
+
+function verificarResposta(elemento) {
+    const resposta = elemento.innerText;
+    const pergunta = perguntas[perguntaAtual];
+
+    if (resposta === pergunta.correta) {
+        elemento.classList.add("correct");
+        usuario.acertos += 1;
+    } else {
+        elemento.classList.add("incorrect");
+        usuario.erros += 1;
+    }
+
+    usuario.atualizar_pontos();
+    atualizar_pontuacao();
+    setTimeout(() => {
+        elemento.classList.remove("correct", "incorrect");
+        proximaPergunta();
+    }, 1000); // Tempo para mostrar feedback antes de mudar a pergunta
+}
+
+function proximaPergunta() {
+    perguntaAtual += 1;
+    if (perguntaAtual < perguntas.length) {
+        carregarPergunta();
+    } else {
+        document.querySelector(".main-content").innerHTML = `<h2>Quiz finalizado! Sua pontuação final é: ${usuario.pontos}</h2>`;
+        // Aqui você pode reiniciar o quiz ou mostrar um resumo dos acertos/erros.
+    }
+}
+
+let usuario = new Usuario();
+
+function atualizar_pontuacao() {
+    let pontuacao = document.getElementById('pontuacao');
+    pontuacao.innerHTML = usuario.pontos;
+    let erros = document.getElementById('erros-numero');
+    erros.innerHTML = usuario.erros;
+    let acertos = document.getElementById('acertos-numero');
+    acertos.innerHTML = usuario.acertos;
+}
+
+carregarPergunta();
     </script>
 </body>
 

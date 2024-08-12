@@ -128,12 +128,11 @@ aside p {
 }
 
 .image-question-wrap {
-    max-width: 700px;
-    height: auto;
 }
 
 .image-question-wrap > img {
-    width: 100%;
+    width: auto;
+    max-height: 500px;
 }
 
 
@@ -151,6 +150,17 @@ aside p {
     align-items: center;
 }
 
+.question-text {
+    flex: 1;
+    font: normal 500 1.2rem "Roboto";
+    color: #4e5154;
+    margin: 20px 0px;
+}
+
+.question-text p {
+    margin: 0;
+}
+
 .answers-wrap {
     width: 100%;
     justify-content: center;
@@ -162,7 +172,7 @@ aside p {
 .answer {
     cursor: pointer;
     color: #4e5154;
-    background-color: rgb(245, 245, 245);
+    background-color: rgb(235, 235, 235);
     width: 100%;
     padding: 25px;
     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
@@ -172,6 +182,17 @@ aside p {
 .answer:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+.correct {
+    background-color: #d4edda; 
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.incorrect {
+    background-color: #f8d7da; 
+    border: 1px solid #f5c6cb;
+    color: #721c24;
 
 section {
     display: flex;

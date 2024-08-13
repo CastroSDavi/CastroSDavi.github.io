@@ -72,9 +72,8 @@
         </aside>
         <div class="main-content">
             <section id="cranio">
-                <h2>Crânio</h2>
+                <h2><span id =id-questao></span> - Questão</h2>
                 <div class="question-wrap">
-                    <h3>1 - Questão</h3>
                     <div class="question-text">
                         <p id="pergunta-texto"></p>
                     </div>
@@ -111,6 +110,7 @@
             &copy; Desenvolvido por Davi Castro
         </p>
     </footer>
+
     <script>
         class Usuario {
     constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
@@ -170,8 +170,50 @@ const perguntas = [
         imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
         respostas: ["Frontal", "Parietal", "Esfenóide", "Nasal"],
         correta: "Esfenóide"
+    },
+    {
+        id: 4,
+        pergunta: "Qual o nome da estrutura óssea central mostrada na imagem?",
+        imagem: "imagens/torax/caixa_toracica_visao_anterior.jpg",
+        respostas: ["Coluna Vertebral", "Esterno", "Costelas", "Clavícula"],
+        correta: "Esterno"
+    },
+    {
+        id: 5,
+        pergunta: "As costelas falsas se articulam diretamente com qual estrutura óssea?",
+        imagem: "imagens/torax/caixa_toracica.jpg",
+        respostas: ["Esterno", "Coluna vertebral", "Clavícula", "Não se articulam diretamente"],
+        correta: "Não se articulam diretamente"
+    },
+    {
+        id: 6,
+        pergunta: "Quais costelas são conhecidas como costelas flutuantes?",
+        imagem: "imagens/torax/caixa_toracica.jpg",
+        respostas: ["8ª e 9ª costelas", "11ª e 12ª costelas", "5ª e 6ª costelas", "7ª e 8ª costelas"],
+        correta: "11ª e 12ª costelas"
+    },
+    {
+        id: 7,
+        pergunta: "Quantas vértebras compõem a região cervical da coluna vertebral?",
+        imagem: "imagens/coluna/estrutura_coluna.jpg",
+        respostas: ["5 vértebras", "7 vértebras", "12 vértebras", "9 vértebras"],
+        correta: "7 vértebras"
+    },
+    {
+        id: 8,
+        pergunta: "Quantas vértebras compõem a região lombar da coluna vertebral?",
+        imagem: "imagens/coluna/estrutura_coluna.jpg",
+        respostas: ["5 vértebras", "7 vértebras", "4 vértebras", "6 vértebras"],
+        correta: "5 vértebras"
+    },
+    {
+        id: 9,
+        pergunta: "Qual parte da coluna vertebral se conecta ao crânio?",
+        imagem: "imagens/coluna/estrutura_coluna.jpg",
+        respostas: ["Região Torácica", "Região Sacral", "Região Cervical", "Região Lombar"],
+        correta: "Região Cervical"
     }
-];
+]
 
 let perguntaAtual = 0;
 
@@ -180,7 +222,9 @@ function carregarPergunta() {
     const imagem = document.querySelector(".image-question-wrap img");
     const respostas = document.querySelectorAll(".answer");
     const perguntaTexto = document.getElementById("pergunta-texto");
+    const id_questao = document.getElementById('id-questao');
 
+    id_questao.innerHTML = perguntas[perguntaAtual].id;
     perguntaTexto.innerText = pergunta.pergunta;
     imagem.src = pergunta.imagem;
 
@@ -229,6 +273,7 @@ function atualizar_pontuacao() {
     erros.innerHTML = usuario.erros;
     let acertos = document.getElementById('acertos-numero');
     acertos.innerHTML = usuario.acertos;
+
 }
 
 carregarPergunta();

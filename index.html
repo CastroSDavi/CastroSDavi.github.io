@@ -96,6 +96,7 @@
                             </p>
                         </div>
                     </div>
+                    <p id="referencia-questao"></p>
                 </div>
             </section>
             <section id="coluna">
@@ -155,63 +156,72 @@ const perguntas = [
         pergunta: "Qual o osso em azul na imagem?",
         imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
         respostas: ["Esfenoide", "Occipital", "Temporal", "Parietal"],
-        correta: "Occipital"
+        correta: "Occipital",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 2,
         pergunta: "Qual o osso em roxo na imagem?",
         imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
         respostas: ["Frontal", "Maxila", "Esfenoide", "Parietal"],
-        correta: "Parietal"
+        correta: "Parietal",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 3,
         pergunta: "Qual o osso em amarelo na imagem?",
         imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
         respostas: ["Frontal", "Parietal", "Esfenóide", "Nasal"],
-        correta: "Esfenóide"
+        correta: "Esfenóide",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 4,
         pergunta: "Qual o nome da estrutura óssea central mostrada na imagem?",
         imagem: "imagens/torax/caixa_toracica_visao_anterior.jpg",
         respostas: ["Coluna Vertebral", "Esterno", "Costelas", "Clavícula"],
-        correta: "Esterno"
+        correta: "Esterno",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 5,
         pergunta: "As costelas falsas se articulam diretamente com qual estrutura óssea?",
         imagem: "imagens/torax/caixa_toracica.jpg",
         respostas: ["Esterno", "Coluna vertebral", "Clavícula", "Não se articulam diretamente"],
-        correta: "Não se articulam diretamente"
+        correta: "Não se articulam diretamente",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 6,
         pergunta: "Quais costelas são conhecidas como costelas flutuantes?",
         imagem: "imagens/torax/caixa_toracica.jpg",
         respostas: ["8ª e 9ª costelas", "11ª e 12ª costelas", "5ª e 6ª costelas", "7ª e 8ª costelas"],
-        correta: "11ª e 12ª costelas"
+        correta: "11ª e 12ª costelas",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 7,
         pergunta: "Quantas vértebras compõem a região cervical da coluna vertebral?",
         imagem: "imagens/coluna/coluna_anterior.jpg",
         respostas: ["5 vértebras", "7 vértebras", "12 vértebras", "9 vértebras"],
-        correta: "7 vértebras"
+        correta: "7 vértebras",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 8,
         pergunta: "Quantas vértebras compõem a região lombar da coluna vertebral?",
         imagem: "imagens/coluna/coluna_anterior.jpg",
         respostas: ["5 vértebras", "7 vértebras", "4 vértebras", "6 vértebras"],
-        correta: "5 vértebras"
+        correta: "5 vértebras",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     },
     {
         id: 9,
         pergunta: "Qual parte da coluna vertebral se conecta ao crânio?",
         imagem: "imagens/coluna/coluna_anterior.jpg",
         respostas: ["Região Torácica", "Região Sacral", "Região Cervical", "Região Lombar"],
-        correta: "Região Cervical"
+        correta: "Região Cervical",
+        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
     }
 ]
 
@@ -223,10 +233,12 @@ function carregarPergunta() {
     const respostas = document.querySelectorAll(".answer");
     const perguntaTexto = document.getElementById("pergunta-texto");
     const id_questao = document.getElementById('id-questao');
+    const referencia = document.getElementById("referencia-questao")
 
     id_questao.innerHTML = perguntas[perguntaAtual].id;
     perguntaTexto.innerText = pergunta.pergunta;
     imagem.src = pergunta.imagem;
+    referencia.innerHTML = perguntas[perguntaAtual].referencia
 
     respostas.forEach((resposta, index) => {
         resposta.innerText = pergunta.respostas[index];

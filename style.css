@@ -192,10 +192,42 @@ aside p {
     background-color: #ffffff; /* Fundo branco para a área principal */
 }
 
-section#quiz-section { /* Seletor mais específico */
-   /* Gap definido no JS, mas pode definir aqui se preferir */
-   /* gap: 30px; */
+#quiz-section h2 {
+    font-size: 1.6rem; /* Tamanho da fonte principal do título */
+    color: #343a40; /* Cor de texto mais neutra para o texto "- Questão X" */
+    font-weight: 500; /* Peso da fonte */
+    font-family: "Roboto", sans-serif; /* Pode usar Roboto ou manter Montserrat */
+    margin-top: 0; /* Remove margem superior padrão do h2, se houver */
+    margin-bottom: 25px; /* Espaço abaixo do título */
+    display: flex; /* Essencial para alinhar a tag e o texto */
+    align-items: center; /* Alinha verticalmente a tag e o texto */
+    gap: 10px; /* Espaço horizontal entre a tag e o texto */
+    flex-wrap: wrap; /* Permite que o texto quebre linha se não couber */
+    /* Remova ou comente outras regras de H2 que conflitem (ex: text-align, background, border-bottom) */
 }
+
+/* Estilo específico para a "Tag" da categoria (o primeiro span) */
+#quiz-section h2 #categoria-titulo {
+    display: inline-block; /* Permite aplicar padding e background */
+    background-color: #114a9c; /* Cor de fundo da tag (azul principal) */
+    color: white; /* Cor do texto da tag */
+    font-size: 0.8rem; /* Tamanho da fonte da tag (menor) */
+    font-weight: 600; /* Peso da fonte da tag */
+    font-family: "Montserrat", sans-serif; /* Fonte da tag */
+    padding: 4px 10px; /* Espaçamento interno da tag */
+    border-radius: 4px; /* Cantos arredondados da tag */
+    text-transform: uppercase; /* Texto da tag em maiúsculas */
+    letter-spacing: 0.5px; /* Espaçamento entre letras na tag */
+    white-space: nowrap; /* Evita que o texto da tag quebre linha */
+}
+
+/* Estilo específico para o número da questão (o span dentro do segundo span) */
+#quiz-section h2 #id-questao {
+   font-weight: 700; /* Deixa o número em negrito */
+   color: #343a40;; /* Cor do número (pode ser a cor principal ou outra) */
+   /* Herda o tamanho da fonte do h2 pai */
+}
+
 
 
 .question-wrap {

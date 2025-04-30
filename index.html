@@ -84,6 +84,16 @@
                     </div>
                     <p id="referencia-questao" style="font-size: 0.9em; color: #6c757d; margin-top: 15px;"></p> </div>
             </section>
+            <div class="resultado-final-card">
+                <h3 class="resultado-final-titulo">Quiz de [Nome da Categoria] Concluído!</h3>
+                <p class="resultado-final-pontuacao">
+                    Pontuação Final: <span class="pontos-valor">[Valor dos Pontos]</span>
+                </p>
+                <div class="resultado-final-detalhes">
+                    <p>Acertos: <span class="acertos-valor">[Número de Acertos]</span></p>
+                    <p>Erros: <span class="erros-valor">[Número de Erros]</span></p>
+                </div>
+                </div>
             </div>
     </main>
 
@@ -100,9 +110,8 @@
                 this._nome = nome;
                 this._acertos = acertos;
                 this._erros = erros;
-                // A pontuação inicial deve ser calculada ou definida como 0
-                this._pontos = pontos; // Iniciado com o valor passado ou 0
-                this.atualizar_pontos(); // Calcula com base nos acertos/erros iniciais
+                this._pontos = pontos;
+                this.atualizar_pontos();
             }
 
             get acertos() { return this._acertos; }
@@ -111,34 +120,32 @@
 
             set acertos(acertos) {
                 this._acertos = acertos;
-                this.atualizar_pontos(); // Recalcula pontos ao mudar acertos
+                this.atualizar_pontos();
             }
             set erros(erros) {
                 this._erros = erros;
-                this.atualizar_pontos(); // Recalcula pontos ao mudar erros
+                this.atualizar_pontos();
             }
 
-            // Método para resetar contadores (útil ao mudar de categoria)
             resetarContadores() {
                 this._acertos = 0;
                 this._erros = 0;
                 this.atualizar_pontos();
             }
 
-            // Atualiza a pontuação baseada nos acertos e erros
             atualizar_pontos() {
                 this._pontos = (15 * this._acertos) - (5 * this._erros);
-                 if (this._pontos < 0) this._pontos = 0; // Evita pontuação negativa
+                 if (this._pontos < 0) this._pontos = 0;
             }
         }
 
-        // --- Array de Perguntas (Adicione mais perguntas!) ---
+        // --- Array de Perguntas (mantido como no original) ---
         const perguntas = [
             // Concepção
             {
                 id: 1,
                 pergunta: "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
-                imagem: "", // Caminho da imagem, se houver
+                imagem: "",
                 respostas: [
                     "Produzir testosterona",
                     "Formar a túnica albugínea",
@@ -163,7 +170,7 @@
                 referencia: "Gartner, 5ª ed.",
                 categoria: "Concepção"
             },
-            {
+             {
                 id: 3,
                 pergunta: "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
                 imagem: "",
@@ -205,8 +212,7 @@
                 referencia: "Gartner, 5ª ed.",
                 categoria: "Concepção"
             },
-
-            // Metabolismo (Exemplos - Adicione as suas!)
+            // Metabolismo
             {
                 id: 6,
                 pergunta: "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
@@ -225,8 +231,7 @@
                 referencia: "Bioquímica Ilustrada",
                 categoria: "Metabolismo"
             },
-
-            // Funções (Exemplos - Adicione as suas!)
+            // Funções
             {
                 id: 8,
                 pergunta: "Qual a principal função do tecido epitelial de revestimento?",
@@ -247,13 +252,13 @@
             }
         ];
 
-        // --- Variáveis Globais do Quiz ---
+        // --- Variáveis Globais do Quiz (mantidas como no original) ---
         let perguntaAtual = 0;
         let perguntasFiltradas = [];
-        let categoriaAtual = "Concepção"; // Categoria inicial
-        const usuario = new Usuario(); // Instancia o usuário
+        let categoriaAtual = "Concepção";
+        const usuario = new Usuario();
 
-        // --- Elementos do DOM (Cache para performance) ---
+        // --- Elementos do DOM (Cache) (mantidos como no original) ---
         const elCategoriaTitulo = document.getElementById('categoria-titulo');
         const elIdQuestao = document.getElementById('id-questao');
         const elPerguntaTexto = document.getElementById('pergunta-texto');
@@ -269,32 +274,66 @@
 
         // --- Funções do Quiz ---
 
+        // *** NOVA FUNÇÃO ADICIONADA ***
+        function mostrarAviso(texto) {
+            // Remove aviso anterior, se houver
+            const existingAviso = document.querySelector('.aviso-mensagem');
+            if (existingAviso) {
+                existingAviso.remove();
+            }
+             // Remove card de resultado anterior, se houver
+            const existingCard = document.querySelector('.resultado-final-card');
+            if(existingCard) {
+                existingCard.remove();
+            }
+
+            // Cria um parágrafo simples para o aviso
+            const avisoP = document.createElement('p');
+            avisoP.classList.add('aviso-mensagem'); // Adiciona uma classe para possível estilização
+            avisoP.textContent = texto;
+            avisoP.style.textAlign = 'center'; // Estilo simples por enquanto
+            avisoP.style.padding = '20px';
+            avisoP.style.color = '#6c757d'; // Cor cinza
+            elMainContent.appendChild(avisoP);
+        }
+
+        // *** FUNÇÃO MODIFICADA ***
         function selecionarCategoria(categoria) {
-            console.log("Selecionando categoria:", categoria);
+            console.log("Selecionando categoria:", categoria); // Mantenha para debug
             categoriaAtual = categoria;
             perguntasFiltradas = perguntas.filter(p => p.categoria === categoria);
             perguntaAtual = 0;
-            usuario.resetarContadores(); // Reseta acertos/erros ao mudar categoria
-            atualizar_pontuacao(); // Atualiza a exibição da pontuação zerada
+            usuario.resetarContadores();
+            atualizar_pontuacao();
 
-            // Remove mensagem final anterior, se houver
-            const finalMessage = document.getElementById('final-message');
-            if(finalMessage) {
-                finalMessage.remove();
+            // Remove o card de resultado anterior, se houver
+            const existingCard = document.querySelector('.resultado-final-card'); // <-- CORRIGIDO
+            if(existingCard) {
+                existingCard.remove();
             }
+            // Remove aviso anterior, se houver
+            const existingAviso = document.querySelector('.aviso-mensagem'); // <-- ADICIONADO
+            if (existingAviso) {
+                existingAviso.remove();
+            }
+
 
             if (perguntasFiltradas.length > 0) {
                 elCategoriaTitulo.innerText = categoria;
-                elQuizSection.style.display = 'flex'; // Garante que a seção esteja visível
+                elQuizSection.style.display = 'flex';
                 carregarPergunta();
             } else {
-                elQuizSection.style.display = 'none'; // Esconde a seção de quiz
-                mostrarMensagem(`Nenhuma pergunta encontrada para ${categoria}.`);
-                console.log("Nenhuma pergunta para esta categoria:", categoria);
+                elQuizSection.style.display = 'none';
+                 // CORRIGIDO: Usa a nova função mostrarAviso
+                mostrarAviso(`Nenhuma pergunta encontrada para ${categoria}.`);
+                console.log("Nenhuma pergunta para esta categoria:", categoria); // Mantenha para debug
             }
         }
 
         function carregarPergunta() {
+            // ADICIONADO PARA DEBUG vvv
+            console.log(`carregarPergunta: Índice Atual = ${perguntaAtual}, Total Perguntas Filtradas = ${perguntasFiltradas.length}`);
+            // ADICIONADO PARA DEBUG ^^^
             if (perguntaAtual >= perguntasFiltradas.length) {
                 mostrarResultadoFinal();
                 return;
@@ -302,16 +341,14 @@
 
             const pergunta = perguntasFiltradas[perguntaAtual];
 
-            elCategoriaTitulo.innerText = categoriaAtual; // Garante que o título está correto
-            // MODIFICAÇÃO AQUI: Usa o índice atual + 1 para a numeração da questão na categoria
+            elCategoriaTitulo.innerText = categoriaAtual;
             elIdQuestao.innerText = perguntaAtual + 1;
             elPerguntaTexto.innerText = pergunta.pergunta;
             elReferencia.innerText = `Referência: ${pergunta.referencia}`;
 
-            // Imagem
             if (pergunta.imagem && pergunta.imagem.trim() !== "") {
                 elPerguntaImagem.src = pergunta.imagem;
-                elPerguntaImagem.alt = `Imagem para a questão ${perguntaAtual + 1} de ${categoriaAtual}`; // Alt text mais descritivo
+                elPerguntaImagem.alt = `Imagem para a questão ${perguntaAtual + 1} de ${categoriaAtual}`;
                 elPerguntaImagem.style.display = 'block';
             } else {
                 elPerguntaImagem.style.display = 'none';
@@ -319,13 +356,11 @@
                 elPerguntaImagem.alt = "";
             }
 
-            // Respostas
-            elRespostasContainer.innerHTML = ''; // Limpa respostas anteriores
+            elRespostasContainer.innerHTML = '';
             pergunta.respostas.forEach((respostaTexto) => {
                 const p = document.createElement('p');
                 p.classList.add('answer');
                 p.innerText = respostaTexto;
-                // Usar função anônima para garantir que 'p' e 'pergunta' corretos sejam passados
                 p.onclick = () => verificarResposta(p, pergunta);
                 elRespostasContainer.appendChild(p);
             });
@@ -335,16 +370,14 @@
             const respostaSelecionada = elementoClicado.innerText;
             const allAnswers = elRespostasContainer.querySelectorAll('.answer');
 
-            // Desabilita cliques futuros nas respostas desta pergunta
             allAnswers.forEach(ans => ans.onclick = null);
 
             if (respostaSelecionada === pergunta.correta) {
                 elementoClicado.classList.add("correct");
-                usuario.acertos += 1; // Setter atualiza a pontuação
+                usuario.acertos += 1;
             } else {
                 elementoClicado.classList.add("incorrect");
-                usuario.erros += 1; // Setter atualiza a pontuação
-                // Mostra a correta
+                usuario.erros += 1;
                 allAnswers.forEach(ans => {
                     if (ans.innerText === pergunta.correta) {
                         ans.classList.add('correct');
@@ -352,11 +385,11 @@
                 });
             }
 
-            atualizar_pontuacao(); // Atualiza a exibição da pontuação
+            atualizar_pontuacao();
 
             setTimeout(() => {
                 proximaPergunta();
-            }, 1500); // Tempo para ver o feedback
+            }, 1500);
         }
 
         function proximaPergunta() {
@@ -368,25 +401,61 @@
             }
         }
 
+        // *** FUNÇÃO MODIFICADA ***
         function mostrarResultadoFinal() {
             elQuizSection.style.display = 'none';
-            mostrarMensagem(`Quiz de ${categoriaAtual} finalizado! Sua pontuação final é: ${usuario.pontos}`);
-             // Aqui você pode adicionar botões para reiniciar ou escolher outra categoria
-             // Ex: addRestartButton();
+            mostrarMensagem(); // <-- CORRIGIDO: Chamada sem argumentos
         }
 
-        function mostrarMensagem(texto) {
-             // Remove mensagem anterior, se houver
-            const existingMessage = document.getElementById('final-message');
-            if(existingMessage) {
-                existingMessage.remove();
+        // *** FUNÇÃO NOVA/CORRIGIDA ***
+        function mostrarMensagem() {
+            const existingCard = document.querySelector('.resultado-final-card');
+            if(existingCard) {
+                existingCard.remove();
             }
-             // Cria e adiciona nova mensagem
-            const finalMessage = document.createElement('h2');
-            finalMessage.id = 'final-message';
-            finalMessage.textContent = texto;
-            finalMessage.style.textAlign = 'center'; // Centraliza a mensagem
-            elMainContent.appendChild(finalMessage);
+             // Remove aviso anterior, se houver
+            const existingAviso = document.querySelector('.aviso-mensagem');
+            if (existingAviso) {
+                existingAviso.remove();
+            }
+
+             // 1. Criar o container principal (o "card")
+            const resultadoCard = document.createElement('div');
+            resultadoCard.classList.add('resultado-final-card'); // Classe para estilização
+
+            // 2. Criar o título
+            const titulo = document.createElement('h3');
+            titulo.classList.add('resultado-final-titulo');
+            titulo.textContent = `Quiz de ${categoriaAtual} Concluído!`; // Usa a variável global 'categoriaAtual'
+
+            // 3. Criar o parágrafo da pontuação
+            const pontuacaoP = document.createElement('p');
+            pontuacaoP.classList.add('resultado-final-pontuacao');
+            pontuacaoP.innerHTML = `Pontuação Final: <span class="pontos-valor">${usuario.pontos}</span>`; // Usa usuario.pontos
+
+            // 4. Criar o div para os detalhes (acertos/erros)
+            const detalhesDiv = document.createElement('div');
+            detalhesDiv.classList.add('resultado-final-detalhes');
+
+            // 5. Criar parágrafo de acertos
+            const acertosP = document.createElement('p');
+            acertosP.innerHTML = `Acertos: <span class="acertos-valor">${usuario.acertos}</span>`; // Usa usuario.acertos
+
+            // 6. Criar parágrafo de erros
+            const errosP = document.createElement('p');
+            errosP.innerHTML = `Erros: <span class="erros-valor">${usuario.erros}</span>`; // Usa usuario.erros
+
+            // 7. Montar a estrutura: adicionar acertos/erros aos detalhes
+            detalhesDiv.appendChild(acertosP);
+            detalhesDiv.appendChild(errosP);
+
+            // 8. Montar a estrutura: adicionar título, pontuação e detalhes ao card
+            resultadoCard.appendChild(titulo);
+            resultadoCard.appendChild(pontuacaoP);
+            resultadoCard.appendChild(detalhesDiv);
+
+            // 9. Adicionar o card completo ao main-content
+            elMainContent.appendChild(resultadoCard);
         }
 
         function atualizar_pontuacao() {
@@ -395,20 +464,20 @@
             elErrosNum.innerText = usuario.erros;
         }
 
-        // --- Inicialização e Event Listeners ---
+        // --- Inicialização e Event Listeners (mantido como no original) ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Listeners para os links de navegação
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', (event) => {
-                    event.preventDefault(); // Previne navegação padrão
+                    event.preventDefault();
                     const categoria = event.target.innerText;
                     selecionarCategoria(categoria);
                 });
             });
 
-            // Carrega a categoria inicial
             selecionarCategoria(categoriaAtual);
         });
+
+    </script>
 
     </script>
 </body>

@@ -353,11 +353,86 @@ footer a:hover {
 }
 
 /* Estilos para mensagens dinâmicas (ex: Quiz finalizado) */
-#final-message {
-    text-align: center;
-    padding: 40px;
-    font-size: 1.5rem;
-    color: #114a9c;
+/* --- Estilos para a Mensagem Final do Quiz --- */
+
+/* Container principal (card) da mensagem final */
+.resultado-final-card {
+    background-color: #ffffff; /* Fundo branco, como outros cards */
+    border: 1px solid #e9ecef; /* Borda leve, padrão do site */
+    border-radius: 8px;       /* Cantos arredondados */
+    padding: 30px 40px;       /* Espaçamento interno generoso */
+    margin: 40px auto;        /* Centraliza horizontalmente e adiciona margem vertical */
+    max-width: 550px;         /* Limita a largura para melhor leitura */
+    text-align: center;       /* Centraliza o texto interno */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave, similar a outros elementos */
+    animation: fadeIn 0.5s ease-out; /* Reutiliza a animação definida anteriormente */
+}
+
+/* Título da mensagem final */
+.resultado-final-titulo {
+    font-family: "Montserrat", sans-serif; /* Fonte de títulos do site */
+    font-size: 1.7rem;        /* Tamanho destacado */
+    font-weight: 600;
+    color: #114a9c;           /* Cor primária do site */
+    margin-bottom: 15px;      /* Espaço abaixo do título */
+}
+
+/* Parágrafo da pontuação geral */
+.resultado-final-pontuacao {
+    font-family: "Roboto", sans-serif; /* Fonte padrão do corpo */
+    font-size: 1.15rem;       /* Tamanho confortável para leitura */
+    color: #343a40;          /* Cor de texto escura */
+    margin-bottom: 25px;      /* Mais espaço antes dos detalhes */
+}
+
+/* Estilo específico para o valor numérico da pontuação */
+.pontos-valor {
+    font-weight: 700;          /* Negrito para destaque */
+    font-size: 1.6rem;         /* Maior que o texto ao redor */
+    color: #3bcf76;           /* Verde de sucesso, usado nos ícones de acerto */
+    margin-left: 8px;          /* Pequeno espaço antes do número */
+}
+
+/* Container para os detalhes (acertos e erros) */
+.resultado-final-detalhes {
+    border-top: 1px solid #e9ecef; /* Linha divisória sutil */
+    margin-top: 20px;          /* Espaço acima da linha */
+    padding-top: 20px;         /* Espaço abaixo da linha */
+    display: flex;             /* Coloca acertos e erros lado a lado */
+    justify-content: space-around; /* Espaça os itens igualmente */
+    flex-wrap: wrap;           /* Permite quebrar linha em telas menores */
+    gap: 15px;                 /* Espaço entre os itens */
+}
+
+/* Estilo para os parágrafos dentro dos detalhes */
+.resultado-final-detalhes p {
+    font-family: "Roboto", sans-serif;
+    font-size: 1rem;
+    color: #495057;           /* Cinza um pouco mais claro */
+    margin-bottom: 0;          /* Remove margem inferior padrão do parágrafo */
+}
+
+/* Estilo para os valores numéricos de acertos e erros */
+.acertos-valor,
+.erros-valor {
+    font-weight: 600;          /* Negrito */
+    margin-left: 5px;          /* Pequeno espaço */
+}
+
+/* Cor específica para acertos */
+.acertos-valor {
+    color: #3bcf76;           /* Verde */
+}
+
+/* Cor específica para erros */
+.erros-valor {
+    color: #dc3545;           /* Vermelho */
+}
+
+/* Animação de Fade In (se já não existir no seu CSS) */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- Media Queries (Exemplo Básico) --- */

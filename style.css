@@ -191,6 +191,39 @@ aside p {
     width: 100%;
     background-color: #ffffff; /* Fundo branco para a área principal */
 }
+/* --- Estilos para Barra de Progresso --- */
+#progress-container {
+    width: 100%;
+    background-color: #e9ecef; /* Cor de fundo da barra vazia */
+    border-radius: 5px;
+    margin-bottom: 20px; /* Espaço abaixo da barra */
+    overflow: hidden; /* Para conter o border-radius da barra interna */
+    height: 10px; /* Altura da barra container */
+    position: relative; /* Para posicionar o texto se necessário */
+}
+
+#progress-bar-fill {
+    height: 100%; /* Ocupa toda a altura do container */
+    width: 0%; /* Começa vazia */
+    background-color: #114a9c; /* Cor de preenchimento (azul principal) */
+    border-radius: 5px; /* Mesma borda do container */
+    transition: width 0.3s ease-out; /* Transição suave */
+}
+
+#progress-text {
+    display: block; /* Para ocupar a linha abaixo (ou use float/position se preferir ao lado) */
+    text-align: right; /* Alinha o texto à direita */
+    font-size: 0.85em;
+    color: #6c757d;
+    margin-top: 5px; /* Espaço acima do texto */
+    padding-right: 5px; /* Pequeno padding para não colar na borda */
+}
+
+/* Opcional: esconder a barra inteira quando o quiz não estiver ativo */
+#quiz-section:not([style*="display: flex"]) #progress-container {
+    display: none;
+}
+/* Ou controlar via JS como faremos abaixo */
 
 #quiz-section h2 {
     font-size: 1.6rem; /* Tamanho da fonte principal do título */
@@ -433,6 +466,85 @@ footer a:hover {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Estilos para Botões de Navegação --- */
+.navigation-buttons {
+    display: flex; /* Alterado para flex para mostrar botões */
+    justify-content: space-between; /* Espaça os botões */
+    padding: 20px 0; /* Espaçamento vertical */
+    margin-top: 20px; /* Espaço acima dos botões */
+    border-top: 1px solid #e9ecef; /* Linha divisória opcional */
+}
+
+.navigation-buttons button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: "Montserrat", sans-serif;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* Estilo botão "Próxima" (ou "Ver Resultado") */
+#next-btn {
+    background-color: #114a9c; /* Azul principal */
+    color: white;
+    border-color: #114a9c;
+}
+
+#next-btn:hover {
+    background-color: #0b3064; /* Azul mais escuro */
+    border-color: #0b3064;
+}
+
+/* Estilo botão "Anterior" */
+#prev-btn {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+    border-color: #6c757d;
+}
+
+#prev-btn:hover {
+    background-color: #5a6268; /* Cinza mais escuro */
+    border-color: #545b62;
+}
+
+/* Estilo para botões desabilitados */
+.navigation-buttons button:disabled {
+    background-color: #e9ecef; /* Cinza claro */
+    color: #6c757d;
+    border-color: #dee2e6;
+    cursor: not-allowed; /* Indica que não é clicável */
+}
+
+/* Ajuste para o card de resultado inicial */
+.resultado-final-card {
+    display: none; /* Esconde inicialmente */
+    /* Mantém os outros estilos que você já tem */
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 30px 40px;
+    margin: 40px auto;
+    max-width: 550px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Você pode precisar ajustar os media queries se os botões não se alinharem bem em telas menores */
+@media (max-width: 480px) {
+    .navigation-buttons {
+        flex-direction: column; /* Empilha os botões */
+        gap: 10px; /* Espaço entre botões empilhados */
+        align-items: stretch; /* Faz os botões ocuparem a largura */
+    }
+    .navigation-buttons button {
+         width: 100%; /* Garante largura total */
+    }
 }
 
 /* --- Media Queries (Exemplo Básico) --- */

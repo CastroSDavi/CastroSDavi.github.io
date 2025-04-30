@@ -68,33 +68,48 @@
         </aside>
         <div class="main-content">
             <section id="quiz-section" style="display: flex; flex-direction: column; gap: 20px;">
-            <h2>
-                <span id="categoria-titulo">Categoria</span>
-                <span>- Questão <span id="id-questao">1</span></span>
-            </h2>
+        
+                <div id="progress-container" style="width: 100%; margin-bottom: 15px;">
+                    <div id="progress-bar-fill" style="height: 10px; width: 0%; background-color: #114a9c; border-radius: 5px; transition: width 0.3s ease-out;"></div>
+                    <span id="progress-text" style="font-size: 0.9em; color: #6c757d; float: right; margin-top: 2px;">0 / 0</span>
+                </div>
+        
+                <h2>
+                    <span id="categoria-titulo">Categoria</span>
+                    <span>- Questão <span id="id-questao">1</span></span>
+                </h2>
+        
                 <div class="question-wrap">
                     <div class="question-text">
                         <p id="pergunta-texto">Carregando pergunta...</p>
                     </div>
                     <div class="question">
                         <div class="image-question-wrap">
-                            <img src="" alt="" id="pergunta-imagem" style="display: none; max-height: 400px; width: auto;"> </div>
+                            <img src="" alt="" id="pergunta-imagem" style="display: none; max-height: 400px; width: auto;">
+                        </div>
                         <div class="answers-wrap" id="respostas-container">
                             </div>
                     </div>
-                    <p id="referencia-questao" style="font-size: 0.9em; color: #6c757d; margin-top: 15px;"></p> </div>
-            </section>
-            <div class="resultado-final-card">
-                <h3 class="resultado-final-titulo">Quiz de [Nome da Categoria] Concluído!</h3>
+                    <p id="referencia-questao" style="font-size: 0.9em; color: #6c757d; margin-top: 15px;"></p>
+                </div>
+            </section> <div class="navigation-buttons" style="display: none;">
+                <button id="prev-btn" disabled>Anterior</button>
+                <button id="next-btn">Próxima</button>
+            </div>
+        
+            <div class="resultado-final-card" style="display: none;">
+                <h3 class="resultado-final-titulo">Quiz Concluído!</h3>
                 <p class="resultado-final-pontuacao">
-                    Pontuação Final: <span class="pontos-valor">[Valor dos Pontos]</span>
+                    Pontuação Final: <span class="pontos-valor">0</span>
                 </p>
                 <div class="resultado-final-detalhes">
-                    <p>Acertos: <span class="acertos-valor">[Número de Acertos]</span></p>
-                    <p>Erros: <span class="erros-valor">[Número de Erros]</span></p>
-                </div>
+                    <p>Acertos: <span class="acertos-valor">0</span></p>
+                    <p>Erros: <span class="erros-valor">0</span></p>
                 </div>
             </div>
+        
+        </div> ```
+        
     </main>
 
     <footer id="footer">
@@ -104,7 +119,7 @@
     </footer>
 
     <script>
-        // --- Classe Usuário (mantida como no original) ---
+        // --- Classe Usuário ---
         class Usuario {
             constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
                 this._nome = nome;
@@ -113,152 +128,39 @@
                 this._pontos = pontos;
                 this.atualizar_pontos();
             }
-
             get acertos() { return this._acertos; }
             get erros() { return this._erros; }
             get pontos() { return this._pontos; }
-
-            set acertos(acertos) {
-                this._acertos = acertos;
-                this.atualizar_pontos();
-            }
-            set erros(erros) {
-                this._erros = erros;
-                this.atualizar_pontos();
-            }
-
-            resetarContadores() {
-                this._acertos = 0;
-                this._erros = 0;
-                this.atualizar_pontos();
-            }
-
-            atualizar_pontos() {
-                this._pontos = (15 * this._acertos) - (5 * this._erros);
-                 if (this._pontos < 0) this._pontos = 0;
-            }
+            set acertos(acertos) { this._acertos = acertos; this.atualizar_pontos(); }
+            set erros(erros) { this._erros = erros; this.atualizar_pontos(); }
+            resetarContadores() { this._acertos = 0; this._erros = 0; this.atualizar_pontos(); }
+            atualizar_pontos() { this._pontos = (15 * this._acertos) - (5 * this._erros); if (this._pontos < 0) this._pontos = 0; }
         }
-
-        // --- Array de Perguntas (mantido como no original) ---
+    
+        // --- Array de Perguntas ---
         const perguntas = [
             // Concepção
-            {
-                id: 1,
-                pergunta: "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
-                imagem: "",
-                respostas: [
-                    "Produzir testosterona",
-                    "Formar a túnica albugínea",
-                    "Fornecer sustentação e formar a barreira hematotesticular",
-                    "Participar diretamente da espermiogênese"
-                ],
-                correta: "Fornecer sustentação e formar a barreira hematotesticular",
-                referencia: "Gartner, 5ª ed.",
-                categoria: "Concepção"
-            },
-            {
-                id: 2,
-                pergunta: "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?",
-                imagem: "",
-                respostas: [
-                    "Espermatogônias",
-                    "Células de Sertoli",
-                    "Espermátides",
-                    "Espermatócitos primários"
-                ],
-                correta: "Espermátides",
-                referencia: "Gartner, 5ª ed.",
-                categoria: "Concepção"
-            },
-             {
-                id: 3,
-                pergunta: "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
-                imagem: "",
-                respostas: [
-                    "Epitélio simples pavimentoso",
-                    "Epitélio cúbico simples",
-                    "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
-                    "Epitélio pseudoestratificado com estereocílios"
-                ],
-                correta: "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
-                referencia: "Gartner, 5ª ed.",
-                categoria: "Concepção"
-            },
-            {
-                id: 4,
-                pergunta: "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?",
-                imagem: "",
-                respostas: [
-                    "Epitélio seminífero",
-                    "Túnica própria",
-                    "Tecido intersticial entre os túbulos seminíferos",
-                    "Rede testicular (rete testis)"
-                ],
-                correta: "Tecido intersticial entre os túbulos seminíferos",
-                referencia: "Gartner, 5ª ed.",
-                categoria: "Concepção"
-            },
-            {
-                id: 5,
-                pergunta: "Sobre o ducto deferente, é correto afirmar que:",
-                imagem: "",
-                respostas: [
-                    "Possui epitélio simples cúbico e camada muscular fina",
-                    "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
-                    "Possui epitélio estratificado pavimentoso e camada adventícia espessa",
-                    "É formado por epitélio colunar ciliado e tecido fibroso denso"
-                ],
-                correta: "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
-                referencia: "Gartner, 5ª ed.",
-                categoria: "Concepção"
-            },
+            { id: 1, pergunta: "Qual é a principal função das células de Sertoli...", imagem: "", respostas: ["Produzir testosterona", "Formar a túnica albugínea", "Fornecer sustentação e formar a barreira hematotesticular", "Participar diretamente da espermiogênese"], correta: "Fornecer sustentação e formar a barreira hematotesticular", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
+            { id: 2, pergunta: "Quais são as células espermatogênicas localizadas mais próximas ao lúmen...", imagem: "", respostas: ["Espermatogônias", "Células de Sertoli", "Espermátides", "Espermatócitos primários"], correta: "Espermátides", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
+            { id: 3, pergunta: "Que tipo de epitélio reveste os dúctulos eferentes...", imagem: "", respostas: ["Epitélio simples pavimentoso", "Epitélio cúbico simples", "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", "Epitélio pseudoestratificado com estereocílios"], correta: "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
+            { id: 4, pergunta: "Qual estrutura testicular contém as células de Leydig...", imagem: "", respostas: ["Epitélio seminífero", "Túnica própria", "Tecido intersticial entre os túbulos seminíferos", "Rede testicular (rete testis)"], correta: "Tecido intersticial entre os túbulos seminíferos", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
+            { id: 5, pergunta: "Sobre o ducto deferente, é correto afirmar que:", imagem: "", respostas: ["Possui epitélio simples cúbico e camada muscular fina", "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", "Possui epitélio estratificado pavimentoso e camada adventícia espessa", "É formado por epitélio colunar ciliado e tecido fibroso denso"], correta: "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
             // Metabolismo
-            {
-                id: 6,
-                pergunta: "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
-                imagem: "",
-                respostas: ["Retículo Endoplasmático", "Complexo de Golgi", "Mitocôndria", "Lisossomo"],
-                correta: "Mitocôndria",
-                referencia: "Biologia Celular Básica",
-                categoria: "Metabolismo"
-            },
-            {
-                id: 7,
-                pergunta: "O processo de glicólise ocorre em qual compartimento celular?",
-                imagem: "",
-                respostas: ["Mitocôndria", "Núcleo", "Citosol", "Peroxissomo"],
-                correta: "Citosol",
-                referencia: "Bioquímica Ilustrada",
-                categoria: "Metabolismo"
-            },
+            { id: 6, pergunta: "Qual organela celular é a principal responsável pela respiração celular aeróbica?", imagem: "", respostas: ["Retículo Endoplasmático", "Complexo de Golgi", "Mitocôndria", "Lisossomo"], correta: "Mitocôndria", referencia: "Biologia Celular Básica", categoria: "Metabolismo" },
+            { id: 7, pergunta: "O processo de glicólise ocorre em qual compartimento celular?", imagem: "", respostas: ["Mitocôndria", "Núcleo", "Citosol", "Peroxissomo"], correta: "Citosol", referencia: "Bioquímica Ilustrada", categoria: "Metabolismo" },
             // Funções
-            {
-                id: 8,
-                pergunta: "Qual a principal função do tecido epitelial de revestimento?",
-                imagem: "",
-                respostas: ["Contração", "Sustentação", "Proteção e Absorção", "Transmissão de impulsos"],
-                correta: "Proteção e Absorção",
-                referencia: "Histologia Básica",
-                categoria: "Funções"
-            },
-            {
-                id: 9,
-                pergunta: "Os neurônios são células especializadas na função de:",
-                imagem: "",
-                respostas: ["Produzir hormônios", "Realizar fagocitose", "Transmitir impulsos nervosos", "Armazenar gordura"],
-                correta: "Transmitir impulsos nervosos",
-                referencia: "Neurociência Fundamental",
-                categoria: "Funções"
-            }
+            { id: 8, pergunta: "Qual a principal função do tecido epitelial de revestimento?", imagem: "", respostas: ["Contração", "Sustentação", "Proteção e Absorção", "Transmissão de impulsos"], correta: "Proteção e Absorção", referencia: "Histologia Básica", categoria: "Funções" },
+            { id: 9, pergunta: "Os neurônios são células especializadas na função de:", imagem: "", respostas: ["Produzir hormônios", "Realizar fagocitose", "Transmitir impulsos nervosos", "Armazenar gordura"], correta: "Transmitir impulsos nervosos", referencia: "Neurociência Fundamental", categoria: "Funções" }
         ];
-
-        // --- Variáveis Globais do Quiz (mantidas como no original) ---
+    
+        // --- Variáveis Globais do Quiz ---
         let perguntaAtual = 0;
         let perguntasFiltradas = [];
         let categoriaAtual = "Concepção";
         const usuario = new Usuario();
-
-        // --- Elementos do DOM (Cache) (mantidos como no original) ---
+        let autoAvancoTimeoutId = null;
+    
+        // --- Elementos do DOM (Cache) ---
         const elCategoriaTitulo = document.getElementById('categoria-titulo');
         const elIdQuestao = document.getElementById('id-questao');
         const elPerguntaTexto = document.getElementById('pergunta-texto');
@@ -270,82 +172,93 @@
         const elPontuacao = document.getElementById('pontuacao');
         const elAcertosNum = document.getElementById('acertos-numero');
         const elErrosNum = document.getElementById('erros-numero');
-
-
+        const elPrevBtn = document.getElementById('prev-btn');
+        const elNextBtn = document.getElementById('next-btn');
+        const elNavigationButtons = document.querySelector('.navigation-buttons');
+        const elResultadoCard = document.querySelector('.resultado-final-card');
+        const elProgressBarFill = document.getElementById('progress-bar-fill');
+        const elProgressText = document.getElementById('progress-text');
+        const elProgressContainer = document.getElementById('progress-container');
+    
         // --- Funções do Quiz ---
-
-        // *** NOVA FUNÇÃO ADICIONADA ***
-        function mostrarAviso(texto) {
-            // Remove aviso anterior, se houver
-            const existingAviso = document.querySelector('.aviso-mensagem');
-            if (existingAviso) {
-                existingAviso.remove();
+    
+        function atualizarBarraProgresso() {
+            if (!elProgressContainer || !elProgressBarFill || !elProgressText) { return; }
+            if (!perguntasFiltradas || perguntasFiltradas.length === 0) {
+                elProgressBarFill.style.width = '0%';
+                elProgressText.innerText = '';
+                elProgressContainer.style.display = 'none';
+                return;
             }
-             // Remove card de resultado anterior, se houver
-            const existingCard = document.querySelector('.resultado-final-card');
-            if(existingCard) {
-                existingCard.remove();
-            }
-
-            // Cria um parágrafo simples para o aviso
-            const avisoP = document.createElement('p');
-            avisoP.classList.add('aviso-mensagem'); // Adiciona uma classe para possível estilização
-            avisoP.textContent = texto;
-            avisoP.style.textAlign = 'center'; // Estilo simples por enquanto
-            avisoP.style.padding = '20px';
-            avisoP.style.color = '#6c757d'; // Cor cinza
-            elMainContent.appendChild(avisoP);
+            elProgressContainer.style.display = 'block';
+            const totalPerguntas = perguntasFiltradas.length;
+            const numeroQuestaoAtual = (perguntaAtual < totalPerguntas) ? perguntaAtual + 1 : totalPerguntas;
+            const progressoPercentual = (numeroQuestaoAtual / totalPerguntas) * 100;
+            elProgressBarFill.style.width = `${progressoPercentual}%`;
+            elProgressText.innerText = `${numeroQuestaoAtual} / ${totalPerguntas}`;
         }
-
-        // *** FUNÇÃO MODIFICADA ***
+    
+        function mostrarAviso(texto) {
+            const existingAviso = document.querySelector('.aviso-mensagem');
+            if (existingAviso) existingAviso.remove();
+            if (elResultadoCard) elResultadoCard.style.display = 'none';
+            const avisoP = document.createElement('p');
+            avisoP.classList.add('aviso-mensagem');
+            avisoP.textContent = texto;
+            avisoP.style.textAlign = 'center';
+            avisoP.style.padding = '20px';
+            avisoP.style.color = '#6c757d';
+            if (elResultadoCard) { elMainContent.insertBefore(avisoP, elResultadoCard); }
+            else { elMainContent.appendChild(avisoP); }
+        }
+    
         function selecionarCategoria(categoria) {
-            console.log("Selecionando categoria:", categoria); // Mantenha para debug
+            clearTimeout(autoAvancoTimeoutId);
+            autoAvancoTimeoutId = null;
+            perguntas.forEach(p => { delete p.respostaDada; });
             categoriaAtual = categoria;
             perguntasFiltradas = perguntas.filter(p => p.categoria === categoria);
             perguntaAtual = 0;
             usuario.resetarContadores();
             atualizar_pontuacao();
-
-            // Remove o card de resultado anterior, se houver
-            const existingCard = document.querySelector('.resultado-final-card'); // <-- CORRIGIDO
-            if(existingCard) {
-                existingCard.remove();
-            }
-            // Remove aviso anterior, se houver
-            const existingAviso = document.querySelector('.aviso-mensagem'); // <-- ADICIONADO
-            if (existingAviso) {
-                existingAviso.remove();
-            }
-
-
+            atualizarBarraProgresso();
+            if (elResultadoCard) elResultadoCard.style.display = 'none';
+            const existingAviso = document.querySelector('.aviso-mensagem');
+            if (existingAviso) existingAviso.remove();
             if (perguntasFiltradas.length > 0) {
-                elCategoriaTitulo.innerText = categoria;
                 elQuizSection.style.display = 'flex';
+                if(elNavigationButtons) elNavigationButtons.style.display = 'flex'; // Garante que botões apareçam
                 carregarPergunta();
             } else {
                 elQuizSection.style.display = 'none';
-                 // CORRIGIDO: Usa a nova função mostrarAviso
+                if(elNavigationButtons) elNavigationButtons.style.display = 'none';
                 mostrarAviso(`Nenhuma pergunta encontrada para ${categoria}.`);
-                console.log("Nenhuma pergunta para esta categoria:", categoria); // Mantenha para debug
             }
         }
-
+    
         function carregarPergunta() {
-            // ADICIONADO PARA DEBUG vvv
-            console.log(`carregarPergunta: Índice Atual = ${perguntaAtual}, Total Perguntas Filtradas = ${perguntasFiltradas.length}`);
-            // ADICIONADO PARA DEBUG ^^^
+            autoAvancoTimeoutId = null;
+            atualizarBarraProgresso();
+    
             if (perguntaAtual >= perguntasFiltradas.length) {
                 mostrarResultadoFinal();
                 return;
             }
-
+    
             const pergunta = perguntasFiltradas[perguntaAtual];
-
+            const jaRespondida = pergunta.hasOwnProperty('respostaDada');
+    
+            if (elResultadoCard) elResultadoCard.style.display = 'none';
+            elQuizSection.style.display = 'flex';
+             if(elNavigationButtons) elNavigationButtons.style.display = 'flex'; // Garante que botões apareçam
+    
+            elRespostasContainer.innerHTML = '';
             elCategoriaTitulo.innerText = categoriaAtual;
             elIdQuestao.innerText = perguntaAtual + 1;
             elPerguntaTexto.innerText = pergunta.pergunta;
             elReferencia.innerText = `Referência: ${pergunta.referencia}`;
-
+    
+            // Imagem
             if (pergunta.imagem && pergunta.imagem.trim() !== "") {
                 elPerguntaImagem.src = pergunta.imagem;
                 elPerguntaImagem.alt = `Imagem para a questão ${perguntaAtual + 1} de ${categoriaAtual}`;
@@ -355,23 +268,48 @@
                 elPerguntaImagem.src = "";
                 elPerguntaImagem.alt = "";
             }
-
-            elRespostasContainer.innerHTML = '';
+    
+            // Cria/Restaura Respostas
             pergunta.respostas.forEach((respostaTexto) => {
                 const p = document.createElement('p');
                 p.classList.add('answer');
                 p.innerText = respostaTexto;
-                p.onclick = () => verificarResposta(p, pergunta);
+                if (jaRespondida) {
+                    p.onclick = null;
+                    p.classList.add('answered');
+                    if (respostaTexto === pergunta.correta) { p.classList.add('correct'); }
+                    if (respostaTexto === pergunta.respostaDada && respostaTexto !== pergunta.correta) { p.classList.add('incorrect'); }
+                } else {
+                    p.onclick = () => verificarResposta(p, pergunta);
+                }
                 elRespostasContainer.appendChild(p);
             });
+    
+            // --- LÓGICA DO BOTÃO CORRIGIDA ---
+            elPrevBtn.disabled = perguntaAtual === 0;
+            elNextBtn.disabled = false; // <<< CORRIGIDO: Botão "Próxima" sempre habilitado ao carregar
+    
+            // Ajusta texto do botão "Próxima"
+            if (perguntaAtual === perguntasFiltradas.length - 1) {
+                elNextBtn.innerText = 'Ver Resultado';
+                 // Opcional: Desabilitar apenas na última questão se não respondida
+                 // Você pode descomentar a linha abaixo se quiser esse comportamento:
+                 // elNextBtn.disabled = !jaRespondida;
+            } else {
+                elNextBtn.innerText = 'Próxima';
+            }
+            // --- FIM DA CORREÇÃO ---
         }
-
+    
         function verificarResposta(elementoClicado, pergunta) {
+            clearTimeout(autoAvancoTimeoutId);
             const respostaSelecionada = elementoClicado.innerText;
             const allAnswers = elRespostasContainer.querySelectorAll('.answer');
-
-            allAnswers.forEach(ans => ans.onclick = null);
-
+            pergunta.respostaDada = respostaSelecionada;
+            allAnswers.forEach(ans => {
+                ans.onclick = null;
+                ans.classList.add('answered');
+            });
             if (respostaSelecionada === pergunta.correta) {
                 elementoClicado.classList.add("correct");
                 usuario.acertos += 1;
@@ -384,15 +322,17 @@
                     }
                 });
             }
-
             atualizar_pontuacao();
-
-            setTimeout(() => {
+            // A linha 'elNextBtn.disabled = false;' foi removida daqui pois é redundante
+    
+            autoAvancoTimeoutId = setTimeout(() => {
                 proximaPergunta();
             }, 1500);
         }
-
+    
         function proximaPergunta() {
+            clearTimeout(autoAvancoTimeoutId);
+            autoAvancoTimeoutId = null;
             perguntaAtual++;
             if (perguntaAtual < perguntasFiltradas.length) {
                 carregarPergunta();
@@ -400,72 +340,55 @@
                 mostrarResultadoFinal();
             }
         }
-
-        // *** FUNÇÃO MODIFICADA ***
+    
+        function perguntaAnterior() {
+            clearTimeout(autoAvancoTimeoutId);
+            autoAvancoTimeoutId = null;
+            if (perguntaAtual > 0) {
+                perguntaAtual--;
+                carregarPergunta();
+            }
+        }
+    
         function mostrarResultadoFinal() {
+            clearTimeout(autoAvancoTimeoutId);
+            autoAvancoTimeoutId = null;
             elQuizSection.style.display = 'none';
-            mostrarMensagem(); // <-- CORRIGIDO: Chamada sem argumentos
-        }
-
-        // *** FUNÇÃO NOVA/CORRIGIDA ***
-        function mostrarMensagem() {
-            const existingCard = document.querySelector('.resultado-final-card');
-            if(existingCard) {
-                existingCard.remove();
+            if(elNavigationButtons) elNavigationButtons.style.display = 'none';
+            if (elProgressContainer) elProgressContainer.style.display = 'none';
+            if (elResultadoCard) {
+                elResultadoCard.style.display = 'block';
+                preencherMensagemFinal();
+            } else {
+                console.error("Elemento '.resultado-final-card' não encontrado.");
             }
-             // Remove aviso anterior, se houver
-            const existingAviso = document.querySelector('.aviso-mensagem');
-            if (existingAviso) {
-                existingAviso.remove();
-            }
-
-             // 1. Criar o container principal (o "card")
-            const resultadoCard = document.createElement('div');
-            resultadoCard.classList.add('resultado-final-card'); // Classe para estilização
-
-            // 2. Criar o título
-            const titulo = document.createElement('h3');
-            titulo.classList.add('resultado-final-titulo');
-            titulo.textContent = `Quiz de ${categoriaAtual} Concluído!`; // Usa a variável global 'categoriaAtual'
-
-            // 3. Criar o parágrafo da pontuação
-            const pontuacaoP = document.createElement('p');
-            pontuacaoP.classList.add('resultado-final-pontuacao');
-            pontuacaoP.innerHTML = `Pontuação Final: <span class="pontos-valor">${usuario.pontos}</span>`; // Usa usuario.pontos
-
-            // 4. Criar o div para os detalhes (acertos/erros)
-            const detalhesDiv = document.createElement('div');
-            detalhesDiv.classList.add('resultado-final-detalhes');
-
-            // 5. Criar parágrafo de acertos
-            const acertosP = document.createElement('p');
-            acertosP.innerHTML = `Acertos: <span class="acertos-valor">${usuario.acertos}</span>`; // Usa usuario.acertos
-
-            // 6. Criar parágrafo de erros
-            const errosP = document.createElement('p');
-            errosP.innerHTML = `Erros: <span class="erros-valor">${usuario.erros}</span>`; // Usa usuario.erros
-
-            // 7. Montar a estrutura: adicionar acertos/erros aos detalhes
-            detalhesDiv.appendChild(acertosP);
-            detalhesDiv.appendChild(errosP);
-
-            // 8. Montar a estrutura: adicionar título, pontuação e detalhes ao card
-            resultadoCard.appendChild(titulo);
-            resultadoCard.appendChild(pontuacaoP);
-            resultadoCard.appendChild(detalhesDiv);
-
-            // 9. Adicionar o card completo ao main-content
-            elMainContent.appendChild(resultadoCard);
         }
-
+    
+        function preencherMensagemFinal() {
+            if (!elResultadoCard) return;
+            const tituloResultado = elResultadoCard.querySelector('.resultado-final-titulo');
+            const pontuacaoResultado = elResultadoCard.querySelector('.resultado-final-pontuacao .pontos-valor');
+            const acertosResultado = elResultadoCard.querySelector('.resultado-final-detalhes .acertos-valor');
+            const errosResultado = elResultadoCard.querySelector('.resultado-final-detalhes .erros-valor');
+            if (tituloResultado) tituloResultado.textContent = `Quiz de ${categoriaAtual} Concluído!`;
+            if (pontuacaoResultado) pontuacaoResultado.textContent = usuario.pontos;
+            if (acertosResultado) acertosResultado.textContent = usuario.acertos;
+            if (errosResultado) errosResultado.textContent = usuario.erros;
+        }
+    
         function atualizar_pontuacao() {
             elPontuacao.innerText = usuario.pontos;
             elAcertosNum.innerText = usuario.acertos;
             elErrosNum.innerText = usuario.erros;
         }
-
-        // --- Inicialização e Event Listeners (mantido como no original) ---
+    
+        // --- Inicialização e Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
+            if (!elPrevBtn || !elNextBtn || !elNavigationButtons || !elResultadoCard || !elQuizSection || !elRespostasContainer || !elMainContent || !elPontuacao || !elAcertosNum || !elErrosNum || !elProgressContainer || !elProgressBarFill || !elProgressText) {
+                console.error("Erro Crítico: Um ou mais elementos essenciais do DOM não foram encontrados.");
+                alert("Ocorreu um erro ao carregar o quiz. Verifique o console para detalhes.");
+                return;
+            }
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', (event) => {
                     event.preventDefault();
@@ -473,12 +396,11 @@
                     selecionarCategoria(categoria);
                 });
             });
-
+            elPrevBtn.addEventListener('click', perguntaAnterior);
+            elNextBtn.addEventListener('click', proximaPergunta);
             selecionarCategoria(categoriaAtual);
         });
-
-    </script>
-
+    
     </script>
 </body>
 </html>

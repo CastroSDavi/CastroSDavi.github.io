@@ -1,4 +1,5 @@
-*{
+/* Reset básico e configuração inicial */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -6,155 +7,232 @@
 
 html {
     scroll-behavior: smooth;
+    font-size: 16px; /* Definir um tamanho base pode ajudar na consistência */
 }
 
+body {
+    font-family: "Roboto", sans-serif; /* Fonte padrão para o corpo */
+    color: #333; /* Cor de texto padrão um pouco mais suave que preto */
+    background-color: #f8f9fa; /* Fundo global levemente acinzentado */
+    line-height: 1.5; /* Altura de linha padrão para melhor legibilidade */
+}
+
+/* Cabeçalho */
 header {
     height: 70px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgb(245, 245, 245);
+    background-color: #ffffff; /* Fundo branco para contraste */
     padding: 0 30px;
     gap: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil */
+    border-bottom: 1px solid #e9ecef; /* Linha divisória leve */
 }
 
-h1 {
+h1.title-header { /* Seletor mais específico */
     order: 2;
-    font: normal 600 2.2rem "Montserrat";
-    color: rgb(19, 83, 185);
-    text-shadow: 1px 1px 2cm rgba(0, 0, 0, 0.20);
+    font: normal 600 2.1rem "Montserrat", sans-serif; /* Tamanho ligeiramente ajustado */
+    color: #114a9c; /* Azul um pouco menos saturado */
+    text-shadow: none; /* Removido text-shadow que pode ser pesado */
 }
+
 header div {
-    order:3
+    order: 3
 }
 
 .about-link {
     order: 1;
-    font: normal 400 1.2rem "Montserrat";
+    font: normal 400 1rem "Montserrat", sans-serif; /* Tamanho ajustado */
     text-decoration: none;
-    color: rgb(19, 83, 185);
+    color: #114a9c; /* Mesmo azul do título */
+    transition: color 0.2s ease; /* Transição suave */
+}
+.about-link:hover {
+    color: #0b3064; /* Azul mais escuro no hover */
 }
 
+/* Títulos */
 h2 {
-    font: normal 600 2rem "Montserrat";
-    color: rgb(19, 83, 185);
+    font: normal 600 1.8rem "Montserrat", sans-serif; /* Tamanho ajustado para hierarquia */
+    color: #114a9c;
+    margin-bottom: 15px; /* Adiciona espaço abaixo dos H2 */
 }
 
-h3 {
-    font:  normal 500 1.5em "Roboto";
-    color: #4e5154;
+h3 { /* Estilo base para H3 se for usar */
+    font: normal 500 1.4rem "Roboto", sans-serif;
+    color: #495057;
+    margin-bottom: 10px;
 }
 
+/* Barra de Navegação */
 .navbar {
-    box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra mais sutil */
     padding: 0 20px;
     display: flex;
     list-style: none;
-    background-color:rgb(19, 83, 185);
+    background-color: #114a9c; /* Azul principal */
     justify-content: flex-start;
+    margin-bottom: 0; /* Remove margem padrão da ul */
 }
 
-.navbar > li{
-    padding: 10px 0px;
+.navbar > li {
+    padding: 0; /* Removido padding do li, controle no link */
 }
 
-.nav-link{
+.nav-link {
+    display: block; /* Para que o padding funcione corretamente */
     text-decoration: none;
-    font: normal 400 0.95rem "Montserrat";
-    color:  white;
-    padding: 10px 20px;
+    font: normal 500 1rem "Montserrat", sans-serif; /* Tamanho e peso ajustados */
+    color: white;
+    padding: 12px 20px; /* Padding ajustado */
+    border-bottom: 4px solid transparent; /* Borda transparente para espaço no hover */
+    transition: background-color 0.2s ease, border-bottom-color 0.2s ease; /* Transições */
 }
 
 .nav-link:hover {
-    border-bottom: 4px solid #3bcf76;
+    background-color: rgba(255, 255, 255, 0.1); /* Fundo leve no hover */
+    border-bottom-color: #3bcf76; /* Verde para indicar hover/seleção */
 }
 
+/* Estilo para link ativo (requer JS para adicionar a classe 'active') */
+.nav-link.active {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-bottom-color: #3bcf76; /* Mantém a cor da borda */
+    font-weight: 600; /* Destaca o texto */
+}
+
+
+/* Conteúdo Principal e Lateral */
 main {
     display: flex;
-    min-height: 100vh;
-    font-family: "Roboto";
+    min-height: calc(100vh - 70px - 60px); /* Calcula altura menos header e footer */
+    font-family: "Roboto", sans-serif;
 }
 
 aside {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    font: normal 500 1.2rem arial;
+    gap: 25px; /* Espaçamento ajustado */
     padding: 30px;
-    min-width: 250px;
-    min-height: 100%;
-    box-shadow: 0 4px 6px 1px rgb(0 0 0 / 0.15);
+    min-width: 260px; /* Largura ligeiramente aumentada */
+    background-color: #ffffff; /* Fundo branco */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05); /* Sombra na lateral direita */
+    border-right: 1px solid #e9ecef; /* Linha divisória */
 }
 
 .aside-title {
     text-align: center;
-    font: normal 500 1.4rem "Roboto";
+    font: normal 500 1.3rem "Roboto", sans-serif; /* Tamanho ajustado */
+    color: #343a40;
 }
 
-
 aside p {
-    font:normal 400 1.1rem "Roboto";
-    color: #4e5154;
+    font: normal 400 1rem "Roboto", sans-serif; /* Tamanho ajustado */
+    color: #495057;
 }
 
 .pontuacao-wrap {
     display: flex;
-    height: 150px;
-    width: 150px;
+    height: 140px; /* Tamanho ajustado */
+    width: 140px;  /* Tamanho ajustado */
     align-self: center;
-    justify-self: center;
     border-radius: 50%;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    /* Sombra mais suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
     justify-content: center;
     align-items: center;
-    background-color: #3bcf76;
-
+    background-color: #3bcf76; /* Verde */
 }
 
 #pontuacao {
-    width: 135px;
-    height: 135px;
-    font-size: 3rem;
+    width: 125px;  /* Tamanho ajustado */
+    height: 125px; /* Tamanho ajustado */
+    font-size: 2.8rem; /* Tamanho ajustado */
     background-color: white;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #333;
+    font-weight: 600;
 }
-
-.main-content {
-    padding: 30px 30px;
-    width: 100%;
-}
-
-.image-question-wrap {
-}
-
-.image-question-wrap > img {
-    width: auto;
-    max-height: 500px;
-}
-
 
 .aside-info-wrap {
     display: flex;
-    gap: 20px;
+    gap: 15px; /* Espaçamento ajustado */
+    align-items: center; /* Alinha ícone e texto verticalmente */
+}
+
+.icon-wrap {
+    padding: 4px; /* Pequeno padding interno */
+    border-radius: 50%; /* Deixa o fundo do ícone redondo */
+    display: inline-flex; /* Para que o padding funcione bem */
+    justify-content: center;
+    align-items: center;
+}
+.icon-wrap.icon-correct {
+     background-color: rgba(59, 207, 118, 0.1); /* Fundo verde claro */
+}
+.icon-wrap.icon-correct svg {
+    fill: #2a9d8f; /* Cor do ícone de acerto (verde mais sóbrio) */
+}
+
+.icon-wrap.icon-error {
+     background-color: rgba(220, 53, 69, 0.1); /* Fundo vermelho claro */
+}
+.icon-wrap.icon-error svg {
+    fill: #dc3545; /* Cor do ícone de erro (vermelho) */
+}
+
+/* Conteúdo Principal do Quiz */
+.main-content {
+    padding: 30px 40px; /* Padding horizontal aumentado */
+    width: 100%;
+    background-color: #ffffff; /* Fundo branco para a área principal */
+}
+
+section#quiz-section { /* Seletor mais específico */
+   /* Gap definido no JS, mas pode definir aqui se preferir */
+   /* gap: 30px; */
+}
+
+
+.question-wrap {
+     background-color: #f8f9fa; /* Fundo levemente diferente para destacar */
+     padding: 25px;
+     border-radius: 8px; /* Bordas arredondadas */
+     border: 1px solid #e9ecef; /* Borda leve */
 }
 
 .question {
     width: 100%;
-    padding: 30px;
+    padding: 10px 0; /* Padding vertical interno ajustado */
     display: flex;
-    gap: 30px;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column; /* Empilha imagem/texto e respostas */
+    gap: 25px; /* Espaço entre os elementos */
+    /* Removido justify-content e align-items que não fazem mais sentido */
+}
+
+.image-question-wrap {
+    text-align: center; /* Centraliza a imagem se ela for menor que a largura */
+    margin-bottom: 15px; /* Espaço abaixo da imagem */
+}
+
+.image-question-wrap > img {
+    max-width: 100%; /* Garante que a imagem não ultrapasse o contêiner */
+    height: auto; /* Mantém a proporção */
+    max-height: 400px; /* Limite de altura mantido */
+    border-radius: 4px; /* Leve arredondamento na imagem */
+    border: 1px solid #dee2e6; /* Borda sutil na imagem */
 }
 
 .question-text {
-    flex: 1;
-    font: normal 500 1.2rem "Roboto";
-    color: #4e5154;
-    margin: 20px 0px;
+    flex: 1; /* Mantém, caso volte para layout lado a lado */
+    font: normal 400 1.1rem "Roboto", sans-serif; /* Peso e tamanho ajustados */
+    color: #343a40; /* Cor de texto principal */
+    margin: 0; /* Removido margem extra */
+    line-height: 1.6; /* Altura de linha para legibilidade */
 }
 
 .question-text p {
@@ -163,60 +241,146 @@ aside p {
 
 .answers-wrap {
     width: 100%;
-    justify-content: center;
     display: flex;
-    gap: 20px;
+    gap: 15px; /* Espaçamento entre respostas ajustado */
     flex-direction: column;
+    align-items: stretch; /* Garante que os botões ocupem a largura */
 }
 
 .answer {
     cursor: pointer;
-    color: #4e5154;
-    background-color: rgb(235, 235, 235);
+    color: #343a40;
+    background-color: #ffffff; /* Fundo branco para respostas */
     width: 100%;
-    padding: 25px;
-    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    border-radius: 20px;
+    padding: 18px 25px; /* Padding ajustado */
+    /* Sombra mais suave */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    border-radius: 8px; /* Bordas arredondadas consistentes */
+    border: 1px solid #dee2e6; /* Borda leve */
+    text-align: left; /* Garante alinhamento à esquerda */
+    font-size: 1rem;
+    transition: box-shadow 0.2s ease, transform 0.1s ease, background-color 0.2s ease, border-color 0.2s ease; /* Transições */
 }
 
 .answer:hover {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), 0 2px 5px rgba(0, 0, 0, 0.06); /* Sombra maior no hover */
+    border-color: #adb5bd; /* Borda mais visível no hover */
+    transform: translateY(-2px); /* Leve efeito de elevação */
 }
 
-.correct {
-    background-color: #d4edda; 
-    border: 1px solid #c3e6cb;
-    color: #155724;
+/* Estilos de Feedback para Respostas */
+.answer.correct {
+    background-color: #e6f9f0; /* Verde bem claro */
+    border-color: #2a9d8f; /* Verde mais sóbrio */
+    color: #0a4d45; /* Verde escuro para texto */
+    font-weight: 500;
 }
 
-.incorrect {
-    background-color: #f8d7da; 
-    border: 1px solid #f5c6cb;
-    color: #721c24;
+.answer.incorrect {
+    background-color: #fceded; /* Vermelho bem claro */
+    border-color: #dc3545; /* Vermelho */
+    color: #721c24; /* Vermelho escuro para texto */
+    font-weight: 500;
 }
 
-section {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+/* Referência da questão */
+#referencia-questao {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 10px;
+    text-align: right;
 }
 
+
+/* Rodapé */
 footer {
-    font: normal 400 1rem "Roboto";
+    font: normal 400 0.9rem "Roboto", sans-serif; /* Tamanho ajustado */
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-color: #1353b9;
-    color: #ffffff;
-    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #343a40; /* Cinza escuro */
+    color: #e9ecef; /* Cor de texto clara */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil acima */
+    border-top: 1px solid #495057; /* Linha divisória */
+    height: 60px; /* Altura definida para cálculo do main */
 }
 
 footer p {
     margin: 0;
 }
 
-footer a {
-    color: #ffffff;
+footer a { /* Estilo para links no footer, se houver */
+    color: #adb5bd;
     margin-left: 20px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+footer a:hover {
+    color: #ffffff;
+}
+
+/* Estilos para mensagens dinâmicas (ex: Quiz finalizado) */
+#final-message {
+    text-align: center;
+    padding: 40px;
+    font-size: 1.5rem;
+    color: #114a9c;
+}
+
+/* --- Media Queries (Exemplo Básico) --- */
+/* Estilos para telas menores - ajuste conforme necessário */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column; /* Empilha aside e main content */
+    }
+
+    aside {
+        min-width: 100%; /* Ocupa largura total */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra abaixo */
+        border-right: none; /* Remove borda lateral */
+        border-bottom: 1px solid #e9ecef; /* Adiciona borda inferior */
+        flex-direction: row; /* Coloca itens da aside lado a lado */
+        justify-content: space-around; /* Espaça os itens */
+        align-items: center;
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .pontuacao-wrap { /* Reduz o tamanho do círculo de pontuação */
+        height: 80px;
+        width: 80px;
+    }
+    #pontuacao {
+        height: 70px;
+        width: 70px;
+        font-size: 1.8rem;
+    }
+    .aside-title { display: none; } /* Esconde título da aside */
+
+
+    .main-content {
+        padding: 20px; /* Reduz padding */
+    }
+
+    h1.title-header { font-size: 1.8rem; }
+    h2 { font-size: 1.5rem; }
+    .nav-link { font-size: 0.9rem; padding: 10px 15px;}
+    .answer { padding: 15px 20px; font-size: 0.95rem;}
+    footer { font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+    header { padding: 0 15px; }
+    .main-content { padding: 15px;}
+    .answer { padding: 12px 15px; }
+    .nav-link { padding: 10px; font-size: 0.85rem;}
+    h1.title-header { font-size: 1.6rem; }
+    h2 { font-size: 1.3rem; }
+
+    aside {
+         flex-wrap: wrap; /* Permite que os itens quebrem linha */
+         justify-content: center; /* Centraliza itens quando quebram */
+    }
+
 }

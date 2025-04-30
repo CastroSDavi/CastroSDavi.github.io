@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
+<html lang="pt-BR"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
@@ -10,34 +8,34 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
         rel="stylesheet">
-    <title>Anatomia</title>
-</head>
+    <title>Histologia - Quiz Interativo</title> </head>
 
 <body>
     <header>
         <h1 class="title-header">
-            Anatomia
+            Histologia
         </h1>
         <p>
             <a class="about-link" href="#footer">Sobre</a>
         </p>
         <div>
-
-        </div>
+            </div>
     </header>
+
     <nav>
         <ul class="navbar">
             <li>
-                <a href="#cranio" class="nav-link">Crânio</a>
+                <a href="#" class="nav-link">Concepção</a>
             </li>
             <li>
-                <a href="#coluna" class="nav-link">Coluna vertebral</a>
+                <a href="#" class="nav-link">Metabolismo</a>
             </li>
             <li>
-                <a href="#torax" class="nav-link">Caixa torácica</a>
+                <a href="#" class="nav-link">Funções</a>
             </li>
         </ul>
     </nav>
+
     <main>
         <aside>
             <p class="aside-title">Pontuação</p>
@@ -49,8 +47,7 @@
             <div class="aside-info-wrap">
                 <div class="icon-wrap icon-correct">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#5f6368">
-                        <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                        fill="#3bcf76"> <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
                     </svg>
                 </div>
                 <p id="acertos">
@@ -60,8 +57,7 @@
             <div class="aside-info-wrap">
                 <div class="icon-wrap icon-error" id="error">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#5f6368">
-                        <path
+                        fill="#dc3545"> <path
                             d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
                     </svg>
                 </div>
@@ -71,41 +67,22 @@
             </div>
         </aside>
         <div class="main-content">
-            <section id="cranio">
-                <h2><span id =id-questao></span> - Questão</h2>
+            <section id="quiz-section" style="display: flex; flex-direction: column; gap: 20px;"> <h2><span id="categoria-titulo">Categoria</span> - Questão <span id="id-questao"></span></h2>
                 <div class="question-wrap">
                     <div class="question-text">
-                        <p id="pergunta-texto"></p>
+                        <p id="pergunta-texto">Carregando pergunta...</p>
                     </div>
                     <div class="question">
                         <div class="image-question-wrap">
-                            <img src="imagens/cranio/ossos_do_cranio_separados_grays.jpg" alt="">
-                        </div>
-                        <div class="answers-wrap">
-                            <p class="answer">
-                                Temporal
-                            </p>
-                            <p class="answer">
-                                Occipital
-                            </p>
-                            <p class="answer">
-                                Frontal
-                            </p>
-                            <p class="answer">
-                                Parietal
-                            </p>
-                        </div>
+                            <img src="" alt="" id="pergunta-imagem" style="display: none; max-height: 400px; width: auto;"> </div>
+                        <div class="answers-wrap" id="respostas-container">
+                            </div>
                     </div>
-                    <p id="referencia-questao"></p>
-                </div>
+                    <p id="referencia-questao" style="font-size: 0.9em; color: #6c757d; margin-top: 15px;"></p> </div>
             </section>
-            <section id="coluna">
-
-            </section>
-            <section id="torax">
-            </section>
-        </div>
+            </div>
     </main>
+
     <footer id="footer">
         <p>
             &copy; Desenvolvido por Davi Castro
@@ -113,183 +90,322 @@
     </footer>
 
     <script>
+        // --- Classe Usuário (mantida como no original) ---
         class Usuario {
-    constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
-        this._nome = nome;
-        this._acertos = acertos;
-        this._erros = erros;
-        this._pontos = pontos + (15 * this._acertos) - (5 * this._erros)
-    }
+            constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
+                this._nome = nome;
+                this._acertos = acertos;
+                this._erros = erros;
+                // A pontuação inicial deve ser calculada ou definida como 0
+                this._pontos = pontos; // Iniciado com o valor passado ou 0
+                this.atualizar_pontos(); // Calcula com base nos acertos/erros iniciais
+            }
 
-    get acertos() {
-        return this._acertos;
-    }
+            get acertos() { return this._acertos; }
+            get erros() { return this._erros; }
+            get pontos() { return this._pontos; }
 
-    get erros() {
-        return this._erros;
-    }
+            set acertos(acertos) {
+                this._acertos = acertos;
+                this.atualizar_pontos(); // Recalcula pontos ao mudar acertos
+            }
+            set erros(erros) {
+                this._erros = erros;
+                this.atualizar_pontos(); // Recalcula pontos ao mudar erros
+            }
 
-    get pontos() {
-        return this._pontos;
-    }
+            // Método para resetar contadores (útil ao mudar de categoria)
+            resetarContadores() {
+                this._acertos = 0;
+                this._erros = 0;
+                this.atualizar_pontos();
+            }
 
-    set acertos(acertos) {
-        this._acertos = acertos;
-    }
+            // Atualiza a pontuação baseada nos acertos e erros
+            atualizar_pontos() {
+                this._pontos = (15 * this._acertos) - (5 * this._erros);
+                 if (this._pontos < 0) this._pontos = 0; // Evita pontuação negativa
+            }
+        }
 
-    set erros(erros) {
-        this._erros = erros;
-    }
+        // --- Array de Perguntas (Adicione mais perguntas!) ---
+        const perguntas = [
+            // Concepção
+            {
+                id: 1,
+                pergunta: "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
+                imagem: "", // Caminho da imagem, se houver
+                respostas: [
+                    "Produzir testosterona",
+                    "Formar a túnica albugínea",
+                    "Fornecer sustentação e formar a barreira hematotesticular",
+                    "Participar diretamente da espermiogênese"
+                ],
+                correta: "Fornecer sustentação e formar a barreira hematotesticular",
+                referencia: "Gartner, 5ª ed.",
+                categoria: "Concepção"
+            },
+            {
+                id: 2,
+                pergunta: "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?",
+                imagem: "",
+                respostas: [
+                    "Espermatogônias",
+                    "Células de Sertoli",
+                    "Espermátides",
+                    "Espermatócitos primários"
+                ],
+                correta: "Espermátides",
+                referencia: "Gartner, 5ª ed.",
+                categoria: "Concepção"
+            },
+            {
+                id: 3,
+                pergunta: "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
+                imagem: "",
+                respostas: [
+                    "Epitélio simples pavimentoso",
+                    "Epitélio cúbico simples",
+                    "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+                    "Epitélio pseudoestratificado com estereocílios"
+                ],
+                correta: "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+                referencia: "Gartner, 5ª ed.",
+                categoria: "Concepção"
+            },
+            {
+                id: 4,
+                pergunta: "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?",
+                imagem: "",
+                respostas: [
+                    "Epitélio seminífero",
+                    "Túnica própria",
+                    "Tecido intersticial entre os túbulos seminíferos",
+                    "Rede testicular (rete testis)"
+                ],
+                correta: "Tecido intersticial entre os túbulos seminíferos",
+                referencia: "Gartner, 5ª ed.",
+                categoria: "Concepção"
+            },
+            {
+                id: 5,
+                pergunta: "Sobre o ducto deferente, é correto afirmar que:",
+                imagem: "",
+                respostas: [
+                    "Possui epitélio simples cúbico e camada muscular fina",
+                    "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+                    "Possui epitélio estratificado pavimentoso e camada adventícia espessa",
+                    "É formado por epitélio colunar ciliado e tecido fibroso denso"
+                ],
+                correta: "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+                referencia: "Gartner, 5ª ed.",
+                categoria: "Concepção"
+            },
 
-    set pontos(pontos) {
-        this._pontos = pontos;
-    }
+            // Metabolismo (Exemplos - Adicione as suas!)
+            {
+                id: 6,
+                pergunta: "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
+                imagem: "",
+                respostas: ["Retículo Endoplasmático", "Complexo de Golgi", "Mitocôndria", "Lisossomo"],
+                correta: "Mitocôndria",
+                referencia: "Biologia Celular Básica",
+                categoria: "Metabolismo"
+            },
+            {
+                id: 7,
+                pergunta: "O processo de glicólise ocorre em qual compartimento celular?",
+                imagem: "",
+                respostas: ["Mitocôndria", "Núcleo", "Citosol", "Peroxissomo"],
+                correta: "Citosol",
+                referencia: "Bioquímica Ilustrada",
+                categoria: "Metabolismo"
+            },
 
-    atualizar_pontos() {
-        this._pontos = (15 * this._acertos) - (5 * this._erros);
-    }
-}
+            // Funções (Exemplos - Adicione as suas!)
+            {
+                id: 8,
+                pergunta: "Qual a principal função do tecido epitelial de revestimento?",
+                imagem: "",
+                respostas: ["Contração", "Sustentação", "Proteção e Absorção", "Transmissão de impulsos"],
+                correta: "Proteção e Absorção",
+                referencia: "Histologia Básica",
+                categoria: "Funções"
+            },
+            {
+                id: 9,
+                pergunta: "Os neurônios são células especializadas na função de:",
+                imagem: "",
+                respostas: ["Produzir hormônios", "Realizar fagocitose", "Transmitir impulsos nervosos", "Armazenar gordura"],
+                correta: "Transmitir impulsos nervosos",
+                referencia: "Neurociência Fundamental",
+                categoria: "Funções"
+            }
+        ];
 
-const perguntas = [
-    {
-        id: 1,
-        pergunta: "Qual o osso em azul na imagem?",
-        imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
-        respostas: ["Esfenoide", "Occipital", "Temporal", "Parietal"],
-        correta: "Occipital",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 2,
-        pergunta: "Qual o osso em roxo na imagem?",
-        imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
-        respostas: ["Frontal", "Maxila", "Esfenoide", "Parietal"],
-        correta: "Parietal",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 3,
-        pergunta: "Qual o osso em amarelo na imagem?",
-        imagem: "imagens/cranio/ossos_do_cranio_separados_grays.jpg",
-        respostas: ["Frontal", "Parietal", "Esfenóide", "Nasal"],
-        correta: "Esfenóide",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 4,
-        pergunta: "Qual o nome da estrutura óssea central mostrada na imagem?",
-        imagem: "imagens/torax/caixa_toracica_visao_anterior.jpg",
-        respostas: ["Coluna Vertebral", "Esterno", "Costelas", "Clavícula"],
-        correta: "Esterno",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 5,
-        pergunta: "As costelas falsas se articulam diretamente com qual estrutura óssea?",
-        imagem: "imagens/torax/caixa_toracica.jpg",
-        respostas: ["Esterno", "Coluna vertebral", "Clavícula", "Não se articulam diretamente"],
-        correta: "Não se articulam diretamente",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 6,
-        pergunta: "Quais costelas são conhecidas como costelas flutuantes?",
-        imagem: "imagens/torax/caixa_toracica.jpg",
-        respostas: ["8ª e 9ª costelas", "11ª e 12ª costelas", "5ª e 6ª costelas", "7ª e 8ª costelas"],
-        correta: "11ª e 12ª costelas",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 7,
-        pergunta: "Quantas vértebras compõem a região cervical da coluna vertebral?",
-        imagem: "imagens/coluna/coluna_anterior.jpg",
-        respostas: ["5 vértebras", "7 vértebras", "12 vértebras", "9 vértebras"],
-        correta: "7 vértebras",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 8,
-        pergunta: "Quantas vértebras compõem a região lombar da coluna vertebral?",
-        imagem: "imagens/coluna/coluna_anterior.jpg",
-        respostas: ["5 vértebras", "7 vértebras", "4 vértebras", "6 vértebras"],
-        correta: "5 vértebras",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    },
-    {
-        id: 9,
-        pergunta: "Qual parte da coluna vertebral se conecta ao crânio?",
-        imagem: "imagens/coluna/coluna_anterior.jpg",
-        respostas: ["Região Torácica", "Região Sacral", "Região Cervical", "Região Lombar"],
-        correta: "Região Cervical",
-        referencia:"GRAY, Henry. Gray's Anatomy: The Anatomical Basis of Clinical Practice. 4. ed. [S.l.]: Elsevier, 2015.",
-    }
-]
+        // --- Variáveis Globais do Quiz ---
+        let perguntaAtual = 0;
+        let perguntasFiltradas = [];
+        let categoriaAtual = "Concepção"; // Categoria inicial
+        const usuario = new Usuario(); // Instancia o usuário
 
-let perguntaAtual = 0;
+        // --- Elementos do DOM (Cache para performance) ---
+        const elCategoriaTitulo = document.getElementById('categoria-titulo');
+        const elIdQuestao = document.getElementById('id-questao');
+        const elPerguntaTexto = document.getElementById('pergunta-texto');
+        const elPerguntaImagem = document.getElementById('pergunta-imagem');
+        const elRespostasContainer = document.getElementById('respostas-container');
+        const elReferencia = document.getElementById('referencia-questao');
+        const elQuizSection = document.getElementById('quiz-section');
+        const elMainContent = document.querySelector('.main-content');
+        const elPontuacao = document.getElementById('pontuacao');
+        const elAcertosNum = document.getElementById('acertos-numero');
+        const elErrosNum = document.getElementById('erros-numero');
 
-function carregarPergunta() {
-    const pergunta = perguntas[perguntaAtual];
-    const imagem = document.querySelector(".image-question-wrap img");
-    const respostas = document.querySelectorAll(".answer");
-    const perguntaTexto = document.getElementById("pergunta-texto");
-    const id_questao = document.getElementById('id-questao');
-    const referencia = document.getElementById("referencia-questao")
 
-    id_questao.innerHTML = perguntas[perguntaAtual].id;
-    perguntaTexto.innerText = pergunta.pergunta;
-    imagem.src = pergunta.imagem;
-    referencia.innerHTML = perguntas[perguntaAtual].referencia
+        // --- Funções do Quiz ---
 
-    respostas.forEach((resposta, index) => {
-        resposta.innerText = pergunta.respostas[index];
-        resposta.onclick = () => verificarResposta(resposta);
-    });
-}
+        function selecionarCategoria(categoria) {
+            console.log("Selecionando categoria:", categoria);
+            categoriaAtual = categoria;
+            perguntasFiltradas = perguntas.filter(p => p.categoria === categoria);
+            perguntaAtual = 0;
+            usuario.resetarContadores(); // Reseta acertos/erros ao mudar categoria
+            atualizar_pontuacao(); // Atualiza a exibição da pontuação zerada
 
-function verificarResposta(elemento) {
-    const resposta = elemento.innerText;
-    const pergunta = perguntas[perguntaAtual];
+            // Remove mensagem final anterior, se houver
+            const finalMessage = document.getElementById('final-message');
+            if(finalMessage) {
+                finalMessage.remove();
+            }
 
-    if (resposta === pergunta.correta) {
-        elemento.classList.add("correct");
-        usuario.acertos += 1;
-    } else {
-        elemento.classList.add("incorrect");
-        usuario.erros += 1;
-    }
+            if (perguntasFiltradas.length > 0) {
+                elCategoriaTitulo.innerText = categoria;
+                elQuizSection.style.display = 'flex'; // Garante que a seção esteja visível
+                carregarPergunta();
+            } else {
+                elQuizSection.style.display = 'none'; // Esconde a seção de quiz
+                mostrarMensagem(`Nenhuma pergunta encontrada para ${categoria}.`);
+                console.log("Nenhuma pergunta para esta categoria:", categoria);
+            }
+        }
 
-    usuario.atualizar_pontos();
-    atualizar_pontuacao();
-    setTimeout(() => {
-        elemento.classList.remove("correct", "incorrect");
-        proximaPergunta();
-    }, 700); // Tempo para mostrar feedback antes de mudar a pergunta
-}
+        function carregarPergunta() {
+            if (perguntaAtual >= perguntasFiltradas.length) {
+                mostrarResultadoFinal();
+                return;
+            }
 
-function proximaPergunta() {
-    perguntaAtual += 1;
-    if (perguntaAtual < perguntas.length) {
-        carregarPergunta();
-    } else {
-        document.querySelector(".main-content").innerHTML = `<h2>Quiz finalizado! Sua pontuação final é: ${usuario.pontos}</h2>`;
-        // Aqui você pode reiniciar o quiz ou mostrar um resumo dos acertos/erros.
-    }
-}
+            const pergunta = perguntasFiltradas[perguntaAtual];
 
-let usuario = new Usuario();
+            elCategoriaTitulo.innerText = categoriaAtual; // Garante que o título está correto
+            // MODIFICAÇÃO AQUI: Usa o índice atual + 1 para a numeração da questão na categoria
+            elIdQuestao.innerText = perguntaAtual + 1;
+            elPerguntaTexto.innerText = pergunta.pergunta;
+            elReferencia.innerText = `Referência: ${pergunta.referencia}`;
 
-function atualizar_pontuacao() {
-    let pontuacao = document.getElementById('pontuacao');
-    pontuacao.innerHTML = usuario.pontos;
-    let erros = document.getElementById('erros-numero');
-    erros.innerHTML = usuario.erros;
-    let acertos = document.getElementById('acertos-numero');
-    acertos.innerHTML = usuario.acertos;
+            // Imagem
+            if (pergunta.imagem && pergunta.imagem.trim() !== "") {
+                elPerguntaImagem.src = pergunta.imagem;
+                elPerguntaImagem.alt = `Imagem para a questão ${perguntaAtual + 1} de ${categoriaAtual}`; // Alt text mais descritivo
+                elPerguntaImagem.style.display = 'block';
+            } else {
+                elPerguntaImagem.style.display = 'none';
+                elPerguntaImagem.src = "";
+                elPerguntaImagem.alt = "";
+            }
 
-}
+            // Respostas
+            elRespostasContainer.innerHTML = ''; // Limpa respostas anteriores
+            pergunta.respostas.forEach((respostaTexto) => {
+                const p = document.createElement('p');
+                p.classList.add('answer');
+                p.innerText = respostaTexto;
+                // Usar função anônima para garantir que 'p' e 'pergunta' corretos sejam passados
+                p.onclick = () => verificarResposta(p, pergunta);
+                elRespostasContainer.appendChild(p);
+            });
+        }
 
-carregarPergunta();
+        function verificarResposta(elementoClicado, pergunta) {
+            const respostaSelecionada = elementoClicado.innerText;
+            const allAnswers = elRespostasContainer.querySelectorAll('.answer');
+
+            // Desabilita cliques futuros nas respostas desta pergunta
+            allAnswers.forEach(ans => ans.onclick = null);
+
+            if (respostaSelecionada === pergunta.correta) {
+                elementoClicado.classList.add("correct");
+                usuario.acertos += 1; // Setter atualiza a pontuação
+            } else {
+                elementoClicado.classList.add("incorrect");
+                usuario.erros += 1; // Setter atualiza a pontuação
+                // Mostra a correta
+                allAnswers.forEach(ans => {
+                    if (ans.innerText === pergunta.correta) {
+                        ans.classList.add('correct');
+                    }
+                });
+            }
+
+            atualizar_pontuacao(); // Atualiza a exibição da pontuação
+
+            setTimeout(() => {
+                proximaPergunta();
+            }, 1500); // Tempo para ver o feedback
+        }
+
+        function proximaPergunta() {
+            perguntaAtual++;
+            if (perguntaAtual < perguntasFiltradas.length) {
+                carregarPergunta();
+            } else {
+                mostrarResultadoFinal();
+            }
+        }
+
+        function mostrarResultadoFinal() {
+            elQuizSection.style.display = 'none';
+            mostrarMensagem(`Quiz de ${categoriaAtual} finalizado! Sua pontuação final é: ${usuario.pontos}`);
+             // Aqui você pode adicionar botões para reiniciar ou escolher outra categoria
+             // Ex: addRestartButton();
+        }
+
+        function mostrarMensagem(texto) {
+             // Remove mensagem anterior, se houver
+            const existingMessage = document.getElementById('final-message');
+            if(existingMessage) {
+                existingMessage.remove();
+            }
+             // Cria e adiciona nova mensagem
+            const finalMessage = document.createElement('h2');
+            finalMessage.id = 'final-message';
+            finalMessage.textContent = texto;
+            finalMessage.style.textAlign = 'center'; // Centraliza a mensagem
+            elMainContent.appendChild(finalMessage);
+        }
+
+        function atualizar_pontuacao() {
+            elPontuacao.innerText = usuario.pontos;
+            elAcertosNum.innerText = usuario.acertos;
+            elErrosNum.innerText = usuario.erros;
+        }
+
+        // --- Inicialização e Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Listeners para os links de navegação
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault(); // Previne navegação padrão
+                    const categoria = event.target.innerText;
+                    selecionarCategoria(categoria);
+                });
+            });
+
+            // Carrega a categoria inicial
+            selecionarCategoria(categoriaAtual);
+        });
+
     </script>
 </body>
-
 </html>

@@ -122,8 +122,8 @@ main {
 
 .main-section {
     flex-grow: 1;
-    display: flex; /* Alterado aqui */
-    flex-direction: column; /* Alterado aqui */
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -131,13 +131,15 @@ main {
 #inicio-section {
      padding: 40px;
      background-color: #f1f3f5;
-     /* display: flex; herdado */
-     justify-content: center; /* Centraliza .inicio-content */
-     align-items: center; /* Centraliza .inicio-content */
+     /* display: flex; herdado de .main-section */
+     /* flex-direction: column; herdado de .main-section */
+     justify-content: center; /* <<-- GARANTE Centralização Vertical */
+     align-items: center;    /* <<-- GARANTE Centralização Horizontal */
 }
 #inicio-section .inicio-content {
     max-width: 800px;
-    /* margin: auto; Removido, flex no pai centraliza */
+    width: 90%; /* Adiciona largura relativa para telas menores */
+    /* margin: auto; <<-- REMOVIDO para permitir centralização pelo flex pai */
     background-color: #ffffff;
     padding: 30px;
     border-radius: 8px;
@@ -160,7 +162,7 @@ main {
 #questoes-section {
     /* flex-grow: 1; herdado */
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* <<-- Redefine para Row aqui */
 }
 
 
@@ -308,7 +310,7 @@ aside p {
      flex-direction: column;
      gap: 20px;
      flex-grow: 1;
-     display: flex; /* Garantir flex aqui */
+     display: flex;
  }
 
 /* Barra de Progresso */
@@ -388,26 +390,23 @@ aside p {
 /* Mensagem de Aviso (dentro de #aviso-container) */
 #aviso-container {
     width: 100%;
-    flex-grow: 1; /* Ocupa espaço vertical */
-    display: block; /* <<-- ALTERADO para block */
-    /* justify-content, align-items Removidos */
-    padding: 0; /* Removido padding geral, colocar no filho se necessário */
-    margin-top: 20px; /* <<-- ADICIONADO espaço acima */
+    flex-grow: 1;
+    display: block;
+    padding: 0;
+    margin-top: 20px;
     flex-shrink: 0;
 }
 .aviso-mensagem {
      text-align: center;
-     padding: 25px; /* Aumentado padding interno da mensagem */
-     /* margin-top: 20px; Removido */
-     color: #495057; /* Cor de texto um pouco mais escura */
+     padding: 25px;
+     color: #495057;
      font-size: 1.1rem;
-     font-style: normal; /* Retirado itálico */
-     background-color: #ffffff; /* Fundo branco como o filtro */
-     border-radius: 8px; /* Mesma borda do filtro */
-     border: 1px solid #dee2e6; /* Borda igual filtro */
-     box-shadow: 0 3px 8px rgba(0,0,0,0.04); /* Sombra igual filtro */
-     width: 100%; /* <<-- ADICIONADO para garantir largura total */
-     /* max-width: 600px; <<-- REMOVIDO -->> */
+     font-style: normal;
+     background-color: #ffffff;
+     border-radius: 8px;
+     border: 1px solid #dee2e6;
+     box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+     width: 100%;
 }
 
 
@@ -437,7 +436,7 @@ footer a:hover { color: #ffffff; }
      h1.title-header { font-size: 1.8rem; }
      h2 { font-size: 1.7rem; }
      #inicio-section { padding: 30px; }
-     #inicio-section .inicio-content { padding: 25px; margin: auto 0; }
+     #inicio-section .inicio-content { padding: 25px; width: 90%; /* Mantém largura relativa */ }
 
     #questoes-section {
         flex-direction: column;
@@ -467,7 +466,7 @@ footer a:hover { color: #ffffff; }
     .filtro-checkboxes { gap: 10px 8px; }
     .checkbox-item label { font-size: 0.85rem; padding: 7px 15px; }
 
-    #aviso-container { margin-top: 15px; } /* Ajuste margem mobile */
+    #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 20px; }
 
     #quiz-section { flex-grow: 1; }
@@ -488,7 +487,7 @@ footer a:hover { color: #ffffff; }
     .about-link { font-size: 0.9rem; }
     h2 { font-size: 1.5rem; }
     #inicio-section { padding: 20px 15px; }
-    #inicio-section .inicio-content { padding: 20px; }
+    #inicio-section .inicio-content { padding: 20px; width: 95%; /* Ajusta largura mobile */ }
 
     .navbar { padding: 0 5px; }
     .nav-link { font-size: 0.85rem; padding: 10px 12px; }

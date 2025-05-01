@@ -29,11 +29,11 @@
 
     <main>
         <section id="inicio-section" class="main-section">
-             <div class="inicio-content">
+            <div class="inicio-content">
                 <h2>Bem-vindo ao Quiz Interativo de Histologia!</h2>
                 <p>Navegue até a seção "Questões" para testar seus conhecimentos.</p>
                 <p>Lá, você poderá escolher uma ou mais categorias ou responder a perguntas de todas elas.</p>
-                <p>Sua pontuação será exibida ao lado. Boa sorte!</p>
+                <p>Sua pontuação será exibida ao lado e um mapa de questões aparecerá durante o quiz. Boa sorte!</p>
             </div>
         </section>
 
@@ -84,18 +84,22 @@
                             <input type="checkbox" id="cat-funcoes" name="categoria" value="Funções" checked>
                             <label for="cat-funcoes">Funções</label>
                         </div>
-                        </div>
+                    </div>
                 </div>
-                <div id="aviso-container">
-                     <p class="aviso-mensagem">Selecione pelo menos uma categoria para começar o quiz.</p>
+                <div id="aviso-container" style="display: none;">
+                    <p class="aviso-mensagem">Selecione pelo menos uma categoria para começar o quiz.</p>
                 </div>
 
                 <section id="quiz-section" style="display: none;">
-                    <div id="progress-container">
+                    <div id="progress-container" style="display: none;">
                         <div id="progress-bar-fill"></div>
                         <span id="progress-text">0 / 0</span>
                     </div>
+
+                    <div id="question-grid-container" style="display: none;">
+                    </div>
                     <h2><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+
                     <div class="question-wrap">
                         <div class="question-text">
                             <p id="pergunta-texto">Carregando pergunta...</p>
@@ -143,7 +147,7 @@
             atualizar_pontos() { this._pontos = (15 * this._acertos) - (5 * this._erros); if (this._pontos < 0) this._pontos = 0; }
         }
 
-        // --- Array de Perguntas (Usando 'categorias' como array) ---
+        // --- Array de Perguntas ---
         const perguntas = [
             // Concepção
             { id: 1, pergunta: "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?", imagem: "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1", respostas: ["Produzir testosterona", "Formar a túnica albugínea", "Fornecer sustentação e formar a barreira hematotesticular", "Participar diretamente da espermiogênese"], correta: "Fornecer sustentação e formar a barreira hematotesticular", referencia: "Gartner, 5ª ed.", categorias: ["Concepção"] },
@@ -157,7 +161,6 @@
             // Funções
             { id: 8, pergunta: "Qual a principal função do tecido epitelial de revestimento?", imagem: "", respostas: ["Contração", "Sustentação", "Proteção e Absorção", "Transmissão de impulsos"], correta: "Proteção e Absorção", referencia: "Histologia Básica", categorias: ["Funções"] },
             { id: 9, pergunta: "Os neurônios são células especializadas na função de:", imagem: "", respostas: ["Produzir hormônios", "Realizar fagocitose", "Transmitir impulsos nervosos", "Armazenar gordura"], correta: "Transmitir impulsos nervosos", referencia: "Neurociência Fundamental", categorias: ["Funções"] }
-            // Adicione mais perguntas aqui...
         ];
 
         // --- Variáveis Globais ---
@@ -169,7 +172,9 @@
         let secaoAtual = 'inicio-section';
 
         // --- Elementos do DOM ---
-        let elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elNavigationButtons, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, avisoMensagem; // Adicionado avisoMensagem
+        let elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elNavigationButtons, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, avisoMensagem;
+        // << ELEMENTO PARA A GRADE >>
+        let elQuestionGridContainer;
 
         // --- Função para Embaralhar Array (Opcional) ---
         function shuffleArray(array) {
@@ -200,16 +205,16 @@
             elProgressContainer = document.getElementById('progress-container');
             filtroCheckboxesContainer = document.querySelector('.filtro-checkboxes');
             avisoContainer = document.getElementById('aviso-container');
-            avisoMensagem = avisoContainer ? avisoContainer.querySelector('.aviso-mensagem') : null; // Pega o parágrafo dentro do container
+            avisoMensagem = avisoContainer ? avisoContainer.querySelector('.aviso-mensagem') : null;
+            // << CACHE DO CONTAINER DA GRADE (agora em #quiz-section) >>
+            elQuestionGridContainer = document.getElementById('question-grid-container');
 
             // Validação essencial
-            const elementos = { elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, /* elNavigationButtons pode ser null inicialmente */ elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, avisoMensagem };
+            const elementos = { elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, /* elNavigationButtons pode ser null */ elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, avisoMensagem, elQuestionGridContainer }; // Mantém validação
             for (const key in elementos) {
-                // Permitir null para elNavigationButtons
                 if (!elementos[key] && key !== 'elNavigationButtons') {
                     console.error(`Erro Crítico: Elemento ${key} não encontrado no DOM! Verifique IDs/classes no HTML.`);
-                    // alert(`Erro crítico: Elemento essencial "${key}" não encontrado.`); // Comentar se for muito chato
-                    // return false; // Poderia parar a inicialização
+                    // return false;
                 }
             }
             return true;
@@ -218,31 +223,29 @@
         // --- Funções para Mostrar/Limpar Avisos ---
         function mostrarAviso(texto) {
             if (!avisoContainer || !avisoMensagem) return;
-            avisoMensagem.textContent = texto; // Atualiza o texto do parágrafo existente
-            avisoContainer.style.display = 'block'; // Mostra o container (que agora é block por padrão)
+            avisoMensagem.textContent = texto;
+            avisoContainer.style.display = 'block';
         }
         function limparAviso() {
             if (avisoContainer) {
-                 avisoContainer.style.display = 'none'; // Apenas esconde o container
+                avisoContainer.style.display = 'none';
             }
         }
 
         // --- Função para Atualizar Barra de Progresso ---
         function atualizarBarraProgresso() {
-             if (!elProgressContainer || !elProgressBarFill || !elProgressText || !perguntasFiltradas) {
+            if (!elProgressContainer || !elProgressBarFill || !elProgressText || !perguntasFiltradas) {
                 if (elProgressContainer) elProgressContainer.style.display = 'none';
                 return;
             }
             if (perguntasFiltradas.length > 0) {
-                // Mostra a barra se houver perguntas filtradas
-                elProgressContainer.style.display = 'block'; // Mudar para 'flex' ou 'block' dependendo do CSS
+                elProgressContainer.style.display = 'block';
                 const totalPerguntas = perguntasFiltradas.length;
                 const numeroQuestaoAtualExibicao = Math.min(perguntaAtual + 1, totalPerguntas);
                 const progressoPercentual = totalPerguntas > 0 ? (numeroQuestaoAtualExibicao / totalPerguntas) * 100 : 0;
                 if (elProgressBarFill) elProgressBarFill.style.width = `${progressoPercentual}%`;
                 if (elProgressText) elProgressText.textContent = `${numeroQuestaoAtualExibicao} / ${totalPerguntas}`;
             } else {
-                // Esconde a barra se não houver perguntas
                 elProgressContainer.style.display = 'none';
                 if (elProgressBarFill) elProgressBarFill.style.width = `0%`;
                 if (elProgressText) elProgressText.textContent = `0 / 0`;
@@ -254,43 +257,109 @@
             document.querySelectorAll('.main-section').forEach(s => s.style.display = 'none');
             const secaoParaMostrar = document.getElementById(idSecao);
             if (secaoParaMostrar) {
-                // <<< --- CORREÇÃO APLICADA AQUI --- >>>
-                secaoParaMostrar.style.display = 'flex'; // Sempre usa flex para as seções principais
-                // <<< --- FIM DA CORREÇÃO --- >>>
-
+                secaoParaMostrar.style.display = 'flex';
                 secaoAtual = idSecao;
                 limparAviso();
 
                 if (idSecao === 'questoes-section') {
-                    // Certifica que elementos internos estão corretos
-                     if (elQuizSection) elQuizSection.style.display = 'none'; // Esconde quiz inicialmente
-                     if (elResultadoCard) elResultadoCard.style.display = 'none'; // Esconde resultado
-                     if (avisoContainer) avisoContainer.style.display = 'none'; // Esconde aviso
-                    atualizarFiltroECarregarPerguntas(); // Filtra e decide o que mostrar
+                    if (elQuizSection) elQuizSection.style.display = 'none';
+                    if (elResultadoCard) elResultadoCard.style.display = 'none';
+                    if (avisoContainer) avisoContainer.style.display = 'none';
+                    atualizarFiltroECarregarPerguntas();
                 } else {
-                    // Se for #inicio-section ou outra, garante que quiz/resultado estão escondidos
                     const secaoQuestoes = document.getElementById('questoes-section');
                     if (secaoQuestoes) {
                         const quiz = secaoQuestoes.querySelector('#quiz-section');
                         const resultado = secaoQuestoes.querySelector('.resultado-final-card');
-                        if(quiz) quiz.style.display = 'none';
-                        if(resultado) resultado.style.display = 'none';
+                        if (quiz) quiz.style.display = 'none';
+                        if (resultado) resultado.style.display = 'none';
                     }
-                     if (avisoContainer) avisoContainer.style.display = 'none'; // Esconde aviso ao ir para início
+                    if (avisoContainer) avisoContainer.style.display = 'none';
+                    // Esconde a grade se sair da seção de questões
+                    if (elQuestionGridContainer) elQuestionGridContainer.style.display = 'none';
                 }
             } else { console.error(`Seção ${idSecao} não encontrada.`); }
         }
 
+
+        // --- FUNÇÃO PARA CRIAR A GRADE DE QUESTÕES ---
+        function criarGridQuestoes(totalQuestoes) {
+            if (!elQuestionGridContainer) {
+                console.warn("Container da grade não encontrado ao tentar criar grid.");
+                return;
+            }
+            elQuestionGridContainer.innerHTML = '';
+
+            if (totalQuestoes === 0) {
+                elQuestionGridContainer.style.display = 'none';
+                return;
+            } else {
+                elQuestionGridContainer.style.display = 'grid';
+            }
+
+            for (let i = 0; i < totalQuestoes; i++) {
+                const gridItem = document.createElement('button');
+                gridItem.classList.add('grid-item');
+                gridItem.textContent = i + 1;
+                gridItem.dataset.index = i;
+                gridItem.setAttribute('aria-label', `Ir para questão ${i + 1}`);
+                gridItem.onclick = () => irParaQuestao(i);
+                elQuestionGridContainer.appendChild(gridItem);
+            }
+            atualizarGridQuestoes(perguntaAtual);
+        }
+
+        // --- FUNÇÃO PARA ATUALIZAR A GRADE DE QUESTÕES ---
+        function atualizarGridQuestoes(indiceAtual) {
+            if (!elQuestionGridContainer || !perguntasFiltradas) return;
+            const items = elQuestionGridContainer.querySelectorAll('.grid-item');
+
+            items.forEach(item => {
+                const itemIndex = parseInt(item.dataset.index, 10);
+                if (isNaN(itemIndex) || itemIndex < 0 || itemIndex >= perguntasFiltradas.length) {
+                    //console.warn(`Índice inválido ${itemIndex} ou fora dos limites no grid.`); // Silenciado
+                    return;
+                }
+
+                const pergunta = perguntasFiltradas[itemIndex];
+
+                item.classList.remove('grid-item--current', 'grid-item--correct', 'grid-item--incorrect');
+
+                if (pergunta && pergunta.hasOwnProperty('respostaDada')) {
+                    if (pergunta.respostaDada === pergunta.correta) {
+                        item.classList.add('grid-item--correct');
+                    } else {
+                        item.classList.add('grid-item--incorrect');
+                    }
+                }
+
+                if (itemIndex === indiceAtual) {
+                    item.classList.add('grid-item--current');
+                }
+            });
+        }
+
+        // --- FUNÇÃO PARA NAVEGAR VIA GRADE ---
+        function irParaQuestao(indice) {
+            clearTimeout(autoAvancoTimeoutId);
+            autoAvancoTimeoutId = null;
+            if (perguntasFiltradas && indice >= 0 && indice < perguntasFiltradas.length) {
+                perguntaAtual = indice;
+                carregarPergunta();
+            } else {
+                console.error(`Tentativa de ir para questão inválida: índice ${indice}`);
+            }
+        }
 
         // --- Função Central: Atualiza Filtro e Carrega Perguntas ---
         function atualizarFiltroECarregarPerguntas() {
             clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
             perguntas.forEach(p => delete p.respostaDada);
-            limparAviso(); // Esconde o container de aviso
+            limparAviso();
 
             categoriasSelecionadas = [];
-            const checkboxesCategorias = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
+            const checkboxesCategorias = filtroCheckboxesContainer ? filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])') : [];
             checkboxesCategorias.forEach(cb => {
                 if (cb.checked) {
                     categoriasSelecionadas.push(cb.value);
@@ -302,7 +371,6 @@
                 perguntasFiltradas = perguntas.filter(p =>
                     p.categorias && p.categorias.some(cat => categoriasSelecionadas.includes(cat))
                 );
-                // shuffleArray(perguntasFiltradas);
             }
 
             perguntaAtual = 0;
@@ -310,54 +378,56 @@
             atualizar_pontuacao();
             atualizarBarraProgresso();
 
+            // << CRIA OU LIMPA A GRADE AQUI (na nova posição) >>
+            criarGridQuestoes(perguntasFiltradas.length);
+
             if (elResultadoCard) elResultadoCard.style.display = 'none';
-            if (elQuizSection) elQuizSection.style.display = 'none'; // Esconde quiz por padrão
+            if (elQuizSection) elQuizSection.style.display = 'none';
 
             if (perguntasFiltradas.length > 0) {
                 if (elQuizSection) {
-                    elQuizSection.style.display = 'flex'; // Mostra a seção do quiz (como flex)
+                    elQuizSection.style.display = 'flex';
                     carregarPergunta();
                 } else { console.error("Erro crítico: Elemento #quiz-section não encontrado."); }
-                 if (avisoContainer) avisoContainer.style.display = 'none'; // Garante que aviso está escondido
+                if (avisoContainer) avisoContainer.style.display = 'none';
             } else {
-                // Se NÃO houver perguntas, mostra o aviso
+                // A grade já foi limpa/escondida por criarGridQuestoes(0)
                 if (categoriasSelecionadas.length > 0) {
                     mostrarAviso(`Nenhuma pergunta encontrada para a(s) categoria(s) selecionada(s).`);
                 } else {
                     mostrarAviso(`Selecione pelo menos uma categoria para começar o quiz.`);
                 }
-                if (elQuizSection) elQuizSection.style.display = 'none'; // Garante quiz escondido
+                if (elQuizSection) elQuizSection.style.display = 'none';
             }
         }
 
 
         // --- Função para Carregar Pergunta ---
         function carregarPergunta() {
-             if (!elQuizSection || !elRespostasContainer || !elNavigationButtons) {
-                // Validar se elNavigationButtons existe antes de tentar acessar propriedades
-                if(!elNavigationButtons) {
-                    const navButtonsContainer = elQuizSection ? elQuizSection.querySelector('.navigation-buttons') : null;
-                    if(navButtonsContainer) elNavigationButtons = navButtonsContainer;
-                    else {
-                         console.error("Erro crítico: .navigation-buttons não encontrado dentro de #quiz-section.");
-                         mostrarAviso("Erro ao carregar a estrutura do quiz.");
-                         return;
-                    }
+            if (!elQuizSection || !elRespostasContainer) {
+                console.error("Erro crítico ao carregar pergunta."); return;
+            }
+            // Busca botões de navegação se não cacheados
+            if (!elNavigationButtons && elQuizSection) {
+                elNavigationButtons = elQuizSection.querySelector('.navigation-buttons');
+                if (elNavigationButtons) {
+                    elPrevBtn = elNavigationButtons.querySelector('#prev-btn');
+                    elNextBtn = elNavigationButtons.querySelector('#next-btn');
+                } else {
+                    console.warn("Aviso: .navigation-buttons não encontrado ao carregar pergunta.");
                 }
-                 if (!elRespostasContainer) { // Checagem redundante, mas segura
-                     console.error("Erro crítico: #respostas-container não encontrado.");
-                     mostrarAviso("Erro ao carregar a estrutura do quiz.");
-                     return;
-                 }
-             }
+            }
 
-             if (elQuizSection.style.display === 'none') {
+            if (elQuizSection.style.display === 'none') {
                 elQuizSection.style.display = 'flex';
             }
 
             clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
             atualizarBarraProgresso();
+
+            // << ATUALIZA A GRADE AO CARREGAR >>
+            atualizarGridQuestoes(perguntaAtual);
 
             if (perguntaAtual >= perguntasFiltradas.length) {
                 mostrarResultadoFinal();
@@ -373,13 +443,13 @@
             }
 
             const jaRespondida = pergunta.hasOwnProperty('respostaDada');
-            elRespostasContainer.innerHTML = '';
+            if (elRespostasContainer) elRespostasContainer.innerHTML = '';
 
             let tituloCat = "Questão";
             if (pergunta.categorias && pergunta.categorias.length > 0) {
                 tituloCat = pergunta.categorias[0];
             } else if (categoriasSelecionadas.length === 1) {
-                 tituloCat = categoriasSelecionadas[0];
+                tituloCat = categoriasSelecionadas[0];
             }
             if (elCategoriaTitulo) elCategoriaTitulo.innerText = tituloCat;
             if (elIdQuestao) elIdQuestao.innerText = perguntaAtual + 1;
@@ -402,7 +472,7 @@
                 }
             }
 
-            if (pergunta.respostas && Array.isArray(pergunta.respostas)) {
+            if (pergunta.respostas && Array.isArray(pergunta.respostas) && elRespostasContainer) {
                 pergunta.respostas.forEach((respostaTexto) => {
                     const p = document.createElement('p');
                     p.classList.add('answer');
@@ -416,30 +486,28 @@
                     } else {
                         p.onclick = () => verificarResposta(p, pergunta);
                     }
-                    if (elRespostasContainer) {
-                        elRespostasContainer.appendChild(p);
-                    } else {
-                        console.error("Erro crítico: #respostas-container não encontrado!");
-                    }
+                    elRespostasContainer.appendChild(p);
                 });
             } else {
-                console.error(`Pergunta ID ${pergunta.id} não possui array de respostas válido.`);
+                console.error(`Pergunta ID ${pergunta.id} não possui array de respostas válido ou container não existe.`);
                 if (elRespostasContainer) {
                     elRespostasContainer.innerHTML = '<p class="aviso-mensagem erro">Erro: Opções de resposta não encontradas.</p>';
                 }
             }
 
-            if (elNavigationButtons) elNavigationButtons.style.display = 'flex'; // Mostra botões
-            if (elPrevBtn) elPrevBtn.disabled = perguntaAtual === 0;
-            if (elNextBtn) {
-                elNextBtn.disabled = false;
-                elNextBtn.innerText = (perguntaAtual === perguntasFiltradas.length - 1) ? 'Ver Resultado' : 'Próxima';
+            if (elNavigationButtons) {
+                elNavigationButtons.style.display = 'flex';
+                if (elPrevBtn) elPrevBtn.disabled = perguntaAtual === 0;
+                if (elNextBtn) {
+                    elNextBtn.disabled = false;
+                    elNextBtn.innerText = (perguntaAtual === perguntasFiltradas.length - 1) ? 'Ver Resultado' : 'Próxima';
+                }
             }
         }
 
         // --- Função para Verificar Resposta ---
         function verificarResposta(elementoClicado, pergunta) {
-            if (pergunta.hasOwnProperty('respostaDada') || !elementoClicado) return;
+            if (pergunta.hasOwnProperty('respostaDada') || !elementoClicado || !elRespostasContainer) return;
             clearTimeout(autoAvancoTimeoutId);
 
             const respostaSelecionada = elementoClicado.textContent;
@@ -464,6 +532,10 @@
                 });
             }
             atualizar_pontuacao();
+
+            // << ATUALIZA A GRADE APÓS RESPONDER >>
+            atualizarGridQuestoes(perguntaAtual);
+
             autoAvancoTimeoutId = setTimeout(proximaPergunta, 1500);
         }
 
@@ -487,10 +559,14 @@
             clearTimeout(autoAvancoTimeoutId); autoAvancoTimeoutId = null;
             if (elQuizSection) elQuizSection.style.display = 'none';
             if (elProgressContainer) elProgressContainer.style.display = 'none';
-            if (avisoContainer) avisoContainer.style.display = 'none'; // Esconde aviso ao mostrar resultado
+            if (avisoContainer) avisoContainer.style.display = 'none';
+            if (elQuestionGridContainer) elQuestionGridContainer.style.display = 'none'; // Esconde a grade no final
+
+            // << ATUALIZA A GRADE PARA REMOVER O DESTAQUE ATUAL >>
+            atualizarGridQuestoes(-1);
 
             if (elResultadoCard) {
-                elResultadoCard.style.display = 'block'; // Mostra o card
+                elResultadoCard.style.display = 'block';
                 preencherMensagemFinal();
             } else {
                 mostrarAviso(`Quiz Concluído! Pontuação Final: ${usuario.pontos}, Acertos: ${usuario.acertos}, Erros: ${usuario.erros}`);
@@ -506,6 +582,7 @@
             const pont = elResultadoCard.querySelector('.resultado-final-pontuacao .pontos-valor');
             const acert = elResultadoCard.querySelector('.resultado-final-detalhes .acertos-valor');
             const err = elResultadoCard.querySelector('.resultado-final-detalhes .erros-valor');
+            const outrosCheckboxes = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
 
             let tituloFinal = "Quiz Concluído!";
             const categoriasAtivas = [];
@@ -513,8 +590,13 @@
             checkboxesAtivos.forEach(cb => { categoriasAtivas.push(cb.value); });
             const cbTodas = filtroCheckboxesContainer.querySelector('input[value="Todas"]');
 
-            if (categoriasAtivas.length === 1) { tituloFinal = `Quiz de ${categoriasAtivas[0]} Concluído!`; }
-            else if (cbTodas && cbTodas.checked) { tituloFinal = `Quiz de Todas as Categorias Concluído!`; }
+            if (categoriasAtivas.length === 1) {
+                tituloFinal = `Quiz de ${categoriasAtivas[0]} Concluído!`;
+            } else if (cbTodas && cbTodas.checked && outrosCheckboxes && categoriasAtivas.length === outrosCheckboxes.length) {
+                tituloFinal = `Quiz de Todas as Categorias Concluído!`;
+            } else if (categoriasAtivas.length > 1) {
+                tituloFinal = `Quiz de Múltiplas Categorias Concluído!`;
+            }
 
             if (tit) tit.textContent = tituloFinal;
             if (pont) pont.textContent = usuario.pontos;
@@ -552,13 +634,13 @@
             });
 
             // Listener dos Checkboxes de Filtro
-            if (filtroCheckboxesContainer) {
-                const cbTodas = filtroCheckboxesContainer.querySelector('input[value="Todas"]');
-                const outrosCheckboxes = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
+            const cbTodas = filtroCheckboxesContainer ? filtroCheckboxesContainer.querySelector('input[value="Todas"]') : null;
+            const outrosCheckboxes = filtroCheckboxesContainer ? filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])') : null;
 
+            if (filtroCheckboxesContainer && cbTodas && outrosCheckboxes) {
                 filtroCheckboxesContainer.addEventListener('change', (event) => {
                     const changedCheckbox = event.target;
-                    if (changedCheckbox.type !== 'checkbox') return; // Garante que é um checkbox
+                    if (changedCheckbox.type !== 'checkbox') return;
 
                     if (changedCheckbox === cbTodas) {
                         outrosCheckboxes.forEach(cb => { cb.checked = cbTodas.checked; });
@@ -567,16 +649,14 @@
                         outrosCheckboxes.forEach(cb => { if (!cb.checked) { todosMarcados = false; } });
                         if (cbTodas) { cbTodas.checked = todosMarcados; }
                     }
-                    atualizarFiltroECarregarPerguntas(); // Atualiza após qualquer mudança
+                    atualizarFiltroECarregarPerguntas();
                 });
 
-                 // Garante que o estado inicial seja aplicado ao carregar a seção de questões
-                 if(secaoAtual === 'questoes-section') {
+                if (secaoAtual === 'questoes-section') {
                     atualizarFiltroECarregarPerguntas();
-                 }
+                }
 
-
-            } else { console.error("FATAL: .filtro-checkboxes não encontrado!"); }
+            } else { console.error("FATAL: Elementos do filtro não encontrados!"); }
 
             // Listeners dos botões de navegação
             if (elPrevBtn) elPrevBtn.addEventListener('click', perguntaAnterior);
@@ -585,9 +665,15 @@
             // Define e mostra a seção inicial
             const linkInicial = document.querySelector('.navbar .nav-link.active');
             const secaoInicialId = linkInicial ? linkInicial.dataset.section : 'inicio-section';
-            mostrarSecao(secaoInicialId || 'inicio-section'); // Mostra a seção correta ao carregar
+            mostrarSecao(secaoInicialId || 'inicio-section');
+
+            // Cria a grade vazia inicialmente se não começar na seção de questões
+            if (secaoAtual !== 'questoes-section') {
+                criarGridQuestoes(0); // Garante que a grade esteja escondida
+            }
         });
     </script>
 
 </body>
+
 </html>

@@ -7,148 +7,146 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 16px; /* Definir um tamanho base pode ajudar na consistência */
+    font-size: 16px;
 }
 
 body {
-    font-family: "Roboto", sans-serif; /* Fonte padrão para o corpo */
-    color: #333; /* Cor de texto padrão um pouco mais suave que preto */
-    background-color: #f8f9fa; /* Fundo global levemente acinzentado */
-    line-height: 1.5; /* Altura de linha padrão para melhor legibilidade */
+    font-family: "Roboto", sans-serif;
+    color: #343a40; /* Cor de texto padrão ligeiramente mais escura */
+    background-color: #f8f9fa;
+    line-height: 1.6; /* Aumentado ligeiramente para melhor leitura */
 }
 
 /* Cabeçalho */
 header {
-    height: 70px;
+    height: 75px; /* Ligeiramente mais alto */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff; /* Fundo branco para contraste */
-    padding: 0 30px;
-    gap: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil */
-    border-bottom: 1px solid #e9ecef; /* Linha divisória leve */
+    background-color: #ffffff;
+    padding: 0 40px; /* Mais padding horizontal */
+    gap: 25px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06); /* Sombra um pouco mais pronunciada */
+    border-bottom: 1px solid #e9ecef;
 }
 
-h1.title-header { /* Seletor mais específico */
+h1.title-header {
     order: 2;
-    font: normal 600 2.1rem "Montserrat", sans-serif; /* Tamanho ligeiramente ajustado */
-    color: #114a9c; /* Azul um pouco menos saturado */
-    text-shadow: none; /* Removido text-shadow que pode ser pesado */
+    font: normal 700 2.2rem "Montserrat", sans-serif; /* Peso e tamanho ajustados (Sugestão 2) */
+    color: #0d3b66; /* Azul um pouco mais escuro e dessaturado (Sugestão 1) */
 }
 
 header div {
-    order: 3
+    order: 3;
 }
 
 .about-link {
     order: 1;
-    font: normal 400 1rem "Montserrat", sans-serif; /* Tamanho ajustado */
+    font: normal 500 1rem "Montserrat", sans-serif; /* Peso ajustado */
     text-decoration: none;
-    color: #114a9c; /* Mesmo azul do título */
-    transition: color 0.2s ease; /* Transição suave */
+    color: #0d3b66; /* Mesmo azul do título (Sugestão 1) */
+    transition: color 0.2s ease;
 }
 .about-link:hover {
-    color: #0b3064; /* Azul mais escuro no hover */
+    color: #1a5f9e; /* Azul mais claro no hover */
 }
 
 /* Títulos */
-h2 {
-    font: normal 600 1.8rem "Montserrat", sans-serif; /* Tamanho ajustado para hierarquia */
-    color: #114a9c;
-    margin-bottom: 15px; /* Adiciona espaço abaixo dos H2 */
+h2 { /* Estilo base para H2 - será sobrescrito no #quiz-section */
+    font: normal 600 1.9rem "Montserrat", sans-serif;
+    color: #0d3b66;
+    margin-bottom: 20px; /* Mais espaço abaixo */
 }
 
-h3 { /* Estilo base para H3 se for usar */
-    font: normal 500 1.4rem "Roboto", sans-serif;
+h3 {
+    font: normal 500 1.5rem "Roboto", sans-serif;
     color: #495057;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 /* Barra de Navegação */
 .navbar {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Sombra mais sutil */
-    padding: 0 20px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+    padding: 0 30px; /* Padding ajustado */
     display: flex;
     list-style: none;
-    background-color: #114a9c; /* Azul principal */
+    background-color: #0d3b66; /* Azul principal (Sugestão 1) */
     justify-content: flex-start;
-    margin-bottom: 0; /* Remove margem padrão da ul */
+    margin-bottom: 0;
 }
 
 .navbar > li {
-    padding: 0; /* Removido padding do li, controle no link */
+    padding: 0;
 }
 
 .nav-link {
-    display: block; /* Para que o padding funcione corretamente */
+    display: block;
     text-decoration: none;
-    font: normal 500 1rem "Montserrat", sans-serif; /* Tamanho e peso ajustados */
+    font: normal 500 1rem "Montserrat", sans-serif;
     color: white;
-    padding: 12px 20px; /* Padding ajustado */
-    border-bottom: 4px solid transparent; /* Borda transparente para espaço no hover */
-    transition: background-color 0.2s ease, border-bottom-color 0.2s ease; /* Transições */
+    padding: 15px 25px; /* Padding ajustado */
+    border-bottom: 4px solid transparent;
+    transition: background-color 0.2s ease, border-bottom-color 0.2s ease; /* (Sugestão 4) */
 }
 
 .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Fundo leve no hover */
-    border-bottom-color: #3bcf76; /* Verde para indicar hover/seleção */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: #5fda9a; /* Verde mais suave para hover (Sugestão 1) */
 }
 
 /* Estilo para link ativo (requer JS para adicionar a classe 'active') */
 .nav-link.active {
     background-color: rgba(255, 255, 255, 0.15);
-    border-bottom-color: #3bcf76; /* Mantém a cor da borda */
-    font-weight: 600; /* Destaca o texto */
+    border-bottom-color: #5fda9a;
+    font-weight: 600;
 }
 
 
 /* Conteúdo Principal e Lateral */
 main {
     display: flex;
-    min-height: calc(100vh - 70px - 60px); /* Calcula altura menos header e footer */
+    min-height: calc(100vh - 75px - 65px); /* Altura ajustada para novo header/footer */
     font-family: "Roboto", sans-serif;
 }
 
 aside {
     display: flex;
     flex-direction: column;
-    gap: 25px; /* Espaçamento ajustado */
-    padding: 30px;
-    min-width: 260px; /* Largura ligeiramente aumentada */
-    background-color: #ffffff; /* Fundo branco */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05); /* Sombra na lateral direita */
-    border-right: 1px solid #e9ecef; /* Linha divisória */
+    gap: 30px; /* Mais espaço (Sugestão 3) */
+    padding: 40px; /* Mais padding (Sugestão 3) */
+    min-width: 280px; /* Largura ligeiramente aumentada */
+    background-color: #ffffff;
+    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.05); /* Sombra mais suave (Sugestão 3) */
+    border-right: 1px solid #e9ecef;
 }
 
 .aside-title {
     text-align: center;
-    font: normal 500 1.3rem "Roboto", sans-serif; /* Tamanho ajustado */
+    font: normal 500 1.4rem "Roboto", sans-serif;
     color: #343a40;
 }
 
 aside p {
-    font: normal 400 1rem "Roboto", sans-serif; /* Tamanho ajustado */
+    font: normal 400 1rem "Roboto", sans-serif;
     color: #495057;
 }
 
 .pontuacao-wrap {
     display: flex;
-    height: 140px; /* Tamanho ajustado */
-    width: 140px;  /* Tamanho ajustado */
+    height: 150px;
+    width: 150px;
     align-self: center;
     border-radius: 50%;
-    /* Sombra mais suave */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0, 0, 0, 0.08); /* Sombra mais suave (Sugestão 3) */
     justify-content: center;
     align-items: center;
-    background-color: #3bcf76; /* Verde */
+    background-color: #5fda9a; /* Verde mais suave (Sugestão 1) */
 }
 
 #pontuacao {
-    width: 125px;  /* Tamanho ajustado */
-    height: 125px; /* Tamanho ajustado */
-    font-size: 2.8rem; /* Tamanho ajustado */
+    width: 130px;
+    height: 130px;
+    font-size: 3rem; /* Maior destaque */
     background-color: white;
     border-radius: 50%;
     display: flex;
@@ -160,222 +158,227 @@ aside p {
 
 .aside-info-wrap {
     display: flex;
-    gap: 15px; /* Espaçamento ajustado */
-    align-items: center; /* Alinha ícone e texto verticalmente */
+    gap: 18px; /* Mais espaço */
+    align-items: center;
 }
 
 .icon-wrap {
-    padding: 4px; /* Pequeno padding interno */
-    border-radius: 50%; /* Deixa o fundo do ícone redondo */
-    display: inline-flex; /* Para que o padding funcione bem */
+    padding: 5px;
+    border-radius: 50%;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
 }
 .icon-wrap.icon-correct {
-     background-color: rgba(59, 207, 118, 0.1); /* Fundo verde claro */
+     background-color: rgba(95, 218, 154, 0.15); /* Fundo verde claro (Sugestão 1) */
 }
 .icon-wrap.icon-correct svg {
-    fill: #2a9d8f; /* Cor do ícone de acerto (verde mais sóbrio) */
+    fill: #2a9d8f; /* Verde mais sóbrio */
 }
 
 .icon-wrap.icon-error {
-     background-color: rgba(220, 53, 69, 0.1); /* Fundo vermelho claro */
+     background-color: rgba(240, 87, 108, 0.1); /* Fundo vermelho claro (Sugestão 1) */
 }
 .icon-wrap.icon-error svg {
-    fill: #dc3545; /* Cor do ícone de erro (vermelho) */
+    fill: #e63946; /* Vermelho um pouco diferente (Sugestão 1) */
 }
 
 /* Conteúdo Principal do Quiz */
 .main-content {
-    padding: 30px 40px; /* Padding horizontal aumentado */
+    padding: 40px 50px; /* Mais padding (Sugestão 3) */
     width: 100%;
-    background-color: #ffffff; /* Fundo branco para a área principal */
+    background-color: #ffffff;
 }
-/* --- Estilos para Barra de Progresso --- */
+
+/* --- Estilos para Barra de Progresso (Sugestão 5) --- */
 #progress-container {
     width: 100%;
-    background-color: #e9ecef; /* Cor de fundo da barra vazia */
-    border-radius: 5px;
-    margin-bottom: 20px; /* Espaço abaixo da barra */
-    overflow: hidden; /* Para conter o border-radius da barra interna */
-    height: 10px; /* Altura da barra container */
-    position: relative; /* Para posicionar o texto se necessário */
+    background-color: #e9ecef;
+    border-radius: 25px; /* Bordas bem arredondadas */
+    margin-bottom: 25px;
+    overflow: hidden;
+    height: 12px; /* Ligeiramente mais grossa */
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Sombra interna */
 }
 
 #progress-bar-fill {
-    height: 100%; /* Ocupa toda a altura do container */
-    width: 0%; /* Começa vazia */
-    background-color: #114a9c; /* Cor de preenchimento (azul principal) */
-    border-radius: 5px; /* Mesma borda do container */
-    transition: width 0.3s ease-out; /* Transição suave */
+    height: 100%;
+    width: 0%;
+    /* Gradiente suave no preenchimento */
+    background-image: linear-gradient(to right, #1a5f9e, #0d3b66); /* (Sugestão 1) */
+    border-radius: 25px;
+    transition: width 0.4s ease-out; /* Transição mais suave */
 }
 
 #progress-text {
-    display: block; /* Para ocupar a linha abaixo (ou use float/position se preferir ao lado) */
-    text-align: right; /* Alinha o texto à direita */
-    font-size: 0.85em;
+    display: block;
+    text-align: right;
+    font-size: 0.9em;
     color: #6c757d;
-    margin-top: 5px; /* Espaço acima do texto */
-    padding-right: 5px; /* Pequeno padding para não colar na borda */
+    margin-top: 8px; /* Mais espaço */
+    padding-right: 5px;
 }
 
-/* Opcional: esconder a barra inteira quando o quiz não estiver ativo */
-#quiz-section:not([style*="display: flex"]) #progress-container {
-    display: none;
-}
-/* Ou controlar via JS como faremos abaixo */
-
+/* --- Título da Questão com Tag --- */
 #quiz-section h2 {
-    font-size: 1.6rem; /* Tamanho da fonte principal do título */
-    color: #343a40; /* Cor de texto mais neutra para o texto "- Questão X" */
-    font-weight: 500; /* Peso da fonte */
-    font-family: "Roboto", sans-serif; /* Pode usar Roboto ou manter Montserrat */
-    margin-top: 0; /* Remove margem superior padrão do h2, se houver */
-    margin-bottom: 25px; /* Espaço abaixo do título */
-    display: flex; /* Essencial para alinhar a tag e o texto */
-    align-items: center; /* Alinha verticalmente a tag e o texto */
-    gap: 10px; /* Espaço horizontal entre a tag e o texto */
-    flex-wrap: wrap; /* Permite que o texto quebre linha se não couber */
-    /* Remova ou comente outras regras de H2 que conflitem (ex: text-align, background, border-bottom) */
+    font-size: 1.7rem; /* (Sugestão 2) */
+    color: #495057; /* Cor mais neutra para o texto geral */
+    font-weight: 400; /* Peso normal para o texto */
+    font-family: "Roboto", sans-serif;
+    margin-top: 0;
+    margin-bottom: 30px; /* Mais espaço (Sugestão 3) */
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Mais espaço */
+    flex-wrap: wrap;
 }
 
-/* Estilo específico para a "Tag" da categoria (o primeiro span) */
 #quiz-section h2 #categoria-titulo {
-    display: inline-block; /* Permite aplicar padding e background */
-    background-color: #114a9c; /* Cor de fundo da tag (azul principal) */
-    color: white; /* Cor do texto da tag */
-    font-size: 0.8rem; /* Tamanho da fonte da tag (menor) */
-    font-weight: 600; /* Peso da fonte da tag */
-    font-family: "Montserrat", sans-serif; /* Fonte da tag */
-    padding: 4px 10px; /* Espaçamento interno da tag */
-    border-radius: 4px; /* Cantos arredondados da tag */
-    text-transform: uppercase; /* Texto da tag em maiúsculas */
-    letter-spacing: 0.5px; /* Espaçamento entre letras na tag */
-    white-space: nowrap; /* Evita que o texto da tag quebre linha */
+    display: inline-block;
+    background-color: #0d3b66; /* Azul principal (Sugestão 1) */
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    padding: 5px 12px;
+    border-radius: 6px; /* Bordas ligeiramente arredondadas */
+    text-transform: uppercase;
+    letter-spacing: 0.8px; /* Mais espaçamento */
+    white-space: nowrap;
 }
 
-/* Estilo específico para o número da questão (o span dentro do segundo span) */
 #quiz-section h2 #id-questao {
-   font-weight: 700; /* Deixa o número em negrito */
-   color: #343a40;; /* Cor do número (pode ser a cor principal ou outra) */
-   /* Herda o tamanho da fonte do h2 pai */
+   font-weight: 700; /* (Sugestão 2) */
+   color: #343a40;
 }
 
-
-
+/* --- Container da Pergunta --- */
 .question-wrap {
-     background-color: #f8f9fa; /* Fundo levemente diferente para destacar */
-     padding: 25px;
-     border-radius: 8px; /* Bordas arredondadas */
-     border: 1px solid #e9ecef; /* Borda leve */
+     background-color: #f8f9fa;
+     padding: 30px; /* Mais padding (Sugestão 3) */
+     border-radius: 10px; /* Bordas mais arredondadas */
+     border: 1px solid #e9ecef;
+     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); /* Sombra mais suave (Sugestão 3) */
 }
 
 .question {
     width: 100%;
-    padding: 10px 0; /* Padding vertical interno ajustado */
+    padding: 15px 0;
     display: flex;
-    flex-direction: column; /* Empilha imagem/texto e respostas */
-    gap: 25px; /* Espaço entre os elementos */
-    /* Removido justify-content e align-items que não fazem mais sentido */
+    flex-direction: column;
+    gap: 30px; /* Mais espaço (Sugestão 3) */
 }
 
 .image-question-wrap {
-    text-align: center; /* Centraliza a imagem se ela for menor que a largura */
-    margin-bottom: 15px; /* Espaço abaixo da imagem */
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .image-question-wrap > img {
-    max-width: 100%; /* Garante que a imagem não ultrapasse o contêiner */
-    height: auto; /* Mantém a proporção */
-    max-height: 400px; /* Limite de altura mantido */
-    border-radius: 4px; /* Leve arredondamento na imagem */
-    border: 1px solid #dee2e6; /* Borda sutil na imagem */
+    max-width: 100%;
+    height: auto;
+    max-height: 450px; /* Aumentado ligeiramente */
+    border-radius: 8px; /* Bordas arredondadas (Sugestão 5) */
+    border: 1px solid #dee2e6; /* Borda sutil (Sugestão 5) */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Pequena sombra na imagem */
 }
 
 .question-text {
-    flex: 1; /* Mantém, caso volte para layout lado a lado */
-    font: normal 400 1.1rem "Roboto", sans-serif; /* Peso e tamanho ajustados */
-    color: #343a40; /* Cor de texto principal */
-    margin: 0; /* Removido margem extra */
-    line-height: 1.6; /* Altura de linha para legibilidade */
+    flex: 1;
+    font: normal 400 1.15rem "Roboto", sans-serif; /* Tamanho ligeiramente maior (Sugestão 2) */
+    color: #343a40;
+    margin: 0;
+    line-height: 1.7; /* Mais espaçamento entre linhas (Sugestão 2) */
 }
 
 .question-text p {
     margin: 0;
 }
 
+/* --- Respostas --- */
 .answers-wrap {
     width: 100%;
     display: flex;
-    gap: 15px; /* Espaçamento entre respostas ajustado */
+    gap: 18px; /* Mais espaço (Sugestão 3) */
     flex-direction: column;
-    align-items: stretch; /* Garante que os botões ocupem a largura */
+    align-items: stretch;
 }
 
 .answer {
     cursor: pointer;
     color: #343a40;
-    background-color: #ffffff; /* Fundo branco para respostas */
+    background-color: #ffffff;
     width: 100%;
-    padding: 18px 25px; /* Padding ajustado */
-    /* Sombra mais suave */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-    border-radius: 8px; /* Bordas arredondadas consistentes */
-    border: 1px solid #dee2e6; /* Borda leve */
-    text-align: left; /* Garante alinhamento à esquerda */
-    font-size: 1rem;
-    transition: box-shadow 0.2s ease, transform 0.1s ease, background-color 0.2s ease, border-color 0.2s ease; /* Transições */
+    padding: 20px 30px; /* Mais padding */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05); /* Sombra atualizada (Sugestão 3) */
+    border-radius: 10px; /* Bordas mais arredondadas */
+    border: 1px solid #dee2e6;
+    text-align: left;
+    font-size: 1.05rem; /* Tamanho ligeiramente maior */
+    transition: all 0.2s ease-in-out; /* Transição suave para tudo (Sugestão 4) */
 }
 
 .answer:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08), 0 2px 5px rgba(0, 0, 0, 0.06); /* Sombra maior no hover */
-    border-color: #adb5bd; /* Borda mais visível no hover */
-    transform: translateY(-2px); /* Leve efeito de elevação */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.07); /* Sombra maior no hover */
+    border-color: #adb5bd;
+    transform: translateY(-3px); /* Efeito de elevação maior (Sugestão 4) */
+    background-color: #f8f9fa; /* Leve mudança de fundo no hover */
 }
 
 /* Estilos de Feedback para Respostas */
 .answer.correct {
-    background-color: #e6f9f0; /* Verde bem claro */
-    border-color: #2a9d8f; /* Verde mais sóbrio */
-    color: #0a4d45; /* Verde escuro para texto */
+    background-color: #e8f9f1; /* Verde bem claro (Sugestão 1) */
+    border-color: #5fda9a; /* Verde mais suave (Sugestão 1) */
+    color: #0a4d45;
     font-weight: 500;
+    transform: translateY(0); /* Reseta a elevação */
+}
+.answer.correct:hover { /* Evita efeito hover estranho na correta */
+     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
+     background-color: #e8f9f1;
 }
 
 .answer.incorrect {
-    background-color: #fceded; /* Vermelho bem claro */
-    border-color: #dc3545; /* Vermelho */
-    color: #721c24; /* Vermelho escuro para texto */
+    background-color: #fdebec; /* Vermelho bem claro (Sugestão 1) */
+    border-color: #e63946; /* Vermelho (Sugestão 1) */
+    color: #721c24;
     font-weight: 500;
+    transform: translateY(0); /* Reseta a elevação */
+}
+.answer.incorrect:hover { /* Evita efeito hover estranho na incorreta */
+     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
+     background-color: #fdebec;
 }
 
 /* Referência da questão */
 #referencia-questao {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* (Sugestão 2) */
     color: #6c757d;
-    margin-top: 10px;
+    margin-top: 15px;
     text-align: right;
 }
 
 
 /* Rodapé */
 footer {
-    font: normal 400 0.9rem "Roboto", sans-serif; /* Tamanho ajustado */
+    font: normal 400 0.9rem "Roboto", sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-color: #343a40; /* Cinza escuro */
-    color: #e9ecef; /* Cor de texto clara */
-    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05); /* Sombra sutil acima */
-    border-top: 1px solid #495057; /* Linha divisória */
-    height: 60px; /* Altura definida para cálculo do main */
+    background-color: #343a40;
+    color: #e9ecef;
+    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06);
+    border-top: 1px solid #495057;
+    height: 65px; /* Altura ajustada */
 }
 
 footer p {
     margin: 0;
 }
 
-footer a { /* Estilo para links no footer, se houver */
+footer a {
     color: #adb5bd;
     margin-left: 20px;
     text-decoration: none;
@@ -385,221 +388,216 @@ footer a:hover {
     color: #ffffff;
 }
 
-/* Estilos para mensagens dinâmicas (ex: Quiz finalizado) */
-/* --- Estilos para a Mensagem Final do Quiz --- */
-
-/* Container principal (card) da mensagem final */
+/* --- Estilos para Card de Resultado Final (Sugestão 5) --- */
 .resultado-final-card {
-    background-color: #ffffff; /* Fundo branco, como outros cards */
-    border: 1px solid #e9ecef; /* Borda leve, padrão do site */
-    border-radius: 8px;       /* Cantos arredondados */
-    padding: 30px 40px;       /* Espaçamento interno generoso */
-    margin: 40px auto;        /* Centraliza horizontalmente e adiciona margem vertical */
-    max-width: 550px;         /* Limita a largura para melhor leitura */
-    text-align: center;       /* Centraliza o texto interno */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sombra suave, similar a outros elementos */
-    animation: fadeIn 0.5s ease-out; /* Reutiliza a animação definida anteriormente */
+    background-color: #ffffff;
+    border: 1px solid #e9ecef;
+    border-radius: 12px; /* Mais arredondado */
+    padding: 40px 50px; /* Mais padding */
+    margin: 50px auto; /* Mais margem vertical */
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09); /* Sombra mais destacada */
+    animation: fadeIn 0.5s ease-out;
+    display: none; /* Escondido inicialmente */
 }
 
-/* Título da mensagem final */
 .resultado-final-titulo {
-    font-family: "Montserrat", sans-serif; /* Fonte de títulos do site */
-    font-size: 1.7rem;        /* Tamanho destacado */
-    font-weight: 600;
-    color: #114a9c;           /* Cor primária do site */
-    margin-bottom: 15px;      /* Espaço abaixo do título */
+    font-family: "Montserrat", sans-serif;
+    font-size: 2rem; /* Maior */
+    font-weight: 700; /* Mais peso */
+    color: #0d3b66; /* Azul principal */
+    margin-bottom: 20px;
 }
 
-/* Parágrafo da pontuação geral */
 .resultado-final-pontuacao {
-    font-family: "Roboto", sans-serif; /* Fonte padrão do corpo */
-    font-size: 1.15rem;       /* Tamanho confortável para leitura */
-    color: #343a40;          /* Cor de texto escura */
-    margin-bottom: 25px;      /* Mais espaço antes dos detalhes */
+    font-family: "Roboto", sans-serif;
+    font-size: 1.25rem;
+    color: #343a40;
+    margin-bottom: 30px;
 }
 
-/* Estilo específico para o valor numérico da pontuação */
 .pontos-valor {
-    font-weight: 700;          /* Negrito para destaque */
-    font-size: 1.6rem;         /* Maior que o texto ao redor */
-    color: #3bcf76;           /* Verde de sucesso, usado nos ícones de acerto */
-    margin-left: 8px;          /* Pequeno espaço antes do número */
+    font-weight: 700;
+    font-size: 2rem; /* Maior */
+    color: #5fda9a; /* Verde suave */
+    margin-left: 10px;
 }
 
-/* Container para os detalhes (acertos e erros) */
 .resultado-final-detalhes {
-    border-top: 1px solid #e9ecef; /* Linha divisória sutil */
-    margin-top: 20px;          /* Espaço acima da linha */
-    padding-top: 20px;         /* Espaço abaixo da linha */
-    display: flex;             /* Coloca acertos e erros lado a lado */
-    justify-content: space-around; /* Espaça os itens igualmente */
-    flex-wrap: wrap;           /* Permite quebrar linha em telas menores */
-    gap: 15px;                 /* Espaço entre os itens */
+    border-top: 1px solid #e9ecef;
+    margin-top: 25px;
+    padding-top: 25px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-/* Estilo para os parágrafos dentro dos detalhes */
 .resultado-final-detalhes p {
     font-family: "Roboto", sans-serif;
-    font-size: 1rem;
-    color: #495057;           /* Cinza um pouco mais claro */
-    margin-bottom: 0;          /* Remove margem inferior padrão do parágrafo */
+    font-size: 1.1rem; /* Ligeiramente maior */
+    color: #495057;
+    margin-bottom: 0;
 }
 
-/* Estilo para os valores numéricos de acertos e erros */
 .acertos-valor,
 .erros-valor {
-    font-weight: 600;          /* Negrito */
-    margin-left: 5px;          /* Pequeno espaço */
+    font-weight: 600;
+    margin-left: 8px;
 }
 
-/* Cor específica para acertos */
 .acertos-valor {
-    color: #3bcf76;           /* Verde */
+    color: #2a9d8f; /* Verde sóbrio */
 }
 
-/* Cor específica para erros */
 .erros-valor {
-    color: #dc3545;           /* Vermelho */
+    color: #e63946; /* Vermelho */
 }
 
-/* Animação de Fade In (se já não existir no seu CSS) */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(15px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- Estilos para Botões de Navegação --- */
+/* --- Estilos para Botões de Navegação Refinados (Sugestão 4) --- */
 .navigation-buttons {
-    display: flex; /* Alterado para flex para mostrar botões */
-    justify-content: space-between; /* Espaça os botões */
-    padding: 20px 0; /* Espaçamento vertical */
-    margin-top: 20px; /* Espaço acima dos botões */
-    border-top: 1px solid #e9ecef; /* Linha divisória opcional */
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 0; /* Mais padding vertical */
+    margin-top: 30px; /* Mais espaço acima */
+    border-top: 1px solid #e9ecef;
 }
 
 .navigation-buttons button {
-    padding: 12px 25px;
+    padding: 14px 32px; /* Padding ajustado para estilo pill */
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600; /* Mais destaque */
     font-family: "Montserrat", sans-serif;
-    border-radius: 6px;
-    border: 1px solid transparent;
+    border-radius: 25px; /* Estilo "Pill" */
+    border: none; /* Remover borda padrão */
     cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    transition: all 0.2s ease-in-out; /* Transição suave */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    letter-spacing: 0.5px;
 }
 
 /* Estilo botão "Próxima" (ou "Ver Resultado") */
 #next-btn {
-    background-color: #114a9c; /* Azul principal */
+    background-image: linear-gradient(to right, #0d3b66, #1a5f9e); /* Gradiente azul (Sugestão 1) */
     color: white;
-    border-color: #114a9c;
 }
 
 #next-btn:hover {
-    background-color: #0b3064; /* Azul mais escuro */
-    border-color: #0b3064;
+    transform: translateY(-2px); /* Efeito de elevação */
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15); /* Sombra maior no hover */
+    filter: brightness(110%); /* Leve brilho */
 }
 
 /* Estilo botão "Anterior" */
 #prev-btn {
-    background-color: #6c757d; /* Cinza */
+    background-color: #6c757d;
     color: white;
-    border-color: #6c757d;
 }
 
 #prev-btn:hover {
-    background-color: #5a6268; /* Cinza mais escuro */
-    border-color: #545b62;
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(108, 117, 125, 0.2); /* Sombra cinza no hover */
 }
 
 /* Estilo para botões desabilitados */
 .navigation-buttons button:disabled {
-    background-color: #e9ecef; /* Cinza claro */
-    color: #6c757d;
-    border-color: #dee2e6;
-    cursor: not-allowed; /* Indica que não é clicável */
+    background-image: none; /* Remove gradiente se houver */
+    background-color: #e9ecef;
+    color: #adb5bd; /* Cor de texto mais clara para desabilitado */
+    box-shadow: none; /* Remove sombra */
+    cursor: not-allowed;
+    transform: translateY(0); /* Remove elevação */
+}
+.navigation-buttons button:disabled:hover {
+    filter: none;
 }
 
-/* Ajuste para o card de resultado inicial */
-.resultado-final-card {
-    display: none; /* Esconde inicialmente */
-    /* Mantém os outros estilos que você já tem */
-    background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 30px 40px;
-    margin: 40px auto;
-    max-width: 550px;
-    text-align: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    animation: fadeIn 0.5s ease-out;
-}
 
-/* Você pode precisar ajustar os media queries se os botões não se alinharem bem em telas menores */
-@media (max-width: 480px) {
-    .navigation-buttons {
-        flex-direction: column; /* Empilha os botões */
-        gap: 10px; /* Espaço entre botões empilhados */
-        align-items: stretch; /* Faz os botões ocuparem a largura */
-    }
-    .navigation-buttons button {
-         width: 100%; /* Garante largura total */
-    }
-}
-
-/* --- Media Queries (Exemplo Básico) --- */
-/* Estilos para telas menores - ajuste conforme necessário */
+/* --- Media Queries (Ajustes Mantidos e Reforçados) --- */
 @media (max-width: 768px) {
     main {
-        flex-direction: column; /* Empilha aside e main content */
+        flex-direction: column;
     }
 
     aside {
-        min-width: 100%; /* Ocupa largura total */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Sombra abaixo */
-        border-right: none; /* Remove borda lateral */
-        border-bottom: 1px solid #e9ecef; /* Adiciona borda inferior */
-        flex-direction: row; /* Coloca itens da aside lado a lado */
-        justify-content: space-around; /* Espaça os itens */
+        min-width: 100%;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        border-right: none;
+        border-bottom: 1px solid #e9ecef;
+        flex-direction: row;
+        justify-content: space-around;
         align-items: center;
-        padding: 15px;
-        gap: 15px;
+        padding: 20px; /* Padding ajustado */
+        gap: 20px;
     }
 
-    .pontuacao-wrap { /* Reduz o tamanho do círculo de pontuação */
-        height: 80px;
-        width: 80px;
+    .pontuacao-wrap {
+        height: 90px; /* Tamanho ajustado */
+        width: 90px;
     }
     #pontuacao {
-        height: 70px;
-        width: 70px;
-        font-size: 1.8rem;
+        height: 75px;
+        width: 75px;
+        font-size: 2rem; /* Tamanho ajustado */
     }
-    .aside-title { display: none; } /* Esconde título da aside */
-
+    .aside-title { display: none; }
 
     .main-content {
-        padding: 20px; /* Reduz padding */
+        padding: 25px; /* Padding ajustado */
     }
 
-    h1.title-header { font-size: 1.8rem; }
-    h2 { font-size: 1.5rem; }
-    .nav-link { font-size: 0.9rem; padding: 10px 15px;}
-    .answer { padding: 15px 20px; font-size: 0.95rem;}
-    footer { font-size: 0.8rem; }
+    h1.title-header { font-size: 1.9rem; }
+    h2 { font-size: 1.6rem; }
+    #quiz-section h2 { font-size: 1.5rem; } /* Ajuste específico */
+    .nav-link { font-size: 0.9rem; padding: 12px 18px;}
+    .answer { padding: 18px 22px; font-size: 1rem;}
+    footer { font-size: 0.85rem; height: 60px;}
+
+    .resultado-final-card { padding: 30px; max-width: 90%; }
+    .resultado-final-titulo { font-size: 1.7rem; }
+    .pontos-valor { font-size: 1.8rem; }
+    .resultado-final-detalhes p { font-size: 1rem; }
 }
 
 @media (max-width: 480px) {
-    header { padding: 0 15px; }
-    .main-content { padding: 15px;}
-    .answer { padding: 12px 15px; }
-    .nav-link { padding: 10px; font-size: 0.85rem;}
-    h1.title-header { font-size: 1.6rem; }
-    h2 { font-size: 1.3rem; }
+    header { padding: 0 20px; height: 70px; }
+    .main-content { padding: 20px;}
+    .answer { padding: 15px 18px; }
+    .nav-link { padding: 10px 12px; font-size: 0.8rem;}
+    h1.title-header { font-size: 1.7rem; }
+    #quiz-section h2 { font-size: 1.4rem; gap: 8px; }
+    #quiz-section h2 #categoria-titulo { font-size: 0.75rem; padding: 4px 8px;}
 
     aside {
-         flex-wrap: wrap; /* Permite que os itens quebrem linha */
-         justify-content: center; /* Centraliza itens quando quebram */
+         flex-wrap: wrap;
+         justify-content: center;
+         padding: 15px;
+         gap: 15px;
+    }
+    .pontuacao-wrap { height: 80px; width: 80px; }
+    #pontuacao { height: 65px; width: 65px; font-size: 1.8rem; }
+    .aside-info-wrap { gap: 10px; } /* Menos espaço nos ícones/texto */
+    .aside-info-wrap p { font-size: 0.9rem; }
+
+    .navigation-buttons {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+    }
+    .navigation-buttons button {
+         width: 100%;
+         padding: 12px 25px; /* Ajuste de padding para mobile */
     }
 
+    .resultado-final-card { padding: 25px; }
+    .resultado-final-titulo { font-size: 1.5rem; }
+    .pontos-valor { font-size: 1.6rem; }
 }
+

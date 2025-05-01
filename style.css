@@ -8,6 +8,8 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
+    /* Tentativa de correção de rolagem: */
+    /* height: 100%; */
 }
 
 body {
@@ -17,45 +19,106 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh; /* Mantido min-height em vez de height 100% */
+    /* height: 100%; */
 }
 
-/* Cabeçalho */
+.logo-area {
+    font-family: "Montserrat", sans-serif;
+    font-size: 2.0rem;  /* << AUMENTADO de 1.6rem */
+    font-weight: 700;  /* << AUMENTADO de 600 */
+    color: #0d3b66;
+    margin: 0;
+    letter-spacing: 0.5px; /* << ADICIONADO espaçamento sutil */
+    /* Sombra de texto sutil (deslocamento x, y, desfoque, cor) */
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* << ADICIONADO */
+    transition: transform 0.2s ease-out; /* Para efeito hover suave */
+}
+
+/* Efeito hover opcional para dar um feedback visual */
+.logo-area:hover {
+    transform: scale(1.03); /* Aumenta levemente o tamanho */
+}
+
+.logo-area b {
+    /* Mantém o peso 800 para 'Quiz' ou pode aumentar para 900 se quiser ainda mais destaque */
+    font-weight: 800;
+    color: #2a9d8f; /* Mantém a cor de destaque verde/azul */
+    /* Garante que a sombra do pai não seja sobreposta se necessário */
+    /* text-shadow: none; */ /* Descomente se a sombra do pai parecer estranha aqui */
+}
+
+.logo-area a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Verifique se a altura do header (80px) ainda acomoda bem a logo maior.
+   Se necessário, ajuste o 'height' ou 'padding' do header.
+   A regra atual do header já centraliza verticalmente (align-items: center),
+   então deve funcionar bem. */
+   
 header {
-    height: 75px;
+    height: 80px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Mantém centralizado */
     align-items: center;
     background-color: #ffffff;
     padding: 0 40px;
-    gap: 25px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid #dee2e6;
+    gap: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid #e9ecef;
     flex-shrink: 0;
 }
 
+/* Restante do seu CSS continua igual... */
+
+/* O H1 original pode ser ocultado se o logo o substituir visualmente */
 h1.title-header {
-    order: 2;
-    font: normal 700 2.0rem "Montserrat", sans-serif;
-    color: #0d3b66;
+    /* Estilos originais removidos ou comentados se não forem mais usados diretamente */
+    /* order: 2; */
+    /* font: normal 700 2.0rem "Montserrat", sans-serif; */
+    /* color: #0d3b66; */
+    /* O display: none está inline no HTML, mas pode ser colocado aqui: */
+    /* display: none; */
 }
 
-header div {
-    order: 3;
+/* Remover regra para a div vazia antiga */
+/* header div { order: 3; } */
+
+/* Remover regra para o <p> antigo no header */
+header p { display: none; }
+
+.header-nav { /* Container para links/botões do header */
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
-.about-link {
-    order: 1;
-    font: normal 500 1rem "Montserrat", sans-serif;
+.about-link.button-style {
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
     text-decoration: none;
-    color: #0d3b66;
-    transition: color 0.2s ease;
-}
-.about-link:hover {
-    color: #1a5f9e;
+    color: #0d3b66; /* Cor do texto do botão */
+    background-color: #f1f3f5; /* Fundo do botão */
+    padding: 8px 18px; /* Padding interno do botão */
+    border-radius: 50px; /* Bordas arredondadas (pílula) */
+    border: 1px solid transparent; /* Borda inicial transparente */
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Evita quebra de linha */
 }
 
-/* Títulos Gerais */
+.about-link.button-style:hover {
+    background-color: #e9ecef; /* Fundo mais escuro no hover */
+    color: #0d3b66;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Leve sombra no hover */
+    transform: translateY(-1px); /* Leve elevação */
+}
+/* --- FIM DOS ESTILOS DO CABEÇALHO --- */
+
+
+/* Títulos Gerais (fora do header) */
 h2 {
     font: normal 600 1.9rem "Montserrat", sans-serif;
     color: #0d3b66;
@@ -109,7 +172,7 @@ nav {
 .nav-link.active {
      font-weight: 600;
      color: #0d3b66;
-     border-bottom-color: #5fda9a;
+     border-bottom-color: #5fda9a; /* Verde usado na navbar */
 }
 
 
@@ -118,14 +181,14 @@ main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    /* Adicionado para garantir que 'main' contenha seus filhos flex */
-    overflow: hidden;
+    /* Tentativa correção rolagem: */
+    /* overflow: hidden; */
 }
 
 .main-section {
     flex-grow: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; /* Padrão, pode ser sobrescrito */
 }
 
 
@@ -135,6 +198,8 @@ main {
      background-color: #f1f3f5;
      justify-content: center;
      align-items: center;
+     /* flex-grow: 1; */ /* Removido para consistência */
+     /* flex-direction: column; <-- já é o padrão de .main-section */
 }
 #inicio-section .inicio-content {
     max-width: 800px;
@@ -161,8 +226,10 @@ main {
 #questoes-section {
     display: flex;
     flex-direction: row;
-    flex-grow: 1; /* Faz a seção de questões preencher o espaço de 'main' */
-    /* overflow: hidden;  <-- REMOVIDO */
+    flex-grow: 1;
+    /* Tentativa correção rolagem: */
+    /* height: 100%; */
+    /* overflow: hidden; */
 }
 
 
@@ -173,12 +240,12 @@ aside {
     gap: 20px;
     padding: 30px;
     min-width: 280px;
+    /* width: 280px; */ /* Removido para usar min-width */
     background-color: #ffffff;
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
     border-right: 1px solid #dee2e6;
     flex-shrink: 0;
-    /* Adicionado para evitar que o aside role caso seu conteúdo interno seja grande */
-    overflow-y: auto;
+    /* overflow-y: auto; */ /* Removido, não deve rolar */
 }
 
 .aside-title {
@@ -215,18 +282,19 @@ aside p {
 /* --- Conteúdo Principal (Dentro da Seção Questões) --- */
 #questoes-section .main-content {
     padding: 30px 40px;
-    width: 100%;
+    width: 100%; /* Re-adicionado pois flex-grow sozinho pode não ser suficiente */
     background-color: #f1f3f5;
     overflow-x: hidden;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    /* MODIFICAÇÕES APLICADAS AQUI: */
-    overflow-y: auto; /* Permite rolagem vertical apenas nesta área */
-    min-height: 0;   /* Ajuda o flex item a calcular o overflow corretamente */
+    /* Tentativa correção rolagem: (MANTENDO as sugestões anteriores para teste) */
+    overflow-y: auto;
+    min-height: 0; /* Adicionado de volta como tentativa */
+    /* height: 100%; <-- Comentado pois min-height: 0 costuma ser mais eficaz com flex-grow */
 }
 
-/* --- Filtro de Categorias (Estilo Refinado/Integrado - Tamanho Ajustado) --- */
+/* --- Filtro de Categorias --- */
 .filtro-categorias-container {
     margin-bottom: 25px;
     display: flex;
@@ -247,7 +315,7 @@ aside p {
 .filtro-checkboxes {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px 10px; /* Aumentado levemente o gap horizontal */
+    gap: 10px 10px;
 }
 
 .checkbox-item {
@@ -262,33 +330,30 @@ aside p {
     pointer-events: none;
 }
 
-/* Estilo do Label como Botão Pílula (Vazado por padrão - Tamanho Ajustado) */
 .checkbox-item label {
     display: inline-block;
     cursor: pointer;
-    padding: 7px 17px; /* <<-- AUMENTADO padding vertical e horizontal */
+    padding: 7px 17px;
     border: 1.5px solid #adb5bd;
     border-radius: 50px;
     background-color: transparent;
     color: #495057;
-    font-size: 0.9rem; /* <<-- AUMENTADO tamanho da fonte */
+    font-size: 0.9rem;
     font-weight: 500;
     font-family: "Montserrat", sans-serif;
     user-select: none;
     transition: all 0.20s ease-out;
     text-align: center;
     white-space: nowrap;
-    line-height: 1.5; /* <<-- AJUSTADO altura da linha */
+    line-height: 1.5;
 }
 
-/* Efeito Hover no botão (desmarcado) */
 .checkbox-item label:hover {
     border-color: #0d3b66;
     background-color: rgba(13, 59, 102, 0.05);
     color: #0d3b66;
 }
 
-/* Estilos quando o checkbox está MARCADO (Botão Preenchido) */
 .checkbox-item input[type="checkbox"]:checked + label {
     background-color: #0d3b66;
     border-color: #0d3b66;
@@ -296,12 +361,10 @@ aside p {
     box-shadow: 0 1px 4px rgba(13, 59, 102, 0.2);
 }
 
-/* Efeito Hover no botão (marcado) */
 .checkbox-item input[type="checkbox"]:checked + label:hover {
      filter: brightness(115%);
 }
 
-/* Estilo de foco para acessibilidade */
 .checkbox-item input[type="checkbox"]:focus-visible + label {
     outline: 2px solid #1a5f9e;
     outline-offset: 2px;
@@ -309,15 +372,15 @@ aside p {
 .checkbox-item input[type="checkbox"]:focus + label {
     outline: none;
 }
-/* ----- FIM da Seção de Filtro (Refinado - Tamanho Ajustado) ----- */
-
 
 /* --- Área do Quiz --- */
 #quiz-section {
      flex-direction: column;
      gap: 20px;
-     /* flex-grow: 1;  Removido pois .main-content já faz crescer */
      display: flex;
+     /* flex-grow: 1; */ /* Removido, o conteúdo deve definir o tamanho */
+     flex-shrink: 0; /* Garante que não encolha */
+     /* min-height: min-content; <-- Removido, pode causar problemas */
  }
 
 /* Barra de Progresso */
@@ -431,6 +494,8 @@ footer a:hover { color: #ffffff; }
 
 /* --- Media Queries --- */
 @media (max-width: 992px) {
+     header { padding: 0 30px; } /* Ajuste padding */
+     .logo-area { font-size: 1.5rem;}
      aside { min-width: 240px; padding: 25px; gap: 15px; }
      .pontuacao-wrap { height: 100px; width: 100px; }
      #pontuacao { height: 85px; width: 85px; font-size: 2.2rem; }
@@ -438,15 +503,23 @@ footer a:hover { color: #ffffff; }
 
 
 @media (max-width: 768px) {
-     header { padding: 0 20px; }
-     h1.title-header { font-size: 1.8rem; }
+    header {
+        height: 70px; /* Reduz altura em mobile */
+        padding: 0 20px;
+     }
+     .logo-area { font-size: 1.3rem; } /* Reduz logo */
+     .about-link.button-style { /* Ajusta botão */
+        font-size: 0.8rem;
+        padding: 6px 14px;
+     }
+     h1.title-header { font-size: 1.8rem; } /* Ignorado se display:none */
      h2 { font-size: 1.7rem; }
      #inicio-section { padding: 30px; }
      #inicio-section .inicio-content { padding: 25px; width: 90%; }
 
     #questoes-section {
         flex-direction: column;
-        /* overflow: visible; <-- Removido, main já tem overflow: hidden */
+        /* overflow: visible; */ /* Removido */
     }
     aside {
         min-width: 100%; width: 100%;
@@ -456,7 +529,7 @@ footer a:hover { color: #ffffff; }
         align-items: center; padding: 15px; gap: 15px; flex-wrap: wrap;
         background-color: #ffffff;
         flex-shrink: 0;
-        overflow-y: visible; /* Desativa rolagem no aside para mobile */
+        /* overflow-y: visible; */ /* Removido */
     }
     .pontuacao-wrap { height: 80px; width: 80px; }
     #pontuacao { height: 65px; width: 65px; font-size: 1.8rem; }
@@ -465,13 +538,12 @@ footer a:hover { color: #ffffff; }
     #questoes-section .main-content {
         padding: 20px;
         flex-grow: 1;
-        min-height: 0; /* Garante que funcione em mobile também */
-        /* overflow-y: auto; continua valendo de cima */
+        min-height: 0;
     }
 
     .navbar { padding: 0 10px; }
     .nav-link { font-size: 0.9rem; padding: 12px 16px; }
-    /* Filtro Refinado Mobile - Tamanho Ajustado */
+
     .filtro-categorias-container {
         gap: 8px;
         margin-bottom: 20px;
@@ -485,14 +557,15 @@ footer a:hover { color: #ffffff; }
         gap: 8px 8px;
     }
     .checkbox-item label {
-        font-size: 0.85rem; /* <<-- AUMENTADO */
-        padding: 6px 15px; /* <<-- AUMENTADO */
+        font-size: 0.85rem;
+        padding: 6px 15px;
     }
 
 
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 20px; }
 
+    #quiz-section { flex-grow: 1; } /* Re-adicionado para mobile onde main-content pode precisar crescer */
     #quiz-section h2 { font-size: 1.4rem; }
     .answer { padding: 15px 20px; font-size: 0.95rem;}
     .resultado-final-card { padding: 25px; max-width: 90%; }
@@ -505,9 +578,18 @@ footer a:hover { color: #ffffff; }
 }
 
 @media (max-width: 480px) {
-    header { padding: 0 15px; height: 65px; }
+    header {
+        height: 65px; /* Altura menor ainda */
+        padding: 0 15px;
+    }
+    .logo-area { font-size: 1.2rem; } /* Logo menor */
+    .header-nav { gap: 10px; } /* Menos espaço */
+    .about-link.button-style {
+        font-size: 0.75rem;
+        padding: 5px 12px;
+    }
+
     h1.title-header { font-size: 1.5rem; }
-    .about-link { font-size: 0.9rem; }
     h2 { font-size: 1.5rem; }
     #inicio-section { padding: 20px 15px; }
     #inicio-section .inicio-content { padding: 20px; width: 95%; }
@@ -525,7 +607,7 @@ footer a:hover { color: #ffffff; }
     #questoes-section .main-content {
         padding: 15px;
      }
-     /* Filtro Refinado Mobile - Tamanho Ajustado */
+
      .filtro-categorias-container {
         gap: 6px;
         margin-bottom: 15px;
@@ -535,8 +617,8 @@ footer a:hover { color: #ffffff; }
          padding-left: 0;
      }
      .checkbox-item label {
-        font-size: 0.8rem; /* <<-- AUMENTADO */
-        padding: 5px 13px; /* <<-- AUMENTADO */
+        font-size: 0.8rem;
+        padding: 5px 13px;
     }
 
     #aviso-container { margin-top: 15px; }

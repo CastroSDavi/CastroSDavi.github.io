@@ -118,6 +118,8 @@ main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    /* Adicionado para garantir que 'main' contenha seus filhos flex */
+    overflow: hidden;
 }
 
 .main-section {
@@ -131,15 +133,12 @@ main {
 #inicio-section {
      padding: 40px;
      background-color: #f1f3f5;
-     /* display: flex; herdado de .main-section */
-     /* flex-direction: column; herdado de .main-section */
-     justify-content: center; /* <<-- GARANTE Centralização Vertical */
-     align-items: center;    /* <<-- GARANTE Centralização Horizontal */
+     justify-content: center;
+     align-items: center;
 }
 #inicio-section .inicio-content {
     max-width: 800px;
-    width: 90%; /* Adiciona largura relativa para telas menores */
-    /* margin: auto; <<-- REMOVIDO para permitir centralização pelo flex pai */
+    width: 90%;
     background-color: #ffffff;
     padding: 30px;
     border-radius: 8px;
@@ -160,9 +159,10 @@ main {
 
 /* Layout específico para a seção de questões (Aside + Conteúdo) */
 #questoes-section {
-    /* flex-grow: 1; herdado */
     display: flex;
-    flex-direction: row; /* <<-- Redefine para Row aqui */
+    flex-direction: row;
+    flex-grow: 1; /* Faz a seção de questões preencher o espaço de 'main' */
+    /* overflow: hidden;  <-- REMOVIDO */
 }
 
 
@@ -177,6 +177,8 @@ aside {
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
     border-right: 1px solid #dee2e6;
     flex-shrink: 0;
+    /* Adicionado para evitar que o aside role caso seu conteúdo interno seja grande */
+    overflow-y: auto;
 }
 
 .aside-title {
@@ -219,34 +221,33 @@ aside p {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    /* MODIFICAÇÕES APLICADAS AQUI: */
+    overflow-y: auto; /* Permite rolagem vertical apenas nesta área */
+    min-height: 0;   /* Ajuda o flex item a calcular o overflow corretamente */
 }
 
-/* --- Filtro de Categorias (Botões Pílula) --- */
+/* --- Filtro de Categorias (Estilo Refinado/Integrado - Tamanho Ajustado) --- */
 .filtro-categorias-container {
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    margin-bottom: 30px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+    margin-bottom: 25px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     flex-shrink: 0;
 }
 
 .filtro-label {
-    font-weight: 600;
+    font-weight: 500;
     font-family: "Montserrat", sans-serif;
-    color: #0d3b66;
-    font-size: 1.1rem;
-    margin-bottom: 5px;
+    color: #495057;
+    font-size: 1rem;
+    margin-bottom: 0;
+    padding-left: 5px;
 }
 
 .filtro-checkboxes {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 10px;
+    gap: 10px 10px; /* Aumentado levemente o gap horizontal */
 }
 
 .checkbox-item {
@@ -261,40 +262,46 @@ aside p {
     pointer-events: none;
 }
 
+/* Estilo do Label como Botão Pílula (Vazado por padrão - Tamanho Ajustado) */
 .checkbox-item label {
     display: inline-block;
     cursor: pointer;
-    padding: 8px 18px;
-    border: 1.5px solid #ced4da;
+    padding: 7px 17px; /* <<-- AUMENTADO padding vertical e horizontal */
+    border: 1.5px solid #adb5bd;
     border-radius: 50px;
-    background-color: #f8f9fa;
+    background-color: transparent;
     color: #495057;
-    font-size: 0.9rem;
+    font-size: 0.9rem; /* <<-- AUMENTADO tamanho da fonte */
     font-weight: 500;
     font-family: "Montserrat", sans-serif;
     user-select: none;
-    transition: all 0.25s ease-out;
+    transition: all 0.20s ease-out;
     text-align: center;
     white-space: nowrap;
+    line-height: 1.5; /* <<-- AJUSTADO altura da linha */
 }
 
+/* Efeito Hover no botão (desmarcado) */
 .checkbox-item label:hover {
-    border-color: #adb5bd;
-    background-color: #e9ecef;
-    color: #343a40;
+    border-color: #0d3b66;
+    background-color: rgba(13, 59, 102, 0.05);
+    color: #0d3b66;
 }
 
+/* Estilos quando o checkbox está MARCADO (Botão Preenchido) */
 .checkbox-item input[type="checkbox"]:checked + label {
     background-color: #0d3b66;
     border-color: #0d3b66;
     color: #ffffff;
-    box-shadow: 0 2px 5px rgba(13, 59, 102, 0.2);
+    box-shadow: 0 1px 4px rgba(13, 59, 102, 0.2);
 }
 
+/* Efeito Hover no botão (marcado) */
 .checkbox-item input[type="checkbox"]:checked + label:hover {
      filter: brightness(115%);
 }
 
+/* Estilo de foco para acessibilidade */
 .checkbox-item input[type="checkbox"]:focus-visible + label {
     outline: 2px solid #1a5f9e;
     outline-offset: 2px;
@@ -302,14 +309,14 @@ aside p {
 .checkbox-item input[type="checkbox"]:focus + label {
     outline: none;
 }
-/* ----- FIM da Seção de Filtro ----- */
+/* ----- FIM da Seção de Filtro (Refinado - Tamanho Ajustado) ----- */
 
 
 /* --- Área do Quiz --- */
 #quiz-section {
      flex-direction: column;
      gap: 20px;
-     flex-grow: 1;
+     /* flex-grow: 1;  Removido pois .main-content já faz crescer */
      display: flex;
  }
 
@@ -390,7 +397,6 @@ aside p {
 /* Mensagem de Aviso (dentro de #aviso-container) */
 #aviso-container {
     width: 100%;
-    flex-grow: 1;
     display: block;
     padding: 0;
     margin-top: 20px;
@@ -436,10 +442,11 @@ footer a:hover { color: #ffffff; }
      h1.title-header { font-size: 1.8rem; }
      h2 { font-size: 1.7rem; }
      #inicio-section { padding: 30px; }
-     #inicio-section .inicio-content { padding: 25px; width: 90%; /* Mantém largura relativa */ }
+     #inicio-section .inicio-content { padding: 25px; width: 90%; }
 
     #questoes-section {
         flex-direction: column;
+        /* overflow: visible; <-- Removido, main já tem overflow: hidden */
     }
     aside {
         min-width: 100%; width: 100%;
@@ -449,6 +456,7 @@ footer a:hover { color: #ffffff; }
         align-items: center; padding: 15px; gap: 15px; flex-wrap: wrap;
         background-color: #ffffff;
         flex-shrink: 0;
+        overflow-y: visible; /* Desativa rolagem no aside para mobile */
     }
     .pontuacao-wrap { height: 80px; width: 80px; }
     #pontuacao { height: 65px; width: 65px; font-size: 1.8rem; }
@@ -457,19 +465,34 @@ footer a:hover { color: #ffffff; }
     #questoes-section .main-content {
         padding: 20px;
         flex-grow: 1;
+        min-height: 0; /* Garante que funcione em mobile também */
+        /* overflow-y: auto; continua valendo de cima */
     }
 
     .navbar { padding: 0 10px; }
     .nav-link { font-size: 0.9rem; padding: 12px 16px; }
-    .filtro-categorias-container { padding: 15px; }
-    .filtro-label { font-size: 1rem; }
-    .filtro-checkboxes { gap: 10px 8px; }
-    .checkbox-item label { font-size: 0.85rem; padding: 7px 15px; }
+    /* Filtro Refinado Mobile - Tamanho Ajustado */
+    .filtro-categorias-container {
+        gap: 8px;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+    .filtro-label {
+        font-size: 0.9rem;
+         padding-left: 3px;
+    }
+    .filtro-checkboxes {
+        gap: 8px 8px;
+    }
+    .checkbox-item label {
+        font-size: 0.85rem; /* <<-- AUMENTADO */
+        padding: 6px 15px; /* <<-- AUMENTADO */
+    }
+
 
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 20px; }
 
-    #quiz-section { flex-grow: 1; }
     #quiz-section h2 { font-size: 1.4rem; }
     .answer { padding: 15px 20px; font-size: 0.95rem;}
     .resultado-final-card { padding: 25px; max-width: 90%; }
@@ -487,7 +510,7 @@ footer a:hover { color: #ffffff; }
     .about-link { font-size: 0.9rem; }
     h2 { font-size: 1.5rem; }
     #inicio-section { padding: 20px 15px; }
-    #inicio-section .inicio-content { padding: 20px; width: 95%; /* Ajusta largura mobile */ }
+    #inicio-section .inicio-content { padding: 20px; width: 95%; }
 
     .navbar { padding: 0 5px; }
     .nav-link { font-size: 0.85rem; padding: 10px 12px; }
@@ -502,9 +525,19 @@ footer a:hover { color: #ffffff; }
     #questoes-section .main-content {
         padding: 15px;
      }
-    .filtro-categorias-container { padding: 10px; }
-     .filtro-checkboxes { gap: 8px 6px; }
-     .checkbox-item label { font-size: 0.8rem; padding: 6px 12px; }
+     /* Filtro Refinado Mobile - Tamanho Ajustado */
+     .filtro-categorias-container {
+        gap: 6px;
+        margin-bottom: 15px;
+     }
+     .filtro-label {
+         font-size: 0.85rem;
+         padding-left: 0;
+     }
+     .checkbox-item label {
+        font-size: 0.8rem; /* <<-- AUMENTADO */
+        padding: 5px 13px; /* <<-- AUMENTADO */
+    }
 
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 15px; font-size: 1rem; }

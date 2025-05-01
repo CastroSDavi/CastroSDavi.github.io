@@ -12,50 +12,54 @@ html {
 
 body {
     font-family: "Roboto", sans-serif;
-    color: #343a40; /* Cor de texto padrão ligeiramente mais escura */
+    color: #343a40;
     background-color: #f8f9fa;
-    line-height: 1.6; /* Aumentado ligeiramente para melhor leitura */
+    line-height: 1.6;
+    display: flex; /* Para garantir que o footer fique no fim */
+    flex-direction: column; /* Empilha header, main, footer */
+    min-height: 100vh; /* Ocupa a altura toda da viewport */
 }
 
 /* Cabeçalho */
 header {
-    height: 75px; /* Ligeiramente mais alto */
+    height: 75px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff;
-    padding: 0 40px; /* Mais padding horizontal */
+    padding: 0 40px;
     gap: 25px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06); /* Sombra um pouco mais pronunciada */
-    border-bottom: 1px solid #e9ecef;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #dee2e6;
+    flex-shrink: 0; /* Não encolhe */
 }
 
 h1.title-header {
     order: 2;
-    font: normal 700 2.2rem "Montserrat", sans-serif; /* Peso e tamanho ajustados (Sugestão 2) */
-    color: #0d3b66; /* Azul um pouco mais escuro e dessaturado (Sugestão 1) */
+    font: normal 700 2.0rem "Montserrat", sans-serif;
+    color: #0d3b66;
 }
 
 header div {
-    order: 3;
+    order: 3; /* Mantém espaço à direita */
 }
 
 .about-link {
     order: 1;
-    font: normal 500 1rem "Montserrat", sans-serif; /* Peso ajustado */
+    font: normal 500 1rem "Montserrat", sans-serif;
     text-decoration: none;
-    color: #0d3b66; /* Mesmo azul do título (Sugestão 1) */
+    color: #0d3b66;
     transition: color 0.2s ease;
 }
 .about-link:hover {
-    color: #1a5f9e; /* Azul mais claro no hover */
+    color: #1a5f9e;
 }
 
-/* Títulos */
-h2 { /* Estilo base para H2 - será sobrescrito no #quiz-section */
+/* Títulos Gerais */
+h2 {
     font: normal 600 1.9rem "Montserrat", sans-serif;
     color: #0d3b66;
-    margin-bottom: 20px; /* Mais espaço abaixo */
+    margin-bottom: 20px;
 }
 
 h3 {
@@ -64,15 +68,22 @@ h3 {
     margin-bottom: 15px;
 }
 
-/* Barra de Navegação */
+/* --- NAVBAR --- */
+nav {
+     flex-shrink: 0; /* Não encolhe */
+     background-color: #ffffff; /* Fundo branco */
+     border-bottom: 1px solid #dee2e6;
+}
+
 .navbar {
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
-    padding: 0 30px; /* Padding ajustado */
+    justify-content: flex-start;
+    padding: 0 15px;
     display: flex;
     list-style: none;
-    background-color: #0d3b66; /* Azul principal (Sugestão 1) */
-    justify-content: flex-start;
-    margin-bottom: 0;
+    margin: 0; /* Reset margin */
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
 }
 
 .navbar > li {
@@ -82,42 +93,81 @@ h3 {
 .nav-link {
     display: block;
     text-decoration: none;
-    font: normal 500 1rem "Montserrat", sans-serif;
-    color: white;
-    padding: 15px 25px; /* Padding ajustado */
-    border-bottom: 4px solid transparent;
-    transition: background-color 0.2s ease, border-bottom-color 0.2s ease; /* (Sugestão 4) */
+    font: normal 500 0.95rem "Montserrat", sans-serif;
+    color: #495057;
+    padding: 15px 20px;
+    position: relative;
+    border-bottom: 3px solid transparent; /* Borda para efeito ativo */
+    background-color: transparent;
+    transition: color 0.2s ease, border-color 0.3s ease;
 }
 
-.nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-bottom-color: #5fda9a; /* Verde mais suave para hover (Sugestão 1) */
+.nav-link:hover:not(.active) {
+    color: #0d3b66;
 }
 
-/* Estilo para link ativo (requer JS para adicionar a classe 'active') */
 .nav-link.active {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-bottom-color: #5fda9a;
-    font-weight: 600;
+     font-weight: 600;
+     color: #0d3b66;
+     border-bottom-color: #5fda9a; /* Cor do destaque ativo */
 }
 
 
-/* Conteúdo Principal e Lateral */
+/* --- Conteúdo Principal e Seções --- */
 main {
-    display: flex;
-    min-height: calc(100vh - 75px - 65px); /* Altura ajustada para novo header/footer */
-    font-family: "Roboto", sans-serif;
+    flex-grow: 1; /* Faz o main ocupar o espaço restante */
+    display: block; /* Ou flex se precisar alinhar seções (não neste caso) */
 }
 
+.main-section {
+    width: 100%;
+    /* display: none; -> Controlado pelo JS */
+}
+
+/* Estilo para a Seção Inicial */
+#inicio-section {
+     padding: 40px;
+     background-color: #f1f3f5; /* Mesmo fundo do conteúdo das questões */
+}
+.inicio-content {
+    max-width: 800px;
+    margin: 0 auto; /* Centraliza o conteúdo */
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    border: 1px solid #dee2e6;
+}
+.inicio-content h2 {
+    margin-top: 0;
+    text-align: center;
+}
+.inicio-content p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: #495057;
+    text-align: justify;
+}
+
+
+/* Layout específico para a seção de questões (Aside + Conteúdo) */
+#questoes-section {
+    display: flex; /* Coloca aside e main-content lado a lado */
+    /* min-height é herdado implicitamente ou pode ser setado */
+}
+
+
+/* --- Barra Lateral (Aside) --- */
 aside {
     display: flex;
     flex-direction: column;
-    gap: 30px; /* Mais espaço (Sugestão 3) */
-    padding: 40px; /* Mais padding (Sugestão 3) */
-    min-width: 280px; /* Largura ligeiramente aumentada */
+    gap: 20px;
+    padding: 30px;
+    min-width: 280px;
     background-color: #ffffff;
-    box-shadow: 3px 0 8px rgba(0, 0, 0, 0.05); /* Sombra mais suave (Sugestão 3) */
-    border-right: 1px solid #e9ecef;
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
+    border-right: 1px solid #dee2e6;
+    flex-shrink: 0; /* Não encolhe */
 }
 
 .aside-title {
@@ -132,472 +182,364 @@ aside p {
 }
 
 .pontuacao-wrap {
-    display: flex;
-    height: 150px;
-    width: 150px;
-    align-self: center;
-    border-radius: 50%;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1), 0 2px 5px rgba(0, 0, 0, 0.08); /* Sombra mais suave (Sugestão 3) */
-    justify-content: center;
-    align-items: center;
-    background-color: #5fda9a; /* Verde mais suave (Sugestão 1) */
+    display: flex; height: 120px; width: 120px; align-self: center;
+    border-radius: 50%; box-shadow: 0 5px 15px rgba(0,0,0,0.08), 0 2px 5px rgba(0,0,0,0.06);
+    justify-content: center; align-items: center; background-color: #5fda9a; flex-shrink: 0;
 }
 
 #pontuacao {
-    width: 130px;
-    height: 130px;
-    font-size: 3rem; /* Maior destaque */
-    background-color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #333;
-    font-weight: 600;
+    width: 100px; height: 100px; font-size: 2.5rem; background-color: #ffffff;
+    border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    color: #333; font-weight: 600;
 }
 
-.aside-info-wrap {
-    display: flex;
-    gap: 18px; /* Mais espaço */
-    align-items: center;
-}
-
-.icon-wrap {
-    padding: 5px;
-    border-radius: 50%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-}
-.icon-wrap.icon-correct {
-     background-color: rgba(95, 218, 154, 0.15); /* Fundo verde claro (Sugestão 1) */
-}
-.icon-wrap.icon-correct svg {
-    fill: #2a9d8f; /* Verde mais sóbrio */
-}
-
-.icon-wrap.icon-error {
-     background-color: rgba(240, 87, 108, 0.1); /* Fundo vermelho claro (Sugestão 1) */
-}
-.icon-wrap.icon-error svg {
-    fill: #e63946; /* Vermelho um pouco diferente (Sugestão 1) */
-}
-
-/* Conteúdo Principal do Quiz */
-.main-content {
-    padding: 40px 50px; /* Mais padding (Sugestão 3) */
-    width: 100%;
-    background-color: #ffffff;
-}
-
-/* --- Estilos para Barra de Progresso (Sugestão 5) --- */
-#progress-container {
-    width: 100%;
-    background-color: #e9ecef;
-    border-radius: 25px; /* Bordas bem arredondadas */
-    margin-bottom: 25px;
-    overflow: hidden;
-    height: 12px; /* Ligeiramente mais grossa */
-    position: relative;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Sombra interna */
-}
-
-#progress-bar-fill {
-    height: 100%;
-    width: 0%;
-    /* Gradiente suave no preenchimento */
-    background-image: linear-gradient(to right, #1a5f9e, #0d3b66); /* (Sugestão 1) */
-    border-radius: 25px;
-    transition: width 0.4s ease-out; /* Transição mais suave */
-}
-
-#progress-text {
-    display: block;
-    text-align: right;
-    font-size: 0.9em;
-    color: #6c757d;
-    margin-top: 8px; /* Mais espaço */
-    padding-right: 5px;
-}
-
-/* --- Título da Questão com Tag --- */
-#quiz-section h2 {
-    font-size: 1.7rem; /* (Sugestão 2) */
-    color: #495057; /* Cor mais neutra para o texto geral */
-    font-weight: 400; /* Peso normal para o texto */
-    font-family: "Roboto", sans-serif;
-    margin-top: 0;
-    margin-bottom: 30px; /* Mais espaço (Sugestão 3) */
-    display: flex;
-    align-items: center;
-    gap: 12px; /* Mais espaço */
-    flex-wrap: wrap;
-}
-
-#quiz-section h2 #categoria-titulo {
-    display: inline-block;
-    background-color: #0d3b66; /* Azul principal (Sugestão 1) */
-    color: white;
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: "Montserrat", sans-serif;
-    padding: 5px 12px;
-    border-radius: 6px; /* Bordas ligeiramente arredondadas */
-    text-transform: uppercase;
-    letter-spacing: 0.8px; /* Mais espaçamento */
-    white-space: nowrap;
-}
-
-#quiz-section h2 #id-questao {
-   font-weight: 700; /* (Sugestão 2) */
-   color: #343a40;
-}
-
-/* --- Container da Pergunta --- */
-.question-wrap {
-     background-color: #f8f9fa;
-     padding: 30px; /* Mais padding (Sugestão 3) */
-     border-radius: 10px; /* Bordas mais arredondadas */
-     border: 1px solid #e9ecef;
-     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04); /* Sombra mais suave (Sugestão 3) */
-}
-
-.question {
-    width: 100%;
-    padding: 15px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* Mais espaço (Sugestão 3) */
-}
-
-.image-question-wrap {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.image-question-wrap > img {
-    max-width: 100%;
-    height: auto;
-    max-height: 450px; /* Aumentado ligeiramente */
-    border-radius: 8px; /* Bordas arredondadas (Sugestão 5) */
-    border: 1px solid #dee2e6; /* Borda sutil (Sugestão 5) */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Pequena sombra na imagem */
-}
-
-.question-text {
-    flex: 1;
-    font: normal 400 1.15rem "Roboto", sans-serif; /* Tamanho ligeiramente maior (Sugestão 2) */
-    color: #343a40;
-    margin: 0;
-    line-height: 1.7; /* Mais espaçamento entre linhas (Sugestão 2) */
-}
-
-.question-text p {
-    margin: 0;
-}
-
-/* --- Respostas --- */
-.answers-wrap {
-    width: 100%;
-    display: flex;
-    gap: 18px; /* Mais espaço (Sugestão 3) */
-    flex-direction: column;
-    align-items: stretch;
-}
-
-.answer {
-    cursor: pointer;
-    color: #343a40;
-    background-color: #ffffff;
-    width: 100%;
-    padding: 20px 30px; /* Mais padding */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05); /* Sombra atualizada (Sugestão 3) */
-    border-radius: 10px; /* Bordas mais arredondadas */
-    border: 1px solid #dee2e6;
-    text-align: left;
-    font-size: 1.05rem; /* Tamanho ligeiramente maior */
-    transition: all 0.2s ease-in-out; /* Transição suave para tudo (Sugestão 4) */
-}
-
-.answer:hover {
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.09), 0 2px 6px rgba(0, 0, 0, 0.07); /* Sombra maior no hover */
-    border-color: #adb5bd;
-    transform: translateY(-3px); /* Efeito de elevação maior (Sugestão 4) */
-    background-color: #f8f9fa; /* Leve mudança de fundo no hover */
-}
-
-/* Estilos de Feedback para Respostas */
-.answer.correct {
-    background-color: #e8f9f1; /* Verde bem claro (Sugestão 1) */
-    border-color: #5fda9a; /* Verde mais suave (Sugestão 1) */
-    color: #0a4d45;
-    font-weight: 500;
-    transform: translateY(0); /* Reseta a elevação */
-}
-.answer.correct:hover { /* Evita efeito hover estranho na correta */
-     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
-     background-color: #e8f9f1;
-}
-
-.answer.incorrect {
-    background-color: #fdebec; /* Vermelho bem claro (Sugestão 1) */
-    border-color: #e63946; /* Vermelho (Sugestão 1) */
-    color: #721c24;
-    font-weight: 500;
-    transform: translateY(0); /* Reseta a elevação */
-}
-.answer.incorrect:hover { /* Evita efeito hover estranho na incorreta */
-     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07), 0 1px 3px rgba(0, 0, 0, 0.05);
-     background-color: #fdebec;
-}
-
-/* Referência da questão */
-#referencia-questao {
-    font-size: 0.9rem; /* (Sugestão 2) */
-    color: #6c757d;
-    margin-top: 15px;
-    text-align: right;
-}
+.aside-info-wrap { display: flex; gap: 15px; align-items: center; }
+.icon-wrap { padding: 5px; border-radius: 50%; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; }
+.icon-wrap.icon-correct { background-color: rgba(95, 218, 154, 0.15); }
+.icon-wrap.icon-correct svg { fill: #2a9d8f; }
+.icon-wrap.icon-error { background-color: rgba(240, 87, 108, 0.1); }
+.icon-wrap.icon-error svg { fill: #e63946; }
 
 
-/* Rodapé */
-footer {
-    font: normal 400 0.9rem "Roboto", sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* --- Conteúdo Principal (Dentro da Seção Questões) --- */
+#questoes-section .main-content { /* Seletor mais específico */
+    padding: 30px 40px;
+    width: 100%; /* Ocupa o espaço restante */
+    background-color: #f1f3f5;
+    overflow-x: hidden;
+    flex-grow: 1;
+}
+
+/* --- Filtro de Categorias --- */
+/* --- Filtro de Categorias (Botões Pílula) --- */
+.filtro-categorias-container {
     padding: 20px;
-    background-color: #343a40;
-    color: #e9ecef;
-    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06);
-    border-top: 1px solid #495057;
-    height: 65px; /* Altura ajustada */
-}
-
-footer p {
-    margin: 0;
-}
-
-footer a {
-    color: #adb5bd;
-    margin-left: 20px;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-footer a:hover {
-    color: #ffffff;
-}
-
-/* --- Estilos para Card de Resultado Final (Sugestão 5) --- */
-.resultado-final-card {
     background-color: #ffffff;
-    border: 1px solid #e9ecef;
-    border-radius: 12px; /* Mais arredondado */
-    padding: 40px 50px; /* Mais padding */
-    margin: 50px auto; /* Mais margem vertical */
-    max-width: 600px;
-    text-align: center;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.09); /* Sombra mais destacada */
-    animation: fadeIn 0.5s ease-out;
-    display: none; /* Escondido inicialmente */
-}
-
-.resultado-final-titulo {
-    font-family: "Montserrat", sans-serif;
-    font-size: 2rem; /* Maior */
-    font-weight: 700; /* Mais peso */
-    color: #0d3b66; /* Azul principal */
-    margin-bottom: 20px;
-}
-
-.resultado-final-pontuacao {
-    font-family: "Roboto", sans-serif;
-    font-size: 1.25rem;
-    color: #343a40;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
     margin-bottom: 30px;
-}
-
-.pontos-valor {
-    font-weight: 700;
-    font-size: 2rem; /* Maior */
-    color: #5fda9a; /* Verde suave */
-    margin-left: 10px;
-}
-
-.resultado-final-detalhes {
-    border-top: 1px solid #e9ecef;
-    margin-top: 25px;
-    padding-top: 25px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.04);
     display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.resultado-final-detalhes p {
-    font-family: "Roboto", sans-serif;
-    font-size: 1.1rem; /* Ligeiramente maior */
-    color: #495057;
-    margin-bottom: 0;
-}
-
-.acertos-valor,
-.erros-valor {
+.filtro-label {
     font-weight: 600;
-    margin-left: 8px;
-}
-
-.acertos-valor {
-    color: #2a9d8f; /* Verde sóbrio */
-}
-
-.erros-valor {
-    color: #e63946; /* Vermelho */
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* --- Estilos para Botões de Navegação Refinados (Sugestão 4) --- */
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    padding: 25px 0; /* Mais padding vertical */
-    margin-top: 30px; /* Mais espaço acima */
-    border-top: 1px solid #e9ecef;
-}
-
-.navigation-buttons button {
-    padding: 14px 32px; /* Padding ajustado para estilo pill */
-    font-size: 1rem;
-    font-weight: 600; /* Mais destaque */
     font-family: "Montserrat", sans-serif;
-    border-radius: 25px; /* Estilo "Pill" */
-    border: none; /* Remover borda padrão */
+    color: #0d3b66;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.filtro-checkboxes {
+    display: flex; /* Mudar para flexbox */
+    flex-wrap: wrap; /* Permitir quebra de linha */
+    gap: 12px 10px; /* Espaçamento entre os botões */
+}
+
+.checkbox-item {
+    /* Não precisa de estilo específico aqui, o label fará o trabalho */
+    display: inline-block; /* Para que os itens fluam com o wrap */
+}
+
+/* Esconde o checkbox padrão de forma acessível */
+.checkbox-item input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none; /* Evita interação fantasma */
+}
+
+/* Estilo do Label como Botão Pílula */
+.checkbox-item label {
+    display: inline-block; /* Importante para padding funcionar bem */
     cursor: pointer;
-    transition: all 0.2s ease-in-out; /* Transição suave */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-    letter-spacing: 0.5px;
+    padding: 8px 18px; /* Padding interno */
+    border: 1.5px solid #ced4da; /* Borda padrão cinza claro */
+    border-radius: 50px; /* Bordas totalmente arredondadas (pílula) */
+    background-color: #f8f9fa; /* Fundo levemente acinzentado (desmarcado) */
+    color: #495057; /* Texto cinza escuro (desmarcado) */
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: "Montserrat", sans-serif; /* Usar Montserrat para botões */
+    user-select: none;
+    transition: all 0.25s ease-out;
+    text-align: center;
+    white-space: nowrap; /* Evita quebra de linha no texto */
 }
 
-/* Estilo botão "Próxima" (ou "Ver Resultado") */
-#next-btn {
-    background-image: linear-gradient(to right, #0d3b66, #1a5f9e); /* Gradiente azul (Sugestão 1) */
-    color: white;
-}
-
-#next-btn:hover {
-    transform: translateY(-2px); /* Efeito de elevação */
-    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15); /* Sombra maior no hover */
-    filter: brightness(110%); /* Leve brilho */
-}
-
-/* Estilo botão "Anterior" */
-#prev-btn {
-    background-color: #6c757d;
-    color: white;
-}
-
-#prev-btn:hover {
-    background-color: #5a6268;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 12px rgba(108, 117, 125, 0.2); /* Sombra cinza no hover */
-}
-
-/* Estilo para botões desabilitados */
-.navigation-buttons button:disabled {
-    background-image: none; /* Remove gradiente se houver */
+/* Efeito Hover no botão (desmarcado) */
+.checkbox-item label:hover {
+    border-color: #adb5bd;
     background-color: #e9ecef;
-    color: #adb5bd; /* Cor de texto mais clara para desabilitado */
-    box-shadow: none; /* Remove sombra */
-    cursor: not-allowed;
-    transform: translateY(0); /* Remove elevação */
+    color: #343a40;
 }
-.navigation-buttons button:disabled:hover {
-    filter: none;
+
+/* Estilos quando o checkbox está MARCADO (estado ativo do botão) */
+.checkbox-item input[type="checkbox"]:checked + label {
+    background-color: #0d3b66; /* Cor de fundo azul primário */
+    border-color: #0d3b66; /* Cor da borda azul primário */
+    color: #ffffff; /* Texto branco */
+    box-shadow: 0 2px 5px rgba(13, 59, 102, 0.2); /* Sombra sutil azulada */
+}
+
+/* Efeito Hover no botão (marcado) - pode ser opcional ou um leve brilho */
+.checkbox-item input[type="checkbox"]:checked + label:hover {
+     filter: brightness(115%); /* Deixa um pouco mais claro no hover */
+}
+
+/* Estilo de foco para acessibilidade (anel em volta do botão) */
+.checkbox-item input[type="checkbox"]:focus-visible + label {
+    outline: 2px solid #1a5f9e; /* Cor secundária azul para o outline */
+    outline-offset: 2px; /* Espaço entre o botão e o outline */
+}
+/* Remove o outline padrão que pode aparecer em alguns navegadores */
+.checkbox-item input[type="checkbox"]:focus + label {
+    outline: none;
 }
 
 
-/* --- Media Queries (Ajustes Mantidos e Reforçados) --- */
+/* Ajustes Mobile */
 @media (max-width: 768px) {
-    main {
-        flex-direction: column;
+    .filtro-categorias-container {
+        padding: 15px;
     }
-
-    aside {
-        min-width: 100%;
-        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-        border-right: none;
-        border-bottom: 1px solid #e9ecef;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        padding: 20px; /* Padding ajustado */
-        gap: 20px;
+    .filtro-label {
+        font-size: 1rem;
     }
-
-    .pontuacao-wrap {
-        height: 90px; /* Tamanho ajustado */
-        width: 90px;
+    .filtro-checkboxes {
+        gap: 10px 8px; /* Diminui espaçamento */
     }
-    #pontuacao {
-        height: 75px;
-        width: 75px;
-        font-size: 2rem; /* Tamanho ajustado */
+    .checkbox-item label {
+        font-size: 0.85rem;
+        padding: 7px 15px; /* Diminui padding */
     }
-    .aside-title { display: none; }
-
-    .main-content {
-        padding: 25px; /* Padding ajustado */
-    }
-
-    h1.title-header { font-size: 1.9rem; }
-    h2 { font-size: 1.6rem; }
-    #quiz-section h2 { font-size: 1.5rem; } /* Ajuste específico */
-    .nav-link { font-size: 0.9rem; padding: 12px 18px;}
-    .answer { padding: 18px 22px; font-size: 1rem;}
-    footer { font-size: 0.85rem; height: 60px;}
-
-    .resultado-final-card { padding: 30px; max-width: 90%; }
-    .resultado-final-titulo { font-size: 1.7rem; }
-    .pontos-valor { font-size: 1.8rem; }
-    .resultado-final-detalhes p { font-size: 1rem; }
 }
 
 @media (max-width: 480px) {
-    header { padding: 0 20px; height: 70px; }
-    .main-content { padding: 20px;}
-    .answer { padding: 15px 18px; }
-    .nav-link { padding: 10px 12px; font-size: 0.8rem;}
-    h1.title-header { font-size: 1.7rem; }
-    #quiz-section h2 { font-size: 1.4rem; gap: 8px; }
-    #quiz-section h2 #categoria-titulo { font-size: 0.75rem; padding: 4px 8px;}
+    .filtro-checkboxes {
+        gap: 8px 6px; /* Diminui ainda mais */
+    }
+     .checkbox-item label {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
 
+/* ----- FIM da Seção de Filtro ----- */
+
+/* --- Área do Quiz --- */
+#quiz-section {
+     /* display: none; -> Controlado pelo JS */
+     flex-direction: column;
+     gap: 20px;
+ }
+
+/* Barra de Progresso */
+#progress-container {
+    width: 100%; background-color: #e9ecef; border-radius: 25px;
+    margin-bottom: 25px; overflow: hidden; height: 12px; position: relative;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08); display: none; /* Controlado JS */
+}
+#progress-bar-fill { height: 100%; width: 0%; background-image: linear-gradient(to right, #1a5f9e, #0d3b66); border-radius: 25px; transition: width 0.4s ease-out; }
+#progress-text { display: block; text-align: right; font-size: 0.9em; color: #6c757d; margin-top: 8px; padding-right: 5px; }
+
+/* Título dentro do Quiz */
+#quiz-section h2 {
+    font-size: 1.5rem; color: #495057; font-weight: 400;
+    font-family: "Roboto", sans-serif; margin-top: 0; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+#quiz-section h2 #categoria-titulo {
+    display: inline-block; background-color: #0d3b66; color: white;
+    font-size: 0.85rem; font-weight: 600; font-family: "Montserrat", sans-serif;
+    padding: 5px 12px; border-radius: 6px; text-transform: uppercase;
+    letter-spacing: 0.8px; white-space: nowrap;
+}
+#quiz-section h2 #id-questao { font-weight: 700; color: #343a40; }
+
+/* Container da Pergunta */
+.question-wrap {
+     background-color: #ffffff; padding: 25px; border-radius: 10px;
+     border: 1px solid #dee2e6; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+     border-top: 4px solid #0d3b66;
+}
+.question { width: 100%; padding: 15px 0 0 0; display: flex; flex-direction: column; gap: 20px; }
+.image-question-wrap { text-align: center; margin-bottom: 20px; }
+.image-question-wrap > img { max-width: 100%; height: auto; max-height: 350px; border-radius: 8px; border: 1px solid #dee2e6; box-shadow: 0 2px 5px rgba(0,0,0,0.07); display: none; }
+.question-text { flex: 1; font: normal 400 1.15rem "Roboto", sans-serif; color: #343a40; margin: 0 0 15px 0; line-height: 1.7; }
+.question-text p { margin: 0; }
+
+/* Respostas */
+.answers-wrap { width: 100%; display: flex; gap: 12px; flex-direction: column; align-items: stretch; }
+.answer { cursor: pointer; color: #343a40; background-color: #f8f9fa; width: 100%; padding: 15px 25px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); border-radius: 8px; border: 1px solid #e9ecef; text-align: left; font-size: 1.0rem; transition: all 0.2s ease-in-out; }
+.answer:hover { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07); border-color: #ced4da; transform: translateY(-2px); background-color: #e9ecef; }
+.answer.answered { cursor: default; }
+.answer.answered:hover { box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); transform: translateY(0); background-color: #f8f9fa; border-color: #e9ecef; }
+.answer.correct { background-color: #d1f7e0; border-color: #a3e9c1; color: #0a3622; font-weight: 500; transform: translateY(0); }
+.answer.correct:hover { background-color: #d1f7e0; border-color: #a3e9c1; }
+.answer.incorrect { background-color: #f8d7da; border-color: #f1aeb5; color: #58151c; font-weight: 500; transform: translateY(0); }
+.answer.incorrect:hover { background-color: #f8d7da; border-color: #f1aeb5; }
+
+#referencia-questao { font-size: 0.9rem; color: #6c757d; margin-top: 15px; text-align: right; font-style: italic; }
+
+/* Botões de Navegação do Quiz */
+.navigation-buttons { display: none; justify-content: space-between; padding: 20px 0 0 0; margin-top: 25px; border-top: 1px solid #e9ecef; }
+.navigation-buttons button { padding: 12px 28px; font-size: 0.95rem; font-weight: 600; font-family: "Montserrat", sans-serif; border-radius: 25px; border: none; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); letter-spacing: 0.5px; }
+#next-btn { background-image: linear-gradient(to right, #0d3b66, #1a5f9e); color: white; }
+#next-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15); filter: brightness(110%); }
+#prev-btn { background-color: #6c757d; color: white; }
+#prev-btn:hover:not(:disabled) { background-color: #5a6268; transform: translateY(-2px); box-shadow: 0 5px 12px rgba(108, 117, 125, 0.2); }
+.navigation-buttons button:disabled { background-image: none; background-color: #e9ecef; color: #adb5bd; box-shadow: none; cursor: not-allowed; transform: translateY(0); }
+.navigation-buttons button:disabled:hover { filter: none; transform: translateY(0); box-shadow: none; background-color: #e9ecef; }
+
+
+/* Card de Resultado Final */
+.resultado-final-card { background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 12px; padding: 30px 40px; margin: 40px auto 0 auto; /* Adicionado 0 no bottom margin */ max-width: 600px; text-align: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.07); animation: fadeIn 0.5s ease-out; display: none; }
+.resultado-final-titulo { font-family: "Montserrat", sans-serif; font-size: 1.8rem; font-weight: 700; color: #0d3b66; margin-bottom: 15px; }
+.resultado-final-pontuacao { font-family: "Roboto", sans-serif; font-size: 1.15rem; color: #343a40; margin-bottom: 25px; }
+.pontos-valor { font-weight: 700; font-size: 1.8rem; color: #5fda9a; margin-left: 8px; }
+.resultado-final-detalhes { border-top: 1px solid #dee2e6; margin-top: 20px; padding-top: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; }
+.resultado-final-detalhes p { font-family: "Roboto", sans-serif; font-size: 1.05rem; color: #495057; margin-bottom: 0; }
+.acertos-valor { font-weight: 600; margin-left: 8px; color: #2a9d8f; }
+.erros-valor { font-weight: 600; margin-left: 8px; color: #e63946; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* Mensagem de Aviso (dentro de #aviso-container) */
+.aviso-mensagem {
+     text-align: center;
+     padding: 20px; /* Menor padding */
+     margin-top: 20px;
+     color: #6c757d;
+     font-size: 1.1rem;
+     font-style: italic;
+     background-color: #f8f9fa; /* Fundo sutil */
+     border-radius: 6px;
+}
+
+
+/* --- Rodapé --- */
+footer {
+    font: normal 400 0.9rem "Roboto", sans-serif;
+    display: flex; justify-content: center; align-items: center;
+    padding: 20px; background-color: #343a40; color: #e9ecef;
+    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06); border-top: 1px solid #495057;
+    height: 65px; flex-shrink: 0; /* Não encolhe */
+}
+footer p { margin: 0; }
+footer a { color: #adb5bd; margin-left: 20px; text-decoration: none; transition: color 0.2s ease; }
+footer a:hover { color: #ffffff; }
+
+
+/* --- Media Queries --- */
+@media (max-width: 992px) {
+     aside { min-width: 240px; padding: 25px; gap: 15px; }
+     .pontuacao-wrap { height: 100px; width: 100px; }
+     #pontuacao { height: 85px; width: 85px; font-size: 2.2rem; }
+}
+
+
+@media (max-width: 768px) {
+     /* Ajustes gerais para tablet */
+     header { padding: 0 20px; }
+     h1.title-header { font-size: 1.8rem; }
+     h2 { font-size: 1.7rem; } /* Ajuste geral h2 */
+     #inicio-section { padding: 30px; }
+     .inicio-content { padding: 25px; }
+
+
+    /* Layout da seção de questões empilhado */
+    #questoes-section {
+        flex-direction: column;
+    }
     aside {
-         flex-wrap: wrap;
-         justify-content: center;
-         padding: 15px;
-         gap: 15px;
+        min-width: 100%; width: 100%; /* Ocupa largura total */
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        border-right: none; border-bottom: 1px solid #dee2e6;
+        flex-direction: row; justify-content: space-around;
+        align-items: center; padding: 15px; gap: 15px; flex-wrap: wrap;
+        background-color: #ffffff;
     }
     .pontuacao-wrap { height: 80px; width: 80px; }
     #pontuacao { height: 65px; width: 65px; font-size: 1.8rem; }
-    .aside-info-wrap { gap: 10px; } /* Menos espaço nos ícones/texto */
-    .aside-info-wrap p { font-size: 0.9rem; }
+    .aside-title { display: none; } /* Esconde título da aside no mobile */
 
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 12px;
-        align-items: stretch;
-    }
-    .navigation-buttons button {
-         width: 100%;
-         padding: 12px 25px; /* Ajuste de padding para mobile */
-    }
+    #questoes-section .main-content { padding: 20px; } /* Padding do conteúdo principal */
 
-    .resultado-final-card { padding: 25px; }
-    .resultado-final-titulo { font-size: 1.5rem; }
-    .pontos-valor { font-size: 1.6rem; }
+    /* Navbar e Filtro */
+    .navbar { padding: 0 10px; }
+    .nav-link { font-size: 0.9rem; padding: 12px 16px; }
+    .filtro-categorias-container { padding: 12px; flex-direction: column; align-items: stretch;}
+    .filtro-categorias-container label { margin-bottom: 5px; text-align: center;}
+    #filtro-categoria { min-width: unset; width: 100%; } /* Filtro ocupa largura total */
+
+
+    /* Quiz e Resultado */
+    #quiz-section h2 { font-size: 1.4rem; }
+    .answer { padding: 15px 20px; font-size: 0.95rem;}
+    .resultado-final-card { padding: 25px; max-width: 90%; }
+    .resultado-final-titulo { font-size: 1.6rem; }
+    .pontos-valor { font-size: 1.7rem; }
+    .resultado-final-detalhes p { font-size: 0.95rem; }
+    .navigation-buttons button { padding: 10px 24px; font-size: 0.9rem; }
+
+    footer { font-size: 0.85rem; height: 60px;}
 }
 
+@media (max-width: 480px) {
+    /* Ajustes gerais para mobile */
+    header { padding: 0 15px; height: 65px; }
+    h1.title-header { font-size: 1.5rem; }
+    .about-link { font-size: 0.9rem; }
+    h2 { font-size: 1.5rem; }
+    #inicio-section { padding: 20px 15px; }
+    .inicio-content { padding: 20px; }
+
+    /* Navbar */
+    .navbar { padding: 0 5px; }
+    .nav-link { font-size: 0.85rem; padding: 10px 12px; }
+
+    /* Aside mobile */
+    aside { padding: 10px; gap: 10px; }
+    .pontuacao-wrap { height: 70px; width: 70px; }
+    #pontuacao { height: 55px; width: 55px; font-size: 1.6rem; }
+    .aside-info-wrap { gap: 8px; }
+    .aside-info-wrap p { font-size: 0.85rem; }
+    .icon-wrap svg { height: 20px; width: 20px; }
+
+    /* Conteúdo Principal e Filtro Mobile */
+    #questoes-section .main-content { padding: 15px; }
+    .filtro-categorias-container { padding: 10px; }
+
+    /* Quiz Mobile */
+    #quiz-section h2 { font-size: 1.2rem; gap: 6px; margin-bottom: 15px;}
+    #quiz-section h2 #categoria-titulo { font-size: 0.7rem; padding: 3px 6px;}
+    .question-wrap { padding: 15px; }
+    .question { gap: 15px; }
+    .question-text { font-size: 1.0rem; line-height: 1.6; }
+    .image-question-wrap > img { max-height: 250px; }
+    .answers-wrap { gap: 10px; }
+    .answer { padding: 12px 15px; font-size: 0.9rem;}
+    #referencia-questao { font-size: 0.8rem; margin-top: 10px; }
+
+    /* Botões Quiz Mobile */
+    .navigation-buttons { padding: 15px 0 0 0; margin-top: 20px; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .navigation-buttons button { padding: 10px 18px; font-size: 0.8rem; flex-grow: 1; min-width: 120px; }
+
+    /* Botões em coluna abaixo de 360px */
+    @media (max-width: 360px) {
+        .navigation-buttons { flex-direction: column; align-items: stretch; }
+        .navigation-buttons button { width: 100%; }
+    }
+
+    /* Resultado Final Mobile */
+    .resultado-final-card { padding: 20px; }
+    .resultado-final-titulo { font-size: 1.4rem; }
+    .pontos-valor { font-size: 1.5rem; }
+    .resultado-final-detalhes p { font-size: 0.9rem; }
+
+    footer { height: 55px; font-size: 0.8rem; }
+}

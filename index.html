@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-BR"> <head>
+<html lang="pt-BR">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
@@ -8,318 +10,422 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
         rel="stylesheet">
-    <title>Histologia - Quiz Interativo</title> </head>
+    <title>Histologia - Quiz Interativo</title>
+</head>
 
 <body>
     <header>
-        <h1 class="title-header">
-            Histologia
-        </h1>
-        <p>
-            <a class="about-link" href="#footer">Sobre</a>
-        </p>
-        <div>
-            </div>
+        <h1 class="title-header">Histologia</h1>
+        <p><a class="about-link" href="#footer">Sobre</a></p>
+        <div></div>
     </header>
 
     <nav>
         <ul class="navbar">
-            <li>
-                <a href="#" class="nav-link">Concepção</a>
-            </li>
-            <li>
-                <a href="#" class="nav-link">Metabolismo</a>
-            </li>
-            <li>
-                <a href="#" class="nav-link">Funções</a>
-            </li>
+            <li><a href="#" class="nav-link active" data-section="inicio-section">Início</a></li>
+            <li><a href="#" class="nav-link" data-section="questoes-section">Questões</a></li>
         </ul>
     </nav>
 
     <main>
-        <aside>
-            <p class="aside-title">Pontuação</p>
-            <div class="pontuacao-wrap">
-                <p id="pontuacao">
-                    0
-                </p>
+        <section id="inicio-section" class="main-section">
+            <div class="inicio-content">
+                <h2>Bem-vindo ao Quiz Interativo de Histologia!</h2>
+                <p>Navegue até a seção "Questões" para testar seus conhecimentos.</p>
+                <p>Lá, você poderá escolher uma ou mais categorias ou responder a perguntas de todas elas.</p>
+                <p>Sua pontuação será exibida ao lado. Boa sorte!</p>
             </div>
-            <div class="aside-info-wrap">
-                <div class="icon-wrap icon-correct">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#3bcf76"> <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
-                    </svg>
+        </section>
+
+        <section id="questoes-section" class="main-section" style="display: none;">
+            <aside>
+                <p class="aside-title">Pontuação</p>
+                <div class="pontuacao-wrap">
+                    <p id="pontuacao">0</p>
                 </div>
-                <p id="acertos">
-                    Acertos <span id="acertos-numero">0</span>
-                </p>
-            </div>
-            <div class="aside-info-wrap">
-                <div class="icon-wrap icon-error" id="error">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                        fill="#dc3545"> <path
-                            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                    </svg>
-                </div>
-                <p id="erros">
-                    Erros <span id="erros-numero">0</span>
-                </p>
-            </div>
-        </aside>
-        <div class="main-content">
-            <section id="quiz-section" style="display: flex; flex-direction: column; gap: 20px;">
-        
-                <div id="progress-container" style="width: 100%; margin-bottom: 15px;">
-                    <div id="progress-bar-fill" style="height: 10px; width: 0%; background-color: #114a9c; border-radius: 5px; transition: width 0.3s ease-out;"></div>
-                    <span id="progress-text" style="font-size: 0.9em; color: #6c757d; float: right; margin-top: 2px;">0 / 0</span>
-                </div>
-        
-                <h2>
-                    <span id="categoria-titulo">Categoria</span>
-                    <span>- Questão <span id="id-questao">1</span></span>
-                </h2>
-        
-                <div class="question-wrap">
-                    <div class="question-text">
-                        <p id="pergunta-texto">Carregando pergunta...</p>
+                <div class="aside-info-wrap">
+                    <div class="icon-wrap icon-correct">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#3bcf76">
+                            <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
+                        </svg>
                     </div>
-                    <div class="question">
-                        <div class="image-question-wrap">
-                            <img src="" alt="" id="pergunta-imagem" style="display: none; max-height: 400px; width: auto;">
+                    <p id="acertos">Acertos <span id="acertos-numero">0</span></p>
+                </div>
+                <div class="aside-info-wrap">
+                    <div class="icon-wrap icon-error" id="error">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                            fill="#dc3545">
+                            <path
+                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                        </svg>
+                    </div>
+                    <p id="erros">Erros <span id="erros-numero">0</span></p>
+                </div>
+            </aside>
+
+            <div class="main-content">
+                <div class="filtro-categorias-container">
+                    <span class="filtro-label">Categorias:</span>
+                    <div class="filtro-checkboxes">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-todas" name="categoria" value="Todas" checked>
+                            <label for="cat-todas">Todas</label>
                         </div>
-                        <div class="answers-wrap" id="respostas-container">
-                            </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-concepcao" name="categoria" value="Concepção" checked>
+                            <label for="cat-concepcao">Concepção</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-metabolismo" name="categoria" value="Metabolismo" checked>
+                            <label for="cat-metabolismo">Metabolismo</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="cat-funcoes" name="categoria" value="Funções" checked>
+                            <label for="cat-funcoes">Funções</label>
+                        </div>
+                        </div>
+                </div>
+                <div id="aviso-container" style="width: 100%;"></div>
+
+                <section id="quiz-section" style="display: none;">
+                    <div id="progress-container" style="width: 100%; margin-bottom: 15px;">
+                        <div id="progress-bar-fill"
+                            style="height: 10px; width: 0%; background-color: #114a9c; border-radius: 5px; transition: width 0.3s ease-out;">
+                        </div>
+                        <span id="progress-text"
+                            style="font-size: 0.9em; color: #6c757d; float: right; margin-top: 2px;">0 / 0</span>
                     </div>
-                    <p id="referencia-questao" style="font-size: 0.9em; color: #6c757d; margin-top: 15px;"></p>
+                    <h2><span id="categoria-titulo">Questão</span> <span id="id-questao">1</span></h2>
+                    <div class="question-wrap">
+                        <div class="question-text">
+                            <p id="pergunta-texto">Carregando pergunta...</p>
+                        </div>
+                        <div class="question">
+                            <div class="image-question-wrap">
+                                <img src="" alt="" id="pergunta-imagem" style="display: none;">
+                            </div>
+                            <div class="answers-wrap" id="respostas-container">
+                            </div>
+                        </div>
+                        <p id="referencia-questao" style="font-size: 0.9em; color: #6c757d; margin-top: 15px;"></p>
+                    </div>
+                    <div class="navigation-buttons" style="display: none;">
+                        <button id="prev-btn" disabled>Anterior</button>
+                        <button id="next-btn">Próxima</button>
+                    </div>
+                </section>
+
+                <div class="resultado-final-card" style="display: none;">
+                    <h3 class="resultado-final-titulo">Quiz Concluído!</h3>
+                    <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
+                    <div class="resultado-final-detalhes">
+                        <p>Acertos: <span class="acertos-valor">0</span></p>
+                        <p>Erros: <span class="erros-valor">0</span></p>
+                    </div>
                 </div>
-            </section> <div class="navigation-buttons" style="display: none;">
-                <button id="prev-btn" disabled>Anterior</button>
-                <button id="next-btn">Próxima</button>
             </div>
-        
-            <div class="resultado-final-card" style="display: none;">
-                <h3 class="resultado-final-titulo">Quiz Concluído!</h3>
-                <p class="resultado-final-pontuacao">
-                    Pontuação Final: <span class="pontos-valor">0</span>
-                </p>
-                <div class="resultado-final-detalhes">
-                    <p>Acertos: <span class="acertos-valor">0</span></p>
-                    <p>Erros: <span class="erros-valor">0</span></p>
-                </div>
-            </div>
-        
-        </div> ```
-        
+        </section>
     </main>
 
     <footer id="footer">
-        <p>
-            &copy; Desenvolvido por Davi Castro
-        </p>
+        <p>&copy; Desenvolvido por Davi Castro</p>
     </footer>
 
     <script>
         // --- Classe Usuário ---
         class Usuario {
             constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
-                this._nome = nome;
-                this._acertos = acertos;
-                this._erros = erros;
-                this._pontos = pontos;
-                this.atualizar_pontos();
+                this._nome = nome; this._acertos = acertos; this._erros = erros; this._pontos = pontos; this.atualizar_pontos();
             }
-            get acertos() { return this._acertos; }
-            get erros() { return this._erros; }
-            get pontos() { return this._pontos; }
-            set acertos(acertos) { this._acertos = acertos; this.atualizar_pontos(); }
-            set erros(erros) { this._erros = erros; this.atualizar_pontos(); }
+            get acertos() { return this._acertos; } get erros() { return this._erros; } get pontos() { return this._pontos; }
+            set acertos(acertos) { this._acertos = acertos; this.atualizar_pontos(); } set erros(erros) { this._erros = erros; this.atualizar_pontos(); }
             resetarContadores() { this._acertos = 0; this._erros = 0; this.atualizar_pontos(); }
             atualizar_pontos() { this._pontos = (15 * this._acertos) - (5 * this._erros); if (this._pontos < 0) this._pontos = 0; }
         }
-    
-        // --- Array de Perguntas ---
+
+        // --- Array de Perguntas (Usando 'categorias' como array) ---
         const perguntas = [
             // Concepção
-            { 
-                id: 1,
-                pergunta: "Qual é a principal função das células de Sertoli...", 
-                imagem: "",
-                respostas: [
-                    "Produzir testosterona", "Formar a túnica albugínea", "Fornecer sustentação e formar a barreira hematotesticular", "Participar diretamente da espermiogênese"
-                ], 
-                correta: "Fornecer sustentação e formar a barreira hematotesticular", 
-                referencia: "Gartner, 5ª ed.", 
-                categoria: "Concepção" 
-            },
-            { id: 2, pergunta: "Quais são as células espermatogênicas localizadas mais próximas ao lúmen...", imagem: "", respostas: ["Espermatogônias", "Células de Sertoli", "Espermátides", "Espermatócitos primários"], correta: "Espermátides", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
-            { id: 3, pergunta: "Que tipo de epitélio reveste os dúctulos eferentes...", imagem: "", respostas: ["Epitélio simples pavimentoso", "Epitélio cúbico simples", "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", "Epitélio pseudoestratificado com estereocílios"], correta: "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
-            { id: 4, pergunta: "Qual estrutura testicular contém as células de Leydig...", imagem: "", respostas: ["Epitélio seminífero", "Túnica própria", "Tecido intersticial entre os túbulos seminíferos", "Rede testicular (rete testis)"], correta: "Tecido intersticial entre os túbulos seminíferos", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
-            { id: 5, pergunta: "Sobre o ducto deferente, é correto afirmar que:", imagem: "", respostas: ["Possui epitélio simples cúbico e camada muscular fina", "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", "Possui epitélio estratificado pavimentoso e camada adventícia espessa", "É formado por epitélio colunar ciliado e tecido fibroso denso"], correta: "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", referencia: "Gartner, 5ª ed.", categoria: "Concepção" },
+            { id: 1, pergunta: "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?", imagem: "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1", respostas: ["Produzir testosterona", "Formar a túnica albugínea", "Fornecer sustentação e formar a barreira hematotesticular", "Participar diretamente da espermiogênese"], correta: "Fornecer sustentação e formar a barreira hematotesticular", referencia: "Gartner, 5ª ed.", categorias: ["Concepção"] },
+            { id: 2, pergunta: "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?", imagem: "", respostas: ["Espermatogônias", "Células de Sertoli", "Espermátides", "Espermatócitos primários"], correta: "Espermátides", referencia: "Gartner, 5ª ed.", categorias: ["Concepção"] },
+            { id: 3, pergunta: "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?", imagem: "", respostas: ["Epitélio simples pavimentoso", "Epitélio cúbico simples", "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", "Epitélio pseudoestratificado com estereocílios"], correta: "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", referencia: "Gartner, 5ª ed.", categorias: ["Concepção"] },
+            { id: 4, pergunta: "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?", imagem: "", respostas: ["Epitélio seminífero", "Túnica própria", "Tecido intersticial entre os túbulos seminíferos", "Rede testicular (rete testis)"], correta: "Tecido intersticial entre os túbulos seminíferos", referencia: "Gartner, 5ª ed.", categorias: ["Concepção"] },
+            { id: 5, pergunta: "Sobre o ducto deferente, é correto afirmar que:", imagem: "", respostas: ["Possui epitélio simples cúbico e camada muscular fina", "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", "Possui epitélio estratificado pavimentoso e camada adventícia espessa", "É formado por epitélio colunar ciliado e tecido fibroso denso"], correta: "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", referencia: "Gartner, 5ª ed.", categorias: ["Concepção"] },
             // Metabolismo
-            { id: 6, pergunta: "Qual organela celular é a principal responsável pela respiração celular aeróbica?", imagem: "", respostas: ["Retículo Endoplasmático", "Complexo de Golgi", "Mitocôndria", "Lisossomo"], correta: "Mitocôndria", referencia: "Biologia Celular Básica", categoria: "Metabolismo" },
-            { id: 7, pergunta: "O processo de glicólise ocorre em qual compartimento celular?", imagem: "", respostas: ["Mitocôndria", "Núcleo", "Citosol", "Peroxissomo"], correta: "Citosol", referencia: "Bioquímica Ilustrada", categoria: "Metabolismo" },
+            { id: 6, pergunta: "Qual organela celular é a principal responsável pela respiração celular aeróbica?", imagem: "", respostas: ["Retículo Endoplasmático", "Complexo de Golgi", "Mitocôndria", "Lisossomo"], correta: "Mitocôndria", referencia: "Biologia Celular Básica", categorias: ["Metabolismo", "Funções"] }, // Multi-categoria
+            { id: 7, pergunta: "O processo de glicólise ocorre em qual compartimento celular?", imagem: "", respostas: ["Mitocôndria", "Núcleo", "Citosol", "Peroxissomo"], correta: "Citosol", referencia: "Bioquímica Ilustrada", categorias: ["Metabolismo"] },
             // Funções
-            { id: 8, pergunta: "Qual a principal função do tecido epitelial de revestimento?", imagem: "", respostas: ["Contração", "Sustentação", "Proteção e Absorção", "Transmissão de impulsos"], correta: "Proteção e Absorção", referencia: "Histologia Básica", categoria: "Funções" },
-            { id: 9, pergunta: "Os neurônios são células especializadas na função de:", imagem: "", respostas: ["Produzir hormônios", "Realizar fagocitose", "Transmitir impulsos nervosos", "Armazenar gordura"], correta: "Transmitir impulsos nervosos", referencia: "Neurociência Fundamental", categoria: "Funções" }
+            { id: 8, pergunta: "Qual a principal função do tecido epitelial de revestimento?", imagem: "", respostas: ["Contração", "Sustentação", "Proteção e Absorção", "Transmissão de impulsos"], correta: "Proteção e Absorção", referencia: "Histologia Básica", categorias: ["Funções"] },
+            { id: 9, pergunta: "Os neurônios são células especializadas na função de:", imagem: "", respostas: ["Produzir hormônios", "Realizar fagocitose", "Transmitir impulsos nervosos", "Armazenar gordura"], correta: "Transmitir impulsos nervosos", referencia: "Neurociência Fundamental", categorias: ["Funções"] }
+            // Adicione mais perguntas aqui...
         ];
-    
-        // --- Variáveis Globais do Quiz ---
+
+        // --- Variáveis Globais ---
         let perguntaAtual = 0;
         let perguntasFiltradas = [];
-        let categoriaAtual = "Concepção";
+        let categoriasSelecionadas = []; // Guarda as categorias ativas (nomes)
         const usuario = new Usuario();
         let autoAvancoTimeoutId = null;
-    
-        // --- Elementos do DOM (Cache) ---
-        const elCategoriaTitulo = document.getElementById('categoria-titulo');
-        const elIdQuestao = document.getElementById('id-questao');
-        const elPerguntaTexto = document.getElementById('pergunta-texto');
-        const elPerguntaImagem = document.getElementById('pergunta-imagem');
-        const elRespostasContainer = document.getElementById('respostas-container');
-        const elReferencia = document.getElementById('referencia-questao');
-        const elQuizSection = document.getElementById('quiz-section');
-        const elMainContent = document.querySelector('.main-content');
-        const elPontuacao = document.getElementById('pontuacao');
-        const elAcertosNum = document.getElementById('acertos-numero');
-        const elErrosNum = document.getElementById('erros-numero');
-        const elPrevBtn = document.getElementById('prev-btn');
-        const elNextBtn = document.getElementById('next-btn');
-        const elNavigationButtons = document.querySelector('.navigation-buttons');
-        const elResultadoCard = document.querySelector('.resultado-final-card');
-        const elProgressBarFill = document.getElementById('progress-bar-fill');
-        const elProgressText = document.getElementById('progress-text');
-        const elProgressContainer = document.getElementById('progress-container');
-    
-        // --- Funções do Quiz ---
-    
+        let secaoAtual = 'inicio-section';
+
+        // --- Elementos do DOM ---
+        let elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elNavigationButtons, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer;
+
+        // --- Função para Embaralhar Array (Opcional) ---
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        // --- Função para buscar elementos do DOM ---
+        function cacheDOMelements() {
+            elCategoriaTitulo = document.getElementById('categoria-titulo');
+            elIdQuestao = document.getElementById('id-questao');
+            elPerguntaTexto = document.getElementById('pergunta-texto');
+            elPerguntaImagem = document.getElementById('pergunta-imagem');
+            elRespostasContainer = document.getElementById('respostas-container');
+            elReferencia = document.getElementById('referencia-questao');
+            elQuizSection = document.getElementById('quiz-section');
+            elPontuacao = document.getElementById('pontuacao');
+            elAcertosNum = document.getElementById('acertos-numero');
+            elErrosNum = document.getElementById('erros-numero');
+            elPrevBtn = document.getElementById('prev-btn');
+            elNextBtn = document.getElementById('next-btn');
+            elNavigationButtons = elQuizSection ? elQuizSection.querySelector('.navigation-buttons') : null;
+            elResultadoCard = document.querySelector('.resultado-final-card');
+            elProgressBarFill = document.getElementById('progress-bar-fill');
+            elProgressText = document.getElementById('progress-text');
+            elProgressContainer = document.getElementById('progress-container');
+            filtroCheckboxesContainer = document.querySelector('.filtro-checkboxes'); // <- MUDOU AQUI
+            avisoContainer = document.getElementById('aviso-container');
+
+            // Validação essencial
+            const elementos = { elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elNavigationButtons, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer };
+            for (const key in elementos) {
+                if (!elementos[key]) {
+                    console.error(`Erro Crítico: Elemento ${key} não encontrado no DOM! Verifique os IDs e classes no HTML.`);
+                    alert(`Erro crítico: Elemento essencial "${key}" não encontrado. O quiz pode não funcionar corretamente.`);
+                    return false; // Parar a inicialização
+                }
+            }
+            return true; // Retorna true se tudo ok
+        }
+
+        // --- Funções para Mostrar/Limpar Avisos ---
+        function mostrarAviso(texto) {
+            if (!avisoContainer) return;
+            avisoContainer.innerHTML = ''; // Limpa avisos anteriores
+            const p = document.createElement('p');
+            p.classList.add('aviso-mensagem');
+            p.textContent = texto;
+            avisoContainer.appendChild(p);
+            avisoContainer.style.display = 'block'; // Mostra o container
+        }
+        function limparAviso() {
+            if (avisoContainer) {
+                avisoContainer.innerHTML = '';
+                avisoContainer.style.display = 'none'; // Esconde o container
+            }
+        }
+
+        // --- Função para Atualizar Barra de Progresso ---
         function atualizarBarraProgresso() {
-            if (!elProgressContainer || !elProgressBarFill || !elProgressText) { return; }
-            if (!perguntasFiltradas || perguntasFiltradas.length === 0) {
-                elProgressBarFill.style.width = '0%';
-                elProgressText.innerText = '';
-                elProgressContainer.style.display = 'none';
+            if (!elProgressContainer || !elProgressBarFill || !elProgressText || !perguntasFiltradas) {
+                if (elProgressContainer) elProgressContainer.style.display = 'none';
                 return;
             }
-            elProgressContainer.style.display = 'block';
-            const totalPerguntas = perguntasFiltradas.length;
-            const numeroQuestaoAtual = (perguntaAtual < totalPerguntas) ? perguntaAtual + 1 : totalPerguntas;
-            const progressoPercentual = (numeroQuestaoAtual / totalPerguntas) * 100;
-            elProgressBarFill.style.width = `${progressoPercentual}%`;
-            elProgressText.innerText = `${numeroQuestaoAtual} / ${totalPerguntas}`;
+            if (perguntasFiltradas.length > 0) {
+                elProgressContainer.style.display = 'block';
+                const totalPerguntas = perguntasFiltradas.length;
+                const numeroQuestaoAtualExibicao = Math.min(perguntaAtual + 1, totalPerguntas);
+                const progressoPercentual = totalPerguntas > 0 ? (numeroQuestaoAtualExibicao / totalPerguntas) * 100 : 0;
+                if (elProgressBarFill) elProgressBarFill.style.width = `${progressoPercentual}%`;
+                if (elProgressText) elProgressText.textContent = `${numeroQuestaoAtualExibicao} / ${totalPerguntas}`;
+            } else {
+                elProgressContainer.style.display = 'none';
+                if (elProgressBarFill) elProgressBarFill.style.width = `0%`;
+                if (elProgressText) elProgressText.textContent = `0 / 0`;
+            }
         }
-    
-        function mostrarAviso(texto) {
-            const existingAviso = document.querySelector('.aviso-mensagem');
-            if (existingAviso) existingAviso.remove();
-            if (elResultadoCard) elResultadoCard.style.display = 'none';
-            const avisoP = document.createElement('p');
-            avisoP.classList.add('aviso-mensagem');
-            avisoP.textContent = texto;
-            avisoP.style.textAlign = 'center';
-            avisoP.style.padding = '20px';
-            avisoP.style.color = '#6c757d';
-            if (elResultadoCard) { elMainContent.insertBefore(avisoP, elResultadoCard); }
-            else { elMainContent.appendChild(avisoP); }
+
+        // --- Função para Mostrar/Esconder Seções ---
+        function mostrarSecao(idSecao) {
+            document.querySelectorAll('.main-section').forEach(s => s.style.display = 'none');
+            const secaoParaMostrar = document.getElementById(idSecao);
+            if (secaoParaMostrar) {
+                secaoParaMostrar.style.display = (idSecao === 'questoes-section') ? 'flex' : 'block';
+                secaoAtual = idSecao;
+                limparAviso(); // Limpa avisos ao mudar de seção
+                if (idSecao === 'questoes-section' && filtroCheckboxesContainer) {
+                    atualizarFiltroECarregarPerguntas();
+                } else {
+                    if (elQuizSection) elQuizSection.style.display = 'none';
+                    if (elResultadoCard) elResultadoCard.style.display = 'none';
+                }
+            } else { console.error(`Seção ${idSecao} não encontrada.`); }
         }
-    
-        function selecionarCategoria(categoria) {
+
+        // --- Função Central: Atualiza Filtro e Carrega Perguntas ---
+        function atualizarFiltroECarregarPerguntas() {
             clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
-            perguntas.forEach(p => { delete p.respostaDada; });
-            categoriaAtual = categoria;
-            perguntasFiltradas = perguntas.filter(p => p.categoria === categoria);
+            perguntas.forEach(p => delete p.respostaDada);
+            limparAviso();
+
+            // 1. Ler categorias selecionadas dos checkboxes MARCADOS (exceto "Todas")
+            categoriasSelecionadas = [];
+            const checkboxesCategorias = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
+            checkboxesCategorias.forEach(cb => {
+                if (cb.checked) {
+                    categoriasSelecionadas.push(cb.value); // Adiciona o valor (nome da categoria)
+                }
+            });
+
+            // 2. Filtrar perguntas
+            perguntasFiltradas = [];
+            if (categoriasSelecionadas.length > 0) {
+                perguntasFiltradas = perguntas.filter(p =>
+                    p.categorias && p.categorias.some(cat => categoriasSelecionadas.includes(cat))
+                );
+                 // shuffleArray(perguntasFiltradas); // Descomente se quiser embaralhar
+            }
+
+            // 3. Resetar estado do Quiz e UI
             perguntaAtual = 0;
             usuario.resetarContadores();
             atualizar_pontuacao();
             atualizarBarraProgresso();
+
             if (elResultadoCard) elResultadoCard.style.display = 'none';
-            const existingAviso = document.querySelector('.aviso-mensagem');
-            if (existingAviso) existingAviso.remove();
+            if (elQuizSection) elQuizSection.style.display = 'none';
+
+            // 4. Exibir Quiz ou Mensagem
             if (perguntasFiltradas.length > 0) {
-                elQuizSection.style.display = 'flex';
-                if(elNavigationButtons) elNavigationButtons.style.display = 'flex'; // Garante que botões apareçam
-                carregarPergunta();
+                if (elQuizSection) {
+                    elQuizSection.style.display = 'flex';
+                    carregarPergunta();
+                } else { console.error("Erro crítico: Elemento #quiz-section não encontrado."); }
             } else {
-                elQuizSection.style.display = 'none';
-                if(elNavigationButtons) elNavigationButtons.style.display = 'none';
-                mostrarAviso(`Nenhuma pergunta encontrada para ${categoria}.`);
+                if (categoriasSelecionadas.length > 0) {
+                    mostrarAviso(`Nenhuma pergunta encontrada para a(s) categoria(s) selecionada(s).`);
+                } else {
+                    mostrarAviso(`Selecione pelo menos uma categoria para começar o quiz.`);
+                }
+                if (elQuizSection) elQuizSection.style.display = 'none';
             }
         }
-    
+
+
+        // --- Função para Carregar Pergunta ---
         function carregarPergunta() {
+            if (!elQuizSection || !elRespostasContainer || !elNavigationButtons) {
+                console.error("Erro crítico: Elementos essenciais do quiz não encontrados.");
+                mostrarAviso("Erro ao carregar a estrutura do quiz.");
+                return;
+            }
+            if (elQuizSection.style.display === 'none') {
+                elQuizSection.style.display = 'flex';
+            }
+
+            clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
             atualizarBarraProgresso();
-    
+
             if (perguntaAtual >= perguntasFiltradas.length) {
                 mostrarResultadoFinal();
                 return;
             }
-    
+
             const pergunta = perguntasFiltradas[perguntaAtual];
+            if (!pergunta) {
+                console.error(`Erro: Tentativa de acessar pergunta inválida no índice ${perguntaAtual}.`);
+                mostrarAviso("Erro ao carregar os dados da pergunta.");
+                mostrarResultadoFinal();
+                return;
+            }
+
             const jaRespondida = pergunta.hasOwnProperty('respostaDada');
-    
-            if (elResultadoCard) elResultadoCard.style.display = 'none';
-            elQuizSection.style.display = 'flex';
-             if(elNavigationButtons) elNavigationButtons.style.display = 'flex'; // Garante que botões apareçam
-    
             elRespostasContainer.innerHTML = '';
-            elCategoriaTitulo.innerText = categoriaAtual;
-            elIdQuestao.innerText = perguntaAtual + 1;
-            elPerguntaTexto.innerText = pergunta.pergunta;
-            elReferencia.innerText = `Referência: ${pergunta.referencia}`;
-    
-            // Imagem
-            if (pergunta.imagem && pergunta.imagem.trim() !== "") {
-                elPerguntaImagem.src = pergunta.imagem;
-                elPerguntaImagem.alt = `Imagem para a questão ${perguntaAtual + 1} de ${categoriaAtual}`;
-                elPerguntaImagem.style.display = 'block';
-            } else {
-                elPerguntaImagem.style.display = 'none';
-                elPerguntaImagem.src = "";
-                elPerguntaImagem.alt = "";
+
+            let tituloCat = "Questão";
+            if (pergunta.categorias && pergunta.categorias.length > 0) {
+                tituloCat = pergunta.categorias[0];
+            } else if (categoriasSelecionadas.length === 1) {
+                 tituloCat = categoriasSelecionadas[0];
             }
-    
-            // Cria/Restaura Respostas
-            pergunta.respostas.forEach((respostaTexto) => {
-                const p = document.createElement('p');
-                p.classList.add('answer');
-                p.innerText = respostaTexto;
-                if (jaRespondida) {
-                    p.onclick = null;
-                    p.classList.add('answered');
-                    if (respostaTexto === pergunta.correta) { p.classList.add('correct'); }
-                    if (respostaTexto === pergunta.respostaDada && respostaTexto !== pergunta.correta) { p.classList.add('incorrect'); }
+            if (elCategoriaTitulo) elCategoriaTitulo.innerText = tituloCat;
+            if (elIdQuestao) elIdQuestao.innerText = perguntaAtual + 1;
+            if (elPerguntaTexto) elPerguntaTexto.textContent = pergunta.pergunta;
+            if (elReferencia) elReferencia.textContent = `Referência: ${pergunta.referencia || 'N/A'}`;
+
+            if (elPerguntaImagem) {
+                if (pergunta.imagem && pergunta.imagem.trim() !== "") {
+                    elPerguntaImagem.src = pergunta.imagem;
+                    elPerguntaImagem.alt = `Imagem da questão ${perguntaAtual + 1}`;
+                    elPerguntaImagem.style.display = 'block';
+                    elPerguntaImagem.onerror = () => {
+                        elPerguntaImagem.style.display = 'none';
+                        console.warn(`Erro ao carregar imagem: ${pergunta.imagem}`);
+                    };
                 } else {
-                    p.onclick = () => verificarResposta(p, pergunta);
+                    elPerguntaImagem.style.display = 'none';
+                    elPerguntaImagem.src = "";
+                    elPerguntaImagem.alt = "";
                 }
-                elRespostasContainer.appendChild(p);
-            });
-    
-            // --- LÓGICA DO BOTÃO CORRIGIDA ---
-            elPrevBtn.disabled = perguntaAtual === 0;
-            elNextBtn.disabled = false; // <<< CORRIGIDO: Botão "Próxima" sempre habilitado ao carregar
-    
-            // Ajusta texto do botão "Próxima"
-            if (perguntaAtual === perguntasFiltradas.length - 1) {
-                elNextBtn.innerText = 'Ver Resultado';
-                 // Opcional: Desabilitar apenas na última questão se não respondida
-                 // Você pode descomentar a linha abaixo se quiser esse comportamento:
-                 // elNextBtn.disabled = !jaRespondida;
-            } else {
-                elNextBtn.innerText = 'Próxima';
             }
-            // --- FIM DA CORREÇÃO ---
+
+            if (pergunta.respostas && Array.isArray(pergunta.respostas)) {
+                pergunta.respostas.forEach((respostaTexto) => {
+                    const p = document.createElement('p');
+                    p.classList.add('answer');
+                    p.textContent = respostaTexto;
+
+                    if (jaRespondida) {
+                        p.onclick = null;
+                        p.classList.add('answered');
+                        if (respostaTexto === pergunta.correta) p.classList.add('correct');
+                        if (respostaTexto === pergunta.respostaDada && respostaTexto !== pergunta.correta) p.classList.add('incorrect');
+                    } else {
+                        p.onclick = () => verificarResposta(p, pergunta);
+                    }
+                    if (elRespostasContainer) {
+                        elRespostasContainer.appendChild(p);
+                    } else {
+                        console.error("Erro crítico: #respostas-container não encontrado ao adicionar resposta!");
+                    }
+                });
+            } else {
+                console.error(`Pergunta ID ${pergunta.id} não possui um array de respostas válido.`);
+                if (elRespostasContainer) {
+                    elRespostasContainer.innerHTML = '<p class="aviso-mensagem erro">Erro: Opções de resposta não encontradas.</p>';
+                }
+            }
+
+            if (elNavigationButtons) elNavigationButtons.style.display = 'flex';
+            if (elPrevBtn) elPrevBtn.disabled = perguntaAtual === 0;
+            if (elNextBtn) {
+                elNextBtn.disabled = false;
+                elNextBtn.innerText = (perguntaAtual === perguntasFiltradas.length - 1) ? 'Ver Resultado' : 'Próxima';
+            }
         }
-    
+
+        // --- Função para Verificar Resposta ---
         function verificarResposta(elementoClicado, pergunta) {
+            if (pergunta.hasOwnProperty('respostaDada') || !elementoClicado) return;
             clearTimeout(autoAvancoTimeoutId);
-            const respostaSelecionada = elementoClicado.innerText;
+
+            const respostaSelecionada = elementoClicado.textContent;
             const allAnswers = elRespostasContainer.querySelectorAll('.answer');
             pergunta.respostaDada = respostaSelecionada;
+
             allAnswers.forEach(ans => {
                 ans.onclick = null;
                 ans.classList.add('answered');
             });
+
             if (respostaSelecionada === pergunta.correta) {
                 elementoClicado.classList.add("correct");
                 usuario.acertos += 1;
@@ -327,20 +433,21 @@
                 elementoClicado.classList.add("incorrect");
                 usuario.erros += 1;
                 allAnswers.forEach(ans => {
-                    if (ans.innerText === pergunta.correta) {
+                    if (ans.textContent === pergunta.correta) {
                         ans.classList.add('correct');
                     }
                 });
             }
             atualizar_pontuacao();
-            // A linha 'elNextBtn.disabled = false;' foi removida daqui pois é redundante
-    
-            autoAvancoTimeoutId = setTimeout(() => {
-                proximaPergunta();
-            }, 1500);
+            autoAvancoTimeoutId = setTimeout(proximaPergunta, 1500);
         }
-    
+
+        // --- Funções de Navegação do Quiz ---
         function proximaPergunta() {
+            if (!elQuizSection) {
+                console.error("Erro: #quiz-section não existe.");
+                return;
+            }
             clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
             perguntaAtual++;
@@ -350,8 +457,12 @@
                 mostrarResultadoFinal();
             }
         }
-    
+
         function perguntaAnterior() {
+            if (!elQuizSection) {
+                console.error("Erro: #quiz-section não existe.");
+                return;
+            }
             clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
             if (perguntaAtual > 0) {
@@ -359,58 +470,129 @@
                 carregarPergunta();
             }
         }
-    
+
+        // --- Função para Mostrar Resultado Final ---
         function mostrarResultadoFinal() {
             clearTimeout(autoAvancoTimeoutId);
             autoAvancoTimeoutId = null;
-            elQuizSection.style.display = 'none';
-            if(elNavigationButtons) elNavigationButtons.style.display = 'none';
+            if (elQuizSection) elQuizSection.style.display = 'none';
             if (elProgressContainer) elProgressContainer.style.display = 'none';
+
             if (elResultadoCard) {
                 elResultadoCard.style.display = 'block';
                 preencherMensagemFinal();
             } else {
-                console.error("Elemento '.resultado-final-card' não encontrado.");
+                mostrarAviso(`Quiz Concluído! Pontuação Final: ${usuario.pontos}, Acertos: ${usuario.acertos}, Erros: ${usuario.erros}`);
+                console.error("Erro: .resultado-final-card não encontrado.");
             }
         }
-    
+
+        // --- Função para Preencher Resultado Final ---
         function preencherMensagemFinal() {
-            if (!elResultadoCard) return;
-            const tituloResultado = elResultadoCard.querySelector('.resultado-final-titulo');
-            const pontuacaoResultado = elResultadoCard.querySelector('.resultado-final-pontuacao .pontos-valor');
-            const acertosResultado = elResultadoCard.querySelector('.resultado-final-detalhes .acertos-valor');
-            const errosResultado = elResultadoCard.querySelector('.resultado-final-detalhes .erros-valor');
-            if (tituloResultado) tituloResultado.textContent = `Quiz de ${categoriaAtual} Concluído!`;
-            if (pontuacaoResultado) pontuacaoResultado.textContent = usuario.pontos;
-            if (acertosResultado) acertosResultado.textContent = usuario.acertos;
-            if (errosResultado) errosResultado.textContent = usuario.erros;
+            if (!elResultadoCard || !filtroCheckboxesContainer) return;
+
+            const tit = elResultadoCard.querySelector('.resultado-final-titulo');
+            const pont = elResultadoCard.querySelector('.resultado-final-pontuacao .pontos-valor');
+            const acert = elResultadoCard.querySelector('.resultado-final-detalhes .acertos-valor');
+            const err = elResultadoCard.querySelector('.resultado-final-detalhes .erros-valor');
+
+            let tituloFinal = "Quiz Concluído!";
+            const categoriasAtivas = [];
+            const checkboxesAtivos = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked:not([value="Todas"])');
+            checkboxesAtivos.forEach(cb => {
+                categoriasAtivas.push(cb.value);
+            });
+
+            const cbTodas = filtroCheckboxesContainer.querySelector('input[value="Todas"]');
+
+            if (categoriasAtivas.length === 1) {
+                tituloFinal = `Quiz de ${categoriasAtivas[0]} Concluído!`;
+            } else if (cbTodas && cbTodas.checked) {
+                 tituloFinal = `Quiz de Todas as Categorias Concluído!`;
+            }
+            // Se múltiplas categorias (mas não todas), mantém o título genérico.
+
+            if (tit) tit.textContent = tituloFinal;
+            if (pont) pont.textContent = usuario.pontos;
+            if (acert) acert.textContent = usuario.acertos;
+            if (err) err.textContent = usuario.erros;
         }
-    
+
+
+        // --- Função para Atualizar Pontuação na Sidebar ---
         function atualizar_pontuacao() {
-            elPontuacao.innerText = usuario.pontos;
-            elAcertosNum.innerText = usuario.acertos;
-            elErrosNum.innerText = usuario.erros;
+            if (elPontuacao) elPontuacao.textContent = usuario.pontos;
+            if (elAcertosNum) elAcertosNum.textContent = usuario.acertos;
+            if (elErrosNum) elErrosNum.textContent = usuario.erros;
         }
-    
+
         // --- Inicialização e Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            if (!elPrevBtn || !elNextBtn || !elNavigationButtons || !elResultadoCard || !elQuizSection || !elRespostasContainer || !elMainContent || !elPontuacao || !elAcertosNum || !elErrosNum || !elProgressContainer || !elProgressBarFill || !elProgressText) {
-                console.error("Erro Crítico: Um ou mais elementos essenciais do DOM não foram encontrados.");
-                alert("Ocorreu um erro ao carregar o quiz. Verifique o console para detalhes.");
+            if (!cacheDOMelements()) {
+                console.error("Inicialização interrompida devido à falta de elementos essenciais do DOM.");
                 return;
             }
-            document.querySelectorAll('.nav-link').forEach(link => {
+
+            // Listener da Navbar
+            document.querySelectorAll('.navbar .nav-link').forEach(link => {
                 link.addEventListener('click', (event) => {
                     event.preventDefault();
-                    const categoria = event.target.innerText;
-                    selecionarCategoria(categoria);
+                    const clickedLink = event.target.closest('a');
+                    if (!clickedLink) return;
+                    const secaoId = clickedLink.dataset.section;
+                    if (secaoId && secaoId !== secaoAtual) {
+                        document.querySelectorAll('.navbar .nav-link.active').forEach(al => al.classList.remove('active'));
+                        clickedLink.classList.add('active');
+                        mostrarSecao(secaoId);
+                    }
                 });
             });
-            elPrevBtn.addEventListener('click', perguntaAnterior);
-            elNextBtn.addEventListener('click', proximaPergunta);
-            selecionarCategoria(categoriaAtual);
+
+            // Listener dos Checkboxes de Filtro de Categoria
+            if (filtroCheckboxesContainer) {
+                const cbTodas = filtroCheckboxesContainer.querySelector('input[value="Todas"]');
+                const outrosCheckboxes = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
+
+                filtroCheckboxesContainer.addEventListener('change', (event) => {
+                    const changedCheckbox = event.target;
+
+                    if (changedCheckbox === cbTodas) {
+                        // Se o checkbox "Todas" foi alterado
+                        outrosCheckboxes.forEach(cb => {
+                            cb.checked = cbTodas.checked; // Marca/desmarca todos os outros
+                        });
+                    } else {
+                        // Se um checkbox de categoria individual foi alterado
+                        let todosMarcados = true;
+                        outrosCheckboxes.forEach(cb => {
+                            if (!cb.checked) {
+                                todosMarcados = false; // Se algum estiver desmarcado
+                            }
+                        });
+                        if (cbTodas) {
+                            cbTodas.checked = todosMarcados; // Marca "Todas" só se todos os outros estiverem marcados
+                        }
+                    }
+
+                    // Após qualquer mudança, atualiza as perguntas
+                    atualizarFiltroECarregarPerguntas();
+                });
+
+                // Garante que o estado inicial (com 'checked' no HTML) seja aplicado
+                atualizarFiltroECarregarPerguntas();
+
+            } else { console.error("FATAL: Container de checkboxes de filtro (.filtro-checkboxes) não encontrado!"); }
+
+            // Listeners dos botões de navegação do Quiz
+            if (elPrevBtn) elPrevBtn.addEventListener('click', perguntaAnterior);
+            if (elNextBtn) elNextBtn.addEventListener('click', proximaPergunta);
+
+            // Define e mostra a seção inicial
+            const linkInicial = document.querySelector('.navbar .nav-link.active');
+            const secaoInicialId = linkInicial ? linkInicial.dataset.section : 'inicio-section';
+            mostrarSecao(secaoInicialId || 'inicio-section');
         });
-    
     </script>
+
 </body>
 </html>

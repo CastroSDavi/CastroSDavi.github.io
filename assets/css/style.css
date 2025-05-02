@@ -828,6 +828,17 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     .navigation-buttons { position: static; padding-bottom: 0; padding-top: 20px; margin-top: 5px; } /* Reduz margem superior */
     .navigation-buttons .button { padding: 10px 24px; font-size: 0.9rem; }
     .paginacao button, .paginacao span { font-size: 0.8rem; padding: 5px 10px; min-width: 30px; }
+    .scroll-arrow {
+        display: none; /* Esconde as setas */
+    }
+
+    /* AJUSTE Opcional: Remover espaço reservado para as setas no container dos checkboxes */
+     .filtro-checkboxes#filtro-checkboxes-scroll {
+         padding-left: 15px; /* Reduz padding esquerdo */
+         padding-right: 15px; /* Reduz padding direito */
+         clip-path: none; /* Remove o corte lateral que escondia parte dos itens */
+         /* Manter overflow-x: auto; para permitir rolagem por toque */
+     }
 }
 
 /* --- Telas Muito Pequenas (Ex: <= 480px) --- */

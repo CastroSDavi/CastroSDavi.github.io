@@ -307,7 +307,38 @@ aside p {
     transform: translateY(0px);
 }
 /* === FIM: Estilos para Botão Encerrar === */
+/* Estilo para o botão Tentar Novamente */
+.btn-recomecar-quiz {
+    margin-top: 25px; /* Espaçamento acima do botão */
+    padding: 12px 28px;
+    font-size: 1rem; /* Ajuste o tamanho conforme necessário */
+    font-weight: 600;
+    font-family: "Montserrat", sans-serif;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.5px;
+    background-image: linear-gradient(to right, #1a5f9e, #0d3b66); /* Cor similar ao botão 'Próxima' */
+    color: white;
+    display: inline-block; /* Para que a margem funcione corretamente */
+}
 
+.btn-recomecar-quiz:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+    filter: brightness(110%);
+}
+
+.btn-recomecar-quiz:disabled {
+    background-image: none;
+    background-color: #e9ecef;
+    color: #adb5bd;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: translateY(0);
+}
 
 /* --- Conteúdo Principal (Dentro da Seção Questões) --- */
 #questoes-section .main-content {

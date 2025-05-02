@@ -69,17 +69,27 @@
                 <div class="filtro-categorias-container">
                     <span class="filtro-label">Categorias:</span>
                     <div class="categorias-scroll-wrapper">
-                        <button class="scroll-arrow left" id="cat-scroll-left" aria-label="Rolar categorias para esquerda" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg>
+                        <button class="scroll-arrow left" id="cat-scroll-left"
+                            aria-label="Rolar categorias para esquerda" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                                fill="currentColor">
+                                <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
+                            </svg>
                         </button>
 
                         <div class="filtro-checkboxes" id="filtro-checkboxes-scroll">
-                            </div>
+                        </div>
 
-                        <button class="scroll-arrow right" id="cat-scroll-right" aria-label="Rolar categorias para direita">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
+                        <button class="scroll-arrow right" id="cat-scroll-right"
+                            aria-label="Rolar categorias para direita">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                                fill="currentColor">
+                                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
+                            </svg>
                         </button>
-                    </div> </div> <div id="aviso-container" style="display: none;">
+                    </div>
+                </div>
+                <div id="aviso-container" style="display: none;">
                     <p class="aviso-mensagem">Selecione pelo menos uma categoria para começar o quiz.</p>
                 </div>
 
@@ -88,8 +98,11 @@
                     <div id="progress-container" style="display: none;">
                         <div id="progress-bar-fill"></div>
                     </div>
-                    <span id="progress-text" style="display: none; text-align: right; font-size: 0.9em; color: #6c757d; margin-bottom: 8px;">0 / 0</span>
-                    <h2 id="question-title"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+                    <span id="progress-text"
+                        style="display: none; text-align: right; font-size: 0.9em; color: #6c757d; margin-bottom: 8px;">0
+                        / 0</span>
+                    <h2 id="question-title"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
+                    </h2>
                     <div class="question-wrap">
                         <div class="question-text">
                             <p id="pergunta-texto">Carregando pergunta...</p>
@@ -99,7 +112,7 @@
                                 <img src="" alt="" id="pergunta-imagem" style="display: none;">
                             </div>
                             <div class="answers-wrap" id="respostas-container">
-                                </div>
+                            </div>
                         </div>
                         <p id="referencia-questao"></p>
                     </div>
@@ -108,19 +121,23 @@
                         <button id="prev-btn" disabled>Anterior</button>
                         <button id="next-btn">Próxima</button>
                     </div>
-                </section> <div class="resultado-final-card" style="display: none;">
+                </section>
+                <div class="resultado-final-card" style="display: none;">
                     <h3 class="resultado-final-titulo">Quiz Concluído!</h3>
                     <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
                     <div class="resultado-final-detalhes">
                         <p>Acertos: <span class="acertos-valor">0</span></p>
                         <p>Erros: <span class="erros-valor">0</span></p>
                     </div>
+                    <button id="btn-recomecar" class="btn-recomecar-quiz">Tentar Novamente</button>
                 </div>
                 <div id="question-grid-container" class="question-grid-container" style="display: none;">
                 </div>
-            <div id="paginacao-controles" class="paginacao" style="display: none;">
+                <div id="paginacao-controles" class="paginacao" style="display: none;">
                 </div>
-            </div> </section> </main>
+            </div>
+        </section>
+    </main>
 
     <footer id="footer">
         <p>&copy; Desenvolvido por Davi Castro</p>

@@ -88,6 +88,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Padding inferior será adicionado para mobile via media query */
 }
 
 /* ======================================== */
@@ -127,13 +128,13 @@ header {
     flex-shrink: 0;
 }
 
-/* --- Navbar --- */
-nav {
+/* --- Navbar Superior (Desktop/Tablet) --- */
+nav:not(.bottom-navbar) {
      flex-shrink: 0;
      background-color: var(--color-white);
      border-bottom: var(--border-width) solid var(--color-gray-400);
      height: 50px;
-     display: flex;
+     display: flex; /* Será none em mobile */
      align-items: center;
 }
 
@@ -155,15 +156,16 @@ main {
      background-color: var(--color-gray-200);
      justify-content: center;
      align-items: center;
-     min-height: calc(100vh - 80px - 50px - 65px);
+     /* Altura mínima ajustada para mobile em media queries */
+     min-height: calc(100vh - 80px - 50px - 65px); /* Header - TopNav - Footer */
 }
 
 #questoes-section {
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Será column em mobile */
     flex-grow: 1;
     overflow: hidden;
-    height: calc(100vh - 80px - 50px);
+    height: calc(100vh - 80px - 50px); /* Altura Desktop (Header + TopNav) */
 }
 
 /* --- Aside --- */
@@ -174,13 +176,13 @@ aside {
     padding: 30px;
     min-width: 280px;
     background-color: var(--color-white);
-    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04); /* Sombra específica */
+    box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
     border-right: var(--border-width) solid var(--color-gray-400);
     flex-shrink: 0;
-    position: sticky;
-    top: 0;
+    position: sticky; /* Será static em mobile */
+    top: 0; /* Relativo ao espaço ACIMA dele (que some no mobile) */
     align-self: flex-start;
-    height: calc(100vh - 80px - 50px);
+    height: calc(100vh - 80px - 50px); /* Altura Desktop (Header + TopNav) */
     overflow-y: auto;
     z-index: 10;
 }
@@ -195,16 +197,20 @@ aside {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    height: 100%;
+    height: 100%; /* Desktop */
     min-height: 0;
 }
 
-/* --- Footer --- */
-footer {
+/* --- Footer (Desktop/Tablet) --- */
+footer#footer {
     font: var(--font-weight-normal) 0.9rem var(--font-family-sans);
-    display: flex; justify-content: center; align-items: center;
-    padding: 20px; background-color: var(--color-gray-900); color: var(--color-gray-300);
-    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06); /* Sombra específica */
+    display: flex; /* Será none em mobile */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--color-gray-900);
+    color: var(--color-gray-300);
+    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06);
     border-top: var(--border-width) solid var(--color-gray-800);
     height: 65px;
     flex-shrink: 0;
@@ -212,7 +218,7 @@ footer {
     z-index: 1;
 }
 
-footer p { margin: 0; }
+footer#footer p { margin: 0; }
 
 
 /* ======================================== */
@@ -240,7 +246,7 @@ footer p { margin: 0; }
     text-align: center;
     text-decoration: none;
     color: var(--color-white);
-    background-color: var(--color-gray-700); /* Base secundária */
+    background-color: var(--color-gray-700);
     border: var(--border-width-md) solid transparent;
     border-radius: var(--border-radius-xl);
     cursor: pointer;
@@ -289,7 +295,7 @@ footer p { margin: 0; }
     border-color: transparent;
 }
 .button--secondary:hover:not(:disabled) {
-    background-color: #5a6268; /* Cor específica ou usar var(--color-gray-800)? */
+    background-color: var(--color-gray-800); /* Escurece um pouco */
     box-shadow: 0 5px 12px rgba(108, 117, 125, 0.2);
 }
 
@@ -301,14 +307,12 @@ footer p { margin: 0; }
 }
 .button--outline:hover:not(:disabled) {
     background-color: var(--color-primary-light);
-    color: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
     box-shadow: 0 2px 5px rgba(13, 59, 102, 0.1);
     transform: translateY(-1px);
     filter: none;
 }
 .button--outline:active:not(:disabled) {
-    background-color: #cde1f3; /* Cor específica ou var? */
+    background-color: #cde1f3;
     transform: translateY(0px);
 }
 .button--outline:disabled {
@@ -322,11 +326,11 @@ footer p { margin: 0; }
 .button--small {
     font-size: 0.85rem;
     padding: 8px 15px;
-    border-radius: 20px; /* Ou usar var(--border-radius-lg)? */
+    border-radius: var(--border-radius-lg); /* Usando variável */
 }
 
 /* ======================================== */
-/* Componentes Específicos (Adaptados)      */
+/* Componentes Específicos                  */
 /* ======================================== */
 
 /* --- Logo (Header) --- */
@@ -344,7 +348,7 @@ footer p { margin: 0; }
 .logo-area b { font-weight: var(--font-weight-extrabold); color: var(--color-secondary-green); }
 .logo-area a { text-decoration: none; color: inherit; }
 
-/* --- Navbar Links --- */
+/* --- Navbar Links (Superior) --- */
 .navbar { justify-content: flex-start; padding: 0 15px; display: flex; list-style: none; margin: 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; width: 100%; }
 .navbar > li { padding: 0; }
 .nav-link { display: block; text-decoration: none; font: var(--font-weight-medium) 0.95rem var(--font-family-heading); color: var(--color-gray-800); padding: 15px 20px; position: relative; border-bottom: var(--border-width-lg) solid transparent; background-color: transparent; transition: color var(--transition-medium), border-color var(--transition-slow); }
@@ -352,7 +356,7 @@ footer p { margin: 0; }
 .nav-link.active { font-weight: var(--font-weight-semibold); color: var(--color-primary-dark); border-bottom-color: var(--color-secondary-green-light); }
 
 /* --- Conteúdo da Seção Inicial --- */
-#inicio-section .inicio-content { max-width: 800px; width: 90%; /* Base vem de .card */ }
+#inicio-section .inicio-content { max-width: 800px; width: 90%; /* Base .card */ }
 #inicio-section .inicio-content h2 { margin-top: 0; text-align: center; }
 #inicio-section .inicio-content p { margin-bottom: 15px; line-height: 1.7; color: var(--color-gray-800); text-align: justify; }
 
@@ -363,13 +367,13 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 #pontuacao { width: 100px; height: 100px; font-size: 2.5rem; background-color: var(--color-white); display: flex; justify-content: center; align-items: center; color: var(--color-dark); font-weight: var(--font-weight-semibold); /* Usa .is-circle */ }
 .aside-info-wrap { display: flex; gap: 15px; align-items: center; }
 .icon-wrap { padding: 5px; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; /* Usa .is-circle */ }
-.icon-wrap.icon-correct { background-color: rgba(95, 218, 154, 0.15); } /* Cor específica mantida */
+.icon-wrap.icon-correct { background-color: rgba(95, 218, 154, 0.15); }
 .icon-wrap.icon-correct svg { fill: var(--color-secondary-green); }
-.icon-wrap.icon-error { background-color: rgba(240, 87, 108, 0.1); } /* Cor específica mantida */
+.icon-wrap.icon-error { background-color: rgba(240, 87, 108, 0.1); }
 .icon-wrap.icon-error svg { fill: var(--color-accent-red); }
 
 /* --- Botão Encerrar (Aside) --- */
-#btn-encerrar-sessao { width: 100%; margin-top: auto; margin-bottom: 10px; position: sticky; bottom: 10px; background-color: var(--color-white); font-size: 0.9rem; padding: 10px 15px; /* Base vem de .button .button--outline */ }
+#btn-encerrar-sessao { width: 100%; margin-top: auto; margin-bottom: 10px; position: sticky; bottom: 10px; background-color: var(--color-white); font-size: 0.9rem; padding: 10px 15px; /* Base .button .button--outline */ }
 
 /* --- Filtro de Categorias (main-content) --- */
 .filtro-categorias-container { margin-bottom: 25px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; }
@@ -377,7 +381,7 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 .categorias-scroll-wrapper { position: relative; width: 100%; display: flex; align-items: center; -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 5%, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%); mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 5%, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%); }
 .filtro-checkboxes#filtro-checkboxes-scroll { display: flex; gap: 10px 10px; overflow-x: auto; white-space: nowrap; padding-bottom: 10px; padding-left: 40px; padding-right: 40px; clip-path: inset(0 30px 0 30px); flex-grow: 1; min-width: 0; -ms-overflow-style: none; scrollbar-width: none; scroll-behavior: smooth; }
 .filtro-checkboxes#filtro-checkboxes-scroll::-webkit-scrollbar { display: none; }
-.scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; background-color: var(--color-white); color: var(--color-primary-dark); border: var(--border-width) solid #e0e0e0; /* Cor específica ou var(--color-gray-400)? */ width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background-color var(--transition-medium), opacity var(--transition-slow), transform 0.1s, box-shadow var(--transition-medium); opacity: 0; pointer-events: none; /* Usa .is-circle */ }
+.scroll-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; background-color: var(--color-white); color: var(--color-primary-dark); border: var(--border-width) solid var(--color-gray-400); width: 30px; height: 30px; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: background-color var(--transition-medium), opacity var(--transition-slow), transform 0.1s, box-shadow var(--transition-medium); opacity: 0; pointer-events: none; /* Usa .is-circle */ }
 .categorias-scroll-wrapper:hover .scroll-arrow:not(:disabled), .scroll-arrow:focus-visible { opacity: 1; pointer-events: auto; }
 .scroll-arrow.left { left: 5px; }
 .scroll-arrow.right { right: 5px; }
@@ -393,19 +397,19 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 .checkbox-item input[type="checkbox"]:focus-visible + label { outline: 2px solid var(--color-primary-medium); outline-offset: 2px; }
 .checkbox-item input[type="checkbox"]:focus + label { outline: none; }
 
-/* --- Mensagem de Aviso (main-content) --- */
+/* --- Mensagem de Aviso --- */
 #aviso-container { display: none; padding: 0; margin-top: 20px; flex-shrink: 0; max-width: 800px; margin-left: auto; margin-right: auto; }
-.aviso-mensagem { text-align: center; font-size: 1.1rem; font-style: normal; color: var(--color-gray-800); width: 100%; padding: 25px; /* Base vem de .card */ }
+.aviso-mensagem { text-align: center; font-size: 1.1rem; font-style: normal; color: var(--color-gray-800); width: 100%; padding: 25px; /* Base .card */ }
 
-/* --- Seção do Quiz Ativo (#quiz-section) --- */
+/* --- Seção do Quiz Ativo --- */
 #quiz-section { flex-direction: column; gap: 0; display: none; flex-shrink: 0; }
 #progress-container { width: 100%; background-color: var(--color-gray-300); border-radius: var(--border-radius-xl); margin-bottom: 0; overflow: hidden; height: 12px; position: relative; box-shadow: var(--shadow-inner); display: none; flex-shrink: 0; }
 #progress-bar-fill { height: 100%; width: 0%; background-image: linear-gradient(to right, var(--color-primary-medium), var(--color-primary-dark)); border-radius: var(--border-radius-xl); transition: width 0.4s ease-out; }
 #progress-text { display: none; text-align: right; font-size: 0.9em; color: var(--color-gray-700); margin-top: 8px; margin-bottom: 8px; padding-right: 5px; flex-shrink: 0; }
 #quiz-section h2#question-title { font-size: 1.5rem; color: var(--color-gray-800); font-weight: var(--font-weight-normal); font-family: var(--font-family-sans); margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
-#quiz-section h2#question-title #categoria-titulo { display: inline-block; background-color: var(--color-primary-dark); color: var(--color-white); font-size: 0.85rem; font-weight: var(--font-weight-semibold); font-family: var(--font-family-heading); padding: 5px 12px; border-radius: 6px; /* ou var(--border-radius-sm)? */ text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
+#quiz-section h2#question-title #categoria-titulo { display: inline-block; background-color: var(--color-primary-dark); color: var(--color-white); font-size: 0.85rem; font-weight: var(--font-weight-semibold); font-family: var(--font-family-heading); padding: 5px 12px; border-radius: var(--border-radius-sm); text-transform: uppercase; letter-spacing: 0.8px; white-space: nowrap; }
 #quiz-section h2#question-title #id-questao { font-weight: var(--font-weight-bold); color: var(--color-gray-900); }
-.question-wrap { border-radius: 10px; border-top: 4px solid var(--color-primary-dark); margin-bottom: 20px; flex-shrink: 0; padding: 25px; /* Base vem de .card */ }
+.question-wrap { border-radius: var(--border-radius-md); border-top: 4px solid var(--color-primary-dark); margin-bottom: 20px; flex-shrink: 0; padding: 25px; /* Base .card */ }
 .question { width: 100%; padding: 15px 0 0 0; display: flex; flex-direction: column; gap: 20px; }
 .image-question-wrap { text-align: center; margin-bottom: 20px; }
 .image-question-wrap > img { max-width: 100%; height: auto; max-height: 350px; border-radius: var(--border-radius-md); border: var(--border-width) solid var(--color-gray-400); box-shadow: 0 2px 5px rgba(0,0,0,0.07); display: none; }
@@ -413,7 +417,7 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 .question-text p { margin: 0; }
 .answers-wrap { width: 100%; display: flex; gap: 12px; flex-direction: column; align-items: stretch; }
 .answer { cursor: pointer; color: var(--color-gray-900); background-color: var(--color-gray-100); width: 100%; padding: 15px 25px; box-shadow: var(--shadow-sm); border-radius: var(--border-radius-md); border: var(--border-width) solid var(--color-gray-300); text-align: left; font-size: 1.0rem; transition: all var(--transition-medium); }
-.answer:hover { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07); border-color: var(--color-gray-500); transform: translateY(-2px); background-color: var(--color-gray-300); }
+.answer:hover { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07); border-color: var(--color-gray-500); transform: translateY(-2px); background-color: var(--color-gray-200); }
 .answer.answered { cursor: default; }
 .answer.answered:hover { box-shadow: var(--shadow-sm); transform: translateY(0); background-color: var(--color-gray-100); border-color: var(--color-gray-300); }
 .answer.correct { background-color: var(--color-correct-bg-alt); border-color: var(--color-correct-border); color: var(--color-correct-text); font-weight: var(--font-weight-medium); transform: translateY(0); }
@@ -424,7 +428,6 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 
 /* Botões de Navegação Anterior/Próximo */
 .navigation-buttons { display: flex; justify-content: space-between; padding: 20px 0 0 0; margin-top: 0; border-top: var(--border-width) solid var(--color-gray-300); flex-shrink: 0; }
-/* Estilos vêm de .button e modificadores aplicados no HTML */
 
 /* --- Grade de Navegação das Questões --- */
 #question-grid-container { display: none; flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 5px; width: 100%; margin-top: 15px; margin-bottom: 15px; padding: 5px; flex-shrink: 0; }
@@ -439,7 +442,7 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 
 /* --- Paginação da Grade --- */
 .paginacao { display: none; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px; margin-top: 15px; margin-bottom: 0; padding: 5px; flex-shrink: 0; }
-.paginacao button, .paginacao span { padding: 5px 10px; border: none; background-color: transparent; color: var(--color-gray-800); font-size: 0.9rem; font-weight: var(--font-weight-medium); border-radius: 6px; /* Ou var(--border-radius-sm)? */ cursor: pointer; transition: background-color var(--transition-medium), color var(--transition-medium); user-select: none; min-width: 32px; text-align: center; line-height: 1.5; }
+.paginacao button, .paginacao span { padding: 5px 10px; border: none; background-color: transparent; color: var(--color-gray-800); font-size: 0.9rem; font-weight: var(--font-weight-medium); border-radius: var(--border-radius-sm); cursor: pointer; transition: background-color var(--transition-medium), color var(--transition-medium); user-select: none; min-width: 32px; text-align: center; line-height: 1.5; }
 .paginacao span { cursor: default; background-color: transparent; color: var(--color-gray-700); }
 .paginacao button.pagina-atual { background-color: var(--color-primary-dark); color: var(--color-white); font-weight: var(--font-weight-bold); cursor: default; }
 .paginacao button:not(:disabled):not(.pagina-atual):hover { background-color: var(--color-gray-300); color: var(--color-primary-dark); }
@@ -448,116 +451,148 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 .paginacao button:first-child:disabled, .paginacao button:last-child:disabled { color: var(--color-gray-600); }
 
 /* --- Card de Resultado Final --- */
-.resultado-final-card { border-radius: var(--border-radius-lg); padding: 30px 40px; margin: 40px auto; max-width: 600px; text-align: center; box-shadow: var(--shadow-xl); animation: fadeIn 0.5s ease-out; display: none; flex-shrink: 0; /* Base vem de .card */ }
+.resultado-final-card { border-radius: var(--border-radius-lg); padding: 30px 40px; margin: 40px auto; max-width: 600px; text-align: center; box-shadow: var(--shadow-xl); animation: fadeIn 0.5s ease-out; display: none; flex-shrink: 0; /* Base .card */ }
 .resultado-final-titulo { font-family: var(--font-family-heading); font-size: 1.8rem; font-weight: var(--font-weight-bold); color: var(--color-primary-dark); margin-bottom: 15px; }
 .resultado-final-pontuacao { font-family: var(--font-family-sans); font-size: 1.15rem; color: var(--color-gray-900); margin-bottom: 25px; }
-.pontos-valor { font-weight: var(--font-weight-bold); font-size: 1.8rem; color: var(--color-secondary-green-light); margin-left: 8px; }
+.pontos-valor { font-weight: var(--font-weight-bold); font-size: 1.8rem; color: var(--color-secondary-green); margin-left: 8px; }
 .resultado-final-detalhes { border-top: var(--border-width) solid var(--color-gray-400); margin-top: 20px; padding-top: 20px; display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; }
 .resultado-final-detalhes p { font-family: var(--font-family-sans); font-size: 1.05rem; color: var(--color-gray-800); margin-bottom: 0; }
 .acertos-valor { font-weight: var(--font-weight-semibold); margin-left: 8px; color: var(--color-secondary-green); }
 .erros-valor { font-weight: var(--font-weight-semibold); margin-left: 8px; color: var(--color-accent-red); }
-/* Opção B: Mais espaço, padding padrão, borda fina */
-#btn-recomecar {
-    /* Estilo Outline levemente modificado */
-    background-image: none;
-    background-color: transparent;
-    color: var(--color-primary-dark);
-    border: var(--border-width) solid var(--color-primary-dark); /* Borda mais fina (1px) */
-    box-shadow: none;
-    font-weight: var(--font-weight-medium);
-  
-    /* Ajustes de espaço e tamanho */
-    margin-top: 35px; /* Mais espaço acima */
-    padding: 10px 20px; /* Padding padrão da classe .button */
-    font-size: 0.95rem; /* Tamanho padrão da classe .button */
-    border-radius: var(--border-radius-xl); /* Mantém bem arredondado */
-  }
-  
-  #btn-recomecar:hover:not(:disabled) {
-    background-color: var(--color-primary-light);
-    color: var(--color-primary-dark);
-    border-color: var(--color-primary-dark);
-    box-shadow: 0 2px 5px rgba(13, 59, 102, 0.1);
-    transform: translateY(-1px);
-    filter: none;
-  }
-  
-  #btn-recomecar:active:not(:disabled) {
-    background-color: #cde1f3;
-    transform: translateY(0px);
-  }
 
-  /* --- Estilos do Modal de Confirmação --- */
+/* --- Botão Recomeçar --- */
+#btn-recomecar {
+    background-image: linear-gradient(to right, var(--color-primary-dark), var(--color-primary-medium));
+    color: var(--color-white);
+    border: var(--border-width-md) solid transparent;
+    box-shadow: var(--shadow-button);
+    font-weight: var(--font-weight-semibold);
+    margin-top: 35px;
+    padding: 10px 25px;
+    font-size: 1rem;
+    border-radius: var(--border-radius-xl);
+    cursor: pointer;
+    transition: all var(--transition-medium);
+}
+#btn-recomecar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+    filter: brightness(110%);
+}
+#btn-recomecar:active:not(:disabled) {
+    transform: translateY(0px);
+    filter: brightness(100%);
+}
+
+/* --- Estilos do Modal de Confirmação --- */
 .modal-overlay {
-    position: fixed; /* Cobre a tela toda */
-    top: 0;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+}
+.modal-overlay.visible {
+    opacity: 1; visibility: visible;
+    transition: opacity 0.3s ease;
+}
+.modal-content {
+    position: relative; background-color: var(--color-white);
+    padding: 30px 35px; border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl); max-width: 450px; width: 90%;
+    text-align: center; transform: scale(0.95);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.visible .modal-content { transform: scale(1); }
+.modal-title { font-family: var(--font-family-heading); font-size: 1.6rem; color: var(--color-primary-dark); margin-top: 0; margin-bottom: 15px; }
+.modal-message { font-size: 1rem; color: var(--color-gray-800); line-height: 1.6; margin-bottom: 30px; }
+.modal-actions { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+.modal-actions .button { padding: 10px 25px; font-size: 0.95rem; min-width: 120px; }
+
+/* ======================================== */
+/* Barra de Navegação Inferior (Mobile)     */
+/* (Estilos ATUALIZADOS para Material Symbols) */
+/* ======================================== */
+.bottom-navbar {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    bottom: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Fundo escurecido semi-transparente */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Garante que fique sobre outros elementos */
-    opacity: 0; /* Começa invisível */
-    visibility: hidden; /* Começa inacessível */
-    transition: opacity 0.3s ease, visibility 0s linear 0.3s; /* Animação de fade */
-  }
-  
-  .modal-overlay.visible {
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.3s ease;
-  }
-  
-  .modal-content {
-    /* Reutiliza a classe .card para consistência, mas com ajustes */
-    position: relative;
+    height: 60px; /* Altura padrão */
     background-color: var(--color-white);
-    padding: 30px 35px; /* Padding interno do modal */
-    border-radius: var(--border-radius-lg); /* Borda arredondada */
-    box-shadow: var(--shadow-xl); /* Sombra pronunciada */
-    max-width: 450px; /* Largura máxima */
-    width: 90%; /* Responsivo */
-    text-align: center;
-    transform: scale(0.95); /* Efeito de escala inicial */
-    transition: transform 0.3s ease;
-  }
-  
-  .modal-overlay.visible .modal-content {
-      transform: scale(1); /* Escala para o tamanho normal ao aparecer */
-  }
-  
-  .modal-title {
-    font-family: var(--font-family-heading);
-    font-size: 1.6rem;
-    color: var(--color-primary-dark);
-    margin-top: 0;
-    margin-bottom: 15px;
-  }
-  
-  .modal-message {
-    font-size: 1rem;
-    color: var(--color-gray-800);
-    line-height: 1.6;
-    margin-bottom: 30px;
-  }
-  
-  .modal-actions {
+    border-top: var(--border-width) solid var(--color-gray-300);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+    z-index: 100;
+}
+
+.bottom-navbar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
     display: flex;
-    justify-content: center; /* Centraliza os botões */
-    gap: 15px; /* Espaço entre os botões */
-    flex-wrap: wrap; /* Quebra linha em telas pequenas */
-  }
-  
-  /* Ajusta o tamanho dos botões dentro do modal (opcional) */
-  .modal-actions .button {
-    padding: 10px 25px;
-    font-size: 0.95rem;
-    min-width: 120px; /* Largura mínima para melhor toque */
-  }
-  
-  /* Ajustes para telas menores */
+    justify-content: space-around;
+    align-items: stretch; /* Importante para altura total do link */
+    width: 100%;
+    height: 100%;
+}
+
+.bottom-navbar li {
+    flex-grow: 1; /* Ocupa espaço igual */
+}
+
+.bottom-navbar .bottom-nav-link {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centraliza conteúdo (ícone+texto) */
+    align-items: center;
+    height: 100%; /* Ocupa toda altura do LI */
+    padding: 5px 0;
+    text-decoration: none;
+    color: var(--color-gray-700); /* Cor padrão */
+    transition: color var(--transition-fast);
+    text-align: center;
+}
+
+/* --- ESTILOS PARA O ÍCONE (Material Symbol) --- */
+.bottom-navbar .bottom-nav-link .material-symbols-outlined {
+    font-size: 24px; /* Tamanho do ícone */
+    line-height: 1; /* Evita altura extra */
+    transition: transform var(--transition-fast);
+    /* Não definir fill aqui, Material Symbols usa 'color' */
+}
+
+/* --- ESTILOS PARA O TEXTO ABAIXO DO ÍCONE --- */
+.bottom-navbar .bottom-nav-link span:not(.material-symbols-outlined) {
+    font-size: 0.7rem; /* Tamanho do texto */
+    margin-top: 2px; /* Espaço entre ícone e texto */
+    line-height: 1.2; /* Ajusta altura da linha do texto */
+    /* DESCOMENTE ABAIXO PARA ESCONDER O TEXTO */
+    /* display: none; */
+}
+
+.bottom-navbar .bottom-nav-link:hover {
+    color: var(--color-primary-medium); /* Cor no hover */
+}
+
+/* Efeito de clique no ÍCONE */
+.bottom-navbar .bottom-nav-link:active .material-symbols-outlined {
+    transform: scale(0.9);
+}
+
+/* Estilo do link ATIVO */
+.bottom-navbar .bottom-nav-link.active {
+    color: var(--color-primary-dark); /* Cor mais escura para ativo */
+}
+
+/* Estilo do ÍCONE ATIVO */
+.bottom-navbar .bottom-nav-link.active .material-symbols-outlined {
+    /* Usa 'font-variation-settings' para preencher o ícone (se suportado) */
+     font-variation-settings: 'FILL' 1;
+}
+
+
 /* ======================================== */
 /* Animações                                */
 /* ======================================== */
@@ -570,32 +605,49 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 /* Media Queries (Responsividade)           */
 /* ======================================== */
 
-/* --- Telas Médias --- */
+/* --- Telas Médias (Ex: <= 992px) --- */
 @media (max-width: 992px) {
      header { padding: 0 30px; }
      .logo-area { font-size: 1.5rem;}
-     aside { min-width: 240px; padding: 25px; gap: 15px; }
+     aside { min-width: 240px; padding: 25px; gap: 15px; height: calc(100vh - 80px - 50px); top: 0; }
      .pontuacao-wrap { height: 100px; width: 100px; }
      #pontuacao { height: 85px; width: 85px; font-size: 2.2rem; }
      .paginacao button, .paginacao span { font-size: 0.8rem; padding: 5px 10px; }
      .scroll-arrow { width: 30px; height: 30px; }
+     #questoes-section { height: calc(100vh - 80px - 50px); }
 }
 
-/* --- Telas Pequenas --- */
+/* --- Telas Pequenas (Ex: <= 768px) --- */
 @media (max-width: 768px) {
-    /* Layout */
+    /* --- Esconde Navbar Superior e Footer --- */
+    nav:not(.bottom-navbar) {
+        display: none;
+    }
+    footer#footer {
+        display: none;
+    }
+
+    /* --- Mostra a Navbar Inferior --- */
+    .bottom-navbar {
+        display: block; /* Ou flex, dependendo da estrutura interna */
+    }
+
+    /* --- Adiciona Padding Inferior ao Body --- */
+    body {
+        padding-bottom: 60px; /* Deve ser igual à altura da .bottom-navbar */
+    }
+
+    /* --- Ajustes Gerais de Layout Mobile --- */
     header { height: 70px; padding: 0 20px; }
-    nav { height: 45px; }
     main { padding-top: 0; }
     #questoes-section { flex-direction: column; height: auto; overflow: visible; }
     aside { position: static; height: auto; overflow-y: visible; width: 100%; min-width: 100%; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05); border-right: none; border-bottom: var(--border-width) solid var(--color-gray-400); flex-direction: row; justify-content: space-around; align-items: center; padding: 15px; gap: 15px; flex-wrap: wrap; flex-shrink: 0; }
     #questoes-section .main-content { height: auto; overflow-y: visible; padding: 20px; flex-grow: 1; min-height: 0; }
-    footer { font-size: 0.85rem; height: 60px;}
 
     /* Componentes */
     .logo-area { font-size: 1.3rem; }
     h2 { font-size: 1.7rem; }
-    #inicio-section { padding: 30px; min-height: calc(100vh - 70px - 45px - 60px); }
+    #inicio-section { padding: 30px; min-height: calc(100vh - 70px - 60px); /* Header - BottomNav */ }
     #inicio-section .inicio-content { padding: 25px; width: 90%; }
     .pontuacao-wrap { height: 80px; width: 80px; }
     #pontuacao { height: 65px; width: 65px; font-size: 1.8rem; }
@@ -604,9 +656,7 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     .filtro-categorias-container { position: static; gap: 8px; margin-bottom: 20px; }
     #progress-container, #question-grid-container, .paginacao { position: static; }
     #question-grid-container { gap: 4px; padding: 4px; margin-bottom: 20px; }
-    .grid-item { font-size: 0.75rem; border-radius: 4px; /* ou var(--border-radius-sm)? */ }
-    .navbar { padding: 0 10px; }
-    .nav-link { font-size: 0.9rem; padding: 12px 16px; line-height: normal; }
+    .grid-item { font-size: 0.75rem; border-radius: var(--border-radius-sm); }
     .filtro-label { font-size: 0.9rem; padding-left: 3px; }
     .filtro-checkboxes#filtro-checkboxes-scroll { gap: 8px 8px; padding-bottom: 8px; padding-left: 35px; padding-right: 35px; clip-path: inset(0 28px 0 28px); }
     .checkbox-item label { font-size: 0.85rem; padding: 6px 15px; }
@@ -627,27 +677,38 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
      .paginacao button, .paginacao span { font-size: 0.8rem; padding: 5px 10px; min-width: 30px; }
 }
 
-/* --- Telas Muito Pequenas --- */
+/* --- Telas Muito Pequenas (Ex: <= 480px) --- */
 @media (max-width: 480px) {
-    /* Layout */
+     /* --- Ajusta Altura e Padding para Navbar Inferior --- */
+     .bottom-navbar {
+        height: 55px; /* Altura menor */
+    }
+    body {
+         padding-bottom: 55px; /* Ajusta padding do body */
+    }
+     /* Ajusta ícones/texto da navbar inferior */
+    .bottom-navbar .bottom-nav-link .material-symbols-outlined {
+        font-size: 22px; /* Ícone menor */
+    }
+     .bottom-navbar .bottom-nav-link span:not(.material-symbols-outlined) {
+        font-size: 0.65rem; /* Texto menor */
+    }
+
+    /* --- Ajustes Gerais --- */
     header { height: 65px; padding: 0 15px; }
-    nav { height: 40px; }
-    #inicio-section { padding: 20px 15px; min-height: calc(100vh - 65px - 40px - 55px); }
+    #inicio-section { padding: 20px 15px; min-height: calc(100vh - 65px - 55px); /* Header - BottomNav */ }
     #inicio-section .inicio-content { padding: 20px; width: 95%; }
     aside { padding: 10px; gap: 10px; }
     #questoes-section .main-content { padding: 15px; }
-    footer { height: 55px; font-size: 0.8rem; }
 
     /* Componentes */
     .logo-area { font-size: 1.2rem; }
     h2 { font-size: 1.5rem; }
-    .navbar { padding: 0 5px; }
-    .nav-link { font-size: 0.85rem; padding: 10px 12px; }
     .pontuacao-wrap { height: 70px; width: 70px; }
     #pontuacao { height: 55px; width: 55px; font-size: 1.6rem; }
     .aside-info-wrap { gap: 8px; }
     .aside-info-wrap p { font-size: 0.85rem; }
-    .icon-wrap svg { height: 20px; width: 20px; }
+    .icon-wrap svg { height: 20px; width: 20px; } /* SVGs do aside */
     .filtro-categorias-container { gap: 6px; margin-bottom: 15px; }
     .filtro-label { font-size: 0.85rem; padding-left: 0; }
     .filtro-checkboxes#filtro-checkboxes-scroll { padding-bottom: 6px; padding-left: 30px; padding-right: 30px; clip-path: inset(0 25px 0 25px); }
@@ -674,25 +735,11 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     .resultado-final-titulo { font-size: 1.4rem; }
     .pontos-valor { font-size: 1.5rem; }
     .resultado-final-detalhes p { font-size: 0.9rem; }
-    .modal-content {
-        padding: 25px 20px;
-    }
-     .modal-title {
-        font-size: 1.4rem;
-    }
-     .modal-message {
-        font-size: 0.95rem;
-        margin-bottom: 25px;
-    }
-    .modal-actions {
-        flex-direction: column-reverse; /* Empilha botões verticalmente */
-        align-items: stretch; /* Faz botões ocuparem largura total */
-        gap: 10px;
-    }
-    .modal-actions .button {
-        width: 100%;
-         min-width: unset;
-    }
+    .modal-content { padding: 25px 20px; }
+    .modal-title { font-size: 1.4rem; }
+    .modal-message { font-size: 0.95rem; margin-bottom: 25px; }
+    .modal-actions { flex-direction: column-reverse; align-items: stretch; gap: 10px; }
+    .modal-actions .button { width: 100%; min-width: unset; }
 
     /* Ajuste fino extra pequeno */
     @media (max-width: 360px) {
@@ -701,6 +748,6 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
          .paginacao button, .paginacao span { font-size: 0.7rem; padding: 3px 6px; min-width: 25px; }
          .scroll-arrow { width: 24px; height: 24px;}
          .filtro-checkboxes#filtro-checkboxes-scroll { padding-left: 28px; padding-right: 28px; clip-path: inset(0 22px 0 22px); }
-         #btn-encerrar-sessao { padding: 6px 15px; font-size: 0.8rem; } /* Continua usando .button--small */
+         #btn-encerrar-sessao { padding: 6px 15px; font-size: 0.8rem; } /* Continua .button--small */
     }
 }

@@ -766,11 +766,6 @@ footer a:hover { color: #ffffff; }
         flex-grow: 1;
         min-height: 0;
     }
-    aside {
-        /* Se a sidebar vira linha, a grade pode precisar de ajustes */
-        /* Exemplo: Limitar a altura ou largura máxima da grade em modo linha */
-        align-items: flex-start; /* Alinha itens ao topo se quebrar linha */
-    }
 
     #question-grid-container {
         /* Pode precisar de menos colunas ou altura máxima diferente */

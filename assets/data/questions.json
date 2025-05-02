@@ -1,0 +1,281 @@
+
+[
+    {
+        "id": 1,
+        "pergunta": "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
+        "imagem": "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1",
+        "respostas": [
+            "Produzir testosterona",
+            "Formar a túnica albugínea",
+            "Fornecer sustentação e formar a barreira hematotesticular",
+            "Participar diretamente da espermiogênese"
+        ],
+        "correta": "Fornecer sustentação e formar a barreira hematotesticular",
+        "referencia": "Gartner, 5ª ed.",
+        "categorias": [
+            "Concepção"
+        ]
+    },
+    {
+        "id": 2,
+        "pergunta": "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?",
+        "imagem": "",
+        "respostas": [
+            "Espermatogônias",
+            "Células de Sertoli",
+            "Espermátides",
+            "Espermatócitos primários"
+        ],
+        "correta": "Espermátides",
+        "referencia": "Gartner, 5ª ed.",
+        "categorias": [
+            "Concepção"
+        ]
+    },
+    {
+        "id": 3,
+        "pergunta": "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
+        "imagem": "",
+        "respostas": [
+            "Epitélio simples pavimentoso",
+            "Epitélio cúbico simples",
+            "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+            "Epitélio pseudoestratificado com estereocílios"
+        ],
+        "correta": "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+        "referencia": "Gartner, 5ª ed.",
+        "categorias": [
+            "Concepção"
+        ]
+    },
+    {
+        "id": 4,
+        "pergunta": "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?",
+        "imagem": "",
+        "respostas": [
+            "Epitélio seminífero",
+            "Túnica própria",
+            "Tecido intersticial entre os túbulos seminíferos",
+            "Rede testicular (rete testis)"
+        ],
+        "correta": "Tecido intersticial entre os túbulos seminíferos",
+        "referencia": "Gartner, 5ª ed.",
+        "categorias": [
+            "Concepção"
+        ]
+    },
+    {
+        "id": 5,
+        "pergunta": "Sobre o ducto deferente, é correto afirmar que:",
+        "imagem": "",
+        "respostas": [
+            "Possui epitélio simples cúbico e camada muscular fina",
+            "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+            "Possui epitélio estratificado pavimentoso e camada adventícia espessa",
+            "É formado por epitélio colunar ciliado e tecido fibroso denso"
+        ],
+        "correta": "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+        "referencia": "Gartner, 5ª ed.",
+        "categorias": [
+            "Concepção"
+        ]
+    },
+    {
+        "id": 6,
+        "pergunta": "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
+        "imagem": "",
+        "respostas": [
+            "Retículo Endoplasmático",
+            "Complexo de Golgi",
+            "Mitocôndria",
+            "Lisossomo"
+        ],
+        "correta": "Mitocôndria",
+        "referencia": "Biologia Celular Básica",
+        "categorias": [
+            "Metabolismo",
+            "Funções"
+        ]
+    },
+    {
+        "id": 7,
+        "pergunta": "O processo de glicólise ocorre em qual compartimento celular?",
+        "imagem": "",
+        "respostas": [
+            "Mitocôndria",
+            "Núcleo",
+            "Citosol",
+            "Peroxissomo"
+        ],
+        "correta": "Citosol",
+        "referencia": "Bioquímica Ilustrada",
+        "categorias": [
+            "Metabolismo"
+        ]
+    },
+    {
+        "id": 8,
+        "pergunta": "Qual a principal função do tecido epitelial de revestimento?",
+        "imagem": "",
+        "respostas": [
+            "Contração",
+            "Sustentação",
+            "Proteção e Absorção",
+            "Transmissão de impulsos"
+        ],
+        "correta": "Proteção e Absorção",
+        "referencia": "Histologia Básica",
+        "categorias": [
+            "Funções"
+        ]
+    },
+    {
+        "id": 9,
+        "pergunta": "Os neurônios são células especializadas na função de:",
+        "imagem": "",
+        "respostas": [
+            "Produzir hormônios",
+            "Realizar fagocitose",
+            "Transmitir impulsos nervosos",
+            "Armazenar gordura"
+        ],
+        "correta": "Transmitir impulsos nervosos",
+        "referencia": "Neurociência Fundamental",
+        "categorias": [
+            "Funções"
+        ]
+    },
+    {
+        "id": 10,
+        "pergunta": "Qual é a função primária das enzimas nas reações bioquímicas celulares?",
+        "imagem": "",
+        "respostas": [
+            "Fornecer energia direta para a reação",
+            "Aumentar a energia de ativação da reação",
+            "Diminuir a energia de ativação, acelerando a velocidade da reação",
+            "Atuar como substrato principal da reação",
+            "Modificar o pH do meio reacional"
+        ],
+        "correta": "Diminuir a energia de ativação, acelerando a velocidade da reação",
+        "referencia": "Princípios de Bioquímica de Lehninger",
+        "categorias": [
+            "Metabolismo",
+            "Funções"
+        ]
+    },
+    {
+        "id": 11,
+        "pergunta": "O processo de síntese de RNA a partir de um molde de DNA é denominado:",
+        "imagem": "",
+        "respostas": [
+            "Tradução",
+            "Replicação",
+            "Transcrição"
+        ],
+        "correta": "Transcrição",
+        "referencia": "Biologia Molecular da Célula",
+        "categorias": [
+            "Metabolismo"
+        ]
+    },
+    {
+        "id": 12,
+        "pergunta": "Qual molécula é frequentemente referida como a principal 'moeda energética' utilizada pelas células para realizar trabalho?",
+        "imagem": "",
+        "respostas": [
+            "Glicose",
+            "ATP (Trifosfato de Adenosina)",
+            "NADH",
+            "Piruvato"
+        ],
+        "correta": "ATP (Trifosfato de Adenosina)",
+        "referencia": "Bioquímica Ilustrada",
+        "categorias": [
+            "Metabolismo",
+            "Funções"
+        ]
+    },
+    {
+        "id": 13,
+        "pergunta": "Quantos estágios clínicos principais são classicamente descritos no trabalho de parto?",
+        "imagem": "",
+        "respostas": [
+            "Dois",
+            "Três",
+            "Quatro",
+            "Cinco"
+        ],
+        "correta": "Quatro",
+        "referencia": "Manual de Obstetrícia de Williams",
+        "categorias": [
+            "Nascimento"
+        ]
+    },
+    {
+        "id": 14,
+        "pergunta": "Qual é uma das funções vitais da placenta durante a gestação humana?",
+        "imagem": "",
+        "respostas": [
+            "Produzir todas as células sanguíneas fetais",
+            "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
+            "Iniciar as contrações uterinas no início da gestação",
+            "Determinar o sexo do feto"
+        ],
+        "correta": "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
+        "referencia": "Fisiologia Médica de Guyton e Hall",
+        "categorias": [
+            "Nascimento",
+            "Funções"
+        ]
+    },
+    {
+        "id": 15,
+        "pergunta": "Qual hormônio é essencial primariamente para a *produção* de leite (lactogênese) nas glândulas mamárias após o parto?",
+        "imagem": "",
+        "respostas": [
+            "Ocitocina",
+            "Progesterona",
+            "Prolactina",
+            "Estrogênio",
+            "Testosterona"
+        ],
+        "correta": "Prolactina",
+        "referencia": "Tratado de Ginecologia e Obstetrícia",
+        "categorias": [
+            "Nascimento",
+            "Funções"
+        ]
+    },
+    {
+        "id": 16,
+        "pergunta": "O Ciclo de Krebs (ou Ciclo do Ácido Cítrico), uma etapa crucial da respiração celular aeróbica, ocorre em qual compartimento celular?",
+        "imagem": "",
+        "respostas": [
+            "Citosol",
+            "Núcleo",
+            "Membrana Plasmática",
+            "Matriz Mitocondrial"
+        ],
+        "correta": "Matriz Mitocondrial",
+        "referencia": "Bioquímica Básica",
+        "categorias": [
+            "Metabolismo"
+        ]
+    },
+    {
+        "id": 17,
+        "pergunta": "A Regra de Naegele é um método comum em obstetrícia utilizado para estimar:",
+        "imagem": "",
+        "respostas": [
+            "O risco de anomalias cromossômicas",
+            "A data provável do parto (DPP)",
+            "O volume de líquido amniótico",
+            "A posição da placenta"
+        ],
+        "correta": "A data provável do parto (DPP)",
+        "referencia": "Obstetrícia Fundamental",
+        "categorias": [
+            "Nascimento"
+        ]
+    }
+]

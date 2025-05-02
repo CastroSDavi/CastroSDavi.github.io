@@ -16,10 +16,8 @@
 <body>
     <header>
         <div class="logo-area">
-            <a href="#" style="text-decoration: none; color: inherit;">Histologia<b>Quiz</b></a>
-        </div>
-        <h1 class="title-header" style="display: none;">Histologia</h1>
-    </header>
+            <a href="#">Histologia<b>Quiz</b></a> </div>
+        </header>
     <nav>
         <ul class="navbar">
             <li><a href="#" class="nav-link active" data-section="inicio-section">Início</a></li>
@@ -29,7 +27,7 @@
 
     <main>
         <section id="inicio-section" class="main-section">
-            <div class="inicio-content">
+            <div class="inicio-content card">
                 <h2>Bem-vindo ao Quiz Interativo de Histologia!</h2>
                 <p>Navegue até a seção "Questões" para testar seus conhecimentos.</p>
                 <p>Lá, você poderá escolher uma ou mais categorias ou responder a perguntas de todas elas.</p>
@@ -40,70 +38,51 @@
         <section id="questoes-section" class="main-section" style="display: none;">
             <aside>
                 <p class="aside-title">Pontuação</p>
-                <div class="pontuacao-wrap">
-                    <p id="pontuacao">0</p>
+                <div class="pontuacao-wrap is-circle">
+                     <p id="pontuacao" class="is-circle">0</p>
                 </div>
                 <div class="aside-info-wrap">
-                    <div class="icon-wrap icon-correct">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                            fill="#3bcf76">
-                            <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" />
-                        </svg>
+                     <div class="icon-wrap icon-correct is-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" /> </svg>
                     </div>
                     <p id="acertos">Acertos <span id="acertos-numero">0</span></p>
                 </div>
                 <div class="aside-info-wrap">
-                    <div class="icon-wrap icon-error" id="error">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                            fill="#dc3545">
-                            <path
-                                d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                        </svg>
+                     <div class="icon-wrap icon-error is-circle" id="error">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /> </svg>
                     </div>
                     <p id="erros">Erros <span id="erros-numero">0</span></p>
                 </div>
-                <button id="btn-encerrar-sessao" class="btn-encerrar" style="display: none;">Encerrar </button>
+                <button id="btn-encerrar-sessao" class="button button--outline" style="display: none;">Encerrar</button>
             </aside>
 
             <div class="main-content">
                 <div class="filtro-categorias-container">
                     <span class="filtro-label">Categorias:</span>
                     <div class="categorias-scroll-wrapper">
-                        <button class="scroll-arrow left" id="cat-scroll-left"
-                            aria-label="Rolar categorias para esquerda" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="currentColor">
-                                <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" />
-                            </svg>
+                         <button class="scroll-arrow left is-circle" id="cat-scroll-left" aria-label="Rolar categorias para esquerda" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" /> </svg>
                         </button>
-
                         <div class="filtro-checkboxes" id="filtro-checkboxes-scroll">
-                        </div>
-
-                        <button class="scroll-arrow right" id="cat-scroll-right"
-                            aria-label="Rolar categorias para direita">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
-                                fill="currentColor">
-                                <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" />
-                            </svg>
+                            </div>
+                         <button class="scroll-arrow right is-circle" id="cat-scroll-right" aria-label="Rolar categorias para direita">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" /> </svg>
                         </button>
                     </div>
                 </div>
                 <div id="aviso-container" style="display: none;">
-                    <p class="aviso-mensagem">Selecione pelo menos uma categoria para começar o quiz.</p>
+                    <p class="aviso-mensagem card">Selecione pelo menos uma categoria para começar o quiz.</p>
                 </div>
 
                 <section id="quiz-section" style="display: none;">
-
                     <div id="progress-container" style="display: none;">
                         <div id="progress-bar-fill"></div>
                     </div>
-                    <span id="progress-text"
-                        style="display: none; text-align: right; font-size: 0.9em; color: #6c757d; margin-bottom: 8px;">0
-                        / 0</span>
-                    <h2 id="question-title"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
-                    </h2>
-                    <div class="question-wrap">
+                    <span id="progress-text" style="display: none;">0 / 0</span>
+
+                    <h2 id="question-title"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+
+                     <div class="question-wrap card">
                         <div class="question-text">
                             <p id="pergunta-texto">Carregando pergunta...</p>
                         </div>
@@ -112,29 +91,39 @@
                                 <img src="" alt="" id="pergunta-imagem" style="display: none;">
                             </div>
                             <div class="answers-wrap" id="respostas-container">
-                            </div>
+                                </div>
                         </div>
                         <p id="referencia-questao"></p>
                     </div>
 
                     <div class="navigation-buttons" style="display: none;">
-                        <button id="prev-btn" disabled>Anterior</button>
-                        <button id="next-btn">Próxima</button>
+                        <button id="prev-btn" class="button button--secondary" disabled>Anterior</button>
+                        <button id="next-btn" class="button button--primary">Próxima</button>
                     </div>
                 </section>
-                <div class="resultado-final-card" style="display: none;">
+                <div id="confirm-encerrar-overlay" class="modal-overlay" style="display: none;">
+                    <div id="confirm-encerrar-modal" class="modal-content card">
+                        <h3 class="modal-title">Confirmar Encerramento</h3>
+                        <p class="modal-message">Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
+                        <div class="modal-actions">
+                            <button id="cancel-encerrar-btn" class="button button--secondary">Cancelar</button>
+                            <button id="confirm-encerrar-btn" class="button button--primary">Confirmar</button> </div>
+                    </div>
+                </div>
+                 <div class="resultado-final-card card" style="display: none;">
                     <h3 class="resultado-final-titulo">Quiz Concluído!</h3>
                     <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
                     <div class="resultado-final-detalhes">
                         <p>Acertos: <span class="acertos-valor">0</span></p>
                         <p>Erros: <span class="erros-valor">0</span></p>
                     </div>
-                    <button id="btn-recomecar" class="btn-recomecar-quiz">Tentar Novamente</button>
+                    <button id="btn-recomecar" class="button button--primary">Tentar Novamente</button>
                 </div>
+
                 <div id="question-grid-container" class="question-grid-container" style="display: none;">
-                </div>
+                    </div>
                 <div id="paginacao-controles" class="paginacao" style="display: none;">
-                </div>
+                    </div>
             </div>
         </section>
     </main>
@@ -146,5 +135,4 @@
     <script src="assets/js/script.js" defer></script>
 
 </body>
-
 </html>

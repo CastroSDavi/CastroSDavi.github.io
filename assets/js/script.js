@@ -39,10 +39,16 @@ let categoriasSelecionadas = [];
 const usuario = new Usuario();
 let autoAvancoTimeoutId = null;
 let secaoAtual = 'inicio-section'; // Padrão inicial
+const QUESTOES_POR_PAGINA_GRID = 30; // Número de questões por página na grid
+let paginaAtualGrid = 1; // Página atual da grid
 
 // --- Elementos do DOM (cacheados) ---
 let elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elNavigationButtons, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, avisoMensagem;
 let elQuestionGridContainer;
+let elPaginacaoControles;
+let elFiltroCheckboxesScroll; // O div rolável das categorias
+let elCatScrollLeft;         // Botão seta esquerda categorias
+let elCatScrollRight;        // Botão seta direita categorias
 
 // --- Função para Embaralhar Array (Opcional) ---
 function shuffleArray(array) {
@@ -72,15 +78,23 @@ function cacheDOMelements() {
         elProgressBarFill = document.getElementById('progress-bar-fill');
         elProgressText = document.getElementById('progress-text');
         elProgressContainer = document.getElementById('progress-container');
-        filtroCheckboxesContainer = document.querySelector('.filtro-checkboxes');
+        // Container PAI dos checkboxes (para delegação de eventos)
+        filtroCheckboxesContainer = document.querySelector('.filtro-categorias-container');
+        // Container ROLÁVEL dos checkboxes (para manipulação de scroll e conteúdo)
+        elFiltroCheckboxesScroll = document.getElementById('filtro-checkboxes-scroll');
+        elCatScrollLeft = document.getElementById('cat-scroll-left');
+        elCatScrollRight = document.getElementById('cat-scroll-right');
         avisoContainer = document.getElementById('aviso-container');
         avisoMensagem = avisoContainer ? avisoContainer.querySelector('.aviso-mensagem') : null;
         elQuestionGridContainer = document.getElementById('question-grid-container');
+        elPaginacaoControles = document.getElementById('paginacao-controles');
 
-        const elementos = { elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, elQuestionGridContainer };
+        // Adicionado elementos das setas e container rolável à verificação
+        const elementos = { elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, elQuestionGridContainer, elPaginacaoControles, elFiltroCheckboxesScroll, elCatScrollLeft, elCatScrollRight };
         let missingElements = false;
         for (const key in elementos) {
-            if (!elementos[key] && key !== 'elNavigationButtons' && key !== 'avisoMensagem') { // Alguns são opcionais ou dentro de outros
+            const isEssential = key !== 'elNavigationButtons' && key !== 'avisoMensagem';
+            if (!elementos[key] && isEssential) {
                 console.error(`Erro Cache DOM: Elemento ${key} não encontrado! Verifique IDs/classes no HTML.`);
                 missingElements = true;
             }
@@ -126,8 +140,9 @@ function extrairCategoriasUnicas(listaPerguntas) {
 }
 
 function gerarCheckboxesCategoria(containerElemento, listaCategorias) {
+    // O containerElemento agora é o div com id="filtro-checkboxes-scroll"
     if (!containerElemento) {
-        console.error("Container para checkboxes de categoria não encontrado!");
+        console.error("Container rolável para checkboxes de categoria não encontrado!");
         return;
     }
     containerElemento.innerHTML = ''; // Limpa
@@ -154,18 +169,91 @@ function gerarCheckboxesCategoria(containerElemento, listaCategorias) {
         const idSeguro = `cat-${categoria.toLowerCase().replace(/\s+/g, '-')}`;
         containerElemento.appendChild(criarCheckboxItem(idSeguro, categoria, categoria, true));
     });
+
+    // Atualiza o estado das setas após gerar as categorias
+    // Usar um pequeno timeout garante que o navegador calculou as dimensões
+    setTimeout(atualizarSetasScrollCategorias, 100);
 }
 
 function obterCategoriasSelecionadas() {
     const selecionadas = [];
-     if (!filtroCheckboxesContainer) return selecionadas; // Retorna vazio se container não existe
+    // Usa o container PAI para encontrar os checkboxes, não o rolável
+     if (!filtroCheckboxesContainer) return selecionadas;
 
-    const checkboxesCategorias = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:checked:not([value="Todas"])');
+    // Busca checkboxes dentro do elemento rolável correto
+    const checkboxesCategorias = filtroCheckboxesContainer.querySelectorAll('#filtro-checkboxes-scroll input[type="checkbox"]:checked:not([value="Todas"])');
     checkboxesCategorias.forEach(cb => {
         selecionadas.push(cb.value);
     });
     return selecionadas;
 }
+
+// --- Funções para Rolagem das Categorias com Setas ---
+
+// Função para rolar as categorias
+function rolarCategorias(direcao) {
+    if (!elFiltroCheckboxesScroll) return;
+
+    // Calcula o quanto rolar (ex: 80% da largura visível)
+    const scrollAmount = elFiltroCheckboxesScroll.clientWidth * 0.8;
+
+    elFiltroCheckboxesScroll.scrollBy({
+        left: direcao === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth' // Rolagem suave
+    });
+
+    // Atualiza o estado das setas DEPOIS da animação (ou quase)
+    let start = null;
+    const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const elapsed = timestamp - start;
+        // Espera um tempo razoável para a animação terminar (pode ajustar)
+        if (elapsed < 400) {
+             window.requestAnimationFrame(step);
+        } else {
+            atualizarSetasScrollCategorias();
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Função para atualizar o estado (visível/habilitado) das setas
+function atualizarSetasScrollCategorias() {
+    if (!elFiltroCheckboxesScroll || !elCatScrollLeft || !elCatScrollRight) {
+        if(elCatScrollLeft) elCatScrollLeft.style.opacity = '0'; elCatScrollLeft.style.pointerEvents = 'none';
+        if(elCatScrollRight) elCatScrollRight.style.opacity = '0'; elCatScrollRight.style.pointerEvents = 'none';
+        return;
+    }
+
+    const scrollLeft = Math.round(elFiltroCheckboxesScroll.scrollLeft); // Arredonda para evitar problemas de float
+    const scrollWidth = elFiltroCheckboxesScroll.scrollWidth;
+    const clientWidth = elFiltroCheckboxesScroll.clientWidth;
+
+    // Verifica se há conteúdo para rolar (com uma pequena margem de erro)
+    const canScroll = scrollWidth > clientWidth + 1;
+
+    if (!canScroll) {
+        elCatScrollLeft.style.opacity = '0';
+        elCatScrollLeft.style.pointerEvents = 'none';
+        elCatScrollLeft.disabled = true;
+        elCatScrollRight.style.opacity = '0';
+        elCatScrollRight.style.pointerEvents = 'none';
+        elCatScrollRight.disabled = true;
+    } else {
+        // Lógica para habilitar/desabilitar baseado na posição
+        elCatScrollLeft.disabled = scrollLeft <= 0;
+        elCatScrollRight.disabled = scrollLeft + clientWidth >= scrollWidth - 1; // Tolerância de 1px
+
+        // O CSS controla a opacidade via :hover e :disabled
+        // Apenas garantimos que pointer-events esteja correto
+        elCatScrollLeft.style.pointerEvents = elCatScrollLeft.disabled ? 'none' : 'auto';
+        elCatScrollRight.style.pointerEvents = elCatScrollRight.disabled ? 'none' : 'auto';
+        // Reseta opacidade para deixar CSS :hover/:disabled controlar
+        elCatScrollLeft.style.opacity = '';
+        elCatScrollRight.style.opacity = '';
+    }
+}
+
 
 // --- Funções de Barra de Progresso ---
 function atualizarBarraProgresso() {
@@ -176,13 +264,15 @@ function atualizarBarraProgresso() {
 
     if (quizAtivo && temPerguntas) {
         elProgressContainer.style.display = 'block';
+        elProgressText.style.display = 'block'; // Garante que o texto apareça
         const totalPerguntas = perguntasFiltradas.length;
-        const numQuestaoAtual = Math.min(perguntaAtual + 1, totalPerguntas);
+        const numQuestaoAtual = Math.min(perguntaAtual + 1, totalPerguntas); // Usa perguntaAtual (índice global)
         const progressoPercentual = totalPerguntas > 0 ? (numQuestaoAtual / totalPerguntas) * 100 : 0;
         elProgressBarFill.style.width = `${progressoPercentual}%`;
         elProgressText.textContent = `${numQuestaoAtual} / ${totalPerguntas}`;
     } else {
         elProgressContainer.style.display = 'none';
+        elProgressText.style.display = 'none'; // Esconde o texto também
         if(elProgressBarFill) elProgressBarFill.style.width = `0%`;
         if(elProgressText) elProgressText.textContent = `0 / 0`;
     }
@@ -204,6 +294,8 @@ function mostrarSecao(idSecao) {
 
         if (idSecao === 'questoes-section') {
             prepararSecaoQuestoes();
+            // Atualiza estado das setas quando a seção é mostrada
+            setTimeout(atualizarSetasScrollCategorias, 100);
         } else {
             esconderElementosQuiz();
         }
@@ -226,28 +318,57 @@ function esconderElementosQuiz() {
         const resultado = secaoQuestoes.querySelector('.resultado-final-card');
         const aviso = secaoQuestoes.querySelector('#aviso-container');
         const grid = secaoQuestoes.querySelector('#question-grid-container');
-        const progresso = secaoQuestoes.querySelector('#progress-container');
+        const progressoContainer = secaoQuestoes.querySelector('#progress-container');
+        const progressoTexto = secaoQuestoes.querySelector('#progress-text');
+        const paginacao = secaoQuestoes.querySelector('#paginacao-controles');
 
         if (quiz) quiz.style.display = 'none';
         if (resultado) resultado.style.display = 'none';
         if (aviso) aviso.style.display = 'none';
         if (grid) grid.style.display = 'none';
-        if (progresso) progresso.style.display = 'none';
+        if (progressoContainer) progressoContainer.style.display = 'none';
+        if (progressoTexto) progressoTexto.style.display = 'none';
+        if (paginacao) paginacao.innerHTML = ''; paginacao.style.display = 'none';
+        // Esconder setas das categorias também ao sair da seção
+        if(elCatScrollLeft) elCatScrollLeft.style.opacity = '0'; elCatScrollLeft.style.pointerEvents = 'none';
+        if(elCatScrollRight) elCatScrollRight.style.opacity = '0'; elCatScrollRight.style.pointerEvents = 'none';
     }
 }
 
-// --- Funções da Grade de Questões ---
-function criarGridQuestoes(totalQuestoes) {
-    if (!elQuestionGridContainer) return;
-    elQuestionGridContainer.innerHTML = '';
+// --- Funções da Grade de Questões e Paginação ---
 
-    if (totalQuestoes === 0) {
-        elQuestionGridContainer.style.display = 'none';
+// Função PRINCIPAL para renderizar a grid e seus controles
+function renderizarGridEPaginacao() {
+    if (!elQuestionGridContainer || !elPaginacaoControles || !perguntasFiltradas) {
+        console.warn("Elementos da grid/paginação ou perguntas filtradas não disponíveis.");
+        if (elQuestionGridContainer) elQuestionGridContainer.style.display = 'none';
+        if (elPaginacaoControles) elPaginacaoControles.innerHTML = '';
         return;
     }
-    elQuestionGridContainer.style.display = 'grid';
 
-    for (let i = 0; i < totalQuestoes; i++) {
+    if (perguntasFiltradas.length === 0) {
+        elQuestionGridContainer.style.display = 'none';
+        elPaginacaoControles.innerHTML = '';
+        elPaginacaoControles.style.display = 'none'; // Garante que fica escondido
+        return;
+    }
+
+    elQuestionGridContainer.style.display = 'grid'; // Mostra o container da grid
+    renderizarItensDaPaginaGrid(paginaAtualGrid);
+    renderizarControlesPaginacao(perguntasFiltradas.length); // <<< MODIFICADA para lógica de elipses
+    atualizarGridEstilos(perguntaAtual); // Aplica estilos após renderizar
+}
+
+// Função para renderizar APENAS os botões da página atual
+function renderizarItensDaPaginaGrid(pagina) {
+    if (!elQuestionGridContainer) return;
+    elQuestionGridContainer.innerHTML = ''; // Limpa a grid atual
+
+    const totalQuestoes = perguntasFiltradas.length;
+    const inicio = (pagina - 1) * QUESTOES_POR_PAGINA_GRID;
+    const fim = Math.min(inicio + QUESTOES_POR_PAGINA_GRID, totalQuestoes);
+
+    for (let i = inicio; i < fim; i++) {
         const gridItem = document.createElement('button');
         gridItem.classList.add('grid-item');
         gridItem.textContent = i + 1;
@@ -256,32 +377,130 @@ function criarGridQuestoes(totalQuestoes) {
         gridItem.onclick = () => irParaQuestao(i);
         elQuestionGridContainer.appendChild(gridItem);
     }
-    atualizarGridQuestoes(perguntaAtual);
 }
 
-function atualizarGridQuestoes(indiceAtual) {
+// --- MODIFICADO: Função para renderizar controles com lógica de elipses ---
+function renderizarControlesPaginacao(totalQuestoes) {
+    if (!elPaginacaoControles) return;
+    elPaginacaoControles.innerHTML = ''; // Limpa controles existentes
+
+    const totalPaginas = Math.ceil(totalQuestoes / QUESTOES_POR_PAGINA_GRID);
+
+    if (totalPaginas <= 1) {
+         elPaginacaoControles.style.display = 'none'; // Esconde se não precisa
+         return;
+    }
+    elPaginacaoControles.style.display = 'flex'; // Garante visibilidade
+
+    const criarBotao = (texto, pagina, isDisabled = false, isCurrent = false, isEllipsis = false, ariaLabel = '') => {
+        if (isEllipsis) {
+            const span = document.createElement('span');
+            span.textContent = texto;
+            span.setAttribute('aria-hidden', 'true'); // Esconde de leitores de tela
+            return span;
+        }
+
+        const btn = document.createElement('button');
+        btn.textContent = texto;
+        btn.disabled = isDisabled || isCurrent;
+        if (ariaLabel) btn.setAttribute('aria-label', ariaLabel);
+
+        if (isCurrent) {
+            btn.classList.add('pagina-atual');
+            btn.setAttribute('aria-current', 'page');
+        } else if (!isDisabled) {
+            btn.onclick = () => mudarPaginaGrid(pagina);
+        }
+        return btn;
+    };
+
+    // Botão Anterior
+    elPaginacaoControles.appendChild(criarBotao('«', paginaAtualGrid - 1, paginaAtualGrid === 1, false, false, 'Página anterior da grade'));
+
+    // Lógica de Elipses e Números de Página
+    const maxVisibleButtons = 5; // Quantos botões de número mostrar (ideal ímpar)
+    const halfVisible = Math.floor(maxVisibleButtons / 2);
+
+    if (totalPaginas <= maxVisibleButtons + 2) { // Mostra todos se couber (ex: <= 7 para maxVisible 5)
+        for (let i = 1; i <= totalPaginas; i++) {
+            elPaginacaoControles.appendChild(criarBotao(i, i, false, i === paginaAtualGrid, false, `Ir para página ${i} da grade`));
+        }
+    } else {
+        // Lógica mais complexa com elipses
+
+        // Botão Primeira Página (sempre mostrar)
+        elPaginacaoControles.appendChild(criarBotao(1, 1, false, paginaAtualGrid === 1, false, 'Ir para página 1 da grade'));
+
+        // Elipse inicial?
+        if (paginaAtualGrid > halfVisible + 2) {
+            elPaginacaoControles.appendChild(criarBotao('...', 0, true, false, true));
+        }
+
+        // Números do meio
+        let startPage = Math.max(2, paginaAtualGrid - halfVisible);
+        let endPage = Math.min(totalPaginas - 1, paginaAtualGrid + halfVisible);
+
+        // Ajusta start/end para garantir maxVisibleButtons (ou menos se perto das bordas)
+         if (paginaAtualGrid <= halfVisible + 1) {
+             endPage = Math.min(totalPaginas - 1, maxVisibleButtons);
+         }
+         if (paginaAtualGrid >= totalPaginas - halfVisible) {
+             startPage = Math.max(2, totalPaginas - maxVisibleButtons + 1);
+         }
+
+        for (let i = startPage; i <= endPage; i++) {
+            elPaginacaoControles.appendChild(criarBotao(i, i, false, i === paginaAtualGrid, false, `Ir para página ${i} da grade`));
+        }
+
+        // Elipse final?
+        if (paginaAtualGrid < totalPaginas - halfVisible - 1) {
+             elPaginacaoControles.appendChild(criarBotao('...', 0, true, false, true));
+        }
+
+        // Botão Última Página (sempre mostrar)
+        elPaginacaoControles.appendChild(criarBotao(totalPaginas, totalPaginas, false, paginaAtualGrid === totalPaginas, false, `Ir para página ${totalPaginas} da grade`));
+    }
+
+    // Botão Próximo
+    elPaginacaoControles.appendChild(criarBotao('»', paginaAtualGrid + 1, paginaAtualGrid === totalPaginas, false, false, 'Próxima página da grade'));
+}
+
+
+// Função para mudar de página na grid
+function mudarPaginaGrid(novaPagina) {
+     const totalPaginas = Math.ceil(perguntasFiltradas.length / QUESTOES_POR_PAGINA_GRID);
+     if (novaPagina >= 1 && novaPagina <= totalPaginas && novaPagina !== paginaAtualGrid) {
+         paginaAtualGrid = novaPagina;
+         renderizarGridEPaginacao(); // Re-renderiza a grid e os controles
+     }
+}
+
+// Função para aplicar estilos aos itens da grid VISÍVEIS
+function atualizarGridEstilos(indiceAtualGlobal) {
     if (!elQuestionGridContainer || !perguntasFiltradas) return;
     const items = elQuestionGridContainer.querySelectorAll('.grid-item');
 
     items.forEach(item => {
-        const itemIndex = parseInt(item.dataset.index, 10);
-        if (isNaN(itemIndex) || itemIndex < 0 || itemIndex >= perguntasFiltradas.length) return;
+        const itemIndexGlobal = parseInt(item.dataset.index, 10);
+        if (isNaN(itemIndexGlobal) || itemIndexGlobal < 0 || itemIndexGlobal >= perguntasFiltradas.length) return;
 
-        const pergunta = perguntasFiltradas[itemIndex];
+        const pergunta = perguntasFiltradas[itemIndexGlobal];
         item.classList.remove('grid-item--current', 'grid-item--correct', 'grid-item--incorrect');
 
-        if (pergunta?.hasOwnProperty('respostaDada')) { // Optional chaining
+        if (pergunta?.hasOwnProperty('respostaDada')) {
             item.classList.add(pergunta.respostaDada === pergunta.correta ? 'grid-item--correct' : 'grid-item--incorrect');
         }
-        if (itemIndex === indiceAtual) {
+        if (itemIndexGlobal === indiceAtualGlobal) {
             item.classList.add('grid-item--current');
         }
     });
 }
 
+// --- Função para ir para uma questão específica (clicando na grid) ---
 function irParaQuestao(indice) {
     clearTimeout(autoAvancoTimeoutId);
     autoAvancoTimeoutId = null;
+
     if (perguntasFiltradas && indice >= 0 && indice < perguntasFiltradas.length) {
         perguntaAtual = indice;
         carregarPergunta();
@@ -290,7 +509,8 @@ function irParaQuestao(indice) {
     }
 }
 
-// --- Função Central: Atualiza Filtro e Carrega Perguntas --- REFAVORADA ---
+
+// --- Função Central: Atualiza Filtro e Carrega Perguntas ---
 function atualizarFiltroECarregarPerguntas() {
     if (!filtroCheckboxesContainer || !elQuizSection) {
         console.error("Erro: Elementos de filtro ou quiz não encontrados para atualizar.");
@@ -305,8 +525,12 @@ function atualizarFiltroECarregarPerguntas() {
     categoriasSelecionadas = obterCategoriasSelecionadas();
     perguntasFiltradas = filtrarPerguntas(perguntas, categoriasSelecionadas);
     reiniciarEstadoQuiz();
+    paginaAtualGrid = 1; // Reseta a página da grid
 
-    criarGridQuestoes(perguntasFiltradas.length); // Cria ou limpa a grade
+    // Renderiza a grid e a paginação
+    renderizarGridEPaginacao();
+    // Atualiza estado das setas das categorias
+    setTimeout(atualizarSetasScrollCategorias, 100);
 
     // Esconde resultado e quiz antes de decidir o que mostrar
     if (elResultadoCard) elResultadoCard.style.display = 'none';
@@ -322,7 +546,7 @@ function filtrarPerguntas(listaCompleta, categoriasFiltro) {
      if (!Array.isArray(listaCompleta)) {
          console.error('ERRO FATAL: A variável "perguntas" não é um array no momento de filtrar!');
          mostrarAviso("Erro interno ao processar perguntas. Verifique o console.");
-         return []; // Retorna array vazio em caso de erro
+         return [];
      }
 
     if (categoriasFiltro.length > 0) {
@@ -330,7 +554,6 @@ function filtrarPerguntas(listaCompleta, categoriasFiltro) {
             p.categorias && Array.isArray(p.categorias) && p.categorias.some(cat => categoriasFiltro.includes(cat))
         );
     }
-    // Limpa estado 'respostaDada' da execução anterior
     filtradas.forEach(p => delete p.respostaDada);
     return filtradas;
 }
@@ -338,16 +561,17 @@ function filtrarPerguntas(listaCompleta, categoriasFiltro) {
 function reiniciarEstadoQuiz() {
     perguntaAtual = 0;
     usuario.resetarContadores();
-    atualizar_pontuacao(); // Atualiza UI da pontuação
+    atualizar_pontuacao();
 }
 
 function exibirQuizOuAviso(perguntasParaExibir, categoriasAtivas) {
     if (perguntasParaExibir.length > 0) {
         elQuizSection.style.display = 'flex';
-        carregarPergunta(); // Carrega a primeira pergunta filtrada
+        carregarPergunta();
         limparAviso();
     } else {
-        const temCheckboxes = filtroCheckboxesContainer?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])').length > 0;
+        // Verifica checkboxes DENTRO da área rolável
+        const temCheckboxes = elFiltroCheckboxesScroll?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])').length > 0;
         if (categoriasAtivas.length === 0 && temCheckboxes) {
              mostrarAviso("Selecione pelo menos uma categoria para começar o quiz.");
         } else if (categoriasAtivas.length > 0) {
@@ -355,19 +579,27 @@ function exibirQuizOuAviso(perguntasParaExibir, categoriasAtivas) {
         } else {
              mostrarAviso("Nenhuma categoria disponível ou erro na configuração.");
         }
+        if(elQuestionGridContainer) elQuestionGridContainer.style.display = 'none';
+        if(elPaginacaoControles) elPaginacaoControles.innerHTML = ''; elPaginacaoControles.style.display = 'none';
     }
 }
 
-// --- Função para Carregar Pergunta --- REFAVORADA ---
+// --- Função para Carregar Pergunta ---
 function carregarPergunta() {
     if (!elementosEssenciaisQuizExistem() || perguntasFiltradas.length === 0) {
          console.log("carregarPergunta: Elementos ausentes ou sem perguntas filtradas.");
          return;
      }
 
-    elQuizSection.style.display = 'flex'; // Garante visibilidade
+    // Garante que a página correta da grid esteja visível
+    const paginaNecessaria = Math.floor(perguntaAtual / QUESTOES_POR_PAGINA_GRID) + 1;
+    if (paginaNecessaria !== paginaAtualGrid) {
+        mudarPaginaGrid(paginaNecessaria);
+        // A mudança de página já vai renderizar a grid e atualizar os estilos
+    }
 
-    atualizarUINavegacaoQuiz(); // Limpa timeout, atualiza barra e grid
+    elQuizSection.style.display = 'flex';
+    atualizarUINavegacaoQuiz(); // Atualiza barra e estilos da grid atual
 
     if (perguntaAtual >= perguntasFiltradas.length || perguntaAtual < 0) {
         console.warn(`Índice de pergunta (${perguntaAtual}) inválido. Mostrando resultado.`);
@@ -379,7 +611,7 @@ function carregarPergunta() {
     if (!pergunta) {
         console.error(`Erro: Pergunta não encontrada no índice ${perguntaAtual}.`);
         mostrarAviso("Erro ao carregar dados da pergunta.");
-        mostrarResultadoFinal(); // Vai para o final se a pergunta não carregar
+        mostrarResultadoFinal();
         return;
     }
 
@@ -392,7 +624,6 @@ function carregarPergunta() {
 
 // --- Funções Auxiliares de carregarPergunta ---
 function elementosEssenciaisQuizExistem() {
-    // Verifica elementos cruciais para exibir uma pergunta
     const ok = elQuizSection && elRespostasContainer && elPerguntaTexto && elIdQuestao && elCategoriaTitulo && elReferencia && elNavigationButtons && elPrevBtn && elNextBtn;
      if (!ok) {
          console.error("Erro crítico: Elementos essenciais do quiz não encontrados/cacheados.");
@@ -404,7 +635,7 @@ function atualizarUINavegacaoQuiz() {
     clearTimeout(autoAvancoTimeoutId);
     autoAvancoTimeoutId = null;
     atualizarBarraProgresso();
-    atualizarGridQuestoes(perguntaAtual);
+    atualizarGridEstilos(perguntaAtual); // Atualiza estilos da grid visível
 }
 
 function limparAreaPergunta() {
@@ -417,7 +648,7 @@ function limparAreaPergunta() {
 }
 
 function preencherDetalhesQuestao(pergunta, indice) {
-    let tituloCat = "Questão"; // Padrão
+    let tituloCat = "Questão";
     if (pergunta.categorias && pergunta.categorias.length > 0) {
         tituloCat = pergunta.categorias[0];
     } else if (categoriasSelecionadas.length === 1) {
@@ -439,7 +670,7 @@ function exibirImagemQuestao(urlImagem, indice) {
             console.warn(`Erro ao carregar imagem: ${urlImagem}`);
         };
     } else if (elPerguntaImagem) {
-        elPerguntaImagem.style.display = 'none'; // Garante que está escondida se não houver URL
+        elPerguntaImagem.style.display = 'none';
     }
 }
 
@@ -475,7 +706,6 @@ function marcarRespostaComoJaFeita(elementoP, pergunta, textoResposta) {
 }
 
 function configurarBotoesNavegacao(indiceAtual, totalPerguntas) {
-     // Assegura que os botões foram cacheados
      if (!elNavigationButtons && elQuizSection) {
         elNavigationButtons = elQuizSection.querySelector('.navigation-buttons');
         if (elNavigationButtons) {
@@ -483,51 +713,48 @@ function configurarBotoesNavegacao(indiceAtual, totalPerguntas) {
             elNextBtn = elNavigationButtons.querySelector('#next-btn');
         } else {
             console.warn("Aviso: .navigation-buttons não encontrado ao configurar botões.");
-            return; // Sai se não encontrar
+            return;
         }
     }
-    // Continua apenas se os botões existem
      if (!elPrevBtn || !elNextBtn) {
          console.warn("Aviso: Botões prev/next não encontrados.");
          return;
      }
 
-
     elNavigationButtons.style.display = 'flex';
     elPrevBtn.disabled = indiceAtual === 0;
-    elNextBtn.disabled = false; // Habilita por padrão
+    elNextBtn.disabled = false;
     elNextBtn.innerText = (indiceAtual === totalPerguntas - 1) ? 'Ver Resultado' : 'Próxima';
 }
 
-// --- Função para Verificar Resposta --- REFAVORADA ---
+// --- Função para Verificar Resposta ---
 function verificarResposta(elementoClicado, pergunta) {
      if (pergunta.hasOwnProperty('respostaDada') || !elementoClicado || !elRespostasContainer) return;
 
-     clearTimeout(autoAvancoTimeoutId); // Cancela avanço anterior, se houver
+     clearTimeout(autoAvancoTimeoutId);
 
      const respostaSelecionada = elementoClicado.textContent;
-     pergunta.respostaDada = respostaSelecionada; // Marca como respondida
+     pergunta.respostaDada = respostaSelecionada;
 
      desabilitarRespostas();
      aplicarFeedbackVisualResposta(elementoClicado, pergunta, respostaSelecionada);
      atualizarEstadoAposResposta(pergunta, respostaSelecionada);
-     agendarProximaQuestao(1500); // Agenda avanço após 1.5s
+     atualizarGridEstilos(perguntaAtual); // Atualiza estilo na grid
+     agendarProximaQuestao(1500);
  }
 
 // --- Funções Auxiliares de verificarResposta ---
 function desabilitarRespostas() {
     const allAnswers = elRespostasContainer.querySelectorAll('.answer');
     allAnswers.forEach(ans => {
-        ans.onclick = null; // Remove click handler
-        ans.classList.add('answered'); // Adiciona classe genérica de respondida
+        ans.onclick = null;
+        ans.classList.add('answered');
     });
 }
 
 function aplicarFeedbackVisualResposta(elementoClicado, pergunta, respostaSelecionada) {
      const correta = respostaSelecionada === pergunta.correta;
      elementoClicado.classList.add(correta ? "correct" : "incorrect");
-
-     // Se errou, marca também a correta
      if (!correta) {
          const allAnswers = elRespostasContainer.querySelectorAll('.answer');
          allAnswers.forEach(ans => {
@@ -544,8 +771,7 @@ function atualizarEstadoAposResposta(pergunta, respostaSelecionada) {
     } else {
         usuario.erros += 1;
     }
-    atualizar_pontuacao(); // Atualiza UI da pontuação na sidebar
-    atualizarGridQuestoes(perguntaAtual); // Atualiza estado na grid
+    atualizar_pontuacao();
 }
 
 function agendarProximaQuestao(delayMs) {
@@ -576,25 +802,24 @@ function perguntaAnterior() {
 function mostrarResultadoFinal() {
     clearTimeout(autoAvancoTimeoutId); autoAvancoTimeoutId = null;
 
-    // Esconde elementos do quiz ativo
     if (elQuizSection) elQuizSection.style.display = 'none';
     if (elProgressContainer) elProgressContainer.style.display = 'none';
+    if (elProgressText) elProgressText.style.display = 'none';
     if (avisoContainer) avisoContainer.style.display = 'none';
     if (elQuestionGridContainer) elQuestionGridContainer.style.display = 'none';
-    atualizarGridQuestoes(-1); // Desmarca todos na grid
+    if (elPaginacaoControles) elPaginacaoControles.innerHTML = ''; elPaginacaoControles.style.display = 'none';
 
     if (elResultadoCard) {
         elResultadoCard.style.display = 'block';
-        preencherMensagemFinal(); // Preenche os dados no card
+        preencherMensagemFinal();
     } else {
         console.error("Erro: .resultado-final-card não encontrado.");
-        // Fallback: mostra um aviso genérico
         mostrarAviso(`Quiz Concluído! Pontuação Final: ${usuario.pontos}, Acertos: ${usuario.acertos}, Erros: ${usuario.erros}`);
     }
 }
 
 function preencherMensagemFinal() {
-    if (!elResultadoCard || !filtroCheckboxesContainer) return; // Precisa do filtro para o título
+    if (!elResultadoCard || !filtroCheckboxesContainer) return;
 
     const tit = elResultadoCard.querySelector('.resultado-final-titulo');
     const pont = elResultadoCard.querySelector('.resultado-final-pontuacao .pontos-valor');
@@ -613,13 +838,14 @@ function preencherMensagemFinal() {
 }
 
 function gerarTituloResultadoFinal() {
-    const outrosCheckboxes = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
-    const categoriasAtivas = obterCategoriasSelecionadas(); // Reusa a função
-    const cbTodas = filtroCheckboxesContainer.querySelector('input[value="Todas"]');
+    // Usa o container PAI para pegar os checkboxes originais
+    const outrosCheckboxes = filtroCheckboxesContainer?.querySelectorAll('#filtro-checkboxes-scroll input[type="checkbox"]:not([value="Todas"])');
+    const categoriasAtivas = obterCategoriasSelecionadas();
+    const cbTodas = filtroCheckboxesContainer?.querySelector('#filtro-checkboxes-scroll input[value="Todas"]');
 
     if (categoriasAtivas.length === 1) {
         return `Quiz de ${categoriasAtivas[0]} Concluído!`;
-    } else if (cbTodas?.checked && outrosCheckboxes && categoriasAtivas.length === outrosCheckboxes.length) { // Safely check cbTodas
+    } else if (cbTodas?.checked && outrosCheckboxes && categoriasAtivas.length === outrosCheckboxes.length) {
         return `Quiz de Todas as Categorias Concluído!`;
     } else if (categoriasAtivas.length > 1) {
         return `Quiz de Múltiplas Categorias Concluído!`;
@@ -637,32 +863,33 @@ function atualizar_pontuacao() {
 // --- Carregamento Inicial e Event Listeners ---
 async function carregarPerguntasJSON() {
     try {
-        const response = await fetch('assets/data/questions.json');
+        // Adiciona um timestamp para tentar evitar cache do JSON
+        const timestamp = Date.now();
+        const response = await fetch(`assets/data/questions.json?t=${timestamp}`);
         if (!response.ok) {
             throw new Error(`Falha ao buscar questions.json. Status: ${response.status}`);
         }
         const contentType = response.headers.get("content-type");
-        if (!contentType || !contentType.includes("application/json")) {
-           throw new TypeError(`Tipo de conteúdo inesperado (${contentType}). Esperado application/json.`);
+        if (!contentType || !(contentType.includes("application/json") || contentType.includes("text/plain"))) {
+           console.warn(`Tipo de conteúdo (${contentType}) não é estritamente application/json, mas tentando processar...`);
         }
         const data = await response.json();
         if (!Array.isArray(data)) {
             throw new Error("O formato dos dados das perguntas é inválido (não é um Array).");
         }
-        perguntas = data; // Atribui ao array global
-        console.log("Perguntas carregadas com sucesso.");
-        return true; // Sucesso
+        perguntas = data;
+        console.log(`Perguntas carregadas com sucesso (${perguntas.length} perguntas).`);
+        return true;
     } catch (error) {
         console.error("Erro CRÍTICO durante o carregamento das perguntas:", error);
-        // Tenta mostrar aviso na tela, mesmo que o cache falhe depois
-        if (!avisoContainer || !avisoMensagem) cacheDOMelements(); // Tenta cache para aviso
+        if (!avisoContainer || !avisoMensagem) cacheDOMelements();
         if (avisoContainer && avisoMensagem) {
-             mostrarSecao('questoes-section'); // Tenta ir para a seção de questões para mostrar o aviso
+             mostrarSecao('questoes-section');
              mostrarAviso(`Falha grave ao carregar perguntas: ${error.message}. O quiz não pode iniciar.`);
         } else {
-             alert(`Falha grave ao carregar as perguntas: ${error.message}`); // Fallback extremo
+             alert(`Falha grave ao carregar as perguntas: ${error.message}`);
         }
-        return false; // Falha
+        return false;
     }
 }
 
@@ -682,27 +909,55 @@ function configurarEventListeners() {
         });
     });
 
-    // Listener dos Checkboxes de Filtro (delegação de evento)
+    // Listener dos Checkboxes de Filtro (delegação no container PAI)
     if (filtroCheckboxesContainer) {
+        // O listener é no container PAI, mas verificamos se o alvo está DENTRO do rolável
         filtroCheckboxesContainer.addEventListener('change', (event) => {
-            if (event.target?.type === 'checkbox') { // Optional chaining
-                handleCheckboxChange(event.target); // Chama função dedicada
-                atualizarFiltroECarregarPerguntas(); // Recarrega após qualquer mudança
+            // Verifica se o evento ocorreu num checkbox dentro da área rolável
+            if (event.target?.type === 'checkbox' && event.target.closest('#filtro-checkboxes-scroll')) {
+                handleCheckboxChange(event.target);
+                atualizarFiltroECarregarPerguntas();
+                // Atualiza setas após mudança de filtro
+                setTimeout(atualizarSetasScrollCategorias, 100);
             }
         });
     } else {
-        console.warn("Container de filtro de categorias não encontrado para adicionar listener.");
+        console.warn("Container PAI de filtro de categorias não encontrado para adicionar listener.");
     }
 
     // Listeners dos Botões de Navegação do Quiz
     if (elPrevBtn) elPrevBtn.addEventListener('click', perguntaAnterior);
     if (elNextBtn) elNextBtn.addEventListener('click', proximaPergunta);
+
+    // Listeners para as Setas de Rolagem das Categorias
+    if (elCatScrollLeft) {
+        elCatScrollLeft.addEventListener('click', () => rolarCategorias('left'));
+    }
+    if (elCatScrollRight) {
+        elCatScrollRight.addEventListener('click', () => rolarCategorias('right'));
+    }
+
+    // Listener para atualizar setas durante rolagem por toque/outros meios
+    if (elFiltroCheckboxesScroll) {
+        // Usar { passive: true } pode melhorar performance de scroll
+        elFiltroCheckboxesScroll.addEventListener('scroll', atualizarSetasScrollCategorias, { passive: true });
+    }
+
+    // Listener para atualizar setas em redimensionamento da janela
+    // Usar debounce/throttle aqui seria ideal para performance, mas para simplicidade:
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(atualizarSetasScrollCategorias, 150);
+    });
 }
 
 // Função auxiliar para lógica dos checkboxes
 function handleCheckboxChange(changedCheckbox) {
-     const cbTodas = filtroCheckboxesContainer.querySelector('input[value="Todas"]');
-     const outrosCheckboxes = filtroCheckboxesContainer.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
+     // Seleciona os checkboxes dentro do container rolável
+     if (!elFiltroCheckboxesScroll) return;
+     const cbTodas = elFiltroCheckboxesScroll.querySelector('input[value="Todas"]');
+     const outrosCheckboxes = elFiltroCheckboxesScroll.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
 
      if (!cbTodas || !outrosCheckboxes) {
           console.error("Não foi possível encontrar os checkboxes de filtro dinamicamente.");
@@ -721,36 +976,32 @@ function handleCheckboxChange(changedCheckbox) {
 
 // --- Inicialização Principal ---
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1. Carrega as perguntas primeiro
     const perguntasCarregadas = await carregarPerguntasJSON();
 
-    // Só continua se as perguntas foram carregadas com sucesso
     if (perguntasCarregadas) {
-        // 2. Cacheia os elementos DOM essenciais
         if (!cacheDOMelements()) {
-            console.error("Erro Crítico: Falha ao encontrar elementos DOM essenciais após carregar perguntas.");
-            mostrarAviso("Erro crítico na interface do quiz. Verifique o console.");
-            return; // Interrompe se o DOM estiver quebrado
+             console.error("Erro Crítico: Falha ao encontrar elementos DOM essenciais.");
+             mostrarAviso("Erro crítico na interface do quiz. Verifique o console.");
+            return;
         }
 
-        // 3. Gera os filtros de categoria dinamicamente
         try {
             const categoriasUnicas = extrairCategoriasUnicas(perguntas);
-            gerarCheckboxesCategoria(filtroCheckboxesContainer, categoriasUnicas);
+            // Passa o elemento rolável correto para gerar os checkboxes DENTRO dele
+            gerarCheckboxesCategoria(elFiltroCheckboxesScroll, categoriasUnicas);
             console.log("Filtros de categoria gerados.");
         } catch(error) {
             console.error("Erro ao gerar filtros de categoria:", error);
             mostrarAviso("Erro ao configurar filtros de categoria.");
-            // Pode decidir continuar ou parar aqui dependendo da importância dos filtros
         }
 
-        // 4. Configura todos os event listeners
         configurarEventListeners();
 
-        // 5. Define e mostra a seção inicial
         const linkInicialAtivo = document.querySelector('.navbar .nav-link.active');
-        const secaoInicialId = linkInicialAtivo?.dataset.section || 'inicio-section'; // Usa optional chaining e default
-        mostrarSecao(secaoInicialId); // Mostra a seção inicial (pode já chamar atualizarFiltroECarregarPerguntas se for 'questoes-section')
+        const secaoInicialId = linkInicialAtivo?.dataset.section || 'inicio-section';
+        mostrarSecao(secaoInicialId);
+
+        // Chama uma vez para garantir estado inicial correto das setas
+        setTimeout(atualizarSetasScrollCategorias, 150);
     }
-    // Se perguntasCarregadas for false, o erro já foi tratado em carregarPerguntasJSON
 });

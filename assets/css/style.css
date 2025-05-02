@@ -8,8 +8,6 @@
 html {
     scroll-behavior: smooth;
     font-size: 16px;
-    /* Tentativa de correção de rolagem: */
-    /* height: 100%; */
 }
 
 body {
@@ -19,33 +17,27 @@ body {
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Mantido min-height em vez de height 100% */
-    /* height: 100%; */
+    min-height: 100vh;
 }
 
 .logo-area {
     font-family: "Montserrat", sans-serif;
-    font-size: 2.0rem;  /* << AUMENTADO de 1.6rem */
-    font-weight: 700;  /* << AUMENTADO de 600 */
+    font-size: 2.0rem;
+    font-weight: 700;
     color: #0d3b66;
     margin: 0;
-    letter-spacing: 0.5px; /* << ADICIONADO espaçamento sutil */
-    /* Sombra de texto sutil (deslocamento x, y, desfoque, cor) */
-    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* << ADICIONADO */
-    transition: transform 0.2s ease-out; /* Para efeito hover suave */
+    letter-spacing: 0.5px;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-out;
 }
 
-/* Efeito hover opcional para dar um feedback visual */
 .logo-area:hover {
-    transform: scale(1.03); /* Aumenta levemente o tamanho */
+    transform: scale(1.03);
 }
 
 .logo-area b {
-    /* Mantém o peso 800 para 'Quiz' ou pode aumentar para 900 se quiser ainda mais destaque */
     font-weight: 800;
-    color: #2a9d8f; /* Mantém a cor de destaque verde/azul */
-    /* Garante que a sombra do pai não seja sobreposta se necessário */
-    /* text-shadow: none; */ /* Descomente se a sombra do pai parecer estranha aqui */
+    color: #2a9d8f;
 }
 
 .logo-area a {
@@ -53,15 +45,10 @@ body {
     color: inherit;
 }
 
-/* Verifique se a altura do header (80px) ainda acomoda bem a logo maior.
-   Se necessário, ajuste o 'height' ou 'padding' do header.
-   A regra atual do header já centraliza verticalmente (align-items: center),
-   então deve funcionar bem. */
-   
 header {
     height: 80px;
     display: flex;
-    justify-content: center; /* Mantém centralizado */
+    justify-content: center;
     align-items: center;
     background-color: #ffffff;
     padding: 0 40px;
@@ -71,25 +58,13 @@ header {
     flex-shrink: 0;
 }
 
-/* Restante do seu CSS continua igual... */
-
-/* O H1 original pode ser ocultado se o logo o substituir visualmente */
 h1.title-header {
-    /* Estilos originais removidos ou comentados se não forem mais usados diretamente */
-    /* order: 2; */
-    /* font: normal 700 2.0rem "Montserrat", sans-serif; */
-    /* color: #0d3b66; */
-    /* O display: none está inline no HTML, mas pode ser colocado aqui: */
-    /* display: none; */
+     display: none;
 }
 
-/* Remover regra para a div vazia antiga */
-/* header div { order: 3; } */
-
-/* Remover regra para o <p> antigo no header */
 header p { display: none; }
 
-.header-nav { /* Container para links/botões do header */
+.header-nav {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -100,20 +75,20 @@ header p { display: none; }
     font-size: 0.9rem;
     font-weight: 500;
     text-decoration: none;
-    color: #0d3b66; /* Cor do texto do botão */
-    background-color: #f1f3f5; /* Fundo do botão */
-    padding: 8px 18px; /* Padding interno do botão */
-    border-radius: 50px; /* Bordas arredondadas (pílula) */
-    border: 1px solid transparent; /* Borda inicial transparente */
+    color: #0d3b66;
+    background-color: #f1f3f5;
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid transparent;
     transition: all 0.3s ease;
-    white-space: nowrap; /* Evita quebra de linha */
+    white-space: nowrap;
 }
 
 .about-link.button-style:hover {
-    background-color: #e9ecef; /* Fundo mais escuro no hover */
+    background-color: #e9ecef;
     color: #0d3b66;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Leve sombra no hover */
-    transform: translateY(-1px); /* Leve elevação */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
 }
 /* --- FIM DOS ESTILOS DO CABEÇALHO --- */
 
@@ -172,7 +147,7 @@ nav {
 .nav-link.active {
      font-weight: 600;
      color: #0d3b66;
-     border-bottom-color: #5fda9a; /* Verde usado na navbar */
+     border-bottom-color: #5fda9a;
 }
 
 
@@ -181,14 +156,12 @@ main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    /* Tentativa correção rolagem: */
-    /* overflow: hidden; */
 }
 
 .main-section {
     flex-grow: 1;
     display: flex;
-    flex-direction: column; /* Padrão, pode ser sobrescrito */
+    flex-direction: column;
 }
 
 
@@ -198,8 +171,6 @@ main {
      background-color: #f1f3f5;
      justify-content: center;
      align-items: center;
-     /* flex-grow: 1; */ /* Removido para consistência */
-     /* flex-direction: column; <-- já é o padrão de .main-section */
 }
 #inicio-section .inicio-content {
     max-width: 800px;
@@ -227,9 +198,6 @@ main {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
-    /* Tentativa correção rolagem: */
-    /* height: 100%; */
-    /* overflow: hidden; */
 }
 
 
@@ -240,12 +208,10 @@ aside {
     gap: 20px;
     padding: 30px;
     min-width: 280px;
-    /* width: 280px; */ /* Removido para usar min-width */
     background-color: #ffffff;
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
     border-right: 1px solid #dee2e6;
     flex-shrink: 0;
-    /* overflow-y: auto; */ /* Removido, não deve rolar */
 }
 
 .aside-title {
@@ -277,118 +243,18 @@ aside p {
 .icon-wrap.icon-correct svg { fill: #2a9d8f; }
 .icon-wrap.icon-error { background-color: rgba(240, 87, 108, 0.1); }
 .icon-wrap.icon-error svg { fill: #e63946; }
-/* ===== ESTILOS PARA A GRADE DE QUESTÕES ===== */
-
-/* Título opcional acima da grade */
-.question-grid-title {
-    text-align: center;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #495057;
-    margin-top: 15px; /* Espaço acima do título */
-    margin-bottom: 10px; /* Espaço entre título e grade */
-    font-family: "Montserrat", sans-serif;
-}
-
-/* Container da grade */
-#question-grid-container {
-    display: grid; /* Usa Grid Layout */
-    /* Cria colunas que tentam ter no mínimo 35px e no máximo 1fr (espaço disponível)
-       'auto-fill' cria quantas colunas couberem */
-    grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
-    gap: 8px; /* Espaçamento entre os itens da grade */
-    padding: 5px; /* Pequeno padding interno */
-    background-color: #f8f9fa; /* Fundo levemente diferente para destacar a área */
-    border-radius: 6px;
-    border: 1px solid #e9ecef;
-    max-height: 300px; /* Define uma altura máxima */
-    overflow-y: auto;  /* Adiciona scroll vertical se necessário */
-    display: none; /* Começa escondido, JS mostra quando há questões */
-}
-
-/* Estilo base para cada item da grade (botão) */
-.grid-item {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%; /* Ocupa a célula da grade */
-    aspect-ratio: 1 / 1; /* Força a ser um quadrado */
-    font-size: 0.85rem;
-    font-weight: 600;
-    font-family: "Roboto", sans-serif;
-    color: #495057;
-    background-color: #ffffff; /* Fundo padrão */
-    border: 1.5px solid #ced4da; /* Borda padrão */
-    border-radius: 4px; /* Bordas levemente arredondadas */
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-    padding: 2px; /* Pequeno padding interno */
-    line-height: 1; /* Para centralizar o número */
-    text-align: center;
-    user-select: none; /* Evita seleção de texto */
-}
-
-.grid-item:hover {
-    border-color: #0d3b66;
-    background-color: #eef3f8;
-    transform: scale(1.05);
-    z-index: 1; /* Traz para frente no hover */
-}
-
-/* Estado: Questão Atual */
-.grid-item.grid-item--current {
-    border-color: #0d3b66; /* Borda mais forte */
-    background-color: #cde1f3; /* Fundo azul claro */
-    color: #0d3b66;
-    font-weight: 700;
-    box-shadow: 0 0 0 2px rgba(13, 59, 102, 0.3); /* Outline sutil */
-    z-index: 2; /* Garante que fique acima de outros no hover */
-}
-
-/* Estado: Respondida Corretamente */
-.grid-item.grid-item--correct {
-    background-color: #d1f7e0; /* Verde claro (mesmo da resposta) */
-    border-color: #a3e9c1;
-    color: #0a3622; /* Verde escuro */
-}
-.grid-item.grid-item--correct:hover { /* Manter a cor no hover */
-     background-color: #c1f2d5;
-     border-color: #8ae0b1;
-     transform: scale(1); /* Sem scale no hover para estados fixos */
-}
-/* Opcional: Adicionar checkmark (✓) via pseudo-elemento (requer mais CSS) */
-/* .grid-item.grid-item--correct::after { content: '✓'; ... } */
-
-/* Estado: Respondida Incorretamente */
-.grid-item.grid-item--incorrect {
-    background-color: #f8d7da; /* Vermelho claro (mesmo da resposta) */
-    border-color: #f1aeb5;
-    color: #58151c; /* Vermelho escuro */
-}
-.grid-item.grid-item--incorrect:hover { /* Manter a cor no hover */
-     background-color: #f5c6cb;
-     border-color: #ec9aa4;
-     transform: scale(1); /* Sem scale no hover para estados fixos */
-}
-/* Opcional: Adicionar 'X' via pseudo-elemento */
-/* .grid-item.grid-item--incorrect::after { content: '✕'; ... } */
-
-
-/* ===== FIM DOS ESTILOS DA GRADE ===== */
 
 /* --- Conteúdo Principal (Dentro da Seção Questões) --- */
 #questoes-section .main-content {
     padding: 30px 40px;
-    width: 100%; /* Re-adicionado pois flex-grow sozinho pode não ser suficiente */
+    width: 100%;
     background-color: #f1f3f5;
     overflow-x: hidden;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    /* Tentativa correção rolagem: (MANTENDO as sugestões anteriores para teste) */
     overflow-y: auto;
-    min-height: 0; /* Adicionado de volta como tentativa */
-    /* height: 100%; <-- Comentado pois min-height: 0 costuma ser mais eficaz com flex-grow */
+    min-height: 0;
 }
 
 /* --- Filtro de Categorias --- */
@@ -409,15 +275,94 @@ aside p {
     padding-left: 5px;
 }
 
-.filtro-checkboxes {
+/* === INÍCIO: Estilos Categoria - Solução Flexbox Precisa === */
+.categorias-scroll-wrapper {
+    position: relative;
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 5%, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 5%, rgba(0,0,0,1) 95%, rgba(0,0,0,0) 100%);
+}
+
+/* Div rolável */
+.filtro-checkboxes#filtro-checkboxes-scroll {
+    display: flex;
     gap: 10px 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    clip-path: inset(0 30px 0 30px);
+    flex-grow: 1;
+    min-width: 0;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+}
+.filtro-checkboxes#filtro-checkboxes-scroll::-webkit-scrollbar {
+    display: none;
 }
 
 .checkbox-item {
     display: inline-block;
+    flex-shrink: 0;
 }
+
+/* Estilos para as Setas de Rolagem */
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    background-color: #ffffff;
+    color: #0d3b66;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: background-color 0.2s, opacity 0.3s, transform 0.1s, box-shadow 0.2s;
+    opacity: 0;
+    pointer-events: none;
+}
+.categorias-scroll-wrapper:hover .scroll-arrow:not(:disabled),
+.scroll-arrow:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-arrow.left {
+    left: 5px;
+}
+
+.scroll-arrow.right {
+    right: 5px;
+}
+
+.scroll-arrow:hover:not(:disabled) {
+    background-color: #f8f9fa;
+    border-color: #adb5bd;
+    box-shadow: 0 3px 7px rgba(0,0,0,0.15);
+}
+.scroll-arrow:active:not(:disabled) {
+     transform: translateY(-50%) scale(0.95);
+     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.scroll-arrow:disabled {
+    opacity: 0.2 !important;
+    cursor: not-allowed;
+    pointer-events: none !important;
+    box-shadow: none;
+}
+/* === FIM: Estilos Categoria - Solução Flexbox Precisa === */
+
 
 .checkbox-item input[type="checkbox"] {
     position: absolute;
@@ -473,172 +418,214 @@ aside p {
 /* --- Área do Quiz --- */
 #quiz-section {
      flex-direction: column;
-     gap: 20px;
-     display: flex;
-     /* flex-grow: 1; */ /* Removido, o conteúdo deve definir o tamanho */
-     flex-shrink: 0; /* Garante que não encolha */
-     /* min-height: min-content; <-- Removido, pode causar problemas */
+     gap: 0;
+     display: none;
+     flex-shrink: 0;
  }
 
-/* Barra de Progresso */
+/* Barra de Progresso e Texto */
 #progress-container {
     width: 100%; background-color: #e9ecef; border-radius: 25px;
-    margin-bottom: 25px; overflow: hidden; height: 12px; position: relative;
+    margin-bottom: 0;
+    overflow: hidden; height: 12px; position: relative;
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.08); display: none;
     flex-shrink: 0;
 }
 #progress-bar-fill { height: 100%; width: 0%; background-image: linear-gradient(to right, #1a5f9e, #0d3b66); border-radius: 25px; transition: width 0.4s ease-out; }
-#progress-text { display: block; text-align: right; font-size: 0.9em; color: #6c757d; margin-top: 8px; padding-right: 5px; }
+#progress-text { display: block; text-align: right; font-size: 0.9em; color: #6c757d; margin-top: 8px; margin-bottom: 8px; padding-right: 5px; display: none; flex-shrink: 0; }
 
-/* ================================================================== */
-/* ===== INÍCIO: ESTILOS AJUSTADOS (v5) GRADE ABAIXO PROG BAR ===== */
-/* ================================================================== */
-
-/* Container da grade na nova posição */
+/* Container da grade */
 #question-grid-container {
     display: grid;
-    /* Colunas com tamanho mínimo um pouco maior (28px) */
     grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
-    gap: 5px; /* Espaçamento ajustado */
+    gap: 5px;
     width: 100%;
-    margin-top: 12px; /* Espaço abaixo da barra de progresso */
-    margin-bottom: 25px; /* Espaço acima do título H2 da questão */
-    padding: 5px; /* Padding leve no container */
-    background-color: transparent; /* Mantém fundo transparente */
+    margin-top: 0;
+    /* Adiciona margem inferior consistente */
+    margin-bottom: 25px; /* <<<<<<< ADICIONADO/AJUSTADO */
+    padding: 5px;
+    background-color: transparent;
     border: none;
-    display: none; /* JS controla visibilidade */
+    display: none;
+    flex-shrink: 0;
 }
 
-/* Estilo base para cada item da grade (botão) - Tamanho e Legibilidade */
+/* Estilo base para cada item da grade (botão) */
 .grid-item {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
-    aspect-ratio: 1 / 1; /* Mantém quadrado */
-    font-size: 0.8rem; /* Fonte legível */
-    font-weight: 500; /* Peso médio */
+    aspect-ratio: 1 / 1;
+    font-size: 0.8rem;
+    font-weight: 500;
     font-family: "Roboto", sans-serif;
-    color: #6c757d; /* Cinza médio para estado padrão */
-    background-color: #ffffff; /* Fundo branco */
-    border: 1px solid #dee2e6; /* Borda cinza clara */
-    border-radius: 5px; /* Cantos arredondados suaves */
+    color: #6c757d;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
     cursor: pointer;
     transition: all 0.18s ease-out;
-    padding: 2px; /* Pequeno padding para texto não colar na borda */
-    line-height: normal; /* Remove line-height: 1, deixa o flex alinhar */
+    padding: 2px;
+    line-height: normal;
     text-align: center;
     user-select: none;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04); /* Sombra sutil */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .grid-item:hover {
     border-color: #adb5bd;
     color: #343a40;
-    background-color: #f8f9fa; /* Fundo cinza claro hover */
+    background-color: #f8f9fa;
     box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    transform: translateY(-1px); /* Leve elevação */
+    transform: translateY(-1px);
     z-index: 1;
 }
 
-/* Estado: Questão Atual - Destaque claro */
+/* Estado: Questão Atual */
 .grid-item.grid-item--current {
-    border: 1.5px solid #0d3b66; /* Borda azul um pouco mais grossa */
-    background-color: #eef3f8; /* Fundo azul bem claro */
-    color: #0d3b66; /* Texto azul */
+    border: 1.5px solid #0d3b66;
+    background-color: #eef3f8;
+    color: #0d3b66;
     font-weight: 700;
     box-shadow: 0 1px 4px rgba(13, 59, 102, 0.15);
-    transform: scale(1.03); /* Leve scale */
+    transform: scale(1.03);
     z-index: 2;
 }
 .grid-item.grid-item--current:hover {
-     /* Mantém o estilo */
      filter: none;
      transform: scale(1.03);
 }
 
-
-/* Estado: Respondida Corretamente - Fundo verde claro */
+/* Estado: Respondida Corretamente */
 .grid-item.grid-item--correct {
-    background-color: #e6fcf5; /* Fundo verde bem claro */
-    border-color: #a3e9c1; /* Borda verde clara */
-    color: #1e7f74; /* Texto verde escuro */
+    background-color: #e6fcf5;
+    border-color: #a3e9c1;
+    color: #1e7f74;
     font-weight: 600;
     box-shadow: none;
     transform: scale(1);
 }
 .grid-item.grid-item--correct:hover {
-     border-color: #5fda9a; /* Borda mais forte no hover */
+     border-color: #5fda9a;
      filter: brightness(98%);
      transform: scale(1.03);
 }
 
-/* Estado: Respondida Incorretamente - Fundo vermelho claro */
+/* Estado: Respondida Incorretamente */
 .grid-item.grid-item--incorrect {
-    background-color: #fff0f1; /* Fundo vermelho bem claro */
-    border-color: #f1aeb5; /* Borda vermelha clara */
-    color: #c12634; /* Texto vermelho escuro */
+    background-color: #fff0f1;
+    border-color: #f1aeb5;
+    color: #c12634;
     font-weight: 600;
     box-shadow: none;
     transform: scale(1);
 }
 .grid-item.grid-item--incorrect:hover {
-    border-color: #e63946; /* Borda mais forte no hover */
+    border-color: #e63946;
     filter: brightness(98%);
     transform: scale(1.03);
 }
 
-/* --- Ajustes Responsivos --- */
-@media (max-width: 768px) {
-    #question-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(26px, 1fr)); /* Pouco menor */
-        gap: 4px;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        padding: 4px;
-    }
-    .grid-item {
-        font-size: 0.75rem;
-        border-radius: 4px;
-    }
+
+/* === INÍCIO: Estilos para Paginação do Grid (REFINADOS) === */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 15px;
+  /* Remove margem inferior, espaço agora vem da grid */
+  margin-bottom: 0; /* <<<<<<< REMOVIDO/ZERADO */
+  padding: 5px;
+  flex-shrink: 0;
 }
 
-@media (max-width: 480px) {
-     #question-grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(24px, 1fr)); /* Menor ainda */
-        gap: 4px;
-        margin-bottom: 15px;
-    }
-    .grid-item {
-        font-size: 0.7rem;
-        border-radius: 3px;
-    }
+.paginacao button,
+.paginacao span {
+  padding: 5px 10px;
+  border: none;
+  background-color: transparent;
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+  user-select: none;
+  min-width: 32px;
+  text-align: center;
+  line-height: 1.5;
 }
 
-/* ============================================================== */
-/* ===== FIM: ESTILOS AJUSTADOS (v5) GRADE ABAIXO PROG BAR ===== */
-/* ============================================================== */
+/* Estilo para as elipses */
+.paginacao span {
+    cursor: default;
+    background-color: transparent;
+    color: #6c757d;
+}
 
-/* Título dentro do Quiz */
-#quiz-section h2 {
+/* Estilo para o número/botão da página atual */
+.paginacao button.pagina-atual {
+  background-color: #0d3b66;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: default;
+}
+
+/* Hover para botões clicáveis */
+.paginacao button:not(:disabled):not(.pagina-atual):hover {
+  background-color: #e9ecef;
+  color: #0d3b66;
+}
+
+/* Estilo para botões de navegação desabilitados */
+.paginacao button:disabled:not(.pagina-atual) {
+  background-color: transparent;
+  color: #adb5bd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Estilo específico para botões Prev/Next */
+.paginacao button:first-child,
+.paginacao button:last-child {
+    font-weight: 600;
+    color: #0d3b66;
+}
+.paginacao button:first-child:disabled,
+.paginacao button:last-child:disabled {
+     color: #adb5bd;
+}
+/* === FIM: Estilos Refinados da Paginação === */
+
+
+
+/* Título dentro do Quiz (H2) */
+#quiz-section h2#question-title {
     font-size: 1.5rem; color: #495057; font-weight: 400;
-    font-family: "Roboto", sans-serif; margin-top: 0; margin-bottom: 20px;
+    font-family: "Roboto", sans-serif;
+    /* Garante que não haja margem superior extra */
+    margin-top: 0; /* <<<<<<< ZERADO */
+    margin-bottom: 20px; /* Mantém margem abaixo */
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     flex-shrink: 0;
 }
-#quiz-section h2 #categoria-titulo {
+#quiz-section h2#question-title #categoria-titulo {
     display: inline-block; background-color: #0d3b66; color: white;
     font-size: 0.85rem; font-weight: 600; font-family: "Montserrat", sans-serif;
     padding: 5px 12px; border-radius: 6px; text-transform: uppercase;
     letter-spacing: 0.8px; white-space: nowrap;
 }
-#quiz-section h2 #id-questao { font-weight: 700; color: #343a40; }
+#quiz-section h2#question-title #id-questao { font-weight: 700; color: #343a40; }
 
 /* Container da Pergunta */
 .question-wrap {
      background-color: #ffffff; padding: 25px; border-radius: 10px;
      border: 1px solid #dee2e6; box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
      border-top: 4px solid #0d3b66;
+     margin-bottom: 20px;
      flex-shrink: 0;
 }
 .question { width: 100%; padding: 15px 0 0 0; display: flex; flex-direction: column; gap: 20px; }
@@ -661,7 +648,7 @@ aside p {
 #referencia-questao { font-size: 0.9rem; color: #6c757d; margin-top: 15px; text-align: right; font-style: italic; }
 
 /* Botões de Navegação do Quiz */
-.navigation-buttons { display: flex; justify-content: space-between; padding: 20px 0 0 0; margin-top: 25px; border-top: 1px solid #e9ecef; flex-shrink: 0; }
+.navigation-buttons { display: flex; justify-content: space-between; padding: 20px 0 0 0; margin-top: 0; border-top: 1px solid #e9ecef; flex-shrink: 0; }
 .navigation-buttons button { padding: 12px 28px; font-size: 0.95rem; font-weight: 600; font-family: "Montserrat", sans-serif; border-radius: 25px; border: none; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); letter-spacing: 0.5px; }
 #next-btn { background-image: linear-gradient(to right, #0d3b66, #1a5f9e); color: white; }
 #next-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15); filter: brightness(110%); }
@@ -719,33 +706,37 @@ footer a:hover { color: #ffffff; }
 
 
 /* --- Media Queries --- */
+/* (As media queries permanecem as mesmas das versões anteriores,
+   apenas certifique-se que as regras modificadas acima
+   sejam ajustadas dentro delas se necessário) */
+
 @media (max-width: 992px) {
-     header { padding: 0 30px; } /* Ajuste padding */
+     header { padding: 0 30px; }
      .logo-area { font-size: 1.5rem;}
      aside { min-width: 240px; padding: 25px; gap: 15px; }
      .pontuacao-wrap { height: 100px; width: 100px; }
      #pontuacao { height: 85px; width: 85px; font-size: 2.2rem; }
+     .paginacao button, .paginacao span { font-size: 0.8rem; padding: 5px 10px; }
+     .scroll-arrow { width: 30px; height: 30px; }
 }
 
 
 @media (max-width: 768px) {
     header {
-        height: 70px; /* Reduz altura em mobile */
+        height: 70px;
         padding: 0 20px;
      }
-     .logo-area { font-size: 1.3rem; } /* Reduz logo */
-     .about-link.button-style { /* Ajusta botão */
+     .logo-area { font-size: 1.3rem; }
+     .about-link.button-style {
         font-size: 0.8rem;
         padding: 6px 14px;
      }
-     h1.title-header { font-size: 1.8rem; } /* Ignorado se display:none */
      h2 { font-size: 1.7rem; }
      #inicio-section { padding: 30px; }
      #inicio-section .inicio-content { padding: 25px; width: 90%; }
 
     #questoes-section {
         flex-direction: column;
-        /* overflow: visible; */ /* Removido */
     }
     aside {
         min-width: 100%; width: 100%;
@@ -755,7 +746,6 @@ footer a:hover { color: #ffffff; }
         align-items: center; padding: 15px; gap: 15px; flex-wrap: wrap;
         background-color: #ffffff;
         flex-shrink: 0;
-        /* overflow-y: visible; */ /* Removido */
     }
     .pontuacao-wrap { height: 80px; width: 80px; }
     #pontuacao { height: 65px; width: 65px; font-size: 1.8rem; }
@@ -768,26 +758,14 @@ footer a:hover { color: #ffffff; }
     }
 
     #question-grid-container {
-        /* Pode precisar de menos colunas ou altura máxima diferente */
-         grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)); /* Itens um pouco menores */
-         max-height: 150px; /* Menor altura máxima em mobile */
-         width: 100%; /* Ocupar largura disponível no modo linha */
-         order: 4; /* Coloca a grade por último no modo linha da sidebar */
+        gap: 4px;
+        padding: 4px;
+         margin-bottom: 20px; /* Ajuste margem em mobile */
     }
-    .question-grid-title {
-        width: 100%; /* Ocupa largura */
-        text-align: left; /* Alinha à esquerda no modo linha */
-        margin-top: 10px;
-        margin-bottom: 5px;
-        order: 3; /* Coloca o título antes da grade */
-        padding-left: 5px;
+    .grid-item {
+        font-size: 0.75rem;
+        border-radius: 4px;
     }
-
-    /* Ajusta outros itens da sidebar no modo linha se necessário */
-     .aside-title { display: none; } /* Já existia */
-     .pontuacao-wrap, .aside-info-wrap {
-         /* Podem precisar de 'order' se a ordem padrão não for a desejada */
-     }
 
     .navbar { padding: 0 10px; }
     .nav-link { font-size: 0.9rem; padding: 12px 16px; }
@@ -801,20 +779,29 @@ footer a:hover { color: #ffffff; }
         font-size: 0.9rem;
          padding-left: 3px;
     }
-    .filtro-checkboxes {
+    .filtro-checkboxes#filtro-checkboxes-scroll {
         gap: 8px 8px;
+        padding-bottom: 8px;
+        padding-left: 35px;
+        padding-right: 35px;
+        clip-path: inset(0 28px 0 28px);
     }
     .checkbox-item label {
         font-size: 0.85rem;
         padding: 6px 15px;
     }
-
+    .scroll-arrow {
+        width: 28px;
+        height: 28px;
+        left: 3px;
+        right: 3px;
+    }
 
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 20px; }
 
-    #quiz-section { flex-grow: 1; } /* Re-adicionado para mobile onde main-content pode precisar crescer */
-    #quiz-section h2 { font-size: 1.4rem; }
+    #quiz-section { flex-grow: 1; }
+    #quiz-section h2#question-title { font-size: 1.4rem; margin-bottom: 15px; }
     .answer { padding: 15px 20px; font-size: 0.95rem;}
     .resultado-final-card { padding: 25px; max-width: 90%; }
     .resultado-final-titulo { font-size: 1.6rem; }
@@ -822,22 +809,32 @@ footer a:hover { color: #ffffff; }
     .resultado-final-detalhes p { font-size: 0.95rem; }
     .navigation-buttons button { padding: 10px 24px; font-size: 0.9rem; }
 
+    .paginacao {
+        gap: 6px;
+        margin-top: 10px;
+        /* margin-bottom: 20px; <-- Removido */
+    }
+     .paginacao button, .paginacao span {
+        font-size: 0.8rem;
+        padding: 5px 10px;
+        min-width: 30px;
+    }
+
     footer { font-size: 0.85rem; height: 60px;}
 }
 
 @media (max-width: 480px) {
     header {
-        height: 65px; /* Altura menor ainda */
+        height: 65px;
         padding: 0 15px;
     }
-    .logo-area { font-size: 1.2rem; } /* Logo menor */
-    .header-nav { gap: 10px; } /* Menos espaço */
+    .logo-area { font-size: 1.2rem; }
+    .header-nav { gap: 10px; }
     .about-link.button-style {
         font-size: 0.75rem;
         padding: 5px 12px;
     }
 
-    h1.title-header { font-size: 1.5rem; }
     h2 { font-size: 1.5rem; }
     #inicio-section { padding: 20px 15px; }
     #inicio-section .inicio-content { padding: 20px; width: 95%; }
@@ -864,17 +861,29 @@ footer a:hover { color: #ffffff; }
          font-size: 0.85rem;
          padding-left: 0;
      }
+    .filtro-checkboxes#filtro-checkboxes-scroll {
+         padding-bottom: 6px;
+         padding-left: 30px;
+         padding-right: 30px;
+         clip-path: inset(0 25px 0 25px);
+     }
      .checkbox-item label {
         font-size: 0.8rem;
         padding: 5px 13px;
+    }
+    .scroll-arrow {
+         width: 26px;
+         height: 26px;
+         left: 2px;
+         right: 2px;
     }
 
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 15px; font-size: 1rem; }
 
-    #quiz-section h2 { font-size: 1.2rem; gap: 6px; margin-bottom: 15px;}
-    #quiz-section h2 #categoria-titulo { font-size: 0.7rem; padding: 3px 6px;}
-    .question-wrap { padding: 15px; }
+    #quiz-section h2#question-title { font-size: 1.2rem; gap: 6px; margin-bottom: 15px;}
+    #quiz-section h2#question-title #categoria-titulo { font-size: 0.7rem; padding: 3px 6px;}
+    .question-wrap { padding: 15px; margin-bottom: 15px; }
     .question { gap: 15px; }
     .question-text { font-size: 1.0rem; line-height: 1.6; }
     .image-question-wrap > img { max-height: 250px; }
@@ -882,21 +891,43 @@ footer a:hover { color: #ffffff; }
     .answer { padding: 12px 15px; font-size: 0.9rem;}
     #referencia-questao { font-size: 0.8rem; margin-top: 10px; }
 
-    .navigation-buttons { padding: 15px 0 0 0; margin-top: 20px; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .navigation-buttons { padding: 15px 0 0 0; margin-top: 0; flex-wrap: wrap; gap: 10px; justify-content: center; }
     .navigation-buttons button { padding: 10px 18px; font-size: 0.8rem; flex-grow: 1; min-width: 120px; }
 
     #question-grid-container {
-            grid-template-columns: repeat(auto-fill, minmax(30px, 1fr)); /* Ainda menor */
             gap: 5px;
             max-height: 120px;
+             margin-bottom: 15px; /* Ajuste margem */
     }
     .grid-item {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+    }
+
+    .paginacao {
+        gap: 5px;
+        margin-top: 8px;
+        /* margin-bottom: 15px; <-- Removido */
+    }
+     .paginacao button, .paginacao span {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 28px;
     }
 
     @media (max-width: 360px) {
         .navigation-buttons { flex-direction: column; align-items: stretch; }
         .navigation-buttons button { width: 100%; }
+         .paginacao button, .paginacao span {
+            font-size: 0.7rem;
+            padding: 3px 6px;
+            min-width: 25px;
+        }
+         .scroll-arrow { width: 24px; height: 24px;}
+         .filtro-checkboxes#filtro-checkboxes-scroll {
+             padding-left: 28px;
+             padding-right: 28px;
+             clip-path: inset(0 22px 0 22px);
+         }
     }
 
     .resultado-final-card { padding: 20px; }

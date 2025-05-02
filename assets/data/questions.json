@@ -1,4 +1,3 @@
-
 [
     {
         "id": 1,
@@ -276,6 +275,335 @@
         "referencia": "Obstetrícia Fundamental",
         "categorias": [
             "Nascimento"
+        ]
+    },
+    {
+        "id": 18,
+        "pergunta": "Qual lobo cerebral é primariamente responsável pelo processamento da informação visual?",
+        "imagem": "",
+        "respostas": [
+            "Lobo Frontal",
+            "Lobo Parietal",
+            "Lobo Temporal",
+            "Lobo Occipital"
+        ],
+        "correta": "Lobo Occipital",
+        "referencia": "Neurociência Fundamental",
+        "categorias": [
+            "Percepção"
+        ]
+    },
+    {
+        "id": 19,
+        "pergunta": "A capacidade do corpo de sentir a posição e o movimento das suas partes (membros, articulações) é chamada de:",
+        "imagem": "",
+        "respostas": [
+            "Nocicepção",
+            "Termocepção",
+            "Propriocepção",
+            "Interocepção"
+        ],
+        "correta": "Propriocepção",
+        "referencia": "Fisiologia Humana",
+        "categorias": [
+            "Percepção",
+            "Locomoção"
+        ]
+    },
+    {
+        "id": 20,
+        "pergunta": "Qual estrutura do ouvido interno contém as células ciliadas responsáveis pela transdução do estímulo sonoro em sinal neural?",
+        "imagem": "",
+        "respostas": [
+            "Canais Semicirculares",
+            "Utrículo",
+            "Sáculo",
+            "Cóclea (Órgão de Corti)"
+        ],
+        "correta": "Cóclea (Órgão de Corti)",
+        "referencia": "Neurociência: Desvendando o Sistema Nervoso",
+        "categorias": [
+            "Percepção"
+        ]
+    },
+    {
+        "id": 21,
+        "pergunta": "Receptores sensoriais na pele que detectam estímulos dolorosos são chamados de:",
+        "imagem": "",
+        "respostas": [
+            "Mecanorreceptores",
+            "Termorreceptores",
+            "Nociceptores",
+            "Quimiorreceptores"
+        ],
+        "correta": "Nociceptores",
+        "referencia": "Bases da Fisiologia",
+        "categorias": [
+            "Percepção"
+        ]
+    },
+     {
+        "id": 22,
+        "pergunta": "A via neural que transmite informações táteis finas e proprioceptivas da medula espinhal para o tálamo é conhecida como:",
+        "imagem": "",
+        "respostas": [
+            "Trato Espinotalâmico Lateral",
+            "Sistema Coluna Dorsal-Lemnisco Medial",
+            "Trato Corticoespinal",
+            "Trato Espinocerebelar"
+        ],
+        "correta": "Sistema Coluna Dorsal-Lemnisco Medial",
+        "referencia": "Neuroanatomia Clínica",
+        "categorias": [
+            "Percepção"
+        ]
+    },
+    {
+        "id": 23,
+        "pergunta": "A perda progressiva de massa e força muscular associada ao envelhecimento é denominada:",
+        "imagem": "",
+        "respostas": [
+            "Osteoporose",
+            "Sarcopenia",
+            "Anemia",
+            "Disfagia",
+            "Artrite"
+        ],
+        "correta": "Sarcopenia",
+        "referencia": "Tratado de Geriatria",
+        "categorias": [
+            "Envelhecimento",
+            "Locomoção"
+        ]
+    },
+    {
+        "id": 24,
+        "pergunta": "Qual das seguintes condições é uma síndrome geriátrica comum caracterizada por declínio cognitivo agudo e flutuante, geralmente associado a uma causa médica subjacente?",
+        "imagem": "",
+        "respostas": [
+            "Demência de Alzheimer",
+            "Depressão Maior",
+            "Delirium",
+            "Doença de Parkinson"
+        ],
+        "correta": "Delirium",
+        "referencia": "Geriatria Básica",
+        "categorias": [
+            "Envelhecimento"
+        ]
+    },
+    {
+        "id": 25,
+        "pergunta": "O processo de envelhecimento celular, onde as células param de se dividir, mas permanecem metabolicamente ativas, é chamado de:",
+        "imagem": "",
+        "respostas": [
+            "Apoptose",
+            "Necrose",
+            "Senescência Celular",
+            "Autofagia"
+        ],
+        "correta": "Senescência Celular",
+        "referencia": "Biologia Molecular do Envelhecimento",
+        "categorias": [
+            "Envelhecimento",
+            "Proliferação"
+        ]
+    },
+    {
+        "id": 26,
+        "pergunta": "A diminuição da densidade mineral óssea que aumenta o risco de fraturas em idosos é conhecida como:",
+        "imagem": "",
+        "respostas": [
+            "Osteoartrite",
+            "Osteomalácia",
+            "Osteoporose",
+            "Doença de Paget"
+        ],
+        "correta": "Osteoporose",
+        "referencia": "Endocrinologia e Metabologia",
+        "categorias": [
+            "Envelhecimento",
+            "Locomoção"
+        ]
+    },
+    {
+        "id": 27,
+        "pergunta": "O uso concomitante de múltiplos medicamentos, comum em idosos e que aumenta o risco de interações e efeitos adversos, é conhecido como:",
+        "imagem": "",
+        "respostas": [
+            "Monoterapia",
+            "Farmacocinética",
+            "Polifarmácia",
+            "Farmacodinâmica"
+        ],
+        "correta": "Polifarmácia",
+        "referencia": "Farmacologia Clínica",
+        "categorias": [
+            "Envelhecimento"
+        ]
+    },
+    {
+        "id": 28,
+        "pergunta": "Qual tipo de articulação é caracterizado pela presença de uma cavidade articular preenchida por líquido sinovial, permitindo ampla mobilidade?",
+        "imagem": "",
+        "respostas": [
+            "Articulação Fibrosa (Sinartrose)",
+            "Articulação Cartilaginosa (Anfiartrose)",
+            "Articulação Sinovial (Diartrose)"
+        ],
+        "correta": "Articulação Sinovial (Diartrose)",
+        "referencia": "Anatomia Humana",
+        "categorias": [
+            "Locomoção"
+        ]
+    },
+    {
+        "id": 29,
+        "pergunta": "Quais células são primariamente responsáveis pela reabsorção (degradação) do tecido ósseo?",
+        "imagem": "",
+        "respostas": [
+            "Osteoblastos",
+            "Condrócitos",
+            "Osteócitos",
+            "Osteoclastos"
+        ],
+        "correta": "Osteoclastos",
+        "referencia": "Histologia Básica - Junqueira e Carneiro",
+        "categorias": [
+            "Locomoção",
+            "Funções"
+        ]
+    },
+    {
+        "id": 30,
+        "pergunta": "Estruturas de tecido conjuntivo denso que conectam ossos a outros ossos em uma articulação são chamadas de:",
+        "imagem": "",
+        "respostas": [
+            "Tendões",
+            "Ligamentos",
+            "Fáscias",
+            "Cartilagens"
+        ],
+        "correta": "Ligamentos",
+        "referencia": "Ortopedia Essencial",
+        "categorias": [
+            "Locomoção"
+        ]
+    },
+    {
+        "id": 31,
+        "pergunta": "Uma fratura óssea na qual o osso quebrado perfura a pele é classificada como:",
+        "imagem": "",
+        "respostas": [
+            "Fratura Simples (Fechada)",
+            "Fratura Cominutiva",
+            "Fratura Exposta (Aberta)",
+            "Fratura em Galho Verde"
+        ],
+        "correta": "Fratura Exposta (Aberta)",
+        "referencia": "Princípios de Cirurgia Ortopédica",
+        "categorias": [
+            "Locomoção"
+        ]
+    },
+    {
+        "id": 32,
+        "pergunta": "Qual condição ortopédica comum é caracterizada pelo desgaste da cartilagem articular, levando a dor e rigidez nas articulações?",
+        "imagem": "",
+        "respostas": [
+            "Artrite Reumatoide",
+            "Gota",
+            "Osteoartrite (Artrose)",
+            "Lúpus Eritematoso Sistêmico"
+        ],
+        "correta": "Osteoartrite (Artrose)",
+        "referencia": "Reumatologia Clínica",
+        "categorias": [
+            "Locomoção",
+            "Envelhecimento"
+        ]
+    },
+    {
+        "id": 33,
+        "pergunta": "O processo pelo qual células cancerígenas se espalham do tumor primário para outras partes do corpo, formando novos tumores, é chamado de:",
+        "imagem": "",
+        "respostas": [
+            "Angiogênese",
+            "Metástase",
+            "Apoptose",
+            "Hiperplasia",
+            "Diferenciação"
+        ],
+        "correta": "Metástase",
+        "referencia": "Oncologia Básica",
+        "categorias": [
+            "Proliferação"
+        ]
+    },
+    {
+        "id": 34,
+        "pergunta": "Genes que, quando mutados ou superexpressos, podem promover o crescimento celular descontrolado e contribuir para o câncer são chamados de:",
+        "imagem": "",
+        "respostas": [
+            "Genes Supressores de Tumor",
+            "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
+            "Genes de Reparo do DNA",
+            "Genes da Apoptose"
+        ],
+        "correta": "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
+        "referencia": "Biologia Molecular do Câncer",
+        "categorias": [
+            "Proliferação",
+            "Genética"
+        ]
+    },
+    {
+        "id": 35,
+        "pergunta": "Qual proteína, conhecida como 'guardiã do genoma', atua como um gene supressor de tumor, induzindo parada do ciclo celular ou apoptose em resposta a danos no DNA?",
+        "imagem": "",
+        "respostas": [
+            "RAS",
+            "MYC",
+            "p53",
+            "BRCA1"
+        ],
+        "correta": "p53",
+        "referencia": "Biologia Celular e Molecular",
+        "categorias": [
+            "Proliferação",
+            "Funções"
+        ]
+    },
+    {
+        "id": 36,
+        "pergunta": "O desenvolvimento de novos vasos sanguíneos, um processo frequentemente explorado por tumores para obter nutrientes e oxigênio, é denominado:",
+        "imagem": "",
+        "respostas": [
+            "Vasculogênese",
+            "Angiogênese",
+            "Linfangiogênese",
+            "Hemopoiese"
+        ],
+        "correta": "Angiogênese",
+        "referencia": "Patologia Oncológica",
+        "categorias": [
+            "Proliferação"
+        ]
+    },
+    {
+        "id": 37,
+        "pergunta": "Qual modalidade de tratamento do câncer utiliza medicamentos que circulam pelo corpo para destruir células cancerígenas de crescimento rápido?",
+        "imagem": "",
+        "respostas": [
+            "Radioterapia",
+            "Cirurgia Oncológica",
+            "Quimioterapia",
+            "Imunoterapia"
+        ],
+        "correta": "Quimioterapia",
+        "referencia": "Oncologia Clínica",
+        "categorias": [
+            "Proliferação"
         ]
     }
 ]

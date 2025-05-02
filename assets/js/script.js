@@ -50,7 +50,8 @@ let elFiltroCheckboxesScroll; // O div rolável das categorias
 let elCatScrollLeft;         // Botão seta esquerda categorias
 let elCatScrollRight;        // Botão seta direita categorias
 let elBtnEncerrarSessao;     // Botão Encerrar
-let elBtnRecomecar;          // <<< NOVO: Botão Tentar Novamente / Recomeçar
+let elBtnRecomecar;          // Botão Tentar Novamente / Recomeçar
+let elConfirmEncerrarOverlay, elConfirmEncerrarBtn, elCancelEncerrarBtn; // <<< Elementos do Modal
 
 // --- Função para Embaralhar Array (Opcional) ---
 function shuffleArray(array) {
@@ -77,7 +78,7 @@ function cacheDOMelements() {
         elNextBtn = document.getElementById('next-btn');
         elNavigationButtons = elQuizSection ? elQuizSection.querySelector('.navigation-buttons') : null;
         elResultadoCard = document.querySelector('.resultado-final-card');
-        elBtnRecomecar = elResultadoCard ? elResultadoCard.querySelector('#btn-recomecar') : null; // <<< ADICIONADO
+        elBtnRecomecar = elResultadoCard ? elResultadoCard.querySelector('#btn-recomecar') : null;
         elProgressBarFill = document.getElementById('progress-bar-fill');
         elProgressText = document.getElementById('progress-text');
         elProgressContainer = document.getElementById('progress-container');
@@ -91,15 +92,29 @@ function cacheDOMelements() {
         elQuestionGridContainer = document.getElementById('question-grid-container');
         elPaginacaoControles = document.getElementById('paginacao-controles');
 
-        const elementos = { elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, elQuestionGridContainer, elPaginacaoControles, elFiltroCheckboxesScroll, elCatScrollLeft, elCatScrollRight, elBtnEncerrarSessao, elBtnRecomecar }; // <<< ADICIONADO elBtnRecomecar à lista
+        // Cache dos elementos do Modal
+        elConfirmEncerrarOverlay = document.getElementById('confirm-encerrar-overlay');
+        elConfirmEncerrarBtn = document.getElementById('confirm-encerrar-btn');
+        elCancelEncerrarBtn = document.getElementById('cancel-encerrar-btn');
+
+        const elementos = {
+            elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, elQuestionGridContainer, elPaginacaoControles, elFiltroCheckboxesScroll, elCatScrollLeft, elCatScrollRight, elBtnEncerrarSessao, elBtnRecomecar,
+            elConfirmEncerrarOverlay, elConfirmEncerrarBtn, elCancelEncerrarBtn // Adiciona elementos do modal à checagem
+        };
         let missingElements = false;
         for (const key in elementos) {
-            const isEssential = key !== 'elNavigationButtons' && key !== 'avisoMensagem' && key !== 'elBtnEncerrarSessao' && key !== 'elBtnRecomecar'; // Considerar botão Recomeçar não essencial para o *carregamento* inicial
-            if (!elementos[key] && isEssential) {
-                console.error(`Erro Cache DOM: Elemento ${key} não encontrado! Verifique IDs/classes no HTML.`);
+            // Considerar botões/modal não essenciais para o carregamento *inicial* da página,
+            // mas logar um aviso se não encontrados.
+            const isEssentialForCoreFunctionality = ![
+                'elNavigationButtons', 'avisoMensagem', 'elBtnEncerrarSessao',
+                'elBtnRecomecar', 'elConfirmEncerrarOverlay', 'elConfirmEncerrarBtn', 'elCancelEncerrarBtn'
+            ].includes(key);
+
+            if (!elementos[key] && isEssentialForCoreFunctionality) {
+                console.error(`Erro Cache DOM: Elemento essencial ${key} não encontrado! Verifique IDs/classes no HTML.`);
                 missingElements = true;
-            } else if (!elementos[key] && (key === 'elBtnEncerrarSessao' || key === 'elBtnRecomecar')) { // <<< AJUSTADO
-                 console.warn(`Aviso Cache DOM: Elemento ${key} não encontrado. Funcionalidade correspondente não estará disponível.`);
+            } else if (!elementos[key] && !isEssentialForCoreFunctionality) {
+                 console.warn(`Aviso Cache DOM: Elemento opcional ${key} não encontrado. Funcionalidade correspondente pode não estar disponível.`);
             }
         }
         return !missingElements;
@@ -1018,6 +1033,28 @@ function atualizar_pontuacao() {
     if (elErrosNum) elErrosNum.textContent = usuario.erros;
 }
 
+// --- Funções do Modal de Confirmação --- <<< NOVO BLOCO
+function showConfirmEncerrarModal() {
+    if (elConfirmEncerrarOverlay) {
+        elConfirmEncerrarOverlay.style.display = 'flex'; // Garante que está como flex antes da animação
+        // Força reflow para garantir a transição
+        void elConfirmEncerrarOverlay.offsetWidth;
+        elConfirmEncerrarOverlay.classList.add('visible');
+        // Foca no botão de cancelar para acessibilidade
+        if(elCancelEncerrarBtn) elCancelEncerrarBtn.focus();
+    }
+}
+
+function hideConfirmEncerrarModal() {
+    if (elConfirmEncerrarOverlay) {
+        elConfirmEncerrarOverlay.classList.remove('visible');
+         // O CSS cuida de esconder com display:none após a transição de visibilidade
+         // Se precisar esconder manualmente por algum motivo:
+         // setTimeout(() => { if(!elConfirmEncerrarOverlay.classList.contains('visible')) elConfirmEncerrarOverlay.style.display = 'none'; }, 300); // 300ms = duração da transição de opacidade/escala
+    }
+}
+// --- Fim Funções do Modal ---
+
 // --- Carregamento Inicial e Event Listeners ---
 
 async function carregarPerguntasJSON() {
@@ -1129,17 +1166,49 @@ function configurarEventListeners() {
         resizeTimeout = setTimeout(atualizarSetasScrollCategorias, 150);
     });
 
-    // Botão Encerrar Sessão (Durante o Quiz)
+    // --- Event Listeners do Modal de Confirmação --- <<< ALTERADO / ADICIONADO
+    // Botão Encerrar Sessão (Agora abre o Modal)
     if (elBtnEncerrarSessao) {
         elBtnEncerrarSessao.addEventListener('click', () => {
-            // Confirmação com o usuário
-            if (confirm("Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.")) {
-                mostrarResultadoFinal(); // Mostra o card de resultados com a pontuação atual
-            }
+            showConfirmEncerrarModal(); // Chama a função para mostrar o modal
         });
+    } else {
+        console.warn("Botão Encerrar Sessão (#btn-encerrar-sessao) não encontrado.")
     }
 
-    // <<< NOVO: Botão Recomeçar (No Card de Resultado) >>>
+    // Botão Confirmar DENTRO do modal
+    if (elConfirmEncerrarBtn) {
+        elConfirmEncerrarBtn.addEventListener('click', () => {
+            mostrarResultadoFinal(); // Ação de confirmação
+            hideConfirmEncerrarModal(); // Esconde o modal
+        });
+    } else {
+         console.warn("Botão Confirmar do Modal (#confirm-encerrar-btn) não encontrado.")
+    }
+
+    // Botão Cancelar DENTRO do modal
+    if (elCancelEncerrarBtn) {
+        elCancelEncerrarBtn.addEventListener('click', () => {
+            hideConfirmEncerrarModal(); // Apenas esconde o modal
+        });
+    } else {
+         console.warn("Botão Cancelar do Modal (#cancel-encerrar-btn) não encontrado.")
+    }
+
+     // Opcional: Fechar modal clicando fora (no overlay escuro)
+     if (elConfirmEncerrarOverlay) {
+         elConfirmEncerrarOverlay.addEventListener('click', (event) => {
+             // Verifica se o clique foi no overlay e não no conteúdo do modal
+             if (event.target === elConfirmEncerrarOverlay) {
+                 hideConfirmEncerrarModal();
+             }
+         });
+     } else {
+          console.warn("Overlay do Modal (#confirm-encerrar-overlay) não encontrado.")
+     }
+    // --- Fim Event Listeners do Modal ---
+
+    // Botão Recomeçar (No Card de Resultado)
     if (elBtnRecomecar) {
         elBtnRecomecar.addEventListener('click', reiniciarQuizCompleto);
     } else {
@@ -1180,7 +1249,7 @@ function handleCheckboxChange(changedCheckbox) {
      }
 }
 
-// --- <<< NOVA FUNÇÃO: Reiniciar Quiz Completo >>> ---
+// --- Função Reiniciar Quiz Completo ---
 function reiniciarQuizCompleto() {
     if (!elResultadoCard || !filtroCheckboxesContainer) {
         console.error("Não foi possível reiniciar: Elementos essenciais (card de resultado ou filtro) não encontrados.");

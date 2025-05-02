@@ -487,6 +487,77 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     transform: translateY(0px);
   }
 
+  /* --- Estilos do Modal de Confirmação --- */
+.modal-overlay {
+    position: fixed; /* Cobre a tela toda */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo escurecido semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Garante que fique sobre outros elementos */
+    opacity: 0; /* Começa invisível */
+    visibility: hidden; /* Começa inacessível */
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s; /* Animação de fade */
+  }
+  
+  .modal-overlay.visible {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal-content {
+    /* Reutiliza a classe .card para consistência, mas com ajustes */
+    position: relative;
+    background-color: var(--color-white);
+    padding: 30px 35px; /* Padding interno do modal */
+    border-radius: var(--border-radius-lg); /* Borda arredondada */
+    box-shadow: var(--shadow-xl); /* Sombra pronunciada */
+    max-width: 450px; /* Largura máxima */
+    width: 90%; /* Responsivo */
+    text-align: center;
+    transform: scale(0.95); /* Efeito de escala inicial */
+    transition: transform 0.3s ease;
+  }
+  
+  .modal-overlay.visible .modal-content {
+      transform: scale(1); /* Escala para o tamanho normal ao aparecer */
+  }
+  
+  .modal-title {
+    font-family: var(--font-family-heading);
+    font-size: 1.6rem;
+    color: var(--color-primary-dark);
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+  
+  .modal-message {
+    font-size: 1rem;
+    color: var(--color-gray-800);
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: center; /* Centraliza os botões */
+    gap: 15px; /* Espaço entre os botões */
+    flex-wrap: wrap; /* Quebra linha em telas pequenas */
+  }
+  
+  /* Ajusta o tamanho dos botões dentro do modal (opcional) */
+  .modal-actions .button {
+    padding: 10px 25px;
+    font-size: 0.95rem;
+    min-width: 120px; /* Largura mínima para melhor toque */
+  }
+  
+  /* Ajustes para telas menores */
 /* ======================================== */
 /* Animações                                */
 /* ======================================== */
@@ -603,6 +674,25 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     .resultado-final-titulo { font-size: 1.4rem; }
     .pontos-valor { font-size: 1.5rem; }
     .resultado-final-detalhes p { font-size: 0.9rem; }
+    .modal-content {
+        padding: 25px 20px;
+    }
+     .modal-title {
+        font-size: 1.4rem;
+    }
+     .modal-message {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+    .modal-actions {
+        flex-direction: column-reverse; /* Empilha botões verticalmente */
+        align-items: stretch; /* Faz botões ocuparem largura total */
+        gap: 10px;
+    }
+    .modal-actions .button {
+        width: 100%;
+         min-width: unset;
+    }
 
     /* Ajuste fino extra pequeno */
     @media (max-width: 360px) {

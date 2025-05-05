@@ -1,0 +1,174 @@
+/* --- ESTILOS GRID DE QUESTÕES (Mantendo o refinado V5) --- */
+#question-grid-container {
+    display: none;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    padding: 5px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.grid-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 34px;
+    flex-shrink: 0;
+    aspect-ratio: 1 / 1;
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-sans);
+    color: var(--color-gray-700);
+    background-color: var(--color-white);
+    border: var(--border-width) solid var(--color-gray-400); /* Borda padrão */
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: 2px;
+    line-height: normal;
+    text-align: center;
+    user-select: none;
+    box-shadow: var(--shadow-xs);
+    min-height: 34px;
+    position: relative;
+}
+
+.grid-item:hover {
+    border-color: var(--color-gray-600);
+    color: var(--color-gray-900);
+    background-color: var(--color-gray-100);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+    z-index: 1;
+}
+
+/* --- ESTILO REFINADO GRID ITEM ATUAL V5 --- */
+.grid-item.grid-item--current {
+    color: var(--color-primary-dark);      /* Texto azul escuro */
+    font-weight: var(--font-weight-bold);   /* Negrito */
+    transform: scale(1.05);                 /* Leve aumento */
+    z-index: 2;                             /* Acima dos outros */
+    /* Adiciona uma BORDA INTERNA azul escura + sombra externa sutil */
+    box-shadow: inset 0 0 0 2px var(--color-primary-dark),
+                var(--shadow-grid-current-subtle); /* Variável de sombra precisa ser definida */
+    /* Borda externa - Será sobrescrita se respondido */
+    border: var(--border-width-md) solid var(--color-primary-dark);
+    /* Remove o fundo azul claro para deixar o verde/vermelho aparecerem */
+    background-color: transparent;
+}
+
+/* Garante que o fundo correto/incorreto apareça quando aplicável */
+.grid-item.grid-item--current.grid-item--correct {
+    background-color: var(--color-correct-bg);
+    border-color: var(--color-correct-border); /* Deixa a borda externa refletir o status */
+}
+
+.grid-item.grid-item--current.grid-item--incorrect {
+    background-color: var(--color-incorrect-bg);
+    border-color: var(--color-incorrect-border); /* Deixa a borda externa refletir o status */
+}
+
+/* Mantém o texto azul escuro e negrito mesmo quando respondido */
+.grid-item.grid-item--current.grid-item--correct,
+.grid-item.grid-item--current.grid-item--incorrect {
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-bold);
+}
+/* ----------------------------------------------------------- */
+
+.grid-item.grid-item--current:hover {
+    filter: none; /* Remove o filtro de brilho do hover normal */
+    transform: scale(1.05); /* Mantém a escala */
+}
+
+/* Estilos para respondidos (NÃO atuais) */
+.grid-item.grid-item--correct {
+    background-color: var(--color-correct-bg);
+    border-color: var(--color-correct-border);
+    color: var(--color-correct-text);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: none;
+}
+
+.grid-item.grid-item--correct:hover {
+    border-color: var(--color-secondary-green-light);
+    filter: brightness(98%);
+    transform: scale(1.03);
+}
+
+.grid-item.grid-item--incorrect {
+    background-color: var(--color-incorrect-bg);
+    border-color: var(--color-incorrect-border);
+    color: var(--color-incorrect-text);
+    font-weight: var(--font-weight-semibold);
+    box-shadow: none;
+}
+
+.grid-item.grid-item--incorrect:hover {
+    border-color: var(--color-accent-red);
+    filter: brightness(98%);
+    transform: scale(1.03);
+}
+
+/* Estilo de foco padrão */
+.grid-item:focus-visible {
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    z-index: 3; /* Garante que o foco fique visível */
+}
+
+.grid-item:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* --- FIM ESTILOS GRID --- */
+
+.paginacao {
+    display: none;
+}
+
+.grid-nav-arrow {
+    background-color: transparent;
+    border: none;
+    color: var(--color-primary-dark);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: var(--border-radius-circle);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    min-width: 32px;
+    min-height: 32px;
+}
+.grid-nav-arrow:hover:not(:disabled) {
+    background-color: var(--color-gray-200);
+}
+.grid-nav-arrow:disabled {
+    color: var(--color-gray-500);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.grid-nav-arrow svg {
+    width: 20px;
+    height: 20px;
+    display: block;
+}
+.grid-nav-arrow:focus-visible {
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    z-index: 3;
+    background-color: var(--color-gray-100);
+}
+.grid-nav-arrow:focus:not(:focus-visible) {
+    outline: none;
+}

@@ -1,0 +1,546 @@
+@media (max-width: 992px) {
+    header {
+        padding: 0 30px;
+    }
+    .logo-area {
+        font-size: 1.8rem;
+    }
+    aside {
+        min-width: 260px;
+        padding: 25px;
+        gap: 20px;
+        height: calc(100vh - 80px - 50px);
+        top: 0;
+    }
+    .pontuacao-wrap {
+        height: 110px;
+        width: 110px;
+        padding: 3px;
+    }
+    #pontuacao {
+        font-size: 2.3rem;
+    }
+    .aside-info-wrap {
+        gap: 12px;
+    }
+    .scroll-arrow {
+        width: 32px;
+        height: 32px;
+    }
+    #questoes-section {
+        height: calc(100vh - 80px - 50px);
+    }
+    #questoes-section .main-content {
+        padding: 35px;
+    }
+    .filtro-categorias-container {
+        margin-bottom: 35px;
+    }
+    .question-wrap {
+        margin-bottom: 28px;
+    }
+    #question-grid-container {
+        gap: 6px;
+    }
+    .grid-item {
+        width: 32px;
+        min-height: 32px;
+    }
+    .grid-item.grid-item--current {
+        box-shadow: var(--shadow-grid-current-subtle);
+        transform: scale(1.04);
+    }
+    .grid-nav-arrow {
+        width: 30px;
+        height: 30px;
+    }
+    .grid-nav-arrow svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    nav:not(.bottom-navbar) {
+        display: none;
+    }
+    footer#footer {
+        display: none;
+    }
+    .bottom-navbar {
+        display: block;
+        height: 60px;
+    }
+    body {
+        padding-bottom: 60px;
+    }
+    header {
+        height: 70px;
+        padding: 0 20px;
+    }
+    main {
+        padding-top: 0;
+    }
+    #questoes-section {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+    aside {
+        position: static;
+        height: auto;
+        overflow-y: visible;
+        width: 100%;
+        min-width: 100%;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--color-gray-400);
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px 15px;
+        gap: 15px;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+    }
+    .aside-title { display: none; }
+    .pontuacao-wrap {
+        order: 1;
+        height: 70px;
+        width: 70px;
+        padding: 3px;
+        margin: 0;
+    }
+    #pontuacao {
+        font-size: 1.6rem;
+    }
+    .aside-info-wrap {
+        gap: 8px;
+        order: 2;
+        margin-left: 0;
+    }
+    aside #acertos,
+    aside #erros {
+        font-size: 0.9rem;
+    }
+    aside #acertos span,
+    aside #erros span {
+        font-size: 0.9rem;
+    }
+    #btn-encerrar-sessao {
+        position: static;
+        bottom: auto;
+        width: auto;
+        order: 3;
+        flex-basis: auto;
+        align-self: center;
+        flex-shrink: 0;
+        margin-left: auto;
+        margin-top: 0;
+        margin-bottom: 0;
+        font-size: 0.85rem;
+        padding: 10px 18px;
+        min-height: 38px;
+    }
+    #questoes-section .main-content {
+        height: auto;
+        overflow-y: visible;
+        padding: 25px 20px;
+        flex-grow: 1;
+        min-height: 0;
+    }
+    .logo-area {
+        font-size: 1.6rem;
+    }
+    h2 {
+        font-size: 1.7rem;
+        margin-bottom: 20px;
+    }
+    #inicio-section {
+        padding: 30px 20px;
+        min-height: calc(100vh - 70px - 60px);
+    }
+    #inicio-section .inicio-content {
+        padding: 25px;
+        width: 90%;
+    }
+    .filtro-categorias-container {
+        position: static;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    #progress-container,
+    #question-grid-container,
+    .paginacao {
+        position: static;
+    }
+    #question-grid-container {
+        gap: 8px;
+        padding: 5px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .paginacao { display: none; }
+    .grid-item {
+        font-size: 0.8rem;
+        width: 34px;
+        min-height: 34px;
+    }
+    .grid-item.grid-item--current {
+        box-shadow: none;
+        border-width: var(--border-width-md);
+        border-color: var(--color-primary-dark);
+        background-color: var(--color-primary-light);
+        transform: scale(1.03);
+    }
+    .grid-item.grid-item--current.grid-item--correct,
+    .grid-item.grid-item--current.grid-item--incorrect {
+        background-color: unset;
+        border-color: unset;
+    }
+    .grid-nav-arrow { width: 32px; height: 32px; }
+    .grid-nav-arrow svg { width: 20px; height: 20px; }
+    .filtro-label { font-size: 0.9rem; padding-left: 3px; }
+    .filtro-checkboxes#filtro-checkboxes-scroll {
+        gap: 10px;
+        padding: 5px 15px 10px 15px;
+        clip-path: none;
+    }
+    .checkbox-item label {
+        font-size: 0.85rem;
+        padding: 8px 16px;
+        min-height: 40px;
+    }
+    .scroll-arrow { display: none; }
+    #aviso-container { margin-top: 15px; }
+    .aviso-mensagem { padding: 25px; }
+    #quiz-section { flex-grow: 1; }
+    #quiz-section h2#question-title {
+        font-size: 1.3rem;
+        gap: 8px;
+        margin-bottom: 15px;
+        margin-top: 0;
+    }
+    #quiz-section h2#question-title #id-questao { font-size: 1.4rem; }
+    #quiz-section h2#question-title #categoria-titulo {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+    }
+    .question-wrap { padding: 20px; margin-bottom: 25px; }
+    .question-text { font-size: 1.1rem; }
+    .answer {
+        padding: 15px 20px;
+        font-size: 0.95rem;
+        min-height: 46px;
+    }
+    #referencia-questao { margin-top: 20px; padding-top: 10px; }
+    .resultado-final-card {
+        padding: 25px;
+        max-width: 90%;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .resultado-final-titulo { font-size: 1.6rem; }
+    .pontos-valor { font-size: 1.7rem; }
+    .resultado-final-detalhes p { font-size: 1rem; }
+    .navigation-buttons {
+        position: static;
+        padding-bottom: 0;
+        padding-top: 20px;
+        margin-top: 10px;
+    }
+    .navigation-buttons .button {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .bottom-navbar {
+        height: 60px;
+    }
+    body {
+        padding-bottom: 60px;
+    }
+    .bottom-navbar .bottom-nav-link .material-symbols-outlined {
+        font-size: 24px;
+    }
+    .bottom-navbar .bottom-nav-link span:not(.material-symbols-outlined) {
+        font-size: 0.7rem;
+    }
+    header {
+        height: 65px;
+        padding: 0 15px;
+    }
+    #inicio-section {
+        padding: 25px 15px;
+        min-height: calc(100vh - 65px - 60px);
+    }
+    #inicio-section .inicio-content {
+        padding: 20px;
+        width: 95%;
+    }
+    aside {
+        padding: 10px 12px;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+    .pontuacao-wrap {
+        height: 65px;
+        width: 65px;
+        padding: 2px;
+        margin-right: 10px;
+    }
+    #pontuacao {
+        font-size: 1.5rem;
+    }
+    aside #acertos,
+    aside #erros {
+        font-size: 0;
+        color: transparent;
+        font-weight: normal;
+        display: inline-flex;
+        align-items: center;
+    }
+    aside #acertos span,
+    aside #erros span {
+        font-size: 0.9rem;
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-gray-900);
+        margin-left: 0;
+        display: inline;
+        line-height: 1;
+    }
+    .aside-info-wrap p { margin: 0; }
+    .aside-info-wrap .icon-wrap {
+        margin-right: 4px;
+        height: 26px;
+        width: 26px;
+        padding: 4px;
+    }
+    .icon-wrap svg {
+        height: 18px;
+        width: 18px;
+    }
+    #btn-encerrar-sessao {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+        margin-left: auto;
+        order: 3;
+    }
+    #questoes-section .main-content {
+        padding: 20px 15px;
+    }
+    .logo-area {
+        font-size: 1.4rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    .filtro-categorias-container {
+        gap: 8px;
+        margin-bottom: 25px;
+    }
+    .filtro-label {
+        font-size: 0.9rem;
+    }
+    .filtro-checkboxes#filtro-checkboxes-scroll {
+        padding-left: 10px;
+        padding-right: 10px;
+        gap: 8px;
+    }
+    .checkbox-item label {
+        font-size: 0.8rem;
+        padding: 8px 14px;
+        min-height: 38px;
+    }
+    #aviso-container {
+        margin-top: 15px;
+        max-width: 95%;
+    }
+    .aviso-mensagem {
+        padding: 20px;
+        font-size: 1rem;
+    }
+    #quiz-section h2#question-title {
+        font-size: 1.2rem;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+    #quiz-section h2#question-title #categoria-titulo {
+        font-size: 0.75rem;
+        padding: 3px 8px;
+    }
+    #quiz-section h2#question-title #id-questao {
+        font-size: 1.3rem;
+    }
+    .question-wrap {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    .question {
+        gap: 15px;
+    }
+    .question-text {
+        font-size: 1.0rem;
+        line-height: 1.6;
+    }
+    .image-question-wrap > img {
+        max-height: 280px;
+    }
+    .answers-wrap {
+        gap: 12px;
+    }
+    .answer {
+        padding: 14px 18px;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+    #referencia-questao {
+        font-size: 0.85rem;
+        margin-top: 18px;
+        padding-top: 10px;
+    }
+    .navigation-buttons {
+        padding: 20px 0 0 0;
+        margin-top: 5px;
+        gap: 12px;
+    }
+    .navigation-buttons .button {
+        padding: 10px 18px;
+        font-size: 0.85rem;
+        flex-grow: 1;
+        min-width: 110px;
+    }
+    #question-grid-container {
+        gap: 6px;
+        max-height: 120px;
+        margin-top: 18px;
+        margin-bottom: 18px;
+    }
+    .grid-item {
+        font-size: 0.75rem;
+        width: 32px;
+        min-height: 32px;
+    }
+    .grid-nav-arrow {
+        width: 30px;
+        height: 30px;
+    }
+    .grid-nav-arrow svg {
+        width: 18px;
+        height: 18px;
+    }
+    .resultado-final-card {
+        padding: 20px 15px;
+    }
+    .resultado-final-titulo {
+        font-size: 1.4rem;
+    }
+    .pontos-valor {
+        font-size: 1.6rem;
+    }
+    .resultado-final-detalhes p {
+        font-size: 0.95rem;
+    }
+    .modal-content {
+        padding: 25px 20px;
+    }
+    .modal-title {
+        font-size: 1.4rem;
+    }
+    .modal-message {
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+    }
+    .modal-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .modal-actions .button {
+        width: 100%;
+        min-width: unset;
+    }
+    @media (max-width: 360px) {
+        aside {
+            padding: 8px 10px;
+            gap: 5px;
+        }
+        .pontuacao-wrap {
+            height: 60px;
+            width: 60px;
+            padding: 2px;
+            margin-right: 5px;
+        }
+        #pontuacao {
+            font-size: 1.4rem;
+        }
+        .aside-info-wrap {
+            gap: 3px;
+            margin: 0;
+        }
+        aside #acertos span,
+        aside #erros span {
+            font-size: 0.8rem;
+        }
+        .aside-info-wrap .icon-wrap {
+            margin-right: 3px;
+            height: 24px;
+            width: 24px;
+        }
+        .icon-wrap svg {
+            height: 16px;
+            width: 16px;
+        }
+        #btn-encerrar-sessao {
+            padding: 8px 12px;
+        }
+        #questoes-section .main-content {
+            padding: 15px 10px;
+        }
+        .question-text {
+            font-size: 0.95rem;
+        }
+        .answer {
+            padding: 12px 15px;
+            font-size: 0.85rem;
+            min-height: 42px;
+        }
+        #question-grid-container {
+            gap: 5px;
+        }
+        .grid-item {
+            width: 30px;
+            min-height: 30px;
+            font-size: 0.7rem;
+        }
+        .grid-nav-arrow {
+            width: 28px;
+            height: 28px;
+        }
+        .grid-nav-arrow svg {
+            width: 16px;
+            height: 16px;
+        }
+        .checkbox-item label {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            min-height: 36px;
+        }
+    }
+}
+
+
+
+@media (orientation: landscape) and (max-height: 500px) {
+    aside[style*="position: sticky"] #btn-encerrar-sessao,
+    aside:not([style*="position: static"]) #btn-encerrar-sessao {
+        position: static;
+        margin-top: 20px;
+        margin-bottom: 0;
+        width: 90%;
+        align-self: center;
+    }
+}

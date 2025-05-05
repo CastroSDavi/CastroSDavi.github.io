@@ -1,6 +1,3 @@
-// assets/js/script.js - COMPLETO - Sem Auto-Avanço, Botão Próxima Sempre Habilitado
-
-// --- Classe Usuário ---
 class Usuario {
     constructor(nome = null, acertos = 0, erros = 0, pontos = 0) {
         this._nome = nome;
@@ -26,26 +23,20 @@ class Usuario {
         this.atualizar_pontos();
     }
     atualizar_pontos() {
-        // Pontuação: +15 por acerto, -5 por erro (mínimo 0)
         this._pontos = (15 * this._acertos) - (5 * this._erros);
         if (this._pontos < 0) this._pontos = 0;
     }
 }
 
-// --- Array de Perguntas ---
-let perguntas = []; // Será carregado do JSON
-
-// --- Variáveis Globais ---
+let perguntas = [];
 let perguntaAtual = 0;
 let perguntasFiltradas = [];
 let categoriasSelecionadas = [];
 const usuario = new Usuario();
-// autoAvancoTimeoutId REMOVIDO
-let secaoAtual = 'inicio-section'; // Padrão inicial
+let secaoAtual = 'inicio-section';
 const QUESTOES_POR_PAGINA_GRID = 5;
 let paginaAtualGrid = 1;
 
-// --- Elementos do DOM (cacheados) ---
 let elCategoriaTitulo, elIdQuestao, elPerguntaTexto, elPerguntaImagem, elRespostasContainer, elReferencia, elQuizSection, elPontuacao, elAcertosNum, elErrosNum, elPrevBtn, elNextBtn, elNavigationButtons, elResultadoCard, elProgressBarFill, elProgressText, elProgressContainer, filtroCheckboxesContainer, avisoContainer, avisoMensagem;
 let elQuestionGridContainer;
 let elPaginacaoControles;
@@ -56,7 +47,6 @@ let elBtnEncerrarSessao;
 let elBtnRecomecar;
 let elConfirmEncerrarOverlay, elConfirmEncerrarBtn, elCancelEncerrarBtn;
 
-// --- Função para Embaralhar Array (Opcional) ---
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -64,7 +54,6 @@ function shuffleArray(array) {
     }
 }
 
-// --- Função para buscar elementos do DOM ---
 function cacheDOMelements() {
     try {
         elCategoriaTitulo = document.getElementById('categoria-titulo');
@@ -124,7 +113,6 @@ function cacheDOMelements() {
     }
 }
 
-// --- Funções de Aviso ---
 function mostrarAviso(texto) {
     if (!avisoContainer || !avisoMensagem) {
         console.warn("Tentativa de mostrar aviso, mas elementos não encontrados.");
@@ -149,7 +137,6 @@ function limparAviso() {
     }
 }
 
-// --- Funções de Filtro de Categoria ---
 function extrairCategoriasUnicas(listaPerguntas) {
     const categorias = new Set();
     if (Array.isArray(listaPerguntas)) {
@@ -206,7 +193,6 @@ function obterCategoriasSelecionadas() {
     return selecionadas;
 }
 
-// --- Funções para Rolagem das Categorias com Setas ---
 function rolarCategorias(direcao) {
     if (!elFiltroCheckboxesScroll) return;
     const scrollAmount = elFiltroCheckboxesScroll.clientWidth * 0.8;
@@ -246,7 +232,6 @@ function atualizarSetasScrollCategorias() {
     }
 }
 
-// --- Funções de Barra de Progresso ---
 function atualizarBarraProgresso() {
     if (!elProgressContainer || !elProgressBarFill || !elProgressText) return;
     const quizAtivo = elQuizSection && (elQuizSection.style.display === 'flex' || elQuizSection.style.display === 'block');
@@ -268,7 +253,6 @@ function atualizarBarraProgresso() {
     }
 }
 
-// --- Funções de Navegação de Seção ---
 function mostrarSecao(idSecao) {
     if (!elQuizSection) {
         if (!cacheDOMelements()) {
@@ -331,7 +315,6 @@ function esconderElementosQuiz() {
     if (elProgressText) elProgressText.style.display = 'none';
 }
 
-// --- Funções da Grade de Questões e Navegação Direta ---
 function renderizarGridEPaginacao() {
     if (!elQuestionGridContainer || !elPaginacaoControles || !perguntasFiltradas) {
         if (elQuestionGridContainer) elQuestionGridContainer.style.display = 'none';
@@ -370,7 +353,7 @@ function renderizarGridEPaginacao() {
             path.setAttribute("d", "M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z");
             setaBtn.onclick = () => irParaQuestao(perguntaAtual - 1);
             setaBtn.disabled = perguntaAtual === 0;
-        } else { // next
+        } else {
             path.setAttribute("d", "M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z");
             setaBtn.onclick = () => irParaQuestao(perguntaAtual + 1);
             setaBtn.disabled = perguntaAtual === perguntasFiltradas.length - 1;
@@ -422,8 +405,6 @@ function atualizarGridEstilos(indiceAtualGlobal) {
 }
 
 function irParaQuestao(indice) {
-     // Timer removido
-
      if (perguntasFiltradas && indice >= 0 && indice < perguntasFiltradas.length) {
          perguntaAtual = indice;
          carregarPergunta();
@@ -435,8 +416,6 @@ function irParaQuestao(indice) {
           console.warn(`Tentativa de ir para questão com índice inválido ou fora dos limites: ${indice}`);
       }
 }
-
-// --- Funções Principais do Quiz ---
 
 function atualizarFiltroECarregarPerguntas() {
      if (!filtroCheckboxesContainer || !elQuizSection) return;
@@ -468,7 +447,6 @@ function filtrarPerguntas(listaCompleta, categoriasFiltro) {
         filtradas = [];
     }
     filtradas.forEach(p => delete p.respostaDada);
-    // shuffleArray(filtradas);
     return filtradas;
 }
 
@@ -479,14 +457,13 @@ function reiniciarEstadoQuiz() {
     if (perguntasFiltradas && Array.isArray(perguntasFiltradas)) {
         perguntasFiltradas.forEach(p => delete p.respostaDada);
     }
-    // Timer removido
 }
 
 function exibirQuizOuAviso(perguntasParaExibir, categoriasAtivas) {
     limparAviso();
     if (perguntasParaExibir.length > 0) {
         if(elQuizSection) elQuizSection.style.display = 'flex';
-        if(elBtnEncerrarSessao) elBtnEncerrarSessao.style.display = 'block'; // Ou 'inline-block' dependendo do CSS final
+        if(elBtnEncerrarSessao) elBtnEncerrarSessao.style.display = 'block';
         carregarPergunta();
         renderizarGridEPaginacao();
         atualizarBarraProgresso();
@@ -521,7 +498,7 @@ function carregarPergunta() {
         return;
     }
     if(elQuizSection) elQuizSection.style.display = 'flex';
-    atualizarUINavegacaoQuiz(); // Atualiza só a barra de progresso agora
+    atualizarUINavegacaoQuiz();
     const pergunta = perguntasFiltradas[perguntaAtual];
     if (!pergunta) {
         console.error(`Erro: Pergunta ${perguntaAtual} indefinida no array filtrado.`);
@@ -533,9 +510,8 @@ function carregarPergunta() {
     preencherDetalhesQuestao(pergunta, perguntaAtual);
     exibirImagemQuestao(pergunta.imagem, perguntaAtual);
     criarBotoesResposta(pergunta);
-    configurarBotoesNavegacao(perguntaAtual, perguntasFiltradas.length); // Configura e HABILITA botões
+    configurarBotoesNavegacao(perguntaAtual, perguntasFiltradas.length);
 }
-
 
 function elementosEssenciaisQuizExistem() {
      const ok = elQuizSection && elRespostasContainer && elPerguntaTexto && elIdQuestao && elCategoriaTitulo && elReferencia && elNavigationButtons && elPrevBtn && elNextBtn && elProgressBarFill && elProgressText && elProgressContainer && elQuestionGridContainer && elPaginacaoControles && elPontuacao && elAcertosNum && elErrosNum;
@@ -549,7 +525,6 @@ function elementosEssenciaisQuizExistem() {
 }
 
 function atualizarUINavegacaoQuiz() {
-     // Timer removido
      atualizarBarraProgresso();
 }
 
@@ -563,35 +538,21 @@ function limparAreaPergunta() {
 }
 
 function preencherDetalhesQuestao(pergunta, indice) {
-    let tituloCat = "Questão"; // Título padrão
-    const categoriasDaQuestao = pergunta.categorias || []; // Pega as categorias da pergunta
-    const checkboxTodas = document.getElementById('cat-todas'); // Obtém o checkbox 'Todas' pelo ID
+    let tituloCat = "Questão";
+    const categoriasDaQuestao = pergunta.categorias || [];
+    const checkboxTodas = document.getElementById('cat-todas');
 
-    // VERIFICAÇÃO PRINCIPAL: O checkbox 'Todas' está marcado?
     if (checkboxTodas && checkboxTodas.checked && categoriasDaQuestao.length > 0) {
-        // SIM: Se 'Todas' está marcado e a questão tem categorias, junta todas elas
-        tituloCat = categoriasDaQuestao.join(' / '); // Ex: "Metabolismo / Funções"
-
+        tituloCat = categoriasDaQuestao.join(' / ');
     } else {
-        // NÃO: Se 'Todas' NÃO está marcado, aplica a lógica anterior (priorizar filtro ativo)
-
-        // Encontra a PRIMEIRA categoria que está tanto na lista da pergunta
-        // quanto na lista das categorias selecionadas no filtro (exceto 'Todas')
         const categoriaFiltradaAtiva = categoriasSelecionadas.find(catFiltro => categoriasDaQuestao.includes(catFiltro));
-
         if (categoriaFiltradaAtiva) {
-            // Se encontrou uma categoria que foi filtrada E pertence à questão, usa ela
             tituloCat = categoriaFiltradaAtiva;
         } else if (categoriasDaQuestao.length > 0) {
-            // Fallback: Se não houve correspondência com o filtro ativo,
-            // mas a questão tem categorias, mostra a primeira da lista da questão
             tituloCat = categoriasDaQuestao[0];
         }
-        // Se a questão não tiver categorias ('categoriasDaQuestao' está vazio),
-        // 'tituloCat' permanecerá como "Questão".
     }
 
-    // Restante da função permanece igual: atualiza os elementos na tela
     if (elCategoriaTitulo) elCategoriaTitulo.innerText = tituloCat;
     if (elIdQuestao) elIdQuestao.innerText = indice + 1;
     if (elPerguntaTexto) elPerguntaTexto.textContent = pergunta.pergunta;
@@ -683,7 +644,6 @@ function configurarBotoesNavegacao(indiceAtual, totalPerguntas) {
     if(elNextBtn) {
          const ultimaQuestao = indiceAtual === totalPerguntas - 1;
          elNextBtn.innerText = ultimaQuestao ? 'Ver Resultado' : 'Próxima';
-         // Botão Próxima sempre habilitado
          elNextBtn.disabled = false;
     }
 }
@@ -692,7 +652,6 @@ function verificarResposta(elementoClicado, pergunta) {
     if (pergunta.hasOwnProperty('respostaDada') || !elementoClicado || !elRespostasContainer) {
         return;
     }
-    // Timer removido
 
     const respostaSelecionada = elementoClicado.textContent;
     pergunta.respostaDada = respostaSelecionada;
@@ -701,9 +660,7 @@ function verificarResposta(elementoClicado, pergunta) {
     aplicarFeedbackVisualResposta(elementoClicado, pergunta, respostaSelecionada);
     atualizarEstadoAposResposta(pergunta, respostaSelecionada);
     atualizarGridEstilos(perguntaAtual);
-    // Agendamento removido
 }
-
 
 function desabilitarRespostas() {
     if (!elRespostasContainer) return;
@@ -739,21 +696,16 @@ function atualizarEstadoAposResposta(pergunta, respostaSelecionada) {
     atualizar_pontuacao();
 }
 
-// Função agendarProximaQuestao REMOVIDA
-
 function proximaPergunta() {
-    // Timer removido
     if (!perguntasFiltradas) return;
     irParaQuestao(perguntaAtual + 1);
 }
 
 function perguntaAnterior() {
-    // Timer removido
     irParaQuestao(perguntaAtual - 1);
 }
 
 function mostrarResultadoFinal() {
-    // Timer removido
     if (elQuizSection) elQuizSection.style.display = 'none';
     if (elProgressContainer) elProgressContainer.style.display = 'none';
     if (elProgressText) elProgressText.style.display = 'none';
@@ -820,7 +772,6 @@ function atualizar_pontuacao() {
     if (elErrosNum) elErrosNum.textContent = usuario.erros;
 }
 
-// --- Funções do Modal de Confirmação ---
 function showConfirmEncerrarModal() {
      if (elConfirmEncerrarOverlay) {
           elConfirmEncerrarOverlay.style.display = 'flex';
@@ -835,7 +786,6 @@ function hideConfirmEncerrarModal() {
       }
 }
 
-// --- Carregamento Inicial e Event Listeners ---
 async function carregarPerguntasJSON() {
      try {
           const timestamp = Date.now();
@@ -1016,8 +966,6 @@ function reiniciarQuizCompleto() {
     }
 }
 
-
-// --- Inicialização ---
 document.addEventListener('DOMContentLoaded', async () => {
     const perguntasCarregadas = await carregarPerguntasJSON();
     if (perguntasCarregadas) {

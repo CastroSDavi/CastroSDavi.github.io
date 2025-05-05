@@ -1,0 +1,109 @@
+:root {
+    /* Cores Principais */
+    --color-primary-dark: #0d3b66;
+    --color-primary-medium: #1a5f9e;
+    --color-primary-light: #eef3f8; /* Para hovers/backgrounds sutis */
+    --color-secondary-green: #2a9d8f;
+    --color-secondary-green-light: #5fda9a;
+    --color-accent-red: #e63946;
+
+    /* Cores de Feedback */
+    --color-correct-bg: #e6fcf5;
+    --color-correct-border: #a3e9c1;
+    --color-correct-text: #1e7f74;
+    --color-correct-bg-alt: #d1f7e0; /* Para .answer.correct */
+    --color-incorrect-bg: #fff0f1;
+    --color-incorrect-border: #f1aeb5;
+    --color-incorrect-text: #c12634;
+    --color-incorrect-bg-alt: #f8d7da; /* Para .answer.incorrect */
+
+    /* Tons de Cinza e Neutros */
+    --color-gray-900: #343a40; /* Mais escuro */
+    --color-gray-800: #495057;
+    --color-gray-700: #6c757d;
+    --color-gray-600: #adb5bd;
+    --color-gray-500: #ced4da;
+    --color-gray-400: #dee2e6; /* Bordas comuns */
+    --color-gray-300: #e9ecef; /* Backgrounds/bordas sutis */
+    --color-gray-200: #f1f3f5; /* Background seção */
+    --color-gray-100: #f8f9fa; /* Background body/respostas */
+    --color-white: #ffffff;
+    --color-dark: #333; /* Usado na pontuação */
+
+    /* Tipografia */
+    --font-family-sans: "Roboto", sans-serif;
+    --font-family-heading: "Montserrat", sans-serif;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* Sombras */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04); /* grid-item */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05); /* answer, pontuacao-wrap */
+    --shadow-md: 0 3px 10px rgba(0, 0, 0, 0.05); /* card */
+    --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.06); /* header */
+    --shadow-xl: 0 6px 20px rgba(0, 0, 0, 0.07); /* resultado-final */
+    --shadow-button: 0 3px 8px rgba(0, 0, 0, 0.1);
+    --shadow-button-hover: 0 5px 12px rgba(0, 0, 0, 0.15);
+    --shadow-inner: inset 0 1px 2px rgba(0,0,0,0.08); /* progress-bar */
+
+    /* Bordas */
+    --border-radius-sm: 5px;   /* grid-item, grid-nav-arrow, categoria-titulo */
+    --border-radius-md: 8px;   /* card, answer, img */
+    --border-radius-lg: 12px;  /* resultado-final */
+    --border-radius-xl: 25px;  /* button, progress-bar */
+    --border-radius-pill: 50px;/* checkbox-label */
+    --border-radius-circle: 50%;
+    --border-width: 1px;
+    --border-width-md: 1.5px;
+    --border-width-lg: 3px; /* nav-link active */
+    --gradient-border-width: 4px; /* Largura da borda gradiente */
+
+    /* Transições */
+    --transition-fast: 0.18s ease-out; /* grid-item */
+    --transition-medium: 0.2s ease-in-out; /* button, answer */
+    --transition-slow: 0.3s ease; /* nav-link */
+
+    /* Acessibilidade */
+    --focus-outline-color: var(--color-primary-medium);
+    --focus-outline-width: 2px;
+    --focus-outline-offset: 2px;
+}
+
+/* ======================================== */
+/* Reset e Estilos Base                     */
+/* ======================================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+    font-family: var(--font-family-sans); color: var(--color-gray-900);
+    background-color: var(--color-gray-100); line-height: 1.6;
+    display: flex; flex-direction: column; min-height: 100vh;
+}
+
+/* ======================================== */
+/* Tipografia Geral                         */
+/* ======================================== */
+h2 {
+    font-family: var(--font-family-heading); font-weight: var(--font-weight-semibold);
+    font-size: 1.9rem; color: var(--color-primary-dark); margin-bottom: 25px;
+}
+h3 {
+    font-family: var(--font-family-sans); font-weight: var(--font-weight-medium);
+    font-size: 1.5rem; color: var(--color-gray-800); margin-bottom: 15px;
+}
+
+/* ======================================== */
+/* Acessibilidade - Foco Visível Padrão     */
+/* ======================================== */
+:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset)) rgba(from var(--focus-outline-color) r g b / 0.2);
+}
+:focus:not(:focus-visible) { outline: none; box-shadow: none; }
+*:focus { outline: -webkit-focus-ring-color auto 1px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }

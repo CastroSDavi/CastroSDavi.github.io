@@ -1,0 +1,10 @@
+.card {
+    background-color: var(--color-white); 
+    border: var(--border-width) solid var(--color-gray-400); 
+    border-radius: var(--border-radius-md); 
+    box-shadow: var(--shadow-md); 
+    padding: 30px; }
+
+.is-circle { 
+    border-radius: var(--border-radius-circle); 
+}

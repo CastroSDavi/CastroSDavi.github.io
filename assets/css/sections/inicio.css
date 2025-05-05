@@ -1,0 +1,9 @@
+#inicio-section .inicio-content { 
+    max-width: 800px; width: 90%; 
+}
+#inicio-section .inicio-content h2 { 
+    margin-top: 0; text-align: center; 
+}
+#inicio-section .inicio-content p { 
+    margin-bottom: 15px; line-height: 1.7; color: var(--color-gray-800); text-align: justify; 
+}

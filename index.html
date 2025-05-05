@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="assets/css/components/aside.css">
     <link rel="stylesheet" href="assets/css/components/filter.css">
     <link rel="stylesheet" href="assets/css/sections/quiz.css">
-    <link rel="stylesheet" href="assets/css/sections/filters.css">
     <link rel="stylesheet" href="assets/css/sections/inicio.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,8 +45,7 @@
             </div>
         </section>
 
-        <section id="questoes-section" class="main-section" style="display: none;">
-            <aside>
+        <section id="questoes-section" class="main-section is-hidden"> <aside>
                 <p class="aside-title">Pontuação</p>
                 <div class="pontuacao-wrap is-circle">
                      <p id="pontuacao" class="is-circle">0</p>
@@ -64,12 +62,12 @@
                     </div>
                     <p id="erros">Erros <span id="erros-numero">0</span></p>
                 </div>
-                <button id="btn-encerrar-sessao" class="button button--outline" style="display: none;">Encerrar</button>
+                <button id="btn-encerrar-sessao" class="button button--outline is-hidden">Encerrar</button>
             </aside>
 
             <div class="main-content">
                 <div class="filtro-categorias-container">
-                    <span class="filtro-label">Categorias:</span>
+                    <span class="filtro-label" id="categorias-label">Categorias:</span>
                     <div class="categorias-scroll-wrapper">
                          <button class="scroll-arrow left is-circle" id="cat-scroll-left" aria-label="Rolar categorias para esquerda" disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" /> </svg>
@@ -81,81 +79,72 @@
                         </button>
                     </div>
                 </div>
-                <div id="aviso-container" style="display: none;">
-                    <p class="aviso-mensagem card">Selecione pelo menos uma categoria para começar o quiz.</p>
+
+                <div id="aviso-container" class="is-hidden"> <p class="aviso-mensagem card">Selecione pelo menos uma categoria para começar o quiz.</p>
                 </div>
 
-                <section id="quiz-section" style="display: none;">
-                    <div id="progress-container" style="display: none;">
-                        <div id="progress-bar-fill"></div>
+                <section id="quiz-section" class="is-hidden"> <div id="progress-container" class="is-hidden"> <div id="progress-bar-fill"></div>
                     </div>
-                    <span id="progress-text" style="display: none;">0 / 0</span>
-
-                    <h2 id="question-title"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
-
-                     <div class="question-wrap card">
+                    <span id="progress-text" class="is-hidden">0 / 0</span> <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2> <div class="question-wrap card">
                         <div class="question-text">
                             <p id="pergunta-texto">Carregando pergunta...</p>
                         </div>
                         <div class="question">
                             <div class="image-question-wrap">
-                                <img src="" alt="" id="pergunta-imagem" style="display: none;">
+                                <img src="" alt="" id="pergunta-imagem" class="is-hidden">
                             </div>
                             <div class="answers-wrap" id="respostas-container">
                                 </div>
+                            <span id="feedback-acessivel" class="sr-only" aria-live="polite" aria-atomic="true"></span>
                         </div>
                         <p id="referencia-questao"></p>
                     </div>
 
-                    <div class="navigation-buttons" style="display: none;">
-                        <button id="prev-btn" class="button button--secondary" disabled>Anterior</button>
+                    <div class="navigation-buttons is-hidden"> <button id="prev-btn" class="button button--secondary" disabled>Anterior</button>
                         <button id="next-btn" class="button button--primary">Próxima</button>
                     </div>
                 </section>
-                <div id="confirm-encerrar-overlay" class="modal-overlay" style="display: none;">
-                    <div id="confirm-encerrar-modal" class="modal-content card">
+
+                <div id="confirm-encerrar-overlay" class="modal-overlay is-hidden"> <div id="confirm-encerrar-modal" class="modal-content card">
                         <h3 class="modal-title">Confirmar Encerramento</h3>
                         <p class="modal-message">Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
                         <div class="modal-actions">
                             <button id="cancel-encerrar-btn" class="button button--secondary">Cancelar</button>
-                            <button id="confirm-encerrar-btn" class="button button--primary">Confirmar</button> </div>
+                            <button id="confirm-encerrar-btn" class="button button--primary">Confirmar</button>
+                        </div>
                     </div>
                 </div>
-                 <div class="resultado-final-card card" style="display: none;">
-                    <h3 class="resultado-final-titulo">Quiz Concluído!</h3>
-                    <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
+
+                 <div class="resultado-final-card card is-hidden"> <h3 class="resultado-final-titulo" tabindex="-1">Quiz Concluído!</h3> <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
                     <div class="resultado-final-detalhes">
                         <p>Acertos: <span class="acertos-valor">0</span></p>
                         <p>Erros: <span class="erros-valor">0</span></p>
                     </div>
                     <button id="btn-recomecar" class="button button--primary">Tentar Novamente</button>
                 </div>
-                 <div id="question-grid-container" class="question-grid-container" style="display: none;">
-                    </div>
-                 <div id="paginacao-controles" class="paginacao" style="display: none;">
-                    </div>
-            </div>
-        </section>
-    </main>
+
+                 <div id="question-grid-container" class="question-grid-container is-hidden"> </div>
+                 </div> </section> </main>
+
     <nav class="bottom-navbar" aria-label="Navegação principal móvel">
         <ul>
             <li>
                 <a href="#" class="bottom-nav-link active" data-section="inicio-section" aria-label="Ir para Início" aria-current="page">
-                    <span class="material-symbols-outlined">
-                        home </span>
-                    <span>Início</span> </a>
+                    <span class="material-symbols-outlined"> home </span>
+                    <span>Início</span>
+                </a>
             </li>
             <li>
                 <a href="#" class="bottom-nav-link" data-section="questoes-section" aria-label="Ir para Questões">
-                     <span class="material-symbols-outlined">
-                        quiz </span>
-                    <span>Questões</span> </a>
+                     <span class="material-symbols-outlined"> quiz </span>
+                    <span>Questões</span>
+                </a>
             </li>
         </ul>
     </nav>
+
     <footer id="footer">
-        <p>&copy; Desenvolvido por Davi Castro</p>
-    </footer>
+        <p>&copy; 2025 Desenvolvido por Davi Castro</p> </footer>
 
     <script src="assets/js/script.js" defer></script>
 

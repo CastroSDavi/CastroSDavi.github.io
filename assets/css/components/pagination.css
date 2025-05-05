@@ -1,6 +1,6 @@
 /* --- ESTILOS GRID DE QUESTÕES (Mantendo o refinado V5) --- */
 #question-grid-container {
-    display: none;
+    display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
@@ -128,10 +128,6 @@
 }
 
 /* --- FIM ESTILOS GRID --- */
-
-.paginacao {
-    display: none;
-}
 
 .grid-nav-arrow {
     background-color: transparent;

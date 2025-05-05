@@ -1,4 +1,4 @@
-/* assets/css/style.css - Estilo Original + Correção Grid */
+/* assets/css/style.css - Círculo com Borda Gradiente Aplicado */
 :root {
     /* Cores Principais */
     --color-primary-dark: #0d3b66;
@@ -42,7 +42,7 @@
 
     /* Sombras */
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04); /* grid-item */
-    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05); /* answer */
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05); /* answer, pontuacao-wrap */
     --shadow-md: 0 3px 10px rgba(0, 0, 0, 0.05); /* card */
     --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.06); /* header */
     --shadow-xl: 0 6px 20px rgba(0, 0, 0, 0.07); /* resultado-final */
@@ -60,6 +60,7 @@
     --border-width: 1px;
     --border-width-md: 1.5px;
     --border-width-lg: 3px; /* nav-link active */
+    --gradient-border-width: 4px; /* Largura da borda gradiente */
 
     /* Transições */
     --transition-fast: 0.18s ease-out; /* grid-item */
@@ -200,13 +201,13 @@ footer#footer p { margin: 0; }
 /* --- NAVBAR DESKTOP LINKS ORIGINAIS --- */
 .navbar { justify-content: flex-start; padding: 0 15px; display: flex; list-style: none; margin: 0; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; width: 100%; }
 .navbar > li { padding: 0; }
-.nav-link { 
+.nav-link {
     display: block; text-decoration: none; font: var(--font-weight-medium) 0.95rem var(--font-family-heading); color: var(--color-gray-800); padding: 15px 20px; position: relative; border-bottom: var(--border-width-lg) solid transparent; background-color: transparent; transition: color var(--transition-medium), border-color var(--transition-slow); }
 .nav-link:hover:not(.active) { color: var(--color-primary-dark); }
 .nav-link.active {
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-dark); 
-    border-bottom: 0.2rem solid var(--color-secondary-green-light);
+    color: var(--color-primary-dark);
+    border-bottom: 0.2rem solid var(--color-secondary-green-light); /* Corrigido para usar variável correta */
     }
 .nav-link:focus-visible { border-radius: var(--border-radius-sm); }
 /* ------------------------------------ */
@@ -217,20 +218,67 @@ footer#footer p { margin: 0; }
 #inicio-section .inicio-content p { margin-bottom: 15px; line-height: 1.7; color: var(--color-gray-800); text-align: justify; }
 
 /* --- Aside Components (Default/Desktop) --- */
-.aside-title { text-align: center; font: var(--font-weight-medium) 1.4rem var(--font-family-sans); color: var(--color-gray-900); margin-bottom: 5px; }
+/* Estilo do Título "Pontuação" (original) */
+.aside-title {
+    text-align: center;
+    font: var(--font-weight-medium) 1.4rem var(--font-family-sans);
+    color: var(--color-gray-900);
+    margin-bottom: 5px; /* Margem original */
+}
+
+/* NOVO: Estilo do Círculo com Borda Gradiente */
+.pontuacao-wrap {
+    display: flex;
+    height: 120px;
+    width: 120px;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 50%; /* Garante círculo */
+    padding: var(--gradient-border-width, 4px); /* Espaçamento para a borda gradiente (com fallback) */
+    background: linear-gradient(to bottom right, var(--color-primary-medium), var(--color-primary-dark)); /* Gradiente como fundo */
+    position: relative; /* Para posicionar o filho */
+    box-shadow: var(--shadow-sm); /* Sombra sutil */
+}
+
+#pontuacao {
+    /* Reset de estilos antigos se necessário */
+    all: unset;
+    box-sizing: border-box; /* Inclui padding/borda no tamanho total */
+
+    /* Estilos do círculo interno */
+    width: 100%; /* Ocupa todo o espaço interno do wrap */
+    height: 100%;
+    font-size: 2.5rem;
+    background-color: var(--color-white); /* Fundo branco para o número */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-dark); /* Cor escura original para o número */
+    font-weight: var(--font-weight-semibold);
+    border-radius: 50%; /* Mantém o círculo interno */
+}
+
+/* Estilos restantes da Aside */
 aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: var(--color-gray-800); }
+/* Ajuste para remover margem do p dentro de aside-info-wrap */
+aside .aside-info-wrap p {
+    margin-bottom: 0;
+}
 #acertos, #erros { color: var(--color-gray-900); font-weight: var(--font-weight-medium); }
 #acertos span, #erros span { font-weight: var(--font-weight-semibold); }
-.pontuacao-wrap { display: flex; height: 120px; width: 120px; align-self: center; box-shadow: 0 5px 15px rgba(0,0,0,0.08), 0 2px 5px rgba(0,0,0,0.06); justify-content: center; align-items: center; background-color: var(--color-secondary-green-light); flex-shrink: 0; margin-top: 5px; margin-bottom: 10px; }
-#pontuacao { width: 100px; height: 100px; font-size: 2.5rem; background-color: var(--color-white); display: flex; justify-content: center; align-items: center; color: var(--color-dark); font-weight: var(--font-weight-semibold); }
 .aside-info-wrap { display: flex; gap: 10px; align-items: center; }
-/* REMOVIDO: Margem específica nos estilos padrão */
-/* aside .pontuacao-wrap + .aside-info-wrap { margin-left: 10px; } */
-.icon-wrap { padding: 5px; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; }
+.icon-wrap { padding: 5px; display: inline-flex; justify-content: center; align-items: center; flex-shrink: 0; border-radius: 50%; }
 .icon-wrap.icon-correct { background-color: rgba(95, 218, 154, 0.15); } .icon-wrap.icon-correct svg { fill: var(--color-secondary-green); }
 .icon-wrap.icon-error { background-color: rgba(240, 87, 108, 0.1); } .icon-wrap.icon-error svg { fill: var(--color-accent-red); }
 
 #btn-encerrar-sessao { width: 100%; margin-top: auto; margin-bottom: 10px; position: sticky; bottom: 10px; background-color: var(--color-white); z-index: 1; font-size: 0.9rem; padding: 10px 15px; }
+
+/* --- Fim dos Componentes da Aside --- */
+
 
 .filtro-categorias-container { margin-bottom: 40px; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0; }
 .filtro-label { font-weight: var(--font-weight-medium); font-family: var(--font-family-heading); color: var(--color-gray-800); font-size: 1rem; margin-bottom: 0; padding-left: 5px; }
@@ -283,19 +331,75 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 #referencia-questao { margin-top: 25px; padding-top: 15px; border-top: var(--border-width) solid var(--color-gray-300); font-size: 0.9rem; color: var(--color-gray-700); text-align: right; font-style: italic; }
 .navigation-buttons { display: flex; justify-content: space-between; padding: 25px 0 0 0; margin-top: 15px; border-top: var(--border-width) solid var(--color-gray-300); flex-shrink: 0; }
 
+/* --- ESTILOS GRID DE QUESTÕES (Mantendo o refinado V5) --- */
 #question-grid-container { display: none; flex-direction: row; flex-wrap: nowrap; justify-content: center; align-items: center; gap: 8px; width: 100%; margin-top: 25px; margin-bottom: 25px; padding: 5px; flex-shrink: 0; overflow: hidden; }
-.grid-item { display: flex; justify-content: center; align-items: center; width: 34px; flex-shrink: 0; aspect-ratio: 1 / 1; font-size: 0.8rem; font-weight: var(--font-weight-medium); font-family: var(--font-family-sans); color: var(--color-gray-700); background-color: var(--color-white); border: var(--border-width) solid var(--color-gray-400); border-radius: var(--border-radius-sm); cursor: pointer; transition: all var(--transition-fast); padding: 2px; line-height: normal; text-align: center; user-select: none; box-shadow: var(--shadow-xs); min-height: 34px;}
-.grid-item:hover { border-color: var(--color-gray-600); color: var(--color-gray-900); background-color: var(--color-gray-100); box-shadow: 0 2px 4px rgba(0,0,0,0.06); transform: translateY(-1px); z-index: 1; }
-.grid-item.grid-item--current { border: var(--border-width-md) solid var(--color-primary-dark); background-color: var(--color-primary-light); color: var(--color-primary-dark); font-weight: var(--font-weight-bold); box-shadow: 0 1px 4px rgba(13, 59, 102, 0.15); transform: scale(1.1); z-index: 2; }
-.grid-item.grid-item--current:hover { filter: none; transform: scale(1.03); }
-/* --- CORREÇÃO GRID --- */
-.grid-item.grid-item--correct { background-color: var(--color-correct-bg); border-color: var(--color-correct-border); color: var(--color-correct-text); font-weight: var(--font-weight-semibold); box-shadow: none; /* transform: scale(1); <-- REMOVIDO */ }
+.grid-item {
+    display: flex; justify-content: center; align-items: center;
+    width: 34px; flex-shrink: 0; aspect-ratio: 1 / 1;
+    font-size: 0.8rem; font-weight: var(--font-weight-medium); font-family: var(--font-family-sans);
+    color: var(--color-gray-700); background-color: var(--color-white);
+    border: var(--border-width) solid var(--color-gray-400); /* Borda padrão */
+    border-radius: var(--border-radius-sm); cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: 2px; line-height: normal; text-align: center; user-select: none;
+    box-shadow: var(--shadow-xs); min-height: 34px; position: relative;
+}
+.grid-item:hover {
+    border-color: var(--color-gray-600); color: var(--color-gray-900);
+    background-color: var(--color-gray-100); box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+    transform: translateY(-1px); z-index: 1;
+}
+
+/* --- ESTILO REFINADO GRID ITEM ATUAL V5 --- */
+.grid-item.grid-item--current {
+    color: var(--color-primary-dark);      /* Texto azul escuro */
+    font-weight: var(--font-weight-bold);   /* Negrito */
+    transform: scale(1.05);                 /* Leve aumento */
+    z-index: 2;                             /* Acima dos outros */
+    /* Adiciona uma BORDA INTERNA azul escura + sombra externa sutil */
+    box-shadow: inset 0 0 0 2px var(--color-primary-dark),
+                var(--shadow-grid-current-subtle);
+    /* Borda externa - Será sobrescrita se respondido */
+    border: var(--border-width-md) solid var(--color-primary-dark);
+     /* Remove o fundo azul claro para deixar o verde/vermelho aparecerem */
+    background-color: transparent;
+}
+/* Garante que o fundo correto/incorreto apareça quando aplicável */
+.grid-item.grid-item--current.grid-item--correct {
+    background-color: var(--color-correct-bg);
+    border-color: var(--color-correct-border); /* Deixa a borda externa refletir o status */
+}
+.grid-item.grid-item--current.grid-item--incorrect {
+    background-color: var(--color-incorrect-bg);
+     border-color: var(--color-incorrect-border); /* Deixa a borda externa refletir o status */
+}
+/* Mantém o texto azul escuro e negrito mesmo quando respondido */
+.grid-item.grid-item--current.grid-item--correct,
+.grid-item.grid-item--current.grid-item--incorrect {
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-bold);
+}
+/* ----------------------------------------------------------- */
+
+.grid-item.grid-item--current:hover {
+    filter: none; /* Remove o filtro de brilho do hover normal */
+    transform: scale(1.05); /* Mantém a escala */
+}
+/* Estilos para respondidos (NÃO atuais) */
+.grid-item.grid-item--correct { background-color: var(--color-correct-bg); border-color: var(--color-correct-border); color: var(--color-correct-text); font-weight: var(--font-weight-semibold); box-shadow: none; }
 .grid-item.grid-item--correct:hover { border-color: var(--color-secondary-green-light); filter: brightness(98%); transform: scale(1.03); }
-.grid-item.grid-item--incorrect { background-color: var(--color-incorrect-bg); border-color: var(--color-incorrect-border); color: var(--color-incorrect-text); font-weight: var(--font-weight-semibold); box-shadow: none; /* transform: scale(1); <-- REMOVIDO */ }
+.grid-item.grid-item--incorrect { background-color: var(--color-incorrect-bg); border-color: var(--color-incorrect-border); color: var(--color-incorrect-text); font-weight: var(--font-weight-semibold); box-shadow: none; }
 .grid-item.grid-item--incorrect:hover { border-color: var(--color-accent-red); filter: brightness(98%); transform: scale(1.03); }
-/* -------------------- */
-.grid-item:focus-visible { outline: var(--focus-outline-width) solid var(--focus-outline-color); outline-offset: var(--focus-outline-offset); z-index: 3; }
+
+/* Estilo de foco padrão */
+.grid-item:focus-visible {
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    z-index: 3; /* Garante que o foco fique visível */
+}
 .grid-item:focus:not(:focus-visible) { outline: none; }
+/* --- FIM ESTILOS GRID --- */
+
 
 .paginacao { display: none; }
 
@@ -342,16 +446,22 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
 @media (max-width: 992px) {
      header { padding: 0 30px; } .logo-area { font-size: 1.8rem;}
      aside { min-width: 260px; padding: 25px; gap: 20px; height: calc(100vh - 80px - 50px); top: 0; } /* Altura original */
-     .pontuacao-wrap { height: 110px; width: 110px; margin-top: 5px; margin-bottom: 10px;}
-     #pontuacao { height: 90px; width: 90px; font-size: 2.3rem; }
+     /* Ajuste do Círculo Gradiente para telas médias */
+     .pontuacao-wrap { height: 110px; width: 110px; padding: 3px; /* Borda mais fina */}
+     #pontuacao { font-size: 2.3rem; }
      .aside-info-wrap { gap: 12px; }
-     aside .pontuacao-wrap + .aside-info-wrap { margin-left: 0; } /* Remove margin desnecessária */
+     aside .pontuacao-wrap + .aside-info-wrap { margin-left: 0; } /* Regra antiga, pode ser removida */
      .scroll-arrow { width: 32px; height: 32px; }
      #questoes-section { height: calc(100vh - 80px - 50px); } /* Altura original */
      #questoes-section .main-content { padding: 35px; }
      .filtro-categorias-container { margin-bottom: 35px; }
      .question-wrap { margin-bottom: 28px; }
      #question-grid-container { gap: 6px; } .grid-item { width: 32px; min-height: 32px; }
+     /* Ajustar destaque do grid para telas médias (remover borda interna) */
+     .grid-item.grid-item--current {
+          box-shadow: var(--shadow-grid-current-subtle); /* Apenas sombra externa */
+          transform: scale(1.04); /* Escala um pouco menor */
+     }
      .grid-nav-arrow { width: 30px; height: 30px;} .grid-nav-arrow svg { width: 18px; height: 18px; }
 }
 
@@ -366,29 +476,45 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
         position: static; height: auto; overflow-y: visible; width: 100%; min-width: 100%;
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05); border-right: none;
         border-bottom: var(--border-width) solid var(--color-gray-400); flex-direction: row;
-        justify-content: flex-start; align-items: center;
+        justify-content: flex-start; /* Alinha itens à esquerda */
+        align-items: center;
         padding: 10px 15px;
-        gap: 0; /* Remove gap principal, controla com margens */
+        gap: 15px; /* Espaço entre os grupos */
         flex-wrap: wrap; flex-shrink: 0;
     }
-    aside .pontuacao-wrap { margin-right: 20px; height: 70px; width: 70px; flex-shrink: 0; }
-    #pontuacao { height: 55px; width: 55px; font-size: 1.6rem; }
-    aside .aside-info-wrap + .aside-info-wrap { margin-left: 15px; }
+    /* Ajuste para Círculo em mobile */
+    .aside-title { display: none; } /* Esconde o texto "Pontuação" */
+    .pontuacao-wrap {
+        order: 1; /* Coloca no início */
+        height: 70px; /* Círculo menor */
+        width: 70px;
+        padding: 3px; /* Borda fina */
+        margin: 0; /* Remove margens padrão */
+    }
+    #pontuacao {
+        font-size: 1.6rem; /* Fonte menor */
+    }
+
+    .aside-info-wrap {
+        gap: 8px;
+        order: 2; /* Coloca depois do círculo */
+        margin-left: 0; /* Remove margem */
+    }
+    aside #acertos, aside #erros { font-size: 0.9rem; }
+    aside #acertos span, aside #erros span { font-size: 0.9rem; }
+
+    #btn-encerrar-sessao {
+        position: static; bottom: auto; width: auto; order: 3; /* Coloca no final */
+        flex-basis: auto;
+        align-self: center; flex-shrink: 0; margin-left: auto; margin-top: 0; margin-bottom: 0;
+        font-size: 0.85rem; padding: 10px 18px; min-height: 38px;
+    }
+
 
     #questoes-section .main-content { height: auto; overflow-y: visible; padding: 25px 20px; flex-grow: 1; min-height: 0; }
     .logo-area { font-size: 1.6rem; } h2 { font-size: 1.7rem; margin-bottom: 20px; }
     #inicio-section { padding: 30px 20px; min-height: calc(100vh - 70px - 60px); }
     #inicio-section .inicio-content { padding: 25px; width: 90%; }
-    .aside-title { display: none; }
-
-    #btn-encerrar-sessao {
-        position: static; bottom: auto; width: auto; order: 5; flex-basis: auto;
-        align-self: center; flex-shrink: 0; margin-left: auto; margin-top: 0; margin-bottom: 0;
-        font-size: 0.85rem; padding: 10px 18px; min-height: 38px;
-    }
-    .aside-info-wrap { gap: 8px; }
-    aside #acertos, aside #erros { font-size: 0.9rem; }
-    aside #acertos span, aside #erros span { font-size: 0.9rem; }
 
 
     .filtro-categorias-container { position: static; gap: 10px; margin-bottom: 30px; }
@@ -396,6 +522,22 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     #question-grid-container { gap: 8px; padding: 5px; margin-top: 20px; margin-bottom: 20px; }
     .paginacao { display: none; }
     .grid-item { font-size: 0.8rem; width: 34px; min-height: 34px; }
+     /* Manter destaque ainda mais sutil em telas pequenas */
+     .grid-item.grid-item--current {
+        /* Remover borda interna e sombra externa */
+        box-shadow: none;
+        border-width: var(--border-width-md); /* Mantém borda mais grossa */
+        border-color: var(--color-primary-dark); /* Borda azul escura */
+        background-color: var(--color-primary-light); /* Fundo claro padrão */
+        transform: scale(1.03); /* Escala menor */
+    }
+     .grid-item.grid-item--current.grid-item--correct,
+     .grid-item.grid-item--current.grid-item--incorrect {
+          /* Permite que fundo e borda sejam sobrescritos pelo status, mas mantém texto/negrito */
+          background-color: unset; /* Deixa o .grid-item--correct/incorrect definir */
+          border-color: unset;
+     }
+
     .grid-nav-arrow { width: 32px; height: 32px; } .grid-nav-arrow svg { width: 20px; height: 20px; }
     .filtro-label { font-size: 0.9rem; padding-left: 3px; }
     .filtro-checkboxes#filtro-checkboxes-scroll { gap: 10px; padding: 5px 15px 10px 15px; clip-path: none; }
@@ -427,15 +569,18 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     #inicio-section .inicio-content { padding: 20px; width: 95%; }
     aside {
         padding: 10px 12px;
-        gap: 0; /* Remove gap principal */
-        justify-content: flex-start;
+        gap: 10px; /* Ajuste de gap para mobile */
+        justify-content: flex-start; /* Volta a alinhar no início */
     }
-     aside .pontuacao-wrap { margin-right: 15px; height: 65px; width: 65px; }
-    #pontuacao { height: 50px; width: 50px; font-size: 1.5rem; }
-    aside .aside-info-wrap + .aside-info-wrap { margin-left: 10px; }
-
-    #questoes-section .main-content { padding: 20px 15px; }
-    .logo-area { font-size: 1.4rem; } h2 { font-size: 1.5rem; margin-bottom: 15px;}
+     .pontuacao-wrap {
+        height: 65px; /* Círculo ainda menor */
+        width: 65px;
+        padding: 2px; /* Borda mais fina */
+        margin-right: 10px; /* Espaço à direita */
+    }
+    #pontuacao {
+        font-size: 1.5rem; /* Fonte menor */
+    }
 
     /* Esconder Texto "Acertos" e "Erros" */
     aside #acertos,
@@ -448,11 +593,14 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
         margin-left: 0; display: inline; line-height: 1;
     }
     .aside-info-wrap p { margin: 0; }
-    .aside-info-wrap { gap: 4px; margin: 0; }
     .aside-info-wrap .icon-wrap { margin-right: 4px; height: 26px; width: 26px; padding: 4px;}
     .icon-wrap svg { height: 18px; width: 18px; }
 
-     #btn-encerrar-sessao { padding: 8px 15px; font-size: 0.8rem; margin-left: auto; }
+     #btn-encerrar-sessao { padding: 8px 15px; font-size: 0.8rem; margin-left: auto; /* Mantém no final da linha se houver espaço */ order: 3;}
+
+
+    #questoes-section .main-content { padding: 20px 15px; }
+    .logo-area { font-size: 1.4rem; } h2 { font-size: 1.5rem; margin-bottom: 15px;}
 
 
     .filtro-categorias-container { gap: 8px; margin-bottom: 25px; }
@@ -481,10 +629,9 @@ aside p { font: var(--font-weight-normal) 1rem var(--font-family-sans); color: v
     .modal-actions .button { width: 100%; min-width: unset; }
 
     @media (max-width: 360px) {
-        aside { padding: 8px 10px; gap: 5px; /* Ajuste fino gap */ justify-content: flex-start; }
-        aside .pontuacao-wrap { margin-right: 10px; height: 60px; width: 60px; }
-        #pontuacao { height: 45px; width: 45px; font-size: 1.4rem; }
-        aside .aside-info-wrap + .aside-info-wrap { margin-left: 8px; }
+        aside { padding: 8px 10px; gap: 5px; /* Ajuste fino gap */ }
+         .pontuacao-wrap { height: 60px; width: 60px; padding: 2px; margin-right: 5px;}
+         #pontuacao { font-size: 1.4rem; }
         .aside-info-wrap { gap: 3px; margin: 0; }
         aside #acertos span, aside #erros span { font-size: 0.8rem; }
         .aside-info-wrap .icon-wrap { margin-right: 3px; height: 24px; width: 24px;}

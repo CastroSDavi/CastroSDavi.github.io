@@ -563,12 +563,35 @@ function limparAreaPergunta() {
 }
 
 function preencherDetalhesQuestao(pergunta, indice) {
-    let tituloCat = "Questão";
-    if (pergunta.categorias && pergunta.categorias.length > 0) {
-        tituloCat = pergunta.categorias[0];
-    } else if (categoriasSelecionadas.length === 1) {
-        tituloCat = categoriasSelecionadas[0];
+    let tituloCat = "Questão"; // Título padrão
+    const categoriasDaQuestao = pergunta.categorias || []; // Pega as categorias da pergunta
+    const checkboxTodas = document.getElementById('cat-todas'); // Obtém o checkbox 'Todas' pelo ID
+
+    // VERIFICAÇÃO PRINCIPAL: O checkbox 'Todas' está marcado?
+    if (checkboxTodas && checkboxTodas.checked && categoriasDaQuestao.length > 0) {
+        // SIM: Se 'Todas' está marcado e a questão tem categorias, junta todas elas
+        tituloCat = categoriasDaQuestao.join(' / '); // Ex: "Metabolismo / Funções"
+
+    } else {
+        // NÃO: Se 'Todas' NÃO está marcado, aplica a lógica anterior (priorizar filtro ativo)
+
+        // Encontra a PRIMEIRA categoria que está tanto na lista da pergunta
+        // quanto na lista das categorias selecionadas no filtro (exceto 'Todas')
+        const categoriaFiltradaAtiva = categoriasSelecionadas.find(catFiltro => categoriasDaQuestao.includes(catFiltro));
+
+        if (categoriaFiltradaAtiva) {
+            // Se encontrou uma categoria que foi filtrada E pertence à questão, usa ela
+            tituloCat = categoriaFiltradaAtiva;
+        } else if (categoriasDaQuestao.length > 0) {
+            // Fallback: Se não houve correspondência com o filtro ativo,
+            // mas a questão tem categorias, mostra a primeira da lista da questão
+            tituloCat = categoriasDaQuestao[0];
+        }
+        // Se a questão não tiver categorias ('categoriasDaQuestao' está vazio),
+        // 'tituloCat' permanecerá como "Questão".
     }
+
+    // Restante da função permanece igual: atualiza os elementos na tela
     if (elCategoriaTitulo) elCategoriaTitulo.innerText = tituloCat;
     if (elIdQuestao) elIdQuestao.innerText = indice + 1;
     if (elPerguntaTexto) elPerguntaTexto.textContent = pergunta.pergunta;

@@ -1,12 +1,13 @@
 /**
- * script.js - Refatorado para Modularidade e Aprimorado
+ * script.js - Refatorado para Modularidade e Aprimorado (vSOLID + Scroll + Fade)
  *
- * Melhorias aplicadas baseadas nas sugestões:
- * - Acessibilidade: Foco gerenciado (com preventScroll), feedback aria-live, roles.
- * - Estado: Método fullReset, validação de resposta.
+ * Melhorias aplicadas:
+ * - Acessibilidade: Foco, feedback aria-live, roles.
+ * - Estado: fullReset, validação.
  * - Performance: Lazy loading, requestAnimationFrame.
- * - Manutenção: Classes CSS para visibilidade, nomes de métodos.
- * - Scroll: Suave ('nearest'), condicional (não rola ao selecionar categoria).
+ * - Manutenção: Classes CSS visibilidade, nomes métodos, SRP.
+ * - Scroll: Suave ('nearest'), condicional, margem CSS.
+ * - UX: Transição Fade-in/out para suavizar mudança de altura da questão.
  */
 
 // --- Módulo: UserData ---
@@ -87,6 +88,9 @@ class QuizState {
         this.filteredQuestions = [];
         this.currentQuestionIndex = 0;
         this.selectedCategories = [];
+        // Flag para indicar se é a primeira vez que uma questão está sendo carregada
+        // Útil para pular a animação de fade-out inicial.
+        this.isInitialQuestionLoad = true;
     }
 
     initialize(allQuestions) {
@@ -97,6 +101,7 @@ class QuizState {
     resetQuizState() {
         this.filteredQuestions = [];
         this.currentQuestionIndex = 0;
+        this.isInitialQuestionLoad = true; // Reseta a flag
         this.allQuestions.forEach(q => delete q.respostaDada);
     }
 
@@ -107,7 +112,7 @@ class QuizState {
     }
 
     filterQuestions() {
-        this.resetQuizState();
+        this.resetQuizState(); // Garante que isInitialQuestionLoad seja true após filtrar
         if (this.selectedCategories.length > 0) {
             this.filteredQuestions = this.allQuestions.filter(p =>
                 p.categorias?.some(cat => this.selectedCategories.includes(cat))
@@ -158,9 +163,15 @@ class QuizState {
         return false;
     }
 
+    // Chamado ao avançar/voltar/ir para, marca que não é mais o load inicial
+    markNavigated() {
+        this.isInitialQuestionLoad = false;
+    }
+
     goToQuestion(index) {
         if (index >= 0 && index < this.filteredQuestions.length) {
             this.currentQuestionIndex = index;
+            this.markNavigated(); // Marca que houve navegação
             return true;
         }
         return false;
@@ -169,6 +180,7 @@ class QuizState {
     goToNextQuestion() {
         if (this.currentQuestionIndex < this.filteredQuestions.length) {
             this.currentQuestionIndex++;
+            this.markNavigated(); // Marca que houve navegação
             return true;
         }
         return false;
@@ -177,6 +189,7 @@ class QuizState {
     goToPreviousQuestion() {
         if (this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
+            this.markNavigated(); // Marca que houve navegação
             return true;
         }
         return false;
@@ -190,6 +203,7 @@ class QuizUI {
         this.cacheDOMelements();
         this.currentSection = 'inicio-section';
         this.QUESTOES_POR_PAGINA_GRID = 5;
+        this.TRANSITION_DURATION = 200; // ms - Deve corresponder à duração no CSS
     }
 
     cacheDOMelements() {
@@ -216,6 +230,7 @@ class QuizUI {
 
             // Quiz
             quizSectionContent: document.getElementById('quiz-section'),
+            questionWrap: document.querySelector('#quiz-section .question-wrap'), // *** Cache do container da pergunta ***
             progressContainer: document.getElementById('progress-container'),
             progressBarFill: document.getElementById('progress-bar-fill'),
             progressText: document.getElementById('progress-text'),
@@ -254,46 +269,39 @@ class QuizUI {
             cancelEncerrarBtn: document.getElementById('cancel-encerrar-btn')
         };
         for (const key in this.elements) {
-            if (!this.elements[key]) console.warn(`QuizUI Cache DOM: Elemento ${key} não encontrado!`);
+            if (!this.elements[key] && key !== 'filtroLabel' && key !== 'feedbackAcessivel') { // Permite que alguns não existam
+                 console.warn(`QuizUI Cache DOM: Elemento ${key} não encontrado!`);
+            }
         }
     }
 
-    // --- Gerenciamento de Visibilidade (usando classe .is-hidden) ---
-    showElement(element) {
-        element?.classList.remove('is-hidden');
+    // --- Gerenciamento de Visibilidade ---
+    showElement(element) { element?.classList.remove('is-hidden'); }
+    hideElement(element) { element?.classList.add('is-hidden'); }
+
+    // --- Gerenciamento de Seções ---
+    showSection(sectionId) {
+        document.querySelectorAll('.main-section').forEach(s => this.hideElement(s));
+        const sectionToShow = this.elements[`${sectionId.replace('-', '')}Section`] || document.getElementById(sectionId);
+        if (sectionToShow) {
+            this.showElement(sectionToShow);
+            this.currentSection = sectionId;
+            this._updateActiveNavLinks(sectionId);
+            if (sectionId === 'questoes-section') {
+                this.showElement(this.elements.filtroContainer);
+                this.hideElement(this.elements.quizSectionContent);
+                this.hideElement(this.elements.resultadoCard);
+                this.clearWarning();
+                this.hideElement(this.elements.btnEncerrarSessao);
+                this.updateFilterScrollArrows();
+            } else {
+                this.hideQuizElements();
+            }
+        } else {
+            console.error(`QuizUI: Seção com ID '${sectionId}' não encontrada.`);
+        }
+        this.clearWarning();
     }
-
-    hideElement(element) {
-        element?.classList.add('is-hidden');
-    }
-
-     // --- Gerenciamento de Seções ---
-     showSection(sectionId) {
-         document.querySelectorAll('.main-section').forEach(s => this.hideElement(s));
-         const sectionToShow = this.elements[`${sectionId.replace('-', '')}Section`] || document.getElementById(sectionId);
-
-         if (sectionToShow) {
-             this.showElement(sectionToShow);
-             this.currentSection = sectionId;
-             this._updateActiveNavLinks(sectionId);
-
-             if (sectionId === 'questoes-section') {
-                 this.showElement(this.elements.filtroContainer);
-                 this.hideElement(this.elements.quizSectionContent);
-                 this.hideElement(this.elements.resultadoCard);
-                 this.clearWarning();
-                 this.hideElement(this.elements.btnEncerrarSessao);
-                 this.updateFilterScrollArrows();
-             } else {
-                 this.hideQuizElements();
-             }
-
-         } else {
-             console.error(`QuizUI: Seção com ID '${sectionId}' não encontrada.`);
-         }
-         this.clearWarning();
-     }
-
 
     _updateActiveNavLinks(activeSectionId) {
         [...this.elements.navLinksTop, ...this.elements.navLinksBottom].forEach(link => {
@@ -306,10 +314,12 @@ class QuizUI {
 
     // --- Aviso ---
     showWarning(message) {
-        if (this.elements.avisoContainer && this.elements.avisoMensagem) {
-            this.elements.avisoMensagem.textContent = message;
-            this.elements.avisoMensagem.setAttribute('role', 'alert');
-            this.showElement(this.elements.avisoContainer);
+        const container = this.elements.avisoContainer;
+        const msgElement = this.elements.avisoMensagem;
+        if (container && msgElement) {
+            msgElement.textContent = message;
+            msgElement.setAttribute('role', 'alert');
+            this.showElement(container);
             if (this.currentSection === 'questoes-section') {
                  this.hideElement(this.elements.quizSectionContent);
                  this.hideElement(this.elements.questionGridContainer);
@@ -321,11 +331,12 @@ class QuizUI {
 
     clearWarning() {
         this.hideElement(this.elements.avisoContainer);
-         this.elements.avisoMensagem?.removeAttribute('role');
+        this.elements.avisoMensagem?.removeAttribute('role');
     }
 
      // --- Conteúdo do Quiz ---
     displayQuizContent(show = true) {
+         // Controla a visibilidade dos containers gerais do quiz
          if (show) {
              this.showElement(this.elements.quizSectionContent);
              this.showElement(this.elements.btnEncerrarSessao);
@@ -352,22 +363,24 @@ class QuizUI {
         this.hideProgressBar();
     }
 
+    // *** ATUALIZADO: Este método agora APENAS atualiza os dados visuais ***
+    // A lógica de fade foi movida para QuizLogic._displayCurrentQuestion
     displayQuestion(question, questionNumber, totalQuestions, selectedCategories) {
-        if (!question || !this.elements.quizSectionContent) return;
+        if (!question) return;
 
+        // Atualiza os textos e imagem
         let tituloCat = this.determineCategoryTitle(question, selectedCategories);
         this.elements.categoriaTitulo && (this.elements.categoriaTitulo.innerText = tituloCat);
         this.elements.idQuestao && (this.elements.idQuestao.innerText = questionNumber);
         this.elements.perguntaTexto && (this.elements.perguntaTexto.textContent = question.pergunta);
         this.elements.referenciaQuestao && (this.elements.referenciaQuestao.textContent = `Referência: ${question.referencia || 'N/A'}`);
-
         this.displayQuestionImage(question.imagem, questionNumber);
+
+        // Atualiza a barra de progresso
         this.updateProgressBar(questionNumber, totalQuestions);
 
-         // *** ALTERAÇÃO AQUI: Adicionado { preventScroll: true } ao foco ***
-         // Foco no título da pergunta para acessibilidade, prevenindo scroll automático do foco
-         this.elements.questionTitle?.focus({ preventScroll: true });
-         // *** FIM DA ALTERAÇÃO ***
+        // Foca o título (sem scroll automático)
+        this.elements.questionTitle?.focus({ preventScroll: true });
     }
 
 
@@ -375,7 +388,6 @@ class QuizUI {
         let tituloCat = "Questão";
         const categoriasDaQuestao = question.categorias || [];
         const checkboxTodas = this.elements.filtroCheckboxesScroll?.querySelector('input[value="Todas"]');
-
         if (checkboxTodas?.checked && categoriasDaQuestao.length > 0) {
             tituloCat = categoriasDaQuestao.join(' / ');
         } else if (selectedCategories?.length > 0) {
@@ -409,23 +421,20 @@ class QuizUI {
 
     generateAnswerButtons(question, answerClickHandler) {
         const container = this.elements.respostasContainer;
+        // ... (lógica para gerar botões como antes) ...
         if (!container) return;
         container.innerHTML = '';
-
         if (!question.respostas?.length) {
             container.innerHTML = '<p style="color: var(--color-accent-red);">Erro: Opções de resposta não encontradas.</p>';
             return;
         }
-
         const jaRespondida = question.hasOwnProperty('respostaDada');
-
         question.respostas.forEach((respostaTexto) => {
             const p = document.createElement('p');
             p.className = 'answer';
             p.textContent = respostaTexto;
             p.setAttribute('role', 'button');
             p.tabIndex = jaRespondida ? -1 : 0;
-
             if (jaRespondida) {
                 this.markAnswerAsAlreadyDone(p, question, respostaTexto);
             } else if (answerClickHandler) {
@@ -440,6 +449,7 @@ class QuizUI {
     }
 
     markAnswerAsAlreadyDone(answerElement, question, answerText) {
+        // ... (lógica como antes) ...
         answerElement.onclick = null;
         answerElement.onkeydown = null;
         answerElement.classList.add('answered');
@@ -452,6 +462,7 @@ class QuizUI {
     }
 
     disableAnswers() {
+        // ... (lógica como antes) ...
         this.elements.respostasContainer?.querySelectorAll('.answer').forEach(answer => {
             answer.onclick = null;
             answer.onkeydown = null;
@@ -462,6 +473,7 @@ class QuizUI {
     }
 
     applyAnswerFeedback(selectedAnswerText, correctAnswerText, isCorrect) {
+        // ... (lógica como antes, incluindo atualização do feedbackAcessivel) ...
         this.elements.respostasContainer?.querySelectorAll('.answer').forEach(answerEl => {
             const currentAnswerText = answerEl.textContent;
             if (currentAnswerText === selectedAnswerText) {
@@ -471,7 +483,6 @@ class QuizUI {
                 answerEl.classList.add('correct');
             }
         });
-
         if (this.elements.feedbackAcessivel) {
             this.elements.feedbackAcessivel.textContent = isCorrect ? "Resposta correta!" : "Resposta incorreta.";
         }
@@ -479,10 +490,10 @@ class QuizUI {
 
     // --- Barra de Progresso ---
     updateProgressBar(current, total) {
+        // ... (lógica como antes) ...
         const container = this.elements.progressContainer;
         const bar = this.elements.progressBarFill;
         const text = this.elements.progressText;
-
         if (container && bar && text && total > 0) {
             const displayCurrent = Math.min(current, total);
             const percentage = total > 0 ? (displayCurrent / total) * 100 : 0;
@@ -496,6 +507,7 @@ class QuizUI {
     }
 
     hideProgressBar() {
+        // ... (lógica como antes) ...
         this.hideElement(this.elements.progressContainer);
         this.hideElement(this.elements.progressText);
         if(this.elements.progressBarFill) this.elements.progressBarFill.style.width = '0%';
@@ -504,33 +516,29 @@ class QuizUI {
 
     // --- Botões de Navegação ---
     updateNavigationButtons(isFirst, isLast, totalQuestions) {
-        const navContainer = this.elements.navigationButtons;
-        const prevBtn = this.elements.prevBtn;
-        const nextBtn = this.elements.nextBtn;
-
-        if (!navContainer || !prevBtn || !nextBtn) return;
-        if (totalQuestions <= 0) { this.hideElement(navContainer); return; }
-
-        this.showElement(navContainer);
-        prevBtn.disabled = isFirst;
-        nextBtn.disabled = false;
-        nextBtn.textContent = isLast ? 'Ver Resultado' : 'Próxima';
+        // ... (lógica como antes) ...
+         const navContainer = this.elements.navigationButtons;
+         const prevBtn = this.elements.prevBtn;
+         const nextBtn = this.elements.nextBtn;
+         if (!navContainer || !prevBtn || !nextBtn) return;
+         if (totalQuestions <= 0) { this.hideElement(navContainer); return; }
+         this.showElement(navContainer);
+         prevBtn.disabled = isFirst;
+         nextBtn.disabled = false;
+         nextBtn.textContent = isLast ? 'Ver Resultado' : 'Próxima';
     }
 
     // --- Grid de Navegação ---
     renderQuestionGrid(questions, currentIndex, questionClickHandler) {
+        // ... (lógica como antes) ...
         const container = this.elements.questionGridContainer;
         if (!container || !questions?.length) { this.hideElement(container); return; }
-
         this.showElement(container);
         container.innerHTML = '';
-
         const currentPage = Math.floor(currentIndex / this.QUESTOES_POR_PAGINA_GRID);
         const startIndex = currentPage * this.QUESTOES_POR_PAGINA_GRID;
         const endIndex = Math.min(startIndex + this.QUESTOES_POR_PAGINA_GRID, questions.length);
-
         container.appendChild(this._createGridArrow('prev', currentIndex === 0, () => questionClickHandler(currentIndex - 1), 'Questão Anterior'));
-
         for (let i = startIndex; i < endIndex; i++) {
             const question = questions[i];
             const gridItem = document.createElement('button');
@@ -539,7 +547,6 @@ class QuizUI {
             gridItem.dataset.index = i;
             gridItem.setAttribute('aria-label', `Ir para questão ${i + 1}`);
             gridItem.onclick = () => questionClickHandler(i);
-
             if (question.hasOwnProperty('respostaDada')) {
                 const correct = question.respostaDada === question.correta;
                 gridItem.classList.add(correct ? 'grid-item--correct' : 'grid-item--incorrect');
@@ -549,17 +556,16 @@ class QuizUI {
             }
             container.appendChild(gridItem);
         }
-
         container.appendChild(this._createGridArrow('next', currentIndex >= questions.length - 1, () => questionClickHandler(currentIndex + 1), 'Próxima Questão'));
     }
 
     _createGridArrow(direction, disabled, clickHandler, ariaLabel) {
+        // ... (lógica como antes) ...
         const arrowBtn = document.createElement('button');
         arrowBtn.className = 'grid-nav-arrow';
         arrowBtn.setAttribute('aria-label', ariaLabel);
         arrowBtn.disabled = disabled;
         arrowBtn.onclick = clickHandler;
-
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(svgNS, "svg");
         svg.setAttribute("height", "24px"); svg.setAttribute("viewBox", "0 -960 960 960");
@@ -571,17 +577,16 @@ class QuizUI {
         path.setAttribute("d", pathD);
         svg.appendChild(path);
         arrowBtn.appendChild(svg);
-
         return arrowBtn;
     }
 
     // --- Filtros ---
     generateCategoryFilters(categories, changeHandler) {
+        // ... (lógica como antes) ...
         const container = this.elements.filtroCheckboxesScroll;
         if (!container) return;
         container.innerHTML = '';
         const labelId = this.elements.filtroLabel?.id;
-
         const createCheckboxItem = (id, value, text, checked = false) => {
             const div = document.createElement('div');
             div.className = 'checkbox-item';
@@ -590,13 +595,11 @@ class QuizUI {
             input.value = value; input.checked = checked;
             if(labelId) input.setAttribute('aria-describedby', labelId);
             input.addEventListener('change', (e) => changeHandler(e.target));
-
             const label = document.createElement('label');
             label.htmlFor = id; label.textContent = text;
             div.append(input, label);
             return div;
         };
-
         container.appendChild(createCheckboxItem('cat-todas', 'Todas', 'Todas', false));
         categories.forEach(category => {
             const id = `cat-${category.toLowerCase().replace(/\s+/g, '-')}`;
@@ -606,6 +609,7 @@ class QuizUI {
     }
 
     getSelectedCategories() {
+        // ... (lógica como antes) ...
         const selected = [];
         this.elements.filtroCheckboxesScroll?.querySelectorAll('input[type="checkbox"]:checked:not([value="Todas"])')
             .forEach(cb => selected.push(cb.value));
@@ -613,6 +617,7 @@ class QuizUI {
     }
 
     syncSelectAllCheckbox() {
+        // ... (lógica como antes) ...
         const container = this.elements.filtroCheckboxesScroll;
         const cbTodas = container?.querySelector('input[value="Todas"]');
         const otherCheckboxes = container?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
@@ -621,15 +626,16 @@ class QuizUI {
     }
 
     toggleAllCategories(isChecked) {
+        // ... (lógica como antes) ...
         this.elements.filtroCheckboxesScroll?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])')
             .forEach(cb => cb.checked = isChecked);
     }
 
     updateFilterScrollArrows() {
+        // ... (lógica como antes com requestAnimationFrame) ...
          const scrollContainer = this.elements.filtroCheckboxesScroll;
          const leftArrow = this.elements.catScrollLeft;
          const rightArrow = this.elements.catScrollRight;
-
          if (window.innerWidth <= 768) {
              this.hideElement(leftArrow); this.hideElement(rightArrow);
              if(leftArrow) leftArrow.disabled = true; if(rightArrow) rightArrow.disabled = true;
@@ -640,14 +646,11 @@ class QuizUI {
              if(leftArrow) leftArrow.disabled = true; if(rightArrow) rightArrow.disabled = true;
              return;
          }
-
          requestAnimationFrame(() => {
               if (!this.elements.filtroCheckboxesScroll || !this.elements.catScrollLeft || !this.elements.catScrollRight) return;
-
               const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
               const epsilon = 2;
               const canScroll = scrollWidth > clientWidth + epsilon;
-
               if (!canScroll) {
                   this.hideElement(leftArrow); this.hideElement(rightArrow);
                   leftArrow.disabled = true; rightArrow.disabled = true;
@@ -660,6 +663,7 @@ class QuizUI {
      }
 
     scrollCategories(direction) {
+        // ... (lógica como antes) ...
         const scrollContainer = this.elements.filtroCheckboxesScroll;
         if (!scrollContainer) return;
         const scrollAmount = scrollContainer.clientWidth * 0.8;
@@ -669,33 +673,32 @@ class QuizUI {
 
     // --- Pontuação ---
     updateScoreDisplay(points, correct, incorrect) {
-        if (this.elements.pontuacaoDisplay) this.elements.pontuacaoDisplay.textContent = points;
-        if (this.elements.acertosNumDisplay) this.elements.acertosNumDisplay.textContent = correct;
-        if (this.elements.errosNumDisplay) this.elements.errosNumDisplay.textContent = incorrect;
+        // ... (lógica como antes) ...
+         if (this.elements.pontuacaoDisplay) this.elements.pontuacaoDisplay.textContent = points;
+         if (this.elements.acertosNumDisplay) this.elements.acertosNumDisplay.textContent = correct;
+         if (this.elements.errosNumDisplay) this.elements.errosNumDisplay.textContent = incorrect;
     }
 
     // --- Resultado Final ---
     showResults(userData, filteredQuestions, selectedCategories) {
+        // ... (lógica como antes) ...
         const card = this.elements.resultadoCard;
         if (!card || !userData) return;
-
         this.hideQuizElements();
         this.hideElement(this.elements.filtroContainer);
-
         if(this.elements.resultadoTitulo) this.elements.resultadoTitulo.textContent = this._generateResultTitle(filteredQuestions, selectedCategories);
         if(this.elements.resultadoPontos) this.elements.resultadoPontos.textContent = userData.pontos;
         if(this.elements.resultadoAcertos) this.elements.resultadoAcertos.textContent = userData.acertos;
         if(this.elements.resultadoErros) this.elements.resultadoErros.textContent = userData.erros;
-
         this.showElement(card);
         this.elements.resultadoTitulo?.focus();
     }
 
     _generateResultTitle(filteredQuestions, selectedCategories) {
+        // ... (lógica como antes) ...
          const totalFiltered = filteredQuestions?.length ?? 0;
          const allCategoriesAvailable = this.elements.filtroCheckboxesScroll?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])').length ?? 0;
          const checkboxTodas = this.elements.filtroCheckboxesScroll?.querySelector('input[value="Todas"]');
-
          if (totalFiltered === 0 && selectedCategories.length > 0) return "Nenhuma questão encontrada";
          if (totalFiltered === 0) return "Nenhuma questão respondida";
          if (selectedCategories.length === 1) return `Quiz de "${selectedCategories[0]}" Concluído!`;
@@ -706,12 +709,14 @@ class QuizUI {
      }
 
     hideResults() {
+        // ... (lógica como antes) ...
         this.hideElement(this.elements.resultadoCard);
         this.showElement(this.elements.filtroContainer);
     }
 
     // --- Modal ---
     toggleConfirmModal(show) {
+        // ... (lógica como antes) ...
         const overlay = this.elements.confirmEncerrarOverlay;
         if (!overlay) return;
         if (show) {
@@ -730,22 +735,37 @@ class QuizUI {
         }
     }
 
-    // --- Scroll Suave para Início da Questão --- << MÉTODO ALTERADO/RENOMEADO >>
+    // --- Scroll Suave para Início da Questão ---
     scrollToQuestionStart() {
+        // ... (lógica como antes) ...
         const titleElement = this.elements.questionTitle;
-        // Verifica se estamos na seção de questões e se o elemento do título existe
         if (this.currentSection === 'questoes-section' && titleElement) {
             try {
-                 // *** Mantém 'nearest' e 'smooth' ***
                  titleElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } catch (e) {
                  console.warn("scrollIntoView falhou:", e);
-                 // Fallback removido pois o foco já é tratado em displayQuestion sem scroll
             }
         } else {
-             // Removemos o fallback de rolar para o topo da janela
              console.warn("scrollToQuestionStart: Título da questão não encontrado ou seção incorreta.");
         }
+    }
+
+    // --- Foco e Scroll Botão Próxima ---
+    focusNextButton(preventScroll = false) {
+        // ... (lógica como antes) ...
+        this.elements.nextBtn?.focus({ preventScroll });
+    }
+
+    smoothScrollToNextButton() {
+        // ... (lógica como antes, rolando o container) ...
+         const navContainer = this.elements.navigationButtons;
+         if (navContainer) {
+              try {
+                   navContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              } catch (e) {
+                   console.warn("scrollIntoView (para container de botões) falhou:", e);
+              }
+         }
     }
 }
 
@@ -759,18 +779,16 @@ class QuizLogic {
     }
 
     startQuiz() {
+        // ... (lógica como antes, chama _displayCurrentQuestion(false)) ...
         this.user.reset();
         this.state.filterQuestions();
         this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
         this.ui.hideResults();
-
         const questions = this.state.filteredQuestions;
         const categories = this.state.selectedCategories;
-
         if (questions.length > 0) {
              this.ui.displayQuizContent(true);
-             // *** ALTERADO AQUI: Passa 'false' para não rolar ***
-             this._displayCurrentQuestion(false);
+             this._displayCurrentQuestion(false); // Não rola ao iniciar/filtrar
         } else {
              this.ui.displayQuizContent(false);
               const hasFilters = this.ui.elements.filtroCheckboxesScroll?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])').length > 0;
@@ -782,18 +800,19 @@ class QuizLogic {
     }
 
     handleCategoryChange() {
+        // ... (lógica como antes) ...
         const selectedCats = this.ui.getSelectedCategories();
         this.state.setSelectedCategories(selectedCats);
         this.startQuiz();
     }
 
     answerQuestion(selectedAnswer) {
+        // ... (lógica como antes, chama focusNextButton(true) e smoothScrollToNextButton()) ...
         const question = this.state.getCurrentQuestion();
         if (this.state.recordAnswer(selectedAnswer)) {
             const isCorrect = selectedAnswer === question.correta;
             if (isCorrect) this.user.incrementarAcertos();
             else this.user.incrementarErros();
-
             this.ui.disableAnswers();
             this.ui.applyAnswerFeedback(selectedAnswer, question.correta, isCorrect);
             this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
@@ -802,16 +821,20 @@ class QuizLogic {
                  this.state.currentQuestionIndex,
                  (index) => this.goToQuestion(index)
             );
+            this.ui.focusNextButton(true);
+            this.ui.smoothScrollToNextButton();
         }
     }
 
+
     nextQuestion() {
+        // ... (lógica como antes, chama _displayCurrentQuestion()) ...
          const isCurrentlyLast = this.state.isLastQuestion();
          if (this.state.goToNextQuestion()) {
               if (this.state.isQuizComplete()) {
                    this.endQuiz();
               } else {
-                   this._displayCurrentQuestion(); // Chama sem argumento (shouldScroll = true por padrão)
+                   this._displayCurrentQuestion(); // Rola por padrão
               }
          } else if (isCurrentlyLast) {
               this.endQuiz();
@@ -819,63 +842,119 @@ class QuizLogic {
     }
 
     previousQuestion() {
+        // ... (lógica como antes, chama _displayCurrentQuestion()) ...
         if (this.state.goToPreviousQuestion()) {
-            this._displayCurrentQuestion(); // Chama sem argumento (shouldScroll = true por padrão)
+            this._displayCurrentQuestion(); // Rola por padrão
         }
     }
 
     goToQuestion(index) {
+        // ... (lógica como antes, chama _displayCurrentQuestion()) ...
         if (index >= this.state.getTotalFilteredQuestions()) {
              this.endQuiz();
         } else if (this.state.goToQuestion(index)) {
-           this._displayCurrentQuestion(); // Chama sem argumento (shouldScroll = true por padrão)
+           this._displayCurrentQuestion(); // Rola por padrão
        }
     }
 
-    // Adicionado parâmetro 'shouldScroll' com valor padrão true
-    _displayCurrentQuestion(shouldScroll = true) {
-         const question = this.state.getCurrentQuestion();
-         if (question) {
-             this.ui.displayQuestion(
-                 question,
-                 this.state.getCurrentQuestionNumberForDisplay(),
-                 this.state.getTotalFilteredQuestions(),
-                 this.state.selectedCategories
-             );
-              this.ui.updateNavigationButtons(
-                   this.state.isFirstQuestion(),
-                   this.state.isLastQuestion(),
-                   this.state.getTotalFilteredQuestions()
-              );
-              this.ui.renderQuestionGrid(
-                   this.state.filteredQuestions,
-                   this.state.currentQuestionIndex,
-                   (index) => this.goToQuestion(index)
-              );
-              this.ui.generateAnswerButtons(question, (answer) => this.answerQuestion(answer));
+    // *** MÉTODO ATUALIZADO COM LÓGICA DE FADE ***
+    async _displayCurrentQuestion(shouldScroll = true) {
+        const questionWrap = this.ui.elements.questionWrap;
+        const isInitial = this.state.isInitialQuestionLoad; // Verifica se é o load inicial
 
-              // *** ALTERADO AQUI: Verifica se deve rolar ***
-              if (shouldScroll) {
-                   this.ui.scrollToQuestionStart();
-              }
-              // *** FIM DA ALTERAÇÃO ***
-         } else {
-              console.warn("_displayCurrentQuestion: Tentativa de exibir questão inválida.");
-              this.endQuiz();
-         }
+        const updateContent = () => {
+            const question = this.state.getCurrentQuestion();
+            if (question) {
+                // Atualiza conteúdo enquanto invisível/transparente
+                this.ui.displayQuestion(
+                    question,
+                    this.state.getCurrentQuestionNumberForDisplay(),
+                    this.state.getTotalFilteredQuestions(),
+                    this.state.selectedCategories
+                );
+                this.ui.updateNavigationButtons(
+                    this.state.isFirstQuestion(),
+                    this.state.isLastQuestion(),
+                    this.state.getTotalFilteredQuestions()
+                );
+                this.ui.renderQuestionGrid(
+                    this.state.filteredQuestions,
+                    this.state.currentQuestionIndex,
+                    (index) => this.goToQuestion(index)
+                );
+                this.ui.generateAnswerButtons(question, (answer) => this.answerQuestion(answer));
+
+                // Só faz o scroll para o título se explicitamente pedido
+                if (shouldScroll) {
+                     this.ui.scrollToQuestionStart();
+                }
+            } else {
+                console.warn("_displayCurrentQuestion: Tentativa de exibir questão inválida.");
+                this.endQuiz(); // Encerra se não encontrar questão
+            }
+        };
+
+        // Lógica de Fade
+        if (!isInitial && questionWrap) {
+            // Aplica fade-out
+            questionWrap.classList.add('is-fading-out');
+
+            // Espera a transição terminar (com fallback de timeout)
+            await new Promise(resolve => {
+                let resolved = false;
+                const handler = () => {
+                    if (!resolved) {
+                        questionWrap.removeEventListener('transitionend', handler);
+                        resolved = true;
+                        resolve();
+                    }
+                };
+                questionWrap.addEventListener('transitionend', handler);
+                setTimeout(() => {
+                     if (!resolved) { // Se transitionend não disparou
+                         console.warn("TransitionEnd fallback timeout triggered.");
+                         questionWrap.removeEventListener('transitionend', handler);
+                         resolved = true;
+                         resolve();
+                     }
+                }, this.ui.TRANSITION_DURATION + 50); // Duração da transição + margem
+            });
+
+            // Mantém invisível, troca conteúdo e inicia fade-in
+            questionWrap.classList.remove('is-fading-out');
+            questionWrap.classList.add('is-transparent');
+
+            // Garante que a atualização do DOM ocorra *depois* de definir transparente
+            requestAnimationFrame(() => {
+                 updateContent();
+                 // Garante que a remoção da transparência (fade-in) ocorra *depois* da atualização
+                 requestAnimationFrame(() => {
+                      questionWrap.classList.remove('is-transparent');
+                 });
+            });
+        } else {
+            // Primeiro carregamento ou elemento não encontrado, atualiza direto
+            updateContent();
+            // Garante que esteja visível se era o primeiro load
+            questionWrap?.classList.remove('is-fading-out', 'is-transparent');
+            // Marca que o load inicial já ocorreu para as próximas transições
+            if(this.state.getTotalFilteredQuestions() > 0) {
+                 this.state.isInitialQuestionLoad = false;
+            }
+        }
     }
 
 
     endQuiz() {
          console.log("Quiz encerrado.");
          this.ui.showResults(this.user, this.state.filteredQuestions, this.state.selectedCategories);
-         // Removida chamada de scroll explícita aqui
+         // Foco já vai para o título do resultado via showResults
     }
 
     restartQuiz() {
          console.log("Reiniciando quiz com as mesmas categorias.");
-         this.state.resetQuizState();
-         this.startQuiz(); // startQuiz chama _displayCurrentQuestion(false), não precisa rolar aqui
+         this.state.resetQuizState(); // Reseta estado, incluindo isInitialQuestionLoad
+         this.startQuiz(); // startQuiz chama _displayCurrentQuestion(false)
     }
 
     forceEndQuiz() {
@@ -929,9 +1008,8 @@ class App {
                 if (targetSection && targetSection !== this.quizUI.currentSection) {
                      const previousSection = this.quizUI.currentSection;
                      this.quizUI.showSection(targetSection);
-                     // Ao sair da seção de questões, não fazemos reset completo por enquanto
                      // if (previousSection === 'questoes-section' && targetSection !== 'questoes-section') {
-                     //      this.state.fullReset();
+                     //      this.state.fullReset(); // Opcional: Resetar tudo ao sair
                      // }
                      if (targetSection === 'questoes-section') {
                          this.quizLogic.handleCategoryChange();

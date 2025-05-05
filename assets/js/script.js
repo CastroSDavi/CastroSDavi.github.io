@@ -203,7 +203,7 @@ class QuizUI {
         this.cacheDOMelements();
         this.currentSection = 'inicio-section';
         this.QUESTOES_POR_PAGINA_GRID = 5;
-        this.TRANSITION_DURATION = 200; // ms - Deve corresponder à duração no CSS
+        this.TRANSITION_DURATION = 400; // ms - Deve corresponder à duração no CSS
     }
 
     cacheDOMelements() {
@@ -666,7 +666,7 @@ class QuizUI {
         // ... (lógica como antes) ...
         const scrollContainer = this.elements.filtroCheckboxesScroll;
         if (!scrollContainer) return;
-        const scrollAmount = scrollContainer.clientWidth * 0.8;
+        const scrollAmount = scrollContainer.clientWidth * 0.6;
         scrollContainer.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
         this.updateFilterScrollArrows();
     }

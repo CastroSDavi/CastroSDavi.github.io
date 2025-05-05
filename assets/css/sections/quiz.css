@@ -78,7 +78,7 @@
     margin-bottom: 30px;
     flex-shrink: 0;
     padding: 25px;
-    transition: opacity 0.2s ease-in-out
+    transition: opacity 0.4s ease-in-out
 }
 
 .question-wrap.is-fading-out {

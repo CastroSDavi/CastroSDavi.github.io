@@ -1,9 +1,287 @@
-#inicio-section .inicio-content { 
-    max-width: 800px; width: 90%; 
+/* assets/css/sections/inicio.css */
+
+#inicio-section {
+    padding: 0;
+    background-color: var(--color-gray-100);
+    min-height: calc(100vh - 80px - 50px); /* Considerando header e nav desktop */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-x: hidden; /* Prevenir scroll horizontal acidental */
 }
-#inicio-section .inicio-content h2 { 
-    margin-top: 0; text-align: center; 
+
+.hero-interactive-block {
+    width: 100%;
+    padding: clamp(40px, 8vh, 60px) 20px clamp(30px, 6vh, 50px) 20px; /* Padding responsivo */
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-medium) 60%, var(--color-secondary-green) 100%);
+    color: var(--color-white);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(25px, 5vh, 35px); /* Gap responsivo */
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    margin-bottom: clamp(30px, 6vh, 40px);
 }
-#inicio-section .inicio-content p { 
-    margin-bottom: 15px; line-height: 1.7; color: var(--color-gray-800); text-align: justify; 
+
+.welcome-message {
+    max-width: 700px;
+    margin-bottom: 0; /* Gap do pai já cuida disso */
+}
+
+.welcome-message h1 {
+    font-family: var(--font-family-heading);
+    font-size: clamp(1.9rem, 5vw, 2.8rem);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 10px 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    line-height: 1.2;
+}
+
+.welcome-message p {
+    font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+    opacity: 0.9;
+    font-weight: var(--font-weight-light);
+    line-height: 1.6;
+}
+
+.stats-card-deck {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Ajustado minmax */
+    gap: clamp(15px, 3vw, 20px); /* Gap responsivo */
+    width: 100%;
+    max-width: 880px; /* Levemente maior para acomodar melhor */
+    align-items: stretch; /* << NOVO: Tenta fazer todos os cards terem a mesma altura na linha */
+}
+
+.stat-card.mini-card {
+    background-color: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    padding: clamp(15px, 3vw, 20px); /* Padding responsivo */
+    border-radius: var(--border-radius-lg);
+    color: var(--color-white);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: transform 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* << ALTERADO: Para melhor distribuição vertical interna */
+    /* min-height: 160px; Removido min-height fixo para permitir que align-items: stretch funcione melhor.
+                       Se o conteúdo for muito variável, podemos reconsiderar ou usar grid-auto-rows. */
+}
+
+
+.stat-card.mini-card:hover {
+    transform: translateY(-4px);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+.stat-card .stat-icon {
+    font-size: clamp(1.8rem, 4vw, 2.1rem); /* Ícone responsivo */
+    margin-bottom: 10px;
+    opacity: 0.85;
+    line-height: 1; /* Garante que o ícone não cause altura extra */
+}
+
+.stat-card .stat-label {
+    font-size: clamp(0.7rem, 1.8vw, 0.75rem); /* Label responsivo e menor */
+    font-weight: var(--font-weight-medium);
+    margin-bottom: 8px; /* Ajustado */
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    opacity: 0.9;
+    line-height: 1.3; /* Melhor controle de altura */
+    flex-grow: 1; /* Permite que o label ocupe espaço se necessário para empurrar o valor */
+}
+
+.stat-card .stat-value {
+    font-size: clamp(1.7rem, 3.8vw, 2.1rem); /* Valor responsivo */
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    margin-top: auto; /* Empurra o valor para baixo se houver espaço */
+}
+
+.main-cta-area {
+    margin-top: 0; /* Gap do pai já cuida disso */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-cta-area p {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    margin-bottom: 20px;
+    font-weight: var(--font-weight-normal);
+    opacity: 0.95;
+}
+
+.quiz-options-main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px; /* Reduzido um pouco */
+    width: 100%;
+    max-width: 550px; /* Reduzido para melhor encaixe mobile */
+}
+
+.button-fancy-primary,
+.button-fancy-secondary {
+    padding: clamp(12px, 2.5vh, 14px) clamp(20px, 4vw, 28px); /* Padding responsivo */
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-xl);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* Gap entre ícone e texto reduzido */
+    text-decoration: none;
+    flex: 1 1 200px; /* Flex grow, shrink e basis */
+    text-align: center; /* Garante centralização do texto */
+}
+
+.button-fancy-primary .material-symbols-outlined,
+.button-fancy-secondary .material-symbols-outlined {
+    font-size: clamp(1.1em, 2.5vw, 1.2em); /* Ícone responsivo */
+}
+
+.button-fancy-primary {
+    background-image: linear-gradient(to right, var(--color-secondary-green), #23d1a0); /* Cor do gradiente ajustada */
+    color: var(--color-white);
+}
+
+.button-fancy-primary:hover {
+    background-image: linear-gradient(to right, #23d1a0, var(--color-secondary-green));
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 6px 15px rgba(32, 201, 151, 0.3);
+}
+
+.button-fancy-secondary {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: var(--color-primary-dark);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.button-fancy-secondary:hover {
+    background-color: var(--color-white);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.08);
+}
+
+
+.additional-content-area {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto clamp(30px, 6vh, 40px) auto; /* Último elemento, margem inferior responsiva */
+    padding: clamp(25px, 5vh, 35px);
+    text-align: center;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+}
+
+.additional-content-area h2 {
+    font-family: var(--font-family-heading);
+    color: var(--color-primary-dark);
+    margin-bottom: 15px;
+    font-size: clamp(1.4rem, 3.5vw, 1.6rem);
+}
+
+.additional-content-area p {
+    color: var(--color-gray-800);
+    line-height: 1.7;
+    margin-bottom: 25px;
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
+}
+
+.additional-content-area .button--outline {
+    border-color: var(--color-primary-medium);
+    color: var(--color-primary-medium);
+    font-weight: var(--font-weight-semibold);
+    padding: 10px 20px;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+}
+
+.additional-content-area .button--outline:hover {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-dark);
+    color: var(--color-primary-dark);
+}
+
+/* Responsividade Mobile Detalhada */
+@media (max-width: 768px) { /* Tablets e mobile grande */
+    .hero-interactive-block {
+        gap: 20px; /* Gap menor no hero */
+    }
+    .stats-card-deck {
+        /* Mantém repeat(auto-fit, minmax(140px, 1fr)) para flexibilidade,
+           mas pode ser necessário forçar 2 colunas se o auto-fit não agradar */
+        grid-template-columns: repeat(2, 1fr); /* Força 2 colunas */
+        gap: 15px;
+        max-width: 420px; /* Ajustado para caber 2 colunas confortavelmente */
+    }
+    /* .stat-card.mini-card: Não precisa de min-height aqui, pois align-items: stretch deve funcionar */
+
+    .quiz-options-main {
+        flex-direction: column; /* Botões empilhados */
+        gap: 12px;
+        max-width: 300px; /* Botões mais estreitos */
+    }
+    .button-fancy-primary,
+    .button-fancy-secondary {
+        flex-basis: auto; /* Reseta flex-basis para empilhar */
+        width: 100%; /* Ocupa toda largura do container .quiz-options-main */
+    }
+}
+
+@media (max-width: 480px) { /* Mobile pequeno */
+    .hero-interactive-block {
+        padding-top: 30px;
+        padding-bottom: 25px;
+    }
+    .welcome-message h1 {
+        font-size: 1.7rem; /* Título um pouco menor */
+    }
+    .welcome-message p {
+        font-size: 0.9rem; /* Texto de apoio menor */
+    }
+
+    .stats-card-deck {
+        grid-template-columns: repeat(2, 1fr); /* Ainda 2 colunas, mas menores */
+        gap: 10px; /* Gap menor entre cards */
+        max-width: 100%; /* Ocupa toda largura */
+        padding: 0 10px; /* Adiciona padding lateral ao deck se necessário */
+    }
+    .stat-card.mini-card {
+         padding: 12px; /* Menos padding interno nos cards */
+    }
+    .stat-card .stat-icon { font-size: 1.6rem; margin-bottom: 6px;}
+    .stat-card .stat-label { font-size: 0.65rem; margin-bottom: 4px;}
+    .stat-card .stat-value { font-size: 1.5rem; }
+
+
+    .main-cta-area p {
+        font-size: 0.95rem;
+        margin-bottom: 15px;
+    }
+    .quiz-options-main {
+        max-width: 280px; /* Botões ainda mais estreitos */
+    }
+    .button-fancy-primary,
+    .button-fancy-secondary {
+        padding: 10px 18px; /* Botões menores */
+        gap: 6px;
+    }
+
+    .additional-content-area {
+        padding: 20px 15px;
+    }
+    .additional-content-area h2 { font-size: 1.3rem;}
+    .additional-content-area p { font-size: 0.85rem;}
 }

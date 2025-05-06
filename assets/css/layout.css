@@ -13,7 +13,6 @@ header {
     border-bottom: var(--border-width) solid var(--color-gray-300);
     flex-shrink: 0;
     position: relative; /* <<< ADICIONADO: Para posicionar ícone e controlar z-index */
-    z-index: 20; /* <<< ADICIONADO: Garante que header fique acima da nav */
 }
 
 /* Estilos para Ícones no Header (Desktop) */

@@ -44,14 +44,54 @@
 
     <main>
         <section id="inicio-section" class="main-section">
-            <div class="inicio-content card">
-                <h2>Bem-vindo ao Quiz Interativo de Histologia!</h2>
-                <p>Navegue entre as seções usando o menu ou os ícones.</p>
-                <p>Teste seus conhecimentos na seção "Questões" ou acesse suas informações em "Conta".</p>
-                <p>Boa sorte!</p>
+            <div class="hero-interactive-block">
+                <div class="welcome-message">
+                    <h1>Olá, [Nome do Usuário]!</h1>
+                    <p>Pronto para expandir seus conhecimentos em histologia hoje?</p>
+                </div>
+    
+                <div class="stats-card-deck">
+                    <div class="stat-card mini-card">
+                        <span class="stat-icon material-symbols-outlined">checklist</span>
+                        <span class="stat-label">Respondidas Hoje</span>
+                        <span class="stat-value" id="daily-questions">0</span>
+                    </div>
+                    <div class="stat-card mini-card">
+                        <span class="stat-icon material-symbols-outlined">target</span>
+                        <span class="stat-label">Acertos Hoje</span>
+                        <span class="stat-value" id="daily-accuracy">0%</span>
+                    </div>
+                    <div class="stat-card mini-card">
+                        <span class="stat-icon material-symbols-outlined">military_tech</span>
+                        <span class="stat-label">Pontos</span>
+                        <span class="stat-value" id="daily-points">0</span>
+                    </div>
+                    <div class="stat-card mini-card">
+                        <span class="stat-icon material-symbols-outlined">local_fire_department</span>
+                        <span class="stat-label">Sequência</span>
+                        <span class="stat-value" id="streak-value">0</span>
+                    </div>
+                </div>
+    
+                <div class="main-cta-area">
+                    <p>Escolha seu desafio:</p>
+                    <div class="quiz-options-main">
+                        <button class="button button-fancy-primary" id="start-random-quiz">
+                            <span class="material-symbols-outlined">shuffle</span> Quiz Rápido
+                        </button>
+                        <button class="button button-fancy-secondary" id="start-category-quiz">
+                            <span class="material-symbols-outlined">category</span> Por Categoria
+                        </button>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="additional-content-area card">
+                <h2>Explore Mais</h2>
+                <p>Ainda desenvolvendo esta área, mas aqui você poderá encontrar artigos, dicas de estudo e outros recursos para complementar seu aprendizado em histologia.</p>
+                <button class="button button--outline" id="view-all-questions-alt">Ver Banco de Questões</button>
             </div>
         </section>
-
         <section id="questoes-section" class="main-section is-hidden">
             <aside>
                 <p class="aside-title">Pontuação</p>

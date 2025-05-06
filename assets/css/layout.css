@@ -1,26 +1,30 @@
+/* assets/css/layout.css */
+
+/* Estilos do Header */
 header {
     height: 80px;
     display: flex;
-    justify-content: center; /* Alterado para centralizar o logo */
+    justify-content: center; /* <<< MODIFICADO: Para centralizar logo */
     align-items: center;
     background-color: var(--color-white);
     padding: 0 40px; /* Padding lateral */
-    /* gap: 20px; Removido ou ajustado */
+    /* gap: 20px; Removido */
     box-shadow: var(--shadow-lg);
     border-bottom: var(--border-width) solid var(--color-gray-300);
     flex-shrink: 0;
-    position: relative; /* Adicionado para posicionamento absoluto do filho */
+    position: relative; /* <<< ADICIONADO: Para posicionar ícone e controlar z-index */
+    z-index: 20; /* <<< ADICIONADO: Garante que header fique acima da nav */
 }
 
-/* --- NOVO: Estilos para Ícones no Header --- */
+/* Estilos para Ícones no Header (Desktop) */
 .header-icons {
-    position: absolute; /* Posicionamento absoluto relativo ao header */
+    position: absolute; /* <<< MODIFICADO: Posicionamento absoluto */
     right: 40px; /* Distância da direita (igual ao padding do header) */
     top: 50%; /* Alinhamento vertical */
     transform: translateY(-50%); /* Ajuste fino vertical */
-    display: flex; /* Para caso haja mais ícones */
+    display: flex;
     align-items: center;
-    /* gap: 10px; Espaçamento se houver mais ícones */
+    /* gap: 10px; */ /* Espaçamento se houver mais ícones */
 }
 
 .header-icon-link {
@@ -49,9 +53,8 @@ header {
     font-size: 28px; /* Tamanho do ícone */
     display: block;
 }
-/* --- FIM: Estilos para Ícones no Header --- */
 
-
+/* Estilos da Logo */
 .logo-area {
     font-family: var(--font-family-heading);
     font-size: 2.0rem;
@@ -61,9 +64,8 @@ header {
     letter-spacing: 0.5px;
     text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     transition: transform var(--transition-medium);
-    /* Z-index pode ser necessário se o conteúdo absoluto sobrepor */
-    position: relative;
-    z-index: 1;
+    position: relative; /* Garante que fique acima de outros elementos não posicionados */
+    z-index: 1; /* Abaixo do header-icons se houver sobreposição */
 }
 
 .logo-area:hover {
@@ -92,15 +94,17 @@ nav:not(.bottom-navbar) {
     height: 50px;
     display: flex;
     align-items: center;
+    position: relative; /* <<< ADICIONADO: Para z-index funcionar */
+    z-index: 10;       /* <<< ADICIONADO: Para ficar abaixo do header mas acima do resto */
 }
 
+/* Barra de navegação interna (Restaurada ao original) */
 .navbar {
-    justify-content: flex-start; /* Mantém links à esquerda */
+    justify-content: flex-start;
     padding: 0 15px;
     display: flex;
     list-style: none;
-    margin: 0 auto; /* Centraliza a barra de links se tiver largura definida */
-    max-width: 1200px; /* Exemplo de largura máxima */
+    margin: 0; /* <<< REVERTIDO */
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
@@ -111,6 +115,7 @@ nav:not(.bottom-navbar) {
     padding: 0;
 }
 
+/* Links da navegação superior */
 .nav-link {
     display: block;
     text-decoration: none;
@@ -137,6 +142,7 @@ nav:not(.bottom-navbar) {
     border-radius: var(--border-radius-sm);
 }
 
+/* Conteúdo Principal */
 main {
     flex-grow: 1;
     display: flex;
@@ -166,22 +172,25 @@ main {
     height: calc(100vh - 80px - 50px); /* Altura total menos header e nav superior */
 }
 
-#conta-section { /* Estilo base para a nova seção */
+/* NOVO: Estilo base para Seção Conta */
+#conta-section {
     padding: 40px;
     background-color: var(--color-gray-200);
-    display: flex; /* Opcional: para alinhar o card interno */
+    display: flex;
     justify-content: center;
-    align-items: flex-start; /* Alinha no topo */
-    flex-grow: 1; /* Ocupa espaço disponível */
+    align-items: flex-start;
+    flex-grow: 1;
 }
-/* Estilo para o card dentro da seção conta (pode ajustar max-width) */
+/* Estilo para o card dentro da seção conta */
 #conta-section .card {
-     margin-top: 0; /* Remove margem padrão se centralizado via flex */
-     width: 100%; /* Ocupa largura disponível até max-width */
+     margin-top: 0;
+     width: 100%;
+     max-width: 800px; /* Limita largura do conteúdo */
 }
 
 
-aside { /* Barra lateral da seção de questões */
+/* Barra Lateral (Aside) da seção de questões */
+aside {
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -191,14 +200,15 @@ aside { /* Barra lateral da seção de questões */
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
     border-right: var(--border-width) solid var(--color-gray-400);
     flex-shrink: 0;
-    position: sticky; /* Mantém fixo no scroll */
-    top: 0; /* Cola no topo (relativo ao container #questoes-section) */
-    align-self: flex-start; /* Alinha no início do container flex */
+    position: sticky;
+    top: 0; /* Relativo ao container #questoes-section */
+    align-self: flex-start;
     height: calc(100vh - 80px - 50px); /* Altura igual à seção */
-    overflow-y: auto; /* Scroll interno se necessário */
-    z-index: 10;
+    overflow-y: auto;
+    z-index: 10; /* Garante que fique acima do conteúdo principal se houver sobreposição */
 }
 
+/* Rodapé Padrão (Desktop) */
 footer#footer {
     font: var(--font-weight-normal) 0.9rem var(--font-family-sans);
     display: flex;
@@ -212,7 +222,7 @@ footer#footer {
     height: 65px;
     flex-shrink: 0;
     position: relative;
-    z-index: 1;
+    z-index: 1; /* Abaixo de outros elementos posicionados */
 }
 
 footer#footer p {
@@ -226,11 +236,11 @@ footer#footer p {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 65px; /* Altura da barra */
+    height: 65px;
     background-color: var(--color-white);
     border-top: var(--border-width) solid var(--color-gray-300);
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
-    z-index: 100;
+    z-index: 100; /* Garante que fique acima de todo o conteúdo */
 }
 
 .bottom-navbar ul {
@@ -238,14 +248,14 @@ footer#footer p {
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: space-around; /* Distribui os itens */
-    align-items: stretch; /* Itens ocupam toda a altura */
+    justify-content: space-around;
+    align-items: stretch;
     width: 100%;
     height: 100%;
 }
 
 .bottom-navbar li {
-    flex-grow: 1; /* Cada item ocupa espaço igual */
+    flex-grow: 1;
 }
 
 .bottom-navbar .bottom-nav-link {
@@ -294,12 +304,12 @@ footer#footer p {
 }
 
 .bottom-navbar .bottom-nav-link.active .material-symbols-outlined {
-    font-variation-settings: 'FILL' 1; /* Ícone preenchido quando ativo */
+    font-variation-settings: 'FILL' 1;
 }
 
 .bottom-navbar .bottom-nav-link:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: -3px; /* Outline interno */
+    outline-offset: -3px;
     background-color: var(--color-gray-200);
 }
 

@@ -1,15 +1,56 @@
 header {
     height: 80px;
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Alterado para centralizar o logo */
     align-items: center;
     background-color: var(--color-white);
-    padding: 0 40px;
-    gap: 20px;
+    padding: 0 40px; /* Padding lateral */
+    /* gap: 20px; Removido ou ajustado */
     box-shadow: var(--shadow-lg);
     border-bottom: var(--border-width) solid var(--color-gray-300);
     flex-shrink: 0;
+    position: relative; /* Adicionado para posicionamento absoluto do filho */
 }
+
+/* --- NOVO: Estilos para Ícones no Header --- */
+.header-icons {
+    position: absolute; /* Posicionamento absoluto relativo ao header */
+    right: 40px; /* Distância da direita (igual ao padding do header) */
+    top: 50%; /* Alinhamento vertical */
+    transform: translateY(-50%); /* Ajuste fino vertical */
+    display: flex; /* Para caso haja mais ícones */
+    align-items: center;
+    /* gap: 10px; Espaçamento se houver mais ícones */
+}
+
+.header-icon-link {
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    padding: 8px; /* Área de clique */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-circle);
+    transition: background-color var(--transition-fast);
+}
+
+.header-icon-link:hover,
+.header-icon-link:focus-visible {
+    background-color: var(--color-gray-100); /* Feedback visual */
+    outline: none;
+}
+.header-icon-link:focus-visible {
+     outline: var(--focus-outline-width) solid var(--focus-outline-color);
+     outline-offset: 2px;
+}
+
+
+.header-icon-link .material-symbols-outlined {
+    font-size: 28px; /* Tamanho do ícone */
+    display: block;
+}
+/* --- FIM: Estilos para Ícones no Header --- */
+
 
 .logo-area {
     font-family: var(--font-family-heading);
@@ -20,6 +61,9 @@ header {
     letter-spacing: 0.5px;
     text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
     transition: transform var(--transition-medium);
+    /* Z-index pode ser necessário se o conteúdo absoluto sobrepor */
+    position: relative;
+    z-index: 1;
 }
 
 .logo-area:hover {
@@ -40,6 +84,7 @@ header {
     outline-offset: 4px;
 }
 
+/* Navegação Superior (Desktop) */
 nav:not(.bottom-navbar) {
     flex-shrink: 0;
     background-color: var(--color-white);
@@ -50,11 +95,12 @@ nav:not(.bottom-navbar) {
 }
 
 .navbar {
-    justify-content: flex-start;
+    justify-content: flex-start; /* Mantém links à esquerda */
     padding: 0 15px;
     display: flex;
     list-style: none;
-    margin: 0;
+    margin: 0 auto; /* Centraliza a barra de links se tiver largura definida */
+    max-width: 1200px; /* Exemplo de largura máxima */
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
@@ -99,27 +145,43 @@ main {
 
 .main-section {
     flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Garante que a seção ocupe espaço */
+    flex-direction: column; /* Layout padrão para conteúdo da seção */
 }
 
+/* Estilos das Seções Específicas */
 #inicio-section {
     padding: 40px;
     background-color: var(--color-gray-200);
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 80px - 50px - 65px);
+    min-height: calc(100vh - 80px - 50px - 65px); /* Ajuste conforme altura do header/nav/footer */
 }
 
 #questoes-section {
     display: flex;
     flex-direction: row;
     flex-grow: 1;
-    overflow: hidden;
-    height: calc(100vh - 80px - 50px);
+    overflow: hidden; /* Evita scroll duplo */
+    height: calc(100vh - 80px - 50px); /* Altura total menos header e nav superior */
 }
 
-aside {
+#conta-section { /* Estilo base para a nova seção */
+    padding: 40px;
+    background-color: var(--color-gray-200);
+    display: flex; /* Opcional: para alinhar o card interno */
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo */
+    flex-grow: 1; /* Ocupa espaço disponível */
+}
+/* Estilo para o card dentro da seção conta (pode ajustar max-width) */
+#conta-section .card {
+     margin-top: 0; /* Remove margem padrão se centralizado via flex */
+     width: 100%; /* Ocupa largura disponível até max-width */
+}
+
+
+aside { /* Barra lateral da seção de questões */
     display: flex;
     flex-direction: column;
     gap: 25px;
@@ -129,11 +191,11 @@ aside {
     box-shadow: 1px 0 3px rgba(0, 0, 0, 0.04);
     border-right: var(--border-width) solid var(--color-gray-400);
     flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
-    height: calc(100vh - 80px - 50px);
-    overflow-y: auto;
+    position: sticky; /* Mantém fixo no scroll */
+    top: 0; /* Cola no topo (relativo ao container #questoes-section) */
+    align-self: flex-start; /* Alinha no início do container flex */
+    height: calc(100vh - 80px - 50px); /* Altura igual à seção */
+    overflow-y: auto; /* Scroll interno se necessário */
     z-index: 10;
 }
 
@@ -157,13 +219,14 @@ footer#footer p {
     margin: 0;
 }
 
+/* Navegação Inferior (Mobile) */
 .bottom-navbar {
-    display: none;
+    display: none; /* Escondido por padrão */
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 65px;
+    height: 65px; /* Altura da barra */
     background-color: var(--color-white);
     border-top: var(--border-width) solid var(--color-gray-300);
     box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
@@ -175,14 +238,14 @@ footer#footer p {
     padding: 0;
     margin: 0;
     display: flex;
-    justify-content: space-around;
-    align-items: stretch;
+    justify-content: space-around; /* Distribui os itens */
+    align-items: stretch; /* Itens ocupam toda a altura */
     width: 100%;
     height: 100%;
 }
 
 .bottom-navbar li {
-    flex-grow: 1;
+    flex-grow: 1; /* Cada item ocupa espaço igual */
 }
 
 .bottom-navbar .bottom-nav-link {
@@ -231,12 +294,12 @@ footer#footer p {
 }
 
 .bottom-navbar .bottom-nav-link.active .material-symbols-outlined {
-    font-variation-settings: 'FILL' 1;
+    font-variation-settings: 'FILL' 1; /* Ícone preenchido quando ativo */
 }
 
 .bottom-navbar .bottom-nav-link:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: -3px;
+    outline-offset: -3px; /* Outline interno */
     background-color: var(--color-gray-200);
 }
 

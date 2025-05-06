@@ -27,25 +27,32 @@
         <div class="logo-area">
             <a href="#">Med<b>Quiz</b></a>
         </div>
+        <div class="header-icons">
+            <a href="#" class="header-icon-link" data-section="conta-section" aria-label="Ir para Conta">
+                 <span class="material-symbols-outlined">
+                     account_circle </span>
+            </a>
+        </div>
     </header>
     <nav>
         <ul class="navbar">
             <li><a href="#" class="nav-link active" data-section="inicio-section">Início</a></li>
             <li><a href="#" class="nav-link" data-section="questoes-section">Questões</a></li>
-        </ul>
+            </ul>
     </nav>
 
     <main>
         <section id="inicio-section" class="main-section">
             <div class="inicio-content card">
                 <h2>Bem-vindo ao Quiz Interativo de Histologia!</h2>
-                <p>Navegue até a seção "Questões" para testar seus conhecimentos.</p>
-                <p>Lá, você poderá escolher uma ou mais categorias ou responder a perguntas de todas elas.</p>
-                <p>Sua pontuação será exibida ao lado e um mapa de questões aparecerá durante o quiz. Boa sorte!</p>
+                <p>Navegue entre as seções usando o menu ou os ícones.</p>
+                <p>Teste seus conhecimentos na seção "Questões" ou acesse suas informações em "Conta".</p>
+                <p>Boa sorte!</p>
             </div>
         </section>
 
-        <section id="questoes-section" class="main-section is-hidden"> <aside>
+        <section id="questoes-section" class="main-section is-hidden">
+            <aside>
                 <p class="aside-title">Pontuação</p>
                 <div class="pontuacao-wrap is-circle">
                      <p id="pontuacao" class="is-circle">0</p>
@@ -80,12 +87,17 @@
                     </div>
                 </div>
 
-                <div id="aviso-container" class="is-hidden"> <p class="aviso-mensagem card">Selecione pelo menos uma categoria para começar o quiz.</p>
+                <div id="aviso-container" class="is-hidden">
+                     <p class="aviso-mensagem card">Selecione pelo menos uma categoria para começar o quiz.</p>
                 </div>
 
-                <section id="quiz-section" class="is-hidden"> <div id="progress-container" class="is-hidden"> <div id="progress-bar-fill"></div>
+                <section id="quiz-section" class="is-hidden">
+                    <div id="progress-container" class="is-hidden">
+                        <div id="progress-bar-fill"></div>
                     </div>
-                    <span id="progress-text" class="is-hidden">0 / 0</span> <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2> <div class="question-wrap card">
+                    <span id="progress-text" class="is-hidden">0 / 0</span>
+                    <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+                    <div class="question-wrap card">
                         <div class="question-text">
                             <p id="pergunta-texto">Carregando pergunta...</p>
                         </div>
@@ -100,12 +112,14 @@
                         <p id="referencia-questao"></p>
                     </div>
 
-                    <div class="navigation-buttons is-hidden"> <button id="prev-btn" class="button button--secondary" disabled>Anterior</button>
+                    <div class="navigation-buttons is-hidden">
+                        <button id="prev-btn" class="button button--secondary" disabled>Anterior</button>
                         <button id="next-btn" class="button button--primary">Próxima</button>
                     </div>
                 </section>
 
-                <div id="confirm-encerrar-overlay" class="modal-overlay is-hidden"> <div id="confirm-encerrar-modal" class="modal-content card">
+                <div id="confirm-encerrar-overlay" class="modal-overlay is-hidden">
+                     <div id="confirm-encerrar-modal" class="modal-content card">
                         <h3 class="modal-title">Confirmar Encerramento</h3>
                         <p class="modal-message">Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
                         <div class="modal-actions">
@@ -115,7 +129,9 @@
                     </div>
                 </div>
 
-                 <div class="resultado-final-card card is-hidden"> <h3 class="resultado-final-titulo" tabindex="-1">Quiz Concluído!</h3> <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
+                 <div class="resultado-final-card card is-hidden">
+                    <h3 class="resultado-final-titulo" tabindex="-1">Quiz Concluído!</h3>
+                    <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
                     <div class="resultado-final-detalhes">
                         <p>Acertos: <span class="acertos-valor">0</span></p>
                         <p>Erros: <span class="erros-valor">0</span></p>
@@ -123,8 +139,31 @@
                     <button id="btn-recomecar" class="button button--primary">Tentar Novamente</button>
                 </div>
 
-                 <div id="question-grid-container" class="question-grid-container is-hidden"> </div>
-                 </div> </section> </main>
+                 <div id="question-grid-container" class="question-grid-container is-hidden">
+                    </div>
+             </div>
+        </section>
+
+        <section id="conta-section" class="main-section is-hidden">
+            <div class="card" style="margin: 40px auto; padding: 30px; max-width: 600px; text-align: center;">
+                 <h2>Minha Conta</h2>
+                 <p>Esta é a seção da sua conta.</p>
+                 <p>Aqui você poderá ver informações de perfil, configurações, etc. (Conteúdo a ser adicionado).</p>
+                 <form action="#" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px; align-items: stretch;">
+                    <div>
+                        <label for="user-name" style="display: block; margin-bottom: 5px; text-align: left;">Nome:</label>
+                        <input type="text" id="user-name" name="user-name" placeholder="Seu nome" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
+                     <div>
+                        <label for="user-email" style="display: block; margin-bottom: 5px; text-align: left;">Email:</label>
+                        <input type="email" id="user-email" name="user-email" placeholder="seuemail@exemplo.com" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                    </div>
+                    <button type="submit" class="button button--primary">Salvar Alterações</button>
+                 </form>
+            </div>
+        </section>
+
+    </main>
 
     <nav class="bottom-navbar" aria-label="Navegação principal móvel">
         <ul>
@@ -144,7 +183,8 @@
     </nav>
 
     <footer id="footer">
-        <p>&copy; 2025 Desenvolvido por Davi Castro</p> </footer>
+        <p>&copy; 2025 Desenvolvido por Davi Castro</p>
+    </footer>
 
     <script src="assets/js/script.js" defer></script>
 

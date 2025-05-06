@@ -1,7 +1,11 @@
 @media (max-width: 992px) {
     header {
-        padding: 0 30px;
+        padding: 0 30px; /* Ajusta padding do header */
     }
+    .header-icons {
+         right: 30px; /* Ajusta posição do ícone */
+    }
+
     .logo-area {
         font-size: 1.8rem;
     }
@@ -9,8 +13,8 @@
         min-width: 260px;
         padding: 25px;
         gap: 20px;
-        height: calc(100vh - 80px - 50px);
-        top: 0;
+        height: calc(100vh - 80px - 50px); /* Recalcula altura */
+        top: 0; /* Mantém sticky no topo */
     }
     .pontuacao-wrap {
         height: 110px;
@@ -28,7 +32,7 @@
         height: 32px;
     }
     #questoes-section {
-        height: calc(100vh - 80px - 50px);
+        height: calc(100vh - 80px - 50px); /* Recalcula altura */
     }
     #questoes-section .main-content {
         padding: 35px;
@@ -47,7 +51,7 @@
         min-height: 32px;
     }
     .grid-item.grid-item--current {
-        box-shadow: var(--shadow-grid-current-subtle);
+        box-shadow: var(--shadow-grid-current-subtle); /* Mantém sombra se definida */
         transform: scale(1.04);
     }
     .grid-nav-arrow {
@@ -58,36 +62,57 @@
         width: 18px;
         height: 18px;
     }
+
+     /* Ajuste da seção Conta */
+     #conta-section {
+          padding: 35px;
+     }
 }
 
 @media (max-width: 768px) {
+    /* --- Alterações Chave para Mobile --- */
     nav:not(.bottom-navbar) {
-        display: none;
+        display: none; /* Esconde nav superior */
     }
     footer#footer {
-        display: none;
+        display: none; /* Esconde footer padrão */
     }
     .bottom-navbar {
-        display: block;
-        height: 60px;
+        display: block; /* Mostra nav inferior */
+        height: 60px; /* Altura ajustada */
     }
     body {
-        padding-bottom: 60px;
+        padding-bottom: 60px; /* Espaço para nav inferior fixa */
     }
     header {
-        height: 70px;
-        padding: 0 20px;
+        height: 70px; /* Altura ajustada */
+        padding: 0 15px; /* Padding ajustado */
+        justify-content: center; /* Mantém logo centralizado */
+        position: relative; /* Mantém para ícone absoluto */
     }
+     .header-icons {
+        /* display: none; */ /* <<== REMOVIDO para mostrar o ícone */
+        right: 15px; /* <<== AJUSTADO para padding do header mobile */
+        /* position: absolute; top: 50%; transform: translateY(-50%); herdados */
+     }
+     .header-icon-link {
+          padding: 6px; /* Opcional: diminuir área de clique */
+     }
+     .header-icon-link .material-symbols-outlined {
+          font-size: 26px; /* Opcional: diminuir ícone */
+     }
+
+
     main {
-        padding-top: 0;
+        padding-top: 0; /* Remove padding se nav superior some */
     }
     #questoes-section {
-        flex-direction: column;
-        height: auto;
-        overflow: visible;
+        flex-direction: column; /* Muda layout para coluna */
+        height: auto; /* Altura automática */
+        overflow: visible; /* Remove overflow hidden */
     }
-    aside {
-        position: static;
+    aside { /* Transforma aside em barra superior */
+        position: static; /* Remove sticky */
         height: auto;
         overflow-y: visible;
         width: 100%;
@@ -95,28 +120,28 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
         border-right: none;
         border-bottom: var(--border-width) solid var(--color-gray-400);
-        flex-direction: row;
-        justify-content: flex-start;
+        flex-direction: row; /* Itens em linha */
+        justify-content: flex-start; /* Alinha itens à esquerda */
         align-items: center;
-        padding: 10px 15px;
+        padding: 10px 15px; /* Padding ajustado */
         gap: 15px;
-        flex-wrap: wrap;
-        flex-shrink: 0;
+        flex-wrap: wrap; /* Permite quebra de linha */
+        flex-shrink: 0; /* Não encolhe */
     }
-    .aside-title { display: none; }
+    .aside-title { display: none; } /* Esconde título "Pontuação" */
     .pontuacao-wrap {
         order: 1;
-        height: 70px;
-        width: 70px;
-        padding: 3px;
+        height: 60px;
+        width: 60px;
+        padding: 2px; /* Pode ajustar o padding da borda também */
         margin: 0;
     }
     #pontuacao {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
     }
-    .aside-info-wrap {
+    .aside-info-wrap { /* Acertos/Erros */
         gap: 8px;
-        order: 2;
+        order: 2; /* Segunda posição */
         margin-left: 0;
     }
     aside #acertos,
@@ -127,30 +152,30 @@
     aside #erros span {
         font-size: 0.9rem;
     }
-    #btn-encerrar-sessao {
+    #btn-encerrar-sessao { /* Botão Encerrar */
         position: static;
         bottom: auto;
-        width: auto;
-        order: 3;
+        width: auto; /* Largura automática */
+        order: 3; /* Terceira posição */
         flex-basis: auto;
         align-self: center;
         flex-shrink: 0;
-        margin-left: auto;
+        margin-left: auto; /* Empurra para a direita */
         margin-top: 0;
         margin-bottom: 0;
         font-size: 0.85rem;
         padding: 10px 18px;
         min-height: 38px;
     }
-    #questoes-section .main-content {
+    #questoes-section .main-content { /* Conteúdo principal das questões */
         height: auto;
         overflow-y: visible;
         padding: 25px 20px;
         flex-grow: 1;
-        min-height: 0;
+        min-height: 0; /* Necessário para flex-grow funcionar corretamente */
     }
     .logo-area {
-        font-size: 1.6rem;
+        font-size: 1.6rem; /* Ajusta tamanho do logo */
     }
     h2 {
         font-size: 1.7rem;
@@ -158,21 +183,23 @@
     }
     #inicio-section {
         padding: 30px 20px;
-        min-height: calc(100vh - 70px - 60px);
+        min-height: calc(100vh - 70px - 60px); /* Recalcula altura mínima */
     }
     #inicio-section .inicio-content {
         padding: 25px;
         width: 90%;
     }
+    /* Filtros */
     .filtro-categorias-container {
-        position: static;
+        position: static; /* Remove sticky se houver */
         gap: 10px;
         margin-bottom: 30px;
     }
+    /* Progresso, Grid, Paginação */
     #progress-container,
     #question-grid-container,
-    .paginacao {
-        position: static;
+    .paginacao { /* Paginação antiga, se existir */
+        position: static; /* Remove sticky se houver */
     }
     #question-grid-container {
         gap: 8px;
@@ -180,13 +207,13 @@
         margin-top: 20px;
         margin-bottom: 20px;
     }
-    .paginacao { display: none; }
+    .paginacao { display: none; } /* Esconde paginação antiga */
     .grid-item {
         font-size: 0.8rem;
         width: 34px;
         min-height: 34px;
     }
-    .grid-item.grid-item--current {
+    .grid-item.grid-item--current { /* Estilo diferente para item atual no mobile */
         box-shadow: none;
         border-width: var(--border-width-md);
         border-color: var(--color-primary-dark);
@@ -195,26 +222,29 @@
     }
     .grid-item.grid-item--current.grid-item--correct,
     .grid-item.grid-item--current.grid-item--incorrect {
-        background-color: unset;
-        border-color: unset;
+        background-color: unset; /* Remove fundo verde/vermelho do item atual */
+        border-color: unset; /* Remove borda verde/vermelha do item atual */
     }
     .grid-nav-arrow { width: 32px; height: 32px; }
     .grid-nav-arrow svg { width: 20px; height: 20px; }
     .filtro-label { font-size: 0.9rem; padding-left: 3px; }
     .filtro-checkboxes#filtro-checkboxes-scroll {
         gap: 10px;
-        padding: 5px 15px 10px 15px;
-        clip-path: none;
+        padding: 5px 15px 10px 15px; /* Padding ajustado */
+        clip-path: none; /* Remove máscara */
+        /* Scroll ainda funciona, mas setas estão escondidas */
     }
     .checkbox-item label {
         font-size: 0.85rem;
         padding: 8px 16px;
         min-height: 40px;
     }
-    .scroll-arrow { display: none; }
+    .scroll-arrow { display: none; } /* Esconde setas de scroll do filtro */
+    /* Aviso */
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 25px; }
-    #quiz-section { flex-grow: 1; }
+    /* Quiz */
+    #quiz-section { flex-grow: 1; } /* Garante que ocupe espaço */
     #quiz-section h2#question-title {
         font-size: 1.3rem;
         gap: 8px;
@@ -234,6 +264,7 @@
         min-height: 46px;
     }
     #referencia-questao { margin-top: 20px; padding-top: 10px; }
+    /* Resultado */
     .resultado-final-card {
         padding: 25px;
         max-width: 90%;
@@ -243,6 +274,7 @@
     .resultado-final-titulo { font-size: 1.6rem; }
     .pontos-valor { font-size: 1.7rem; }
     .resultado-final-detalhes p { font-size: 1rem; }
+    /* Botões de Navegação (Quiz) */
     .navigation-buttons {
         position: static;
         padding-bottom: 0;
@@ -253,14 +285,24 @@
         padding: 10px 24px;
         font-size: 0.9rem;
     }
+
+    /* Ajustes Seção Conta Mobile */
+     #conta-section {
+          padding: 25px 20px;
+     }
+     #conta-section .card {
+          margin: 20px auto;
+          padding: 25px;
+     }
+
 }
 
 @media (max-width: 480px) {
     .bottom-navbar {
-        height: 60px;
+        height: 60px; /* Mantém altura */
     }
     body {
-        padding-bottom: 60px;
+        padding-bottom: 60px; /* Mantém padding */
     }
     .bottom-navbar .bottom-nav-link .material-symbols-outlined {
         font-size: 24px;
@@ -269,50 +311,62 @@
         font-size: 0.7rem;
     }
     header {
-        height: 65px;
-        padding: 0 15px;
+        height: 65px; /* Altura ajustada */
+        padding: 0 10px; /* Padding ajustado */
     }
+    .header-icons {
+         right: 10px; /* <<== AJUSTADO para padding */
+    }
+    .header-icon-link {
+         padding: 5px;
+    }
+     .header-icon-link .material-symbols-outlined {
+          font-size: 24px;
+     }
+
     #inicio-section {
         padding: 25px 15px;
-        min-height: calc(100vh - 65px - 60px);
+        min-height: calc(100vh - 65px - 60px); /* Recalcula */
     }
     #inicio-section .inicio-content {
         padding: 20px;
         width: 95%;
     }
+    /* Aside (agora barra superior) */
     aside {
         padding: 10px 12px;
         gap: 10px;
-        justify-content: flex-start;
+        justify-content: flex-start; /* Mantém alinhamento */
     }
-    .pontuacao-wrap {
-        height: 65px;
-        width: 65px;
+    .pontuacao-wrap { /* Círculo menor */
+        height: 50px;
+        width: 50px;
         padding: 2px;
-        margin-right: 10px;
+        margin-right: 10px; /* Espaço à direita */
     }
     #pontuacao {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
     }
+    /* Esconde texto "Acertos/Erros", mostra só números */
     aside #acertos,
     aside #erros {
-        font-size: 0;
+        font-size: 0; /* Esconde texto */
         color: transparent;
         font-weight: normal;
-        display: inline-flex;
+        display: inline-flex; /* Mantém layout com ícone */
         align-items: center;
     }
     aside #acertos span,
-    aside #erros span {
+    aside #erros span { /* Números */
         font-size: 0.9rem;
         font-weight: var(--font-weight-semibold);
-        color: var(--color-gray-900);
-        margin-left: 0;
+        color: var(--color-gray-900); /* Cor visível */
+        margin-left: 0; /* Remove margem se houver */
         display: inline;
         line-height: 1;
     }
-    .aside-info-wrap p { margin: 0; }
-    .aside-info-wrap .icon-wrap {
+    .aside-info-wrap p { margin: 0; } /* Remove margem do <p> pai */
+    .aside-info-wrap .icon-wrap { /* Ícones Acerto/Erro */
         margin-right: 4px;
         height: 26px;
         width: 26px;
@@ -322,22 +376,23 @@
         height: 18px;
         width: 18px;
     }
-    #btn-encerrar-sessao {
+    #btn-encerrar-sessao { /* Botão Encerrar menor */
         padding: 8px 15px;
         font-size: 0.8rem;
-        margin-left: auto;
-        order: 3;
+        margin-left: auto; /* Mantém na direita */
+        order: 3; /* Mantém ordem */
     }
     #questoes-section .main-content {
-        padding: 20px 15px;
+        padding: 20px 15px; /* Padding ajustado */
     }
     .logo-area {
-        font-size: 1.4rem;
+        font-size: 1.4rem; /* Logo menor */
     }
     h2 {
-        font-size: 1.5rem;
+        font-size: 1.5rem; /* Títulos menores */
         margin-bottom: 15px;
     }
+    /* Filtros */
     .filtro-categorias-container {
         gap: 8px;
         margin-bottom: 25px;
@@ -350,11 +405,12 @@
         padding-right: 10px;
         gap: 8px;
     }
-    .checkbox-item label {
+    .checkbox-item label { /* Botões de filtro menores */
         font-size: 0.8rem;
         padding: 8px 14px;
         min-height: 38px;
     }
+    /* Aviso */
     #aviso-container {
         margin-top: 15px;
         max-width: 95%;
@@ -363,6 +419,7 @@
         padding: 20px;
         font-size: 1rem;
     }
+    /* Quiz */
     #quiz-section h2#question-title {
         font-size: 1.2rem;
         gap: 8px;
@@ -387,12 +444,12 @@
         line-height: 1.6;
     }
     .image-question-wrap > img {
-        max-height: 280px;
+        max-height: 280px; /* Imagem menor */
     }
     .answers-wrap {
         gap: 12px;
     }
-    .answer {
+    .answer { /* Respostas menores */
         padding: 14px 18px;
         font-size: 0.9rem;
         min-height: 44px;
@@ -402,22 +459,26 @@
         margin-top: 18px;
         padding-top: 10px;
     }
+    /* Botões Navegação Quiz */
     .navigation-buttons {
         padding: 20px 0 0 0;
         margin-top: 5px;
         gap: 12px;
+        flex-wrap: wrap; /* Permite quebra se não couber */
     }
     .navigation-buttons .button {
         padding: 10px 18px;
         font-size: 0.85rem;
-        flex-grow: 1;
-        min-width: 110px;
+        flex-grow: 1; /* Ocupam espaço igual */
+        min-width: 110px; /* Largura mínima */
     }
+    /* Grid de Questões */
     #question-grid-container {
         gap: 6px;
-        max-height: 120px;
+        /* max-height: 120px;  Removido ou ajustado */
         margin-top: 18px;
         margin-bottom: 18px;
+        overflow-x: auto; /* Garante scroll se necessário */
     }
     .grid-item {
         font-size: 0.75rem;
@@ -427,11 +488,13 @@
     .grid-nav-arrow {
         width: 30px;
         height: 30px;
+        flex-shrink: 0; /* Evita encolher */
     }
     .grid-nav-arrow svg {
         width: 18px;
         height: 18px;
     }
+    /* Resultado */
     .resultado-final-card {
         padding: 20px 15px;
     }
@@ -444,6 +507,7 @@
     .resultado-final-detalhes p {
         font-size: 0.95rem;
     }
+    /* Modal */
     .modal-content {
         padding: 25px 20px;
     }
@@ -455,20 +519,47 @@
         margin-bottom: 25px;
     }
     .modal-actions {
-        flex-direction: column-reverse;
-        align-items: stretch;
+        flex-direction: column-reverse; /* Botões empilhados */
+        align-items: stretch; /* Botões ocupam largura total */
         gap: 10px;
     }
     .modal-actions .button {
         width: 100%;
         min-width: unset;
     }
+
+     /* Ajustes Seção Conta 480px */
+     #conta-section {
+          padding: 20px 15px;
+     }
+     #conta-section .card {
+          padding: 20px;
+          margin: 15px auto;
+     }
+     #conta-section h2 { /* Título da seção conta */
+          font-size: 1.4rem;
+     }
+     #conta-section label { /* Labels do formulário */
+           font-size: 0.9rem;
+     }
+      #conta-section input[type="text"],
+      #conta-section input[type="email"] {
+           padding: 8px 10px;
+           font-size: 0.9rem;
+      }
+       #conta-section .button { /* Botão Salvar */
+            font-size: 0.9rem;
+            padding: 10px 15px;
+       }
+
+
+    /* Ajustes ainda menores */
     @media (max-width: 360px) {
-        aside {
+        aside { /* Barra superior ainda menor */
             padding: 8px 10px;
             gap: 5px;
         }
-        .pontuacao-wrap {
+        .pontuacao-wrap { /* Círculo ainda menor */
             height: 60px;
             width: 60px;
             padding: 2px;
@@ -482,10 +573,10 @@
             margin: 0;
         }
         aside #acertos span,
-        aside #erros span {
+        aside #erros span { /* Números menores */
             font-size: 0.8rem;
         }
-        .aside-info-wrap .icon-wrap {
+        .aside-info-wrap .icon-wrap { /* Ícones menores */
             margin-right: 3px;
             height: 24px;
             width: 24px;
@@ -494,20 +585,21 @@
             height: 16px;
             width: 16px;
         }
-        #btn-encerrar-sessao {
+        #btn-encerrar-sessao { /* Botão Encerrar menor */
             padding: 8px 12px;
         }
         #questoes-section .main-content {
-            padding: 15px 10px;
+            padding: 15px 10px; /* Menos padding */
         }
         .question-text {
-            font-size: 0.95rem;
+            font-size: 0.95rem; /* Texto da pergunta menor */
         }
-        .answer {
+        .answer { /* Respostas menores */
             padding: 12px 15px;
             font-size: 0.85rem;
             min-height: 42px;
         }
+        /* Grid */
         #question-grid-container {
             gap: 5px;
         }
@@ -524,23 +616,46 @@
             width: 16px;
             height: 16px;
         }
+        /* Filtros */
         .checkbox-item label {
             font-size: 0.75rem;
             padding: 6px 12px;
             min-height: 36px;
         }
+        /* Header */
+        header {
+             padding: 0 8px;
+             height: 60px;
+        }
+         .header-icons {
+              right: 8px;
+         }
+         /* Seção Conta 360px */
+          #conta-section {
+               padding: 15px 10px;
+          }
+           #conta-section .card {
+                padding: 15px;
+                margin: 10px auto;
+           }
+           #conta-section h2 { font-size: 1.3rem; }
+           #conta-section label { font-size: 0.85rem; }
+            #conta-section input[type="text"],
+            #conta-section input[type="email"] { font-size: 0.85rem; }
+            #conta-section .button { font-size: 0.85rem; }
+
     }
 }
 
-
-
+/* Ajuste para modo paisagem em telas baixas */
 @media (orientation: landscape) and (max-height: 500px) {
+    /* Move o botão Encerrar para dentro do fluxo se a aside for sticky */
     aside[style*="position: sticky"] #btn-encerrar-sessao,
-    aside:not([style*="position: static"]) #btn-encerrar-sessao {
-        position: static;
+    aside:not([style*="position: static"]) #btn-encerrar-sessao { /* Seletores mais genéricos */
+        position: static; /* Remove sticky específico do botão */
         margin-top: 20px;
         margin-bottom: 0;
-        width: 90%;
-        align-self: center;
+        width: 90%; /* Largura relativa */
+        align-self: center; /* Centraliza */
     }
 }

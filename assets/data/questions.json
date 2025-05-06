@@ -605,5 +605,533 @@
         "categorias": [
             "Proliferação"
         ]
+    },
+    {
+        "id": 38,
+        "pergunta": "O que é a Perda Auditiva Induzida por Ruído (PAIR) e qual o principal mecanismo de lesão envolvido?",
+        "imagem": "",
+        "respostas": [
+            "Uma infecção viral que afeta o nervo auditivo",
+            "Uma redução da acuidade auditiva, neurossensorial, irreversível e progressiva, causada por lesão crônica das células ciliadas pela exposição ao ruído",
+            "Um bloqueio no canal auditivo causado por cera",
+            "Uma perda auditiva condutiva devido à otosclerose"
+        ],
+        "correta": "Uma redução da acuidade auditiva, neurossensorial, irreversível e progressiva, causada por lesão crônica das células ciliadas pela exposição ao ruído",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 39,
+        "pergunta": "De que forma a exposição prolongada a sons acima de 85 dB afeta as células ciliadas do órgão de Corti?",
+        "imagem": "",
+        "respostas": [
+            "Causa uma inflamação temporária que se resolve espontaneamente",
+            "Leva a uma lesão crônica e morte dessas células, que não se regeneram",
+            "Estimula o crescimento de novas células ciliadas para compensar a perda",
+            "Provoca um aumento na produção de endolinfa, causando hidropsia endolinfática"
+        ],
+        "correta": "Leva a uma lesão crônica e morte dessas células, que não se regeneram",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 40,
+        "pergunta": "A recuperação auditiva na PAIR é possível após a cessação da exposição ao ruído?",
+        "imagem": "",
+        "respostas": [
+            "Sim, a audição se recupera totalmente em algumas semanas",
+            "Sim, mas apenas se a exposição for interrompida nos estágios iniciais",
+            "Não, a perda auditiva causada pela PAIR é irreversível, mas a progressão cessa com o fim da exposição",
+            "Apenas com cirurgia reconstrutiva da cóclea"
+        ],
+        "correta": "Não, a perda auditiva causada pela PAIR é irreversível, mas a progressão cessa com o fim da exposição",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 41,
+        "pergunta": "Por que as células ciliadas que captam sons nas frequências mais altas (3.000 a 6.000 Hz) são geralmente as primeiras a serem afetadas na PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Porque são menos numerosas que as células para frequências baixas",
+            "Devido à sua localização na base da cóclea, primeira região a sofrer o impacto do ruído",
+            "Porque são mais sensíveis a variações de pressão sonora",
+            "Devido a uma menor vascularização nessa região da cóclea"
+        ],
+        "correta": "Devido à sua localização na base da cóclea, primeira região a sofrer o impacto do ruído",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 42,
+        "pergunta": "Qual a prevalência da PAIR como doença ocupacional?",
+        "imagem": "",
+        "respostas": [
+            "É a doença ocupacional mais rara",
+            "É a segunda doença ocupacional mais frequente",
+            "Não é considerada uma doença ocupacional",
+            "Sua prevalência é desconhecida"
+        ],
+        "correta": "É a segunda doença ocupacional mais frequente",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 43,
+        "pergunta": "Qual dos seguintes é considerado um fator protetivo contra a PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Tabagismo",
+            "Exposição contínua ao ruído",
+            "Uso adequado de protetores auditivos",
+            "Déficit de magnésio"
+        ],
+        "correta": "Uso adequado de protetores auditivos",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 44,
+        "pergunta": "Qual o papel das células ciliadas externas na audição e como são afetadas na PAIR?",
+        "imagem": "",
+        "respostas": [
+            "São responsáveis pela transmissão direta do sinal ao nervo auditivo e são resistentes ao ruído",
+            "Amplificam o som e são as primeiras a serem lesadas irreversivelmente pela exposição ao ruído",
+            "Produzem a endolinfa e sua disfunção causa zumbido",
+            "Protegem as células ciliadas internas e se regeneram rapidamente"
+        ],
+        "correta": "Amplificam o som e são as primeiras a serem lesadas irreversivelmente pela exposição ao ruído",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 45,
+        "pergunta": "O que caracteriza a fase de 'Temporary Threshold Shift' (TTS) na fisiopatologia da PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Morte permanente das células ciliadas e inflamação crônica",
+            "Aumento da atividade metabólica das células ciliadas, sobrecarga mitocondrial e estresse oxidativo, podendo ser reversível",
+            "Degeneração sináptica irreversível entre células ciliadas e fibras nervosas",
+            "Formação de tecido cicatricial na cóclea"
+        ],
+        "correta": "Aumento da atividade metabólica das células ciliadas, sobrecarga mitocondrial e estresse oxidativo, podendo ser reversível",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 46,
+        "pergunta": "Como o reflexo do músculo estapédio atua como um mecanismo protetor da audição?",
+        "imagem": "",
+        "respostas": [
+            "Aumentando a sensibilidade auditiva em ambientes silenciosos",
+            "Contraindo-se em resposta a sons intensos, reduzindo a transmissão das vibrações para a orelha interna",
+            "Melhorando a discriminação de frequências sonoras",
+            "Bloqueando completamente a entrada de som no ouvido"
+        ],
+        "correta": "Contraindo-se em resposta a sons intensos, reduzindo a transmissão das vibrações para a orelha interna",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 47,
+        "pergunta": "Qual é um sintoma comum do trauma acústico (exposição aguda a ruído intenso)?",
+        "imagem": "",
+        "respostas": [
+            "Melhora da acuidade auditiva",
+            "Tinnitus (zumbido) e perda súbita auditiva",
+            "Ausência de qualquer sintoma imediato",
+            "Apenas dor de cabeça leve"
+        ],
+        "correta": "Tinnitus (zumbido) e perda súbita auditiva",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 48,
+        "pergunta": "No diagnóstico da PAIR, o que o Teste de Rinne positivo geralmente indica?",
+        "imagem": "",
+        "respostas": [
+            "Perda auditiva de condução",
+            "Audição normal ou perda neurossensorial (onde a condução aérea é melhor que a óssea)",
+            "Presença de líquido na orelha média",
+            "Disfunção do nervo vestibular"
+        ],
+        "correta": "Audição normal ou perda neurossensorial (onde a condução aérea é melhor que a óssea)",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 49,
+        "pergunta": "Qual é o limiar de normalidade geralmente estabelecido na audiometria para a maioria da população adulta?",
+        "imagem": "",
+        "respostas": [
+            "0 dB",
+            "10 dB",
+            "25 dB",
+            "40 dB"
+        ],
+        "correta": "25 dB",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 50,
+        "pergunta": "Qual é a principal medida profilática e terapêutica para a PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Uso de antibióticos potentes",
+            "Cirurgia para implante coclear imediato",
+            "Evitar exposições a ruídos contínuos acima de 85 dB e afastar-se do ambiente ruidoso",
+            "Terapia de reposição hormonal"
+        ],
+        "correta": "Evitar exposições a ruídos contínuos acima de 85 dB e afastar-se do ambiente ruidoso",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 51,
+        "pergunta": "Qual a responsabilidade da empresa em relação aos protetores auriculares para trabalhadores expostos a ruídos acima de 85 dB?",
+        "imagem": "",
+        "respostas": [
+            "A empresa pode cobrar uma taxa pelo fornecimento",
+            "O trabalhador deve adquirir seus próprios protetores",
+            "Devem ser fornecidos gratuitamente ao trabalhador pela empresa",
+            "O uso é opcional e não há responsabilidade da empresa"
+        ],
+        "correta": "Devem ser fornecidos gratuitamente ao trabalhador pela empresa",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 52,
+        "pergunta": "Em que circunstância o INSS concede benefício para um trabalhador com PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Sempre que houver diagnóstico de PAIR, independentemente da capacidade de trabalho",
+            "Apenas se a perda auditiva gerar impactos sociais ou emocionais significativos",
+            "Somente se a capacidade de trabalho do indivíduo estiver reduzida devido à perda auditiva",
+            "O INSS não cobre doenças relacionadas ao trabalho"
+        ],
+        "correta": "Somente se a capacidade de trabalho do indivíduo estiver reduzida devido à perda auditiva",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 53,
+        "pergunta": "De acordo com a NR 15, qual é a máxima exposição diária permissível para um nível de ruído de 90 dB(A)?",
+        "imagem": "",
+        "respostas": [
+            "8 horas",
+            "6 horas",
+            "4 horas",
+            "2 horas"
+        ],
+        "correta": "4 horas",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 54,
+        "pergunta": "Qual o significado de 'PAIR' no contexto da saúde ocupacional?",
+        "imagem": "",
+        "respostas": [
+            "Programa de Atenção Integral ao Reumatismo",
+            "Perda Auditiva Induzida por Radiação",
+            "Perda Auditiva Induzida por Ruído",
+            "Prevenção de Acidentes Industriais e Riscos"
+        ],
+        "correta": "Perda Auditiva Induzida por Ruído",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 55,
+        "pergunta": "A PAIR é caracterizada por ser uma perda auditiva de qual tipo?",
+        "imagem": "",
+        "respostas": [
+            "Condutiva",
+            "Mista",
+            "Neurossensorial",
+            "Funcional"
+        ],
+        "correta": "Neurossensorial",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 56,
+        "pergunta": "Qual o nível sonoro (em dB) a partir do qual a exposição prolongada começa a representar um risco significativo para o desenvolvimento da PAIR, segundo o documento?",
+        "imagem": "",
+        "respostas": [
+            "60 dB",
+            "75 dB",
+            "85 dB",
+            "100 dB"
+        ],
+        "correta": "85 dB",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 57,
+        "pergunta": "O que acontece com a progressão da PAIR uma vez que cessa a exposição ao ruído?",
+        "imagem": "",
+        "respostas": [
+            "A audição se recupera parcialmente",
+            "A progressão da doença continua no mesmo ritmo",
+            "A progressão da doença cessa, mas o dano já existente não é recuperado",
+            "A progressão se acelera devido à ausência do estímulo"
+        ],
+        "correta": "A progressão da doença cessa, mas o dano já existente não é recuperado",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 58,
+        "pergunta": "Qual é a principal estrutura afetada na cóclea pela PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Membrana basilar",
+            "Células ciliadas do órgão de Corti",
+            "Nervo coclear",
+            "Estria vascular"
+        ],
+        "correta": "Células ciliadas do órgão de Corti",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 59,
+        "pergunta": "Qual das alternativas NÃO é um fator de risco para PAIR mencionado no texto?",
+        "imagem": "",
+        "respostas": [
+            "Tabagismo",
+            "Fragilidade coclear constitucional",
+            "Hipotermia",
+            "Déficit de magnésio"
+        ],
+        "correta": "Hipotermia",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 60,
+        "pergunta": "O que é a organização tonotópica da cóclea?",
+        "imagem": "",
+        "respostas": [
+            "As células ciliadas respondem a todas as frequências igualmente",
+            "Diferentes regiões da cóclea respondem a diferentes frequências sonoras",
+            "A cóclea só processa sons de tons graves",
+            "A organização das células em espiral sem relação com a frequência"
+        ],
+        "correta": "Diferentes regiões da cóclea respondem a diferentes frequências sonoras",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 61,
+        "pergunta": "Na fisiopatologia da PAIR, o que o excesso de Espécies Reativas de Oxigênio (ROS) causa?",
+        "imagem": "",
+        "respostas": [
+            "Regeneração das células ciliadas",
+            "Dano às estruturas e células ciliadas internas pelo estresse oxidativo",
+            "Melhora da homeostase da endolinfa",
+            "Diminuição da resposta inflamatória"
+        ],
+        "correta": "Dano às estruturas e células ciliadas internas pelo estresse oxidativo",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 62,
+        "pergunta": "Qual o papel do feixe olivococlear cruzado na proteção auditiva?",
+        "imagem": "",
+        "respostas": [
+            "Amplificar sons fracos",
+            "Inibir temporariamente a atividade das células ciliadas externas, protegendo a cóclea do excesso de estimulação",
+            "Aumentar a liberação de glutamato",
+            "Estimular a contração do músculo estapédio"
+        ],
+        "correta": "Inibir temporariamente a atividade das células ciliadas externas, protegendo a cóclea do excesso de estimulação",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 63,
+        "pergunta": "Qual é uma característica da PAIR relacionada à simetria da perda auditiva?",
+        "imagem": "",
+        "respostas": [
+            "Geralmente é unilateral e assimétrica",
+            "Geralmente é bilateral e simétrica, especialmente se de origem ocupacional",
+            "Afeta apenas uma orelha, dependendo da fonte do ruído",
+            "A simetria é rara e indica outra condição"
+        ],
+        "correta": "Geralmente é bilateral e simétrica, especialmente se de origem ocupacional",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 64,
+        "pergunta": "No Teste de Weber, para onde o som lateraliza em caso de perda sensorioneural unilateral?",
+        "imagem": "",
+        "respostas": [
+            "Para o ouvido afetado",
+            "Para o ouvido normal",
+            "O som é percebido igualmente em ambos os ouvidos",
+            "O som não é percebido"
+        ],
+        "correta": "Para o ouvido normal",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 65,
+        "pergunta": "Qual o padrão típico da audiometria na PAIR em relação às frequências afetadas?",
+        "imagem": "",
+        "respostas": [
+            "Perda maior em frequências graves (abaixo de 1000 Hz)",
+            "Perda uniforme em todas as frequências",
+            "Danos mais comuns em frequências de 3000 a 8000 Hz, com entalhe característico",
+            "Perda exclusiva nas frequências da fala (1000-3000 Hz)"
+        ],
+        "correta": "Danos mais comuns em frequências de 3000 a 8000 Hz, com entalhe característico",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 66,
+        "pergunta": "Qual o papel do fonoaudiólogo no tratamento da PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Realizar cirurgia para restaurar a audição",
+            "Prescrever medicamentos para regenerar as células ciliadas",
+            "Melhorar a capacidade de detecção, discriminação e interpretação de sons com exercícios específicos",
+            "Apenas fornecer protetores auriculares"
+        ],
+        "correta": "Melhorar a capacidade de detecção, discriminação e interpretação de sons com exercícios específicos",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 67,
+        "pergunta": "O que é o 'direito extraprevidenciário' mencionado no contexto da PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Um benefício adicional concedido pelo INSS",
+            "O direito do trabalhador de processar a empresa por indenização na justiça comum, fora do INSS",
+            "Um tipo de aposentadoria especial para portadores de PAIR",
+            "A obrigação da empresa de fornecer tratamento médico contínuo"
+        ],
+        "correta": "O direito do trabalhador de processar a empresa por indenização na justiça comum, fora do INSS",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 68,
+        "pergunta": "Qual a finalidade principal da emissão do Comunicado por Acidente de Trabalho (CAT) em casos de PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Garantir a aposentadoria imediata do trabalhador",
+            "Apenas punir a empresa",
+            "Finalidade epidemiológica e para resguardo da empresa e do trabalhador",
+            "Iniciar um processo criminal contra os gestores da empresa"
+        ],
+        "correta": "Finalidade epidemiológica e para resguardo da empresa e do trabalhador",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 69,
+        "pergunta": "Segundo o documento, qual é o impacto da exposição a temperaturas mais baixas (hipotermia) no contexto da PAIR?",
+        "imagem": "",
+        "respostas": [
+            "Agrava a perda auditiva aumentando o metabolismo celular",
+            "Não tem impacto significativo na audição",
+            "Pode ser um fator protetivo ao reduzir a atividade metabólica e o estresse oxidativo nas células ciliadas",
+            "Causa congelamento das estruturas da orelha interna"
+        ],
+        "correta": "Pode ser um fator protetivo ao reduzir a atividade metabólica e o estresse oxidativo nas células ciliadas",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
+    },
+    {
+        "id": 70,
+        "pergunta": "No caso do Sr. Miguel, metalúrgico exposto a 90dB por 15 anos sem uso de EPI, qual seria a máxima exposição diária permissível segundo a NR 15 para esse nível de ruído?",
+        "imagem": "",
+        "respostas": [
+            "8 horas",
+            "4 horas",
+            "2 horas",
+            "1 hora"
+        ],
+        "correta": "4 horas",
+        "referencia": "Problema 4 - PAIR.pdf",
+        "categorias": [
+            "DRAMA"
+        ]
     }
 ]

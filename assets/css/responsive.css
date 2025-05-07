@@ -1,50 +1,58 @@
+/* assets/css/responsive.css */
+
 @media (max-width: 992px) {
     header {
-        padding: 0 30px; /* Ajusta padding do header */
+        padding: 0 30px;
     }
     .header-icons {
-         right: 30px; /* Ajusta posição do ícone */
+         right: 30px;
     }
 
     .logo-area {
         font-size: 1.8rem;
     }
 
-    /* Adicionado para telas médias (tablets) */
     #inicio-section {
         padding-top: 0;
         padding-left: 0;
         padding-right: 0;
-        /* Mantém o padding-bottom que seria herdado de layout.css (40px) ou inicio.css (0),
-           ou defina um específico se necessário.
-           Se layout.css #inicio-section { padding: 40px; } estiver ativo,
-           e você quiser manter o padding inferior de 40px: */
         padding-bottom: 40px;
+        width: 100%;
     }
 
     .hero-interactive-block {
         margin-top: 0;
-        /* O padding interno (ex: clamp(40px, 8vh, 60px) 20px ... de inicio.css)
-           cuidará do espaçamento do conteúdo.
-           Para garantir que o conteúdo tenha padding lateral se #inicio-section não tiver: */
-        padding-left: 20px; /* Ou o valor desejado para o conteúdo interno do hero */
-        padding-right: 20px;/* Ou o valor desejado para o conteúdo interno do hero */
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        padding: clamp(50px, 9vh, 70px)  /* Top */
+                 clamp(20px, 3vw, 40px)  /* Sides */
+                 clamp(40px, 8vh, 60px); /* Bottom */
+        gap: clamp(30px, 5vh, 40px);
     }
 
+    /* Para tablets em 992px, se os 4 cards de inicio.css (repeat(4,1fr))
+       ficarem apertados, você pode mudar para 2 colunas aqui: */
+    /*
+    .stats-card-deck {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 500px; // Ajuste conforme necessário para 2 cards
+        gap: 20px;
+    }
+    */
+
     .additional-content-area {
-        /* Se #inicio-section tinha padding (ex: 40px de layout.css) que você quer reimplementar aqui para esta área */
-        margin-left: 20px; /* Ajuste conforme o padding lateral do .hero-interactive-block ou desejado */
-        margin-right: 20px;/* Ajuste conforme o padding lateral do .hero-interactive-block ou desejado */
+        margin-left: clamp(20px, 3vw, 40px); /* Coordenar com padding lateral do hero */
+        margin-right: clamp(20px, 3vw, 40px);
         width: auto;
     }
-    /* Fim das adições para #inicio-section em telas médias */
 
     aside {
         min-width: 260px;
         padding: 25px;
         gap: 20px;
-        height: calc(100vh - 80px - 50px); /* Recalcula altura */
-        top: 0; /* Mantém sticky no topo */
+        height: calc(100vh - 80px - 50px);
+        top: 0;
     }
     .pontuacao-wrap {
         height: 110px;
@@ -62,7 +70,7 @@
         height: 32px;
     }
     #questoes-section {
-        height: calc(100vh - 80px - 50px); /* Recalcula altura */
+        height: calc(100vh - 80px - 50px);
     }
     #questoes-section .main-content {
         padding: 35px;
@@ -81,7 +89,7 @@
         min-height: 32px;
     }
     .grid-item.grid-item--current {
-        box-shadow: var(--shadow-grid-current-subtle); /* Mantém sombra se definida */
+        box-shadow: var(--shadow-grid-current-subtle);
         transform: scale(1.04);
     }
     .grid-nav-arrow {
@@ -93,56 +101,51 @@
         height: 18px;
     }
 
-     /* Ajuste da seção Conta */
      #conta-section {
           padding: 35px;
      }
 }
 
 @media (max-width: 768px) {
-    /* --- Alterações Chave para Mobile --- */
     nav:not(.bottom-navbar) {
-        display: none; /* Esconde nav superior */
+        display: none;
     }
     footer#footer {
-        display: none; /* Esconde footer padrão */
+        display: none;
     }
     .bottom-navbar {
-        display: block; /* Mostra nav inferior */
-        height: 60px; /* Altura ajustada */
+        display: block;
+        height: 60px;
     }
     body {
-        padding-bottom: 60px; /* Espaço para nav inferior fixa */
+        padding-bottom: 60px;
     }
     header {
-        height: 70px; /* Altura ajustada */
-        padding: 0 15px; /* Padding ajustado */
-        justify-content: center; /* Mantém logo centralizado */
-        position: relative; /* Mantém para ícone absoluto */
+        height: 70px;
+        padding: 0 15px;
+        justify-content: center;
+        position: relative;
     }
      .header-icons {
-        /* display: none; */ /* <<== REMOVIDO para mostrar o ícone */
-        right: 15px; /* <<== AJUSTADO para padding do header mobile */
-        /* position: absolute; top: 50%; transform: translateY(-50%); herdados */
+        right: 15px;
      }
      .header-icon-link {
-          padding: 6px; /* Opcional: diminuir área de clique */
+          padding: 6px;
      }
      .header-icon-link .material-symbols-outlined {
-          font-size: 26px; /* Opcional: diminuir ícone */
+          font-size: 26px;
      }
 
-
     main {
-        padding-top: 0; /* Remove padding se nav superior some */
+        padding-top: 0;
     }
     #questoes-section {
-        flex-direction: column; /* Muda layout para coluna */
-        height: auto; /* Altura automática */
-        overflow: visible; /* Remove overflow hidden */
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
     }
-    aside { /* Transforma aside em barra superior */
-        position: static; /* Remove sticky */
+    aside {
+        position: static;
         height: auto;
         overflow-y: visible;
         width: 100%;
@@ -150,28 +153,28 @@
         box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
         border-right: none;
         border-bottom: var(--border-width) solid var(--color-gray-400);
-        flex-direction: row; /* Itens em linha */
-        justify-content: flex-start; /* Alinha itens à esquerda */
+        flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
-        padding: 10px 15px; /* Padding ajustado */
+        padding: 10px 15px;
         gap: 15px;
-        flex-wrap: wrap; /* Permite quebra de linha */
-        flex-shrink: 0; /* Não encolhe */
+        flex-wrap: wrap;
+        flex-shrink: 0;
     }
-    .aside-title { display: none; } /* Esconde título "Pontuação" */
+    .aside-title { display: none; }
     .pontuacao-wrap {
         order: 1;
         height: 60px;
         width: 60px;
-        padding: 2px; /* Pode ajustar o padding da borda também */
+        padding: 2px;
         margin: 0;
     }
     #pontuacao {
         font-size: 1.4rem;
     }
-    .aside-info-wrap { /* Acertos/Erros */
+    .aside-info-wrap {
         gap: 8px;
-        order: 2; /* Segunda posição */
+        order: 2;
         margin-left: 0;
     }
     aside #acertos,
@@ -182,79 +185,83 @@
     aside #erros span {
         font-size: 0.9rem;
     }
-    #btn-encerrar-sessao { /* Botão Encerrar */
+    #btn-encerrar-sessao {
         position: static;
         bottom: auto;
-        width: auto; /* Largura automática */
-        order: 3; /* Terceira posição */
+        width: auto;
+        order: 3;
         flex-basis: auto;
         align-self: center;
         flex-shrink: 0;
-        margin-left: auto; /* Empurra para a direita */
+        margin-left: auto;
         margin-top: 0;
         margin-bottom: 0;
         font-size: 0.85rem;
         padding: 10px 18px;
         min-height: 38px;
     }
-    #questoes-section .main-content { /* Conteúdo principal das questões */
+    #questoes-section .main-content {
         height: auto;
         overflow-y: visible;
         padding: 25px 20px;
         flex-grow: 1;
-        min-height: 0; /* Necessário para flex-grow funcionar corretamente */
+        min-height: 0;
     }
     .logo-area {
-        font-size: 1.6rem; /* Ajusta tamanho do logo */
+        font-size: 1.6rem;
     }
     h2 {
         font-size: 1.7rem;
         margin-bottom: 20px;
     }
 
-    /* Modificado para #inicio-section */
     #inicio-section {
         padding-left: 0;
         padding-right: 0;
         padding-top: 0;
-        padding-bottom: 30px; /* Mantém o padding-bottom original de 'padding: 30px 20px;' */
-        min-height: calc(100vh - 70px - 60px); /* Recalcula altura mínima */
+        padding-bottom: 30px;
+        width: 100%;
+        min-height: calc(100vh - 70px - 60px);
     }
 
     .hero-interactive-block {
         margin-top: 0;
-        /* O padding interno do .hero-interactive-block (de inicio.css)
-           como padding: clamp(40px, 8vh, 60px) 20px clamp(30px, 6vh, 50px) 20px;
-           já deve fornecer o espaçamento lateral de 20px para o conteúdo.
-           Se o padding de #inicio-section era 20px e quer manter isso visualmente para o conteúdo:
-           padding-left: 20px;
-           padding-right: 20px;
-           Caso contrário, o padding de 20px de 'inicio.css' já deve funcionar.
-        */
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        padding-top: 50px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-bottom: 40px;
+        gap: 35px;
+    }
+
+    .stats-card-deck {
+        grid-template-columns: repeat(2, 1fr) !important; /* Forçando 2 colunas */
+        gap: 15px;
+        max-width: 480px; /* Aumentado para mais espaço */
+        padding: 0; /* Padding do .hero-interactive-block deve ser suficiente */
     }
 
     .additional-content-area {
-        margin-left: 20px; /* Se #inicio-section tinha 20px de padding lateral */
+        margin-left: 20px;
         margin-right: 20px;
         width: auto;
     }
-    /* Fim da modificação para #inicio-section */
 
-    #inicio-section .inicio-content { /* Esta classe não foi identificada no HTML, mas mantida caso seja usada */
+    #inicio-section .inicio-content {
         padding: 25px;
         width: 90%;
     }
-    /* Filtros */
     .filtro-categorias-container {
-        position: static; /* Remove sticky se houver */
+        position: static;
         gap: 10px;
         margin-bottom: 30px;
     }
-    /* Progresso, Grid, Paginação */
     #progress-container,
     #question-grid-container,
-    .paginacao { /* Paginação antiga, se existir */
-        position: static; /* Remove sticky se houver */
+    .paginacao {
+        position: static;
     }
     #question-grid-container {
         gap: 8px;
@@ -262,13 +269,13 @@
         margin-top: 20px;
         margin-bottom: 20px;
     }
-    .paginacao { display: none; } /* Esconde paginação antiga */
+    .paginacao { display: none; }
     .grid-item {
         font-size: 0.8rem;
         width: 34px;
         min-height: 34px;
     }
-    .grid-item.grid-item--current { /* Estilo diferente para item atual no mobile */
+    .grid-item.grid-item--current {
         box-shadow: none;
         border-width: var(--border-width-md);
         border-color: var(--color-primary-dark);
@@ -277,29 +284,26 @@
     }
     .grid-item.grid-item--current.grid-item--correct,
     .grid-item.grid-item--current.grid-item--incorrect {
-        background-color: unset; /* Remove fundo verde/vermelho do item atual */
-        border-color: unset; /* Remove borda verde/vermelha do item atual */
+        background-color: unset;
+        border-color: unset;
     }
     .grid-nav-arrow { width: 32px; height: 32px; }
     .grid-nav-arrow svg { width: 20px; height: 20px; }
     .filtro-label { font-size: 0.9rem; padding-left: 3px; }
     .filtro-checkboxes#filtro-checkboxes-scroll {
         gap: 10px;
-        padding: 5px 15px 10px 15px; /* Padding ajustado */
-        clip-path: none; /* Remove máscara */
-        /* Scroll ainda funciona, mas setas estão escondidas */
+        padding: 5px 15px 10px 15px;
+        clip-path: none;
     }
     .checkbox-item label {
         font-size: 0.85rem;
         padding: 8px 16px;
         min-height: 40px;
     }
-    .scroll-arrow { display: none; } /* Esconde setas de scroll do filtro */
-    /* Aviso */
+    .scroll-arrow { display: none; }
     #aviso-container { margin-top: 15px; }
     .aviso-mensagem { padding: 25px; }
-    /* Quiz */
-    #quiz-section { flex-grow: 1; } /* Garante que ocupe espaço */
+    #quiz-section { flex-grow: 1; }
     #quiz-section h2#question-title {
         font-size: 1.3rem;
         gap: 8px;
@@ -319,7 +323,6 @@
         min-height: 46px;
     }
     #referencia-questao { margin-top: 20px; padding-top: 10px; }
-    /* Resultado */
     .resultado-final-card {
         padding: 25px;
         max-width: 90%;
@@ -329,7 +332,6 @@
     .resultado-final-titulo { font-size: 1.6rem; }
     .pontos-valor { font-size: 1.7rem; }
     .resultado-final-detalhes p { font-size: 1rem; }
-    /* Botões de Navegação (Quiz) */
     .navigation-buttons {
         position: static;
         padding-bottom: 0;
@@ -341,7 +343,6 @@
         font-size: 0.9rem;
     }
 
-    /* Ajustes Seção Conta Mobile */
      #conta-section {
           padding: 25px 20px;
      }
@@ -349,15 +350,14 @@
           margin: 20px auto;
           padding: 25px;
      }
-
 }
 
 @media (max-width: 480px) {
     .bottom-navbar {
-        height: 60px; /* Mantém altura */
+        height: 60px;
     }
     body {
-        padding-bottom: 60px; /* Mantém padding */
+        padding-bottom: 60px;
     }
     .bottom-navbar .bottom-nav-link .material-symbols-outlined {
         font-size: 24px;
@@ -366,11 +366,11 @@
         font-size: 0.7rem;
     }
     header {
-        height: 65px; /* Altura ajustada */
-        padding: 0 10px; /* Padding ajustado */
+        height: 65px;
+        padding: 0 10px;
     }
     .header-icons {
-         right: 10px; /* <<== AJUSTADO para padding */
+         right: 10px;
     }
     .header-icon-link {
          padding: 5px;
@@ -379,72 +379,95 @@
           font-size: 24px;
      }
 
-    /* Modificado para #inicio-section */
     #inicio-section {
         padding-left: 0;
         padding-right: 0;
         padding-top: 0;
-        padding-bottom: 25px; /* Mantém o padding-bottom original de 'padding: 25px 15px;' */
-        min-height: calc(100vh - 65px - 60px); /* Recalcula */
+        padding-bottom: 25px;
+        width: 100%;
+        min-height: calc(100vh - 65px - 60px);
     }
 
     .hero-interactive-block {
         margin-top: 0;
-        /* responsive.css já tem:
-           padding-top: 30px;
-           padding-bottom: 25px;
-           Para manter o espaçamento lateral que #inicio-section tinha (15px) para o conteúdo: */
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        padding-top: 40px;
         padding-left: 15px;
         padding-right: 15px;
+        padding-bottom: 30px;
+        gap: 30px;
     }
 
+    .stats-card-deck {
+        grid-template-columns: repeat(2, 1fr) !important; /* Forçando 2 colunas */
+        gap: 12px;
+        max-width: 100%;
+        padding: 0; /* Padding do .hero-interactive-block deve ser suficiente */
+    }
+
+    .stat-card.mini-card {
+         padding: 15px 10px; /* Reduzir padding interno para caber melhor */
+         min-height: auto; /* Permitir altura flexível */
+         font-size: 0.9em; /* Reduzir um pouco a fonte geral do card se necessário */
+    }
+    .stat-card .stat-icon {
+        font-size: clamp(1.7rem, 3.5vw, 2rem); /* Ícones menores */
+        margin-bottom: 8px;
+    }
+    .stat-card .stat-label {
+        font-size: clamp(0.65rem, 1.7vw, 0.7rem);
+        margin-bottom: 6px;
+    }
+    .stat-card .stat-value {
+        font-size: clamp(1.6rem, 3.5vw, 2rem); /* Valor menor */
+    }
+
+
     .additional-content-area {
-        margin-left: 15px; /* Se #inicio-section tinha 15px de padding lateral */
+        margin-left: 15px;
         margin-right: 15px;
         width: auto;
     }
-    /* Fim da modificação para #inicio-section */
 
-
-    #inicio-section .inicio-content { /* Esta classe não foi identificada no HTML, mas mantida caso seja usada */
+    #inicio-section .inicio-content {
         padding: 20px;
         width: 95%;
     }
-    /* Aside (agora barra superior) */
     aside {
         padding: 10px 12px;
         gap: 10px;
-        justify-content: flex-start; /* Mantém alinhamento */
+        justify-content: flex-start;
     }
-    .pontuacao-wrap { /* Círculo menor */
+    .pontuacao-wrap {
         height: 50px;
         width: 50px;
         padding: 2px;
-        margin-right: 10px; /* Espaço à direita */
+        margin-right: 10px;
     }
     #pontuacao {
         font-size: 1.2rem;
     }
-    /* Esconde texto "Acertos/Erros", mostra só números */
     aside #acertos,
     aside #erros {
-        font-size: 0; /* Esconde texto */
+        font-size: 0;
         color: transparent;
         font-weight: normal;
-        display: inline-flex; /* Mantém layout com ícone */
+        display: inline-flex;
         align-items: center;
     }
     aside #acertos span,
-    aside #erros span { /* Números */
+    aside #erros span {
         font-size: 0.9rem;
         font-weight: var(--font-weight-semibold);
-        color: var(--color-gray-900); /* Cor visível */
-        margin-left: 0; /* Remove margem se houver */
+        color: var(--color-gray-900);
+        margin-left: 0;
         display: inline;
         line-height: 1;
     }
-    .aside-info-wrap p { margin: 0; } /* Remove margem do <p> pai */
-    .aside-info-wrap .icon-wrap { /* Ícones Acerto/Erro */
+    .aside-info-wrap p { margin: 0; }
+    .aside-info-wrap .icon-wrap {
         margin-right: 4px;
         height: 26px;
         width: 26px;
@@ -454,23 +477,22 @@
         height: 18px;
         width: 18px;
     }
-    #btn-encerrar-sessao { /* Botão Encerrar menor */
+    #btn-encerrar-sessao {
         padding: 8px 15px;
         font-size: 0.8rem;
-        margin-left: auto; /* Mantém na direita */
-        order: 3; /* Mantém ordem */
+        margin-left: auto;
+        order: 3;
     }
     #questoes-section .main-content {
-        padding: 20px 15px; /* Padding ajustado */
+        padding: 20px 15px;
     }
     .logo-area {
-        font-size: 1.4rem; /* Logo menor */
+        font-size: 1.4rem;
     }
     h2 {
-        font-size: 1.5rem; /* Títulos menores */
+        font-size: 1.5rem;
         margin-bottom: 15px;
     }
-    /* Filtros */
     .filtro-categorias-container {
         gap: 8px;
         margin-bottom: 25px;
@@ -483,12 +505,11 @@
         padding-right: 10px;
         gap: 8px;
     }
-    .checkbox-item label { /* Botões de filtro menores */
+    .checkbox-item label {
         font-size: 0.8rem;
         padding: 8px 14px;
         min-height: 38px;
     }
-    /* Aviso */
     #aviso-container {
         margin-top: 15px;
         max-width: 95%;
@@ -497,7 +518,6 @@
         padding: 20px;
         font-size: 1rem;
     }
-    /* Quiz */
     #quiz-section h2#question-title {
         font-size: 1.2rem;
         gap: 8px;
@@ -522,12 +542,12 @@
         line-height: 1.6;
     }
     .image-question-wrap > img {
-        max-height: 280px; /* Imagem menor */
+        max-height: 280px;
     }
     .answers-wrap {
         gap: 12px;
     }
-    .answer { /* Respostas menores */
+    .answer {
         padding: 14px 18px;
         font-size: 0.9rem;
         min-height: 44px;
@@ -537,26 +557,23 @@
         margin-top: 18px;
         padding-top: 10px;
     }
-    /* Botões Navegação Quiz */
     .navigation-buttons {
         padding: 20px 0 0 0;
         margin-top: 5px;
         gap: 12px;
-        flex-wrap: wrap; /* Permite quebra se não couber */
+        flex-wrap: wrap;
     }
     .navigation-buttons .button {
         padding: 10px 18px;
         font-size: 0.85rem;
-        flex-grow: 1; /* Ocupam espaço igual */
-        min-width: 110px; /* Largura mínima */
+        flex-grow: 1;
+        min-width: 110px;
     }
-    /* Grid de Questões */
     #question-grid-container {
         gap: 6px;
-        /* max-height: 120px;  Removido ou ajustado */
         margin-top: 18px;
         margin-bottom: 18px;
-        overflow-x: auto; /* Garante scroll se necessário */
+        overflow-x: auto;
     }
     .grid-item {
         font-size: 0.75rem;
@@ -566,13 +583,12 @@
     .grid-nav-arrow {
         width: 30px;
         height: 30px;
-        flex-shrink: 0; /* Evita encolher */
+        flex-shrink: 0;
     }
     .grid-nav-arrow svg {
         width: 18px;
         height: 18px;
     }
-    /* Resultado */
     .resultado-final-card {
         padding: 20px 15px;
     }
@@ -585,7 +601,6 @@
     .resultado-final-detalhes p {
         font-size: 0.95rem;
     }
-    /* Modal */
     .modal-content {
         padding: 25px 20px;
     }
@@ -597,8 +612,8 @@
         margin-bottom: 25px;
     }
     .modal-actions {
-        flex-direction: column-reverse; /* Botões empilhados */
-        align-items: stretch; /* Botões ocupam largura total */
+        flex-direction: column-reverse;
+        align-items: stretch;
         gap: 10px;
     }
     .modal-actions .button {
@@ -606,7 +621,6 @@
         min-width: unset;
     }
 
-     /* Ajustes Seção Conta 480px */
      #conta-section {
           padding: 20px 15px;
      }
@@ -614,47 +628,63 @@
           padding: 20px;
           margin: 15px auto;
      }
-     #conta-section h2 { /* Título da seção conta */
+     #conta-section h2 {
           font-size: 1.4rem;
      }
-     #conta-section label { /* Labels do formulário */
+     #conta-section label {
            font-size: 0.9rem;
      }
-      #conta-section input[type="text"],
-      #conta-section input[type="email"] {
+      #conta-section .form-control {
            padding: 8px 10px;
            font-size: 0.9rem;
       }
-       #conta-section .button { /* Botão Salvar */
+       #conta-section .button {
             font-size: 0.9rem;
             padding: 10px 15px;
        }
 
-
-    /* Ajustes ainda menores */
     @media (max-width: 360px) {
-        aside { /* Barra superior ainda menor */
+        #inicio-section {
+             width: 100%;
+        }
+        .hero-interactive-block {
+             margin-left: 0;
+             margin-right: 0;
+        }
+
+        .stats-card-deck {
+            /* Considerar 1 coluna para telas muito estreitas se 2 ainda estiverem apertadas */
+            /* grid-template-columns: repeat(1, 1fr) !important; */
+            /* gap: 10px; */
+            /* max-width: calc(100% - 20px); /* Exemplo se for 1 coluna, para dar um respiro */
+        }
+        .stat-card.mini-card {
+            padding: 10px; /* Ainda menor */
+        }
+
+
+        aside {
             padding: 8px 10px;
             gap: 5px;
         }
-        .pontuacao-wrap { /* Círculo ainda menor */
-            height: 60px; /* Mantido de um ajuste anterior no .css, verificar se é intencional ou se deve ser 50px como antes */
-            width: 60px;  /* Mantido de um ajuste anterior no .css */
+        .pontuacao-wrap {
+            height: 60px;
+            width: 60px;
             padding: 2px;
             margin-right: 5px;
         }
         #pontuacao {
-            font-size: 1.4rem; /* Mantido de um ajuste anterior no .css */
+            font-size: 1.4rem;
         }
         .aside-info-wrap {
             gap: 3px;
             margin: 0;
         }
         aside #acertos span,
-        aside #erros span { /* Números menores */
+        aside #erros span {
             font-size: 0.8rem;
         }
-        .aside-info-wrap .icon-wrap { /* Ícones menores */
+        .aside-info-wrap .icon-wrap {
             margin-right: 3px;
             height: 24px;
             width: 24px;
@@ -663,21 +693,20 @@
             height: 16px;
             width: 16px;
         }
-        #btn-encerrar-sessao { /* Botão Encerrar menor */
+        #btn-encerrar-sessao {
             padding: 8px 12px;
         }
         #questoes-section .main-content {
-            padding: 15px 10px; /* Menos padding */
+            padding: 15px 10px;
         }
         .question-text {
-            font-size: 0.95rem; /* Texto da pergunta menor */
+            font-size: 0.95rem;
         }
-        .answer { /* Respostas menores */
+        .answer {
             padding: 12px 15px;
             font-size: 0.85rem;
             min-height: 42px;
         }
-        /* Grid */
         #question-grid-container {
             gap: 5px;
         }
@@ -694,13 +723,11 @@
             width: 16px;
             height: 16px;
         }
-        /* Filtros */
         .checkbox-item label {
             font-size: 0.75rem;
             padding: 6px 12px;
             min-height: 36px;
         }
-        /* Header */
         header {
              padding: 0 8px;
              height: 60px;
@@ -708,7 +735,6 @@
          .header-icons {
               right: 8px;
          }
-         /* Seção Conta 360px */
           #conta-section {
                padding: 15px 10px;
           }
@@ -718,22 +744,19 @@
            }
            #conta-section h2 { font-size: 1.3rem; }
            #conta-section label { font-size: 0.85rem; }
-            #conta-section input[type="text"],
-            #conta-section input[type="email"] { font-size: 0.85rem; }
+            #conta-section .form-control { font-size: 0.85rem; }
             #conta-section .button { font-size: 0.85rem; }
-
     }
 }
 
 /* Ajuste para modo paisagem em telas baixas */
 @media (orientation: landscape) and (max-height: 500px) {
-    /* Move o botão Encerrar para dentro do fluxo se a aside for sticky */
     aside[style*="position: sticky"] #btn-encerrar-sessao,
-    aside:not([style*="position: static"]) #btn-encerrar-sessao { /* Seletores mais genéricos */
-        position: static; /* Remove sticky específico do botão */
+    aside:not([style*="position: static"]) #btn-encerrar-sessao {
+        position: static;
         margin-top: 20px;
         margin-bottom: 0;
-        width: 90%; /* Largura relativa */
-        align-self: center; /* Centraliza */
+        width: 90%;
+        align-self: center;
     }
 }

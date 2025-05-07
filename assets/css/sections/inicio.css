@@ -3,31 +3,33 @@
 #inicio-section {
     padding: 0;
     background-color: var(--color-gray-100);
-    min-height: calc(100vh - 80px - 50px); /* Considerando header e nav desktop */
+    min-height: calc(100vh - 80px - 50px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    overflow-x: hidden; /* Prevenir scroll horizontal acidental */
+    justify-content: center;
+    overflow-x: hidden;
 }
 
 .hero-interactive-block {
     width: 100%;
-    padding: clamp(40px, 8vh, 60px) 20px clamp(30px, 6vh, 50px) 20px; /* Padding responsivo */
+    padding: clamp(50px, 9vh, 70px)  /* Top */
+             clamp(20px, 3vw, 40px)  /* Sides */
+             clamp(40px, 8vh, 60px); /* Bottom */
     background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-medium) 60%, var(--color-secondary-green) 100%);
     color: var(--color-white);
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(25px, 5vh, 35px); /* Gap responsivo */
+    gap: clamp(30px, 5vh, 40px); /* Gap interno moderado */
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-    margin-bottom: clamp(30px, 6vh, 40px);
+    margin-bottom: clamp(40px, 7vh, 60px); /* Margem inferior moderada */
 }
 
 .welcome-message {
     max-width: 700px;
-    margin-bottom: 0; /* Gap do pai já cuida disso */
+    margin-bottom: 0;
 }
 
 .welcome-message h1 {
@@ -48,17 +50,19 @@
 
 .stats-card-deck {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Ajustado minmax */
-    gap: clamp(15px, 3vw, 20px); /* Gap responsivo */
+    grid-template-columns: repeat(4, 1fr); /* SEMPRE 4 cards por linha aqui */
+    gap: clamp(15px, 3vw, 20px);
     width: 100%;
-    max-width: 880px; /* Levemente maior para acomodar melhor */
-    align-items: stretch; /* << NOVO: Tenta fazer todos os cards terem a mesma altura na linha */
+    max-width: 960px; /* Ajuste conforme o tamanho desejado para os 4 cards */
+    align-items: stretch;
+    margin-left: auto; /* Centraliza o deck */
+    margin-right: auto;
 }
 
 .stat-card.mini-card {
     background-color: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(8px);
-    padding: clamp(15px, 3vw, 20px); /* Padding responsivo */
+    padding: clamp(15px, 3vw, 20px);
     border-radius: var(--border-radius-lg);
     color: var(--color-white);
     border: 1px solid rgba(255, 255, 255, 0.25);
@@ -67,11 +71,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between; /* << ALTERADO: Para melhor distribuição vertical interna */
-    /* min-height: 160px; Removido min-height fixo para permitir que align-items: stretch funcione melhor.
-                       Se o conteúdo for muito variável, podemos reconsiderar ou usar grid-auto-rows. */
+    justify-content: space-between;
+    min-height: 150px; /* Para manter uma altura consistente */
 }
-
 
 .stat-card.mini-card:hover {
     transform: translateY(-4px);
@@ -80,32 +82,32 @@
 }
 
 .stat-card .stat-icon {
-    font-size: clamp(1.8rem, 4vw, 2.1rem); /* Ícone responsivo */
+    font-size: clamp(1.8rem, 4vw, 2.1rem);
     margin-bottom: 10px;
     opacity: 0.85;
-    line-height: 1; /* Garante que o ícone não cause altura extra */
+    line-height: 1;
 }
 
 .stat-card .stat-label {
-    font-size: clamp(0.7rem, 1.8vw, 0.75rem); /* Label responsivo e menor */
+    font-size: clamp(0.7rem, 1.8vw, 0.75rem);
     font-weight: var(--font-weight-medium);
-    margin-bottom: 8px; /* Ajustado */
+    margin-bottom: 8px;
     text-transform: uppercase;
     letter-spacing: 0.6px;
     opacity: 0.9;
-    line-height: 1.3; /* Melhor controle de altura */
-    flex-grow: 1; /* Permite que o label ocupe espaço se necessário para empurrar o valor */
+    line-height: 1.3;
+    flex-grow: 1;
 }
 
 .stat-card .stat-value {
-    font-size: clamp(1.7rem, 3.8vw, 2.1rem); /* Valor responsivo */
+    font-size: clamp(1.7rem, 3.8vw, 2.1rem);
     font-weight: var(--font-weight-bold);
     line-height: 1.1;
-    margin-top: auto; /* Empurra o valor para baixo se houver espaço */
+    margin-top: auto;
 }
 
 .main-cta-area {
-    margin-top: 0; /* Gap do pai já cuida disso */
+    margin-top: 0;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -123,14 +125,14 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 15px; /* Reduzido um pouco */
+    gap: 15px;
     width: 100%;
-    max-width: 550px; /* Reduzido para melhor encaixe mobile */
+    max-width: 550px;
 }
 
 .button-fancy-primary,
 .button-fancy-secondary {
-    padding: clamp(12px, 2.5vh, 14px) clamp(20px, 4vw, 28px); /* Padding responsivo */
+    padding: clamp(12px, 2.5vh, 14px) clamp(20px, 4vw, 28px);
     font-size: clamp(0.9rem, 2.2vw, 1rem);
     font-weight: var(--font-weight-semibold);
     border-radius: var(--border-radius-xl);
@@ -140,19 +142,19 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px; /* Gap entre ícone e texto reduzido */
+    gap: 8px;
     text-decoration: none;
-    flex: 1 1 200px; /* Flex grow, shrink e basis */
-    text-align: center; /* Garante centralização do texto */
+    flex: 1 1 200px;
+    text-align: center;
 }
 
 .button-fancy-primary .material-symbols-outlined,
 .button-fancy-secondary .material-symbols-outlined {
-    font-size: clamp(1.1em, 2.5vw, 1.2em); /* Ícone responsivo */
+    font-size: clamp(1.1em, 2.5vw, 1.2em);
 }
 
 .button-fancy-primary {
-    background-image: linear-gradient(to right, var(--color-secondary-green), #23d1a0); /* Cor do gradiente ajustada */
+    background-image: linear-gradient(to right, var(--color-secondary-green), #23d1a0);
     color: var(--color-white);
 }
 
@@ -174,11 +176,12 @@
     box-shadow: 0 5px 10px rgba(0,0,0,0.08);
 }
 
-
 .additional-content-area {
     width: 100%;
     max-width: 800px;
-    margin: 0 auto clamp(30px, 6vh, 40px) auto; /* Último elemento, margem inferior responsiva */
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: clamp(30px, 6vh, 40px);
     padding: clamp(25px, 5vh, 35px);
     text-align: center;
     background-color: var(--color-white);
@@ -212,76 +215,4 @@
     background-color: var(--color-primary-light);
     border-color: var(--color-primary-dark);
     color: var(--color-primary-dark);
-}
-
-/* Responsividade Mobile Detalhada */
-@media (max-width: 768px) { /* Tablets e mobile grande */
-    .hero-interactive-block {
-        gap: 20px; /* Gap menor no hero */
-    }
-    .stats-card-deck {
-        /* Mantém repeat(auto-fit, minmax(140px, 1fr)) para flexibilidade,
-           mas pode ser necessário forçar 2 colunas se o auto-fit não agradar */
-        grid-template-columns: repeat(2, 1fr); /* Força 2 colunas */
-        gap: 15px;
-        max-width: 420px; /* Ajustado para caber 2 colunas confortavelmente */
-    }
-    /* .stat-card.mini-card: Não precisa de min-height aqui, pois align-items: stretch deve funcionar */
-
-    .quiz-options-main {
-        flex-direction: column; /* Botões empilhados */
-        gap: 12px;
-        max-width: 300px; /* Botões mais estreitos */
-    }
-    .button-fancy-primary,
-    .button-fancy-secondary {
-        flex-basis: auto; /* Reseta flex-basis para empilhar */
-        width: 100%; /* Ocupa toda largura do container .quiz-options-main */
-    }
-}
-
-@media (max-width: 480px) { /* Mobile pequeno */
-    .hero-interactive-block {
-        padding-top: 30px;
-        padding-bottom: 25px;
-    }
-    .welcome-message h1 {
-        font-size: 1.7rem; /* Título um pouco menor */
-    }
-    .welcome-message p {
-        font-size: 0.9rem; /* Texto de apoio menor */
-    }
-
-    .stats-card-deck {
-        grid-template-columns: repeat(2, 1fr); /* Ainda 2 colunas, mas menores */
-        gap: 10px; /* Gap menor entre cards */
-        max-width: 100%; /* Ocupa toda largura */
-        padding: 0 10px; /* Adiciona padding lateral ao deck se necessário */
-    }
-    .stat-card.mini-card {
-         padding: 12px; /* Menos padding interno nos cards */
-    }
-    .stat-card .stat-icon { font-size: 1.6rem; margin-bottom: 6px;}
-    .stat-card .stat-label { font-size: 0.65rem; margin-bottom: 4px;}
-    .stat-card .stat-value { font-size: 1.5rem; }
-
-
-    .main-cta-area p {
-        font-size: 0.95rem;
-        margin-bottom: 15px;
-    }
-    .quiz-options-main {
-        max-width: 280px; /* Botões ainda mais estreitos */
-    }
-    .button-fancy-primary,
-    .button-fancy-secondary {
-        padding: 10px 18px; /* Botões menores */
-        gap: 6px;
-    }
-
-    .additional-content-area {
-        padding: 20px 15px;
-    }
-    .additional-content-area h2 { font-size: 1.3rem;}
-    .additional-content-area p { font-size: 0.85rem;}
 }

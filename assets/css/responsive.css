@@ -9,6 +9,36 @@
     .logo-area {
         font-size: 1.8rem;
     }
+
+    /* Adicionado para telas médias (tablets) */
+    #inicio-section {
+        padding-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+        /* Mantém o padding-bottom que seria herdado de layout.css (40px) ou inicio.css (0),
+           ou defina um específico se necessário.
+           Se layout.css #inicio-section { padding: 40px; } estiver ativo,
+           e você quiser manter o padding inferior de 40px: */
+        padding-bottom: 40px;
+    }
+
+    .hero-interactive-block {
+        margin-top: 0;
+        /* O padding interno (ex: clamp(40px, 8vh, 60px) 20px ... de inicio.css)
+           cuidará do espaçamento do conteúdo.
+           Para garantir que o conteúdo tenha padding lateral se #inicio-section não tiver: */
+        padding-left: 20px; /* Ou o valor desejado para o conteúdo interno do hero */
+        padding-right: 20px;/* Ou o valor desejado para o conteúdo interno do hero */
+    }
+
+    .additional-content-area {
+        /* Se #inicio-section tinha padding (ex: 40px de layout.css) que você quer reimplementar aqui para esta área */
+        margin-left: 20px; /* Ajuste conforme o padding lateral do .hero-interactive-block ou desejado */
+        margin-right: 20px;/* Ajuste conforme o padding lateral do .hero-interactive-block ou desejado */
+        width: auto;
+    }
+    /* Fim das adições para #inicio-section em telas médias */
+
     aside {
         min-width: 260px;
         padding: 25px;
@@ -181,11 +211,36 @@
         font-size: 1.7rem;
         margin-bottom: 20px;
     }
+
+    /* Modificado para #inicio-section */
     #inicio-section {
-        padding: 30px 20px;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+        padding-bottom: 30px; /* Mantém o padding-bottom original de 'padding: 30px 20px;' */
         min-height: calc(100vh - 70px - 60px); /* Recalcula altura mínima */
     }
-    #inicio-section .inicio-content {
+
+    .hero-interactive-block {
+        margin-top: 0;
+        /* O padding interno do .hero-interactive-block (de inicio.css)
+           como padding: clamp(40px, 8vh, 60px) 20px clamp(30px, 6vh, 50px) 20px;
+           já deve fornecer o espaçamento lateral de 20px para o conteúdo.
+           Se o padding de #inicio-section era 20px e quer manter isso visualmente para o conteúdo:
+           padding-left: 20px;
+           padding-right: 20px;
+           Caso contrário, o padding de 20px de 'inicio.css' já deve funcionar.
+        */
+    }
+
+    .additional-content-area {
+        margin-left: 20px; /* Se #inicio-section tinha 20px de padding lateral */
+        margin-right: 20px;
+        width: auto;
+    }
+    /* Fim da modificação para #inicio-section */
+
+    #inicio-section .inicio-content { /* Esta classe não foi identificada no HTML, mas mantida caso seja usada */
         padding: 25px;
         width: 90%;
     }
@@ -324,11 +379,34 @@
           font-size: 24px;
      }
 
+    /* Modificado para #inicio-section */
     #inicio-section {
-        padding: 25px 15px;
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+        padding-bottom: 25px; /* Mantém o padding-bottom original de 'padding: 25px 15px;' */
         min-height: calc(100vh - 65px - 60px); /* Recalcula */
     }
-    #inicio-section .inicio-content {
+
+    .hero-interactive-block {
+        margin-top: 0;
+        /* responsive.css já tem:
+           padding-top: 30px;
+           padding-bottom: 25px;
+           Para manter o espaçamento lateral que #inicio-section tinha (15px) para o conteúdo: */
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .additional-content-area {
+        margin-left: 15px; /* Se #inicio-section tinha 15px de padding lateral */
+        margin-right: 15px;
+        width: auto;
+    }
+    /* Fim da modificação para #inicio-section */
+
+
+    #inicio-section .inicio-content { /* Esta classe não foi identificada no HTML, mas mantida caso seja usada */
         padding: 20px;
         width: 95%;
     }
@@ -560,13 +638,13 @@
             gap: 5px;
         }
         .pontuacao-wrap { /* Círculo ainda menor */
-            height: 60px;
-            width: 60px;
+            height: 60px; /* Mantido de um ajuste anterior no .css, verificar se é intencional ou se deve ser 50px como antes */
+            width: 60px;  /* Mantido de um ajuste anterior no .css */
             padding: 2px;
             margin-right: 5px;
         }
         #pontuacao {
-            font-size: 1.4rem;
+            font-size: 1.4rem; /* Mantido de um ajuste anterior no .css */
         }
         .aside-info-wrap {
             gap: 3px;

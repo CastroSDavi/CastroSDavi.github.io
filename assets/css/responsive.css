@@ -25,9 +25,11 @@
         margin-left: 0;
         margin-right: 0;
         width: 100%;
-        padding: clamp(50px, 9vh, 70px)  /* Top */
-                 clamp(20px, 3vw, 40px)  /* Sides */
-                 clamp(40px, 8vh, 60px); /* Bottom */
+        /* Ajuste para 992px - valores originais da seção inicio.css como base */
+        padding-top: clamp(50px, 9vh, 70px);
+        padding-left: clamp(20px, 3vw, 40px);
+        padding-right: clamp(20px, 3vw, 40px);
+        padding-bottom: clamp(40px, 8vh, 60px);
         gap: clamp(30px, 5vh, 40px);
     }
 
@@ -229,19 +231,24 @@
         margin-left: 0;
         margin-right: 0;
         width: 100%;
-        padding-top: 50px;
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-bottom: 40px;
-        gap: 35px;
+        /* Aumentando espaçamentos para 768px */
+        padding-top: clamp(55px, 9.5vh, 70px);
+        padding-left: clamp(25px, 4vw, 35px);
+        padding-right: clamp(25px, 4vw, 35px);
+        padding-bottom: clamp(45px, 8.5vh, 60px);
+        gap: clamp(35px, 5.5vh, 45px);
     }
 
     .stats-card-deck {
         grid-template-columns: repeat(2, 1fr) !important; /* Forçando 2 colunas */
-        gap: 15px;
-        max-width: 480px; /* Aumentado para mais espaço */
-        padding: 0; /* Padding do .hero-interactive-block deve ser suficiente */
+        gap: clamp(18px, 3vw, 22px); /* Aumentado e usando clamp */
+        max-width: 480px;
+        padding: 0;
     }
+     .stat-card.mini-card { /* Adicionado para 768px se precisar de ajuste fino */
+        padding: clamp(15px, 3vw, 20px); /* Ajustado para mais respiro */
+    }
+
 
     .additional-content-area {
         margin-left: 20px;
@@ -393,36 +400,58 @@
         margin-left: 0;
         margin-right: 0;
         width: 100%;
-        padding-top: 40px;
-        padding-left: 15px;
-        padding-right: 15px;
-        padding-bottom: 30px;
-        gap: 30px;
+        /* === ALTERAÇÕES PARA AUMENTAR ESPAÇAMENTO === */
+        padding-top: clamp(45px, 10vh, 60px);
+        padding-left: clamp(20px, 5vw, 30px);
+        padding-right: clamp(20px, 5vw, 30px);
+        padding-bottom: clamp(35px, 8vh, 50px);
+        gap: clamp(35px, 6vh, 45px);
+    }
+
+    .hero-interactive-block .welcome-message h1 { /* Seletor mais específico */
+        margin-bottom: 15px;
+        font-size: clamp(1.8rem, 5.2vw, 2.5rem); /* Ajustado para mais respiro */
+    }
+    .hero-interactive-block .welcome-message p { /* Seletor mais específico */
+        line-height: 1.7;
+        font-size: clamp(0.9rem, 2.3vw, 1.1rem); /* Ajustado para mais respiro */
     }
 
     .stats-card-deck {
         grid-template-columns: repeat(2, 1fr) !important; /* Forçando 2 colunas */
-        gap: 12px;
+        /* === ALTERAÇÃO PARA AUMENTAR ESPAÇAMENTO === */
+        gap: clamp(18px, 3.5vw, 25px);
         max-width: 100%;
-        padding: 0; /* Padding do .hero-interactive-block deve ser suficiente */
+        padding: 0;
     }
 
     .stat-card.mini-card {
-         padding: 15px 10px; /* Reduzir padding interno para caber melhor */
-         min-height: auto; /* Permitir altura flexível */
-         font-size: 0.9em; /* Reduzir um pouco a fonte geral do card se necessário */
+         /* === ALTERAÇÃO PARA AUMENTAR ESPAÇAMENTO === */
+         padding: clamp(18px, 3.5vw, 22px);
+         min-height: auto;
     }
     .stat-card .stat-icon {
-        font-size: clamp(1.7rem, 3.5vw, 2rem); /* Ícones menores */
-        margin-bottom: 8px;
+        /* === ALTERAÇÃO PARA AUMENTAR ESPAÇAMENTO === */
+        font-size: clamp(1.7rem, 3.8vw, 2rem); /* Mantido, mas margin aumentada */
+        margin-bottom: 12px;
     }
     .stat-card .stat-label {
-        font-size: clamp(0.65rem, 1.7vw, 0.7rem);
-        margin-bottom: 6px;
+        /* === ALTERAÇÃO PARA AUMENTAR ESPAÇAMENTO === */
+        font-size: clamp(0.75rem, 1.9vw, 0.8rem);
+        margin-bottom: 10px;
     }
     .stat-card .stat-value {
-        font-size: clamp(1.6rem, 3.5vw, 2rem); /* Valor menor */
+        /* === ALTERAÇÃO PARA AUMENTAR ESPAÇAMENTO === */
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
     }
+
+    .hero-interactive-block .main-cta-area p { /* Seletor mais específico */
+        margin-bottom: 25px;
+    }
+    .hero-interactive-block .quiz-options-main { /* Seletor mais específico */
+        gap: 20px;
+    }
+    /* === FIM DAS ALTERAÇÕES PARA AUMENTAR ESPAÇAMENTO === */
 
 
     .additional-content-area {
@@ -489,8 +518,8 @@
     .logo-area {
         font-size: 1.4rem;
     }
-    h2 {
-        font-size: 1.5rem;
+    h2 { /* Estilo geral de h2 para este breakpoint */
+        font-size: 1.5rem; /* Mantido, mas o da hero será mais específico */
         margin-bottom: 15px;
     }
     .filtro-categorias-container {
@@ -650,16 +679,31 @@
         .hero-interactive-block {
              margin-left: 0;
              margin-right: 0;
+             /* Ajustes finos para telas muito pequenas, se necessário */
+             padding-top: clamp(40px, 8vh, 50px);
+             padding-left: clamp(15px, 4vw, 25px);
+             padding-right: clamp(15px, 4vw, 25px);
+             padding-bottom: clamp(30px, 7vh, 40px);
+             gap: clamp(30px, 5vh, 40px);
         }
+
+        .hero-interactive-block .welcome-message h1 {
+            font-size: clamp(1.7rem, 4.8vw, 2.3rem);
+        }
+        .hero-interactive-block .welcome-message p {
+            font-size: clamp(0.85rem, 2.2vw, 1rem);
+        }
+
 
         .stats-card-deck {
             /* Considerar 1 coluna para telas muito estreitas se 2 ainda estiverem apertadas */
             /* grid-template-columns: repeat(1, 1fr) !important; */
             /* gap: 10px; */
             /* max-width: calc(100% - 20px); /* Exemplo se for 1 coluna, para dar um respiro */
+            gap: clamp(15px, 3vw, 20px); /* Ajustado para telas muito pequenas */
         }
         .stat-card.mini-card {
-            padding: 10px; /* Ainda menor */
+            padding: clamp(15px, 3vw, 18px); /* Ajustado para telas muito pequenas */
         }
 
 

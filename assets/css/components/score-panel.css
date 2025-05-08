@@ -45,17 +45,16 @@
   color: var(--timer-color, var(--color-gray-800));
   line-height: 1.1;
   margin-bottom: var(--spacing-xxs, 4px);
-  /* Você pode usar uma fonte monoespaçada para os números não "pularem" */
-  /* font-family: 'Roboto Mono', monospace; */
 }
 
 /* Element: .score-panel__timer-label (Ex: TEMPO DECORRIDO) */
 .score-panel__timer-label {
   font-size: var(--timer-label-font-size, var(--font-size-xs, 0.75rem));
   font-weight: var(--font-weight-medium);
-  color: var(--timer-label-color, var(--color-gray-600));
+  color: var(--timer-label-color, var(--color-gray-800));
   letter-spacing: 0.8px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 /* Element: .score-panel__stats-group (Container para Pontos, Acertos, Erros) */
@@ -118,13 +117,15 @@
 
 /* Element: .score-panel__action-button */
 .score-panel__action-button {
-  width: 100%;
+  width: 100%; /* No layout de coluna (desktop), ocupa a largura */
   margin-top: auto; /* Empurra para o final */
   margin-bottom: var(--spacing-sm, 10px);
+  /* A classe .button--compact aplicada no HTML já deve torná-lo pequeno.
+     Se precisar de mais ajustes específicos para este botão DENTRO do score-panel:
+     font-size: 0.8rem;
+     padding: 5px 10px;
+  */
 }
-
-/* REMOVIDO: Estilos para .score-panel__title, .score-panel__score-display-wrapper,
-             .score-panel__score-value, .score-panel__stat-icon-wrapper */
 
 
 /* --- RESPONSIVIDADE --- */
@@ -181,31 +182,38 @@
     .score-panel__stat-content {
         align-items: flex-start; /* Mantém alinhado à esquerda */
     }
-    .score-panel__stat--points .score-panel__stat-content { /* Esconde label 'PONTOS' */
-        /* align-items: center; */ /* Centraliza só o número se quiser */
-    }
-     .score-panel__stat--points .score-panel__stat-label { display: none; }
-     .score-panel__stat--correct .score-panel__stat-label { display: none; }
-     .score-panel__stat--incorrect .score-panel__stat-label { display: none; }
+     .score-panel__stat--points .score-panel__stat-label,
+     .score-panel__stat--correct .score-panel__stat-label,
+     .score-panel__stat--incorrect .score-panel__stat-label {
+         display: none;
+     }
 
-    /* Mostra apenas ícone e valor */
     .score-panel__stat-icon { font-size: 22px; }
     .score-panel__stat-value { font-size: 1rem; }
 
     .score-panel__action-button {
         order: 3; /* Botão no final */
-        position: static; width: auto; margin: 0; /* Remove margens auto */
-        /* Usa modificador button--compact definido em button.css */
+        position: static;
+        width: auto; /* Para não ocupar 100% da largura no flex row */
+        margin: 0; /* Remove margens auto */
+        /* .button--compact já deve estar aplicado via HTML.
+           Se precisar de mais ajustes para o botão AQUI, pode adicionar:
+           padding: 6px 10px;
+           font-size: 0.75rem;
+        */
     }
 }
 
 @media (max-width: 480px) {
-    .score-panel { padding: var(--spacing-sm, 10px) var(--spacing-sm, 12px); gap: var(--spacing-sm, 10px); }
+    .score-panel {
+        padding: var(--spacing-sm, 10px) var(--spacing-sm, 12px);
+        gap: var(--spacing-sm, 10px);
+    }
     .score-panel__timer-value { font-size: 1.1rem; }
     .score-panel__timer-label { display: none; } /* Esconde label do timer */
     .score-panel__stats-group { gap: var(--spacing-sm, 12px); }
     .score-panel__stat { gap: var(--spacing-xs, 4px); }
     .score-panel__stat-icon { font-size: 20px; }
     .score-panel__stat-value { font-size: 0.9rem; }
-    /* .score-panel__action-button já usa button--compact */
+    /* .score-panel__action-button já usa button--compact que tem estilos para este breakpoint */
 }

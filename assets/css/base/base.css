@@ -1,0 +1,29 @@
+@import '_variables.css';
+@import '_reset.css';
+@import '_typography.css';
+@import '_utilities.css';
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-family-sans);
+    color: var(--color-gray-900);
+    background-color: var(--color-gray-100);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+*:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+*:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}

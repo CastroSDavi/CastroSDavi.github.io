@@ -1,0 +1,211 @@
+/* assets/css/components/score-panel.css */
+
+/*
+==========================================================================
+  Component: Score Panel (.score-panel) v2 - Com Timer
+==========================================================================
+*/
+
+/* Block: .score-panel */
+.score-panel {
+  display: flex;
+  flex-direction: column;
+  /* Gap principal entre Timer, Stats e Botão */
+  gap: var(--score-panel-gap, var(--spacing-xl, 30px));
+  padding: var(--score-panel-padding, var(--spacing-lg, 30px) var(--spacing-md, 25px));
+  width: var(--score-panel-width, 260px); /* Largura ajustada se necessário */
+  min-width: var(--score-panel-width, 260px);
+  background-color: var(--score-panel-bg-color, var(--color-white));
+  box-shadow: var(--score-panel-box-shadow, 1px 0 3px rgba(0, 0, 0, 0.04));
+  border-right: var(--score-panel-border-right-width, var(--border-width)) solid var(--score-panel-border-right-color, var(--color-gray-400));
+  flex-shrink: 0;
+
+  /* --- Estilos Sticky para Desktop --- */
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px));
+  overflow-y: auto;
+  z-index: var(--z-index-sticky, 10);
+}
+
+/* Element: .score-panel__timer (Novo Bloco do Cronômetro) */
+.score-panel__timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: var(--spacing-lg, 20px); /* Espaço abaixo do timer */
+  border-bottom: 1px solid var(--color-gray-300); /* Linha divisória */
+}
+
+/* Element: .score-panel__timer-value (Ex: 00:00) */
+.score-panel__timer-value {
+  font-size: var(--timer-font-size, 2.8rem); /* Tamanho grande */
+  font-weight: var(--font-weight-medium);
+  color: var(--timer-color, var(--color-gray-800));
+  line-height: 1.1;
+  margin-bottom: var(--spacing-xxs, 4px);
+  /* Você pode usar uma fonte monoespaçada para os números não "pularem" */
+  /* font-family: 'Roboto Mono', monospace; */
+}
+
+/* Element: .score-panel__timer-label (Ex: TEMPO DECORRIDO) */
+.score-panel__timer-label {
+  font-size: var(--timer-label-font-size, var(--font-size-xs, 0.75rem));
+  font-weight: var(--font-weight-medium);
+  color: var(--timer-label-color, var(--color-gray-600));
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Element: .score-panel__stats-group (Container para Pontos, Acertos, Erros) */
+.score-panel__stats-group {
+  display: flex;
+  flex-direction: column;
+  /* Gap entre os itens de stat */
+  gap: var(--stats-group-gap, var(--spacing-lg, 25px));
+}
+
+/* Element: .score-panel__stat (Wrapper para cada linha: Ícone + Conteúdo) */
+.score-panel__stat {
+  display: flex;
+  align-items: center; /* Alinha ícone e conteúdo verticalmente */
+  gap: var(--spacing-md, 15px); /* Espaço entre ícone e texto */
+}
+
+/* Element: .score-panel__stat-icon */
+.score-panel__stat-icon {
+  font-size: var(--stat-icon-size, 28px); /* Tamanho do ícone */
+  color: var(--stat-icon-color, var(--color-gray-500)); /* Cor padrão do ícone */
+  flex-shrink: 0;
+  line-height: 1; /* Garante alinhamento */
+}
+/* Cores específicas por tipo */
+.score-panel__stat--points .score-panel__stat-icon {
+  color: var(--color-primary-medium); /* Cor para ícone de pontos */
+}
+.score-panel__stat--correct .score-panel__stat-icon {
+  color: var(--color-secondary-green); /* Cor para ícone de acertos */
+}
+.score-panel__stat--incorrect .score-panel__stat-icon {
+  color: var(--color-accent-red); /* Cor para ícone de erros */
+}
+
+
+/* Element: .score-panel__stat-content (Wrapper para Label e Valor) */
+.score-panel__stat-content {
+  display: flex;
+  flex-direction: column; /* Empilha label e valor */
+  align-items: flex-start; /* Alinha texto à esquerda */
+  line-height: 1.3; /* Ajuste para espaçamento vertical */
+}
+
+/* Element: .score-panel__stat-label */
+.score-panel__stat-label {
+  font-size: var(--stat-label-font-size, var(--font-size-sm, 0.9rem));
+  font-weight: var(--font-weight-medium);
+  color: var(--stat-label-color, var(--color-gray-700));
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Element: .score-panel__stat-value */
+.score-panel__stat-value {
+  font-size: var(--stat-value-font-size, var(--font-size-lg, 1.2rem)); /* Tamanho maior para o número */
+  font-weight: var(--font-weight-semibold);
+  color: var(--stat-value-color, var(--color-gray-900));
+}
+
+/* Element: .score-panel__action-button */
+.score-panel__action-button {
+  width: 100%;
+  margin-top: auto; /* Empurra para o final */
+  margin-bottom: var(--spacing-sm, 10px);
+}
+
+/* REMOVIDO: Estilos para .score-panel__title, .score-panel__score-display-wrapper,
+             .score-panel__score-value, .score-panel__stat-icon-wrapper */
+
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 992px) {
+    .score-panel {
+        width: var(--score-panel-width-tablet, 240px); /* Exemplo: um pouco mais estreito */
+        min-width: var(--score-panel-width-tablet, 240px);
+        --score-panel-padding: var(--spacing-lg, 25px) var(--spacing-md, 20px);
+        gap: var(--score-panel-gap-tablet, var(--spacing-lg, 25px));
+        height: calc(100vh - var(--header-height-tablet, 80px) - var(--main-nav-height-tablet, 50px));
+    }
+    .score-panel__timer-value { font-size: 2.5rem; }
+    .score-panel__stats-group { gap: var(--spacing-md, 20px); }
+    .score-panel__stat { gap: var(--spacing-sm, 12px); }
+    .score-panel__stat-icon { font-size: 26px; }
+    .score-panel__stat-value { font-size: 1.1rem; }
+}
+
+@media (max-width: 768px) {
+    .score-panel {
+        /* Muda para layout horizontal */
+        position: static; height: auto; overflow-y: visible; width: 100%;
+        min-width: 100%; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+        border-right: none; border-bottom: var(--border-width) solid var(--color-gray-400);
+        flex-direction: row; justify-content: space-between; /* Espaça timer, stats e botão */
+        align-items: center; padding: var(--spacing-sm, 10px) var(--spacing-md, 15px);
+        gap: var(--spacing-md, 15px); flex-wrap: nowrap; /* Evita quebra de linha */
+    }
+
+    .score-panel__timer {
+        order: 1; /* Timer primeiro */
+        flex-direction: row; /* Valor e label lado a lado */
+        align-items: baseline; /* Alinha pela base do texto */
+        padding-bottom: 0; border-bottom: none; /* Remove separador */
+        gap: var(--spacing-xs, 8px);
+    }
+    .score-panel__timer-value {
+        font-size: 1.2rem; /* Timer menor */
+        margin-bottom: 0;
+    }
+    .score-panel__timer-label {
+        font-size: 0.7rem; /* Label menor */
+        margin-bottom: 1px; /* Ajuste fino vertical */
+    }
+
+    .score-panel__stats-group {
+        order: 2; /* Stats no meio */
+        flex-direction: row; /* Stats lado a lado */
+        gap: var(--spacing-md, 15px); /* Espaço entre stats */
+    }
+    .score-panel__stat {
+        gap: var(--spacing-xs, 5px); /* Espaço menor entre ícone e texto */
+    }
+    .score-panel__stat-content {
+        align-items: flex-start; /* Mantém alinhado à esquerda */
+    }
+    .score-panel__stat--points .score-panel__stat-content { /* Esconde label 'PONTOS' */
+        /* align-items: center; */ /* Centraliza só o número se quiser */
+    }
+     .score-panel__stat--points .score-panel__stat-label { display: none; }
+     .score-panel__stat--correct .score-panel__stat-label { display: none; }
+     .score-panel__stat--incorrect .score-panel__stat-label { display: none; }
+
+    /* Mostra apenas ícone e valor */
+    .score-panel__stat-icon { font-size: 22px; }
+    .score-panel__stat-value { font-size: 1rem; }
+
+    .score-panel__action-button {
+        order: 3; /* Botão no final */
+        position: static; width: auto; margin: 0; /* Remove margens auto */
+        /* Usa modificador button--compact definido em button.css */
+    }
+}
+
+@media (max-width: 480px) {
+    .score-panel { padding: var(--spacing-sm, 10px) var(--spacing-sm, 12px); gap: var(--spacing-sm, 10px); }
+    .score-panel__timer-value { font-size: 1.1rem; }
+    .score-panel__timer-label { display: none; } /* Esconde label do timer */
+    .score-panel__stats-group { gap: var(--spacing-sm, 12px); }
+    .score-panel__stat { gap: var(--spacing-xs, 4px); }
+    .score-panel__stat-icon { font-size: 20px; }
+    .score-panel__stat-value { font-size: 0.9rem; }
+    /* .score-panel__action-button já usa button--compact */
+}

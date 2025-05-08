@@ -1,0 +1,87 @@
+/* assets/css/sections/home-section.css */
+
+#home-section {
+    /* >>> ADICIONAR ESTAS DUAS LINHAS <<< */
+    display: flex;            /* Habilita Flexbox */
+    flex-direction: column; /* Empilha os filhos verticalmente */
+    /* >>> FIM DAS LINHAS A ADICIONAR <<< */
+
+    align-items: center; /* Centraliza os filhos horizontalmente */
+    gap: var(--home-section-gap, clamp(40px, 7vh, 60px)); /* Espaçamento vertical entre filhos */
+    min-height: var(--home-section-min-height, calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px) - var(--footer-height, 65px)));
+    padding-bottom: var(--spacing-xl); /* Espaço antes do footer */
+    /* background-color: var(--color-gray-100); */ /* Se precisar de cor de fundo específica */
+    overflow-x: hidden; /* Previne scroll horizontal acidental */
+}
+
+.home-section__additional-content {
+    width: 100%;
+    max-width: var(--container-width-md, 800px);
+    margin-left: auto;
+    margin-right: auto;
+    /* Margens superior/inferior são controladas pelo gap da #home-section
+       e pelo padding-bottom da #home-section */
+}
+
+/* ... (resto das regras para .card__title, p, .button dentro de .home-section__additional-content) ... */
+.home-section__additional-content .card__title {
+    font-family: var(--font-family-heading);
+    color: var(--color-primary-dark);
+    font-size: clamp(1.4rem, 3.5vw, 1.6rem);
+    margin-bottom: var(--spacing-md, 15px);
+}
+
+.home-section__additional-content p {
+    color: var(--color-gray-800);
+    line-height: 1.7;
+    margin-bottom: var(--spacing-lg, 25px);
+    font-size: clamp(0.9rem, 2.2vw, 1rem);
+}
+
+.home-section__additional-content .button {
+    border-color: var(--color-primary-medium);
+    color: var(--color-primary-medium);
+    font-weight: var(--font-weight-semibold);
+    padding: 10px 20px;
+    font-size: clamp(0.85rem, 2vw, 0.95rem);
+}
+
+.home-section__additional-content .button:hover {
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-dark);
+    color: var(--color-primary-dark);
+}
+
+
+/* --- Responsividade --- */
+/* (As media queries permanecem as mesmas da resposta anterior) */
+@media (max-width: 992px) {
+    .home-section__additional-content {
+        margin-left: clamp(20px, 3vw, 40px);
+        margin-right: clamp(20px, 3vw, 40px);
+        width: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    #home-section {
+        min-height: calc(100vh - var(--header-height-mobile, 70px) - var(--bottom-nav-height, 60px));
+        gap: var(--home-section-gap-mobile, clamp(30px, 6vh, 50px));
+        padding-bottom: var(--spacing-lg);
+    }
+    .home-section__additional-content {
+        margin-left: var(--spacing-md, 20px);
+        margin-right: var(--spacing-md, 20px);
+    }
+}
+
+@media (max-width: 480px) {
+    #home-section {
+        min-height: calc(100vh - var(--header-height-small-mobile, 65px) - var(--bottom-nav-height, 60px));
+        gap: var(--home-section-gap-small-mobile, clamp(25px, 5vh, 40px));
+    }
+    .home-section__additional-content {
+        margin-left: var(--spacing-sm, 15px);
+        margin-right: var(--spacing-sm, 15px);
+    }
+}

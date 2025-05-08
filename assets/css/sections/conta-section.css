@@ -1,0 +1,107 @@
+/* assets/css/sections/conta-section.css */
+
+#conta-section {
+    padding: var(--conta-section-padding, var(--spacing-xl, 40px));
+    background-color: var(--conta-section-bg, var(--color-gray-200));
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+#conta-section .card__title {
+    text-align: center;
+}
+
+.profile-form {
+    margin-top: var(--spacing-lg, 20px);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md, 15px);
+    align-items: stretch;
+    text-align: left;
+}
+
+.form-group {}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-xxs, 5px);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--form-label-font-size, var(--font-size-sm));
+    color: var(--form-label-color, var(--color-gray-800));
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: var(--form-control-padding-y, var(--spacing-xs, 8px)) var(--form-control-padding-x, var(--spacing-sm, 10px));
+    font-size: var(--form-control-font-size, var(--font-size-base, 0.9rem));
+    line-height: var(--line-height-base);
+    color: var(--form-control-color, var(--color-gray-900));
+    background-color: var(--form-control-bg, var(--color-white));
+    border: var(--border-width) solid var(--form-control-border-color, var(--color-gray-500));
+    border-radius: var(--form-control-border-radius, var(--border-radius-sm));
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+.form-control::placeholder {
+    color: var(--color-gray-600);
+    opacity: 1;
+}
+.form-control:focus {
+    border-color: var(--focus-outline-color);
+    outline: 0;
+    box-shadow: 0 0 0 var(--focus-outline-width) rgba(from var(--focus-outline-color) r g b / 0.25);
+}
+
+.profile-form .button {
+    margin-top: var(--spacing-sm, 5px);
+}
+
+@media (max-width: 992px) {
+    #conta-section {
+        padding: var(--conta-section-padding-tablet, var(--spacing-lg, 35px));
+    }
+}
+
+@media (max-width: 768px) {
+    #conta-section {
+        padding: var(--conta-section-padding-mobile, var(--spacing-md, 25px) var(--spacing-sm, 20px));
+    }
+    .form-label {}
+    .form-control {}
+    .profile-form .button {}
+}
+
+@media (max-width: 480px) {
+    #conta-section {
+        padding: var(--conta-section-padding-small-mobile, var(--spacing-md, 20px) var(--spacing-sm, 15px));
+    }
+    .form-label {
+        font-size: var(--form-label-font-size-mobile, var(--font-size-sm, 0.9rem));
+    }
+    .form-control {
+        padding: var(--spacing-xs, 8px) var(--spacing-sm, 10px);
+        font-size: var(--form-control-font-size-mobile, var(--font-size-sm, 0.9rem));
+    }
+    .profile-form .button {}
+    #conta-section .card__title {
+        font-size: var(--font-size-h2-mobile, 1.4rem);
+    }
+}
+
+@media (max-width: 360px) {
+    #conta-section {
+        padding: var(--conta-section-padding-tiny-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
+    }
+    .form-label {
+        font-size: var(--form-label-font-size-tiny-mobile, var(--font-size-xs, 0.85rem));
+    }
+    .form-control {
+        font-size: var(--form-control-font-size-tiny-mobile, var(--font-size-xs, 0.85rem));
+    }
+    .profile-form .button {}
+    #conta-section .card__title {
+        font-size: var(--font-size-h2-tiny-mobile, 1.3rem);
+    }
+}

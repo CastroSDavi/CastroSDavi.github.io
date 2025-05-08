@@ -1,0 +1,40 @@
+/* assets/css/components/progress-bar.css */
+
+/* Component: Progress Bar (.progress-bar) */
+
+/* Block: .progress-bar */
+.progress-bar {
+    display: block;
+    width: 100%;
+    height: var(--progress-bar-height, 12px);
+    background-color: var(--progress-bar-bg, var(--color-gray-300));
+    border-radius: var(--progress-bar-border-radius, var(--border-radius-xl));
+    overflow: hidden;
+    box-shadow: var(--progress-bar-shadow, var(--shadow-inner));
+    flex-shrink: 0;
+}
+
+/* Element: .progress-bar__fill */
+.progress-bar__fill {
+    height: 100%;
+    width: 0%;
+    background-color: var(--progress-bar-fill-bg-color, var(--color-primary-medium));
+    background-image: var(--progress-bar-fill-bg-image, linear-gradient(to right, var(--color-primary-medium), var(--color-primary-dark)));
+    border-radius: inherit;
+    transition: width var(--progress-bar-transition-duration, 0.4s) var(--progress-bar-transition-timing, ease-out);
+}
+
+/* Element: .progress-bar__text */
+.progress-bar__text {
+    display: block;
+    width: 100%;
+    text-align: right;
+    font-size: var(--progress-bar-text-font-size, var(--font-size-sm, 0.9rem));
+    color: var(--progress-bar-text-color, var(--color-gray-800));
+    font-weight: var(--font-weight-medium);
+    margin-top: var(--progress-bar-text-margin-top, var(--spacing-xs, 8px));
+    margin-bottom: var(--progress-bar-text-margin-bottom, var(--spacing-md, 15px));
+    padding-right: var(--progress-bar-text-padding-right, var(--spacing-xxs, 5px));
+    flex-shrink: 0;
+    line-height: var(--line-height-tight);
+}

@@ -4,227 +4,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/base.css">
-    <link rel="stylesheet" href="assets/css/layout.css">
-    <link rel="stylesheet" href="assets/css/components/buttons.css">
-    <link rel="stylesheet" href="assets/css/components/card.css">
-    <link rel="stylesheet" href="assets/css/components/pagination.css">
-    <link rel="stylesheet" href="assets/css/components/modal.css">
-    <link rel="stylesheet" href="assets/css/components/aside.css">
-    <link rel="stylesheet" href="assets/css/components/filter.css">
-    <link rel="stylesheet" href="assets/css/sections/quiz.css">
-    <link rel="stylesheet" href="assets/css/sections/inicio.css">
-    <link rel="stylesheet" href="assets/css/responsive.css">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
     <title>Histologia - Quiz Interativo</title>
 </head>
 
 <body>
-    <header>
-        <div class="header-spacer"></div> <div class="logo-area">
+    <header class="site-header">
+        <div class="site-header__logo">
             <a href="#">Med<b>Quiz</b></a>
         </div>
-        <div class="header-icons">
-            <a href="#" class="header-icon-link" data-section="conta-section" aria-label="Ir para Conta">
+        <div class="site-header__actions">
+            <a href="#" class="site-header__action-link" data-section="account-section" aria-label="Ir para Conta">
                  <span class="material-symbols-outlined">
                      account_circle
                  </span>
             </a>
         </div>
     </header>
-    <nav>
-        <ul class="navbar">
-            <li><a href="#" class="nav-link active" data-section="inicio-section">Início</a></li>
-            <li><a href="#" class="nav-link" data-section="questoes-section">Questões</a></li>
-            </ul>
+
+    <nav class="main-nav">
+        <ul class="main-nav__list">
+            <li class="main-nav__item"><a href="#" class="main-nav__link main-nav__link--active" data-section="home-section">Início</a></li>
+            <li class="main-nav__item"><a href="#" class="main-nav__link" data-section="question-section">Questões</a></li>
+        </ul>
     </nav>
 
     <main>
-        <section id="inicio-section" class="main-section">
-            <div class="hero-interactive-block">
-                <div class="welcome-message">
-                    <h1>Olá, Davi!</h1>
-                    <p>Pronto para expandir seus conhecimentos em histologia hoje?</p>
+        <section id="home-section" class="main-section">
+             <div class="hero-block">
+                <div class="hero-block__welcome">
+                    <h1 class="hero-block__title">Olá, Davi!</h1>
+                    <p class="hero-block__subtitle">Pronto para expandir seus conhecimentos em histologia hoje?</p>
                 </div>
-    
-                <div class="stats-card-deck">
-                    <div class="stat-card mini-card">
-                        <span class="stat-icon material-symbols-outlined">checklist</span>
-                        <span class="stat-label">Respondidas Hoje</span>
-                        <span class="stat-value" id="daily-questions">0</span>
+
+                <div class="stats-deck">
+                    <div class="stat-card">
+                        <span class="material-symbols-outlined stat-card__icon">checklist</span>
+                        <span class="stat-card__label">Respondidas Hoje</span>
+                        <span class="stat-card__value" id="daily-questions">0</span>
                     </div>
-                    <div class="stat-card mini-card">
-                        <span class="stat-icon material-symbols-outlined">target</span>
-                        <span class="stat-label">Acertos Hoje</span>
-                        <span class="stat-value" id="daily-accuracy">0%</span>
+                    <div class="stat-card">
+                        <span class="material-symbols-outlined stat-card__icon">target</span>
+                        <span class="stat-card__label">Acertos Hoje</span>
+                        <span class="stat-card__value" id="daily-accuracy">0%</span>
                     </div>
-                    <div class="stat-card mini-card">
-                        <span class="stat-icon material-symbols-outlined">military_tech</span>
-                        <span class="stat-label">Pontos</span>
-                        <span class="stat-value" id="daily-points">0</span>
+                    <div class="stat-card">
+                        <span class="material-symbols-outlined stat-card__icon">military_tech</span>
+                        <span class="stat-card__label">Pontos</span>
+                        <span class="stat-card__value" id="daily-points">0</span>
                     </div>
-                    <div class="stat-card mini-card">
-                        <span class="stat-icon material-symbols-outlined">local_fire_department</span>
-                        <span class="stat-label">Sequência</span>
-                        <span class="stat-value" id="streak-value">0</span>
+                    <div class="stat-card">
+                        <span class="material-symbols-outlined stat-card__icon">local_fire_department</span>
+                        <span class="stat-card__label">Sequência</span>
+                        <span class="stat-card__value" id="streak-value">0</span>
                     </div>
                 </div>
-    
-                <div class="main-cta-area">
-                    <p>Escolha seu desafio:</p>
-                    <div class="quiz-options-main">
-                        <button class="button button-fancy-primary" id="start-random-quiz">
-                            <span class="material-symbols-outlined">shuffle</span> Quiz Rápido
+
+                <div class="hero-block__cta">
+                    <p class="hero-block__cta-text">Escolha seu desafio:</p>
+                    <div class="hero-block__cta-actions">
+                        <button class="button button--fancy button--fancy-primary" id="start-random-quiz">
+                            <span class="material-symbols-outlined button__icon">shuffle</span>
+                            <span class="button__label">Quiz Rápido</span>
                         </button>
-                        <button class="button button-fancy-secondary" id="start-category-quiz">
-                            <span class="material-symbols-outlined">category</span> Por Categoria
+                         <button class="button button--fancy button--fancy-secondary" id="start-category-quiz" data-section="question-section">
+                            <span class="material-symbols-outlined button__icon">category</span>
+                            <span class="button__label">Por Categoria</span>
                         </button>
                     </div>
                 </div>
             </div>
-    
-            <div class="additional-content-area card">
-                <h2>Explore Mais</h2>
-                <p>Ainda desenvolvendo esta área, mas aqui você poderá encontrar artigos, dicas de estudo e outros recursos para complementar seu aprendizado em histologia.</p>
-                <button class="button button--outline" id="view-all-questions-alt">Ver Banco de Questões</button>
+
+            <div class="home-section__additional-content">
+                 <div class="card card--additional-content card--centered-content">
+                     <h2 class="card__title">Explore Mais</h2>
+                    <div class="card__body">
+                        <p>Ainda desenvolvendo esta área, mas aqui você poderá encontrar artigos, dicas de estudo e outros recursos para complementar seu aprendizado em histologia.</p>
+                        <button class="button button--outline button--small" id="view-all-questions-alt" data-section="question-section">Ver Banco de Questões</button>
+                    </div>
+                </div>
             </div>
         </section>
-        <section id="questoes-section" class="main-section is-hidden">
-            <aside>
-                <p class="aside-title">Pontuação</p>
-                <div class="pontuacao-wrap is-circle">
-                     <p id="pontuacao" class="is-circle">0</p>
+
+        <section id="question-section" class="main-section u-is-hidden">
+            <aside class="score-panel">
+
+                <div class="score-panel__timer">
+                    <span id="timer-display" class="score-panel__timer-value">00:00</span>
+                    <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
                 </div>
-                <div class="aside-info-wrap">
-                     <div class="icon-wrap icon-correct is-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M382-240 154-468l57-57 171 171 367-367 57 57-424 424Z" /> </svg>
+            
+                <div class="score-panel__stats-group">
+                    <div class="score-panel__stat score-panel__stat--points">
+                         <span class="material-symbols-outlined score-panel__stat-icon">military_tech</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">PONTOS</span>
+                            <span id="pontuacao" class="score-panel__stat-value">0</span>
+                        </div>
                     </div>
-                    <p id="acertos">Acertos <span id="acertos-numero">0</span></p>
-                </div>
-                <div class="aside-info-wrap">
-                     <div class="icon-wrap icon-error is-circle" id="error">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" /> </svg>
+                    <div class="score-panel__stat score-panel__stat--correct">
+                        <span class="material-symbols-outlined score-panel__stat-icon">check_circle</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">ACERTOS</span>
+                            <span id="acertos-numero" class="score-panel__stat-value">0</span>
+                        </div>
                     </div>
-                    <p id="erros">Erros <span id="erros-numero">0</span></p>
+                    <div class="score-panel__stat score-panel__stat--incorrect">
+                         <span class="material-symbols-outlined score-panel__stat-icon">cancel</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">ERROS</span>
+                            <span id="erros-numero" class="score-panel__stat-value">0</span>
+                        </div>
+                    </div>
                 </div>
-                <button id="btn-encerrar-sessao" class="button button--outline is-hidden">Encerrar</button>
+            
+                <button id="btn-encerrar-sessao" class="button button--outline button--compact score-panel__action-button u-is-hidden">Encerrar Quiz</button>
+            
             </aside>
 
-            <div class="main-content">
-                <div class="filtro-categorias-container">
-                    <span class="filtro-label" id="categorias-label">Categorias:</span>
-                    <div class="categorias-scroll-wrapper">
-                         <button class="scroll-arrow left is-circle" id="cat-scroll-left" aria-label="Rolar categorias para esquerda" disabled>
+            <div class="question-section__main-content">
+
+                <div class="category-filter">
+                    <span class="category-filter__label" id="categorias-label">Categorias:</span>
+                    <div class="category-filter__scroll-wrapper">
+                         <button class="category-filter__scroll-arrow category-filter__scroll-arrow--left u-is-circle" id="cat-scroll-left" aria-label="Rolar categorias para esquerda" disabled>
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" /> </svg>
                         </button>
-                        <div class="filtro-checkboxes" id="filtro-checkboxes-scroll">
+                        <div class="category-filter__list" id="filtro-checkboxes-scroll">
                             </div>
-                         <button class="scroll-arrow right is-circle" id="cat-scroll-right" aria-label="Rolar categorias para direita">
+                         <button class="category-filter__scroll-arrow category-filter__scroll-arrow--right u-is-circle" id="cat-scroll-right" aria-label="Rolar categorias para direita">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" /> </svg>
                         </button>
                     </div>
                 </div>
 
-                <div id="aviso-container" class="is-hidden">
-                     <p class="aviso-mensagem card">Selecione pelo menos uma categoria para começar o quiz.</p>
+                <div id="aviso-container" class="u-is-hidden">
+                     <div class="card card--aviso"> <p>Selecione pelo menos uma categoria para começar o quiz.</p>
+                     </div>
                 </div>
 
-                <section id="quiz-section" class="is-hidden">
-                    <div id="progress-container" class="is-hidden">
-                        <div id="progress-bar-fill"></div>
+                <section id="quiz-section" class="u-is-hidden">
+                    <div id="progress-container" class="progress-bar u-is-hidden">
+                        <div id="progress-bar-fill" class="progress-bar__fill"></div>
                     </div>
-                    <span id="progress-text" class="is-hidden">0 / 0</span>
-                    <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
-                    <div class="question-wrap card">
-                        <div class="question-text">
-                            <p id="pergunta-texto">Carregando pergunta...</p>
-                        </div>
-                        <div class="question">
-                            <div class="image-question-wrap">
-                                <img src="" alt="" id="pergunta-imagem" class="is-hidden">
-                            </div>
-                            <div class="answers-wrap" id="respostas-container">
-                                </div>
-                            <span id="feedback-acessivel" class="sr-only" aria-live="polite" aria-atomic="true"></span>
-                        </div>
-                        <p id="referencia-questao"></p>
-                    </div>
+                    <span id="progress-text" class="progress-bar__text u-is-hidden">0 / 0</span>
 
-                    <div class="navigation-buttons is-hidden">
-                        <button id="prev-btn" class="button button--secondary" disabled>Anterior</button>
-                        <button id="next-btn" class="button button--primary">Próxima</button>
+                    <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+
+                    <div class="card card--question-wrap">
+                        <div class="card__body">
+                            <div class="question-display__text">
+                                <p id="pergunta-texto">Carregando pergunta...</p>
+                            </div>
+                            <div class="question-display__content">
+                                <div class="question-display__image-container">
+                                    <img src="" alt="" id="pergunta-imagem" class="question-display__image u-is-hidden">
+                                </div>
+                                <div class="question-display__answers-list" id="respostas-container">
+                                    </div>
+                                <span id="feedback-acessivel" class="u-sr-only" aria-live="polite" aria-atomic="true"></span>
+                            </div>
+                            <p id="referencia-questao" class="question-display__reference"></p>
+                        </div>
+                    </div>
+                    <div class="quiz-navigation u-is-hidden">
+                        <button id="prev-btn" class="button button--secondary quiz-navigation__button" disabled>Anterior</button>
+                        <button id="next-btn" class="button button--primary quiz-navigation__button">Próxima</button>
                     </div>
                 </section>
 
-                <div id="confirm-encerrar-overlay" class="modal-overlay is-hidden">
-                     <div id="confirm-encerrar-modal" class="modal-content card">
-                        <h3 class="modal-title">Confirmar Encerramento</h3>
-                        <p class="modal-message">Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
-                        <div class="modal-actions">
-                            <button id="cancel-encerrar-btn" class="button button--secondary">Cancelar</button>
-                            <button id="confirm-encerrar-btn" class="button button--primary">Confirmar</button>
+                <div id="confirm-encerrar-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="modalConfirmTitle" aria-modal="true">
+                    <div id="confirm-encerrar-modal" class="card modal__dialog">
+                        <div class="modal__header">
+                            <h3 id="modalConfirmTitle" class="modal__title card__title">Confirmar Encerramento</h3>
+                        </div>
+                        <div class="modal__body">
+                            <p>Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
+                        </div>
+                        <div class="modal__footer">
+                            <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
+                            <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
                         </div>
                     </div>
                 </div>
 
-                 <div class="resultado-final-card card is-hidden">
-                    <h3 class="resultado-final-titulo" tabindex="-1">Quiz Concluído!</h3>
-                    <p class="resultado-final-pontuacao">Pontuação Final: <span class="pontos-valor">0</span></p>
-                    <div class="resultado-final-detalhes">
-                        <p>Acertos: <span class="acertos-valor">0</span></p>
-                        <p>Erros: <span class="erros-valor">0</span></p>
+                <div class="card card--quiz-result u-is-hidden">
+                    <h3 class="card__title quiz-results__title" tabindex="-1">Quiz Concluído!</h3>
+                    <div class="card__body">
+                        <p class="quiz-results__score-line">Pontuação Final: <span class="quiz-results__score-value pontos-valor" id="resultado-pontos">0</span></p>
+                        <div class="quiz-results__details-group">
+                            <p class="quiz-results__detail-item">Acertos: <span class="quiz-results__detail-value acertos-valor" id="resultado-acertos">0</span></p>
+                            <p class="quiz-results__detail-item">Erros: <span class="quiz-results__detail-value erros-valor" id="resultado-erros">0</span></p>
+                        </div>
                     </div>
-                    <button id="btn-recomecar" class="button button--primary">Tentar Novamente</button>
+                    <div class="card__footer">
+                        <button id="btn-recomecar" class="button button--primary">Tentar Novamente</button>
+                    </div>
                 </div>
 
-                 <div id="question-grid-container" class="question-grid-container is-hidden">
+                <div id="question-grid-container" class="question-grid u-is-hidden">
                     </div>
+
              </div>
         </section>
 
-        <section id="conta-section" class="main-section is-hidden">
-            <div class="card" style="margin: 40px auto; padding: 30px; max-width: 600px; text-align: center;">
-                 <h2>Minha Conta</h2>
-                 <p>Esta é a seção da sua conta.</p>
-                 <p>Aqui você poderá ver informações de perfil, configurações, etc. (Conteúdo a ser adicionado).</p>
-                 <form action="#" style="margin-top: 20px; display: flex; flex-direction: column; gap: 15px; align-items: stretch;">
-                    <div>
-                        <label for="user-name" style="display: block; margin-bottom: 5px; text-align: left;">Nome:</label>
-                        <input type="text" id="user-name" name="user-name" placeholder="Seu nome" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                    </div>
-                     <div>
-                        <label for="user-email" style="display: block; margin-bottom: 5px; text-align: left;">Email:</label>
-                        <input type="email" id="user-email" name="user-email" placeholder="seuemail@exemplo.com" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                    </div>
-                    <button type="submit" class="button button--primary">Salvar Alterações</button>
-                 </form>
-            </div>
+        <section id="account-section" class="main-section u-is-hidden">
+             <div class="card card--conta-perfil">
+                 <h2 class="card__title">Minha Conta</h2>
+                 <div class="card__body">
+                     <p>Esta é a seção da sua conta.</p>
+                     <p>Aqui você poderá ver informações de perfil, configurações, etc. (Conteúdo a ser adicionado).</p>
+                     <form action="#" class="profile-form">
+                        <div class="form-group">
+                            <label for="user-name" class="form-label">Nome:</label>
+                            <input type="text" id="user-name" name="user-name" placeholder="Seu nome" class="form-control">
+                        </div>
+                         <div class="form-group">
+                            <label for="user-email" class="form-label">Email:</label>
+                            <input type="email" id="user-email" name="user-email" placeholder="seuemail@exemplo.com" class="form-control">
+                        </div>
+                        <button type="submit" class="button button--primary">Salvar Alterações</button>
+                     </form>
+                 </div>
+             </div>
         </section>
 
     </main>
 
-    <nav class="bottom-navbar" aria-label="Navegação principal móvel">
-        <ul>
-            <li>
-                <a href="#" class="bottom-nav-link active" data-section="inicio-section" aria-label="Ir para Início" aria-current="page">
-                    <span class="material-symbols-outlined"> home </span>
-                    <span>Início</span>
+    <nav class="bottom-nav" aria-label="Navegação principal móvel">
+        <ul class="bottom-nav__list">
+            <li class="bottom-nav__item">
+                 <a href="#" class="bottom-nav__link bottom-nav__link--active" data-section="home-section" aria-label="Ir para Início" aria-current="page">
+                    <span class="material-symbols-outlined bottom-nav__icon"> home </span>
+                    <span class="bottom-nav__label">Início</span>
                 </a>
             </li>
-            <li>
-                <a href="#" class="bottom-nav-link" data-section="questoes-section" aria-label="Ir para Questões">
-                     <span class="material-symbols-outlined"> quiz </span>
-                    <span>Questões</span>
+            <li class="bottom-nav__item">
+                 <a href="#" class="bottom-nav__link" data-section="question-section" aria-label="Ir para Questões">
+                     <span class="material-symbols-outlined bottom-nav__icon"> quiz </span>
+                    <span class="bottom-nav__label">Questões</span>
                 </a>
             </li>
-        </ul>
+            </ul>
     </nav>
 
-    <footer id="footer">
-        <p>&copy; 2025 Desenvolvido por Davi Castro</p>
+    <footer id="footer" class="site-footer">
+        <p class="site-footer__text">&copy; 2025 Desenvolvido por Davi Castro</p>
     </footer>
 
     <script src="assets/js/script.js" defer></script>

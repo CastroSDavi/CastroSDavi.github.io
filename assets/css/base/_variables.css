@@ -1,0 +1,126 @@
+:root {
+    /* Cores principais */
+    --color-primary-dark: #0d3b66;
+    --color-primary-medium: #1a5f9e;
+    --color-primary-light: #eef3f8;
+    --color-secondary-green: #2a9d8f;
+    --color-secondary-green-light: #5fda9a;
+    --color-accent-red: #e63946;
+
+    /* Feedback */
+    --color-correct-bg: #e6fcf5;
+    --color-correct-border: #a3e9c1;
+    --color-correct-text: #1e7f74;
+    --color-correct-bg-alt: #d1f7e0;
+    --color-incorrect-bg: #fff0f1;
+    --color-incorrect-border: #f1aeb5;
+    --color-incorrect-text: #c12634;
+    --color-incorrect-bg-alt: #f8d7da;
+
+    /* Tons de cinza e neutros */
+    --color-gray-900: #343a40;
+    --color-gray-800: #495057;
+    --color-gray-700: #6c757d;
+    --color-gray-600: #adb5bd;
+    --color-gray-500: #ced4da;
+    --color-gray-400: #dee2e6;
+    --color-gray-300: #e9ecef;
+    --color-gray-200: #f1f3f5;
+    --color-gray-100: #f8f9fa;
+    --color-white: #ffffff;
+    --color-dark: #333;
+
+    /* Texto */
+    --color-text-primary: var(--color-gray-900);
+    --color-text-secondary: var(--color-gray-700);
+    --color-text-muted: var(--color-gray-600);
+    --color-text-link: var(--color-primary-medium);
+    --color-text-link-hover: var(--color-primary-dark);
+
+    /* Tipografia */
+    --font-family-sans: "Roboto", sans-serif;
+    --font-family-heading: "Montserrat", sans-serif;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-size-root: 16px;
+    --font-size-base: 1rem;
+    --font-size-sm: 0.875rem;
+    --font-size-xs: 0.75rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-h1: 2.5rem;
+    --font-size-h2: 1.9rem;
+    --font-size-h3: 1.5rem;
+
+    --line-height-base: 1.6;
+    --line-height-heading: 1.3;
+    --line-height-tight: 1.2;
+    --line-height-loose: 1.8;
+
+    /* Espaçamento */
+    --spacing-unit: 8px;
+    --spacing-xxs: calc(var(--spacing-unit) * 0.5);
+    --spacing-xs: var(--spacing-unit);
+    --spacing-sm: calc(var(--spacing-unit) * 2);
+    --spacing-md: calc(var(--spacing-unit) * 3);
+    --spacing-lg: calc(var(--spacing-unit) * 4);
+    --spacing-xl: calc(var(--spacing-unit) * 5);
+    --spacing-xxl: calc(var(--spacing-unit) * 6);
+
+    /* Bordas */
+    --border-radius-sm: 5px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 25px;
+    --border-radius-pill: 50px;
+    --border-radius-circle: 50%;
+    --border-width: 1px;
+    --border-width-md: 1.5px;
+    --border-width-lg: 3px;
+    --gradient-border-width: 4px;
+
+    /* Sombras */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 3px 10px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.06);
+    --shadow-xl: 0 6px 20px rgba(0, 0, 0, 0.07);
+    --shadow-button: 0 3px 8px rgba(0, 0, 0, 0.1);
+    --shadow-button-hover: 0 5px 12px rgba(0, 0, 0, 0.15);
+    --shadow-inner: inset 0 1px 2px rgba(0,0,0,0.08);
+    --shadow-grid-current-subtle: 0 2px 6px rgba(13, 59, 102, 0.15);
+
+    /* Transições */
+    --transition-duration-fast: 0.18s;
+    --transition-duration-medium: 0.2s;
+    --transition-duration-slow: 0.3s;
+    --transition-timing-function-ease-out: ease-out;
+    --transition-timing-function-ease-in-out: ease-in-out;
+    --transition-timing-function-ease: ease;
+    --transition-fast: var(--transition-duration-fast) var(--transition-timing-function-ease-out);
+    --transition-medium: var(--transition-duration-medium) var(--transition-timing-function-ease-in-out);
+    --transition-slow: var(--transition-duration-slow) var(--transition-timing-function-ease);
+
+    /* Z-index */
+    --z-index-default: 1;
+    --z-index-sticky: 10;
+    --z-index-dropdown: 100;
+    --z-index-header: 110;
+    --z-index-modal-backdrop: 900;
+    --z-index-modal-content: 901;
+    --z-index-bottom-nav: 100;
+
+    /* Acessibilidade */
+    --focus-outline-color: var(--color-primary-medium);
+    --focus-outline-width: 2px;
+    --focus-outline-offset: 2px;
+
+    /* ... suas outras variáveis ... */
+    --header-height: 80px; /* << VERIFIQUE/ADICIONE */
+    --main-nav-height: 50px; /* << VERIFIQUE/ADICIONE */
+    --footer-height: 65px; /* << VERIFIQUE/ADICIONE (se usar no calc) */
+}

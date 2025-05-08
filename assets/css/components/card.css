@@ -1,10 +1,160 @@
-.card {
-    background-color: var(--color-white); 
-    border: var(--border-width) solid var(--color-gray-400); 
-    border-radius: var(--border-radius-md); 
-    box-shadow: var(--shadow-md); 
-    padding: 30px; }
+/* assets/css/components/card.css */
 
-.is-circle { 
-    border-radius: var(--border-radius-circle); 
+.card {
+    background-color: var(--card-bg-color, var(--color-white));
+    border: var(--card-border-width, var(--border-width)) solid var(--card-border-color, var(--color-gray-400));
+    border-radius: var(--card-border-radius, var(--border-radius-md));
+    box-shadow: var(--card-box-shadow, var(--shadow-md));
+    padding: var(--card-padding, var(--spacing-lg, 30px));
+    position: relative;
+    width: 100%;
+}
+
+.card__header {
+    padding-bottom: var(--card-header-padding-bottom, var(--spacing-sm, 16px));
+    margin-bottom: var(--card-header-margin-bottom, var(--spacing-sm, 16px));
+    border-bottom: var(--card-header-border-bottom-width, var(--border-width)) solid var(--card-header-border-bottom-color, var(--color-gray-300));
+}
+.card__header:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.card__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--card-title-font-size, var(--font-size-h3, 1.5rem));
+    font-weight: var(--font-weight-semibold);
+    color: var(--card-title-color, var(--color-primary-dark));
+    margin-top: 0;
+    margin-bottom: var(--card-title-margin-bottom, var(--spacing-md, 20px));
+}
+.card__title:last-child {
+    margin-bottom: 0;
+}
+
+.card__body {
+}
+
+.card__body--flush {
+    padding: 0;
+    margin: 0;
+}
+
+.card__footer {
+    padding-top: var(--card-footer-padding-top, var(--spacing-sm, 16px));
+    margin-top: var(--card-footer-margin-top, var(--spacing-sm, 16px));
+    border-top: var(--card-footer-border-top-width, var(--border-width)) solid var(--card-footer-border-top-color, var(--color-gray-300));
+    font-size: var(--font-size-sm, 0.9rem);
+    color: var(--color-gray-700);
+}
+.card__footer:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+/* Modifiers */
+
+.card--interactive:hover {
+    box-shadow: var(--card-hover-box-shadow, var(--shadow-lg));
+    transform: translateY(-2px);
+    transition: box-shadow var(--transition-medium), transform var(--transition-medium);
+}
+
+.card--no-padding {
+    --card-padding: 0;
+}
+
+.card--centered-content {
+    text-align: center;
+}
+
+.card--aviso {
+    text-align: center;
+    line-height: 1.5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card--quiz-result {
+    --card-border-radius: var(--border-radius-lg);
+    --card-box-shadow: var(--shadow-xl);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: var(--spacing-xl, 40px);
+    margin-bottom: var(--spacing-xl, 40px);
+    text-align: center;
+    animation: fadeIn 0.5s ease-out;
+    flex-shrink: 0;
+}
+
+.card--conta-perfil {
+    margin-top: 0;
+    max-width: 800px;
+}
+
+.card--question-wrap {
+    margin-bottom: var(--spacing-lg, 30px);
+    transition: opacity var(--transition-duration-slow, 0.4s) var(--transition-timing-function-ease, ease-in-out);
+}
+.card--question-wrap.is-fading-out {
+    opacity: 0;
+}
+.card--question-wrap.is-transparent {
+    opacity: 0;
+    transition: none;
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+    .card--conta-perfil {
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        --card-padding: var(--spacing-md, 25px);
+    }
+    .card--quiz-result {
+        max-width: 90%;
+        margin-top: var(--spacing-lg, 20px);
+        margin-bottom: var(--spacing-lg, 20px);
+    }
+    .card--conta-perfil {
+        margin-top: var(--spacing-md, 20px);
+        margin-bottom: var(--spacing-md, 20px);
+    }
+    .card--question-wrap {
+        margin-bottom: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        --card-padding: var(--spacing-sm, 20px);
+    }
+    .card--quiz-result {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .card--conta-perfil {
+        margin-top: var(--spacing-sm, 15px);
+        margin-bottom: var(--spacing-sm, 15px);
+    }
+    .card--question-wrap {
+        margin-bottom: var(--spacing-md, 25px);
+    }
+}
+
+@media (max-width: 360px) {
+    .card--conta-perfil {
+        --card-padding: 15px;
+        margin-top: var(--spacing-sm, 10px);
+        margin-bottom: var(--spacing-sm, 10px);
+    }
+    .card--question-wrap {
+        margin-bottom: 20px;
+    }
 }

@@ -1,0 +1,133 @@
+/* assets/css/components/hero-block.css */
+
+/*
+==========================================================================
+  Component: Hero Block (.hero-block)
+==========================================================================
+*/
+
+/* Block: .hero-block */
+.hero-block {
+    width: 100%;
+    padding: var(--hero-padding-y-top, clamp(50px, 9vh, 70px))
+             var(--hero-padding-x, clamp(20px, 3vw, 40px))
+             var(--hero-padding-y-bottom, clamp(40px, 8vh, 60px));
+    background: var(--hero-bg-gradient, linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-medium) 60%, var(--color-secondary-green) 100%));
+    color: var(--hero-text-color, var(--color-white)); /* Cor padrão do texto dentro do hero */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--hero-internal-gap, clamp(30px, 5vh, 40px));
+    box-shadow: var(--hero-shadow, 0 6px 20px rgba(0,0,0,0.1));
+  }
+  
+  /* Element: .hero-block__welcome */
+  .hero-block__welcome {
+    max-width: var(--hero-welcome-max-width, 700px);
+    margin-bottom: 0;
+  }
+  
+  /* Element: .hero-block__title */
+  .hero-block__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--hero-title-size, clamp(1.9rem, 5vw, 2.8rem));
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-sm, 10px) 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+    line-height: var(--line-height-tight, 1.2);
+    color: var(--hero-text-color, var(--color-white)); /* << GARANTE a cor branca */
+  }
+  
+  /* Element: .hero-block__subtitle */
+  .hero-block__subtitle {
+    font-size: var(--hero-subtitle-size, clamp(0.95rem, 2.2vw, 1.15rem));
+    opacity: 0.9;
+    font-weight: var(--font-weight-light);
+    line-height: var(--line-height-base, 1.6);
+    margin: 0;
+  }
+  
+  /* O .stats-deck é estilizado em stats-deck.css */
+  
+  /* Element: .hero-block__cta */
+  .hero-block__cta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Element: .hero-block__cta-text */
+  .hero-block__cta-text {
+    font-size: var(--hero-cta-text-size, clamp(1rem, 2.5vw, 1.1rem));
+    margin: 0 0 var(--spacing-md, 20px) 0;
+    font-weight: var(--font-weight-normal);
+    opacity: 0.95;
+  }
+  
+  /* Element: .hero-block__cta-actions */
+  .hero-block__cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--hero-cta-actions-gap, var(--spacing-md, 15px));
+    width: 100%;
+    max-width: var(--hero-cta-actions-max-width, 550px);
+  }
+  /* Os botões dentro usam .button e modificadores de button.css */
+  
+  
+  /*
+  --------------------------------------------------------------------------
+    Responsive Styles for .hero-block
+  --------------------------------------------------------------------------
+  */
+  /* Os ajustes responsivos permanecem os mesmos da resposta anterior */
+  @media (max-width: 992px) {
+      /* ... (sem grandes mudanças necessárias aqui geralmente) ... */
+  }
+  @media (max-width: 768px) {
+    .hero-block {
+      --hero-padding-y-top: clamp(55px, 9.5vh, 70px);
+      --hero-padding-x: clamp(25px, 4vw, 35px);
+      --hero-padding-y-bottom: clamp(45px, 8.5vh, 60px);
+      --hero-internal-gap: clamp(35px, 5.5vh, 45px);
+    }
+  }
+  @media (max-width: 480px) {
+    .hero-block {
+      --hero-padding-y-top: clamp(45px, 10vh, 60px);
+      --hero-padding-x: clamp(20px, 5vw, 30px);
+      --hero-padding-y-bottom: clamp(35px, 8vh, 50px);
+      --hero-internal-gap: clamp(35px, 6vh, 45px);
+    }
+    .hero-block__title {
+      margin-bottom: var(--spacing-md, 15px);
+      /* --hero-title-size: clamp(1.8rem, 5.2vw, 2.5rem); */
+    }
+    .hero-block__subtitle {
+      line-height: 1.7;
+      /* --hero-subtitle-size: clamp(0.9rem, 2.3vw, 1.1rem); */
+    }
+    .hero-block__cta-text {
+      margin-bottom: var(--spacing-lg, 25px);
+    }
+    .hero-block__cta-actions {
+      gap: var(--spacing-lg, 20px);
+    }
+  }
+  @media (max-width: 360px) {
+    .hero-block {
+      --hero-padding-y-top: clamp(40px, 8vh, 50px);
+      --hero-padding-x: clamp(15px, 4vw, 25px);
+      --hero-padding-y-bottom: clamp(30px, 7vh, 40px);
+      --hero-internal-gap: clamp(30px, 5vh, 40px);
+    }
+    .hero-block__title {
+      /* --hero-title-size: clamp(1.7rem, 4.8vw, 2.3rem); */
+    }
+    .hero-block__subtitle {
+      /* --hero-subtitle-size: clamp(0.85rem, 2.2vw, 1rem); */
+    }
+  }

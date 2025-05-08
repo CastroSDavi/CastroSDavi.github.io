@@ -1,0 +1,102 @@
+/* assets/css/layout/_main-sections.css */
+
+/*
+==========================================================================
+  Layout: Main Sections
+==========================================================================
+*/
+
+/* Estilo para o container <main> */
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    /* Garante que <main> possa conter um filho com altura 100vh sem problemas */
+    position: relative;
+  }
+  
+  /* Estilo base para todas as seções principais */
+  .main-section {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* --- Layout Específico para #question-section --- */
+  
+  /* Estilos para a seção de questões no Desktop (e telas maiores) */
+  #question-section.main-section {
+    display: flex;
+    flex-direction: row; /* score-panel e main-content lado a lado */
+    /* IMPORTANTE: Define a altura explicitamente para limitar os filhos */
+    height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px));
+    /* Previne overflow horizontal que poderia quebrar o sticky */
+    overflow-x: hidden;
+    /* Previne overflow vertical NA SEÇÃO PAI, o scroll será no filho */
+    overflow-y: hidden;
+  }
+  
+  /* Estilos para a área de conteúdo principal DENTRO da #question-section */
+  .question-section__main-content {
+    flex-grow: 1;             /* Ocupa o espaço restante */
+    /* IMPORTANTE: Permite o scroll vertical DENTRO desta área */
+    overflow-y: auto;
+    /* IMPORTANTE: Correção comum para overflow em flex items */
+    min-height: 0;
+    padding: var(--question-section-main-padding, var(--spacing-xl, 40px));
+    background-color: var(--question-section-main-bg, var(--color-gray-200));
+    /* Organiza o conteúdo interno (filtros, aviso, quiz, etc.) em coluna */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  
+  /* --- RESPONSIVIDADE para _main-sections.css --- */
+  
+  @media (max-width: 992px) { /* Tablet Landscape */
+    .question-section__main-content {
+      padding: var(--question-section-main-padding-tablet, var(--spacing-lg, 35px));
+    }
+    #question-section.main-section {
+      height: calc(100vh - var(--header-height-tablet, 80px) - var(--main-nav-height-tablet, 50px));
+       /* Ajuste as variáveis se a altura do header/nav mudar neste breakpoint */
+    }
+  }
+  
+  @media (max-width: 768px) { /* Tablet Portrait e Mobile */
+  
+    /* Adiciona padding inferior ao body para compensar a altura da bottom-nav */
+    body {
+      padding-bottom: var(--bottom-nav-height, 60px);
+      /* Certifique-se que --bottom-nav-height está definida em _variables.css */
+    }
+  
+    /* Muda o layout da #question-section para coluna */
+    #question-section.main-section {
+      flex-direction: column; /* Empilha score-panel e main-content */
+      height: auto;          /* Altura volta a ser automática */
+      overflow: visible;     /* Scroll volta a ser da página inteira */
+    }
+  
+    /* Ajusta o conteúdo principal da seção de questões */
+    .question-section__main-content {
+      height: auto;
+      overflow-y: visible;   /* Scroll volta a ser da página */
+      padding: var(--question-section-main-padding-mobile, var(--spacing-md, 25px) var(--spacing-sm, 20px));
+      flex-grow: 1;          /* Mantém flex-grow para ocupar espaço */
+      min-height: initial;   /* Reseta min-height */
+    }
+  }
+  
+  @media (max-width: 480px) {
+       .question-section__main-content {
+          padding: var(--question-section-main-padding-sm-mobile, var(--spacing-md, 20px) var(--spacing-sm, 15px));
+       }
+  }
+  
+  @media (max-width: 360px) {
+      .question-section__main-content {
+          padding: var(--question-section-main-padding-xs-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
+       }
+  }

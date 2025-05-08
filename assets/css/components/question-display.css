@@ -1,0 +1,153 @@
+/* assets/css/components/question-display.css */
+
+/* ... (Estilos para .question-display__content, __image-container, __image, __text) ... */
+.question-display__content { display: flex; flex-direction: column; gap: var(--spacing-md, 20px); }
+.question-display__image-container { text-align: center; margin-bottom: var(--spacing-md, 20px); }
+.question-display__image { max-width: 100%; height: auto; max-height: 350px; border-radius: var(--border-radius-md); border: var(--border-width) solid var(--color-gray-400); box-shadow: 0 2px 5px rgba(0,0,0,0.07); }
+.question-display__text { font-size: var(--question-text-font-size, 1.2rem); font-weight: var(--font-weight-medium); color: var(--color-gray-900); margin: 0 0 var(--spacing-md, 20px) 0; line-height: 1.7; }
+.question-display__text p { margin: 0; }
+
+
+/* Container da lista de respostas */
+.question-display__answers-list {
+  width: 100%;
+  display: flex;
+  /* << AJUSTE: Diminuir o gap entre as respostas >> */
+  gap: var(--answer-list-gap, var(--spacing-sm, 10px)); /* Ex: 10px ou 12px em vez de 15px */
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ========================================================== */
+/* ESTILOS PARA OS BOTÕES DE RESPOSTA (HOVER E CURSOR AJUSTADOS) */
+/* ========================================================== */
+
+/* Elemento: .question-display__answer-option */
+.question-display__answer-option {
+  /* ... (reset de botão, layout flex, etc. como antes) ... */
+  border: none; margin: 0; font: inherit; color: inherit; background: none;
+  text-align: left; width: 100%; display: flex; align-items: center;
+
+  padding: var(--answer-padding-y, 15px) var(--answer-padding-x, 25px);
+  color: var(--answer-color, var(--color-gray-900));
+  background-color: var(--answer-bg-color, var(--color-gray-100));
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius-md);
+  border: var(--border-width) solid var(--answer-border-color, var(--color-gray-300));
+  font-size: var(--answer-font-size, 1.0rem);
+  transition: all var(--transition-medium);
+  min-height: var(--answer-min-height, 48px);
+  cursor: pointer; /* << Mantém o cursor pointer por padrão */
+}
+
+/* Hover padrão para respostas NÃO respondidas */
+.question-display__answer-option:not(.question-display__answer-option--answered):hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
+  border-color: var(--answer-hover-border-color, var(--color-gray-500));
+  transform: translateY(-2px);
+  background-color: var(--answer-hover-bg-color, var(--color-gray-200));
+}
+
+/* Estilo de foco */
+.question-display__answer-option:focus-visible {
+    /* ... (estilos de foco como antes) ... */
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset)) rgba(from var(--focus-outline-color) r g b / 0.2);
+    background-color: var(--answer-focus-bg-color, var(--color-gray-100));
+}
+
+/* Modifier: --answered (Marcador semântico) */
+/* Não força mais o cursor aqui */
+.question-display__answer-option--answered {
+    /* Estilos visuais virão de --correct / --incorrect */
+}
+
+/* Estilo para botão desabilitado (ainda aplicado pelo JS se você mantiver essa lógica) */
+/* Se você removeu disabled do JS, esta regra não terá efeito prático,
+   mas pode ser mantida para clareza ou se voltar a usar disabled. */
+.question-display__answer-option:disabled {
+    cursor: default;
+}
+
+
+/* << HOVER SUTIL PARA RESPOSTAS RESPONDIDAS >> */
+/* Aplica a todos que têm a classe --answered */
+.question-display__answer-option--answered:hover {
+    transform: translateY(0); /* Sem levantar */
+    box-shadow: var(--shadow-sm); /* Sombra base */
+    filter: brightness(98%); /* Efeito sutil */
+    cursor: pointer; /* << PERMITE o cursor pointer no hover */
+    /* A cor de fundo/borda virá dos modificadores --correct/--incorrect */
+}
+/* Garante que mesmo desabilitado (se JS aplicar disabled), o cursor seja default */
+.question-display__answer-option--answered:disabled:hover {
+    cursor: default;
+    filter: none; /* Remove o brilho se estiver desabilitado */
+}
+
+
+/* Modifier: --correct */
+.question-display__answer-option--correct {
+    background-color: var(--color-correct-bg-alt);
+    border-color: var(--color-correct-border);
+    color: var(--color-correct-text);
+    font-weight: var(--font-weight-medium);
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+    filter: none;
+}
+/* Hover no correto - herda o hover sutil de --answered:hover */
+.question-display__answer-option--correct:hover {
+    filter: brightness(98%);
+    /* Garante que outras propriedades do estado --correct permaneçam */
+    background-color: var(--color-correct-bg-alt);
+    border-color: var(--color-correct-border);
+}
+
+
+/* Modifier: --incorrect */
+.question-display__answer-option--incorrect {
+    background-color: var(--color-incorrect-bg-alt);
+    border-color: var(--color-incorrect-border);
+    color: var(--color-incorrect-text);
+    font-weight: var(--font-weight-medium);
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+    filter: none;
+}
+/* Hover no incorreto - herda o hover sutil de --answered:hover */
+.question-display__answer-option--incorrect:hover {
+    filter: brightness(98%);
+     /* Garante que outras propriedades do estado --incorrect permaneçam */
+    background-color: var(--color-incorrect-bg-alt);
+    border-color: var(--color-incorrect-border);
+}
+
+/* Referência da Questão */
+.question-display__reference {
+    /* ... (como antes) ... */
+    margin-top: var(--spacing-lg, 25px); padding-top: var(--spacing-md, 15px); border-top: var(--border-width) solid var(--color-gray-300);
+    font-size: var(--font-size-sm, 0.9rem); color: var(--color-gray-700); text-align: right; font-style: italic;
+}
+
+/* --- RESPONSIVIDADE --- */
+/* Ajuste o gap da lista de respostas nos breakpoints */
+@media (max-width: 768px) {
+    .question-display__text { font-size: 1.1rem; }
+    .question-display__answers-list { gap: var(--answer-list-gap-mobile, 12px); } /* Gap menor */
+    .question-display__answer-option { padding: 15px var(--spacing-md, 20px); font-size: 0.95rem; min-height: 46px; }
+    .question-display__reference { margin-top: var(--spacing-md, 20px); padding-top: var(--spacing-sm, 10px); }
+}
+@media (max-width: 480px) {
+    .question-display__text { font-size: 1.0rem; line-height: 1.6; }
+    .question-display__image { max-height: 280px; }
+    .question-display__answers-list { gap: var(--answer-list-gap-sm-mobile, 10px); } /* Gap ainda menor */
+    .question-display__answer-option { padding: 14px var(--spacing-sm, 18px); font-size: 0.9rem; min-height: 44px; }
+    .question-display__reference { font-size: 0.85rem; margin-top: var(--spacing-sm, 18px); padding-top: var(--spacing-xs, 10px); }
+}
+@media (max-width: 360px) {
+     .question-display__text { font-size: 0.95rem; }
+     .question-display__answers-list { gap: var(--answer-list-gap-xs-mobile, 8px); } /* Gap mínimo */
+    .question-display__answer-option { padding: 12px var(--spacing-sm, 15px); font-size: 0.85rem; min-height: 42px; }
+}

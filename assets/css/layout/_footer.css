@@ -1,0 +1,30 @@
+/* assets/css/layout/_footer.css */
+
+/* Block: .site-footer (representa o <footer>) */
+.site-footer {
+    font: var(--font-weight-normal) var(--font-size-sm, 0.9rem) var(--font-family-sans);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-md, 20px);
+    background-color: var(--color-gray-900);
+    color: var(--color-gray-300);
+    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06);
+    border-top: var(--border-width) solid var(--color-gray-800);
+    height: var(--footer-height, 65px);
+    flex-shrink: 0;
+    position: relative;
+    z-index: var(--z-index-default);
+}
+
+/* Element: .site-footer__text */
+.site-footer__text {
+    margin: 0;
+}
+
+/* Esconde o footer padrão em telas mobile onde a bottom-navbar aparece */
+@media (max-width: 768px) {
+    .site-footer {
+        display: none;
+    }
+}

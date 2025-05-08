@@ -4,6 +4,7 @@
  * + Adicionado funcionalidade de cronômetro
  * + Melhorias na tela de resultados (tempo, mensagem, novo botão)
  * + Correção do erro 'getTotalFilteredQuestions' em showResults
+ * + Modificações para "Tentar Novamente" e "Quiz Rápido"
  */
 
 // --- Módulo: UserData ---
@@ -109,7 +110,10 @@ class QuizUI {
             confirmEncerrarModal: document.getElementById('confirm-encerrar-modal'),
             confirmEncerrarBtn: document.getElementById('confirm-encerrar-btn'),
             cancelEncerrarBtn: document.getElementById('cancel-encerrar-btn'),
-            timerDisplay: document.getElementById('timer-display')
+            timerDisplay: document.getElementById('timer-display'),
+            // START --- MODIFICATION: Cache new buttons from home page --- START
+            startRandomQuiz: document.getElementById('start-random-quiz'),
+            // END --- MODIFICATION --- END
         };
         this.sectionElements = {
             'home-section': this.elements.homeSection,
@@ -224,7 +228,7 @@ class QuizUI {
         if (this.timerRunning) return;
         this.timerRunning = true;
         if (this.timerInterval) { clearInterval(this.timerInterval); }
-        this._updateTimerDisplay(); 
+        this._updateTimerDisplay();
         this.timerInterval = setInterval(() => {
             this.timerSeconds++;
             this._updateTimerDisplay();
@@ -248,25 +252,23 @@ class QuizUI {
         console.log("Timer resetado.");
     }
 
-    // ***** CORREÇÃO APLICADA AQUI *****
-    showResults(userData, filteredQuestions, selectedCategories, totalFilteredQuestions) { // Adicionado totalFilteredQuestions
+    showResults(userData, filteredQuestions, selectedCategories, totalFilteredQuestions) { 
         const card = this.elements.resultadoCard;
         if (!card) { console.error("showResults: Elemento do card de resultado não encontrado."); return; }
         if (!userData) { console.error("showResults: Dados do usuário inválidos."); return; }
 
         this.hideQuizElements();
-        this.hideElement(this.elements.filtroContainer);
+        this.hideElement(this.elements.filtroContainer); // This hides the category filters
 
         if (this.elements.resultadoTitulo) this.elements.resultadoTitulo.textContent = "Desempenho Final!";
         if (this.elements.resultadoPontos) this.elements.resultadoPontos.textContent = userData.pontos;
         if (this.elements.resultadoAcertos) this.elements.resultadoAcertos.textContent = userData.acertos;
         if (this.elements.resultadoErros) this.elements.resultadoErros.textContent = userData.erros;
         if (this.elements.resultadoTempo) this.elements.resultadoTempo.textContent = this._formatDisplayTime(this.timerSeconds);
-        
+
         if (this.elements.resultadoMensagemMotivacional) {
             const pontos = userData.pontos;
-            // Usar o totalFilteredQuestions passado como parâmetro
-            const totalQuestoes = totalFilteredQuestions; 
+            const totalQuestoes = totalFilteredQuestions;
             let mensagem = "Continue praticando para melhorar ainda mais!";
             if (totalQuestoes > 0) {
                 const pontuacaoMaximaPossivel = totalQuestoes * 15;
@@ -285,7 +287,7 @@ class QuizUI {
         this.elements.resultadoTitulo?.focus();
     }
 
-    _generateResultTitle(filteredQuestions, selectedCategories) { 
+    _generateResultTitle(filteredQuestions, selectedCategories) {
         const numFiltered = filteredQuestions?.length ?? 0;
         const numTotalCategoriasCheckbox = this.elements.filtroCheckboxesScroll?.querySelectorAll(`input.${'category-filter__input'}[type="checkbox"]:not([value="Todas"])`).length ?? 0;
         const selectAllChecked = this.elements.filtroCheckboxesScroll?.querySelector(`input.${'category-filter__input'}[value="Todas"]`)?.checked;
@@ -464,25 +466,46 @@ class QuizLogic {
     endQuiz() {
         console.log("Quiz encerrado.");
         this.ui.stopTimer();
-        // ***** CORREÇÃO APLICADA AQUI *****
         this.ui.showResults(
             this.user,
             this.state.filteredQuestions,
             this.state.selectedCategories,
-            this.state.getTotalFilteredQuestions() // Passando o total de questões filtradas
+            this.state.getTotalFilteredQuestions() 
         );
     }
 
+    // START --- MODIFICATION for "Tentar Novamente" --- START
     restartQuiz() {
         console.log("Reiniciando quiz...");
-        this.startQuiz();
+        this.user.reset();
+        this.state.resetQuizState(); // Resets current question index, answers given, etc.
+                                     // Keeps selectedCategories for now, user can change them.
+
+        this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
+        this.ui.hideResults(); // Hide the results card
+        this.ui.resetTimer();
+
+        // Explicitly show the category filter again, as it's hidden by showResults
+        this.ui.showElement(this.ui.elements.filtroContainer);
+        this.ui.updateFilterScrollArrows(); // Update scroll arrows in case they were hidden/disabled
+
+        // Hide quiz content (like questions, nav buttons) and clear any previous warnings
+        this.ui.displayQuizContent(false);
+        this.ui.clearWarning();
+
+        // The UI should now primarily show category filters.
+        // Call handleCategoryChange to initiate the quiz start process based on current (possibly persisted) category selections.
+        // If no categories are selected, it will show the appropriate warning.
+        this.handleCategoryChange();
     }
+    // END --- MODIFICATION --- END
+
 
     forceEndQuiz() {
         console.log("Forçando encerramento do quiz.");
-        this.ui.stopTimer(); 
-        this.endQuiz();      
-        this.ui.toggleConfirmModal(false); 
+        this.ui.stopTimer();
+        this.endQuiz();
+        this.ui.toggleConfirmModal(false);
     }
 }
 
@@ -541,29 +564,66 @@ class App {
     }
 
     setupEventListeners() {
+        // Listener para navegação principal e botões com data-section (inclui "Quiz por Categoria")
         this.quizUI.elements.navElements?.forEach(navElement => {
             if (!navElement) return;
             navElement.addEventListener('click', (e) => {
-                if (navElement.tagName === 'A') e.preventDefault();
+                if (navElement.tagName === 'A') e.preventDefault(); // Para links
                 const targetSection = navElement.dataset.section;
                 if (targetSection && targetSection !== this.quizUI.currentSection) {
                      this.quizUI.showSection(targetSection);
+                     // Se a seção de destino for 'question-section', atualize/inicie o quiz
                      if (targetSection === 'question-section') {
                           this.quizLogic.handleCategoryChange();
                      }
+                } else if (targetSection && targetSection === 'question-section' && targetSection === this.quizUI.currentSection) {
+                    // Se já estiver na seção de questões e clicar novamente (ex: botão "Quiz por Categoria")
+                    // garante que o quiz seja (re)iniciado com as seleções atuais.
+                    this.quizLogic.handleCategoryChange();
                 }
             });
         });
+        
+        // START --- MODIFICATION: Event listener for "Quiz Rápido" --- START
+        if (this.quizUI.elements.startRandomQuiz) {
+            this.quizUI.elements.startRandomQuiz.addEventListener('click', () => {
+                console.log("Botão 'Quiz Rápido' clicado!");
+                this.quizUI.showSection('question-section'); // Navega para a seção de questões
+
+                // Programaticamente seleciona todas as categorias individuais
+                const categoryCheckboxes = this.quizUI.elements.filtroCheckboxesScroll?.querySelectorAll('input[type="checkbox"]:not([value="Todas"])');
+                if (categoryCheckboxes) {
+                    categoryCheckboxes.forEach(checkbox => {
+                        checkbox.checked = true;
+                    });
+                }
+
+                // Atualiza o estado da checkbox "Todas" para consistência da UI
+                const selectAllCheckbox = this.quizUI.elements.filtroCheckboxesScroll?.querySelector('input[value="Todas"]');
+                if (selectAllCheckbox) {
+                    selectAllCheckbox.checked = true;
+                }
+                this.quizUI.updateFilterScrollArrows(); // Atualiza setas de rolagem do filtro
+
+                // Inicia a lógica do quiz com todas as categorias selecionadas
+                this.quizLogic.handleCategoryChange();
+            });
+        }
+        // END --- MODIFICATION --- END
+
 
         this.quizUI.elements.prevBtn?.addEventListener('click', () => this.quizLogic.previousQuestion());
         this.quizUI.elements.nextBtn?.addEventListener('click', () => this.quizLogic.nextQuestion());
         this.quizUI.elements.catScrollLeft?.addEventListener('click', () => this.quizUI.scrollCategories('left'));
         this.quizUI.elements.catScrollRight?.addEventListener('click', () => this.quizUI.scrollCategories('right'));
         this.quizUI.elements.filtroCheckboxesScroll?.addEventListener('scroll', () => this.quizUI.updateFilterScrollArrows(), { passive: true });
+        
+        // Listener para o botão "Tentar Novamente" (Recomeçar)
         this.quizUI.elements.btnRecomecar?.addEventListener('click', () => this.quizLogic.restartQuiz());
+        
         this.quizUI.elements.btnExplorarMais?.addEventListener('click', () => this.handleExplorarMais());
         this.quizUI.elements.btnEncerrarSessao?.addEventListener('click', () => this.quizUI.toggleConfirmModal(true));
-        
+
         this.quizUI.elements.confirmEncerrarBtn?.addEventListener('click', () => {
             console.log("Botão Confirmar (forceEndQuiz) clicado");
             this.quizLogic.forceEndQuiz();

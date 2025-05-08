@@ -1,1137 +1,1201 @@
 [
-    {
-        "id": 1,
-        "pergunta": "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
-        "imagem": "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1",
-        "respostas": [
-            "Produzir testosterona",
-            "Formar a túnica albugínea",
-            "Fornecer sustentação e formar a barreira hematotesticular",
-            "Participar diretamente da espermiogênese"
-        ],
-        "correta": "Fornecer sustentação e formar a barreira hematotesticular",
-        "referencia": "Gartner, 5ª ed.",
-        "categorias": [
-            "Concepção"
-        ]
-    },
-    {
-        "id": 2,
-        "pergunta": "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?",
-        "imagem": "",
-        "respostas": [
-            "Espermatogônias",
-            "Células de Sertoli",
-            "Espermátides",
-            "Espermatócitos primários"
-        ],
-        "correta": "Espermátides",
-        "referencia": "Gartner, 5ª ed.",
-        "categorias": [
-            "Concepção"
-        ]
-    },
-    {
-        "id": 3,
-        "pergunta": "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
-        "imagem": "",
-        "respostas": [
-            "Epitélio simples pavimentoso",
-            "Epitélio cúbico simples",
-            "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
-            "Epitélio pseudoestratificado com estereocílios"
-        ],
-        "correta": "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
-        "referencia": "Gartner, 5ª ed.",
-        "categorias": [
-            "Concepção"
-        ]
-    },
-    {
-        "id": 4,
-        "pergunta": "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?",
-        "imagem": "",
-        "respostas": [
-            "Epitélio seminífero",
-            "Túnica própria",
-            "Tecido intersticial entre os túbulos seminíferos",
-            "Rede testicular (rete testis)"
-        ],
-        "correta": "Tecido intersticial entre os túbulos seminíferos",
-        "referencia": "Gartner, 5ª ed.",
-        "categorias": [
-            "Concepção"
-        ]
-    },
-    {
-        "id": 5,
-        "pergunta": "Sobre o ducto deferente, é correto afirmar que:",
-        "imagem": "",
-        "respostas": [
-            "Possui epitélio simples cúbico e camada muscular fina",
-            "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
-            "Possui epitélio estratificado pavimentoso e camada adventícia espessa",
-            "É formado por epitélio colunar ciliado e tecido fibroso denso"
-        ],
-        "correta": "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
-        "referencia": "Gartner, 5ª ed.",
-        "categorias": [
-            "Concepção"
-        ]
-    },
-    {
-        "id": 6,
-        "pergunta": "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
-        "imagem": "",
-        "respostas": [
-            "Retículo Endoplasmático",
-            "Complexo de Golgi",
-            "Mitocôndria",
-            "Lisossomo"
-        ],
-        "correta": "Mitocôndria",
-        "referencia": "Biologia Celular Básica",
-        "categorias": [
-            "Metabolismo",
-            "Funções"
-        ]
-    },
-    {
-        "id": 7,
-        "pergunta": "O processo de glicólise ocorre em qual compartimento celular?",
-        "imagem": "",
-        "respostas": [
-            "Mitocôndria",
-            "Núcleo",
-            "Citosol",
-            "Peroxissomo"
-        ],
-        "correta": "Citosol",
-        "referencia": "Bioquímica Ilustrada",
-        "categorias": [
-            "Metabolismo"
-        ]
-    },
-    {
-        "id": 8,
-        "pergunta": "Qual a principal função do tecido epitelial de revestimento?",
-        "imagem": "",
-        "respostas": [
-            "Contração",
-            "Sustentação",
-            "Proteção e Absorção",
-            "Transmissão de impulsos"
-        ],
-        "correta": "Proteção e Absorção",
-        "referencia": "Histologia Básica",
-        "categorias": [
-            "Funções"
-        ]
-    },
-    {
-        "id": 9,
-        "pergunta": "Os neurônios são células especializadas na função de:",
-        "imagem": "",
-        "respostas": [
-            "Produzir hormônios",
-            "Realizar fagocitose",
-            "Transmitir impulsos nervosos",
-            "Armazenar gordura"
-        ],
-        "correta": "Transmitir impulsos nervosos",
-        "referencia": "Neurociência Fundamental",
-        "categorias": [
-            "Funções"
-        ]
-    },
-    {
-        "id": 10,
-        "pergunta": "Qual é a função primária das enzimas nas reações bioquímicas celulares?",
-        "imagem": "",
-        "respostas": [
-            "Fornecer energia direta para a reação",
-            "Aumentar a energia de ativação da reação",
-            "Diminuir a energia de ativação, acelerando a velocidade da reação",
-            "Atuar como substrato principal da reação",
-            "Modificar o pH do meio reacional"
-        ],
-        "correta": "Diminuir a energia de ativação, acelerando a velocidade da reação",
-        "referencia": "Princípios de Bioquímica de Lehninger",
-        "categorias": [
-            "Metabolismo",
-            "Funções"
-        ]
-    },
-    {
-        "id": 11,
-        "pergunta": "O processo de síntese de RNA a partir de um molde de DNA é denominado:",
-        "imagem": "",
-        "respostas": [
-            "Tradução",
-            "Replicação",
-            "Transcrição"
-        ],
-        "correta": "Transcrição",
-        "referencia": "Biologia Molecular da Célula",
-        "categorias": [
-            "Metabolismo"
-        ]
-    },
-    {
-        "id": 12,
-        "pergunta": "Qual molécula é frequentemente referida como a principal 'moeda energética' utilizada pelas células para realizar trabalho?",
-        "imagem": "",
-        "respostas": [
-            "Glicose",
-            "ATP (Trifosfato de Adenosina)",
-            "NADH",
-            "Piruvato"
-        ],
-        "correta": "ATP (Trifosfato de Adenosina)",
-        "referencia": "Bioquímica Ilustrada",
-        "categorias": [
-            "Metabolismo",
-            "Funções"
-        ]
-    },
-    {
-        "id": 13,
-        "pergunta": "Quantos estágios clínicos principais são classicamente descritos no trabalho de parto?",
-        "imagem": "",
-        "respostas": [
-            "Dois",
-            "Três",
-            "Quatro",
-            "Cinco"
-        ],
-        "correta": "Quatro",
-        "referencia": "Manual de Obstetrícia de Williams",
-        "categorias": [
-            "Nascimento"
-        ]
-    },
-    {
-        "id": 14,
-        "pergunta": "Qual é uma das funções vitais da placenta durante a gestação humana?",
-        "imagem": "",
-        "respostas": [
-            "Produzir todas as células sanguíneas fetais",
-            "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
-            "Iniciar as contrações uterinas no início da gestação",
-            "Determinar o sexo do feto"
-        ],
-        "correta": "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
-        "referencia": "Fisiologia Médica de Guyton e Hall",
-        "categorias": [
-            "Nascimento",
-            "Funções"
-        ]
-    },
-    {
-        "id": 15,
-        "pergunta": "Qual hormônio é essencial primariamente para a *produção* de leite (lactogênese) nas glândulas mamárias após o parto?",
-        "imagem": "",
-        "respostas": [
-            "Ocitocina",
-            "Progesterona",
-            "Prolactina",
-            "Estrogênio",
-            "Testosterona"
-        ],
-        "correta": "Prolactina",
-        "referencia": "Tratado de Ginecologia e Obstetrícia",
-        "categorias": [
-            "Nascimento",
-            "Funções"
-        ]
-    },
-    {
-        "id": 16,
-        "pergunta": "O Ciclo de Krebs (ou Ciclo do Ácido Cítrico), uma etapa crucial da respiração celular aeróbica, ocorre em qual compartimento celular?",
-        "imagem": "",
-        "respostas": [
-            "Citosol",
-            "Núcleo",
-            "Membrana Plasmática",
-            "Matriz Mitocondrial"
-        ],
-        "correta": "Matriz Mitocondrial",
-        "referencia": "Bioquímica Básica",
-        "categorias": [
-            "Metabolismo"
-        ]
-    },
-    {
-        "id": 17,
-        "pergunta": "A Regra de Naegele é um método comum em obstetrícia utilizado para estimar:",
-        "imagem": "",
-        "respostas": [
-            "O risco de anomalias cromossômicas",
-            "A data provável do parto (DPP)",
-            "O volume de líquido amniótico",
-            "A posição da placenta"
-        ],
-        "correta": "A data provável do parto (DPP)",
-        "referencia": "Obstetrícia Fundamental",
-        "categorias": [
-            "Nascimento"
-        ]
-    },
-    {
-        "id": 18,
-        "pergunta": "Qual lobo cerebral é primariamente responsável pelo processamento da informação visual?",
-        "imagem": "",
-        "respostas": [
-            "Lobo Frontal",
-            "Lobo Parietal",
-            "Lobo Temporal",
-            "Lobo Occipital"
-        ],
-        "correta": "Lobo Occipital",
-        "referencia": "Neurociência Fundamental",
-        "categorias": [
-            "Percepção"
-        ]
-    },
-    {
-        "id": 19,
-        "pergunta": "A capacidade do corpo de sentir a posição e o movimento das suas partes (membros, articulações) é chamada de:",
-        "imagem": "",
-        "respostas": [
-            "Nocicepção",
-            "Termocepção",
-            "Propriocepção",
-            "Interocepção"
-        ],
-        "correta": "Propriocepção",
-        "referencia": "Fisiologia Humana",
-        "categorias": [
-            "Percepção",
-            "Locomoção"
-        ]
-    },
-    {
-        "id": 20,
-        "pergunta": "Qual estrutura do ouvido interno contém as células ciliadas responsáveis pela transdução do estímulo sonoro em sinal neural?",
-        "imagem": "",
-        "respostas": [
-            "Canais Semicirculares",
-            "Utrículo",
-            "Sáculo",
-            "Cóclea (Órgão de Corti)"
-        ],
-        "correta": "Cóclea (Órgão de Corti)",
-        "referencia": "Neurociência: Desvendando o Sistema Nervoso",
-        "categorias": [
-            "Percepção"
-        ]
-    },
-    {
-        "id": 21,
-        "pergunta": "Receptores sensoriais na pele que detectam estímulos dolorosos são chamados de:",
-        "imagem": "",
-        "respostas": [
-            "Mecanorreceptores",
-            "Termorreceptores",
-            "Nociceptores",
-            "Quimiorreceptores"
-        ],
-        "correta": "Nociceptores",
-        "referencia": "Bases da Fisiologia",
-        "categorias": [
-            "Percepção"
-        ]
-    },
-     {
-        "id": 22,
-        "pergunta": "A via neural que transmite informações táteis finas e proprioceptivas da medula espinhal para o tálamo é conhecida como:",
-        "imagem": "",
-        "respostas": [
-            "Trato Espinotalâmico Lateral",
-            "Sistema Coluna Dorsal-Lemnisco Medial",
-            "Trato Corticoespinal",
-            "Trato Espinocerebelar"
-        ],
-        "correta": "Sistema Coluna Dorsal-Lemnisco Medial",
-        "referencia": "Neuroanatomia Clínica",
-        "categorias": [
-            "Percepção"
-        ]
-    },
-    {
-        "id": 23,
-        "pergunta": "A perda progressiva de massa e força muscular associada ao envelhecimento é denominada:",
-        "imagem": "",
-        "respostas": [
-            "Osteoporose",
-            "Sarcopenia",
-            "Anemia",
-            "Disfagia",
-            "Artrite"
-        ],
-        "correta": "Sarcopenia",
-        "referencia": "Tratado de Geriatria",
-        "categorias": [
-            "Envelhecimento",
-            "Locomoção"
-        ]
-    },
-    {
-        "id": 24,
-        "pergunta": "Qual das seguintes condições é uma síndrome geriátrica comum caracterizada por declínio cognitivo agudo e flutuante, geralmente associado a uma causa médica subjacente?",
-        "imagem": "",
-        "respostas": [
-            "Demência de Alzheimer",
-            "Depressão Maior",
-            "Delirium",
-            "Doença de Parkinson"
-        ],
-        "correta": "Delirium",
-        "referencia": "Geriatria Básica",
-        "categorias": [
-            "Envelhecimento"
-        ]
-    },
-    {
-        "id": 25,
-        "pergunta": "O processo de envelhecimento celular, onde as células param de se dividir, mas permanecem metabolicamente ativas, é chamado de:",
-        "imagem": "",
-        "respostas": [
-            "Apoptose",
-            "Necrose",
-            "Senescência Celular",
-            "Autofagia"
-        ],
-        "correta": "Senescência Celular",
-        "referencia": "Biologia Molecular do Envelhecimento",
-        "categorias": [
-            "Envelhecimento",
-            "Proliferação"
-        ]
-    },
-    {
-        "id": 26,
-        "pergunta": "A diminuição da densidade mineral óssea que aumenta o risco de fraturas em idosos é conhecida como:",
-        "imagem": "",
-        "respostas": [
-            "Osteoartrite",
-            "Osteomalácia",
-            "Osteoporose",
-            "Doença de Paget"
-        ],
-        "correta": "Osteoporose",
-        "referencia": "Endocrinologia e Metabologia",
-        "categorias": [
-            "Envelhecimento",
-            "Locomoção"
-        ]
-    },
-    {
-        "id": 27,
-        "pergunta": "O uso concomitante de múltiplos medicamentos, comum em idosos e que aumenta o risco de interações e efeitos adversos, é conhecido como:",
-        "imagem": "",
-        "respostas": [
-            "Monoterapia",
-            "Farmacocinética",
-            "Polifarmácia",
-            "Farmacodinâmica"
-        ],
-        "correta": "Polifarmácia",
-        "referencia": "Farmacologia Clínica",
-        "categorias": [
-            "Envelhecimento"
-        ]
-    },
-    {
-        "id": 28,
-        "pergunta": "Qual tipo de articulação é caracterizado pela presença de uma cavidade articular preenchida por líquido sinovial, permitindo ampla mobilidade?",
-        "imagem": "",
-        "respostas": [
-            "Articulação Fibrosa (Sinartrose)",
-            "Articulação Cartilaginosa (Anfiartrose)",
-            "Articulação Sinovial (Diartrose)"
-        ],
-        "correta": "Articulação Sinovial (Diartrose)",
-        "referencia": "Anatomia Humana",
-        "categorias": [
-            "Locomoção"
-        ]
-    },
-    {
-        "id": 29,
-        "pergunta": "Quais células são primariamente responsáveis pela reabsorção (degradação) do tecido ósseo?",
-        "imagem": "",
-        "respostas": [
-            "Osteoblastos",
-            "Condrócitos",
-            "Osteócitos",
-            "Osteoclastos"
-        ],
-        "correta": "Osteoclastos",
-        "referencia": "Histologia Básica - Junqueira e Carneiro",
-        "categorias": [
-            "Locomoção",
-            "Funções"
-        ]
-    },
-    {
-        "id": 30,
-        "pergunta": "Estruturas de tecido conjuntivo denso que conectam ossos a outros ossos em uma articulação são chamadas de:",
-        "imagem": "",
-        "respostas": [
-            "Tendões",
-            "Ligamentos",
-            "Fáscias",
-            "Cartilagens"
-        ],
-        "correta": "Ligamentos",
-        "referencia": "Ortopedia Essencial",
-        "categorias": [
-            "Locomoção"
-        ]
-    },
-    {
-        "id": 31,
-        "pergunta": "Uma fratura óssea na qual o osso quebrado perfura a pele é classificada como:",
-        "imagem": "",
-        "respostas": [
-            "Fratura Simples (Fechada)",
-            "Fratura Cominutiva",
-            "Fratura Exposta (Aberta)",
-            "Fratura em Galho Verde"
-        ],
-        "correta": "Fratura Exposta (Aberta)",
-        "referencia": "Princípios de Cirurgia Ortopédica",
-        "categorias": [
-            "Locomoção"
-        ]
-    },
-    {
-        "id": 32,
-        "pergunta": "Qual condição ortopédica comum é caracterizada pelo desgaste da cartilagem articular, levando a dor e rigidez nas articulações?",
-        "imagem": "",
-        "respostas": [
-            "Artrite Reumatoide",
-            "Gota",
-            "Osteoartrite (Artrose)",
-            "Lúpus Eritematoso Sistêmico"
-        ],
-        "correta": "Osteoartrite (Artrose)",
-        "referencia": "Reumatologia Clínica",
-        "categorias": [
-            "Locomoção",
-            "Envelhecimento"
-        ]
-    },
-    {
-        "id": 33,
-        "pergunta": "O processo pelo qual células cancerígenas se espalham do tumor primário para outras partes do corpo, formando novos tumores, é chamado de:",
-        "imagem": "",
-        "respostas": [
-            "Angiogênese",
-            "Metástase",
-            "Apoptose",
-            "Hiperplasia",
-            "Diferenciação"
-        ],
-        "correta": "Metástase",
-        "referencia": "Oncologia Básica",
-        "categorias": [
-            "Proliferação"
-        ]
-    },
-    {
-        "id": 34,
-        "pergunta": "Genes que, quando mutados ou superexpressos, podem promover o crescimento celular descontrolado e contribuir para o câncer são chamados de:",
-        "imagem": "",
-        "respostas": [
-            "Genes Supressores de Tumor",
-            "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
-            "Genes de Reparo do DNA",
-            "Genes da Apoptose"
-        ],
-        "correta": "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
-        "referencia": "Biologia Molecular do Câncer",
-        "categorias": [
-            "Proliferação",
-            "Genética"
-        ]
-    },
-    {
-        "id": 35,
-        "pergunta": "Qual proteína, conhecida como 'guardiã do genoma', atua como um gene supressor de tumor, induzindo parada do ciclo celular ou apoptose em resposta a danos no DNA?",
-        "imagem": "",
-        "respostas": [
-            "RAS",
-            "MYC",
-            "p53",
-            "BRCA1"
-        ],
-        "correta": "p53",
-        "referencia": "Biologia Celular e Molecular",
-        "categorias": [
-            "Proliferação",
-            "Funções"
-        ]
-    },
-    {
-        "id": 36,
-        "pergunta": "O desenvolvimento de novos vasos sanguíneos, um processo frequentemente explorado por tumores para obter nutrientes e oxigênio, é denominado:",
-        "imagem": "",
-        "respostas": [
-            "Vasculogênese",
-            "Angiogênese",
-            "Linfangiogênese",
-            "Hemopoiese"
-        ],
-        "correta": "Angiogênese",
-        "referencia": "Patologia Oncológica",
-        "categorias": [
-            "Proliferação"
-        ]
-    },
-    {
-        "id": 37,
-        "pergunta": "Qual modalidade de tratamento do câncer utiliza medicamentos que circulam pelo corpo para destruir células cancerígenas de crescimento rápido?",
-        "imagem": "",
-        "respostas": [
-            "Radioterapia",
-            "Cirurgia Oncológica",
-            "Quimioterapia",
-            "Imunoterapia"
-        ],
-        "correta": "Quimioterapia",
-        "referencia": "Oncologia Clínica",
-        "categorias": [
-            "Proliferação"
-        ]
-    },
-    {
-        "id": 38,
-        "pergunta": "O que é a Perda Auditiva Induzida por Ruído (PAIR) e qual o principal mecanismo de lesão envolvido?",
-        "imagem": "",
-        "respostas": [
-            "Uma infecção viral que afeta o nervo auditivo",
-            "Uma redução da acuidade auditiva, neurossensorial, irreversível e progressiva, causada por lesão crônica das células ciliadas pela exposição ao ruído",
-            "Um bloqueio no canal auditivo causado por cera",
-            "Uma perda auditiva condutiva devido à otosclerose"
-        ],
-        "correta": "Uma redução da acuidade auditiva, neurossensorial, irreversível e progressiva, causada por lesão crônica das células ciliadas pela exposição ao ruído",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 39,
-        "pergunta": "De que forma a exposição prolongada a sons acima de 85 dB afeta as células ciliadas do órgão de Corti?",
-        "imagem": "",
-        "respostas": [
-            "Causa uma inflamação temporária que se resolve espontaneamente",
-            "Leva a uma lesão crônica e morte dessas células, que não se regeneram",
-            "Estimula o crescimento de novas células ciliadas para compensar a perda",
-            "Provoca um aumento na produção de endolinfa, causando hidropsia endolinfática"
-        ],
-        "correta": "Leva a uma lesão crônica e morte dessas células, que não se regeneram",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 40,
-        "pergunta": "A recuperação auditiva na PAIR é possível após a cessação da exposição ao ruído?",
-        "imagem": "",
-        "respostas": [
-            "Sim, a audição se recupera totalmente em algumas semanas",
-            "Sim, mas apenas se a exposição for interrompida nos estágios iniciais",
-            "Não, a perda auditiva causada pela PAIR é irreversível, mas a progressão cessa com o fim da exposição",
-            "Apenas com cirurgia reconstrutiva da cóclea"
-        ],
-        "correta": "Não, a perda auditiva causada pela PAIR é irreversível, mas a progressão cessa com o fim da exposição",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 41,
-        "pergunta": "Por que as células ciliadas que captam sons nas frequências mais altas (3.000 a 6.000 Hz) são geralmente as primeiras a serem afetadas na PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Porque são menos numerosas que as células para frequências baixas",
-            "Devido à sua localização na base da cóclea, primeira região a sofrer o impacto do ruído",
-            "Porque são mais sensíveis a variações de pressão sonora",
-            "Devido a uma menor vascularização nessa região da cóclea"
-        ],
-        "correta": "Devido à sua localização na base da cóclea, primeira região a sofrer o impacto do ruído",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 42,
-        "pergunta": "Qual a prevalência da PAIR como doença ocupacional?",
-        "imagem": "",
-        "respostas": [
-            "É a doença ocupacional mais rara",
-            "É a segunda doença ocupacional mais frequente",
-            "Não é considerada uma doença ocupacional",
-            "Sua prevalência é desconhecida"
-        ],
-        "correta": "É a segunda doença ocupacional mais frequente",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 43,
-        "pergunta": "Qual dos seguintes é considerado um fator protetivo contra a PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Tabagismo",
-            "Exposição contínua ao ruído",
-            "Uso adequado de protetores auditivos",
-            "Déficit de magnésio"
-        ],
-        "correta": "Uso adequado de protetores auditivos",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 44,
-        "pergunta": "Qual o papel das células ciliadas externas na audição e como são afetadas na PAIR?",
-        "imagem": "",
-        "respostas": [
-            "São responsáveis pela transmissão direta do sinal ao nervo auditivo e são resistentes ao ruído",
-            "Amplificam o som e são as primeiras a serem lesadas irreversivelmente pela exposição ao ruído",
-            "Produzem a endolinfa e sua disfunção causa zumbido",
-            "Protegem as células ciliadas internas e se regeneram rapidamente"
-        ],
-        "correta": "Amplificam o som e são as primeiras a serem lesadas irreversivelmente pela exposição ao ruído",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 45,
-        "pergunta": "O que caracteriza a fase de 'Temporary Threshold Shift' (TTS) na fisiopatologia da PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Morte permanente das células ciliadas e inflamação crônica",
-            "Aumento da atividade metabólica das células ciliadas, sobrecarga mitocondrial e estresse oxidativo, podendo ser reversível",
-            "Degeneração sináptica irreversível entre células ciliadas e fibras nervosas",
-            "Formação de tecido cicatricial na cóclea"
-        ],
-        "correta": "Aumento da atividade metabólica das células ciliadas, sobrecarga mitocondrial e estresse oxidativo, podendo ser reversível",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 46,
-        "pergunta": "Como o reflexo do músculo estapédio atua como um mecanismo protetor da audição?",
-        "imagem": "",
-        "respostas": [
-            "Aumentando a sensibilidade auditiva em ambientes silenciosos",
-            "Contraindo-se em resposta a sons intensos, reduzindo a transmissão das vibrações para a orelha interna",
-            "Melhorando a discriminação de frequências sonoras",
-            "Bloqueando completamente a entrada de som no ouvido"
-        ],
-        "correta": "Contraindo-se em resposta a sons intensos, reduzindo a transmissão das vibrações para a orelha interna",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 47,
-        "pergunta": "Qual é um sintoma comum do trauma acústico (exposição aguda a ruído intenso)?",
-        "imagem": "",
-        "respostas": [
-            "Melhora da acuidade auditiva",
-            "Tinnitus (zumbido) e perda súbita auditiva",
-            "Ausência de qualquer sintoma imediato",
-            "Apenas dor de cabeça leve"
-        ],
-        "correta": "Tinnitus (zumbido) e perda súbita auditiva",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 48,
-        "pergunta": "No diagnóstico da PAIR, o que o Teste de Rinne positivo geralmente indica?",
-        "imagem": "",
-        "respostas": [
-            "Perda auditiva de condução",
-            "Audição normal ou perda neurossensorial (onde a condução aérea é melhor que a óssea)",
-            "Presença de líquido na orelha média",
-            "Disfunção do nervo vestibular"
-        ],
-        "correta": "Audição normal ou perda neurossensorial (onde a condução aérea é melhor que a óssea)",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 49,
-        "pergunta": "Qual é o limiar de normalidade geralmente estabelecido na audiometria para a maioria da população adulta?",
-        "imagem": "",
-        "respostas": [
-            "0 dB",
-            "10 dB",
-            "25 dB",
-            "40 dB"
-        ],
-        "correta": "25 dB",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 50,
-        "pergunta": "Qual é a principal medida profilática e terapêutica para a PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Uso de antibióticos potentes",
-            "Cirurgia para implante coclear imediato",
-            "Evitar exposições a ruídos contínuos acima de 85 dB e afastar-se do ambiente ruidoso",
-            "Terapia de reposição hormonal"
-        ],
-        "correta": "Evitar exposições a ruídos contínuos acima de 85 dB e afastar-se do ambiente ruidoso",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 51,
-        "pergunta": "Qual a responsabilidade da empresa em relação aos protetores auriculares para trabalhadores expostos a ruídos acima de 85 dB?",
-        "imagem": "",
-        "respostas": [
-            "A empresa pode cobrar uma taxa pelo fornecimento",
-            "O trabalhador deve adquirir seus próprios protetores",
-            "Devem ser fornecidos gratuitamente ao trabalhador pela empresa",
-            "O uso é opcional e não há responsabilidade da empresa"
-        ],
-        "correta": "Devem ser fornecidos gratuitamente ao trabalhador pela empresa",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 52,
-        "pergunta": "Em que circunstância o INSS concede benefício para um trabalhador com PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Sempre que houver diagnóstico de PAIR, independentemente da capacidade de trabalho",
-            "Apenas se a perda auditiva gerar impactos sociais ou emocionais significativos",
-            "Somente se a capacidade de trabalho do indivíduo estiver reduzida devido à perda auditiva",
-            "O INSS não cobre doenças relacionadas ao trabalho"
-        ],
-        "correta": "Somente se a capacidade de trabalho do indivíduo estiver reduzida devido à perda auditiva",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 53,
-        "pergunta": "De acordo com a NR 15, qual é a máxima exposição diária permissível para um nível de ruído de 90 dB(A)?",
-        "imagem": "",
-        "respostas": [
-            "8 horas",
-            "6 horas",
-            "4 horas",
-            "2 horas"
-        ],
-        "correta": "4 horas",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 54,
-        "pergunta": "Qual o significado de 'PAIR' no contexto da saúde ocupacional?",
-        "imagem": "",
-        "respostas": [
-            "Programa de Atenção Integral ao Reumatismo",
-            "Perda Auditiva Induzida por Radiação",
-            "Perda Auditiva Induzida por Ruído",
-            "Prevenção de Acidentes Industriais e Riscos"
-        ],
-        "correta": "Perda Auditiva Induzida por Ruído",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 55,
-        "pergunta": "A PAIR é caracterizada por ser uma perda auditiva de qual tipo?",
-        "imagem": "",
-        "respostas": [
-            "Condutiva",
-            "Mista",
-            "Neurossensorial",
-            "Funcional"
-        ],
-        "correta": "Neurossensorial",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 56,
-        "pergunta": "Qual o nível sonoro (em dB) a partir do qual a exposição prolongada começa a representar um risco significativo para o desenvolvimento da PAIR, segundo o documento?",
-        "imagem": "",
-        "respostas": [
-            "60 dB",
-            "75 dB",
-            "85 dB",
-            "100 dB"
-        ],
-        "correta": "85 dB",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 57,
-        "pergunta": "O que acontece com a progressão da PAIR uma vez que cessa a exposição ao ruído?",
-        "imagem": "",
-        "respostas": [
-            "A audição se recupera parcialmente",
-            "A progressão da doença continua no mesmo ritmo",
-            "A progressão da doença cessa, mas o dano já existente não é recuperado",
-            "A progressão se acelera devido à ausência do estímulo"
-        ],
-        "correta": "A progressão da doença cessa, mas o dano já existente não é recuperado",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 58,
-        "pergunta": "Qual é a principal estrutura afetada na cóclea pela PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Membrana basilar",
-            "Células ciliadas do órgão de Corti",
-            "Nervo coclear",
-            "Estria vascular"
-        ],
-        "correta": "Células ciliadas do órgão de Corti",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 59,
-        "pergunta": "Qual das alternativas NÃO é um fator de risco para PAIR mencionado no texto?",
-        "imagem": "",
-        "respostas": [
-            "Tabagismo",
-            "Fragilidade coclear constitucional",
-            "Hipotermia",
-            "Déficit de magnésio"
-        ],
-        "correta": "Hipotermia",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 60,
-        "pergunta": "O que é a organização tonotópica da cóclea?",
-        "imagem": "",
-        "respostas": [
-            "As células ciliadas respondem a todas as frequências igualmente",
-            "Diferentes regiões da cóclea respondem a diferentes frequências sonoras",
-            "A cóclea só processa sons de tons graves",
-            "A organização das células em espiral sem relação com a frequência"
-        ],
-        "correta": "Diferentes regiões da cóclea respondem a diferentes frequências sonoras",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 61,
-        "pergunta": "Na fisiopatologia da PAIR, o que o excesso de Espécies Reativas de Oxigênio (ROS) causa?",
-        "imagem": "",
-        "respostas": [
-            "Regeneração das células ciliadas",
-            "Dano às estruturas e células ciliadas internas pelo estresse oxidativo",
-            "Melhora da homeostase da endolinfa",
-            "Diminuição da resposta inflamatória"
-        ],
-        "correta": "Dano às estruturas e células ciliadas internas pelo estresse oxidativo",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 62,
-        "pergunta": "Qual o papel do feixe olivococlear cruzado na proteção auditiva?",
-        "imagem": "",
-        "respostas": [
-            "Amplificar sons fracos",
-            "Inibir temporariamente a atividade das células ciliadas externas, protegendo a cóclea do excesso de estimulação",
-            "Aumentar a liberação de glutamato",
-            "Estimular a contração do músculo estapédio"
-        ],
-        "correta": "Inibir temporariamente a atividade das células ciliadas externas, protegendo a cóclea do excesso de estimulação",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 63,
-        "pergunta": "Qual é uma característica da PAIR relacionada à simetria da perda auditiva?",
-        "imagem": "",
-        "respostas": [
-            "Geralmente é unilateral e assimétrica",
-            "Geralmente é bilateral e simétrica, especialmente se de origem ocupacional",
-            "Afeta apenas uma orelha, dependendo da fonte do ruído",
-            "A simetria é rara e indica outra condição"
-        ],
-        "correta": "Geralmente é bilateral e simétrica, especialmente se de origem ocupacional",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 64,
-        "pergunta": "No Teste de Weber, para onde o som lateraliza em caso de perda sensorioneural unilateral?",
-        "imagem": "",
-        "respostas": [
-            "Para o ouvido afetado",
-            "Para o ouvido normal",
-            "O som é percebido igualmente em ambos os ouvidos",
-            "O som não é percebido"
-        ],
-        "correta": "Para o ouvido normal",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 65,
-        "pergunta": "Qual o padrão típico da audiometria na PAIR em relação às frequências afetadas?",
-        "imagem": "",
-        "respostas": [
-            "Perda maior em frequências graves (abaixo de 1000 Hz)",
-            "Perda uniforme em todas as frequências",
-            "Danos mais comuns em frequências de 3000 a 8000 Hz, com entalhe característico",
-            "Perda exclusiva nas frequências da fala (1000-3000 Hz)"
-        ],
-        "correta": "Danos mais comuns em frequências de 3000 a 8000 Hz, com entalhe característico",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 66,
-        "pergunta": "Qual o papel do fonoaudiólogo no tratamento da PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Realizar cirurgia para restaurar a audição",
-            "Prescrever medicamentos para regenerar as células ciliadas",
-            "Melhorar a capacidade de detecção, discriminação e interpretação de sons com exercícios específicos",
-            "Apenas fornecer protetores auriculares"
-        ],
-        "correta": "Melhorar a capacidade de detecção, discriminação e interpretação de sons com exercícios específicos",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 67,
-        "pergunta": "O que é o 'direito extraprevidenciário' mencionado no contexto da PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Um benefício adicional concedido pelo INSS",
-            "O direito do trabalhador de processar a empresa por indenização na justiça comum, fora do INSS",
-            "Um tipo de aposentadoria especial para portadores de PAIR",
-            "A obrigação da empresa de fornecer tratamento médico contínuo"
-        ],
-        "correta": "O direito do trabalhador de processar a empresa por indenização na justiça comum, fora do INSS",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 68,
-        "pergunta": "Qual a finalidade principal da emissão do Comunicado por Acidente de Trabalho (CAT) em casos de PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Garantir a aposentadoria imediata do trabalhador",
-            "Apenas punir a empresa",
-            "Finalidade epidemiológica e para resguardo da empresa e do trabalhador",
-            "Iniciar um processo criminal contra os gestores da empresa"
-        ],
-        "correta": "Finalidade epidemiológica e para resguardo da empresa e do trabalhador",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 69,
-        "pergunta": "Segundo o documento, qual é o impacto da exposição a temperaturas mais baixas (hipotermia) no contexto da PAIR?",
-        "imagem": "",
-        "respostas": [
-            "Agrava a perda auditiva aumentando o metabolismo celular",
-            "Não tem impacto significativo na audição",
-            "Pode ser um fator protetivo ao reduzir a atividade metabólica e o estresse oxidativo nas células ciliadas",
-            "Causa congelamento das estruturas da orelha interna"
-        ],
-        "correta": "Pode ser um fator protetivo ao reduzir a atividade metabólica e o estresse oxidativo nas células ciliadas",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    },
-    {
-        "id": 70,
-        "pergunta": "No caso do Sr. Miguel, metalúrgico exposto a 90dB por 15 anos sem uso de EPI, qual seria a máxima exposição diária permissível segundo a NR 15 para esse nível de ruído?",
-        "imagem": "",
-        "respostas": [
-            "8 horas",
-            "4 horas",
-            "2 horas",
-            "1 hora"
-        ],
-        "correta": "4 horas",
-        "referencia": "Problema 4 - PAIR.pdf",
-        "categorias": [
-            "DRAMA"
-        ]
-    }
+  {
+    "id": 1,
+    "pergunta": "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
+    "imagem": "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1",
+    "respostas": [
+      "Produzir testosterona",
+      "Formar a túnica albugínea",
+      "Fornecer sustentação e formar a barreira hematotesticular",
+      "Participar diretamente da espermiogênese"
+    ],
+    "correta": "Fornecer sustentação e formar a barreira hematotesticular",
+    "referencia": "Gartner, 5ª ed.",
+    "categorias": [
+      "Concepção"
+    ]
+  },
+  {
+    "id": 2,
+    "pergunta": "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?",
+    "imagem": "",
+    "respostas": [
+      "Espermatogônias",
+      "Células de Sertoli",
+      "Espermátides",
+      "Espermatócitos primários"
+    ],
+    "correta": "Espermátides",
+    "referencia": "Gartner, 5ª ed.",
+    "categorias": [
+      "Concepção"
+    ]
+  },
+  {
+    "id": 3,
+    "pergunta": "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
+    "imagem": "",
+    "respostas": [
+      "Epitélio simples pavimentoso",
+      "Epitélio cúbico simples",
+      "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+      "Epitélio pseudoestratificado com estereocílios"
+    ],
+    "correta": "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+    "referencia": "Gartner, 5ª ed.",
+    "categorias": [
+      "Concepção"
+    ]
+  },
+  {
+    "id": 4,
+    "pergunta": "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?",
+    "imagem": "",
+    "respostas": [
+      "Epitélio seminífero",
+      "Túnica própria",
+      "Tecido intersticial entre os túbulos seminíferos",
+      "Rede testicular (rete testis)"
+    ],
+    "correta": "Tecido intersticial entre os túbulos seminíferos",
+    "referencia": "Gartner, 5ª ed.",
+    "categorias": [
+      "Concepção"
+    ]
+  },
+  {
+    "id": 5,
+    "pergunta": "Sobre o ducto deferente, é correto afirmar que:",
+    "imagem": "",
+    "respostas": [
+      "Possui epitélio simples cúbico e camada muscular fina",
+      "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+      "Possui epitélio estratificado pavimentoso e camada adventícia espessa",
+      "É formado por epitélio colunar ciliado e tecido fibroso denso"
+    ],
+    "correta": "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+    "referencia": "Gartner, 5ª ed.",
+    "categorias": [
+      "Concepção"
+    ]
+  },
+  {
+    "id": 6,
+    "pergunta": "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
+    "imagem": "",
+    "respostas": [
+      "Retículo Endoplasmático",
+      "Complexo de Golgi",
+      "Mitocôndria",
+      "Lisossomo"
+    ],
+    "correta": "Mitocôndria",
+    "referencia": "Biologia Celular Básica",
+    "categorias": [
+      "Metabolismo",
+      "Funções"
+    ]
+  },
+  {
+    "id": 7,
+    "pergunta": "O processo de glicólise ocorre em qual compartimento celular?",
+    "imagem": "",
+    "respostas": [
+      "Mitocôndria",
+      "Núcleo",
+      "Citosol",
+      "Peroxissomo"
+    ],
+    "correta": "Citosol",
+    "referencia": "Bioquímica Ilustrada",
+    "categorias": [
+      "Metabolismo"
+    ]
+  },
+  {
+    "id": 8,
+    "pergunta": "Qual a principal função do tecido epitelial de revestimento?",
+    "imagem": "",
+    "respostas": [
+      "Contração",
+      "Sustentação",
+      "Proteção e Absorção",
+      "Transmissão de impulsos"
+    ],
+    "correta": "Proteção e Absorção",
+    "referencia": "Histologia Básica",
+    "categorias": [
+      "Funções"
+    ]
+  },
+  {
+    "id": 9,
+    "pergunta": "Os neurônios são células especializadas na função de:",
+    "imagem": "",
+    "respostas": [
+      "Produzir hormônios",
+      "Realizar fagocitose",
+      "Transmitir impulsos nervosos",
+      "Armazenar gordura"
+    ],
+    "correta": "Transmitir impulsos nervosos",
+    "referencia": "Neurociência Fundamental",
+    "categorias": [
+      "Funções"
+    ]
+  },
+  {
+    "id": 10,
+    "pergunta": "Qual é a função primária das enzimas nas reações bioquímicas celulares?",
+    "imagem": "",
+    "respostas": [
+      "Fornecer energia direta para a reação",
+      "Aumentar a energia de ativação da reação",
+      "Diminuir a energia de ativação, acelerando a velocidade da reação",
+      "Atuar como substrato principal da reação",
+      "Modificar o pH do meio reacional"
+    ],
+    "correta": "Diminuir a energia de ativação, acelerando a velocidade da reação",
+    "referencia": "Princípios de Bioquímica de Lehninger",
+    "categorias": [
+      "Metabolismo",
+      "Funções"
+    ]
+  },
+  {
+    "id": 11,
+    "pergunta": "O processo de síntese de RNA a partir de um molde de DNA é denominado:",
+    "imagem": "",
+    "respostas": [
+      "Tradução",
+      "Replicação",
+      "Transcrição"
+    ],
+    "correta": "Transcrição",
+    "referencia": "Biologia Molecular da Célula",
+    "categorias": [
+      "Metabolismo"
+    ]
+  },
+  {
+    "id": 12,
+    "pergunta": "Qual molécula é frequentemente referida como a principal 'moeda energética' utilizada pelas células para realizar trabalho?",
+    "imagem": "",
+    "respostas": [
+      "Glicose",
+      "ATP (Trifosfato de Adenosina)",
+      "NADH",
+      "Piruvato"
+    ],
+    "correta": "ATP (Trifosfato de Adenosina)",
+    "referencia": "Bioquímica Ilustrada",
+    "categorias": [
+      "Metabolismo",
+      "Funções"
+    ]
+  },
+  {
+    "id": 13,
+    "pergunta": "Quantos estágios clínicos principais são classicamente descritos no trabalho de parto?",
+    "imagem": "",
+    "respostas": [
+      "Dois",
+      "Três",
+      "Quatro",
+      "Cinco"
+    ],
+    "correta": "Quatro",
+    "referencia": "Manual de Obstetrícia de Williams",
+    "categorias": [
+      "Nascimento"
+    ]
+  },
+  {
+    "id": 14,
+    "pergunta": "Qual é uma das funções vitais da placenta durante a gestação humana?",
+    "imagem": "",
+    "respostas": [
+      "Produzir todas as células sanguíneas fetais",
+      "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
+      "Iniciar as contrações uterinas no início da gestação",
+      "Determinar o sexo do feto"
+    ],
+    "correta": "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
+    "referencia": "Fisiologia Médica de Guyton e Hall",
+    "categorias": [
+      "Nascimento",
+      "Funções"
+    ]
+  },
+  {
+    "id": 15,
+    "pergunta": "Qual hormônio é essencial primariamente para a *produção* de leite (lactogênese) nas glândulas mamárias após o parto?",
+    "imagem": "",
+    "respostas": [
+      "Ocitocina",
+      "Progesterona",
+      "Prolactina",
+      "Estrogênio",
+      "Testosterona"
+    ],
+    "correta": "Prolactina",
+    "referencia": "Tratado de Ginecologia e Obstetrícia",
+    "categorias": [
+      "Nascimento",
+      "Funções"
+    ]
+  },
+  {
+    "id": 16,
+    "pergunta": "O Ciclo de Krebs (ou Ciclo do Ácido Cítrico), uma etapa crucial da respiração celular aeróbica, ocorre em qual compartimento celular?",
+    "imagem": "",
+    "respostas": [
+      "Citosol",
+      "Núcleo",
+      "Membrana Plasmática",
+      "Matriz Mitocondrial"
+    ],
+    "correta": "Matriz Mitocondrial",
+    "referencia": "Bioquímica Básica",
+    "categorias": [
+      "Metabolismo"
+    ]
+  },
+  {
+    "id": 17,
+    "pergunta": "A Regra de Naegele é um método comum em obstetrícia utilizado para estimar:",
+    "imagem": "",
+    "respostas": [
+      "O risco de anomalias cromossômicas",
+      "A data provável do parto (DPP)",
+      "O volume de líquido amniótico",
+      "A posição da placenta"
+    ],
+    "correta": "A data provável do parto (DPP)",
+    "referencia": "Obstetrícia Fundamental",
+    "categorias": [
+      "Nascimento"
+    ]
+  },
+  {
+    "id": 18,
+    "pergunta": "Qual lobo cerebral é primariamente responsável pelo processamento da informação visual?",
+    "imagem": "",
+    "respostas": [
+      "Lobo Frontal",
+      "Lobo Parietal",
+      "Lobo Temporal",
+      "Lobo Occipital"
+    ],
+    "correta": "Lobo Occipital",
+    "referencia": "Neurociência Fundamental",
+    "categorias": [
+      "Percepção"
+    ]
+  },
+  {
+    "id": 19,
+    "pergunta": "A capacidade do corpo de sentir a posição e o movimento das suas partes (membros, articulações) é chamada de:",
+    "imagem": "",
+    "respostas": [
+      "Nocicepção",
+      "Termocepção",
+      "Propriocepção",
+      "Interocepção"
+    ],
+    "correta": "Propriocepção",
+    "referencia": "Fisiologia Humana",
+    "categorias": [
+      "Percepção",
+      "Locomoção"
+    ]
+  },
+  {
+    "id": 20,
+    "pergunta": "Qual estrutura do ouvido interno contém as células ciliadas responsáveis pela transdução do estímulo sonoro em sinal neural?",
+    "imagem": "",
+    "respostas": [
+      "Canais Semicirculares",
+      "Utrículo",
+      "Sáculo",
+      "Cóclea (Órgão de Corti)"
+    ],
+    "correta": "Cóclea (Órgão de Corti)",
+    "referencia": "Neurociência: Desvendando o Sistema Nervoso",
+    "categorias": [
+      "Percepção"
+    ]
+  },
+  {
+    "id": 21,
+    "pergunta": "Receptores sensoriais na pele que detectam estímulos dolorosos são chamados de:",
+    "imagem": "",
+    "respostas": [
+      "Mecanorreceptores",
+      "Termorreceptores",
+      "Nociceptores",
+      "Quimiorreceptores"
+    ],
+    "correta": "Nociceptores",
+    "referencia": "Bases da Fisiologia",
+    "categorias": [
+      "Percepção"
+    ]
+  },
+  {
+    "id": 22,
+    "pergunta": "A via neural que transmite informações táteis finas e proprioceptivas da medula espinhal para o tálamo é conhecida como:",
+    "imagem": "",
+    "respostas": [
+      "Trato Espinotalâmico Lateral",
+      "Sistema Coluna Dorsal-Lemnisco Medial",
+      "Trato Corticoespinal",
+      "Trato Espinocerebelar"
+    ],
+    "correta": "Sistema Coluna Dorsal-Lemnisco Medial",
+    "referencia": "Neuroanatomia Clínica",
+    "categorias": [
+      "Percepção"
+    ]
+  },
+  {
+    "id": 23,
+    "pergunta": "A perda progressiva de massa e força muscular associada ao envelhecimento é denominada:",
+    "imagem": "",
+    "respostas": [
+      "Osteoporose",
+      "Sarcopenia",
+      "Anemia",
+      "Disfagia",
+      "Artrite"
+    ],
+    "correta": "Sarcopenia",
+    "referencia": "Tratado de Geriatria",
+    "categorias": [
+      "Envelhecimento",
+      "Locomoção"
+    ]
+  },
+  {
+    "id": 24,
+    "pergunta": "Qual das seguintes condições é uma síndrome geriátrica comum caracterizada por declínio cognitivo agudo e flutuante, geralmente associado a uma causa médica subjacente?",
+    "imagem": "",
+    "respostas": [
+      "Demência de Alzheimer",
+      "Depressão Maior",
+      "Delirium",
+      "Doença de Parkinson"
+    ],
+    "correta": "Delirium",
+    "referencia": "Geriatria Básica",
+    "categorias": [
+      "Envelhecimento"
+    ]
+  },
+  {
+    "id": 25,
+    "pergunta": "O processo de envelhecimento celular, onde as células param de se dividir, mas permanecem metabolicamente ativas, é chamado de:",
+    "imagem": "",
+    "respostas": [
+      "Apoptose",
+      "Necrose",
+      "Senescência Celular",
+      "Autofagia"
+    ],
+    "correta": "Senescência Celular",
+    "referencia": "Biologia Molecular do Envelhecimento",
+    "categorias": [
+      "Envelhecimento",
+      "Proliferação"
+    ]
+  },
+  {
+    "id": 26,
+    "pergunta": "A diminuição da densidade mineral óssea que aumenta o risco de fraturas em idosos é conhecida como:",
+    "imagem": "",
+    "respostas": [
+      "Osteoartrite",
+      "Osteomalácia",
+      "Osteoporose",
+      "Doença de Paget"
+    ],
+    "correta": "Osteoporose",
+    "referencia": "Endocrinologia e Metabologia",
+    "categorias": [
+      "Envelhecimento",
+      "Locomoção"
+    ]
+  },
+  {
+    "id": 27,
+    "pergunta": "O uso concomitante de múltiplos medicamentos, comum em idosos e que aumenta o risco de interações e efeitos adversos, é conhecido como:",
+    "imagem": "",
+    "respostas": [
+      "Monoterapia",
+      "Farmacocinética",
+      "Polifarmácia",
+      "Farmacodinâmica"
+    ],
+    "correta": "Polifarmácia",
+    "referencia": "Farmacologia Clínica",
+    "categorias": [
+      "Envelhecimento"
+    ]
+  },
+  {
+    "id": 28,
+    "pergunta": "Qual tipo de articulação é caracterizado pela presença de uma cavidade articular preenchida por líquido sinovial, permitindo ampla mobilidade?",
+    "imagem": "",
+    "respostas": [
+      "Articulação Fibrosa (Sinartrose)",
+      "Articulação Cartilaginosa (Anfiartrose)",
+      "Articulação Sinovial (Diartrose)"
+    ],
+    "correta": "Articulação Sinovial (Diartrose)",
+    "referencia": "Anatomia Humana",
+    "categorias": [
+      "Locomoção"
+    ]
+  },
+  {
+    "id": 29,
+    "pergunta": "Quais células são primariamente responsáveis pela reabsorção (degradação) do tecido ósseo?",
+    "imagem": "",
+    "respostas": [
+      "Osteoblastos",
+      "Condrócitos",
+      "Osteócitos",
+      "Osteoclastos"
+    ],
+    "correta": "Osteoclastos",
+    "referencia": "Histologia Básica - Junqueira e Carneiro",
+    "categorias": [
+      "Locomoção",
+      "Funções"
+    ]
+  },
+  {
+    "id": 30,
+    "pergunta": "Estruturas de tecido conjuntivo denso que conectam ossos a outros ossos em uma articulação são chamadas de:",
+    "imagem": "",
+    "respostas": [
+      "Tendões",
+      "Ligamentos",
+      "Fáscias",
+      "Cartilagens"
+    ],
+    "correta": "Ligamentos",
+    "referencia": "Ortopedia Essencial",
+    "categorias": [
+      "Locomoção"
+    ]
+  },
+  {
+    "id": 31,
+    "pergunta": "Uma fratura óssea na qual o osso quebrado perfura a pele é classificada como:",
+    "imagem": "",
+    "respostas": [
+      "Fratura Simples (Fechada)",
+      "Fratura Cominutiva",
+      "Fratura Exposta (Aberta)",
+      "Fratura em Galho Verde"
+    ],
+    "correta": "Fratura Exposta (Aberta)",
+    "referencia": "Princípios de Cirurgia Ortopédica",
+    "categorias": [
+      "Locomoção"
+    ]
+  },
+  {
+    "id": 32,
+    "pergunta": "Qual condição ortopédica comum é caracterizada pelo desgaste da cartilagem articular, levando a dor e rigidez nas articulações?",
+    "imagem": "",
+    "respostas": [
+      "Artrite Reumatoide",
+      "Gota",
+      "Osteoartrite (Artrose)",
+      "Lúpus Eritematoso Sistêmico"
+    ],
+    "correta": "Osteoartrite (Artrose)",
+    "referencia": "Reumatologia Clínica",
+    "categorias": [
+      "Locomoção",
+      "Envelhecimento"
+    ]
+  },
+  {
+    "id": 33,
+    "pergunta": "O processo pelo qual células cancerígenas se espalham do tumor primário para outras partes do corpo, formando novos tumores, é chamado de:",
+    "imagem": "",
+    "respostas": [
+      "Angiogênese",
+      "Metástase",
+      "Apoptose",
+      "Hiperplasia",
+      "Diferenciação"
+    ],
+    "correta": "Metástase",
+    "referencia": "Oncologia Básica",
+    "categorias": [
+      "Proliferação"
+    ]
+  },
+  {
+    "id": 34,
+    "pergunta": "Genes que, quando mutados ou superexpressos, podem promover o crescimento celular descontrolado e contribuir para o câncer são chamados de:",
+    "imagem": "",
+    "respostas": [
+      "Genes Supressores de Tumor",
+      "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
+      "Genes de Reparo do DNA",
+      "Genes da Apoptose"
+    ],
+    "correta": "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
+    "referencia": "Biologia Molecular do Câncer",
+    "categorias": [
+      "Proliferação",
+      "Genética"
+    ]
+  },
+  {
+    "id": 35,
+    "pergunta": "Qual proteína, conhecida como 'guardiã do genoma', atua como um gene supressor de tumor, induzindo parada do ciclo celular ou apoptose em resposta a danos no DNA?",
+    "imagem": "",
+    "respostas": [
+      "RAS",
+      "MYC",
+      "p53",
+      "BRCA1"
+    ],
+    "correta": "p53",
+    "referencia": "Biologia Celular e Molecular",
+    "categorias": [
+      "Proliferação",
+      "Funções"
+    ]
+  },
+  {
+    "id": 36,
+    "pergunta": "O desenvolvimento de novos vasos sanguíneos, um processo frequentemente explorado por tumores para obter nutrientes e oxigênio, é denominado:",
+    "imagem": "",
+    "respostas": [
+      "Vasculogênese",
+      "Angiogênese",
+      "Linfangiogênese",
+      "Hemopoiese"
+    ],
+    "correta": "Angiogênese",
+    "referencia": "Patologia Oncológica",
+    "categorias": [
+      "Proliferação"
+    ]
+  },
+  {
+    "id": 37,
+    "pergunta": "Qual modalidade de tratamento do câncer utiliza medicamentos que circulam pelo corpo para destruir células cancerígenas de crescimento rápido?",
+    "imagem": "",
+    "respostas": [
+      "Radioterapia",
+      "Cirurgia Oncológica",
+      "Quimioterapia",
+      "Imunoterapia"
+    ],
+    "correta": "Quimioterapia",
+    "referencia": "Oncologia Clínica",
+    "categorias": [
+      "Proliferação"
+    ]
+  },
+  {
+    "id": 38,
+    "pergunta": "Qual o principal mecanismo de ação dos inseticidas organofosforados e qual enzima é primariamente inativada, levando à hiperestimulação colinérgica?",
+    "imagem": "",
+    "respostas": [
+      "Bloqueio dos canais de sódio; ATPase",
+      "Inibição da recaptação de serotonina; Monoamina oxidase",
+      "Ligação e inativação da acetilcolinesterase (AChE); Acetilcolinesterase",
+      "Modulação dos receptores GABA; GABA transaminase"
+    ],
+    "correta": "Ligação e inativação da acetilcolinesterase (AChE); Acetilcolinesterase",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 39,
+    "pergunta": "O que é o processo de 'aging' relacionado à intoxicação por organofosforados e qual a sua consequência principal para a recuperação do organismo?",
+    "imagem": "",
+    "respostas": [
+      "É a rápida metabolização do organofosforado pelo fígado, permitindo a recuperação da AChE em poucas horas.",
+      "Refere-se à ativação compensatória de outras enzimas que degradam a acetilcolina, diminuindo a necessidade de novas AChE.",
+      "É a mudança conformacional irreversível do complexo organofosforado-AChE, exigindo a síntese de novas moléculas de AChE, o que pode levar dias.",
+      "Consiste na excreção acelerada do organofosforado pela urina, minimizando os danos à AChE."
+    ],
+    "correta": "É a mudança conformacional irreversível do complexo organofosforado-AChE, exigindo a síntese de novas moléculas de AChE, o que pode levar dias.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 40,
+    "pergunta": "A Síndrome Neurológica Intermediária (SNI) pode ocorrer após a exposição a organofosforados. Quais são as principais características clínicas e o período típico de manifestação?",
+    "imagem": "",
+    "respostas": [
+      "Parestesia em luvas e botas e polineuropatia motora simétrica ascendente, surgindo 1-3 semanas após a exposição.",
+      "Bradicardia, broncoconstrição, miose e diaforese, iniciando-se imediatamente após a exposição.",
+      "Fraqueza na flexão do pescoço, dos reflexos tendíneos profundos, anormalidades nos nervos cranianos, fraqueza muscular proximal e insuficiência respiratória, manifestando-se 24-96h após a exposição.",
+      "Agitação, confusão, convulsões e coma, desenvolvendo-se em minutos."
+    ],
+    "correta": "Fraqueza na flexão do pescoço, dos reflexos tendíneos profundos, anormalidades nos nervos cranianos, fraqueza muscular proximal e insuficiência respiratória, manifestando-se 24-96h após a exposição.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 41,
+    "pergunta": "Piretroides são classificados em Tipo I e Tipo II, com quadros clínicos distintos. Qual característica química diferencia os piretroides Tipo II e qual sintoma é proeminente em sua intoxicação?",
+    "imagem": "",
+    "respostas": [
+      "Ausência do grupo a-ciano; Tremor e hipersensibilidade.",
+      "Presença do grupo a-ciano; Salivação excessiva, coreoatetose e convulsões.",
+      "Cadeia lateral alifática longa; Broncodilatação e taquicardia.",
+      "Anel benzênico adicional; Depressão respiratória e miose."
+    ],
+    "correta": "Presença do grupo a-ciano; Salivação excessiva, coreoatetose e convulsões.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 42,
+    "pergunta": "Qual o mecanismo de ação dos herbicidas compostos clorofenoxi e qual o principal efeito observado em plantas-alvo?",
+    "imagem": "",
+    "respostas": [
+      "Inibição da fotossíntese; Amarelecimento e queda das folhas.",
+      "Bloqueio da síntese de aminoácidos; Necrose dos tecidos meristemáticos.",
+      "Análogos da auxina, levando ao crescimento incontrolável e letal.",
+      "Interferência na divisão celular; Nanismo e má formação das raízes."
+    ],
+    "correta": "Análogos da auxina, levando ao crescimento incontrolável e letal.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 43,
+    "pergunta": "O paraquat é um herbicida bipiridílico de alta toxicidade. Qual órgão é particularmente afetado pelo acúmulo de paraquat e qual a consequência histopatológica primária nesse órgão?",
+    "imagem": "",
+    "respostas": [
+      "Fígado; Esteatose e necrose hepatocelular.",
+      "Rins; Necrose tubular aguda e fibrose intersticial.",
+      "Pulmões; Danos epiteliais alveolares, edema pulmonar e infiltração de células inflamatórias.",
+      "Cérebro; Edema cerebral e desmielinização."
+    ],
+    "correta": "Pulmões; Danos epiteliais alveolares, edema pulmonar e infiltração de células inflamatórias.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 44,
+    "pergunta": "Na intoxicação por glifosato, quais são os sintomas gastrintestinais iniciais mais comuns e como os casos mais graves podem evoluir?",
+    "imagem": "",
+    "respostas": [
+      "Constipação e distensão abdominal; Evolução para íleo paralítico.",
+      "Azia e regurgitação; Evolução para esofagite erosiva.",
+      "Sintomas gastrintestinais passageiros; Evolução para hemorragia gastrintestinal, hipotensão, disfunção pulmonar e dano renal.",
+      "Diarreia aquosa e cólicas leves; Evolução para desidratação severa sem outras complicações sistêmicas."
+    ],
+    "correta": "Sintomas gastrintestinais passageiros; Evolução para hemorragia gastrintestinal, hipotensão, disfunção pulmonar e dano renal.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 45,
+    "pergunta": "A etilenotioureia (ETU) é um metabólito de qual classe de fungicidas e qual é o principal efeito adverso crônico associado à ETU em mamíferos?",
+    "imagem": "",
+    "respostas": [
+      "Triazóis; Neurotoxicidade e distúrbios comportamentais.",
+      "Estrobilurinas; Cardiotoxicidade e arritmias.",
+      "Ditiocarbamatos; Efeitos na tireoide, como hipertrofia e hiperplasia.",
+      "Benzimidazóis; Hepatotoxicidade e cirrose."
+    ],
+    "correta": "Ditiocarbamatos; Efeitos na tireoide, como hipertrofia e hiperplasia.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 46,
+    "pergunta": "Qual o mecanismo de ação dos rodenticidas anticoagulantes e quais fatores de coagulação têm sua síntese afetada?",
+    "imagem": "",
+    "respostas": [
+      "Inibição da agregação plaquetária; Fator de von Willebrand.",
+      "Ativação excessiva da plasmina; Fibrinogênio.",
+      "Antagonizam a ação da vitamina K na síntese dos fatores de coagulação II, VII, IX e X.",
+      "Destruição direta dos eritrócitos; Hemoglobina."
+    ],
+    "correta": "Antagonizam a ação da vitamina K na síntese dos fatores de coagulação II, VII, IX e X.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 47,
+    "pergunta": "Na avaliação inicial de um paciente com suspeita de intoxicação por agrotóxico, qual o mnemônico universalmente empregado para garantir a estabilidade e quais as primeiras medidas de suporte vital?",
+    "imagem": "",
+    "respostas": [
+      "SAMPLE (Sinais/Sintomas, Alergias, Medicações, Passado médico, Líquidos/alimentação, Eventos); Administração de analgésicos e antieméticos.",
+      "ABC (Vias aéreas, Respiração, Circulação); Garantir vias aéreas, respiração, circulação, oxigênio, hidratação e controle de convulsões.",
+      "FAST (Face, Arms, Speech, Time); Monitorização neurológica contínua e trombólise se indicado.",
+      "RICE (Repouso, Gelo, Compressão, Elevação); Imobilização da área afetada e crioterapia."
+    ],
+    "correta": "ABC (Vias aéreas, Respiração, Circulação); Garantir vias aéreas, respiração, circulação, oxigênio, hidratação e controle de convulsões.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 48,
+    "pergunta": "A lavagem gástrica é um procedimento de descontaminação em casos de ingestão de agrotóxicos. Em que situação específica ela é indicada e qual o critério para considerar sua finalização?",
+    "imagem": "",
+    "respostas": [
+      "Ingestão ocorrida há mais de 6 horas, em qualquer dose; Quando o paciente relata alívio dos sintomas.",
+      "Apenas para substâncias oleosas, independentemente do tempo de ingestão; Após a administração de 1 litro de soro fisiológico.",
+      "Ingestão ocorrida em menos de 60 minutos, envolvendo dose potencialmente letal; Remoção da substância indicada pela cor clara do líquido drenado.",
+      "Em todos os casos de ingestão, como medida profilática; Após 30 minutos de procedimento contínuo."
+    ],
+    "correta": "Ingestão ocorrida em menos de 60 minutos, envolvendo dose potencialmente letal; Remoção da substância indicada pela cor clara do líquido drenado.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 49,
+    "pergunta": "Qual o mecanismo de ação da Pralidoxima no tratamento da intoxicação por organofosforados e quais tipos de sintomas ela visa tratar?",
+    "imagem": "",
+    "respostas": [
+      "Bloqueia competitivamente os receptores muscarínicos; Trata apenas sintomas muscarínicos como salivação e broncoespasmo.",
+      "Potencializa a ação do GABA nos receptores GABA-A; Reduz convulsões e agitação.",
+      "Reativa a acetilcolinesterase removendo o grupo fosforil; Trata sintomas muscarínicos e nicotínicos (fasciculações, miastenia).",
+      "É um agonista adrenérgico que aumenta a frequência cardíaca e pressão arterial; Usada para bradicardia e hipotensão refratárias."
+    ],
+    "correta": "Reativa a acetilcolinesterase removendo o grupo fosforil; Trata sintomas muscarínicos e nicotínicos (fasciculações, miastenia).",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 50,
+    "pergunta": "De acordo com o documento, qual a principal via de contaminação por agrotóxicos notificada no Brasil entre janeiro de 2013 e junho de 2022, e qual o desfecho mais comum nesses casos?",
+    "imagem": "",
+    "respostas": [
+      "Via dérmica (70%); Óbito (25%).",
+      "Via inalatória (55%); Cura com sequelas graves (10%).",
+      "Via ingestão (42%); Cura sem sequelas (80%).",
+      "Via ocular (30%); Seqüelas visuais permanentes (5%)."
+    ],
+    "correta": "Via ingestão (42%); Cura sem sequelas (80%).",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 51,
+    "pergunta": "Qual órgão regulador no Brasil é o principal responsável pela avaliação da eficácia agronômica e registro de agrotóxicos, e qual outro órgão avalia os riscos à saúde humana?",
+    "imagem": "",
+    "respostas": [
+      "IBAMA (eficácia agronômica e registro); Ministério da Saúde (riscos à saúde humana).",
+      "ANVISA (eficácia agronômica e registro); MAPA (riscos à saúde humana).",
+      "MAPA (Ministério da Agricultura e Pecuária - eficácia agronômica e registro); ANVISA (riscos à saúde humana).",
+      "Conselho Nacional do Meio Ambiente - CONAMA (eficácia agronômica e registro); Secretarias Estaduais de Saúde (riscos à saúde humana)."
+    ],
+    "correta": "MAPA (Ministério da Agricultura e Pecuária - eficácia agronômica e registro); ANVISA (riscos à saúde humana).",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 52,
+    "pergunta": "Segundo a nova classificação da OMS (GHS) para agrotóxicos, além da toxicidade aguda, quais outros aspectos são considerados na rotulagem dos produtos químicos?",
+    "imagem": "",
+    "respostas": [
+      "Apenas o custo de produção e a solubilidade em água.",
+      "O país de origem do fabricante e a data de validade.",
+      "Classificação de perigos ao meio ambiente, símbolos, palavras de advertência, frases de risco e precaução, e fichas de segurança.",
+      "A cor do produto e o tipo de embalagem utilizada."
+    ],
+    "correta": "Classificação de perigos ao meio ambiente, símbolos, palavras de advertência, frases de risco e precaução, e fichas de segurança.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 53,
+    "pergunta": "Qual a principal característica da intoxicação por carbamatos em relação à sua reversibilidade e quais são os sintomas comuns?",
+    "imagem": "",
+    "respostas": [
+      "Inibição irreversível da AChE; Sintomas prolongados por semanas, necessitando de antídotos específicos.",
+      "Inibição da AChE rapidamente reversível; Miose, diurese, diarreia, salivação, fasciculação muscular, geralmente desaparecendo em algumas horas.",
+      "Bloqueio dos canais de cálcio; Efeitos cardiovasculares graves e persistentes.",
+      "Dano direto ao DNA mitocondrial; Fadiga crônica e neuropatia periférica tardia."
+    ],
+    "correta": "Inibição da AChE rapidamente reversível; Miose, diurese, diarreia, salivação, fasciculação muscular, geralmente desaparecendo em algumas horas.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 54,
+    "pergunta": "A notificação de casos de intoxicação por agrotóxicos é obrigatória no Brasil. A partir de qual momento essa notificação deve ser realizada e qual sistema é utilizado?",
+    "imagem": "",
+    "respostas": [
+      "Apenas após a confirmação laboratorial da intoxicação; Sistema de Informação de Mortalidade (SIM).",
+      "Somente em casos graves com internação hospitalar; Prontuário eletrônico do paciente (PEP).",
+      "Desde a suspeita; SINAN (Sistema de Informação de Agravos de Notificação), usando a ficha de intoxicação exógena.",
+      "Após a alta hospitalar do paciente; Cadastro Nacional de Estabelecimentos de Saúde (CNES)."
+    ],
+    "correta": "Desde a suspeita; SINAN (Sistema de Informação de Agravos de Notificação), usando a ficha de intoxicação exógena.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 55,
+    "pergunta": "Qual o critério de tempo estabelecido em 2023 para a análise técnica de registro de agrotóxicos no Brasil e o que pode ocorrer em casos de produtos com ingredientes já aprovados em outros países?",
+    "imagem": "",
+    "respostas": [
+      "6 meses para análise técnica; Proibição imediata se não aprovado no Brasil.",
+      "12 meses para análise técnica; Necessidade de testes adicionais em solo brasileiro.",
+      "24 meses para análise técnica; Possibilidade de registro temporário.",
+      "Sem prazo fixo, dependendo da complexidade; Aguardar aprovação em pelo menos três países da OCDE."
+    ],
+    "correta": "24 meses para análise técnica; Possibilidade de registro temporário.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 56,
+    "pergunta": "Qual dos seguintes NÃO é um critério para que rodenticidas sejam considerados eficazes e seguros?",
+    "imagem": "",
+    "respostas": [
+      "Serem eficazes para espécies-alvo.",
+      "Iscas devem ser atrativas para os roedores.",
+      "A forma como o animal é induzido à morte não pode levantar suspeitas nos sobreviventes.",
+      "Causar morte instantânea por paralisia neuromuscular para evitar sofrimento animal."
+    ],
+    "correta": "Causar morte instantânea por paralisia neuromuscular para evitar sofrimento animal.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 57,
+    "pergunta": "A exposição crônica a compostos organoclorados, mesmo que apresentem toxicidade aguda moderada, pode estar associada a efeitos adversos em quais sistemas orgânicos?",
+    "imagem": "",
+    "respostas": [
+      "Sistema cardiovascular e renal.",
+      "Sistema respiratório e musculoesquelético.",
+      "Fígado e sistema endócrino.",
+      "Sistema nervoso central e periférico, exclusivamente."
+    ],
+    "correta": "Fígado e sistema endócrino.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 58,
+    "pergunta": "Qual o papel da enzima pseudocolinesterase (BuChE) no contexto da exposição a organofosforados?",
+    "imagem": "",
+    "respostas": [
+      "É a principal enzima responsável pela degradação da acetilcolina nas junções neuromusculares.",
+      "Serve como biomarcador de exposição a OFs, por ser mais sensível à inibição, embora não tenha função colinérgica direta.",
+      "É a enzima alvo que, quando inibida, causa diretamente os danos neurotóxicos retardados.",
+      "Participa ativamente na regeneração da AChE após o processo de 'aging'."
+    ],
+    "correta": "Serve como biomarcador de exposição a OFs, por ser mais sensível à inibição, embora não tenha função colinérgica direta.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 59,
+    "pergunta": "Qual dos seguintes NÃO é um fator de risco para intoxicação por agrotóxicos explicitamente mencionado no documento?",
+    "imagem": "",
+    "respostas": [
+      "Trabalhadores na cadeia de produção e uso dos agrotóxicos.",
+      "Gênero masculino.",
+      "Alta escolaridade e residência em grandes centros urbanos.",
+      "Moradores de áreas rurais."
+    ],
+    "correta": "Alta escolaridade e residência em grandes centros urbanos.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 60,
+    "pergunta": "A administração de carvão ativado é uma medida de descontaminação. Em que janela de tempo após a ingestão ele é mais eficaz e qual o seu mecanismo de ação?",
+    "imagem": "",
+    "respostas": [
+      "Ingestão ocorrida em menos de 6 horas; Neutraliza quimicamente as toxinas no estômago.",
+      "Ingestão ocorrida em menos de 60 minutos; Adsorve toxinas, impedindo sua absorção intestinal e facilitando sua eliminação nas fezes.",
+      "A qualquer momento após a ingestão, se o paciente estiver sintomático; Induz o vômito para expelir a substância tóxica.",
+      "Apenas para substâncias ácidas, em menos de 30 minutos; Altera o pH gástrico, dificultando a absorção."
+    ],
+    "correta": "Ingestão ocorrida em menos de 60 minutos; Adsorve toxinas, impedindo sua absorção intestinal e facilitando sua eliminação nas fezes.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 61,
+    "pergunta": "Qual o efeito da Atropina no tratamento da síndrome colinérgica por organofosforados e quais sintomas ela visa neutralizar?",
+    "imagem": "",
+    "respostas": [
+      "Reativa a acetilcolinesterase; Trata sintomas muscarínicos e nicotínicos.",
+      "Bloqueia receptores muscarínicos; Neutraliza sintomas colinérgicos como salivação, broncoespasmo e bradicardia.",
+      "Potencializa a ação do GABA; Reduz convulsões e agitação.",
+      "É um quelante que se liga ao organofosforado; Facilita a eliminação do tóxico."
+    ],
+    "correta": "Bloqueia receptores muscarínicos; Neutraliza sintomas colinérgicos como salivação, broncoespasmo e bradicardia.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 62,
+    "pergunta": "Qual o papel da Epinefrina no manejo da intoxicação por agrotóxicos, segundo o documento?",
+    "imagem": "",
+    "respostas": [
+      "É o antídoto de primeira escolha para reverter a inibição da AChE.",
+      "Utilizada para induzir êmese em pacientes conscientes com ingestão recente.",
+      "Agonista adrenérgico usado como segunda linha em bradicardia ou hipotensão persistentes apesar de altas doses de atropina.",
+      "Antagonista dos receptores benzodiazepínicos para reverter sedação excessiva."
+    ],
+    "correta": "Agonista adrenérgico usado como segunda linha em bradicardia ou hipotensão persistentes apesar de altas doses de atropina.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 63,
+    "pergunta": "O documento menciona que a contaminação por agrotóxicos pode ocorrer por via dérmica. Como essa via de exposição pode afetar outros indivíduos além daquele que manuseou diretamente o produto?",
+    "imagem": "",
+    "respostas": [
+      "Apenas se houver contato direto pele a pele com o indivíduo contaminado em até 1 hora.",
+      "Agrotóxicos depositados nas roupas podem permitir a exposição de outros indivíduos.",
+      "A contaminação dérmica é autolimitada e não oferece risco a terceiros.",
+      "Somente se a pessoa contaminada compartilhar alimentos ou bebidas."
+    ],
+    "correta": "Agrotóxicos depositados nas roupas podem permitir a exposição de outros indivíduos.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 64,
+    "pergunta": "Qual das seguintes é uma medida de prevenção primária contra intoxicação por agrotóxicos em trabalhadores, conforme orientado no documento?",
+    "imagem": "",
+    "respostas": [
+      "Realização de exames laboratoriais periódicos para detecção precoce de contaminação.",
+      "Administração profilática de antídotos antes da jornada de trabalho.",
+      "Uso de Equipamentos de Proteção Individual (EPIs) durante a aplicação e educação/treinamento.",
+      "Disponibilização de unidades de terapia intensiva próximas às áreas de cultivo."
+    ],
+    "correta": "Uso de Equipamentos de Proteção Individual (EPIs) durante a aplicação e educação/treinamento.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 65,
+    "pergunta": "A Neuropatia Tardia Induzida por Organofosforados (OPIDN) manifesta-se semanas após a exposição. Qual o sintoma inicial característico e como a condição progride?",
+    "imagem": "",
+    "respostas": [
+      "Cefaleia intensa e visão turva, progredindo para cegueira.",
+      "Fraqueza muscular proximal imediata, progredindo para paralisia flácida generalizada.",
+      "Parestesia transitória em luva (mãos e pés), seguida por polineuropatia motora simétrica ascendente.",
+      "Alterações de humor e psicose, evoluindo para demência."
+    ],
+    "correta": "Parestesia transitória em luva (mãos e pés), seguida por polineuropatia motora simétrica ascendente.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 66,
+    "pergunta": "Qual o principal efeito agudo da intoxicação por piretroides do Tipo I, que não possuem o grupo a-ciano?",
+    "imagem": "",
+    "respostas": [
+      "Salivação excessiva, coreoatetose e convulsões intensas.",
+      "Depressão respiratória severa e coma profundo.",
+      "Tremor, prostração e hipersensibilidade, com hiperexcitabilidade moderada.",
+      "Bradicardia sinusal e bloqueio atrioventricular."
+    ],
+    "correta": "Tremor, prostração e hipersensibilidade, com hiperexcitabilidade moderada.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 67,
+    "pergunta": "No caso de ingestão de compostos clorofenoxi, quais sintomas agudos são tipicamente observados?",
+    "imagem": "",
+    "respostas": [
+      "Apenas sintomas neurológicos como ataxia e confusão mental.",
+      "Êmese, miotonia, sensação de queimação na boca, dores abdominais, hipotensão e acometimento do SNC.",
+      "Febre alta, calafrios e sudorese profusa, sem sintomas gastrointestinais.",
+      "Erupção cutânea pruriginosa generalizada e angioedema."
+    ],
+    "correta": "Êmese, miotonia, sensação de queimação na boca, dores abdominais, hipotensão e acometimento do SNC.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 68,
+    "pergunta": "Qual das seguintes opções descreve corretamente a toxicidade dos fungicidas ditiocarbamatos e um de seus efeitos crônicos?",
+    "imagem": "",
+    "respostas": [
+      "Alta toxicidade aguda, causando falência hepática fulminante; sem efeitos crônicos significativos.",
+      "Baixa toxicidade aguda; exposição crônica pode causar hipertrofia e hiperplasia da tireoide devido ao metabólito ETU.",
+      "Neurotoxicidade aguda severa; cronicamente causa doença de Parkinson.",
+      "Cardiotoxicidade aguda; exposição crônica leva à cardiomiopatia dilatada."
+    ],
+    "correta": "Baixa toxicidade aguda; exposição crônica pode causar hipertrofia e hiperplasia da tireoide devido ao metabólito ETU.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 69,
+    "pergunta": "Em caso de intoxicação por rodenticidas, qual grupo de sintomas sugere o envolvimento de substâncias que causam hematomas ou hemorragias?",
+    "imagem": "",
+    "respostas": [
+      "Arritmias cardíacas, choque refratário e parada cardíaca.",
+      "Convulsões e rigidez muscular.",
+      "Hematomas ou hemorragias.",
+      "Neuropatia craniana, letargia ou coma."
+    ],
+    "correta": "Hematomas ou hemorragias.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 70,
+    "pergunta": "No contexto do problema apresentado sobre José Paulo, qual foi a principal via de contaminação dos seus filhos pelos agrotóxicos, considerando as ações descritas?",
+    "imagem": "",
+    "respostas": [
+      "Via inalatória, devido à dispersão do veneno durante a aplicação na lavoura.",
+      "Via dérmica, pelo contato com as plantas da horta recém-regada com excesso de veneno.",
+      "Via oral, pelo consumo de água armazenada nos frascos vazios de agrotóxicos.",
+      "Via ocular, devido ao respingo do veneno durante a preparação da solução."
+    ],
+    "correta": "Via oral, pelo consumo de água armazenada nos frascos vazios de agrotóxicos.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 71,
+    "pergunta": "O Sistema Harmonizado Globalmente de Classificação e Rotulagem de Produtos Químicos (GHS) substituiu a antiga classificação da OMS para agrotóxicos. Além da toxicidade aguda (categorias I a IV), que outros elementos são cruciais na nova abordagem do GHS para a rotulagem?",
+    "imagem": "",
+    "respostas": [
+      "Apenas a DL50 oral e dérmica em diferentes espécies animais.",
+      "O custo-benefício do agrotóxico e sua eficácia em diferentes climas.",
+      "Classificação de perigos ao meio ambiente, símbolos padronizados, palavras de advertência (Perigo, Atenção), frases de risco (H) e precaução (P), e fichas de segurança com informações detalhadas.",
+      "A popularidade do produto no mercado e o número de anos desde seu lançamento."
+    ],
+    "correta": "Classificação de perigos ao meio ambiente, símbolos padronizados, palavras de advertência (Perigo, Atenção), frases de risco (H) e precaução (P), e fichas de segurança com informações detalhadas.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 72,
+    "pergunta": "A Esterase Alvo Neuropática (NTE) é inibida por alguns organofosforados específicos. Qual é a principal consequência clínica associada à inibição da NTE?",
+    "imagem": "",
+    "respostas": [
+      "Hiperestimulação colinérgica aguda com miose e broncoespasmo.",
+      "Síndrome neurológica intermediária com fraqueza muscular proximal.",
+      "Danos neurotóxicos retardados, como a polineuropatia motora simétrica ascendente, que se manifesta semanas após a exposição.",
+      "Efeitos cardiotóxicos imediatos, incluindo arritmias e parada cardíaca."
+    ],
+    "correta": "Danos neurotóxicos retardados, como a polineuropatia motora simétrica ascendente, que se manifesta semanas após a exposição.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 73,
+    "pergunta": "Além da ingestão intencional ou acidental de altas doses, de que outra forma a população geral pode ser cronicamente exposta a pequenas doses de agrotóxicos por via oral?",
+    "imagem": "",
+    "respostas": [
+      "Exclusivamente pela inalação de vapores durante a aplicação agrícola.",
+      "Pelo contato dérmico com superfícies contaminadas em áreas urbanas.",
+      "Pelo consumo crônico de alimentos e água contendo resíduos de agrotóxicos.",
+      "Apenas através da exposição ocupacional em fábricas de agrotóxicos."
+    ],
+    "correta": "Pelo consumo crônico de alimentos e água contendo resíduos de agrotóxicos.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 74,
+    "pergunta": "No tratamento da intoxicação por agrotóxicos, qual a principal indicação para o uso de benzodiazepínicos e qual o seu mecanismo de ação?",
+    "imagem": "",
+    "respostas": [
+      "Para reverter a bradicardia, atuando como agonista beta-adrenérgico.",
+      "Para controlar convulsões e agitação, potencializando a ação do GABA nos receptores GABA-A, promovendo inibição neuronal no SNC.",
+      "Para neutralizar os efeitos muscarínicos, bloqueando os receptores de acetilcolina.",
+      "Para acelerar a eliminação do tóxico, aumentando a diurese osmótica."
+    ],
+    "correta": "Para controlar convulsões e agitação, potencializando a ação do GABA nos receptores GABA-A, promovendo inibição neuronal no SNC.",
+    "referencia": "P05 - Agrotóxicos.pdf",
+    "categorias": [
+      "DRAMA"
+    ]
+  }
 ]

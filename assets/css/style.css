@@ -6,14 +6,10 @@
    deve importar _variables.css, _reset.css, _typography.css, _utilities.css */
    @import 'base/base.css';
 
-   /* 2. LAYOUT
-      Importa o arquivo principal da pasta layout, que por sua vez
-      deve importar _header.css, _footer.css, _main-sections.css */
+   /* 2. LAYOUT */
    @import 'layout/layout.css';
    
-   /* 3. COMPONENTS
-      Importa cada componente individualmente. A ordem aqui geralmente
-      importa menos, a menos que um componente sobrescreva estilos de outro. */
+   /* 3. COMPONENTS */
    @import 'components/button.css';
    @import 'components/card.css';
    @import 'components/question-display.css';
@@ -28,17 +24,9 @@
    /* Certifique-se de que todos os seus componentes estejam listados aqui */
    
    
-   /* 4. SECTIONS
-      Importa os estilos de layout específicos para cada seção principal.
-      Estes vêm depois dos componentes, pois podem posicionar componentes. */
+   /* 4. SECTIONS */
    @import 'sections/home-section.css';        /* Substitui inicio.css */
    @import 'sections/question-section.css';   /* Substitui quiz.css */
    @import 'sections/conta-section.css';
    
    
-   /* 5. RESPONSIVE (Temporário - Remover eventualmente)
-      Se você ainda tiver regras responsivas globais não distribuídas,
-      importe o arquivo responsive.css por ÚLTIMO para que ele possa
-      sobrescrever as regras anteriores. O objetivo final é esvaziar
-      e remover este import. */
-   /* @import 'responsive.css'; */

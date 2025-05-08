@@ -1,4 +1,4 @@
 /* assets/css/layout/layout.css */
-@import '_header.css';
-@import '_footer.css';
-@import '_main-sections.css';
+@import 'header.css';
+@import 'footer.css';
+@import 'main-sections.css';

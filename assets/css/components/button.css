@@ -118,6 +118,12 @@
     border-width: var(--border-width); /* Borda mais fina para outline compact */
 }
 
+/* Para .button--large (opcional, pode definir no button.css também) */
+.button--large {
+    padding: 12px 25px;
+    font-size: 1.05rem;
+    min-height: 48px;
+}
 /* Elementos internos do botão */
 .button__icon { margin-right: var(--spacing-xs, 8px); }
 .button__icon--right { margin-right: 0; margin-left: var(--spacing-xs, 8px); }

@@ -196,16 +196,47 @@
                 </div>
 
                 <div class="card card--quiz-result u-is-hidden">
-                    <h3 class="card__title quiz-results__title" tabindex="-1">Quiz Concluído!</h3>
+                    <div class="card__header">
+                        <h3 class="card__title quiz-results__title" tabindex="-1">Desempenho Final!</h3>
+                    </div>
                     <div class="card__body">
-                        <p class="quiz-results__score-line">Pontuação Final: <span class="quiz-results__score-value pontos-valor" id="resultado-pontos">0</span></p>
+                        <div class="quiz-results__summary">
+                            <div class="quiz-results__stat-item quiz-results__stat-item--score">
+                                <span class="material-symbols-outlined quiz-results__icon">military_tech</span>
+                                <span class="quiz-results__label">Pontuação Final</span>
+                                <span class="quiz-results__value pontos-valor" id="resultado-pontos">0</span>
+                            </div>
+                            <div class="quiz-results__stat-item quiz-results__stat-item--time">
+                                <span class="material-symbols-outlined quiz-results__icon">timer</span>
+                                <span class="quiz-results__label">Tempo Decorrido</span>
+                                <span class="quiz-results__value" id="resultado-tempo">00:00</span>
+                            </div>
+                        </div>
+
                         <div class="quiz-results__details-group">
-                            <p class="quiz-results__detail-item">Acertos: <span class="quiz-results__detail-value acertos-valor" id="resultado-acertos">0</span></p>
-                            <p class="quiz-results__detail-item">Erros: <span class="quiz-results__detail-value erros-valor" id="resultado-erros">0</span></p>
+                            <p class="quiz-results__detail-item">
+                                <span class="material-symbols-outlined quiz-results__detail-icon quiz-results__detail-icon--correct">check_circle</span>
+                                Acertos: <span class="quiz-results__detail-value acertos-valor" id="resultado-acertos">0</span>
+                            </p>
+                            <p class="quiz-results__detail-item">
+                                <span class="material-symbols-outlined quiz-results__detail-icon quiz-results__detail-icon--incorrect">cancel</span>
+                                Erros: <span class="quiz-results__detail-value erros-valor" id="resultado-erros">0</span>
+                            </p>
+                        </div>
+                        
+                        <div class="quiz-results__message">
+                            <p id="resultado-mensagem-motivacional">Continue praticando para melhorar ainda mais!</p>
                         </div>
                     </div>
-                    <div class="card__footer">
-                        <button id="btn-recomecar" class="button button--primary">Tentar Novamente</button>
+                    <div class="card__footer quiz-results__actions">
+                        <button id="btn-recomecar" class="button button--primary button--large">
+                            <span class="material-symbols-outlined button__icon">refresh</span>
+                            Tentar Novamente
+                        </button>
+                        <button id="btn-explorar-mais" class="button button--secondary button--large">
+                            <span class="material-symbols-outlined button__icon">explore</span>
+                            Explorar Mais
+                        </button>
                     </div>
                 </div>
 

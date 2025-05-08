@@ -54,7 +54,6 @@
   color: var(--timer-label-color, var(--color-gray-800));
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 
 /* Element: .score-panel__stats-group (Container para Pontos, Acertos, Erros) */

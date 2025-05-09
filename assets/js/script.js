@@ -273,7 +273,7 @@ class QuizUI {
             if (totalQuestoes > 0) {
                 const pontuacaoMaximaPossivel = totalQuestoes * 15;
                 if (pontos >= pontuacaoMaximaPossivel * 0.8) {
-                     mensagem = "Excelente desempenho! Você é um mestre da histologia!";
+                     mensagem = "Excelente desempenho! Você é um mestre da medicina!";
                 } else if (pontos >= pontuacaoMaximaPossivel * 0.5) {
                      mensagem = "Muito bom! Você está no caminho certo.";
                 }

@@ -800,7 +800,7 @@
   },
   {
     "id": 50,
-    "pergunta": "De acordo com o documento, qual a principal via de contaminação por agrotóxicos notificada no Brasil entre janeiro de 2013 e junho de 2022, e qual o desfecho mais comum nesses casos?",
+    "pergunta": "Qual a principal via de contaminação por agrotóxicos notificada no Brasil entre janeiro de 2013 e junho de 2022, e qual o desfecho mais comum nesses casos?",
     "imagem": "",
     "respostas": [
       "Via dérmica (70%); Óbito (25%).",
@@ -944,7 +944,7 @@
   },
   {
     "id": 59,
-    "pergunta": "Qual dos seguintes NÃO é um fator de risco para intoxicação por agrotóxicos explicitamente mencionado no documento?",
+    "pergunta": "Qual dos seguintes NÃO é um fator de risco para intoxicação por agrotóxicos ?",
     "imagem": "",
     "respostas": [
       "Trabalhadores na cadeia de produção e uso dos agrotóxicos.",
@@ -1024,7 +1024,7 @@
   },
   {
     "id": 64,
-    "pergunta": "Qual das seguintes é uma medida de prevenção primária contra intoxicação por agrotóxicos em trabalhadores, conforme orientado no documento?",
+    "pergunta": "Qual das seguintes é uma medida de prevenção primária contra intoxicação por agrotóxicos em trabalhadores?",
     "imagem": "",
     "respostas": [
       "Realização de exames laboratoriais periódicos para detecção precoce de contaminação.",
@@ -1104,38 +1104,6 @@
   },
   {
     "id": 69,
-    "pergunta": "Em caso de intoxicação por rodenticidas, qual grupo de sintomas sugere o envolvimento de substâncias que causam hematomas ou hemorragias?",
-    "imagem": "",
-    "respostas": [
-      "Arritmias cardíacas, choque refratário e parada cardíaca.",
-      "Convulsões e rigidez muscular.",
-      "Hematomas ou hemorragias.",
-      "Neuropatia craniana, letargia ou coma."
-    ],
-    "correta": "Hematomas ou hemorragias.",
-    "referencia": "P05 - Agrotóxicos.pdf",
-    "categorias": [
-      "DRAMA"
-    ]
-  },
-  {
-    "id": 70,
-    "pergunta": "No contexto do problema apresentado sobre José Paulo, qual foi a principal via de contaminação dos seus filhos pelos agrotóxicos, considerando as ações descritas?",
-    "imagem": "",
-    "respostas": [
-      "Via inalatória, devido à dispersão do veneno durante a aplicação na lavoura.",
-      "Via dérmica, pelo contato com as plantas da horta recém-regada com excesso de veneno.",
-      "Via oral, pelo consumo de água armazenada nos frascos vazios de agrotóxicos.",
-      "Via ocular, devido ao respingo do veneno durante a preparação da solução."
-    ],
-    "correta": "Via oral, pelo consumo de água armazenada nos frascos vazios de agrotóxicos.",
-    "referencia": "P05 - Agrotóxicos.pdf",
-    "categorias": [
-      "DRAMA"
-    ]
-  },
-  {
-    "id": 71,
     "pergunta": "O Sistema Harmonizado Globalmente de Classificação e Rotulagem de Produtos Químicos (GHS) substituiu a antiga classificação da OMS para agrotóxicos. Além da toxicidade aguda (categorias I a IV), que outros elementos são cruciais na nova abordagem do GHS para a rotulagem?",
     "imagem": "",
     "respostas": [
@@ -1151,7 +1119,7 @@
     ]
   },
   {
-    "id": 72,
+    "id": 70,
     "pergunta": "A Esterase Alvo Neuropática (NTE) é inibida por alguns organofosforados específicos. Qual é a principal consequência clínica associada à inibição da NTE?",
     "imagem": "",
     "respostas": [
@@ -1167,7 +1135,7 @@
     ]
   },
   {
-    "id": 73,
+    "id": 71,
     "pergunta": "Além da ingestão intencional ou acidental de altas doses, de que outra forma a população geral pode ser cronicamente exposta a pequenas doses de agrotóxicos por via oral?",
     "imagem": "",
     "respostas": [
@@ -1183,7 +1151,7 @@
     ]
   },
   {
-    "id": 74,
+    "id": 72,
     "pergunta": "No tratamento da intoxicação por agrotóxicos, qual a principal indicação para o uso de benzodiazepínicos e qual o seu mecanismo de ação?",
     "imagem": "",
     "respostas": [

@@ -165,14 +165,14 @@
     text-align: center;
     border: 1px solid var(--color-primary-dark);
     background-color: var(--color-primary-light);
-    max-width: 700px; /* Mantendo a largura que ajustamos antes, ou aumente mais se precisar */
-    margin-top: var(--spacing-md, 25px); /* Reduzindo margem superior */
-    margin-bottom: var(--spacing-md, 25px); /* Reduzindo margem inferior */
+    max-width: 700px; 
+    margin-top: var(--spacing-md, 25px); 
+    margin-bottom: var(--spacing-md, 25px); 
 }
 
 .card--quiz-result .card__header {
-    padding-bottom: var(--spacing-sm, 15px);  /* Reduzido */
-    margin-bottom: var(--spacing-md, 20px); /* Reduzido */
+    padding-bottom: var(--spacing-sm, 15px);  
+    margin-bottom: var(--spacing-md, 20px); 
     border-bottom: 1px solid var(--color-gray-400);
 }
 
@@ -183,11 +183,11 @@
 
 .quiz-results__summary {
     display: flex;
-    justify-content: space-around; /* ou space-evenly para espaçamento mais igual */
-    align-items: center; /* Alinha verticalmente os itens do sumário */
-    gap: var(--spacing-sm, 15px); /* Reduzido o gap se os itens estiverem muito próximos */
-    margin-bottom: var(--spacing-lg, 25px); /* Reduzido */
-    padding-bottom: var(--spacing-md, 20px); /* Reduzido */
+    justify-content: space-around; 
+    align-items: center; 
+    gap: var(--spacing-sm, 15px); 
+    margin-bottom: var(--spacing-lg, 25px); 
+    padding-bottom: var(--spacing-md, 20px); 
     border-bottom: 1px dashed var(--color-gray-500);
 }
 
@@ -195,20 +195,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-xxs, 4px); /* Reduzido o gap interno do stat-item */
-    flex: 1; /* Faz cada item do sumário tentar ocupar espaço igual */
-    min-width: 0; /* Ajuda com flexbox em alguns casos */
+    gap: var(--spacing-xxs, 4px); 
+    flex: 1; 
+    min-width: 0; 
 }
 
-/* ... (estilos de .quiz-results__stat-item--score, .quiz-results__stat-item--time, etc., podem permanecer os mesmos) ... */
-
 .quiz-results__icon {
-    font-size: 2.5rem; /* Levemente reduzido se estiver muito grande */
-    margin-bottom: var(--spacing-xxs, 5px); /* Reduzido */
+    font-size: 2.5rem; 
+    margin-bottom: var(--spacing-xxs, 5px); 
 }
 
 .quiz-results__label {
-    font-size: var(--font-size-xs, 0.8rem); /* Pode reduzir um pouco se necessário */
+    font-size: var(--font-size-xs, 0.8rem); 
     color: var(--color-gray-700);
     font-weight: var(--font-weight-medium);
     text-transform: uppercase;
@@ -216,19 +214,14 @@
 }
 
 .quiz-results__value {
-    font-size: 2rem; /* Pode reduzir um pouco se estiver muito grande */
+    font-size: 2rem; 
     font-weight: var(--font-weight-bold);
 }
 
 .quiz-results__details-group {
-    margin-bottom: var(--spacing-md, 20px); /* Reduzido */
-    font-size: 1rem; /* Pode ajustar */
+    margin-bottom: var(--spacing-md, 20px); 
+    font-size: 1rem; 
     color: var(--color-gray-800);
-    /* Para colocar Acertos e Erros lado a lado, se desejar: */
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    /* gap: var(--spacing-lg, 30px); */ /* Espaço entre Acertos e Erros */
 }
 
 .quiz-results__detail-item {
@@ -236,35 +229,59 @@
     align-items: center;
     justify-content: center;
     gap: var(--spacing-xs, 8px);
-    margin-bottom: var(--spacing-xs, 8px); /* Reduzido */
+    margin-bottom: var(--spacing-xs, 8px); 
 }
 
-/* ... (estilos dos ícones de detalhe podem permanecer) ... */
-
 .quiz-results__message {
-    margin-top: var(--spacing-sm, 15px);      /* Reduzido */
-    margin-bottom: var(--spacing-md, 20px); /* Reduzido */
-    font-size: 1rem; /* Pode ajustar */
+    margin-top: var(--spacing-sm, 15px);     
+    margin-bottom: var(--spacing-md, 20px); 
+    font-size: 1rem; 
     color: var(--color-gray-900);
     font-style: italic;
 }
 
+/* START --- MODIFICATIONS FOR RESPONSIVE BUTTONS --- START */
 .quiz-results__actions {
     display: flex;
-    gap: var(--spacing-md, 15px);
-    padding-top: var(--spacing-md, 20px);    /* Reduzido */
-    margin-top: var(--spacing-md, 20px);     /* Reduzido */
+    flex-direction: column; /* Botões empilhados por padrão (mobile-first) */
+    align-items: stretch;   /* Botões esticam para preencher a largura */
+    gap: var(--spacing-sm, 12px); /* Espaçamento entre botões empilhados */
+    padding-top: var(--spacing-md, 20px);
+    margin-top: var(--spacing-md, 20px);
     border-top: 1px solid var(--color-gray-400);
 }
 
-/* Media query para botões lado a lado continua relevante */
+.quiz-results__actions .button {
+    width: 100%; /* Botões ocupam a largura total quando empilhados */
+}
+
+/* Para telas com largura de 576px ou mais */
 @media (min-width: 576px) {
     .quiz-results__actions {
-        flex-direction: row;
-        justify-content: center;
+        flex-direction: row; /* Botões lado a lado */
+        justify-content: center; /* Centraliza os botões na linha */
+        align-items: center; 
+        gap: var(--spacing-md, 15px); /* Espaçamento original para layout em linha */
     }
+
     .quiz-results__actions .button {
-        flex-grow: 1;
-        max-width: 280px;
+        width: auto; /* Largura automática */
+        flex-grow: 1; /* Permite que os botões cresçam */
+        max-width: 280px; /* Limita a largura máxima de cada botão */
     }
 }
+
+/* Ajustes para telas muito pequenas (ex: largura menor que 375px) */
+@media (max-width: 375px) {
+    .quiz-results__actions .button.button--large { /* Aplicar especificamente aos .button--large neste contexto */
+        font-size: var(--font-size-sm); /* Reduz o tamanho da fonte (padrão: 0.875rem em variables.css) */
+        padding-top: var(--spacing-xs);    /* Reduz o padding vertical (padrão: 8px em variables.css) */
+        padding-bottom: var(--spacing-xs); /* Reduz o padding vertical (padrão: 8px em variables.css) */
+        /* O padding horizontal de .button--large (25px) pode ser mantido 
+           ou também reduzido se o texto ainda estiver muito apertado. Exemplo:
+           padding-left: var(--spacing-md);  // 16px
+           padding-right: var(--spacing-md); // 16px
+        */
+    }
+}
+/* END --- MODIFICATIONS FOR RESPONSIVE BUTTONS --- END */

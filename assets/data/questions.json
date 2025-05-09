@@ -1165,5 +1165,103 @@
     "categorias": [
       "DRAMA"
     ]
+  },
+  {
+    "id": 73,
+    "pergunta": "Um agricultor, que utiliza regularmente herbicidas contendo 2,4-D há vários anos, começa a apresentar fraqueza muscular progressiva, formigamento persistente nas mãos e pés, dificuldades de coordenação motora e episódios de irritabilidade notados pela família. Investigações clínicas e neurológicas posteriores revelam múltiplos déficits. Considerando os potenciais efeitos neurológicos da exposição crônica ao 2,4-D, qual das seguintes opções descreve o espectro MAIS completo e preciso de achados que poderiam estar contribuindo para o quadro clínico complexo do agricultor, abrangendo danos estruturais e funcionais no sistema nervoso?",
+    "imagem": "image_198721.jpg",
+    "respostas": [
+      "Apenas alterações comportamentais como irritabilidade e miotonia leve, sem evidências de danos estruturais significativos no sistema nervoso central ou periférico que justifiquem a fraqueza e o formigamento.",
+      "Neuropatias periféricas (explicando o formigamento e parte da fraqueza), desmielinização (comprometendo a transmissão nervosa), degeneração ganglionar no SNC (impactando coordenação e funções centrais), velocidade reduzida da condução nervosa (resultando em lentidão reflexa e fraqueza), miotonia (contribuindo para rigidez e fraqueza) e alterações comportamentais (como a irritabilidade).",
+      "Somente degeneração ganglionar no sistema nervoso central e uma discreta redução na velocidade de condução nervosa periférica, com as alterações comportamentais sendo o principal achado e a fraqueza muscular atribuída a fatores não neurológicos.",
+      "Miotonia severa e neuropatias periféricas focais afetando exclusivamente os membros inferiores, mas com integridade preservada das estruturas mielínicas centrais e dos gânglios da base, sugerindo uma disfunção primariamente neuromuscular periférica com mínimas alterações comportamentais reativas."
+    ],
+    "correta": "Neuropatias periféricas (explicando o formigamento e parte da fraqueza), desmielinização (comprometendo a transmissão nervosa), degeneração ganglionar no SNC (impactando coordenação e funções centrais), velocidade reduzida da condução nervosa (resultando em lentidão reflexa e fraqueza), miotonia (contribuindo para rigidez e fraqueza) e alterações comportamentais (como a irritabilidade).",
+    "referencia": "image_198721.jpg",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  [
+  {
+    "id": 74,
+    "pergunta": "Na intoxicação aguda por paraquat, a lesão pulmonar inicial é desencadeada por um processo bioquímico específico nas células alveolares. Qual é este evento celular chave e qual sua consequência histopatológica inicial mais característica em casos graves?",
+    "imagem": "",
+    "respostas": [
+      "Inibição direta da ATPase mitocondrial, levando à necrose celular imediata; aparecimento de fibrose intersticial em 12 horas.",
+      "Um ciclo de redução-oxidação (ciclo redox) com depleção de NADPH e formação de espécies reativas de oxigênio; dano às células epiteliais alveolares em 24 horas.",
+      "Acúmulo de paraquat nos lisossomos com ruptura e liberação de enzimas hidrolíticas; extensa infiltração de eosinófilos em 48 horas.",
+      "Bloqueio da síntese de surfactante pelos pneumócitos tipo II; colapso alveolar difuso nas primeiras 6 horas."
+    ],
+    "correta": "Um ciclo de redução-oxidação (ciclo redox) com depleção de NADPH e formação de espécies reativas de oxigênio; dano às células epiteliais alveolares em 24 horas.",
+    "referencia": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 75,
+    "pergunta": "Em pacientes que sobrevivem à fase aguda da pneumopatia por paraquat, uma segunda fase proliferativa pode se instalar. Qual alteração celular fundamental caracteriza esta fase tardia, resultando paradoxalmente em deterioração funcional pulmonar crônica?",
+    "imagem": "",
+    "respostas": [
+      "Regeneração excessiva e desorganizada dos pneumócitos tipo I, resultando em hiperplasia e metaplasia escamosa.",
+      "Angiogênese acentuada no interstício alveolar, levando a um shunt intrapulmonar e hipoxemia refratária.",
+      "Extensa proliferação de fibroblastos pulmonares e subsequente deposição maciça de colágeno, resultando em fibrose disseminada.",
+      "Infiltração crônica de macrófagos alveolares que fagocitam o paraquat residual, perpetuando a inflamação e o dano tecidual."
+    ],
+    "correta": "Extensa proliferação de fibroblastos pulmonares e subsequente deposição maciça de colágeno, resultando em fibrose disseminada.",
+    "referencia": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 76,
+    "pergunta": "Após um indivíduo superar a fase inflamatória e destrutiva inicial da intoxicação pulmonar por paraquat, qual complicação tardia, decorrente da subsequente fase proliferativa, representa o maior risco de mortalidade semanas ou meses depois?",
+    "imagem": "",
+    "respostas": [
+      "Desenvolvimento de pneumonia bacteriana secundária devido à imunossupressão induzida pelo paraquat.",
+      "Recorrência do edema pulmonar agudo devido à liberação tardia de mediadores inflamatórios.",
+      "Insuficiência respiratória progressiva devido à extensa fibrose pulmonar que substitui o parênquima funcional.",
+      "Complicações renais crônicas, uma vez que o paraquat também se acumula nos rins, levando à falência renal tardia."
+    ],
+    "correta": "Insuficiência respiratória progressiva devido à extensa fibrose pulmonar que substitui o parênquima funcional.",
+    "referencia": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 77,
+    "pergunta": "Herbicidas bipiridílicos como paraquat e diquat possuem diferentes perfis de toxicidade. Qual é a distinção crucial entre eles no que tange à sua tendência de acúmulo no tecido pulmonar e à indução de lesão pulmonar fibrótica característica?",
+    "imagem": "",
+    "respostas": [
+      "Ambos acumulam-se nos pulmões e causam fibrose pulmonar bifásica, mas o diquat o faz de forma mais acelerada.",
+      "O diquat acumula-se preferencialmente nos pulmões causando uma lesão aguda destrutiva similar ao paraquat, porém sem a fase fibrótica tardia.",
+      "O paraquat não se acumula significativamente nos pulmões, enquanto o diquat é o principal agente causador de fibrose pulmonar entre os bipiridílicos.",
+      "O paraquat acumula-se nos pulmões e induz uma toxicidade pulmonar bifásica característica, enquanto o diquat não se acumula nos pulmões e não causa o mesmo tipo de lesão pulmonar fibrótica."
+    ],
+    "correta": "O paraquat acumula-se nos pulmões e induz uma toxicidade pulmonar bifásica característica, enquanto o diquat não se acumula nos pulmões e não causa o mesmo tipo de lesão pulmonar fibrótica.",
+    "referencia": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+    "categorias": [
+      "DRAMA"
+    ]
+  },
+  {
+    "id": 78,
+    "pergunta": "A letalidade na fase aguda da intoxicação por paraquat frequentemente se due à anóxia grave. Qual conjunto de alterações patológicas pulmonares primárias é o principal responsável pela falha catastrófica das trocas gasosas nesse estágio?",
+    "imagem": "",
+    "respostas": [
+      "Broncoconstrição reflexa e aumento da produção de muco, obstruindo as vias aéreas superiores.",
+      "Paralisia do diafragma e dos músculos intercostais devido à neurotoxicidade do paraquat.",
+      "Perda do epitélio alveolar, edema pulmonar e extensa infiltração de células inflamatórias no interstício, comprometendo severamente a hematose.",
+      "Formação de múltiplos microtrombos na vasculatura pulmonar, levando a um quadro de embolia pulmonar maciça."
+    ],
+    "correta": "Perda do epitélio alveolar, edema pulmonar e extensa infiltração de células inflamatórias no interstício, comprometendo severamente a hematose.",
+    "referencia": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+    "categorias": [
+      "DRAMA"
+    ]
   }
+]
 ]

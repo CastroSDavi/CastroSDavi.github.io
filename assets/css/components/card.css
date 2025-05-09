@@ -273,15 +273,10 @@
 
 /* Ajustes para telas muito pequenas (ex: largura menor que 375px) */
 @media (max-width: 375px) {
-    .quiz-results__actions .button.button--large { /* Aplicar especificamente aos .button--large neste contexto */
+    .quiz-results__actions .button.button--large { /
         font-size: var(--font-size-sm); /* Reduz o tamanho da fonte (padrão: 0.875rem em variables.css) */
         padding-top: var(--spacing-xs);    /* Reduz o padding vertical (padrão: 8px em variables.css) */
-        padding-bottom: var(--spacing-xs); /* Reduz o padding vertical (padrão: 8px em variables.css) */
-        /* O padding horizontal de .button--large (25px) pode ser mantido 
-           ou também reduzido se o texto ainda estiver muito apertado. Exemplo:
-           padding-left: var(--spacing-md);  // 16px
-           padding-right: var(--spacing-md); // 16px
-        */
+        padding-bottom: var(--spacing-xs); 
     }
 }
 /* END --- MODIFICATIONS FOR RESPONSIVE BUTTONS --- END */

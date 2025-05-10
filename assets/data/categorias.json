@@ -1,0 +1,17 @@
+[
+  { "id_categoria": 1, "nome_categoria": "Concepção", "id_categoria_pai": null },
+  { "id_categoria": 2, "nome_categoria": "Metabolismo", "id_categoria_pai": null },
+  { "id_categoria": 3, "nome_categoria": "Funções Celulares", "id_categoria_pai": null },
+  { "id_categoria": 4, "nome_categoria": "Nascimento", "id_categoria_pai": null },
+  { "id_categoria": 5, "nome_categoria": "Percepção", "id_categoria_pai": null },
+  { "id_categoria": 6, "nome_categoria": "Locomoção", "id_categoria_pai": null },
+  { "id_categoria": 7, "nome_categoria": "Envelhecimento", "id_categoria_pai": null },
+  { "id_categoria": 8, "nome_categoria": "Proliferação", "id_categoria_pai": null },
+  { "id_categoria": 9, "nome_categoria": "Genética", "id_categoria_pai": null },
+  { "id_categoria": 10, "nome_categoria": "DRAMA", "id_categoria_pai": null, "descricao_categoria": "Danos, Reparo, Adaptação, Morte e Autodefesa Celular e Tecidual" },
+  { "id_categoria": 1001, "nome_categoria": "Poluição Atmosférica", "id_categoria_pai": 10, "descricao_categoria": "Efeitos da poluição do ar nas células e tecidos." },
+  { "id_categoria": 1002, "nome_categoria": "Pesticidas", "id_categoria_pai": 10, "descricao_categoria": "Impacto de pesticidas e agrotóxicos." },
+  { "id_categoria": 1003, "nome_categoria": "Metais Pesados", "id_categoria_pai": 10, "descricao_categoria": "Toxicidade de metais como chumbo, mercúrio, etc." },
+  { "id_categoria": 1004, "nome_categoria": "Radiação Ionizante", "id_categoria_pai": 10, "descricao_categoria": "Danos celulares causados por radiação ionizante." },
+  { "id_categoria": 1005, "nome_categoria": "Agentes Químicos (Geral)", "id_categoria_pai": 10, "descricao_categoria": "Outros agentes químicos tóxicos." }
+]

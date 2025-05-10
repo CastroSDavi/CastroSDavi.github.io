@@ -2,186 +2,173 @@
 
 /*
 ==========================================================================
-  Section Layout: Question Section (#questoes-section)
+  Section Layout: Question Section (#question-section)
 ==========================================================================
-  Define o layout específico da página de quiz, organizando os componentes
-  score-panel, category-filter, progress-bar, question-display (card),
-  quiz-navigation, question-grid e o card de resultados.
 */
 
-/* Layout da Seção Principal #questoes-section */
-/* A estrutura flex row/column e height/min-height é definida em
-   assets/css/layout/_main-sections.css */
-
 /* Layout do Conteúdo Principal (.question-section__main-content) */
-/* Padding, background, overflow-y definidos em _main-sections.css */
 .question-section__main-content {
-    /* Adiciona um espaçamento geral entre os blocos principais (filtro, aviso, quiz, resultado, grid)
-       se não for tratado pelas margens dos próprios componentes */
-    /* display: flex; flex-direction: column; gap: var(--spacing-lg); */
-  }
-  
-  
-  /* Layout/Contexto para #aviso-container */
-  /* O estilo visual do card interno (.card--aviso) vem de card.css */
-  #aviso-container { /* ID mantido para JS */
+  /* O padding já é definido em _main-sections.css */
+}
+
+/* Controles do Quiz (Botão de Filtro e contagem) */
+.quiz-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--spacing-md, 16px);
+    margin-bottom: var(--spacing-md, 16px);
+    border-bottom: 1px solid var(--color-gray-200);
+    flex-shrink: 0;
+    position: relative; /* Para z-index se sobrepor a algo, se necessário */
+}
+
+.quiz-controls .button--with-icon {
+    padding: var(--spacing-xs, 8px) var(--spacing-md, 16px); /* Padding aumentado */
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    gap: var(--spacing-xs, 6px); /* Gap interno do botão flex */
+}
+
+.quiz-controls .button--with-icon .button__icon {
+    margin-right: 0; /* Removido, pois o gap do botão flex cuida disso */
+    font-size: 1.3em; /* Ícone um pouco maior */
+}
+
+.quiz-controls__count {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    padding-left: var(--spacing-md);
+}
+
+
+/* Layout/Contexto para #aviso-container */
+#aviso-container {
     padding: 0; /* Padding está no card interno */
-    margin-top: var(--spacing-lg, 25px);
+    margin-top: var(--spacing-md, 20px);
     flex-shrink: 0;
     max-width: 950px;
     margin-left: auto;
     margin-right: auto;
-    width: 90%; /* Mantido do original, mas max-width + auto margins é mais comum */
-  }
-  
-  
-  /* Layout para o Container do Quiz Ativo (#quiz-section interno) */
-  /* Este container agrupa barra de progresso, título, card da questão e botões de navegação */
-  #quiz-section { /* ID mantido para JS */
+    width: 100%; /* Ocupar a largura disponível no container */
+}
+
+
+/* Layout para o Container do Quiz Ativo (#quiz-section interno) */
+#quiz-section {
     display: flex;
     flex-direction: column;
-    gap: 0; /* Espaçamento entre progresso, título, card, nav é feito pelas margens deles */
+    gap: 0;
     flex-shrink: 0;
-  }
-  
-  /* Estilos específicos para o Título da Questão (h2#question-title) e seus spans */
-  /* Mantidos aqui pois são muito específicos desta seção */
-  #question-title {
-    font-size: var(--question-title-font-size, 1.5rem); /* Variável local ou global */
-    color: var(--question-title-color, var(--color-gray-800));
-    font-weight: var(--font-weight-normal); /* Diferente do h2 padrão */
-    font-family: var(--font-family-sans); /* Diferente do h2 padrão */
-    margin-top: 0; /* Garante sem margem superior extra */
-    margin-bottom: var(--spacing-md, 20px); /* Espaço antes do card da questão */
+}
+
+/* Estilos para o Título da Questão */
+#question-title {
+    font-size: var(--question-title-font-size, 1.4rem);
+    color: var(--question-title-color, var(--color-gray-900)); /* Mais escuro */
+    font-weight: var(--font-weight-medium); /* Um pouco mais de peso */
+    font-family: var(--font-family-heading); /* Usar fonte de título */
+    margin-top: var(--spacing-sm, 12px);
+    margin-bottom: var(--spacing-md, 20px);
     display: flex;
-    align-items: center;
+    align-items: baseline; /* Alinhar pela base do texto */
     gap: var(--spacing-sm, 10px);
     flex-wrap: wrap;
     flex-shrink: 0;
-    line-height: var(--line-height-tight, 1.4);
+    line-height: var(--line-height-heading, 1.3); /* Usar altura de linha de título */
     scroll-margin-top: var(--spacing-md, 20px);
-  }
-  
-  #categoria-titulo { /* Span da categoria */
+}
+
+#categoria-titulo { /* Span da categoria */
     display: inline-block;
-    background-color: var(--color-primary-dark);
-    color: var(--color-white);
-    font-size: var(--font-size-xs, 0.85rem);
-    font-weight: var(--font-weight-semibold);
-    font-family: var(--font-family-heading);
-    padding: 5px var(--spacing-sm, 12px);
+    background-color: var(--color-gray-100); /* Fundo bem sutil */
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-xs, 0.8rem);
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-sans); /* Fonte normal para a tag */
+    padding: 3px var(--spacing-xs, 8px);
     border-radius: var(--border-radius-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
+    text-transform: none;
+    letter-spacing: 0.2px;
     white-space: nowrap;
-  }
-  
-  #id-questao { /* Span do número da questão */
-    font-weight: var(--font-weight-bold);
-    color: var(--color-gray-900);
-    font-size: inherit; /* Herda o tamanho do h2 pai */
-  }
-  
-  
-  /* Layout para o Container de Navegação (.quiz-navigation) */
-  /* Antigo .navigation-buttons */
-  .quiz-navigation {
+    border: 1px solid var(--color-gray-200); /* Borda sutil para a tag */
+}
+
+#id-questao { /* Span do número da questão */
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-dark); /* Destacar o número */
+    font-size: 1em; /* Relativo ao h2 */
+    margin-right: var(--spacing-xxs);
+}
+
+
+/* Layout para o Container de Navegação (.quiz-navigation) */
+.quiz-navigation {
     display: flex;
     justify-content: space-between;
-    padding: var(--spacing-lg, 25px) 0 0 0; /* Padding acima dos botões */
-    margin-top: var(--spacing-md, 15px);   /* Margem acima da linha */
-    border-top: var(--border-width) solid var(--color-gray-300);
+    padding: var(--spacing-md, 20px) 0 0 0;
+    margin-top: var(--spacing-md, 20px);
+    border-top: var(--border-width) solid var(--color-gray-200);
     flex-shrink: 0;
     scroll-margin-bottom: var(--spacing-lg, 25px);
-  }
-  /* Os botões (.button) dentro são estilizados por button.css */
-  
-  
-  /* ESTILOS REMOVIDOS DESTE ARQUIVO (Movidos ou Substituídos):
-     - #progress-container, #progress-bar-fill, #progress-text -> movido para progress-bar.css
-     - .question-wrap -> substituído por .card--question-wrap em card.css
-     - .question (interno) -> regras de layout movidas para question-display.css (.question-display__content)
-     - .image-question-wrap, .image-question-wrap > img -> movido para question-display.css
-     - .question-text -> movido para question-display.css (.question-display__text)
-     - .answers-wrap -> substituído por .question-display__answers-list em question-display.css
-     - .answer (e todos os seus modificadores/estados) -> substituído por .question-display__answer-option em question-display.css
-     - #referencia-questao -> substituído por .question-display__reference em question-display.css
-     - #questoes-section .main-content -> movido para _main-sections.css (.question-section__main-content)
-     - .aviso-mensagem -> substituído por .card--aviso em card.css (container #aviso-container mantido aqui)
-     - .resultado-final-card (e elementos internos) -> substituído por .card--quiz-result em card.css (regras específicas para elementos internos podem precisar de classes BEM .quiz-results__*)
-  */
-  
-  
-  /*
-  --------------------------------------------------------------------------
-    Responsive Styles for question-section.css Layout
-  --------------------------------------------------------------------------
-  */
-  /* Apenas ajustes de layout específicos desta seção */
-  
-  @media (max-width: 992px) {
+}
+
+/*
+--------------------------------------------------------------------------
+  Responsive Styles for question-section.css Layout
+--------------------------------------------------------------------------
+*/
+
+@media (max-width: 768px) {
+    .quiz-controls {
+        padding-bottom: var(--spacing-sm, 12px);
+        margin-bottom: var(--spacing-sm, 12px);
+    }
+    .quiz-controls .button--with-icon {
+        padding: var(--spacing-xs, 6px) var(--spacing-sm, 10px);
+    }
+    .quiz-controls .button--with-icon .button__icon {
+        font-size: 1.2em;
+    }
+
     #aviso-container {
-       /* Ajustes de max-width se necessário */
+      margin-top: var(--spacing-sm, 12px);
     }
-  }
-  
-  @media (max-width: 768px) {
-    /* Layout da seção e main-content ajustados em _main-sections.css */
-  
-    #aviso-container {
-      margin-top: var(--spacing-md, 15px);
-      /* max-width: 95%; (Ajuste se necessário) */
-    }
-  
-    /* Ajustes no título da questão */
+
     #question-title {
-      font-size: 1.3rem;
-      gap: var(--spacing-xs, 8px);
-      margin-bottom: var(--spacing-md, 15px);
-    }
-    #id-questao {
-      font-size: 1.4rem;
-    }
-    #categoria-titulo {
-      font-size: 0.8rem;
-      padding: 4px var(--spacing-sm, 10px);
-    }
-  
-    /* Ajustes no container de navegação */
-    .quiz-navigation {
-      padding-top: var(--spacing-md, 20px);
-      margin-top: var(--spacing-sm, 10px);
-      gap: var(--spacing-md);
-    }
-    /* Tamanho dos botões internos ajustado em button.css */
-  }
-  
-  @media (max-width: 480px) {
-    /* Ajustes no título da questão */
-    #question-title {
-      font-size: 1.2rem;
-      gap: var(--spacing-xs, 8px);
-      margin-bottom: var(--spacing-md, 15px);
-    }
-    #id-questao {
-      font-size: 1.3rem;
+      font-size: 1.25rem; /* Ajuste conforme _main-sections.css */
+      margin-bottom: var(--spacing-sm, 15px);
     }
     #categoria-titulo {
       font-size: 0.75rem;
-      padding: 3px var(--spacing-xs, 8px);
+      padding: 2px var(--spacing-xs, 6px);
     }
-  
-    /* Ajustes no container de navegação */
     .quiz-navigation {
-      padding-top: var(--spacing-md, 20px);
-      margin-top: var(--spacing-xs, 5px);
-      gap: var(--spacing-sm, 12px);
-      flex-wrap: wrap; /* Quebra linha dos botões */
+      padding-top: var(--spacing-sm, 15px);
+      margin-top: var(--spacing-sm, 15px);
     }
-    /* Layout dos botões internos (flex-grow, min-width) */
+}
+
+@media (max-width: 480px) {
+    .quiz-controls {
+        flex-wrap: wrap; /* Permitir quebra se não couber */
+        gap: var(--spacing-sm);
+    }
+    .quiz-controls__count {
+        width: 100%;
+        text-align: right;
+        padding-left: 0;
+        margin-top: var(--spacing-xs);
+    }
+    #question-title {
+      font-size: 1.15rem;
+    }
+    .quiz-navigation {
+      gap: var(--spacing-sm, 10px);
+      flex-wrap: wrap;
+    }
     .quiz-navigation .button {
         flex-grow: 1;
         min-width: 110px;
     }
-    /* Tamanho visual (padding/font) dos botões ajustado em button.css */
-  }
+}

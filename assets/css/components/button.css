@@ -5,7 +5,6 @@
     align-items: center;
     justify-content: center;
     vertical-align: middle;
-    /* Padding base - um bom ponto de partida */
     padding: var(--button-padding-y, 10px) var(--button-padding-x, 20px);
     font-family: var(--font-family-heading);
     font-weight: var(--font-weight-semibold);
@@ -16,29 +15,40 @@
     white-space: nowrap;
     user-select: none;
     color: var(--button-color, var(--color-white));
-    /* background-color: var(--button-bg-color, var(--color-gray-700)); << REMOVIDO da base para evitar conflitos com gradientes/fancy */
     border: var(--button-border-width, var(--border-width-md)) solid var(--button-border-color, transparent);
     border-radius: var(--button-border-radius, var(--border-radius-xl));
     cursor: pointer;
     transition: transform var(--transition-fast),
                 box-shadow var(--transition-fast),
-                background-color var(--transition-fast), /* Transição de bg ainda é útil */
+                background-color var(--transition-fast),
                 border-color var(--transition-fast),
                 color var(--transition-fast),
                 filter var(--transition-fast);
     box-shadow: var(--shadow-button);
     letter-spacing: 0.5px;
-    min-height: var(--button-min-height, 40px); /* Altura mínima base razoável */
-    min-width: var(--button-min-width, 40px);
+    min-height: var(--button-min-height, 40px);
+    min-width: var(--button-min-width, 40px); /* Para botões de ícone */
 }
 
 /* Estados base */
-.button:not(:disabled):hover { /* ... */ }
-.button:not(:disabled):active { /* ... */ }
-.button:focus-visible { /* ... */ }
+.button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-button-hover);
+    filter: brightness(105%);
+}
+.button:not(:disabled):active {
+    transform: translateY(0px);
+    box-shadow: var(--shadow-inner); /* Sombra interna sutil ao clicar */
+    filter: brightness(95%);
+}
+.button:focus-visible { /* :focus-visible já tem estilos globais em base.css, mas podemos refinar */
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
+    box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset) - 1px) rgba(from var(--focus-outline-color) r g b / 0.25); /* Sombra de foco mais integrada */
+}
 .button:disabled {
-    background-image: none !important; /* Garante que gradientes não apareçam */
-    background-color: var(--color-gray-300) !important; /* Cor de fundo desabilitado */
+    background-image: none !important;
+    background-color: var(--color-gray-300) !important;
     color: var(--color-gray-600);
     border-color: var(--color-gray-400);
     box-shadow: none;
@@ -51,92 +61,135 @@
 /* Modificadores de aparência */
 .button--primary {
     background-image: linear-gradient(to right, var(--color-primary-dark), var(--color-primary-medium));
-    background-color: var(--color-primary-medium); /* Fallback caso gradiente não funcione */
+    background-color: var(--color-primary-medium);
     color: var(--color-white);
     border-color: transparent;
 }
 .button--primary:not(:disabled):hover {
-    box-shadow: 0 5px 12px rgba(13, 59, 102, 0.2);
-    /* O filter brightness no hover base já clareia o gradiente */
+    box-shadow: 0 5px 12px rgba(from var(--color-primary-dark) r g b / 0.3); /* Sombra mais temática */
+    /* filter: brightness(110%); */ /* Ajuste se necessário */
 }
 
 .button--secondary {
-    background-color: var(--color-gray-700); /* Cor de fundo definida aqui */
+    background-color: var(--color-gray-700);
     color: var(--color-white);
     border-color: transparent;
 }
 .button--secondary:not(:disabled):hover {
     background-color: var(--color-gray-800);
-    box-shadow: 0 5px 12px rgba(108, 117, 125, 0.2);
+    box-shadow: 0 5px 12px rgba(from var(--color-gray-700) r g b / 0.2);
 }
 
 .button--outline {
-    background-color: transparent; /* Garante fundo transparente */
+    background-color: transparent;
     color: var(--color-primary-dark);
     border-color: var(--color-primary-dark);
     box-shadow: none;
 }
 .button--outline:not(:disabled):hover {
     background-color: var(--color-primary-light);
-    box-shadow: 0 2px 5px rgba(13, 59, 102, 0.1);
+    color: var(--color-primary-dark); /* Mantém a cor do texto */
+    border-color: var(--color-primary-dark); /* Mantém a cor da borda */
+    /* box-shadow: 0 2px 5px rgba(from var(--color-primary-dark) r g b / 0.1); */
 }
 .button--outline:not(:disabled):active {
-    background-color: #cde1f3;
+    background-color: rgba(from var(--color-primary-light) r g b / 0.7); /* Um pouco mais escuro no active */
     transform: translateY(0px);
 }
 .button--outline:disabled {
-    background-color: transparent !important; /* Garante fundo transparente mesmo desabilitado */
+    background-color: transparent !important;
     color: var(--color-gray-600);
-    border-color: var(--color-gray-600);
+    border-color: var(--color-gray-500); /* Borda um pouco mais clara para desabilitado */
     opacity: 0.6;
 }
 
-/* --- MODIFICADORES DE TAMANHO --- */
+/* Botão apenas com ícone */
+.button--icon-only {
+    padding: var(--spacing-xs, 8px); /* Padding igual em todos os lados */
+    min-width: var(--button-min-height, 40px); /* Garante que seja quadrado ou redondo */
+    aspect-ratio: 1 / 1; /* Mantém proporção 1:1 se min-width e min-height forem iguais */
+    border-radius: var(--border-radius-circle); /* Para botões de ícone redondos */
+}
+.button--icon-only .button__icon,
+.button--icon-only .material-symbols-outlined { /* Para ícones diretos */
+    margin: 0; /* Remove margens padrão do ícone */
+    font-size: 1.3em; /* Ajusta tamanho do ícone relativo ao botão */
+}
 
-/* Modificador: .button--small - Para "Anterior", "Próximo", etc. */
+
+/* --- MODIFICADORES DE TAMANHO --- */
 .button--small {
     --button-font-size: 0.9rem;
     --button-padding-y: 8px;
-    --button-padding-x: 16px; /* Não muito largo */
+    --button-padding-x: 16px;
     --button-min-height: 36px;
     letter-spacing: 0.4px;
 }
 
-/* Modificador: .button--compact - Para o botão "Encerrar" */
 .button--compact {
-    --button-font-size: 0.85rem;  /* Aumentei um pouco */
-    --button-padding-y: 6px;      /* Mantido pequeno */
-    --button-padding-x: 12px;     /* Aumentei um pouco */
-    --button-min-height: auto;
+    --button-font-size: 0.85rem;
+    --button-padding-y: 6px;
+    --button-padding-x: 12px;
+    --button-min-height: auto; /* Permite altura menor */
     letter-spacing: 0.3px;
-    /* Aplicando explicitamente as variáveis para garantir override */
     font-size: var(--button-font-size);
     padding: var(--button-padding-y) var(--button-padding-x);
     min-height: var(--button-min-height);
-    /* Para o outline compact ficar com borda e raio consistentes */
-    border-radius: var(--border-radius-md); /* Um pouco menos redondo */
-    border-width: var(--border-width); /* Borda mais fina para outline compact */
+    border-radius: var(--border-radius-md);
+    border-width: var(--border-width);
 }
 
-/* Para .button--large (opcional, pode definir no button.css também) */
 .button--large {
     padding: 12px 25px;
     font-size: 1.05rem;
     min-height: 48px;
 }
+
+/* Modificador para botões de texto (usado nos filtros de categoria) */
+.button--text {
+    background-color: transparent;
+    background-image: none;
+    color: var(--color-text-link);
+    border-color: transparent;
+    box-shadow: none;
+    font-weight: var(--font-weight-medium);
+    padding: var(--spacing-xxs, 4px) var(--spacing-xs, 8px); /* Padding menor */
+    min-height: auto;
+}
+.button--text:not(:disabled):hover,
+.button--text:not(:disabled):focus-visible {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-link-hover);
+    box-shadow: none;
+    filter: none; /* Remove filtro de brilho do hover base */
+    text-decoration: underline;
+}
+.button--text:not(:disabled):active {
+    background-color: var(--color-gray-200);
+    transform: none;
+    filter: none;
+}
+.button--text:disabled {
+    background-color: transparent !important;
+    color: var(--color-gray-500);
+    opacity: 0.7;
+}
+
+
 /* Elementos internos do botão */
 .button__icon { margin-right: var(--spacing-xs, 8px); }
 .button__icon--right { margin-right: 0; margin-left: var(--spacing-xs, 8px); }
 .button__label { display: inline-block; }
 
-/* Fancy buttons - Garantindo que definam seus próprios backgrounds */
+
+/* Fancy buttons */
 .button--fancy {
     padding: clamp(12px, 2.5vh, 14px) clamp(20px, 4vw, 28px);
     font-size: clamp(0.9rem, 2.2vw, 1rem);
     border-radius: var(--border-radius-xl);
-    border: none; /* Sobrescreve borda base */
+    border: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, background-image 0.2s ease; /* Adicionado background-image */
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, background-image 0.2s ease;
     flex: 1 1 200px;
     text-align: center;
 }
@@ -144,18 +197,18 @@
 
 .button--fancy-primary {
     background-image: linear-gradient(to right, var(--color-secondary-green), #23d1a0);
-    background-color: var(--color-secondary-green); /* Fallback */
+    background-color: var(--color-secondary-green);
     color: var(--color-white);
 }
 .button--fancy-primary:not(:disabled):hover {
     background-image: linear-gradient(to right, #23d1a0, var(--color-secondary-green));
     transform: translateY(-2px) scale(1.01);
     box-shadow: 0 6px 15px rgba(32, 201, 151, 0.3);
-    filter: none; /* Remove o brightness padrão do hover base */
+    filter: none;
 }
 
 .button--fancy-secondary {
-    background-color: rgba(255, 255, 255, 0.95); /* Cor explícita */
+    background-color: rgba(255, 255, 255, 0.95);
     color: var(--color-primary-dark);
     border: 1px solid rgba(0,0,0,0.05);
 }
@@ -163,22 +216,27 @@
     background-color: var(--color-white);
     transform: translateY(-2px) scale(1.01);
     box-shadow: 0 5px 10px rgba(0,0,0,0.08);
-    filter: none; /* Remove o brightness padrão do hover base */
+    filter: none;
+}
+
+/* Botões no rodapé de painéis/modais */
+.button--panel-footer { /* Usado no filter-panel.css */
+    flex-grow: 1;
+    padding-top: var(--spacing-sm, 12px);
+    padding-bottom: var(--spacing-sm, 12px);
+    font-size: 0.9rem;
+}
+.button--modal-action { /* Usado no modal.css */
+    /* Pode ter estilos semelhantes ao panel-footer ou específicos */
 }
 
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
-    .button--small {
-        /* Ajustes se necessário */
-    }
-    .button--compact {
-        /* Ajustes se necessário */
-    }
+    /* Ajustes gerais para botões em tablet, se necessário */
 }
 
 @media (max-width: 480px) {
-    /* Ajustes para mobile se necessário */
     .button--small {
         --button-font-size: 0.8rem;
         --button-padding-y: 6px;
@@ -186,10 +244,15 @@
         --button-min-height: 32px;
     }
     .button--compact {
-        --button-font-size: 0.75rem; /* Mantido pequeno */
+        --button-font-size: 0.75rem;
         --button-padding-y: 5px;
-        --button-padding-x: 10px;  /* Levemente aumentado */
-        border-radius: var(--border-radius-sm); /* Mais quadrado */
+        --button-padding-x: 10px;
+        border-radius: var(--border-radius-sm);
+    }
+    .button--large {
+        padding: 10px 20px; /* Um pouco menor em mobile */
+        font-size: 1rem;
+        min-height: 44px;
     }
 }
 

@@ -1,32 +1,27 @@
 /* assets/css/style.css */
 /* Arquivo principal que importa todos os outros módulos CSS. */
 
-/* 1. BASE
-   Importa o arquivo principal da pasta base, que por sua vez
-   deve importar _variables.css, _reset.css, _typography.css, _utilities.css */
-   @import 'base/base.css';
+/* 1. BASE */
+@import 'base/base.css';
 
-   /* 2. LAYOUT */
-   @import 'layout/layout.css';
-   
-   /* 3. COMPONENTS */
-   @import 'components/button.css';
-   @import 'components/card.css';
-   @import 'components/question-display.css';
-   @import 'components/modal.css';
-   @import 'components/navigation.css'; /* Para .main-nav e .bottom-nav */
-   @import 'components/category-filter.css';
-   @import 'components/score-panel.css'; /* Substitui aside.css */
-   @import 'components/progress-bar.css';
-   @import 'components/question-grid.css'; /* Substitui pagination.css */
-   @import 'components/hero-block.css';   /* Para a seção inicial */
-   @import 'components/stats-deck.css';    /* Para a seção inicial */
-   /* Certifique-se de que todos os seus componentes estejam listados aqui */
-   
-   
-   /* 4. SECTIONS */
-   @import 'sections/home-section.css';        /* Substitui inicio.css */
-   @import 'sections/question-section.css';   /* Substitui quiz.css */
-   @import 'sections/conta-section.css';
-   
-   
+/* 2. LAYOUT */
+@import 'layout/layout.css';
+
+/* 3. COMPONENTS */
+@import 'components/button.css';
+@import 'components/card.css';
+@import 'components/question-display.css'; /* Mantido, estiliza a exibição da pergunta */
+@import 'components/modal.css';
+@import 'components/navigation.css';
+/* @import 'components/category-filter.css'; */ /* REMOVER OU COMENTAR ESTA LINHA */
+@import 'components/filter-panel.css';     /* ADICIONAR ESTA LINHA */
+@import 'components/score-panel.css';
+@import 'components/progress-bar.css';
+@import 'components/question-grid.css';
+@import 'components/hero-block.css';
+@import 'components/stats-deck.css';
+
+/* 4. SECTIONS */
+@import 'sections/home-section.css';
+@import 'sections/question-section.css'; /* Já modificado acima */
+@import 'sections/conta-section.css';

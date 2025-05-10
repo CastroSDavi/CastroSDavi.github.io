@@ -11,8 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/style.css">
-
-    <title>Quiz Interativo</title>
+    <title>Histologia - Quiz Interativo</title>
 </head>
 
 <body>
@@ -41,7 +40,7 @@
              <div class="hero-block">
                 <div class="hero-block__welcome">
                     <h1 class="hero-block__title">Olá</h1>
-                    <p class="hero-block__subtitle">Pronto para expandir seus conhecimentos hoje?</p>
+                    <p class="hero-block__subtitle">Pronto para expandir seus conhecimentos em histologia hoje?</p>
                 </div>
 
                 <div class="stats-deck">
@@ -95,12 +94,10 @@
 
         <section id="question-section" class="main-section u-is-hidden">
             <aside class="score-panel">
-
                 <div class="score-panel__timer">
                     <span id="timer-display" class="score-panel__timer-value">00:00</span>
                     <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
                 </div>
-            
                 <div class="score-panel__stats-group">
                     <div class="score-panel__stat score-panel__stat--points">
                          <span class="material-symbols-outlined score-panel__stat-icon">military_tech</span>
@@ -124,29 +121,22 @@
                         </div>
                     </div>
                 </div>
-            
                 <button id="btn-encerrar-sessao" class="button button--outline button--small score-panel__action-button u-is-hidden">Encerrar</button>
-            
             </aside>
 
             <div class="question-section__main-content">
 
-                <div class="category-filter">
-                    <span class="category-filter__label" id="categorias-label">Categorias:</span>
-                    <div class="category-filter__scroll-wrapper">
-                         <button class="category-filter__scroll-arrow category-filter__scroll-arrow--left u-is-circle" id="cat-scroll-left" aria-label="Rolar categorias para esquerda" disabled>
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z" /> </svg>
-                        </button>
-                        <div class="category-filter__list" id="filtro-checkboxes-scroll">
-                            </div>
-                         <button class="category-filter__scroll-arrow category-filter__scroll-arrow--right u-is-circle" id="cat-scroll-right" aria-label="Rolar categorias para direita">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor"> <path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z" /> </svg>
-                        </button>
-                    </div>
+                <div class="quiz-controls">
+                    <button class="button button--outline button--with-icon" id="btn-abrir-filtros">
+                        <span class="material-symbols-outlined button__icon">filter_list</span>
+                        Filtros
+                    </button>
+                    <span id="filtered-question-count-display" class="quiz-controls__count"></span>
                 </div>
-
+                
                 <div id="aviso-container" class="u-is-hidden">
-                     <div class="card card--aviso"> <p>Selecione pelo menos uma categoria para começar o quiz.</p>
+                     <div class="card card--aviso">
+                        <p>Use o botão "Filtros" para selecionar categorias e depois clique em "Aplicar Filtros" no painel.</p>
                      </div>
                 </div>
 
@@ -168,7 +158,7 @@
                                     <img src="" alt="" id="pergunta-imagem" class="question-display__image u-is-hidden">
                                 </div>
                                 <div class="question-display__answers-list" id="respostas-container">
-                                    </div>
+                                </div>
                                 <span id="feedback-acessivel" class="u-sr-only" aria-live="polite" aria-atomic="true"></span>
                             </div>
                             <p id="referencia-questao" class="question-display__reference"></p>
@@ -212,7 +202,6 @@
                                 <span class="quiz-results__value" id="resultado-tempo">00:00</span>
                             </div>
                         </div>
-
                         <div class="quiz-results__details-group">
                             <p class="quiz-results__detail-item">
                                 <span class="material-symbols-outlined quiz-results__detail-icon quiz-results__detail-icon--correct">check_circle</span>
@@ -223,7 +212,6 @@
                                 Erros: <span class="quiz-results__detail-value erros-valor" id="resultado-erros">0</span>
                             </p>
                         </div>
-                        
                         <div class="quiz-results__message">
                             <p id="resultado-mensagem-motivacional">Continue praticando para melhorar ainda mais!</p>
                         </div>
@@ -241,10 +229,9 @@
                 </div>
 
                 <div id="question-grid-container" class="question-grid u-is-hidden">
-                    </div>
+                </div>
 
-             </div>
-        </section>
+             </div> </section>
 
         <section id="account-section" class="main-section u-is-hidden">
              <div class="card card--conta-perfil">
@@ -266,9 +253,53 @@
                  </div>
              </div>
         </section>
-
     </main>
 
+    <div class="filter-panel-overlay u-is-hidden" id="filter-panel-overlay" aria-hidden="true"></div>
+    <aside class="filter-panel" id="filter-panel" aria-labelledby="filter-panel-title" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+        <div class="filter-panel__header">
+            <h2 id="filter-panel-title" class="filter-panel__title">Filtros</h2>
+            <button class="button button--icon-only filter-panel__close-button" id="btn-fechar-filtros" aria-label="Fechar painel de filtros">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <div class="filter-panel__body">
+            <div class="filter-group" id="filter-group-categories">
+                <div class="filter-group__header"> <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
+                    <div class="filter-group__controls">
+                        <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
+                        <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
+                    </div>
+                </div>
+                <ul class="category-tree" id="category-tree-list" role="tree" aria-labelledby="filter-group-categories-title">
+                    </ul>
+            </div>
+
+            <div class="filter-group" id="filter-group-difficulty">
+                <h3 class="filter-group__title" id="filter-group-difficulty-title">Dificuldade</h3>
+                <div class="chip-group" role="radiogroup" aria-labelledby="filter-group-difficulty-title">
+                    <input type="radio" name="difficulty" id="diff-all" value="all" class="chip-group__input u-sr-only" checked>
+                    <label for="diff-all" class="chip-group__chip">Todas</label>
+
+                    <input type="radio" name="difficulty" id="diff-easy" value="easy" class="chip-group__input u-sr-only">
+                    <label for="diff-easy" class="chip-group__chip">Fácil</label>
+                    
+                    <input type="radio" name="difficulty" id="diff-medium" value="medium" class="chip-group__input u-sr-only">
+                    <label for="diff-medium" class="chip-group__chip">Médio</label>
+
+                    <input type="radio" name="difficulty" id="diff-hard" value="hard" class="chip-group__input u-sr-only">
+                    <label for="diff-hard" class="chip-group__chip">Difícil</label>
+                </div>
+            </div>
+            
+            </div>
+
+        <div class="filter-panel__footer">
+            <button class="button button--secondary" id="btn-limpar-filtros-painel">Limpar Filtros</button>
+            <button class="button button--primary" id="btn-aplicar-filtros-painel">Aplicar Filtros</button>
+        </div>
+    </aside>
     <nav class="bottom-nav" aria-label="Navegação principal móvel">
         <ul class="bottom-nav__list">
             <li class="bottom-nav__item">
@@ -283,7 +314,13 @@
                     <span class="bottom-nav__label">Questões</span>
                 </a>
             </li>
-            </ul>
+            <li class="bottom-nav__item">
+                 <a href="#" class="bottom-nav__link" data-section="account-section" aria-label="Ir para Conta">
+                     <span class="material-symbols-outlined bottom-nav__icon">person</span>
+                    <span class="bottom-nav__label">Conta</span>
+                </a>
+            </li>
+        </ul>
     </nav>
 
     <footer id="footer" class="site-footer">

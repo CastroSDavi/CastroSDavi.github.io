@@ -32,7 +32,7 @@
         <ul class="main-nav__list">
             <li class="main-nav__item"><a href="#" class="main-nav__link main-nav__link--active" data-section="home-section">Início</a></li>
             <li class="main-nav__item"><a href="#" class="main-nav__link" data-section="question-section">Questões</a></li>
-        </ul>
+            </ul>
     </nav>
 
     <main>
@@ -133,7 +133,20 @@
                     </button>
                     <span id="filtered-question-count-display" class="quiz-controls__count"></span>
                 </div>
-                
+
+                <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
+                    <div class="card__body">
+                        <span class="material-symbols-outlined placeholder-icon">tune</span>
+                        <h3>Selecione seus Filtros</h3>
+                        <p>Use o botão "Filtros" acima para escolher as categorias e a dificuldade das questões que deseja praticar.</p>
+                        <p>Após ajustar suas preferências no painel lateral, clique em "Aplicar Filtros" para começar!</p>
+                        <p class="placeholder-ou">- OU -</p>
+                        <button class="button button--primary button--small" id="start-random-quiz-placeholder">
+                            <span class="material-symbols-outlined button__icon">shuffle</span>
+                            Iniciar um Quiz Rápido
+                        </button>
+                    </div>
+                </div>
                 <div id="aviso-container" class="u-is-hidden">
                      <div class="card card--aviso">
                         <p>Use o botão "Filtros" para selecionar categorias e depois clique em "Aplicar Filtros" no painel.</p>
@@ -158,7 +171,7 @@
                                     <img src="" alt="" id="pergunta-imagem" class="question-display__image u-is-hidden">
                                 </div>
                                 <div class="question-display__answers-list" id="respostas-container">
-                                </div>
+                                    </div>
                                 <span id="feedback-acessivel" class="u-sr-only" aria-live="polite" aria-atomic="true"></span>
                             </div>
                             <p id="referencia-questao" class="question-display__reference"></p>
@@ -178,8 +191,7 @@
                         <div class="modal__body">
                             <p>Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
                         </div>
-                        <div class="modal__footer">
-                            <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
+                        <div class="modal__footer modal__footer--stacked"> <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
                             <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
                         </div>
                     </div>
@@ -229,7 +241,7 @@
                 </div>
 
                 <div id="question-grid-container" class="question-grid u-is-hidden">
-                </div>
+                    </div>
 
              </div> </section>
 
@@ -266,7 +278,8 @@
 
         <div class="filter-panel__body">
             <div class="filter-group" id="filter-group-categories">
-                <div class="filter-group__header"> <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
+                <div class="filter-group__header">
+                    <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
                     <div class="filter-group__controls">
                         <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
                         <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
@@ -284,7 +297,7 @@
 
                     <input type="radio" name="difficulty" id="diff-easy" value="easy" class="chip-group__input u-sr-only">
                     <label for="diff-easy" class="chip-group__chip">Fácil</label>
-                    
+
                     <input type="radio" name="difficulty" id="diff-medium" value="medium" class="chip-group__input u-sr-only">
                     <label for="diff-medium" class="chip-group__chip">Médio</label>
 
@@ -292,14 +305,14 @@
                     <label for="diff-hard" class="chip-group__chip">Difícil</label>
                 </div>
             </div>
-            
             </div>
 
         <div class="filter-panel__footer">
-            <button class="button button--secondary" id="btn-limpar-filtros-painel">Limpar Filtros</button>
-            <button class="button button--primary" id="btn-aplicar-filtros-painel">Aplicar Filtros</button>
+            <button class="button button--secondary button--panel-footer" id="btn-limpar-filtros-painel">Limpar Filtros</button>
+            <button class="button button--primary button--panel-footer" id="btn-aplicar-filtros-painel">Aplicar Filtros</button>
         </div>
     </aside>
+
     <nav class="bottom-nav" aria-label="Navegação principal móvel">
         <ul class="bottom-nav__list">
             <li class="bottom-nav__item">
@@ -324,10 +337,14 @@
     </nav>
 
     <footer id="footer" class="site-footer">
-        <p class="site-footer__text">&copy; 2025 Desenvolvido por Davi Castro</p>
+        <p class="site-footer__text">&copy; <span id="current-year">2025</span> Desenvolvido por Davi Castro</p>
     </footer>
 
     <script src="assets/js/script.js" defer></script>
+    <script>
+        // Pequeno script para atualizar o ano no rodapé dinamicamente
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
 
 </body>
 </html>

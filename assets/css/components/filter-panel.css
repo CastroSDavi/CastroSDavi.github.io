@@ -7,7 +7,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--modal-backdrop-bg, rgba(0, 0, 0, 0.55));
+    background-color: var(--modal-backdrop-bg, rgba(0, 0, 0, 0.55)); /* Levemente mais escuro */
     z-index: var(--z-index-modal-backdrop, 900);
     opacity: 0;
     visibility: hidden;
@@ -25,10 +25,10 @@
     top: 0;
     right: 0;
     width: 100%;
-    max-width: 380px;
+    max-width: 380px; /* Um pouco mais largo para conforto */
     height: 100vh;
     background-color: var(--color-white);
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12);
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12); /* Sombra mais suave e definida */
     z-index: var(--z-index-modal-content, 901);
     transform: translateX(100%);
     transition: transform 0.35s var(--transition-timing-function-ease-in-out);
@@ -59,7 +59,7 @@
 }
 
 .filter-panel__close-button {
-    color: var(--color-gray-600);
+    color: var(--color-gray-600); /* Um pouco mais escuro para o ícone */
     padding: var(--spacing-xs, 6px); /* Padding no botão de fechar */
 }
 .filter-panel__close-button:hover,
@@ -68,7 +68,7 @@
     background-color: var(--color-gray-100);
 }
 .filter-panel__close-button .material-symbols-outlined {
-    font-size: 26px;
+    font-size: 26px; /* Ícone ligeiramente maior */
 }
 
 .filter-panel__body {
@@ -148,7 +148,7 @@
 .filter-panel__footer .button {
     flex-grow: 1;
     font-size: 0.9rem; /* Tamanho de fonte dos botões do rodapé */
-    padding-top: var(--spacing-xs, 10px); /* Aumenta um pouco o padding vertical */
+    padding-top: var(--spacing-xs, 10px);
     padding-bottom: var(--spacing-xs, 10px);
 }
 
@@ -158,18 +158,17 @@
     list-style: none;
     padding-left: 0;
     margin: 0;
-    /* Adiciona um pequeno espaço acima da árvore, se não for o primeiro elemento após o header do grupo */
-    margin-top: var(--spacing-xs, 8px);
+    margin-top: var(--spacing-xs, 8px); /* Espaço acima da árvore se ela seguir o header do grupo */
 }
 
 .category-tree__item {
-    margin-bottom: var(--spacing-xxs, 2px); /* Espaço mínimo entre itens LI */
+    margin-bottom: var(--spacing-xxs, 2px);
 }
 
 .category-tree__label-wrapper {
     display: flex;
     align-items: center;
-    padding: var(--spacing-xs, 7px) var(--spacing-xxs, 5px); /* Padding do wrapper, mais apertado horizontalmente */
+    padding: var(--spacing-xs, 7px) var(--spacing-xxs, 5px);
     border-radius: var(--border-radius-md);
     transition: background-color 0.15s ease-in-out;
     cursor: default;
@@ -182,25 +181,15 @@
 .category-tree__input { /* Já tem .u-sr-only */ }
 
 .category-tree__label {
-    font-size: var(--font-size-sm, 0.875rem); /* Tamanho de fonte do label */
+    font-size: var(--font-size-sm, 0.875rem);
     color: var(--color-text-secondary);
     flex-grow: 1;
     user-select: none;
-    /* Espaço para o checkbox customizado e toggle (se houver) */
-    /* O padding-left inicial é para o checkbox. Se houver toggle, ele ocupa espaço à esquerda disso. */
-    padding-left: calc(18px + var(--spacing-xs, 8px)); /* (largura_checkbox + gap_entre_checkbox_e_texto) */
+    padding-left: calc(17px + var(--spacing-xs, 8px)); /* (largura_checkbox_caixa + gap_entre_checkbox_e_texto) */
     position: relative;
     line-height: 1.4;
     cursor: pointer;
 }
-
-/* Ajuste para quando há toggle, o padding-left do label precisa considerar o espaço do toggle */
-.category-tree__item--has-children > .category-tree__label-wrapper > .category-tree__label {
-    /* O toggle tem `margin-right` que já empurra o label. Não precisa de ajuste aqui se o toggle estiver antes do label no DOM. */
-    /* Se o toggle está dentro do label-wrapper mas o label não é filho direto dele, pode precisar de ajuste.
-       No JS atual, toggle e label são irmãos dentro do wrapper. */
-}
-
 
 .category-tree__label:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
@@ -214,27 +203,24 @@
 .category-tree__label::before { /* Caixa do checkbox */
     content: "";
     position: absolute;
-    left: 0; /* Alinhado à esquerda do padding-left do label */
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 17px; /* Tamanho do checkbox */
+    width: 17px;
     height: 17px;
     border: 1.5px solid var(--color-gray-400);
-    border-radius: var(--border-radius-sm, 4px); /* Arredondamento da caixa */
+    border-radius: var(--border-radius-sm, 4px);
     background-color: var(--color-white);
     transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 .category-tree__label::after { /* Marca de verificação (check) */
-    content: "check"; /* Usando o ícone de material symbols */
+    content: "check";
     font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 1, 'wght' 600; /* Ícone preenchido e mais grosso */
-    font-size: 15px; /* Tamanho do ícone de check */
-    line-height: 1; letter-spacing: normal;
-    text-transform: none; display: inline-block; white-space: nowrap;
-    word-wrap: normal; direction: ltr;
-    -webkit-font-feature-settings: 'liga'; -webkit-font-smoothing: antialiased;
+    font-variation-settings: 'FILL' 1, 'wght' 700; /* Check mais visível */
+    font-size: 15px; /* Ajuste o tamanho conforme necessário */
+    line-height: 1;
     position: absolute;
-    left: 1px; /* Ajuste fino para centralizar o check na caixa */
+    left: 1px; /* Ajuste fino para centralizar */
     top: 50%;
     transform: translateY(-50%) scale(0);
     color: var(--color-white);
@@ -264,22 +250,20 @@
     border-color: var(--color-secondary-green);
 }
 .category-tree__input.is-indeterminate + .category-tree__label::after {
-    content: ""; /* Remove o check */
+    content: "";
     position: absolute;
-    left: 4px; /* Ajuste horizontal do traço */
-    top: 50%;
-    width: 9px; /* Largura do traço */
-    height: 2px;
+    left: 4px; top: 50%;
+    width: 9px; height: 2px;
     background-color: var(--color-white);
-    border-radius: 1px; /* Pequeno arredondamento no traço */
+    border-radius: 1px;
     transform: translateY(-50%) scale(1);
     transition: none;
 }
 
 
 .category-tree__toggle {
-    margin-right: var(--spacing-xxs, 5px); /* Espaço entre toggle e o início do label (que tem seu próprio padding) */
-    padding: var(--spacing-xxs, 4px); /* Área de clique do toggle */
+    margin-right: var(--spacing-xxs, 5px);
+    padding: var(--spacing-xxs, 4px);
     color: var(--color-gray-600);
     background: none; border: none; cursor: pointer;
     display: inline-flex; align-items: center; justify-content: center;
@@ -287,7 +271,7 @@
     transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.2s ease-in-out;
 }
 .category-tree__toggle .material-symbols-outlined {
-    font-size: 22px; /* Tamanho do ícone chevron/expand */
+    font-size: 22px;
     transition: transform 0.2s var(--transition-timing-function-ease);
     display: block;
 }
@@ -304,11 +288,6 @@
 
 .category-tree__submenu {
     list-style: none;
-    /* O padding-left deve ser o suficiente para alinhar os checkboxes filhos
-       com o texto dos checkboxes pais.
-       Considerar: largura do toggle + gap do toggle + padding-left original do label pai.
-       Ex: 22px (toggle) + 5px (gap) = 27px de indentação para o submenu
-    */
     padding-left: calc(var(--spacing-md, 18px) + var(--spacing-xxs, 5px)); /* Ajuste de indentação dos submenus */
     margin-top: var(--spacing-xxs, 3px);
     max-height: 0;
@@ -323,18 +302,15 @@
 .chip-group {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-xs, 8px); /* Espaçamento entre chips */
-    /* A margem superior virá do .filter-group__header ou .filter-group > .chip-group */
-    /* Se .filter-group__header for o único filho antes, a margem dele já cria o espaço */
-    /* Se não, pode adicionar margin-top aqui ou no :first-child de .filter-group > * */
-    margin-top: var(--spacing-xs, 8px); /* Espaço entre o título "Dificuldade" e os chips */
+    gap: var(--spacing-xs, 8px);
+    margin-top: var(--spacing-xs, 8px); /* ESPAÇO ENTRE TÍTULO "DIFICULDADE" E OS CHIPS */
 }
-.chip-group__input.u-sr-only { /* Para esconder inputs de rádio/checkbox */ }
+.chip-group__input.u-sr-only { /* u-sr-only já deve esconder */ }
 
 .chip-group__chip {
     display: inline-block;
-    padding: var(--spacing-xs, 7px) var(--spacing-sm, 14px); /* Padding dos chips */
-    font-size: var(--font-size-xs, 0.85rem); /* Tamanho da fonte dos chips */
+    padding: var(--spacing-xs, 7px) var(--spacing-sm, 14px);
+    font-size: var(--font-size-xs, 0.85rem);
     color: var(--color-text-secondary);
     background-color: var(--color-gray-100);
     border: 1px solid var(--color-gray-300);
@@ -371,7 +347,7 @@
         padding: var(--spacing-md, 16px);
     }
     .filter-panel__body {
-        gap: var(--spacing-lg, 24px); /* Gap entre grupos no mobile */
+        gap: var(--spacing-lg, 24px);
     }
      .filter-panel__footer {
         flex-direction: column-reverse;
@@ -385,20 +361,20 @@
     }
     .category-tree__label {
         font-size: var(--font-size-sm, 0.875rem);
-        padding-left: calc(17px + var(--spacing-xs, 6px)); /* checkbox + gap */
+        padding-left: calc(17px + var(--spacing-xs, 6px));
     }
 
     .filter-group__title {
         font-size: 0.95rem;
     }
     .filter-group__header {
-      margin-bottom: var(--spacing-xs, 10px); /* Reduz espaço entre título e controles/itens no mobile */
+      margin-bottom: var(--spacing-xs, 10px);
     }
     .chip-group__chip {
         padding: var(--spacing-xs, 6px) var(--spacing-sm, 12px);
         font-size: var(--font-size-xs, 0.8rem);
     }
     .chip-group {
-        margin-top: var(--spacing-xs, 6px); /* Espaço menor entre título "Dificuldade" e chips no mobile */
+        margin-top: var(--spacing-xs, 6px);
     }
 }

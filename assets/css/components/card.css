@@ -15,9 +15,10 @@
     margin-bottom: var(--card-header-margin-bottom, var(--spacing-sm, 16px));
     border-bottom: var(--card-header-border-bottom-width, var(--border-width)) solid var(--card-header-border-bottom-color, var(--color-gray-300));
 }
-.card__header:last-child {
+.card__header:last-child { /* Se for o único elemento ou o último, remove a borda/margem inferior */
     border-bottom: none;
     margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .card__title {
@@ -33,11 +34,12 @@
 }
 
 .card__body {
+    /* Estilos base para o corpo do card */
 }
 
-.card__body--flush {
+.card__body--flush { /* Para quando o conteúdo interno não deve ter padding do card */
     padding: 0;
-    margin: 0;
+    margin: 0; /* Remove margens internas se o card__body for o container direto */
 }
 
 .card__footer {
@@ -47,13 +49,13 @@
     font-size: var(--font-size-sm, 0.9rem);
     color: var(--color-gray-700);
 }
-.card__footer:first-child {
+.card__footer:first-child { /* Se for o único elemento ou o primeiro, remove a borda/margem superior */
     border-top: none;
     margin-top: 0;
+    padding-top: 0;
 }
 
 /* Modifiers */
-
 .card--interactive:hover {
     box-shadow: var(--card-hover-box-shadow, var(--shadow-lg));
     transform: translateY(-2px);
@@ -74,28 +76,39 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--color-gray-50);
+    border-color: var(--color-gray-300);
+    box-shadow: none;
+}
+.card--aviso p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
 }
 
+
 .card--quiz-result {
+    --card-padding: var(--spacing-lg, 30px);
     --card-border-radius: var(--border-radius-lg);
     --card-box-shadow: var(--shadow-xl);
-    max-width: 600px;
+    max-width: 650px; /* Aumentado um pouco */
     margin-left: auto;
     margin-right: auto;
-    margin-top: var(--spacing-xl, 40px);
-    margin-bottom: var(--spacing-xl, 40px);
+    margin-top: var(--spacing-xl, 30px); /* Ajustado */
+    margin-bottom: var(--spacing-xl, 30px); /* Ajustado */
     text-align: center;
     animation: fadeIn 0.5s ease-out;
-    flex-shrink: 0;
+    flex-shrink: 0; /* Para não encolher em contextos flex */
+    border: 1px solid var(--color-primary-dark);
+    background-color: var(--color-primary-light);
 }
 
 .card--conta-perfil {
-    margin-top: 0;
+    margin-top: 0; /* Será controlado pela section */
     max-width: 800px;
 }
 
 .card--question-wrap {
-    margin-bottom: var(--spacing-lg, 30px);
+    margin-bottom: var(--spacing-lg, 25px); /* Reduzido um pouco */
     transition: opacity var(--transition-duration-slow, 0.4s) var(--transition-timing-function-ease, ease-in-out);
 }
 .card--question-wrap.is-fading-out {
@@ -106,10 +119,67 @@
     transition: none;
 }
 
-/* Responsive */
 
+/* NOVO MODIFICADOR PARA O PLACEHOLDER DE FILTROS */
+.card--placeholder-filtros {
+    background-color: var(--color-gray-50);
+    border: 1px dashed var(--color-gray-300);
+    text-align: center;
+    padding: var(--spacing-xl, 35px) var(--spacing-lg, 30px); /* Padding generoso */
+    margin-top: var(--spacing-lg, 25px);
+    margin-bottom: var(--spacing-lg, 25px);
+    max-width: 650px; /* Largura máxima do placeholder */
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: none;
+    border-radius: var(--border-radius-lg); /* Bordas mais arredondadas */
+}
+
+.card--placeholder-filtros .placeholder-icon {
+    font-size: 3.8rem; /* Ícone bem destacado */
+    color: var(--color-primary-medium);
+    margin-bottom: var(--spacing-md, 20px); /* Espaço abaixo do ícone */
+    display: block;
+     /* Efeito sutil no ícone */
+    opacity: 0.8;
+    line-height: 1;
+}
+
+.card--placeholder-filtros h3 {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h3); /* Usar var(--font-size-h3) consistente */
+    color: var(--color-primary-dark);
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm, 15px); /* Espaço abaixo do título */
+}
+
+.card--placeholder-filtros p {
+    color: var(--color-text-secondary);
+    line-height: 1.65; /* Melhor legibilidade */
+    margin-bottom: var(--spacing-md, 18px); /* Espaço entre parágrafos */
+    font-size: var(--font-size-base, 0.95rem);
+    max-width: 500px; /* Limita largura do texto para melhor leitura */
+    margin-left: auto;
+    margin-right: auto;
+}
+.card--placeholder-filtros p.placeholder-ou {
+    font-style: italic;
+    color: var(--color-gray-600);
+    margin-top: var(--spacing-md, 20px);  /* Espaço acima do "OU" */
+    margin-bottom: var(--spacing-md, 20px); /* Espaço abaixo do "OU" */
+    font-size: var(--font-size-sm, 0.9rem);
+}
+
+.card--placeholder-filtros .button {
+    margin-top: var(--spacing-xs, 8px); /* Pequeno espaço acima do botão */
+    /* O botão já tem seus próprios estilos, como .button--primary .button--small */
+}
+
+
+/* Responsive */
 @media (max-width: 992px) {
     .card--conta-perfil {
+        /* Sem alterações específicas aqui, herda do .card */
     }
 }
 
@@ -119,32 +189,67 @@
     }
     .card--quiz-result {
         max-width: 90%;
-        margin-top: var(--spacing-lg, 20px);
-        margin-bottom: var(--spacing-lg, 20px);
+        margin-top: var(--spacing-lg, 25px);
+        margin-bottom: var(--spacing-lg, 25px);
+        --card-padding: var(--spacing-md, 25px); /* Ajusta padding no mobile */
     }
     .card--conta-perfil {
         margin-top: var(--spacing-md, 20px);
         margin-bottom: var(--spacing-md, 20px);
     }
     .card--question-wrap {
-        margin-bottom: 28px;
+        margin-bottom: var(--spacing-md, 22px); /* Ajustado */
+    }
+
+    .card--placeholder-filtros {
+        padding: var(--spacing-lg, 30px) var(--spacing-md, 20px);
+        margin-top: var(--spacing-md, 20px);
+        margin-bottom: var(--spacing-md, 20px);
+    }
+    .card--placeholder-filtros .placeholder-icon {
+        font-size: 3.2rem;
+        margin-bottom: var(--spacing-sm, 15px);
+    }
+    .card--placeholder-filtros h3 {
+        font-size: var(--font-size-h3-mobile, 1.3rem); /* Ajustar variável se existir, ou valor direto */
+    }
+    .card--placeholder-filtros p {
+        font-size: var(--font-size-base-mobile, 0.9rem); /* Ajustar variável ou valor */
+        margin-bottom: var(--spacing-sm, 15px);
+    }
+     .card--placeholder-filtros p.placeholder-ou {
+        margin-top: var(--spacing-sm, 15px);
+        margin-bottom: var(--spacing-sm, 15px);
     }
 }
 
 @media (max-width: 480px) {
     .card {
-        --card-padding: var(--spacing-sm, 20px);
+        --card-padding: var(--spacing-md, 20px); /* Padding base menor para mobile */
     }
     .card--quiz-result {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: var(--spacing-sm, 15px);
+        padding-right: var(--spacing-sm, 15px);
     }
     .card--conta-perfil {
         margin-top: var(--spacing-sm, 15px);
         margin-bottom: var(--spacing-sm, 15px);
     }
     .card--question-wrap {
-        margin-bottom: var(--spacing-md, 25px);
+        margin-bottom: var(--spacing-md, 20px);
+    }
+
+    .card--placeholder-filtros {
+        padding: var(--spacing-md, 25px) var(--spacing-sm, 18px);
+    }
+    .card--placeholder-filtros .placeholder-icon {
+        font-size: 2.8rem;
+    }
+    .card--placeholder-filtros h3 {
+        font-size: 1.2rem;
+    }
+    .card--placeholder-filtros p {
+        font-size: 0.875rem;
     }
 }
 
@@ -155,24 +260,17 @@
         margin-bottom: var(--spacing-sm, 10px);
     }
     .card--question-wrap {
-        margin-bottom: 20px;
+        margin-bottom: var(--spacing-sm, 18px);
     }
 }
-/* Dentro de assets/css/components/card.css ou um novo quiz-results.css importado em style.css */
 
-.card--quiz-result {
-    --card-padding: var(--spacing-lg, 30px);
-    text-align: center;
-    border: 1px solid var(--color-primary-dark);
-    background-color: var(--color-primary-light);
-    max-width: 700px; 
-    margin-top: var(--spacing-md, 25px); 
-    margin-bottom: var(--spacing-md, 25px); 
-}
+/* Estilos específicos para o card de resultado do quiz */
+/* ... (seção de .quiz-results__* já fornecida anteriormente, pode ser mantida ou ajustada aqui) ... */
+/* A seção de .card--quiz-result .quiz-results__* pode ser otimizada para usar as variáveis globais de espaçamento */
 
 .card--quiz-result .card__header {
-    padding-bottom: var(--spacing-sm, 15px);  
-    margin-bottom: var(--spacing-md, 20px); 
+    padding-bottom: var(--spacing-sm, 15px);
+    margin-bottom: var(--spacing-md, 20px);
     border-bottom: 1px solid var(--color-gray-400);
 }
 
@@ -183,11 +281,11 @@
 
 .quiz-results__summary {
     display: flex;
-    justify-content: space-around; 
-    align-items: center; 
-    gap: var(--spacing-sm, 15px); 
-    margin-bottom: var(--spacing-lg, 25px); 
-    padding-bottom: var(--spacing-md, 20px); 
+    justify-content: space-around;
+    align-items: center;
+    gap: var(--spacing-sm, 15px);
+    margin-bottom: var(--spacing-lg, 25px);
+    padding-bottom: var(--spacing-md, 20px);
     border-bottom: 1px dashed var(--color-gray-500);
 }
 
@@ -195,18 +293,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--spacing-xxs, 4px); 
-    flex: 1; 
-    min-width: 0; 
+    gap: var(--spacing-xxs, 4px);
+    flex: 1;
+    min-width: 0;
 }
 
 .quiz-results__icon {
-    font-size: 2.5rem; 
-    margin-bottom: var(--spacing-xxs, 5px); 
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-xxs, 5px);
 }
 
 .quiz-results__label {
-    font-size: var(--font-size-xs, 0.8rem); 
+    font-size: var(--font-size-xs, 0.8rem);
     color: var(--color-gray-700);
     font-weight: var(--font-weight-medium);
     text-transform: uppercase;
@@ -214,13 +312,13 @@
 }
 
 .quiz-results__value {
-    font-size: 2rem; 
+    font-size: 2rem;
     font-weight: var(--font-weight-bold);
 }
 
 .quiz-results__details-group {
-    margin-bottom: var(--spacing-md, 20px); 
-    font-size: 1rem; 
+    margin-bottom: var(--spacing-md, 20px);
+    font-size: 1rem;
     color: var(--color-gray-800);
 }
 
@@ -229,54 +327,50 @@
     align-items: center;
     justify-content: center;
     gap: var(--spacing-xs, 8px);
-    margin-bottom: var(--spacing-xs, 8px); 
+    margin-bottom: var(--spacing-xs, 8px);
 }
 
 .quiz-results__message {
-    margin-top: var(--spacing-sm, 15px);     
-    margin-bottom: var(--spacing-md, 20px); 
-    font-size: 1rem; 
+    margin-top: var(--spacing-sm, 15px);
+    margin-bottom: var(--spacing-md, 20px);
+    font-size: 1rem;
     color: var(--color-gray-900);
     font-style: italic;
 }
 
-/* START --- MODIFICATIONS FOR RESPONSIVE BUTTONS --- START */
 .quiz-results__actions {
     display: flex;
-    flex-direction: column; /* Botões empilhados por padrão (mobile-first) */
-    align-items: stretch;   /* Botões esticam para preencher a largura */
-    gap: var(--spacing-sm, 12px); /* Espaçamento entre botões empilhados */
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-sm, 12px);
     padding-top: var(--spacing-md, 20px);
     margin-top: var(--spacing-md, 20px);
     border-top: 1px solid var(--color-gray-400);
 }
 
 .quiz-results__actions .button {
-    width: 100%; /* Botões ocupam a largura total quando empilhados */
+    width: 100%;
 }
 
-/* Para telas com largura de 576px ou mais */
 @media (min-width: 576px) {
     .quiz-results__actions {
-        flex-direction: row; /* Botões lado a lado */
-        justify-content: center; /* Centraliza os botões na linha */
-        align-items: center; 
-        gap: var(--spacing-md, 15px); /* Espaçamento original para layout em linha */
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-md, 15px);
     }
 
     .quiz-results__actions .button {
-        width: auto; /* Largura automática */
-        flex-grow: 1; /* Permite que os botões cresçam */
-        max-width: 280px; /* Limita a largura máxima de cada botão */
+        width: auto;
+        flex-grow: 1;
+        max-width: 280px;
     }
 }
 
-/* Ajustes para telas muito pequenas (ex: largura menor que 375px) */
 @media (max-width: 375px) {
-    .quiz-results__actions .button.button--large { /
-        font-size: var(--font-size-sm); /* Reduz o tamanho da fonte (padrão: 0.875rem em variables.css) */
-        padding-top: var(--spacing-xs);    /* Reduz o padding vertical (padrão: 8px em variables.css) */
-        padding-bottom: var(--spacing-xs); 
+    .quiz-results__actions .button.button--large {
+        font-size: var(--font-size-sm);
+        padding-top: var(--spacing-xs);
+        padding-bottom: var(--spacing-xs);
     }
 }
-/* END --- MODIFICATIONS FOR RESPONSIVE BUTTONS --- END */

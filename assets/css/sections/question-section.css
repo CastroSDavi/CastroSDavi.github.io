@@ -8,7 +8,11 @@
 
 /* Layout do Conteúdo Principal (.question-section__main-content) */
 .question-section__main-content {
-  /* O padding já é definido em _main-sections.css */
+  /* O padding já é definido em _main-sections.css e pode ser ajustado lá */
+  /* Adiciona um gap para espaçar os filhos diretos, como quiz-controls, placeholder, aviso, quiz-section */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 20px); /* Espaço entre os elementos principais da seção */
 }
 
 /* Controles do Quiz (Botão de Filtro e contagem) */
@@ -16,41 +20,43 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: var(--spacing-md, 16px);
-    margin-bottom: var(--spacing-md, 16px);
+    padding-bottom: var(--spacing-sm, 10px); /* Reduzido, pois o gap da section principal cuidará do espaço abaixo */
     border-bottom: 1px solid var(--color-gray-200);
     flex-shrink: 0;
-    position: relative; /* Para z-index se sobrepor a algo, se necessário */
+    position: relative;
 }
 
 .quiz-controls .button--with-icon {
-    padding: var(--spacing-xs, 8px) var(--spacing-md, 16px); /* Padding aumentado */
-    font-size: var(--font-size-sm);
+    padding: var(--spacing-xs, 7px) var(--spacing-sm, 14px); /* Ajustado */
+    font-size: var(--font-size-sm, 0.9rem);
     font-weight: var(--font-weight-medium);
-    gap: var(--spacing-xs, 6px); /* Gap interno do botão flex */
+    gap: var(--spacing-xs, 6px);
 }
 
 .quiz-controls .button--with-icon .button__icon {
-    margin-right: 0; /* Removido, pois o gap do botão flex cuida disso */
-    font-size: 1.3em; /* Ícone um pouco maior */
+    margin-right: 0;
+    font-size: 1.25em; /* Ajustado */
 }
 
 .quiz-controls__count {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-sm, 0.85rem); /* Ligeiramente menor */
     color: var(--color-text-muted);
     padding-left: var(--spacing-md);
 }
 
 
-/* Layout/Contexto para #aviso-container */
+/* Layout/Contexto para #placeholder-filtros-container e #aviso-container */
+/* A estilização principal está em card.css */
+#placeholder-filtros-container,
 #aviso-container {
-    padding: 0; /* Padding está no card interno */
-    margin-top: var(--spacing-md, 20px);
+    padding: 0; /* O padding está no card interno */
+    /* A margem superior será controlada pelo gap do .question-section__main-content */
+    /* margin-top: var(--spacing-md, 20px); */ /* Removido para usar o gap do pai */
     flex-shrink: 0;
-    max-width: 950px;
+    max-width: 950px; /* Mantido */
     margin-left: auto;
     margin-right: auto;
-    width: 100%; /* Ocupar a largura disponível no container */
+    width: 100%;
 }
 
 
@@ -58,47 +64,48 @@
 #quiz-section {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 0; /* O espaçamento interno do quiz é gerenciado por seus filhos */
     flex-shrink: 0;
+    /* margin-top: var(--spacing-md, 20px); */ /* Removido para usar o gap do pai */
 }
 
 /* Estilos para o Título da Questão */
 #question-title {
-    font-size: var(--question-title-font-size, 1.4rem);
-    color: var(--question-title-color, var(--color-gray-900)); /* Mais escuro */
-    font-weight: var(--font-weight-medium); /* Um pouco mais de peso */
-    font-family: var(--font-family-heading); /* Usar fonte de título */
-    margin-top: var(--spacing-sm, 12px);
-    margin-bottom: var(--spacing-md, 20px);
+    font-size: var(--question-title-font-size, 1.3rem); /* Ajustado */
+    color: var(--question-title-color, var(--color-gray-900));
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-heading);
+    margin-top: 0; /* Será espaçado pelo gap do #quiz-section ou .card--question-wrap */
+    margin-bottom: var(--spacing-md, 18px); /* Ajustado */
     display: flex;
-    align-items: baseline; /* Alinhar pela base do texto */
-    gap: var(--spacing-sm, 10px);
+    align-items: baseline;
+    gap: var(--spacing-xs, 8px); /* Reduzido gap */
     flex-wrap: wrap;
     flex-shrink: 0;
-    line-height: var(--line-height-heading, 1.3); /* Usar altura de linha de título */
+    line-height: var(--line-height-heading, 1.3);
     scroll-margin-top: var(--spacing-md, 20px);
 }
 
-#categoria-titulo { /* Span da categoria */
+#categoria-titulo {
     display: inline-block;
-    background-color: var(--color-gray-100); /* Fundo bem sutil */
+    background-color: var(--color-gray-100);
     color: var(--color-text-secondary);
-    font-size: var(--font-size-xs, 0.8rem);
+    font-size: var(--font-size-xs, 0.75rem); /* Menor */
     font-weight: var(--font-weight-medium);
-    font-family: var(--font-family-sans); /* Fonte normal para a tag */
-    padding: 3px var(--spacing-xs, 8px);
+    font-family: var(--font-family-sans);
+    padding: 2px var(--spacing-xs, 6px); /* Mais compacto */
     border-radius: var(--border-radius-sm);
     text-transform: none;
     letter-spacing: 0.2px;
     white-space: nowrap;
-    border: 1px solid var(--color-gray-200); /* Borda sutil para a tag */
+    border: 1px solid var(--color-gray-200);
 }
 
-#id-questao { /* Span do número da questão */
+#id-questao {
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-dark); /* Destacar o número */
-    font-size: 1em; /* Relativo ao h2 */
-    margin-right: var(--spacing-xxs);
+    color: var(--color-primary-dark);
+    font-size: 1em;
+    margin-right: var(--spacing-xxs, 4px); /* Reduzido */
 }
 
 
@@ -106,8 +113,8 @@
 .quiz-navigation {
     display: flex;
     justify-content: space-between;
-    padding: var(--spacing-md, 20px) 0 0 0;
-    margin-top: var(--spacing-md, 20px);
+    padding: var(--spacing-sm, 15px) 0 0 0; /* Reduzido padding-top */
+    margin-top: var(--spacing-md, 18px); /* Ajustado */
     border-top: var(--border-width) solid var(--color-gray-200);
     flex-shrink: 0;
     scroll-margin-bottom: var(--spacing-lg, 25px);
@@ -120,9 +127,12 @@
 */
 
 @media (max-width: 768px) {
+    .question-section__main-content {
+      gap: var(--spacing-md, 18px); /* Ajuste de gap para mobile */
+    }
     .quiz-controls {
-        padding-bottom: var(--spacing-sm, 12px);
-        margin-bottom: var(--spacing-sm, 12px);
+        padding-bottom: var(--spacing-xs, 8px);
+        /* margin-bottom removido, usa gap do pai */
     }
     .quiz-controls .button--with-icon {
         padding: var(--spacing-xs, 6px) var(--spacing-sm, 10px);
@@ -131,44 +141,48 @@
         font-size: 1.2em;
     }
 
+    #placeholder-filtros-container,
     #aviso-container {
-      margin-top: var(--spacing-sm, 12px);
+      /* margin-top já tratado pelo gap do pai */
     }
 
     #question-title {
-      font-size: 1.25rem; /* Ajuste conforme _main-sections.css */
+      font-size: 1.15rem;
       margin-bottom: var(--spacing-sm, 15px);
     }
     #categoria-titulo {
-      font-size: 0.75rem;
-      padding: 2px var(--spacing-xs, 6px);
+      font-size: 0.7rem;
+      padding: 2px var(--spacing-xs, 5px);
     }
     .quiz-navigation {
-      padding-top: var(--spacing-sm, 15px);
-      margin-top: var(--spacing-sm, 15px);
+      padding-top: var(--spacing-sm, 12px);
+      margin-top: var(--spacing-sm, 12px);
     }
 }
 
 @media (max-width: 480px) {
+    .question-section__main-content {
+      gap: var(--spacing-sm, 15px); /* Gap ainda menor para mobile pequeno */
+    }
     .quiz-controls {
-        flex-wrap: wrap; /* Permitir quebra se não couber */
-        gap: var(--spacing-sm);
+        flex-wrap: wrap;
+        gap: var(--spacing-xs, 8px); /* Gap interno dos controles */
     }
     .quiz-controls__count {
         width: 100%;
         text-align: right;
         padding-left: 0;
-        margin-top: var(--spacing-xs);
+        margin-top: var(--spacing-xxs, 5px); /* Pequena margem se quebrar linha */
     }
     #question-title {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
     }
     .quiz-navigation {
-      gap: var(--spacing-sm, 10px);
+      gap: var(--spacing-xs, 8px);
       flex-wrap: wrap;
     }
     .quiz-navigation .button {
         flex-grow: 1;
-        min-width: 110px;
+        min-width: 100px; /* Reduzido */
     }
 }

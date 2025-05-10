@@ -291,17 +291,17 @@
 
             <div class="filter-group" id="filter-group-difficulty">
                 <h3 class="filter-group__title" id="filter-group-difficulty-title">Dificuldade</h3>
-                <div class="chip-group" role="radiogroup" aria-labelledby="filter-group-difficulty-title">
-                    <input type="radio" name="difficulty" id="diff-all" value="all" class="chip-group__input u-sr-only" checked>
+                <div class="chip-group" role="group" aria-labelledby="filter-group-difficulty-title">
+                    <input type="checkbox" name="difficulty" id="diff-all" value="all" class="chip-group__input u-sr-only" checked>
                     <label for="diff-all" class="chip-group__chip">Todas</label>
 
-                    <input type="radio" name="difficulty" id="diff-easy" value="easy" class="chip-group__input u-sr-only">
+                    <input type="checkbox" name="difficulty" id="diff-easy" value="fácil" class="chip-group__input u-sr-only">
                     <label for="diff-easy" class="chip-group__chip">Fácil</label>
 
-                    <input type="radio" name="difficulty" id="diff-medium" value="medium" class="chip-group__input u-sr-only">
+                    <input type="checkbox" name="difficulty" id="diff-medium" value="médio" class="chip-group__input u-sr-only">
                     <label for="diff-medium" class="chip-group__chip">Médio</label>
 
-                    <input type="radio" name="difficulty" id="diff-hard" value="hard" class="chip-group__input u-sr-only">
+                    <input type="checkbox" name="difficulty" id="diff-hard" value="difícil" class="chip-group__input u-sr-only">
                     <label for="diff-hard" class="chip-group__chip">Difícil</label>
                 </div>
             </div>
@@ -342,7 +342,6 @@
 
     <script src="assets/js/script.js" defer></script>
     <script>
-        // Pequeno script para atualizar o ano no rodapé dinamicamente
         document.getElementById('current-year').textContent = new Date().getFullYear();
     </script>
 

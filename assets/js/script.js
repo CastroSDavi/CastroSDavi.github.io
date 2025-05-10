@@ -6,6 +6,7 @@
  * - Quiz by Category flujo is now driven by "Apply Filters" from the panel.
  * - Quick Quiz remains N random questions.
  * - Includes a placeholder/guidance box before filters are applied.
+ * - Difficulty filter now supports multiple selections.
  */
 
 // --- Módulo: UserData ---
@@ -118,12 +119,31 @@ class QuizData {
 
 // --- Módulo: QuizState ---
 class QuizState {
-    constructor() { this.allQuestions = []; this.filteredQuestions = []; this.currentQuestionIndex = 0; this.selectedCategories = []; this.selectedDifficulty = 'all'; this.isInitialQuestionLoad = true; this.isQuickQuizMode = false; this.QUICK_QUIZ_COUNT = 10; }
+    constructor() {
+        this.allQuestions = [];
+        this.filteredQuestions = [];
+        this.currentQuestionIndex = 0;
+        this.selectedCategories = [];
+        this.selectedDifficulties = ['all']; // Modificado para array, default 'all'
+        this.isInitialQuestionLoad = true;
+        this.isQuickQuizMode = false;
+        this.QUICK_QUIZ_COUNT = 10;
+    }
     initialize(p) { this.allQuestions = p; this.resetQuizState(); }
     resetQuizState() { this.filteredQuestions = []; this.currentQuestionIndex = 0; this.isInitialQuestionLoad = true; this.allQuestions.forEach(q => { delete q.respostaDadaId; delete q.foiCorretaNaSessao; }); }
-    fullReset() { this.resetQuizState(); this.selectedCategories = []; this.isQuickQuizMode = false; this.selectedDifficulty = 'all'; }
+    fullReset() {
+        this.resetQuizState();
+        this.selectedCategories = [];
+        this.isQuickQuizMode = false;
+        this.selectedDifficulties = ['all']; // Modificado
+    }
     setQuickQuizMode(isQuick) { this.isQuickQuizMode = isQuick; }
-    setFilters(selectedCategories = [], selectedDifficulty = 'all') { this.selectedCategories = Array.isArray(selectedCategories) ? selectedCategories : []; this.selectedDifficulty = selectedDifficulty; }
+
+    setFilters(selectedCategories = [], selectedDifficulties = ['all']) { // Modificado
+        this.selectedCategories = Array.isArray(selectedCategories) ? selectedCategories : [];
+        this.selectedDifficulties = Array.isArray(selectedDifficulties) ? selectedDifficulties : ['all']; // Modificado
+    }
+
     filterQuestions(todasCategorias, relacaoPerguntaCategorias) {
         this.resetQuizState();
         if (this.isQuickQuizMode) {
@@ -132,6 +152,7 @@ class QuizState {
             this.filteredQuestions = shuffled.slice(0, Math.min(this.QUICK_QUIZ_COUNT, shuffled.length));
         } else {
             let perguntasPotenciais = [...this.allQuestions];
+            // Filtro de Categoria (sem alterações)
             if (this.selectedCategories.length > 0) {
                 const idsCatRelevantes = new Set();
                 const getDescendentes = (catIdNum) => { if (idsCatRelevantes.has(catIdNum) || !todasCategorias.find(c=>c.id_categoria === catIdNum)) return; idsCatRelevantes.add(catIdNum); todasCategorias.filter(c => c.id_categoria_pai === catIdNum).forEach(sub => getDescendentes(sub.id_categoria)); };
@@ -139,8 +160,12 @@ class QuizState {
                 const idsPerguntasComCat = new Set(relacaoPerguntaCategorias.filter(pc => idsCatRelevantes.has(pc.id_categoria)).map(pc => pc.id_pergunta));
                 perguntasPotenciais = perguntasPotenciais.filter(p => idsPerguntasComCat.has(p.id_pergunta));
             }
-            if (this.selectedDifficulty && this.selectedDifficulty !== 'all') {
-                perguntasPotenciais = perguntasPotenciais.filter(p => p.nivel_dificuldade && p.nivel_dificuldade.toLowerCase() === this.selectedDifficulty.toLowerCase());
+
+            // Filtro de Dificuldade (MODIFICADO)
+            if (this.selectedDifficulties.length > 0 && !this.selectedDifficulties.includes('all')) {
+                perguntasPotenciais = perguntasPotenciais.filter(p =>
+                    p.nivel_dificuldade && this.selectedDifficulties.includes(p.nivel_dificuldade.toLowerCase())
+                );
             }
             this.filteredQuestions = perguntasPotenciais;
         }
@@ -233,7 +258,6 @@ class QuizUI {
             btnAplicarFiltrosPainel: document.getElementById('btn-aplicar-filtros-painel'),
             filterGroupDifficulty: document.getElementById('filter-group-difficulty'),
             filteredQuestionCountDisplay: document.getElementById('filtered-question-count-display'),
-            // Cache do novo placeholder e seu botão interno
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
             startRandomQuizPlaceholderBtn: document.getElementById('start-random-quiz-placeholder'),
         };
@@ -300,11 +324,11 @@ class QuizUI {
 
         if (show) {
             this.focusedElementBeforePanel = document.activeElement;
-            if (this.quizState) {
+            if (this.quizState) { // this.quizState DEVE ser definido antes de chamar toggleFilterPanel
                  const currentSelectedCategories = this.quizState.selectedCategories;
-                 const currentDifficulty = this.quizState.selectedDifficulty;
+                 const currentDifficulties = this.quizState.selectedDifficulties; // Modificado
                  this.setCategoryTreeState(currentSelectedCategories);
-                 this.setDifficultyState(currentDifficulty);
+                 this.setDifficultyState(currentDifficulties); // Modificado
             }
 
             this.showElement(overlay); this.showElement(panel);
@@ -330,11 +354,9 @@ class QuizUI {
                 onEnter: null
             },
             'question-section': {
-                visible: [this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer], // Placeholder visível por padrão
-                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText /* avisoContainer tem lógica própria */],
+                visible: [this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer],
+                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText ],
                 onEnter: () => {
-                    // Lógica adicional ao entrar na seção de questões, se necessário
-                    // Por exemplo, garantir que o placeholder seja mostrado se nenhum quiz estiver ativo
                     if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) &&
                         this.elements.avisoContainer?.classList.contains(this.hiddenClassName)) {
                         this.showElement(this.elements.placeholderFiltrosContainer);
@@ -370,11 +392,10 @@ class QuizUI {
             }
 
             if (sectionId !== 'question-section') {
-                this.clearWarning(); // Limpa avisos e, por consequência, placeholder se estiver na question-section
-                this.hideElement(this.elements.placeholderFiltrosContainer); // Garante que placeholder está escondido fora da question-section
+                this.clearWarning();
+                this.hideElement(this.elements.placeholderFiltrosContainer);
                 this.toggleFilterPanel(false);
             } else {
-                // Se estamos na question-section, e nenhum quiz/aviso está ativo, o placeholder deve aparecer
                 if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) &&
                     this.elements.avisoContainer?.classList.contains(this.hiddenClassName) &&
                     this.elements.resultadoCard?.classList.contains(this.hiddenClassName)) {
@@ -398,7 +419,7 @@ class QuizUI {
             e.textContent = message;
             e.setAttribute("role", "alert");
             this.showElement(t);
-            this.hideElement(this.elements.placeholderFiltrosContainer); // Esconde placeholder ao mostrar aviso
+            this.hideElement(this.elements.placeholderFiltrosContainer);
             if (this.currentSection === "question-section") this.hideQuizElements();
         }
     }
@@ -406,7 +427,6 @@ class QuizUI {
     clearWarning() {
         this.hideElement(this.elements.avisoContainer);
         this.elements.avisoMensagem?.removeAttribute("role");
-        // Reavalia se o placeholder deve ser mostrado
         if (this.currentSection === "question-section" &&
             this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) &&
             this.elements.resultadoCard?.classList.contains(this.hiddenClassName) ) {
@@ -421,22 +441,20 @@ class QuizUI {
             this.showElement(this.elements.progressContainer);
             this.showElement(this.elements.progressText);
             this.showElement(this.elements.questionGridContainer);
-            this.clearWarning(); // Limpa avisos
-            this.hideElement(this.elements.placeholderFiltrosContainer); // Esconde o placeholder
+            this.clearWarning();
+            this.hideElement(this.elements.placeholderFiltrosContainer);
             this.hideElement(this.elements.resultadoCard);
             this.hideElement(this.elements.btnAbrirFiltros);
             this.hideElement(this.elements.filteredQuestionCountDisplay);
-        } else { // Escondendo conteúdo do quiz (ex: ao encerrar, antes de mostrar resultados ou filtros)
+        } else {
             this.hideElement(this.elements.quizSectionContent);
             this.hideElement(this.elements.btnEncerrarSessao);
             this.hideProgressBar();
             this.hideElement(this.elements.questionGridContainer);
-            // Mostra controles de filtro novamente
             this.showElement(this.elements.btnAbrirFiltros);
             this.showElement(this.elements.filteredQuestionCountDisplay);
-            // Se nenhum aviso estiver ativo, mostra o placeholder
             if (this.elements.avisoContainer?.classList.contains(this.hiddenClassName) &&
-                this.elements.resultadoCard?.classList.contains(this.hiddenClassName) ) { // E se resultados também não estiverem visíveis
+                this.elements.resultadoCard?.classList.contains(this.hiddenClassName) ) {
                 this.showElement(this.elements.placeholderFiltrosContainer);
             }
         }
@@ -679,9 +697,23 @@ class QuizUI {
         return ids;
     }
 
-    getSelectedDifficulty() {
-        const selectedRadio = this.elements.filterGroupDifficulty?.querySelector('input[name="difficulty"]:checked');
-        return selectedRadio ? selectedRadio.value : 'all';
+    // MODIFICADO para retornar array de dificuldades
+    getSelectedDifficulties() {
+        const difficultyCheckboxes = this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]:not([value="all"])');
+        const selectedSpecificDifficulties = [];
+        difficultyCheckboxes?.forEach(cb => {
+            if (cb.checked) {
+                selectedSpecificDifficulties.push(cb.value);
+            }
+        });
+
+        const allCheckbox = this.elements.filterGroupDifficulty?.querySelector('input[value="all"]');
+
+        if (allCheckbox?.checked || selectedSpecificDifficulties.length === 0) {
+            // Se "Todas" está marcado, OU se nenhum específico está marcado, considera todas as dificuldades.
+            return ['all'];
+        }
+        return selectedSpecificDifficulties;
     }
 
     setCategoryTreeState(selectedIds = []) {
@@ -696,29 +728,126 @@ class QuizUI {
         }
     }
 
-    setDifficultyState(difficulty = 'all'){ const el = this.elements.filterGroupDifficulty?.querySelector(`input[name="difficulty"][value="${difficulty}"]`); if(el) el.checked = true; }
-    updateFilteredQuestionCount(count) { if (this.elements.filteredQuestionCountDisplay) { this.elements.filteredQuestionCountDisplay.textContent = count > 0 ? `${count} questão(ões)` : "Nenhuma questão"; } }
-    showResults(userData, totalFilteredQuestions) { const card = this.elements.resultadoCard; if (!card || !userData) return; this.hideQuizElements(); this.hideElement(this.elements.btnAbrirFiltros); this.hideElement(this.elements.filteredQuestionCountDisplay); this.hideElement(this.elements.placeholderFiltrosContainer); if (this.elements.resultadoTitulo) this.elements.resultadoTitulo.textContent = "Desempenho Final!"; if (this.elements.resultadoPontos) this.elements.resultadoPontos.textContent = userData.pontos; if (this.elements.resultadoAcertos) this.elements.resultadoAcertos.textContent = userData.acertos; if (this.elements.resultadoErros) this.elements.resultadoErros.textContent = userData.erros; if (this.elements.resultadoTempo) this.elements.resultadoTempo.textContent = this._formatDisplayTime(this.timerSeconds); if (this.elements.resultadoMensagemMotivacional) { const p = userData.pontos, t = totalFilteredQuestions; let m = "Continue praticando!"; if (t > 0) { const max = t * 15; if (p >= max * 0.8) m = "Excelente desempenho!"; else if (p >= max * 0.5) m = "Muito bom!"; } else if (p === 0 && userData.acertos === 0 && userData.erros === 0) m = "Nenhuma questão encontrada/respondida."; this.elements.resultadoMensagemMotivacional.textContent = m; } this.showElement(card); this.elements.resultadoTitulo?.focus(); }
-    hideResults() { this.hideElement(this.elements.resultadoCard); }
-    toggleConfirmModal(show) { const overlay = this.elements.confirmEncerrarOverlay; if (!overlay) return; const mod = 'modal--visible'; if (show) { this.showElement(overlay); overlay.scrollTop; requestAnimationFrame(() => { overlay.classList.add(mod); this.elements.cancelEncerrarBtn?.focus(); }); } else { overlay.classList.remove(mod); const end = () => { if (!overlay.classList.contains(mod)) this.hideElement(overlay); overlay.removeEventListener('transitionend', end); }; overlay.addEventListener('transitionend', end, {once:true}); setTimeout(() => { if (!overlay.classList.contains(mod)) this.hideElement(overlay); overlay.removeEventListener('transitionend', end); }, this.TRANSITION_DURATION + 50);}}
-    scrollToQuestionStart() { const t = this.elements.questionTitle; if (this.currentSection === "question-section" && t) t.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
-    focusNextButton(prevScroll=false){this.elements.nextBtn?.focus({preventScroll:prevScroll});}
-    smoothScrollToNextButton(){const t=this.elements.navigationButtons; t&&t.scrollIntoView({behavior:"smooth",block:"nearest"});}
+    // MODIFICADO para lidar com array de dificuldades
+    setDifficultyState(difficulties = ['all']) {
+        const allCheckbox = this.elements.filterGroupDifficulty?.querySelector('input[value="all"]');
+        const specificCheckboxes = Array.from(this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]:not([value="all"])') || []);
+
+        if (difficulties.includes('all')) {
+            if (allCheckbox) allCheckbox.checked = true;
+            specificCheckboxes.forEach(cb => cb.checked = false);
+        } else {
+            if (allCheckbox) allCheckbox.checked = false;
+            specificCheckboxes.forEach(cb => {
+                cb.checked = difficulties.includes(cb.value);
+            });
+        }
+    }
+
+
+    updateFilteredQuestionCount(count) {
+        if (this.elements.filteredQuestionCountDisplay) {
+            this.elements.filteredQuestionCountDisplay.textContent = count > 0 ? `${count} questões` : "Nenhuma questão";
+        }
+    }
+
+    showResults(userData, totalFilteredQuestions) {
+        const card = this.elements.resultadoCard;
+        if (!card || !userData) return;
+        this.hideQuizElements();
+        this.hideElement(this.elements.btnAbrirFiltros);
+        this.hideElement(this.elements.filteredQuestionCountDisplay);
+        this.hideElement(this.elements.placeholderFiltrosContainer);
+        if (this.elements.resultadoTitulo) this.elements.resultadoTitulo.textContent = "Desempenho Final!";
+        if (this.elements.resultadoPontos) this.elements.resultadoPontos.textContent = userData.pontos;
+        if (this.elements.resultadoAcertos) this.elements.resultadoAcertos.textContent = userData.acertos;
+        if (this.elements.resultadoErros) this.elements.resultadoErros.textContent = userData.erros;
+        if (this.elements.resultadoTempo) this.elements.resultadoTempo.textContent = this._formatDisplayTime(this.timerSeconds);
+        if (this.elements.resultadoMensagemMotivacional) {
+            const p = userData.pontos, t = totalFilteredQuestions;
+            let m = "Continue praticando!";
+            if (t > 0) {
+                const max = t * 15;
+                if (p >= max * 0.8) m = "Excelente desempenho!";
+                else if (p >= max * 0.5) m = "Muito bom!";
+            } else if (p === 0 && userData.acertos === 0 && userData.erros === 0) m = "Nenhuma questão encontrada/respondida.";
+            this.elements.resultadoMensagemMotivacional.textContent = m;
+        }
+        this.showElement(card);
+        this.elements.resultadoTitulo?.focus();
+    }
+
+    hideResults() {
+        this.hideElement(this.elements.resultadoCard);
+    }
+
+    toggleConfirmModal(show) {
+        const overlay = this.elements.confirmEncerrarOverlay;
+        if (!overlay) return;
+        const mod = 'modal--visible';
+        if (show) {
+            this.showElement(overlay);
+            overlay.scrollTop; // Force reflow
+            requestAnimationFrame(() => {
+                overlay.classList.add(mod);
+                this.elements.cancelEncerrarBtn?.focus();
+            });
+        } else {
+            overlay.classList.remove(mod);
+            const end = () => {
+                if (!overlay.classList.contains(mod)) this.hideElement(overlay);
+                overlay.removeEventListener('transitionend', end);
+            };
+            overlay.addEventListener('transitionend', end, { once: true });
+            setTimeout(() => {
+                if (!overlay.classList.contains(mod)) this.hideElement(overlay);
+                overlay.removeEventListener('transitionend', end);
+            }, this.TRANSITION_DURATION + 50);
+        }
+    }
+
+    scrollToQuestionStart() {
+        const t = this.elements.questionTitle;
+        if (this.currentSection === "question-section" && t)
+            t.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    focusNextButton(prevScroll = false) {
+        this.elements.nextBtn?.focus({ preventScroll: prevScroll });
+    }
+
+    smoothScrollToNextButton() {
+        const t = this.elements.navigationButtons;
+        t && t.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
 }
 
 // --- Módulo: QuizLogic ---
 class QuizLogic {
-    constructor(quizState, quizUI, userData, quizDataInstance) { this.state = quizState; this.ui = quizUI; this.user = userData; this.quizData = quizDataInstance; }
+    constructor(quizState, quizUI, userData, quizDataInstance) {
+        this.state = quizState;
+        this.ui = quizUI;
+        this.user = userData;
+        this.quizData = quizDataInstance;
+    }
+
     applyFiltersAndStartQuiz() {
         console.log("Aplicando filtros e iniciando quiz...");
         const selectedCategoryIds = this.ui.getSelectedCategoriesFromTree();
-        const selectedDifficulty = this.ui.getSelectedDifficulty();
+        const selectedDifficulties = this.ui.getSelectedDifficulties(); // Modificado
         this.state.setQuickQuizMode(false);
-        this.state.setFilters(selectedCategoryIds, selectedDifficulty);
+        this.state.setFilters(selectedCategoryIds, selectedDifficulties); // Modificado
         this.ui.toggleFilterPanel(false);
         this.startQuiz();
     }
-    clearAllFiltersInPanel() { this.ui.setCategoryTreeState([]); this.ui.setDifficultyState('all'); this.ui.updateFilteredQuestionCount(this.state.allQuestions.length); console.log("Filtros limpos no painel."); }
+
+    clearAllFiltersInPanel() {
+        this.ui.setCategoryTreeState([]);
+        this.ui.setDifficultyState(['all']); // Modificado para ['all']
+        this.ui.updateFilteredQuestionCount(this.state.allQuestions.length); // Ou 0 se preferir antes de aplicar
+        console.log("Filtros limpos no painel.");
+    }
+
     startQuiz() {
         this.user.reset();
         this.state.filterQuestions(this.quizData.getCategorias(), this.quizData.getRelacaoPerguntaCategorias());
@@ -728,29 +857,43 @@ class QuizLogic {
         const filteredQuestions = this.state.filteredQuestions;
         this.ui.updateFilteredQuestionCount(filteredQuestions.length);
         if (filteredQuestions.length > 0) {
-            this.ui.displayQuizContent(true); // Esconde o placeholder
+            this.ui.displayQuizContent(true);
             this._displayCurrentQuestion(false);
             this.ui.startTimer();
         }
         else {
-            this.ui.displayQuizContent(false); // Mostra o placeholder se nenhum aviso
+            this.ui.displayQuizContent(false);
             this.ui.showWarning(this.state.isQuickQuizMode ? "Nenhuma pergunta para Quiz Rápido." : "Nenhuma questão encontrada para os filtros. Tente outros.");
             this.ui.stopTimer();
         }
     }
-    startQuickQuiz() { console.log("Iniciando Quiz Rápido..."); this.state.setQuickQuizMode(true); this.state.setFilters([], 'all'); this.ui.toggleFilterPanel(false); this.startQuiz(); }
+    startQuickQuiz() {
+        console.log("Iniciando Quiz Rápido...");
+        this.state.setQuickQuizMode(true);
+        this.state.setFilters([], ['all']); // Categorias vazias, dificuldade 'all'
+        this.ui.toggleFilterPanel(false);
+        this.startQuiz();
+    }
+
     answerQuestion(selectedOpcaoId) {
-        const currentQuestion = this.state.getCurrentQuestion(); if (!currentQuestion) return;
+        const currentQuestion = this.state.getCurrentQuestion();
+        if (!currentQuestion) return;
         const opcoesDaPergunta = this.quizData.getOpcoesPorPerguntaId(currentQuestion.id_pergunta);
         const opcaoSelecionada = opcoesDaPergunta.find(op => op.id_opcao_resposta === selectedOpcaoId);
         if (opcaoSelecionada && this.state.recordAnswer(selectedOpcaoId)) {
             currentQuestion.foiCorretaNaSessao = opcaoSelecionada.eh_correta;
-            if (opcaoSelecionada.eh_correta) { this.user.incrementarAcertos(); } else { this.user.incrementarErros(); }
-            this.ui.disableAnswers(); this.ui.applyAnswerFeedback(selectedOpcaoId, opcoesDaPergunta);
+            if (opcaoSelecionada.eh_correta) {
+                this.user.incrementarAcertos();
+            } else {
+                this.user.incrementarErros();
+            }
+            this.ui.disableAnswers();
+            this.ui.applyAnswerFeedback(selectedOpcaoId, opcoesDaPergunta);
             this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
             this.ui.renderQuestionGrid(this.state.filteredQuestions, this.state.currentQuestionIndex, (idx) => this.goToQuestion(idx));
             this.ui.updateNavigationButtons(this.state.isFirstQuestion(), this.state.isLastQuestion(), this.state.getTotalFilteredQuestions());
-            this.ui.focusNextButton(true); this.ui.smoothScrollToNextButton();
+            this.ui.focusNextButton(true);
+            this.ui.smoothScrollToNextButton();
         }
     }
     nextQuestion() { const i=this.state.isLastQuestion(), q=this.state.getCurrentQuestion(); if(this.state.goToNextQuestion()){ if(this.state.isQuizComplete())this.endQuiz(); else this._displayCurrentQuestion(); } else if(i && q?.hasOwnProperty('respostaDadaId'))this.endQuiz();}
@@ -780,16 +923,16 @@ class QuizLogic {
         this.ui.updateScoreDisplay(this.user.pontos,this.user.acertos,this.user.erros);
         this.ui.hideResults();
         this.ui.resetTimer();
-        this.ui.displayQuizContent(false); // Garante que o placeholder seja mostrado (se nenhum aviso)
-        this.ui.clearWarning(); // Limpa avisos e mostra placeholder se apropriado
+        this.ui.displayQuizContent(false);
+        this.ui.clearWarning();
         this.ui.updateFilteredQuestionCount(0);
-        this.quizLogic.clearAllFiltersInPanel(); // Usa quizLogic para chamar, pois ele tem referência a ui
+        this.quizLogic.clearAllFiltersInPanel();
         this.ui.toggleFilterPanel(true);
     }
     forceEndQuiz() {
         console.log("Forçando encerramento.");
         this.ui.stopTimer();
-        this.endQuiz(); // Mostra resultados, que esconde o placeholder
+        this.endQuiz();
         this.ui.toggleConfirmModal(false);
     }
 }
@@ -802,10 +945,9 @@ class App {
         this.quizState = new QuizState();
         this.layoutManager = new LayoutManager();
         this.quizUI = new QuizUI(this.layoutManager.handleSectionChange.bind(this.layoutManager));
-        this.quizUI.quizState = this.quizState;
+        this.quizUI.quizState = this.quizState; // Fornece referência do QuizState para QuizUI
         this.quizLogic = new QuizLogic(this.quizState, this.quizUI, this.userData, this.quizData);
-         // Para que restartQuiz possa chamar clearAllFiltersInPanel corretamente
-        this.quizLogic.quizLogic = this.quizLogic;
+        this.quizLogic.quizLogic = this.quizLogic; // Para restartQuiz chamar clearAllFiltersInPanel
     }
     async initialize() {
         console.log("Inicializando App...");
@@ -815,15 +957,11 @@ class App {
                 this.quizState.initialize(this.quizData.getPerguntas());
                 const categoriasParaArvore = this.quizData.getCategoriasHierarquicamente();
                 this.quizUI.generateCategoryTree(categoriasParaArvore);
-                this.quizUI.updateFilteredQuestionCount(0);
+                this.quizUI.updateFilteredQuestionCount(0); // Inicialmente 0
                 this.setupEventListeners();
                 const initialActiveLink = document.querySelector('.main-nav__link--active, .bottom-nav__link--active');
                 const initialSection = initialActiveLink?.dataset.section || 'home-section';
                 this.quizUI.showSection(initialSection); console.log("App inicializado com sucesso.");
-                // if (initialSection === 'question-section') { // Lógica de placeholder cuidará disso
-                //     this.quizState.setQuickQuizMode(false);
-                //     this.quizUI.updateFilteredQuestionCount(0);
-                // }
             } else { console.warn("Dados carregados, mas sem perguntas."); this.quizUI.showSection('question-section'); this.quizUI.showWarning("Não foi possível carregar as perguntas."); this.disableCoreFunctionality(); }
         } catch (error) {
             console.error("Falha crítica ao inicializar o App:", error);
@@ -838,7 +976,13 @@ class App {
                 if (navEl.tagName === 'A') e.preventDefault(); const targetSection = navEl.dataset.section;
                 if (targetSection && targetSection !== this.quizUI.currentSection) {
                     this.quizUI.showSection(targetSection);
-                    if (targetSection === 'question-section') { this.quizState.setQuickQuizMode(false); this.quizUI.updateFilteredQuestionCount(this.quizState.filteredQuestions.length); if (navEl.id === 'start-category-quiz' || navEl.id === 'view-all-questions-alt') this.quizUI.toggleFilterPanel(true); }
+                    if (targetSection === 'question-section') {
+                        this.quizState.setQuickQuizMode(false);
+                        this.quizUI.updateFilteredQuestionCount(this.quizState.filteredQuestions.length);
+                        if (navEl.id === 'start-category-quiz' || navEl.id === 'view-all-questions-alt') {
+                             this.quizUI.toggleFilterPanel(true);
+                        }
+                    }
                 } else if (targetSection === 'question-section' && (navEl.id === 'start-category-quiz' || navEl.id === 'view-all-questions-alt')) {
                     if (this.quizUI.elements.quizSectionContent?.classList.contains(this.quizUI.hiddenClassName)) {
                         this.quizState.setQuickQuizMode(false); this.quizUI.toggleFilterPanel(true);
@@ -847,11 +991,10 @@ class App {
             });
         });
         this.quizUI.elements.startRandomQuiz?.addEventListener('click', () => {
-            this.quizUI.showSection('question-section'); // Garante que estamos na seção certa
+            this.quizUI.showSection('question-section');
             this.quizLogic.startQuickQuiz();
         });
         this.quizUI.elements.startRandomQuizPlaceholderBtn?.addEventListener('click', () => {
-            // Já estamos na question-section se este botão está visível
             this.quizLogic.startQuickQuiz();
         });
         this.quizUI.elements.btnAbrirFiltros?.addEventListener('click', () => this.quizUI.toggleFilterPanel(true));
@@ -870,6 +1013,32 @@ class App {
         this.quizUI.elements.cancelEncerrarBtn?.addEventListener('click', () => { this.quizUI.toggleConfirmModal(false); });
         this.quizUI.elements.confirmEncerrarOverlay?.addEventListener('click', (e) => { if (e.target === this.quizUI.elements.confirmEncerrarOverlay) this.quizUI.toggleConfirmModal(false); });
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.quizUI.elements.filterPanel?.classList.contains('filter-panel--visible')) { this.quizUI.toggleFilterPanel(false); }});
+
+        // Listeners para checkboxes de dificuldade
+        const difficultyInputs = this.quizUI.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]');
+        const allDifficultyCheckbox = this.quizUI.elements.filterGroupDifficulty?.querySelector('input[value="all"]');
+
+        difficultyInputs?.forEach(input => {
+            input.addEventListener('change', () => {
+                if (input.value === 'all' && input.checked) {
+                    // Se "Todas" for marcado, desmarca os outros específicos
+                    difficultyInputs.forEach(otherInput => {
+                        if (otherInput.value !== 'all') {
+                            otherInput.checked = false;
+                        }
+                    });
+                } else if (input.value !== 'all' && input.checked) {
+                    // Se um específico for marcado, desmarca "Todas"
+                    if (allDifficultyCheckbox) {
+                        allDifficultyCheckbox.checked = false;
+                    }
+                }
+                // Se todos os específicos forem desmarcados, e "Todas" também estiver desmarcado,
+                // a lógica em getSelectedDifficulties tratará como ['all'].
+                // Se todos os específicos forem marcados, o usuário pode marcar "Todas" manualmente se desejar
+                // ou deixar os específicos marcados, o resultado do filtro será o mesmo.
+            });
+        });
     }
     handleExplorarMais() { console.log("Botão 'Explorar Mais' clicado!"); alert("Funcionalidade 'Explorar Mais' em desenvolvimento!"); }
 }

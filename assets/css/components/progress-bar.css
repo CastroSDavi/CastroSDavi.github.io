@@ -6,11 +6,11 @@
 .progress-bar {
     display: block;
     width: 100%;
-    height: var(--progress-bar-height, 12px);
-    background-color: var(--progress-bar-bg, var(--color-gray-300));
-    border-radius: var(--progress-bar-border-radius, var(--border-radius-xl));
+    height: var(--progress-bar-height, 10px); /* Mantendo a altura sugerida anteriormente ou ajuste */
+    background-color: var(--progress-bar-bg, var(--color-gray-200));
+    border-radius: var(--border-radius-pill);
     overflow: hidden;
-    box-shadow: var(--progress-bar-shadow, var(--shadow-inner));
+    box-shadow: var(--progress-bar-shadow, var(--shadow-inner)); /* Ou none para um visual mais flat */
     flex-shrink: 0;
 }
 
@@ -18,8 +18,7 @@
 .progress-bar__fill {
     height: 100%;
     width: 0%;
-    background-color: var(--progress-bar-fill-bg-color, var(--color-primary-medium));
-    background-image: var(--progress-bar-fill-bg-image, linear-gradient(to right, var(--color-primary-medium), var(--color-primary-dark)));
+    background-image: linear-gradient(to right, var(--color-primary-medium), var(--color-primary-dark)); /* Gradiente mantido */
     border-radius: inherit;
     transition: width var(--progress-bar-transition-duration, 0.4s) var(--progress-bar-transition-timing, ease-out);
 }
@@ -29,12 +28,14 @@
     display: block;
     width: 100%;
     text-align: right;
-    font-size: var(--progress-bar-text-font-size, var(--font-size-sm, 0.9rem));
-    color: var(--progress-bar-text-color, var(--color-gray-800));
-    font-weight: var(--font-weight-medium);
-    margin-top: var(--progress-bar-text-margin-top, var(--spacing-xs, 8px));
-    margin-bottom: var(--progress-bar-text-margin-bottom, var(--spacing-md, 15px));
-    padding-right: var(--progress-bar-text-padding-right, var(--spacing-xxs, 5px));
+    /* --- AJUSTES AQUI --- */
+    font-size: var(--font-size-sm, 0.9rem);  /* AUMENTADO: Antes 0.8rem, agora 0.9rem (ex: 14px se base for 16px) */
+    color: var(--color-text-secondary);      /* Mantido: um cinza legível */
+    font-weight: var(--font-weight-semibold); /* AUMENTADO: Para dar mais clareza e destaque ao número */
+    margin-top: var(--spacing-xxs, 6px);     /* Ajustar conforme a altura da barra para bom alinhamento vertical */
+    /* --- FIM DOS AJUSTES --- */
+    margin-bottom: var(--spacing-md, 18px); /* Espaço antes do título da questão */
+    padding-right: var(--spacing-xxs, 5px); /* Pequeno padding para não colar na borda */
     flex-shrink: 0;
     line-height: var(--line-height-tight);
 }

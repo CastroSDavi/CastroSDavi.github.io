@@ -1,0 +1,159 @@
+/* assets/css/components/challenge-hub.css */
+
+.challenge-hub {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--spacing-xl, 30px) var(--spacing-md, 20px);
+    gap: var(--spacing-lg, 25px); /* Espaço entre o header do hub e a grade de opções */
+    width: 100%;
+    max-width: 800px; /* Largura máxima do hub */
+    margin: var(--spacing-xl, 30px) auto; /* Margem vertical e centralização horizontal */
+    background-color: var(--color-gray-100); /* Fundo suave para o hub */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    min-height: 400px; /* Altura mínima para melhor visualização */
+}
+
+.challenge-hub__header {
+    margin-bottom: var(--spacing-md, 20px);
+}
+
+.challenge-hub__title {
+    font-family: var(--font-family-heading);
+    font-size: clamp(1.8rem, 4.5vw, 2.2rem); /* Tamanho de fonte responsivo */
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-bold);
+    margin-top: 0;
+    margin-bottom: var(--spacing-xs, 8px);
+}
+
+.challenge-hub__subtitle {
+    font-family: var(--font-family-sans);
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: var(--color-text-secondary);
+    margin: 0;
+    font-weight: var(--font-weight-normal);
+}
+
+.challenge-hub__options-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Uma coluna por padrão (mobile) */
+    gap: var(--spacing-lg, 25px);
+    width: 100%;
+    max-width: 700px; /* Largura máxima para a grade de opções */
+}
+
+.challenge-card {
+    background-color: var(--color-white);
+    border: var(--border-width) solid var(--color-gray-300);
+    border-radius: var(--border-radius-md); /* Consistente com .card */
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg, 25px);
+    text-align: left;
+    display: flex; /* Para alinhar ícone e conteúdo */
+    align-items: flex-start; /* Alinha itens no topo */
+    gap: var(--spacing-md, 20px);
+    cursor: pointer;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    text-decoration: none; /* Para caso use <a> no futuro */
+    color: inherit; /* Para caso use <a> no futuro */
+}
+
+.challenge-card:hover,
+.challenge-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg); /* Sombra mais pronunciada no hover/focus */
+    border-color: var(--color-primary-medium); /* Destaque na borda */
+}
+
+.challenge-card:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+}
+
+
+.challenge-card__icon-wrapper {
+    flex-shrink: 0; /* Para o wrapper do ícone não encolher */
+    background-color: var(--color-primary-light); /* Fundo suave para o ícone */
+    border-radius: var(--border-radius-circle);
+    padding: var(--spacing-sm, 12px);
+    display: inline-flex; /* Para centralizar o ícone dentro */
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary-dark); /* Cor do ícone */
+}
+
+.challenge-card__icon {
+    font-size: 2rem; /* Tamanho do ícone */
+    display: block; /* Para garantir o tamanho correto */
+}
+
+.challenge-card__content {
+    flex-grow: 1;
+}
+
+.challenge-card__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h3, 1.3rem);
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-semibold);
+    margin-top: 0;
+    margin-bottom: var(--spacing-xs, 8px);
+}
+
+.challenge-card__description {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-sm, 0.9rem);
+    color: var(--color-text-secondary);
+    line-height: var(--line-height-base);
+    margin: 0;
+}
+
+.challenge-card--disabled {
+    background-color: var(--color-gray-200);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.challenge-card--disabled:hover,
+.challenge-card--disabled:focus-visible {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+    border-color: var(--color-gray-300);
+}
+
+
+/* Responsividade para o grid de opções */
+@media (min-width: 768px) {
+    .challenge-hub__options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Duas colunas se couber */
+        /* Se quiser sempre duas colunas em telas maiores: */
+        /* grid-template-columns: 1fr 1fr; */
+    }
+     .challenge-hub {
+        padding: var(--spacing-xl, 40px) var(--spacing-lg, 30px);
+    }
+}
+
+@media (max-width: 480px) {
+    .challenge-card {
+        padding: var(--spacing-md, 20px);
+        gap: var(--spacing-sm, 15px);
+    }
+    .challenge-card__title {
+        font-size: 1.15rem; /* Ajuste para telas menores */
+    }
+    .challenge-card__icon-wrapper {
+        padding: var(--spacing-xs, 10px);
+    }
+    .challenge-card__icon {
+        font-size: 1.8rem;
+    }
+     .challenge-hub {
+        padding: var(--spacing-lg, 25px) var(--spacing-sm, 15px);
+        min-height: auto; /* Altura mínima menor em mobile */
+    }
+}

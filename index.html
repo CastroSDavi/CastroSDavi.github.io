@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/components/explanation-modal.css">
     <title>MedQuiz</title>
 </head>
 
@@ -94,8 +93,7 @@
         </section>
 
         <section id="question-section" class="main-section u-is-hidden">
-            <aside class="score-panel">
-                <div class="score-panel__timer">
+            <aside class="score-panel u-is-hidden"> <div class="score-panel__timer">
                     <span id="timer-display" class="score-panel__timer-value">00:00</span>
                     <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
                 </div>
@@ -127,30 +125,49 @@
 
             <div class="question-section__main-content">
 
-                <div class="quiz-controls">
-                    <button class="button button--outline button--with-icon" id="btn-abrir-filtros">
-                        <span class="material-symbols-outlined button__icon">filter_list</span>
-                        Filtros
-                    </button>
-                    <span id="filtered-question-count-display" class="quiz-controls__count"></span>
-                </div>
+                <div id="challenge-hub-container" class="challenge-hub u-is-hidden"> <div class="challenge-hub__header">
+                        <h2 class="challenge-hub__title">Escolha seu Desafio</h2>
+                        <p class="challenge-hub__subtitle">Explore nosso banco de <span id="hub-total-questions-count">0</span> questões.</p>
+                    </div>
 
-                <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
-                    <div class="card__body">
-                        <span class="material-symbols-outlined placeholder-icon">tune</span>
-                        <h3>Selecione seus Filtros</h3>
-                        <p>Use o botão "Filtros" acima para escolher as categorias e a dificuldade das questões que deseja praticar.</p>
-                        <p>Após ajustar suas preferências no painel lateral, clique em "Aplicar Filtros" para começar!</p>
-                        <p class="placeholder-ou">- OU -</p>
-                        <button class="button button--primary button--small" id="start-random-quiz-placeholder">
-                            <span class="material-symbols-outlined button__icon">shuffle</span>
-                            Iniciar um Quiz Rápido
+                    <div class="challenge-hub__options-grid">
+                        <button id="hub-customize-quiz-btn" class="challenge-card">
+                            <div class="challenge-card__icon-wrapper">
+                                <span class="material-symbols-outlined challenge-card__icon">tune</span>
+                            </div>
+                            <div class="challenge-card__content">
+                                <h3 class="challenge-card__title">Personalizar Quiz</h3>
+                                <p class="challenge-card__description">Escolha temas, dificuldade e modo de estudo.</p>
+                            </div>
+                        </button>
+
+                        <button id="hub-quick-quiz-btn" class="challenge-card"> <div class="challenge-card__icon-wrapper">
+                                <span class="material-symbols-outlined challenge-card__icon">bolt</span>
+                            </div>
+                            <div class="challenge-card__content">
+                                <h3 class="challenge-card__title">Quiz Rápido</h3>
+                                <p class="challenge-card__description">Um desafio de <span id="hub-quick-quiz-count">10</span> questões aleatórias para começar.</p>
+                            </div>
                         </button>
                     </div>
                 </div>
+                <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
+                    <div class="card__body">
+                        <span class="material-symbols-outlined placeholder-icon">fact_check</span>
+                        <h3>Ajuste seus Filtros</h3>
+                        <p>O painel de filtros está aberto. Selecione as categorias e a dificuldade das questões que deseja praticar.</p>
+                        <p>Após ajustar suas preferências, clique em "Aplicar Filtros" no painel lateral para começar!</p>
+                        <p class="placeholder-ou">- OU -</p>
+                         <button class="button button--secondary button--small" id="close-filters-and-show-hub-btn">
+                            <span class="material-symbols-outlined button__icon">arrow_back</span>
+                            Voltar para Modos de Jogo
+                        </button>
+                    </div>
+                </div>
+
                 <div id="aviso-container" class="u-is-hidden">
                      <div class="card card--aviso">
-                        <p>Use o botão "Filtros" para selecionar categorias e depois clique em "Aplicar Filtros" no painel.</p>
+                        <p>Nenhuma questão encontrada para os filtros selecionados. Por favor, ajuste os filtros e tente novamente.</p>
                      </div>
                 </div>
 
@@ -207,48 +224,49 @@
                 </div>
 
                 <div class="card card--quiz-result u-is-hidden">
-                    <div class="card__header">
-                        <h3 class="card__title quiz-results__title" tabindex="-1">Desempenho Final!</h3>
-                    </div>
-                    <div class="card__body">
-                        <div class="quiz-results__summary">
-                            <div class="quiz-results__stat-item quiz-results__stat-item--score">
-                                <span class="material-symbols-outlined quiz-results__icon">military_tech</span>
-                                <span class="quiz-results__label">Pontuação Final</span>
-                                <span class="quiz-results__value pontos-valor" id="resultado-pontos">0</span>
+                    <div class="card__body quiz-results__body">
+                        <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
+
+                        <div class="quiz-results__summary-alt">
+                            <div class="quiz-results__stat-item-alt">
+                                <span class="material-symbols-outlined quiz-results__stat-icon-alt">military_tech</span>
+                                <span class="quiz-results__stat-label-alt">PONTUAÇÃO FINAL</span>
+                                <span class="quiz-results__stat-value-alt" id="resultado-pontos">0</span>
                             </div>
-                            <div class="quiz-results__stat-item quiz-results__stat-item--time">
-                                <span class="material-symbols-outlined quiz-results__icon">timer</span>
-                                <span class="quiz-results__label">Tempo Decorrido</span>
-                                <span class="quiz-results__value" id="resultado-tempo">00:00</span>
+                            <div class="quiz-results__stat-item-alt">
+                                <span class="material-symbols-outlined quiz-results__stat-icon-alt">timer</span>
+                                <span class="quiz-results__stat-label-alt">TEMPO DECORRIDO</span>
+                                <span class="quiz-results__stat-value-alt" id="resultado-tempo">00:00</span>
                             </div>
                         </div>
-                        <div class="quiz-results__details-group">
-                            <p class="quiz-results__detail-item">
-                                <span class="material-symbols-outlined quiz-results__detail-icon quiz-results__detail-icon--correct">check_circle</span>
-                                Acertos: <span class="quiz-results__detail-value acertos-valor" id="resultado-acertos">0</span>
+
+                        <hr class="quiz-results__divider">
+
+                        <div class="quiz-results__details-alt">
+                            <p class="quiz-results__detail-line">
+                                <span class="material-symbols-outlined quiz-results__detail-icon--correct">check_circle</span>
+                                Acertos: <span class="quiz-results__detail-value--correct" id="resultado-acertos">0</span>
                             </p>
-                            <p class="quiz-results__detail-item">
-                                <span class="material-symbols-outlined quiz-results__detail-icon quiz-results__detail-icon--incorrect">cancel</span>
-                                Erros: <span class="quiz-results__detail-value erros-valor" id="resultado-erros">0</span>
+                            <p class="quiz-results__detail-line">
+                                <span class="material-symbols-outlined quiz-results__detail-icon--incorrect">cancel</span>
+                                Erros: <span class="quiz-results__detail-value--incorrect" id="resultado-erros">0</span>
                             </p>
                         </div>
-                        <div class="quiz-results__message">
-                            <p id="resultado-mensagem-motivacional">Continue praticando para melhorar ainda mais!</p>
-                        </div>
+
+                        <p class="quiz-results__message-alt" id="resultado-mensagem-motivacional">Continue praticando para aprimorar!</p>
+
                     </div>
-                    <div class="card__footer quiz-results__actions">
-                        <button id="btn-recomecar" class="button button--primary button--large">
+                    <div class="card__footer quiz-results__actions-alt">
+                        <button id="btn-recomecar" class="button button--primary button--large quiz-results__action-button">
                             <span class="material-symbols-outlined button__icon">refresh</span>
-                            Tentar Novamente
+                            Nova Tentativa
                         </button>
-                        <button id="btn-explorar-mais" class="button button--secondary button--large">
-                            <span class="material-symbols-outlined button__icon">explore</span>
-                            Explorar Mais
+                        <button id="btn-explorar-mais" class="button button--outline button--large quiz-results__action-button">
+                            <span class="material-symbols-outlined button__icon">home</span>
+                            Voltar ao Início
                         </button>
                     </div>
                 </div>
-
                 <div id="question-grid-container" class="question-grid u-is-hidden">
                 </div>
 
@@ -362,12 +380,6 @@
                  <a href="#" class="bottom-nav__link" data-section="question-section" aria-label="Ir para Questões">
                      <span class="material-symbols-outlined bottom-nav__icon"> quiz </span>
                     <span class="bottom-nav__label">Questões</span>
-                </a>
-            </li>
-            <li class="bottom-nav__item">
-                 <a href="#" class="bottom-nav__link" data-section="account-section" aria-label="Ir para Conta">
-                     <span class="material-symbols-outlined bottom-nav__icon">person</span>
-                    <span class="bottom-nav__label">Conta</span>
                 </a>
             </li>
         </ul>

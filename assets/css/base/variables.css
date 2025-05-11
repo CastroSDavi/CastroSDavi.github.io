@@ -1,20 +1,35 @@
+/* assets/css/base/variables.css */
 :root {
     /* Cores principais */
     --color-primary-dark: #0d3b66;
+    --color-primary-dark-rgb: 13, 59, 102; /* Adicionado para rgba() */
+
     --color-primary-medium: #1a5f9e;
+    --color-primary-medium-rgb: 26, 95, 158; /* Adicionado para rgba() */
+
     --color-primary-light: #eef3f8;
+    --color-primary-light-rgb: 238, 243, 248;
+
     --color-secondary-green: #2a9d8f;
+    --color-secondary-green-rgb: 42, 157, 143; /* Adicionado para rgba() */
+
     --color-secondary-green-light: #5fda9a;
+    --color-secondary-green-light-rgb: 95, 218, 154; /* Adicionado para rgba() */
+
     --color-accent-red: #e63946;
+    --color-accent-red-rgb: 230, 57, 70; /* Adicionado para rgba() */
 
     /* Feedback */
     --color-correct-bg: #e6fcf5;
     --color-correct-border: #a3e9c1;
     --color-correct-text: #1e7f74;
+    --color-correct-text-rgb: 30, 127, 116; /* Adicionado para rgba() */
     --color-correct-bg-alt: #d1f7e0;
+
     --color-incorrect-bg: #fff0f1;
     --color-incorrect-border: #f1aeb5;
     --color-incorrect-text: #c12634;
+    --color-incorrect-text-rgb: 193, 38, 52; /* Adicionado para rgba() */
     --color-incorrect-bg-alt: #f8d7da;
 
     /* Tons de cinza e neutros */
@@ -45,16 +60,21 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
-    --font-weight-extrabold: 800;
-    --font-size-root: 16px;
-    --font-size-base: 1rem;
-    --font-size-sm: 0.875rem;
-    --font-size-xs: 0.75rem;
-    --font-size-lg: 1.125rem;
-    --font-size-xl: 1.25rem;
-    --font-size-h1: 2.5rem;
-    --font-size-h2: 1.9rem;
-    --font-size-h3: 1.5rem;
+    --font-weight-extrabold: 800; /* Você tinha, mas não estava sendo usado no exemplo. Mantendo. */
+    --font-size-root: 16px; /* Define a base para unidades rem */
+    --font-size-base: 1rem;     /* 16px */
+    --font-size-sm: 0.875rem; /* 14px */
+    --font-size-xs: 0.75rem;  /* 12px */
+    --font-size-lg: 1.125rem; /* 18px */
+    --font-size-xl: 1.25rem;  /* 20px */
+    --font-size-h1: 2.5rem;   /* 40px */
+    --font-size-h2: 1.9rem;   /* Aproximadamente 30px */
+    --font-size-h3: 1.5rem;   /* 24px */
+    /* Adicionando tamanhos de fonte para maior granularidade, como visto na imagem */
+    --font-size-display-1: 2.75rem; /* Ex: 44px, para números grandes de estatísticas */
+    --font-size-display-2: 2.25rem; /* Ex: 36px */
+    --font-size-label: 0.6875rem; /* 11px, para labels pequenos */
+
 
     --line-height-base: 1.6;
     --line-height-heading: 1.3;
@@ -63,19 +83,19 @@
 
     /* Espaçamento */
     --spacing-unit: 8px;
-    --spacing-xxs: calc(var(--spacing-unit) * 0.5);
-    --spacing-xs: var(--spacing-unit);
-    --spacing-sm: calc(var(--spacing-unit) * 2);
-    --spacing-md: calc(var(--spacing-unit) * 3);
-    --spacing-lg: calc(var(--spacing-unit) * 4);
-    --spacing-xl: calc(var(--spacing-unit) * 5);
-    --spacing-xxl: calc(var(--spacing-unit) * 6);
+    --spacing-xxs: calc(var(--spacing-unit) * 0.5); /* 4px */
+    --spacing-xs: var(--spacing-unit);             /* 8px */
+    --spacing-sm: calc(var(--spacing-unit) * 1.5); /* 12px (ajustado de 2 para mais granularidade) */
+    --spacing-md: calc(var(--spacing-unit) * 2.5); /* 20px (ajustado de 3) */
+    --spacing-lg: calc(var(--spacing-unit) * 3.5); /* 28px (ajustado de 4) */
+    --spacing-xl: calc(var(--spacing-unit) * 5);   /* 40px (ajustado de 5) */
+    --spacing-xxl: calc(var(--spacing-unit) * 6);  /* 48px */
 
     /* Bordas */
-    --border-radius-sm: 5px;
-    --border-radius-md: 8px;
-    --border-radius-lg: 12px;
-    --border-radius-xl: 25px;
+    --border-radius-sm: 4px;  /* Ajustado para ser um pouco menos redondo */
+    --border-radius-md: 6px;  /* Ajustado */
+    --border-radius-lg: 10px; /* Ajustado */
+    --border-radius-xl: 20px; /* Ajustado */
     --border-radius-pill: 50px;
     --border-radius-circle: 50%;
     --border-width: 1px;
@@ -83,21 +103,21 @@
     --border-width-lg: 3px;
     --gradient-border-width: 4px;
 
-    /* Sombras */
+    /* Sombras - (Valores RGB já embutidos para sombras pretas) */
     --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 3px 10px rgba(0, 0, 0, 0.05);
-    --shadow-lg: 0 4px 10px rgba(0, 0, 0, 0.06);
-    --shadow-xl: 0 6px 20px rgba(0, 0, 0, 0.07);
-    --shadow-button: 0 3px 8px rgba(0, 0, 0, 0.1);
-    --shadow-button-hover: 0 5px 12px rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05); /* Levemente ajustado */
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06); /* Levemente ajustado */
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.07); /* Levemente ajustado */
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.08); /* Levemente ajustado */
+    --shadow-button: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --shadow-button-hover: 0 4px 8px rgba(0, 0, 0, 0.12);
     --shadow-inner: inset 0 1px 2px rgba(0,0,0,0.08);
-    --shadow-grid-current-subtle: 0 2px 6px rgba(13, 59, 102, 0.15);
+    --shadow-grid-current-subtle: 0 2px 6px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15); /* Usando cor do tema */
 
     /* Transições */
-    --transition-duration-fast: 0.18s;
-    --transition-duration-medium: 0.2s;
-    --transition-duration-slow: 0.3s;
+    --transition-duration-fast: 0.15s; /* Um pouco mais rápido */
+    --transition-duration-medium: 0.25s;
+    --transition-duration-slow: 0.35s;
     --transition-timing-function-ease-out: ease-out;
     --transition-timing-function-ease-in-out: ease-in-out;
     --transition-timing-function-ease: ease;
@@ -109,18 +129,20 @@
     --z-index-default: 1;
     --z-index-sticky: 10;
     --z-index-dropdown: 100;
-    --z-index-header: 110;
+    --z-index-header: 110; /* Header e navs acima do conteúdo */
+    --z-index-filter-panel: 800; /* Painel de filtro */
     --z-index-modal-backdrop: 900;
     --z-index-modal-content: 901;
-    --z-index-bottom-nav: 100;
+    --z-index-bottom-nav: 100; /* Abaixo do header, mas acima do conteúdo */
 
     /* Acessibilidade */
     --focus-outline-color: var(--color-primary-medium);
     --focus-outline-width: 2px;
     --focus-outline-offset: 2px;
 
-    /* ... suas outras variáveis ... */
-    --header-height: 80px; /* << VERIFIQUE/ADICIONE */
-    --main-nav-height: 50px; /* << VERIFIQUE/ADICIONE */
-    --footer-height: 65px; /* << VERIFIQUE/ADICIONE (se usar no calc) */
+    /* Layout */
+    --header-height: 70px; /* Ajustado para um header um pouco menor */
+    --main-nav-height: 48px; /* Ajustado para uma nav um pouco menor */
+    --footer-height: 60px; /* Ajustado */
+    --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
 }

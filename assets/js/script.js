@@ -194,31 +194,28 @@ class QuizState {
 }
 
 // --- Módulo: LayoutManager (Gerenciamento de elementos de layout globais) ---
+// --- Módulo: LayoutManager (Gerenciamento de elementos de layout globais) ---
 class LayoutManager {
     constructor() {
         this.footerElement = document.getElementById('footer') || document.querySelector('.site-footer');
         this.hiddenClassName = 'u-is-hidden';
-        if (!this.footerElement) { console.warn("LayoutManager: Footer element não encontrado!"); }
+        if (!this.footerElement) {
+            console.warn("LayoutManager: Footer element não encontrado!");
+        }
     }
+
     handleSectionChange(sectionId) {
         if (!this.footerElement) return;
-        // O footer é oculto em telas mobile pela bottom-nav, então essa lógica é mais para desktop
-        // Se a bottom-nav não estiver visível E a seção for 'question-section', ocultar footer
-        const bottomNav = document.querySelector('.bottom-nav');
-        if (bottomNav && getComputedStyle(bottomNav).display !== 'none') {
-            // Se a bottom nav está visível, o footer CSS já deve estar o ocultando.
-            // Não precisamos fazer nada aqui para o footer, mas o score-panel sim.
+
+        if (sectionId === 'question-section') {
+            // Adiciona a classe para esconder o rodapé quando na seção de questões
+            this.footerElement.classList.add(this.hiddenClassName);
         } else {
-            // Se a bottom nav NÃO está visível (desktop)
-            if (sectionId === 'question-section') {
-                // this.footerElement.classList.add(this.hiddenClassName); // Decidir se oculta no desktop
-            } else {
-                // this.footerElement.classList.remove(this.hiddenClassName);
-            }
+    
+            this.footerElement.classList.remove(this.hiddenClassName);
         }
     }
 }
-
 // --- Módulo: ChallengeHubManager (Gerencia a UI do Hub de Desafios) ---
 class ChallengeHubManager {
     constructor(uiElements, quizLogic) {

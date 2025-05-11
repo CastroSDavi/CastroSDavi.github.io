@@ -224,44 +224,37 @@
                 </div>
 
                 <div class="card card--quiz-result u-is-hidden">
-                    <div class="card__body quiz-results__body">
-                        <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
+                    <div class="card__body quiz-results__body"> <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
 
-                        <div class="quiz-results__summary-alt">
-                            <div class="quiz-results__stat-item-alt">
-                                <span class="material-symbols-outlined quiz-results__stat-icon-alt">military_tech</span>
-                                <span class="quiz-results__stat-label-alt">PONTUAÇÃO FINAL</span>
-                                <span class="quiz-results__stat-value-alt" id="resultado-pontos">0</span>
+                        <div class="quiz-results__primary-score">
+                            <span class="quiz-results__primary-score-value" id="resultado-pontos">0</span>
+                            <span class="quiz-results__primary-score-label">PONTOS</span>
+                        </div>
+
+                        <div class="quiz-results__secondary-stats">
+                            <div class="stat-block"> <span class="material-symbols-outlined stat-block__icon">timer</span>
+                                <span class="stat-block__label">Tempo</span>
+                                <span class="stat-block__value" id="resultado-tempo">00:00</span>
                             </div>
-                            <div class="quiz-results__stat-item-alt">
-                                <span class="material-symbols-outlined quiz-results__stat-icon-alt">timer</span>
-                                <span class="quiz-results__stat-label-alt">TEMPO DECORRIDO</span>
-                                <span class="quiz-results__stat-value-alt" id="resultado-tempo">00:00</span>
+                            <div class="stat-block stat-block--correct"> <span class="material-symbols-outlined stat-block__icon">check_circle</span>
+                                <span class="stat-block__label">Acertos</span>
+                                <span class="stat-block__value" id="resultado-acertos">0</span>
+                            </div>
+                            <div class="stat-block stat-block--incorrect"> <span class="material-symbols-outlined stat-block__icon">cancel</span>
+                                <span class="stat-block__label">Erros</span>
+                                <span class="stat-block__value" id="resultado-erros">0</span>
                             </div>
                         </div>
 
-                        <hr class="quiz-results__divider">
-
-                        <div class="quiz-results__details-alt">
-                            <p class="quiz-results__detail-line">
-                                <span class="material-symbols-outlined quiz-results__detail-icon--correct">check_circle</span>
-                                Acertos: <span class="quiz-results__detail-value--correct" id="resultado-acertos">0</span>
-                            </p>
-                            <p class="quiz-results__detail-line">
-                                <span class="material-symbols-outlined quiz-results__detail-icon--incorrect">cancel</span>
-                                Erros: <span class="quiz-results__detail-value--incorrect" id="resultado-erros">0</span>
-                            </p>
-                        </div>
-
-                        <p class="quiz-results__message-alt" id="resultado-mensagem-motivacional">Continue praticando para aprimorar!</p>
-
+                        <p class="quiz-results__message" id="resultado-mensagem-motivacional">Continue praticando!</p>
                     </div>
-                    <div class="card__footer quiz-results__actions-alt">
-                        <button id="btn-recomecar" class="button button--primary button--large quiz-results__action-button">
+
+                    <div class="card__footer quiz-results__actions">
+                        <button id="btn-recomecar" class="button button--primary quiz-results__action-button">
                             <span class="material-symbols-outlined button__icon">refresh</span>
                             Nova Tentativa
                         </button>
-                        <button id="btn-explorar-mais" class="button button--outline button--large quiz-results__action-button">
+                        <button id="btn-explorar-mais" class="button button--outline quiz-results__action-button">
                             <span class="material-symbols-outlined button__icon">home</span>
                             Voltar ao Início
                         </button>

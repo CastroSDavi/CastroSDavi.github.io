@@ -1,5 +1,3 @@
-/* assets/css/style.css */
-/* Arquivo principal que importa todos os outros módulos CSS. */
 
 /* 1. BASE */
 @import 'base/base.css';
@@ -10,11 +8,11 @@
 /* 3. COMPONENTS */
 @import 'components/button.css';
 @import 'components/card.css';
-@import 'components/question-display.css'; /* Mantido, estiliza a exibição da pergunta */
+@import 'components/question-display.css';
 @import 'components/modal.css';
+@import 'components/explanation-modal.css'; 
 @import 'components/navigation.css';
-/* @import 'components/category-filter.css'; */ /* REMOVER OU COMENTAR ESTA LINHA */
-@import 'components/filter-panel.css';     /* ADICIONAR ESTA LINHA */
+@import 'components/filter-panel.css';
 @import 'components/score-panel.css';
 @import 'components/progress-bar.css';
 @import 'components/question-grid.css';
@@ -23,5 +21,5 @@
 
 /* 4. SECTIONS */
 @import 'sections/home-section.css';
-@import 'sections/question-section.css'; /* Já modificado acima */
+@import 'sections/question-section.css';
 @import 'sections/conta-section.css';

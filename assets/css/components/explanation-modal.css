@@ -1,0 +1,237 @@
+/* assets/css/components/explanation-modal.css */
+
+/* Overlay do Modal de Explicação */
+.explanation-modal__overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.65); /* Fundo translúcido */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-index-modal-backdrop, 1000);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-duration-medium) var(--transition-timing-function-ease-out),
+                visibility 0s linear var(--transition-duration-medium);
+}
+
+.explanation-modal__overlay.modal--visible {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
+
+/* Diálogo (Conteúdo) do Modal de Explicação */
+.explanation-modal__dialog { /* Esta classe já herda estilos de .card do card.css */
+    width: 90%;
+    max-width: 700px;
+    /* background-color, border-radius, box-shadow são herdados de .card */
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    transform: translateY(20px) scale(0.98);
+    opacity: 0;
+    transition: transform var(--transition-duration-medium) var(--transition-timing-function-ease-out),
+                opacity var(--transition-duration-medium) var(--transition-timing-function-ease-out);
+    /* Outros estilos de .card como padding são aplicados via card.css */
+}
+
+.explanation-modal__overlay.modal--visible .explanation-modal__dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+
+/* Cabeçalho do Modal */
+.explanation-modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg); /* Padding interno do cabeçalho */
+    border-bottom: 1px solid var(--color-gray-300);
+    flex-shrink: 0;
+}
+
+.explanation-modal__title { /* Herda .card__title de card.css para consistência */
+    /* font-family, font-size, color, margin são herdados de .card__title */
+    line-height: var(--line-height-heading); /* Garante alinhamento se necessário */
+}
+
+/* Botão de Fechar específico para este modal (usa .button--icon-only como base) */
+.explanation-modal__close-button {
+    /* Estilos base de .button e .button--icon-only são de button.css */
+    color: var(--color-gray-700);
+}
+.explanation-modal__close-button:hover,
+.explanation-modal__close-button:focus-visible {
+    color: var(--color-accent-red);
+    background-color: var(--color-gray-100);
+}
+
+/* Corpo do Modal */
+.explanation-modal__body {
+    padding: var(--spacing-md) var(--spacing-lg); /* Padding interno do corpo */
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.explanation-modal__section {
+    /* Pode adicionar estilos se houver um wrapper comum para as seções */
+}
+
+.explanation-modal__subtitle {
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-gray-800);
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px dashed var(--color-gray-300);
+}
+
+.explanation-modal__text { /* Para o texto da explicação geral */
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-text-secondary);
+}
+.explanation-modal__text p { /* Tratamento para parágrafos dentro do texto */
+    margin-bottom: var(--spacing-sm);
+}
+.explanation-modal__text p:last-child {
+    margin-bottom: 0;
+}
+
+/* Lista de feedback das opções */
+.explanation-modal__options-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.explanation-modal__options-list li {
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-md);
+    background-color: var(--color-gray-50);
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+.explanation-modal__options-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.explanation-modal__options-list .option-original-text {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-900);
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.95rem; /* Ligeiramente menor que o texto principal da pergunta */
+}
+
+.explanation-modal__options-list .option-feedback-value {
+    display: block;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-base);
+    padding-left: var(--spacing-sm);
+    position: relative; /* Para o pseudo-elemento ::before */
+}
+
+/* Marcadores visuais para feedback correto/incorreto */
+.explanation-modal__options-list .option-feedback-value::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: calc(var(--font-size-sm) / 2); /* Centraliza verticalmente */
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: var(--spacing-xs); /* Espaço entre marcador e texto */
+}
+
+.explanation-modal__options-list .option-feedback-value.correct::before {
+    background-color: var(--color-correct-text);
+}
+.explanation-modal__options-list .option-feedback-value.incorrect::before {
+    background-color: var(--color-incorrect-text);
+}
+/* Coloração do texto do feedback */
+.explanation-modal__options-list .option-feedback-value.correct {
+    color: var(--color-correct-text);
+}
+.explanation-modal__options-list .option-feedback-value.incorrect {
+    color: var(--color-incorrect-text);
+}
+
+/* Divisor entre explicação geral e de opções */
+.explanation-modal__divider {
+    border: 0;
+    height: 1px;
+    background-color: var(--color-gray-200);
+    margin: var(--spacing-sm) 0; /* Espaçamento sutil */
+}
+.explanation-modal__divider.u-is-hidden { /* Para controle via JS */
+    display: none;
+}
+
+/* Estado Vazio do Modal */
+.explanation-modal__empty-state {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: var(--color-text-muted);
+}
+.explanation-modal__empty-state .material-symbols-outlined {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-sm);
+    opacity: 0.7;
+}
+
+/* Rodapé do Modal */
+.explanation-modal__footer {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-top: 1px solid var(--color-gray-300);
+    display: flex;
+    justify-content: flex-end; /* Botão à direita */
+    flex-shrink: 0;
+    background-color: var(--color-gray-50);
+}
+/* O botão #btn-got-it-explanation usará as classes .button .button--primary de button.css */
+
+
+/* Responsividade específica do Modal de Explicação */
+@media (max-width: 768px) {
+    .explanation-modal__dialog {
+        max-width: 95%;
+        max-height: 85vh;
+    }
+    .explanation-modal__header,
+    .explanation-modal__body,
+    .explanation-modal__footer {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    .explanation-modal__title { /* Já herda de .card__title que tem sua própria responsividade */
+        /* font-size: var(--font-size-h3-mobile, 1.3rem); (Ajuste em card.css se necessário) */
+    }
+    .explanation-modal__body {
+        gap: var(--spacing-md);
+    }
+    .explanation-modal__subtitle {
+        font-size: var(--font-size-lg-mobile, 1.05rem); /* Pode ser ajustado em typography.css se for um h-like */
+    }
+    .explanation-modal__text,
+    .explanation-modal__options-list .option-feedback-value {
+        font-size: var(--font-size-sm-mobile, 0.9rem); /* Pode ser ajustado em typography.css */
+    }
+    .explanation-modal__options-list .option-original-text {
+        font-size: 0.9rem;
+    }
+}

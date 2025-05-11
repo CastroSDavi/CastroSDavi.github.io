@@ -7,6 +7,7 @@
  * - Quick Quiz remains N random questions.
  * - Includes a placeholder/guidance box before filters are applied.
  * - Difficulty filter now supports multiple selections.
+ * - Implements detailed answer explanations in a dedicated modal. // MODIFICADO
  */
 
 // --- Módulo: UserData ---
@@ -107,7 +108,7 @@ class QuizData {
         const raizes = [];
         catMap.forEach(node => {
             if (node.id_categoria_pai === null) raizes.push(node);
-            else { const pai = catMap.get(node.id_categoria_pai); if (pai) pai.subcategorias.push(node); else { /*console.warn(`Pai ${node.id_categoria_pai} não encontrado para ${node.nome_categoria}.`);*/ raizes.push(node);}}
+            else { const pai = catMap.get(node.id_categoria_pai); if (pai) pai.subcategorias.push(node); else { raizes.push(node);}}
         });
         const sortRec = (nodes) => { nodes.sort((a,b)=>a.nome_categoria.localeCompare(b.nome_categoria)).forEach(n=>n.subcategorias.length && sortRec(n.subcategorias)); };
         sortRec(raizes);
@@ -124,7 +125,7 @@ class QuizState {
         this.filteredQuestions = [];
         this.currentQuestionIndex = 0;
         this.selectedCategories = [];
-        this.selectedDifficulties = ['all']; // Modificado para array, default 'all'
+        this.selectedDifficulties = ['all'];
         this.isInitialQuestionLoad = true;
         this.isQuickQuizMode = false;
         this.QUICK_QUIZ_COUNT = 10;
@@ -135,13 +136,13 @@ class QuizState {
         this.resetQuizState();
         this.selectedCategories = [];
         this.isQuickQuizMode = false;
-        this.selectedDifficulties = ['all']; // Modificado
+        this.selectedDifficulties = ['all'];
     }
     setQuickQuizMode(isQuick) { this.isQuickQuizMode = isQuick; }
 
-    setFilters(selectedCategories = [], selectedDifficulties = ['all']) { // Modificado
+    setFilters(selectedCategories = [], selectedDifficulties = ['all']) {
         this.selectedCategories = Array.isArray(selectedCategories) ? selectedCategories : [];
-        this.selectedDifficulties = Array.isArray(selectedDifficulties) ? selectedDifficulties : ['all']; // Modificado
+        this.selectedDifficulties = Array.isArray(selectedDifficulties) ? selectedDifficulties : ['all'];
     }
 
     filterQuestions(todasCategorias, relacaoPerguntaCategorias) {
@@ -152,7 +153,7 @@ class QuizState {
             this.filteredQuestions = shuffled.slice(0, Math.min(this.QUICK_QUIZ_COUNT, shuffled.length));
         } else {
             let perguntasPotenciais = [...this.allQuestions];
-            // Filtro de Categoria (sem alterações)
+            // Filtro de Categoria
             if (this.selectedCategories.length > 0) {
                 const idsCatRelevantes = new Set();
                 const getDescendentes = (catIdNum) => { if (idsCatRelevantes.has(catIdNum) || !todasCategorias.find(c=>c.id_categoria === catIdNum)) return; idsCatRelevantes.add(catIdNum); todasCategorias.filter(c => c.id_categoria_pai === catIdNum).forEach(sub => getDescendentes(sub.id_categoria)); };
@@ -161,7 +162,6 @@ class QuizState {
                 perguntasPotenciais = perguntasPotenciais.filter(p => idsPerguntasComCat.has(p.id_pergunta));
             }
 
-            // Filtro de Dificuldade (MODIFICADO)
             if (this.selectedDifficulties.length > 0 && !this.selectedDifficulties.includes('all')) {
                 perguntasPotenciais = perguntasPotenciais.filter(p =>
                     p.nivel_dificuldade && this.selectedDifficulties.includes(p.nivel_dificuldade.toLowerCase())
@@ -193,12 +193,13 @@ class QuizUI {
         this.hiddenClassName = 'u-is-hidden';
         this.currentSection = 'home-section';
         this.QUESTOES_POR_PAGINA_GRID = 5;
-        this.TRANSITION_DURATION = 350;
+        this.TRANSITION_DURATION = 300; // Ajustado para corresponder ao CSS do novo modal
         this.onSectionChange = onSectionChangeCallback;
         this.timerInterval = null;
         this.timerSeconds = 0;
         this.timerRunning = false;
         this.focusedElementBeforePanel = null;
+        this.focusedElementBeforeExplanationModal = null; // Para o novo modal
         this.cacheDOMelements();
     }
 
@@ -260,12 +261,37 @@ class QuizUI {
             filteredQuestionCountDisplay: document.getElementById('filtered-question-count-display'),
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
             startRandomQuizPlaceholderBtn: document.getElementById('start-random-quiz-placeholder'),
+            
+            // Elementos para o NOVO Modal de Explicação
+            btnToggleExplanation: document.getElementById('btn-toggle-explanation'), // Botão que dispara o modal
+            explanationModalOverlay: document.getElementById('explanation-modal-overlay'),
+            explanationModalDialog: document.getElementById('explanation-modal-dialog'),
+            explanationModalTitle: document.getElementById('explanationModalTitle'),
+            btnCloseExplanationModal: document.getElementById('btn-close-explanation-modal'),
+            explanationModalGeneralBlock: document.getElementById('explanation-modal-general-block'),
+            explanationModalGeneralText: document.getElementById('explanation-modal-general-text'),
+            explanationModalOptionsBlock: document.getElementById('explanation-modal-options-block'),
+            explanationModalOptionsList: document.getElementById('explanation-modal-options-list'),
+            explanationModalDivider: document.querySelector('.explanation-modal__divider'),
+            explanationModalEmptyState: document.getElementById('explanation-modal-empty-state'),
+            btnGotItExplanation: document.getElementById('btn-got-it-explanation')
         };
         this.sectionElements = { 'home-section': this.elements.homeSection, 'question-section': this.elements.questionSection, 'account-section': this.elements.accountSection };
         this._validateCache();
     }
 
-    _validateCache() { const opt = ['feedbackAcessivel', 'filterGroupDifficulty', 'placeholderFiltrosContainer', 'startRandomQuizPlaceholderBtn']; for (const k in this.elements) { if (!this.elements[k] && !opt.includes(k) && !(k in this.sectionElements)) console.warn(`QuizUI Cache: ${k} não encontrado!`); } for (const k in this.sectionElements) if(!this.sectionElements[k]) console.warn(`QuizUI Cache: Seção ${k} não encontrada!`);}
+    _validateCache() {
+        const optional = ['feedbackAcessivel', 'filterGroupDifficulty', 'placeholderFiltrosContainer', 'startRandomQuizPlaceholderBtn',
+                        // Novos elementos do modal de explicação
+                        'explanationModalOverlay', 'explanationModalDialog', 'explanationModalTitle',
+                        'btnCloseExplanationModal', 'explanationModalGeneralBlock', 'explanationModalGeneralText',
+                        'explanationModalOptionsBlock', 'explanationModalOptionsList', 'explanationModalDivider',
+                        'explanationModalEmptyState','btnGotItExplanation'
+                        ];
+        for (const k in this.elements) { if (!this.elements[k] && !optional.includes(k) && !(k in this.sectionElements)) console.warn(`QuizUI Cache: ${k} não encontrado!`); }
+        for (const k in this.sectionElements) if(!this.sectionElements[k]) console.warn(`QuizUI Cache: Seção ${k} não encontrada!`);
+    }
+
 
     showElement(el) { el?.classList.remove(this.hiddenClassName); }
     hideElement(el) { el?.classList.add(this.hiddenClassName); }
@@ -276,7 +302,7 @@ class QuizUI {
             this.timerInterval = null;
         }
         this.timerRunning = false;
-        console.log("Timer parado.");
+        // console.log("Timer parado."); // Removido para diminuir verbosidade
     }
 
     resetTimer() {
@@ -288,13 +314,13 @@ class QuizUI {
         if (this.elements.resultadoTempo && !this.elements.resultadoCard?.classList.contains(this.hiddenClassName)) {
             this.elements.resultadoTempo.textContent = "00:00";
         }
-        console.log("Timer resetado.");
+        // console.log("Timer resetado.");
     }
 
     startTimer() {
         if (this.timerRunning) return;
         this.timerRunning = true;
-        console.log("Timer iniciado.");
+        // console.log("Timer iniciado.");
         this.timerInterval = setInterval(() => {
             this.timerSeconds++;
             if (this.elements.timerDisplay) {
@@ -324,55 +350,79 @@ class QuizUI {
 
         if (show) {
             this.focusedElementBeforePanel = document.activeElement;
-            if (this.quizState) { // this.quizState DEVE ser definido antes de chamar toggleFilterPanel
+            if (this.quizState) { // quizState deve ser injetado ou acessível
                  const currentSelectedCategories = this.quizState.selectedCategories;
-                 const currentDifficulties = this.quizState.selectedDifficulties; // Modificado
+                 const currentDifficulties = this.quizState.selectedDifficulties;
                  this.setCategoryTreeState(currentSelectedCategories);
-                 this.setDifficultyState(currentDifficulties); // Modificado
+                 this.setDifficultyState(currentDifficulties);
             }
 
             this.showElement(overlay); this.showElement(panel);
             panel.removeAttribute('aria-hidden'); overlay.removeAttribute('aria-hidden');
-            requestAnimationFrame(() => { overlay.classList.add(overlayVisibleClass); panel.classList.add(panelVisibleClass); panel.focus(); });
+            requestAnimationFrame(() => {
+                overlay.classList.add(overlayVisibleClass);
+                panel.classList.add(panelVisibleClass);
+                panel.focus(); // Focar no painel ao abrir
+            });
         } else {
-            panel.classList.remove(panelVisibleClass); overlay.classList.remove(overlayVisibleClass);
-            const onEnd = () => {
-                if (!panel.classList.contains(panelVisibleClass)) { this.hideElement(panel); this.hideElement(overlay); panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true'); }
-                panel.removeEventListener('transitionend', onEnd);
-                this.focusedElementBeforePanel?.focus();
+            panel.classList.remove(panelVisibleClass);
+            overlay.classList.remove(overlayVisibleClass);
+            
+            const onTransitionEnd = () => {
+                if (!panel.classList.contains(panelVisibleClass)) { // Garante que só executa se realmente estiver escondido
+                    this.hideElement(panel);
+                    this.hideElement(overlay);
+                    panel.setAttribute('aria-hidden', 'true');
+                    overlay.setAttribute('aria-hidden', 'true');
+                }
+                panel.removeEventListener('transitionend', onTransitionEnd); // Remove o listener
+                this.focusedElementBeforePanel?.focus(); // Devolve o foco
             };
-            panel.addEventListener('transitionend', onEnd, { once: true });
-            setTimeout(() => { if (!panel.classList.contains(panelVisibleClass)) { this.hideElement(panel); this.hideElement(overlay); panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true'); this.focusedElementBeforePanel?.focus(); } panel.removeEventListener('transitionend', onEnd); }, this.TRANSITION_DURATION + 50);
+            
+            panel.addEventListener('transitionend', onTransitionEnd, { once: true });
+
+            // Fallback caso a transição não dispare por algum motivo (ex: display:none imediato)
+            setTimeout(() => {
+                if (!panel.classList.contains(panelVisibleClass)) {
+                    this.hideElement(panel); this.hideElement(overlay);
+                    panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true');
+                    this.focusedElementBeforePanel?.focus();
+                }
+                panel.removeEventListener('transitionend', onTransitionEnd); // Garante remoção
+            }, this.TRANSITION_DURATION + 50); // Um pouco mais que a duração da transição
         }
     }
 
     getSectionUIConfig() {
+        // Mantém a lógica de esconder elementos não relevantes para a seção atual
+        // O modal de explicação não precisa ser listado aqui, pois é controlado separadamente
         return {
             'home-section': {
                 visible: [],
-                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText, this.elements.avisoContainer, this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer],
+                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText, this.elements.avisoContainer, this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer, this.elements.btnToggleExplanation /* Esconder btn de análise */],
                 onEnter: null
             },
             'question-section': {
                 visible: [this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer],
-                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText ],
+                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText, this.elements.btnToggleExplanation /* Esconder btn de análise por padrão */ ],
                 onEnter: () => {
                     if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) &&
-                        this.elements.avisoContainer?.classList.contains(this.hiddenClassName)) {
+                        this.elements.avisoContainer?.classList.contains(this.hiddenClassName) &&
+                        this.elements.resultadoCard?.classList.contains(this.hiddenClassName)) {
                         this.showElement(this.elements.placeholderFiltrosContainer);
                     }
                 }
             },
             'account-section': {
                 visible: [],
-                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText, this.elements.avisoContainer, this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer],
+                hidden: [this.elements.quizSectionContent, this.elements.resultadoCard, this.elements.btnEncerrarSessao, this.elements.questionGridContainer, this.elements.progressContainer, this.elements.progressText, this.elements.avisoContainer, this.elements.btnAbrirFiltros, this.elements.filteredQuestionCountDisplay, this.elements.placeholderFiltrosContainer, this.elements.btnToggleExplanation /* Esconder btn de análise */],
                 onEnter: null
             }
         };
     }
-
+    
     showSection(sectionId) {
-        console.log(`[Log] Tentando mostrar seção: ${sectionId}`);
+        // console.log(`[Log] Tentando mostrar seção: ${sectionId}`); // Removido para verbosidade
         Object.values(this.sectionElements).forEach(sectionEl => { if (sectionEl) this.hideElement(sectionEl); });
         const sectionToShow = this.sectionElements[sectionId];
 
@@ -395,6 +445,7 @@ class QuizUI {
                 this.clearWarning();
                 this.hideElement(this.elements.placeholderFiltrosContainer);
                 this.toggleFilterPanel(false);
+                this.toggleExplanationModal(false); // Garantir que modal de explicação está fechado
             } else {
                 if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) &&
                     this.elements.avisoContainer?.classList.contains(this.hiddenClassName) &&
@@ -457,10 +508,21 @@ class QuizUI {
                 this.elements.resultadoCard?.classList.contains(this.hiddenClassName) ) {
                 this.showElement(this.elements.placeholderFiltrosContainer);
             }
+            this.toggleExplanationModal(false); // Esconder modal de explicação ao sair do quiz
+            this.hideElement(this.elements.btnToggleExplanation); // Esconder botão de análise
         }
     }
 
-    hideQuizElements() { this.hideElement(this.elements.quizSectionContent); this.hideElement(this.elements.resultadoCard); this.hideElement(this.elements.questionGridContainer); this.hideElement(this.elements.btnEncerrarSessao); this.hideProgressBar(); }
+    hideQuizElements() {
+        this.hideElement(this.elements.quizSectionContent);
+        this.hideElement(this.elements.resultadoCard);
+        this.hideElement(this.elements.questionGridContainer);
+        this.hideElement(this.elements.btnEncerrarSessao);
+        this.hideProgressBar();
+        this.toggleExplanationModal(false); // Esconder modal de explicação
+        this.hideElement(this.elements.btnToggleExplanation); // Esconder botão de análise
+    }
+
     displayQuestion(perguntaObj, questionNumber, totalQuestions, todasCategoriasDoSistema, relacaoPerguntaCategorias, isQuickQuizMode = false) {
         if (!perguntaObj) return console.error("Tentativa de exibir questão nula.");
         let tituloCategoriaDisplay = "Questão";
@@ -498,14 +560,20 @@ class QuizUI {
         this.displayQuestionImage(perguntaObj.url_imagem, questionNumber);
         this.updateProgressBar(questionNumber, totalQuestions);
         this.elements.questionTitle?.focus({ preventScroll: true });
+
+        this.hideElement(this.elements.btnToggleExplanation); // Esconder botão de análise ao carregar nova questão
+        this.toggleExplanationModal(false); // Garantir que o modal de explicação está fechado
     }
+
     _getCategoriaProfundidade(categoriaObj, todasCategorias) {
         if(!categoriaObj || !todasCategorias) return -1;
         let profundidade = 0; let paiId = categoriaObj.id_categoria_pai;
         while(paiId !== null && profundidade < 10) { profundidade++; const pai = todasCategorias.find(c => c.id_categoria === paiId); paiId = pai ? pai.id_categoria_pai : null; }
         return profundidade;
     }
+
     displayQuestionImage(imageUrl, qNum) { const el = this.elements.perguntaImagem; if(el){ if(imageUrl?.trim()){ el.src=imageUrl; el.alt=`Ilustração questão ${qNum}`; this.showElement(el); el.onerror=()=>{this.hideElement(el); console.warn(`Erro img: ${imageUrl}`); el.onerror=null;}} else {this.hideElement(el); el.src=""; el.alt="";}}}
+
     generateAnswerButtons(idPergunta, opcoesDaPergunta, respostaDadaId, answerClickHandler) {
         const container = this.elements.respostasContainer; if (!container) return; container.innerHTML = '';
         if (!opcoesDaPergunta || opcoesDaPergunta.length === 0) { container.innerHTML = `<p class="error-message">Opções para P${idPergunta} não encontradas.</p>`; return; }
@@ -518,7 +586,9 @@ class QuizUI {
             container.appendChild(btn);
         });
     }
+
     disableAnswers() { const t = "question-display__answer-option", e = `${t}--answered`; this.elements.respostasContainer?.querySelectorAll(`button.${t}`).forEach(btn => { btn.onclick = null; btn.disabled = true; btn.classList.add(e); btn.style.cursor = "default"; btn.tabIndex = -1; }); }
+
     applyAnswerFeedback(selectedOpcaoId, opcoesDaPergunta) {
         const baseClass = "question-display__answer-option", correctCl = `${baseClass}--correct`, incorrectCl = `${baseClass}--incorrect`; let isUserChoiceCorrect = false;
         this.elements.respostasContainer?.querySelectorAll(`button.${baseClass}`).forEach(btn => {
@@ -527,7 +597,124 @@ class QuizUI {
             else if (optData.eh_correta) { btn.classList.add(correctCl); }
         });
         if (this.elements.feedbackAcessivel) this.elements.feedbackAcessivel.textContent = isUserChoiceCorrect ? "Resposta correta!" : "Resposta incorreta.";
+
+        const currentQuestion = this.quizState.getCurrentQuestion(); // Necessário acesso ao quizState
+        const hasGeneralExplanation = currentQuestion && currentQuestion.explicacao_resposta && currentQuestion.explicacao_resposta.trim() !== '';
+        const hasAnyOptionFeedback = opcoesDaPergunta.some(op => op.feedback_opcao && op.feedback_opcao.trim() !== '');
+
+        if ((hasGeneralExplanation || hasAnyOptionFeedback) && this.elements.btnToggleExplanation) {
+            this.showElement(this.elements.btnToggleExplanation);
+        } else {
+            this.hideElement(this.elements.btnToggleExplanation);
+        }
     }
+
+    toggleExplanationModal(show) {
+        const overlay = this.elements.explanationModalOverlay;
+        const dialog = this.elements.explanationModalDialog;
+
+        if (!overlay || !dialog || !this.quizState || !this.quizData) {
+            console.error("Elementos do modal de explicação, quizState ou quizData não encontrados.");
+            return;
+        }
+        const modalVisibleClass = 'modal--visible';
+
+        if (show) {
+            const currentQuestion = this.quizState.getCurrentQuestion();
+            if (!currentQuestion) { console.error("Nenhuma pergunta atual para mostrar explicação no modal."); return; }
+            const opcoesDaPergunta = this.quizData.getOpcoesPorPerguntaId(currentQuestion.id_pergunta);
+
+            let contentRendered = false;
+
+            // Preencher Explicação Geral
+            const generalBlock = this.elements.explanationModalGeneralBlock;
+            const generalTextEl = this.elements.explanationModalGeneralText;
+            if (currentQuestion.explicacao_resposta && currentQuestion.explicacao_resposta.trim() !== '') {
+                generalTextEl.innerHTML = currentQuestion.explicacao_resposta.replace(/\n/g, '<br>'); // Suporta quebras de linha
+                this.showElement(generalBlock);
+                contentRendered = true;
+            } else {
+                this.hideElement(generalBlock);
+            }
+
+            // Preencher Feedback das Opções
+            const optionsBlock = this.elements.explanationModalOptionsBlock;
+            const optionsListEl = this.elements.explanationModalOptionsList;
+            optionsListEl.innerHTML = ''; // Limpar
+            let hasSpecificOptionFeedback = false;
+            opcoesDaPergunta.forEach(opcao => {
+                if (opcao.feedback_opcao && opcao.feedback_opcao.trim() !== '') {
+                    hasSpecificOptionFeedback = true;
+                    const li = document.createElement('li');
+                    const originalTextSpan = document.createElement('span');
+                    originalTextSpan.className = 'option-original-text';
+                    originalTextSpan.textContent = `Opção: "${opcao.texto_opcao}"`; // Melhor identificação
+                    li.appendChild(originalTextSpan);
+
+                    const feedbackValueSpan = document.createElement('span');
+                    feedbackValueSpan.className = 'option-feedback-value';
+                    feedbackValueSpan.classList.add(opcao.eh_correta ? 'correct' : 'incorrect');
+                    feedbackValueSpan.innerHTML = opcao.feedback_opcao.replace(/\n/g, '<br>');
+                    li.appendChild(feedbackValueSpan);
+                    optionsListEl.appendChild(li);
+                }
+            });
+
+            if (hasSpecificOptionFeedback) {
+                this.showElement(optionsBlock);
+                contentRendered = true;
+            } else {
+                this.hideElement(optionsBlock);
+            }
+            
+            // Mostrar/esconder divider
+            const divider = this.elements.explanationModalDivider;
+            if (generalBlock && !generalBlock.classList.contains(this.hiddenClassName) &&
+                optionsBlock && !optionsBlock.classList.contains(this.hiddenClassName) && divider) {
+                this.showElement(divider);
+            } else if (divider) {
+                this.hideElement(divider);
+            }
+
+
+            // Mostrar estado vazio se nenhum conteúdo
+            const emptyState = this.elements.explanationModalEmptyState;
+            if (!contentRendered && emptyState) {
+                this.showElement(emptyState);
+            } else if (emptyState) {
+                this.hideElement(emptyState);
+            }
+            
+            // Mostrar o modal
+            this.focusedElementBeforeExplanationModal = document.activeElement;
+            this.showElement(overlay);
+            overlay.scrollTop; // Forçar reflow para transição
+            requestAnimationFrame(() => {
+                overlay.classList.add(modalVisibleClass);
+                dialog.focus(); // Focar no diálogo do modal
+            });
+
+        } else { // Esconder o modal
+            overlay.classList.remove(modalVisibleClass);
+            const onTransitionEnd = () => {
+                if (!overlay.classList.contains(modalVisibleClass)) {
+                    this.hideElement(overlay);
+                }
+                overlay.removeEventListener('transitionend', onTransitionEnd);
+                this.focusedElementBeforeExplanationModal?.focus();
+            };
+            overlay.addEventListener('transitionend', onTransitionEnd, { once: true });
+            setTimeout(() => { // Fallback
+                if (!overlay.classList.contains(modalVisibleClass)) {
+                    this.hideElement(overlay);
+                }
+                overlay.removeEventListener('transitionend', onTransitionEnd);
+                this.focusedElementBeforeExplanationModal?.focus();
+            }, this.TRANSITION_DURATION + 50);
+        }
+    }
+
+
     updateProgressBar(curr, total) { const elP = this.elements.progressContainer, elF = this.elements.progressBarFill, elT = this.elements.progressText; if(elP && elF && elT){ if(total > 0){ elF.style.width = `${Math.min(curr,total)/total*100}%`; elT.textContent = `${curr} / ${total}`; this.showElement(elP); this.showElement(elT); } else this.hideProgressBar();}}
     hideProgressBar() { this.hideElement(this.elements.progressContainer); this.hideElement(this.elements.progressText); if(this.elements.progressBarFill) this.elements.progressBarFill.style.width = "0%"; if(this.elements.progressText) this.elements.progressText.textContent = ""; }
     updateNavigationButtons(isFirst, isLast, total) { const elN = this.elements.navigationButtons, elP = this.elements.prevBtn, elNext = this.elements.nextBtn; if(elN && elP && elNext){ if(total <=0) this.hideElement(elN); else { this.showElement(elN); elP.disabled = isFirst; elNext.disabled = false; elNext.textContent = isLast ? "Ver Resultado" : "Próxima";}}}
@@ -544,7 +731,7 @@ class QuizUI {
                 const li = document.createElement('li');
                 li.className = 'category-tree__item';
                 li.setAttribute('role', 'treeitem');
-                li.setAttribute('aria-checked', 'false');
+                li.setAttribute('aria-checked', 'false'); // Estado inicial
 
                 const wrapper = document.createElement('div');
                 wrapper.className = 'category-tree__label-wrapper';
@@ -552,9 +739,9 @@ class QuizUI {
                 const input = document.createElement('input');
                 input.type = 'checkbox';
                 input.id = `cat-tree-${cat.id_categoria}`;
-                input.className = 'category-tree__input u-sr-only';
+                input.className = 'category-tree__input u-sr-only'; // Mantém escondido, label controla
                 input.value = cat.id_categoria.toString();
-                input.tabIndex = -1;
+                input.tabIndex = -1; // Não focável diretamente
                 input.addEventListener('change', (e) => this.handleCategoryCheckboxChange(e.target));
 
 
@@ -562,54 +749,71 @@ class QuizUI {
                 label.htmlFor = input.id;
                 label.className = 'category-tree__label';
                 label.textContent = cat.nome_categoria;
-                label.tabIndex = 0;
+                label.tabIndex = 0; // Torna o label focável
                 label.addEventListener('keydown', (e) => {
                     if (e.key === ' ' || e.key === 'Enter') {
                         input.checked = !input.checked;
+                        // Disparar o evento change manualmente para que handleCategoryCheckboxChange seja chamado
                         input.dispatchEvent(new Event('change', { bubbles: true }));
-                        e.preventDefault();
+                        e.preventDefault(); // Prevenir comportamento padrão do navegador (scroll, etc.)
                     }
                 });
 
                 if (cat.subcategorias && cat.subcategorias.length > 0) {
                     li.classList.add('category-tree__item--has-children');
-                    li.setAttribute('aria-expanded', 'false');
+                    li.setAttribute('aria-expanded', 'false'); // Começa recolhido
 
                     const toggleBtn = document.createElement('button');
                     toggleBtn.type = 'button';
                     toggleBtn.className = 'category-tree__toggle';
                     toggleBtn.setAttribute('aria-label', `Expandir ${cat.nome_categoria}`);
                     toggleBtn.setAttribute('aria-expanded', 'false');
-                    toggleBtn.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>`;
+                    toggleBtn.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>`; // Ícone inicial
 
+                    // Ordem: toggle, input, label
                     wrapper.appendChild(toggleBtn);
                     wrapper.appendChild(input);
                     wrapper.appendChild(label);
 
                     const submenu = document.createElement('ul');
                     submenu.className = 'category-tree__submenu';
-                    submenu.setAttribute('role', 'group');
+                    submenu.setAttribute('role', 'group'); // Submenu é um grupo de treeitems
 
                     createTreeRecursive(cat.subcategorias, submenu, nivel + 1);
                     li.appendChild(wrapper);
                     li.appendChild(submenu);
 
+                    // Ação de toggle no botão
                     const toggleAction = (e) => {
-                        e.stopPropagation();
+                        e.stopPropagation(); // Evitar que o clique no botão propague para o label/input
                         const isExpanded = li.getAttribute('aria-expanded') === 'true';
                         li.setAttribute('aria-expanded', String(!isExpanded));
                         toggleBtn.setAttribute('aria-expanded', String(!isExpanded));
                         toggleBtn.setAttribute('aria-label', `${!isExpanded ? 'Recolher' : 'Expandir'} ${cat.nome_categoria}`);
                         submenu.classList.toggle('category-tree__submenu--expanded');
+                        // Animação de altura
                         if (!isExpanded) {
+                            // submenu.style.display = 'block'; // Garante que está visível para calcular scrollHeight
                             submenu.style.maxHeight = submenu.scrollHeight + "px";
                         } else {
-                           requestAnimationFrame(() => { submenu.style.maxHeight = '0'; });
+                           // submenu.style.maxHeight = submenu.scrollHeight + "px"; // Prepara para transição de recolhimento
+                           requestAnimationFrame(() => { // Permite que o maxHeight seja aplicado antes de zerar
+                               submenu.style.maxHeight = '0';
+                           });
                         }
                         toggleBtn.querySelector('.material-symbols-outlined').textContent = !isExpanded ? 'expand_more' : 'chevron_right';
                     };
+
                     toggleBtn.addEventListener('click', toggleAction);
-                } else {
+                    // Permitir expandir/recolher com Enter/Space no botão de toggle
+                    toggleBtn.addEventListener('keydown', (e) => {
+                        if (e.key === ' ' || e.key === 'Enter') {
+                            toggleAction(e);
+                            e.preventDefault();
+                        }
+                    });
+
+                } else { // Sem filhos
                     wrapper.appendChild(input);
                     wrapper.appendChild(label);
                     li.appendChild(wrapper);
@@ -618,27 +822,33 @@ class QuizUI {
             });
         };
         createTreeRecursive(categoriasHierarquicas, treeContainer);
+        // Atualizar estado dos pais após a criação inicial
         const parentLis = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__item--has-children') || []);
-        for (let i = parentLis.length - 1; i >= 0; i--) {
+        for (let i = parentLis.length - 1; i >= 0; i--) { // Iterar de baixo para cima
             this.updateParentCheckboxState(parentLis[i]);
         }
     }
+
 
     handleCategoryCheckboxChange(checkbox) {
         const isChecked = checkbox.checked;
         const li = checkbox.closest('.category-tree__item');
         if (!li) return;
 
-        checkbox.classList.remove('is-indeterminate');
+        // Define o estado ARIA do item da árvore
+        checkbox.classList.remove('is-indeterminate'); // Remove indeterminado ao ser clicado diretamente
         li.setAttribute('aria-checked', String(isChecked));
 
+        // Propaga a mudança para os filhos
         const childCheckboxes = li.querySelectorAll(':scope > .category-tree__submenu .category-tree__input');
         childCheckboxes.forEach(childCb => {
             childCb.checked = isChecked;
-            childCb.classList.remove('is-indeterminate');
+            childCb.classList.remove('is-indeterminate'); // Filhos também perdem indeterminação
              const childLi = childCb.closest('.category-tree__item');
              if(childLi) childLi.setAttribute('aria-checked', String(isChecked));
         });
+
+        // Atualiza o estado do pai (e recursivamente dos avós, etc.)
         this.updateParentCheckboxState(li.parentElement?.closest('.category-tree__item'));
     }
 
@@ -648,56 +858,67 @@ class QuizUI {
         const parentCheckbox = parentLi.querySelector(':scope > .category-tree__label-wrapper > .category-tree__input');
         if (!parentCheckbox) return;
 
+        // Pega apenas os LIs filhos diretos para verificar o estado
         const childLis = parentLi.querySelectorAll(':scope > .category-tree__submenu > .category-tree__item');
-        if (childLis.length === 0) return;
+        if (childLis.length === 0) return; // Sem filhos, nada a fazer
 
         let allChecked = true;
         let noneChecked = true;
-        let someIndeterminate = false;
+        let someIndeterminate = false; // Se algum filho está indeterminado
 
         childLis.forEach(childLi => {
             const childInput = childLi.querySelector(':scope > .category-tree__label-wrapper > .category-tree__input');
             if (childInput) {
                 if (childInput.checked && !childInput.classList.contains('is-indeterminate')) {
-                    noneChecked = false;
+                    noneChecked = false; // Pelo menos um está marcado (não indeterminado)
                 } else if (childInput.classList.contains('is-indeterminate')) {
-                    allChecked = false;
-                    noneChecked = false;
+                    allChecked = false; // Se um filho é indeterminado, o pai não pode ser 'allChecked'
+                    noneChecked = false; // Nem 'noneChecked'
                     someIndeterminate = true;
-                } else {
-                    allChecked = false;
+                } else { // childInput.checked é false e não é indeterminado
+                    allChecked = false; // Pelo menos um não está marcado
                 }
             } else {
-                allChecked = false;
+                 allChecked = false; // Considera não marcado se o input não for encontrado
             }
         });
 
-        parentCheckbox.classList.remove('is-indeterminate');
+
+        parentCheckbox.classList.remove('is-indeterminate'); // Limpa estado anterior
+
         if (someIndeterminate || (!allChecked && !noneChecked)) {
-            parentCheckbox.checked = false;
+            // Se algum filho é indeterminado, OU se nem todos estão marcados E nem todos estão desmarcados
+            // (ou seja, uma mistura de marcados e desmarcados)
+            parentCheckbox.checked = false; // O checkbox visual em si não fica "checked"
             parentCheckbox.classList.add('is-indeterminate');
             parentLi.setAttribute('aria-checked', 'mixed');
         } else if (allChecked) {
             parentCheckbox.checked = true;
             parentLi.setAttribute('aria-checked', 'true');
-        } else {
+        } else { // noneChecked é true (todos os filhos estão desmarcados e nenhum é indeterminado)
             parentCheckbox.checked = false;
             parentLi.setAttribute('aria-checked', 'false');
         }
+
+        // Recursivamente atualiza o estado do pai deste pai
         this.updateParentCheckboxState(parentLi.parentElement?.closest('.category-tree__item'));
     }
 
     getSelectedCategoriesFromTree() {
         const ids = [];
         this.elements.categoryTreeList?.querySelectorAll('.category-tree__input').forEach(cb => {
+            // Inclui os explicitamente marcados (não indeterminados)
+            // E os pais indeterminados, pois significam que algum filho está marcado
             if (cb.checked && !cb.classList.contains('is-indeterminate')) {
                 ids.push(cb.value);
             }
+            // Poderia adicionar lógica para incluir pais de itens marcados se a filtragem precisar disso
+            // Mas a lógica atual de filtragem já considera descendentes se o pai é selecionado.
         });
+        // console.log("Categorias selecionadas (raw):", ids);
         return ids;
     }
 
-    // MODIFICADO para retornar array de dificuldades
     getSelectedDifficulties() {
         const difficultyCheckboxes = this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]:not([value="all"])');
         const selectedSpecificDifficulties = [];
@@ -710,8 +931,7 @@ class QuizUI {
         const allCheckbox = this.elements.filterGroupDifficulty?.querySelector('input[value="all"]');
 
         if (allCheckbox?.checked || selectedSpecificDifficulties.length === 0) {
-            // Se "Todas" está marcado, OU se nenhum específico está marcado, considera todas as dificuldades.
-            return ['all'];
+            return ['all']; // Se "Todas" está marcado OU nenhuma específica foi marcada, considera "all"
         }
         return selectedSpecificDifficulties;
     }
@@ -721,14 +941,18 @@ class QuizUI {
         allCheckboxes.forEach(cb => {
             cb.checked = selectedIds.includes(cb.value);
             cb.classList.remove('is-indeterminate');
+             const li = cb.closest('.category-tree__item');
+             if(li) li.setAttribute('aria-checked', String(cb.checked));
         });
+        // Atualizar estado dos pais de baixo para cima
         const parentLis = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__item--has-children') || []);
+        // É crucial iterar de forma que os filhos sejam processados antes dos pais
+        // Uma forma simples é iterar de trás para frente na lista de todos os LIs com filhos.
         for (let i = parentLis.length - 1; i >= 0; i--) {
             this.updateParentCheckboxState(parentLis[i]);
         }
     }
 
-    // MODIFICADO para lidar com array de dificuldades
     setDifficultyState(difficulties = ['all']) {
         const allCheckbox = this.elements.filterGroupDifficulty?.querySelector('input[value="all"]');
         const specificCheckboxes = Array.from(this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]:not([value="all"])') || []);
@@ -743,7 +967,6 @@ class QuizUI {
             });
         }
     }
-
 
     updateFilteredQuestionCount(count) {
         if (this.elements.filteredQuestionCountDisplay) {
@@ -777,17 +1000,16 @@ class QuizUI {
         this.elements.resultadoTitulo?.focus();
     }
 
-    hideResults() {
-        this.hideElement(this.elements.resultadoCard);
-    }
+    hideResults() { this.hideElement(this.elements.resultadoCard); }
 
     toggleConfirmModal(show) {
         const overlay = this.elements.confirmEncerrarOverlay;
         if (!overlay) return;
         const mod = 'modal--visible';
         if (show) {
+            this.focusedElementBeforePanel = document.activeElement; // Reutilizando para modais genéricos
             this.showElement(overlay);
-            overlay.scrollTop; // Force reflow
+            overlay.scrollTop;
             requestAnimationFrame(() => {
                 overlay.classList.add(mod);
                 this.elements.cancelEncerrarBtn?.focus();
@@ -797,11 +1019,13 @@ class QuizUI {
             const end = () => {
                 if (!overlay.classList.contains(mod)) this.hideElement(overlay);
                 overlay.removeEventListener('transitionend', end);
+                this.focusedElementBeforePanel?.focus();
             };
             overlay.addEventListener('transitionend', end, { once: true });
-            setTimeout(() => {
+            setTimeout(() => { // Fallback
                 if (!overlay.classList.contains(mod)) this.hideElement(overlay);
                 overlay.removeEventListener('transitionend', end);
+                this.focusedElementBeforePanel?.focus();
             }, this.TRANSITION_DURATION + 50);
         }
     }
@@ -832,20 +1056,21 @@ class QuizLogic {
     }
 
     applyFiltersAndStartQuiz() {
-        console.log("Aplicando filtros e iniciando quiz...");
+        // console.log("Aplicando filtros e iniciando quiz...");
         const selectedCategoryIds = this.ui.getSelectedCategoriesFromTree();
-        const selectedDifficulties = this.ui.getSelectedDifficulties(); // Modificado
+        const selectedDifficulties = this.ui.getSelectedDifficulties();
         this.state.setQuickQuizMode(false);
-        this.state.setFilters(selectedCategoryIds, selectedDifficulties); // Modificado
+        this.state.setFilters(selectedCategoryIds, selectedDifficulties);
         this.ui.toggleFilterPanel(false);
         this.startQuiz();
     }
 
     clearAllFiltersInPanel() {
         this.ui.setCategoryTreeState([]);
-        this.ui.setDifficultyState(['all']); // Modificado para ['all']
-        this.ui.updateFilteredQuestionCount(this.state.allQuestions.length); // Ou 0 se preferir antes de aplicar
-        console.log("Filtros limpos no painel.");
+        this.ui.setDifficultyState(['all']); // Define para "Todas" dificuldades
+        // Para mostrar o count total, precisaríamos re-filtrar ou pegar o total de this.state.allQuestions
+        this.ui.updateFilteredQuestionCount(this.state.allQuestions.length);
+        // console.log("Filtros limpos no painel.");
     }
 
     startQuiz() {
@@ -854,11 +1079,13 @@ class QuizLogic {
         this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
         this.ui.hideResults();
         this.ui.resetTimer();
+        this.ui.toggleExplanationModal(false); // Garante que modal de explicação está fechado
+
         const filteredQuestions = this.state.filteredQuestions;
         this.ui.updateFilteredQuestionCount(filteredQuestions.length);
         if (filteredQuestions.length > 0) {
             this.ui.displayQuizContent(true);
-            this._displayCurrentQuestion(false);
+            this._displayCurrentQuestion(false); // false para não scrollar na primeira questão
             this.ui.startTimer();
         }
         else {
@@ -868,10 +1095,10 @@ class QuizLogic {
         }
     }
     startQuickQuiz() {
-        console.log("Iniciando Quiz Rápido...");
+        // console.log("Iniciando Quiz Rápido...");
         this.state.setQuickQuizMode(true);
-        this.state.setFilters([], ['all']); // Categorias vazias, dificuldade 'all'
-        this.ui.toggleFilterPanel(false);
+        this.state.setFilters([], ['all']); // Sem categorias, todas as dificuldades
+        this.ui.toggleFilterPanel(false); // Fecha o painel de filtros se estiver aberto
         this.startQuiz();
     }
 
@@ -892,13 +1119,14 @@ class QuizLogic {
             this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
             this.ui.renderQuestionGrid(this.state.filteredQuestions, this.state.currentQuestionIndex, (idx) => this.goToQuestion(idx));
             this.ui.updateNavigationButtons(this.state.isFirstQuestion(), this.state.isLastQuestion(), this.state.getTotalFilteredQuestions());
-            this.ui.focusNextButton(true);
-            this.ui.smoothScrollToNextButton();
+            this.ui.focusNextButton(true); // Foca no botão "Próxima" sem scrollar a página
+            this.ui.smoothScrollToNextButton(); // Scrolla suavemente para o botão de navegação se estiver fora da tela
         }
     }
     nextQuestion() { const i=this.state.isLastQuestion(), q=this.state.getCurrentQuestion(); if(this.state.goToNextQuestion()){ if(this.state.isQuizComplete())this.endQuiz(); else this._displayCurrentQuestion(); } else if(i && q?.hasOwnProperty('respostaDadaId'))this.endQuiz();}
     previousQuestion() { if (this.state.goToPreviousQuestion()) { this._displayCurrentQuestion(); } }
     goToQuestion(idx) { if (idx >= this.state.getTotalFilteredQuestions()) this.endQuiz(); else if (this.state.goToQuestion(idx)) this._displayCurrentQuestion(); }
+
     async _displayCurrentQuestion(shouldScroll = true) {
         const el = this.ui.elements.questionWrap, init = this.state.isInitialQuestionLoad;
         const logic = () => {
@@ -912,28 +1140,73 @@ class QuizLogic {
                 if(shouldScroll)this.ui.scrollToQuestionStart();
             } else { console.error("P inválida:", this.state.currentQuestionIndex); this.endQuiz(); }
         };
-        if(!init && el){ el.classList.add("is-fading-out"); await new Promise(r=>{let t=!1; const h=()=>{if(!t){el.removeEventListener("transitionend",h);t=!0;r();}}; el.addEventListener("transitionend",h); setTimeout(()=>{if(!t){el.removeEventListener("transitionend",h);t=!0;r();}}, this.ui.TRANSITION_DURATION+50);}); el.classList.remove("is-fading-out"); el.classList.add("is-transparent"); requestAnimationFrame(()=>{logic(); requestAnimationFrame(()=>el.classList.remove("is-transparent"));});
-        } else { logic(); if(el)el.classList.remove("is-fading-out","is-transparent"); if(this.state.getTotalFilteredQuestions()>0)this.state.markNavigated();}
+
+        // Transição suave para a nova questão
+        if(!init && el){ // Se não for a carga inicial e o elemento existir
+            el.classList.add("is-fading-out");
+            // Espera a transição de fade-out terminar
+            await new Promise(resolve => {
+                let transitionEnded = false;
+                const transitionEndHandler = () => {
+                    if (!transitionEnded) {
+                        el.removeEventListener("transitionend", transitionEndHandler);
+                        transitionEnded = true;
+                        resolve();
+                    }
+                };
+                el.addEventListener("transitionend", transitionEndHandler);
+                // Fallback caso o evento não dispare (ex: se display:none for setado antes)
+                setTimeout(() => {
+                    if (!transitionEnded) {
+                        el.removeEventListener("transitionend", transitionEndHandler);
+                        transitionEnded = true;
+                        resolve();
+                    }
+                }, this.ui.TRANSITION_DURATION + 50); // Duração da transição + margem
+            });
+
+            el.classList.remove("is-fading-out");
+            el.classList.add("is-transparent"); // Mantém invisível enquanto atualiza
+
+            requestAnimationFrame(() => { // Garante que a classe is-transparent foi aplicada
+                logic(); // Atualiza o conteúdo da questão
+                requestAnimationFrame(() => el.classList.remove("is-transparent")); // Torna visível (fade-in implícito)
+            });
+
+        } else { // Carga inicial ou elemento não encontrado
+            logic();
+            if (el) el.classList.remove("is-fading-out", "is-transparent"); // Limpa classes de transição
+            if (this.state.getTotalFilteredQuestions() > 0) this.state.markNavigated(); // Marca como navegada se houver questões
+        }
     }
-    endQuiz() { console.log("Quiz encerrado."); this.ui.stopTimer(); this.ui.showResults(this.user, this.state.getTotalFilteredQuestions()); }
+
+    endQuiz() {
+        // console.log("Quiz encerrado.");
+        this.ui.stopTimer();
+        this.ui.showResults(this.user, this.state.getTotalFilteredQuestions());
+        this.ui.toggleExplanationModal(false); // Garante que modal de explicação está fechado
+    }
     restartQuiz() {
-        console.log("Tentar Novamente...");
+        // console.log("Tentar Novamente...");
         this.user.reset();
         this.state.fullReset();
         this.ui.updateScoreDisplay(this.user.pontos,this.user.acertos,this.user.erros);
         this.ui.hideResults();
         this.ui.resetTimer();
+        this.ui.toggleExplanationModal(false); // Garante que modal de explicação está fechado
+
         this.ui.displayQuizContent(false);
         this.ui.clearWarning();
-        this.ui.updateFilteredQuestionCount(0);
-        this.quizLogic.clearAllFiltersInPanel();
-        this.ui.toggleFilterPanel(true);
+        this.ui.updateFilteredQuestionCount(0); // Zera a contagem exibida
+        this.quizLogic.clearAllFiltersInPanel(); // Reseta os filtros no painel
+        this.ui.toggleFilterPanel(true); // Abre o painel de filtros
     }
     forceEndQuiz() {
-        console.log("Forçando encerramento.");
+        // console.log("Forçando encerramento.");
         this.ui.stopTimer();
-        this.endQuiz();
-        this.ui.toggleConfirmModal(false);
+        this.endQuiz(); // Mostra resultados
+        this.ui.toggleConfirmModal(false); // Fecha modal de confirmação
+        this.ui.toggleExplanationModal(false); // Garante que modal de explicação está fechado
     }
 }
 
@@ -945,9 +1218,11 @@ class App {
         this.quizState = new QuizState();
         this.layoutManager = new LayoutManager();
         this.quizUI = new QuizUI(this.layoutManager.handleSectionChange.bind(this.layoutManager));
-        this.quizUI.quizState = this.quizState; // Fornece referência do QuizState para QuizUI
+        // Injetar dependências onde necessário
+        this.quizUI.quizState = this.quizState;
+        this.quizUI.quizData = this.quizData;
         this.quizLogic = new QuizLogic(this.quizState, this.quizUI, this.userData, this.quizData);
-        this.quizLogic.quizLogic = this.quizLogic; // Para restartQuiz chamar clearAllFiltersInPanel
+        this.quizLogic.quizLogic = this.quizLogic; // Para o restartQuiz no QuizLogic chamar clearAllFiltersInPanel
     }
     async initialize() {
         console.log("Inicializando App...");
@@ -957,39 +1232,68 @@ class App {
                 this.quizState.initialize(this.quizData.getPerguntas());
                 const categoriasParaArvore = this.quizData.getCategoriasHierarquicamente();
                 this.quizUI.generateCategoryTree(categoriasParaArvore);
-                this.quizUI.updateFilteredQuestionCount(0); // Inicialmente 0
+                this.quizUI.updateFilteredQuestionCount(0); // Inicializa contagem
                 this.setupEventListeners();
                 const initialActiveLink = document.querySelector('.main-nav__link--active, .bottom-nav__link--active');
                 const initialSection = initialActiveLink?.dataset.section || 'home-section';
-                this.quizUI.showSection(initialSection); console.log("App inicializado com sucesso.");
-            } else { console.warn("Dados carregados, mas sem perguntas."); this.quizUI.showSection('question-section'); this.quizUI.showWarning("Não foi possível carregar as perguntas."); this.disableCoreFunctionality(); }
+                this.quizUI.showSection(initialSection);
+                console.log("App inicializado com sucesso.");
+            } else {
+                console.warn("Dados carregados, mas sem perguntas. Verifique os arquivos JSON.");
+                this.quizUI.showSection('question-section'); // Vai para a seção de questões
+                this.quizUI.showWarning("Não foi possível carregar as perguntas do quiz. Por favor, verifique os arquivos de dados e tente recarregar a página.");
+                this.disableCoreFunctionality();
+            }
         } catch (error) {
             console.error("Falha crítica ao inicializar o App:", error);
-            try { this.quizUI.showSection('question-section'); this.quizUI.showWarning(`Erro fatal: ${error.message}.`); this.disableCoreFunctionality(); }
-            catch (uiError) { console.error("Erro na UI:", uiError); alert(`Erro fatal: ${error.message}.`); }
+            try {
+                this.quizUI.showSection('question-section');
+                this.quizUI.showWarning(`Erro fatal ao carregar o quiz: ${error.message}. Verifique o console para mais detalhes.`);
+                this.disableCoreFunctionality();
+            } catch (uiError) {
+                console.error("Erro catastrófico na UI durante o tratamento de erro:", uiError);
+                alert(`Erro fatal ao carregar o quiz: ${error.message}. Não foi possível nem mesmo exibir a mensagem de erro na página.`);
+            }
         }
     }
-    disableCoreFunctionality() { this.quizUI.hideElement(this.quizUI.elements.btnAbrirFiltros); this.quizUI.hideElement(this.quizUI.elements.filteredQuestionCountDisplay); }
+    disableCoreFunctionality() {
+        // Esconde botões que iniciam o quiz ou abrem filtros se os dados falharam
+        this.quizUI.hideElement(this.quizUI.elements.btnAbrirFiltros);
+        this.quizUI.hideElement(this.quizUI.elements.filteredQuestionCountDisplay);
+        this.quizUI.hideElement(this.quizUI.elements.startRandomQuiz);
+        this.quizUI.hideElement(this.quizUI.elements.startRandomQuizPlaceholderBtn);
+        const startCategoryBtn = document.getElementById('start-category-quiz');
+        if(startCategoryBtn) this.quizUI.hideElement(startCategoryBtn);
+    }
+
     setupEventListeners() {
+        // Navegação principal
         this.quizUI.elements.navElements?.forEach(navEl => {
             navEl.addEventListener('click', (e) => {
-                if (navEl.tagName === 'A') e.preventDefault(); const targetSection = navEl.dataset.section;
+                if (navEl.tagName === 'A') e.preventDefault();
+                const targetSection = navEl.dataset.section;
                 if (targetSection && targetSection !== this.quizUI.currentSection) {
                     this.quizUI.showSection(targetSection);
                     if (targetSection === 'question-section') {
-                        this.quizState.setQuickQuizMode(false);
+                        this.quizState.setQuickQuizMode(false); // Garante que não está em modo rápido
                         this.quizUI.updateFilteredQuestionCount(this.quizState.filteredQuestions.length);
-                        if (navEl.id === 'start-category-quiz' || navEl.id === 'view-all-questions-alt') {
-                             this.quizUI.toggleFilterPanel(true);
+                        // Se o quiz não estiver ativo e a seção de questões for acessada por um link que sugere filtros
+                        if ( (navEl.id === 'start-category-quiz' || navEl.id === 'view-all-questions-alt') &&
+                             this.quizUI.elements.quizSectionContent?.classList.contains(this.quizUI.hiddenClassName) ) {
+                             this.quizUI.toggleFilterPanel(true); // Abre painel de filtros
                         }
                     }
                 } else if (targetSection === 'question-section' && (navEl.id === 'start-category-quiz' || navEl.id === 'view-all-questions-alt')) {
+                    // Caso já esteja na seção de questões, mas o quiz não está ativo, e clica para filtrar
                     if (this.quizUI.elements.quizSectionContent?.classList.contains(this.quizUI.hiddenClassName)) {
-                        this.quizState.setQuickQuizMode(false); this.quizUI.toggleFilterPanel(true);
+                        this.quizState.setQuickQuizMode(false);
+                        this.quizUI.toggleFilterPanel(true);
                     }
                 }
             });
         });
+
+        // Botões de Início de Quiz
         this.quizUI.elements.startRandomQuiz?.addEventListener('click', () => {
             this.quizUI.showSection('question-section');
             this.quizLogic.startQuickQuiz();
@@ -997,6 +1301,8 @@ class App {
         this.quizUI.elements.startRandomQuizPlaceholderBtn?.addEventListener('click', () => {
             this.quizLogic.startQuickQuiz();
         });
+
+        // Painel de Filtros
         this.quizUI.elements.btnAbrirFiltros?.addEventListener('click', () => this.quizUI.toggleFilterPanel(true));
         this.quizUI.elements.btnFecharFiltros?.addEventListener('click', () => this.quizUI.toggleFilterPanel(false));
         this.quizUI.elements.filterPanelOverlay?.addEventListener('click', () => this.quizUI.toggleFilterPanel(false));
@@ -1004,15 +1310,33 @@ class App {
         this.quizUI.elements.btnLimparFiltrosPainel?.addEventListener('click', () => this.quizLogic.clearAllFiltersInPanel());
         this.quizUI.elements.btnCatSelectAll?.addEventListener('click', () => { this.quizUI.setCategoryTreeState(this.quizData.getCategorias().map(c=>c.id_categoria.toString())); });
         this.quizUI.elements.btnCatClearAll?.addEventListener('click', () => { this.quizUI.setCategoryTreeState([]); });
+
+        // Navegação do Quiz (Anterior/Próxima)
         this.quizUI.elements.prevBtn?.addEventListener('click', () => this.quizLogic.previousQuestion());
         this.quizUI.elements.nextBtn?.addEventListener('click', () => this.quizLogic.nextQuestion());
+
+        // Ações de Resultado do Quiz
         this.quizUI.elements.btnRecomecar?.addEventListener('click', () => this.quizLogic.restartQuiz());
         this.quizUI.elements.btnExplorarMais?.addEventListener('click', () => this.handleExplorarMais());
+
+        // Modal de Confirmação de Encerramento
         this.quizUI.elements.btnEncerrarSessao?.addEventListener('click', () => this.quizUI.toggleConfirmModal(true));
         this.quizUI.elements.confirmEncerrarBtn?.addEventListener('click', () => { this.quizLogic.forceEndQuiz(); });
         this.quizUI.elements.cancelEncerrarBtn?.addEventListener('click', () => { this.quizUI.toggleConfirmModal(false); });
         this.quizUI.elements.confirmEncerrarOverlay?.addEventListener('click', (e) => { if (e.target === this.quizUI.elements.confirmEncerrarOverlay) this.quizUI.toggleConfirmModal(false); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && this.quizUI.elements.filterPanel?.classList.contains('filter-panel--visible')) { this.quizUI.toggleFilterPanel(false); }});
+        
+        // Fechar painel de filtros com ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (this.quizUI.elements.filterPanel?.classList.contains('filter-panel--visible')) {
+                    this.quizUI.toggleFilterPanel(false);
+                }
+                // Também fechar o modal de explicação com ESC
+                if (this.quizUI.elements.explanationModalOverlay?.classList.contains('modal--visible')) {
+                    this.quizUI.toggleExplanationModal(false);
+                }
+            }
+        });
 
         // Listeners para checkboxes de dificuldade
         const difficultyInputs = this.quizUI.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]');
@@ -1021,7 +1345,7 @@ class App {
         difficultyInputs?.forEach(input => {
             input.addEventListener('change', () => {
                 if (input.value === 'all' && input.checked) {
-                    // Se "Todas" for marcado, desmarca os outros específicos
+                    // Se "Todas" for marcado, desmarca os outros
                     difficultyInputs.forEach(otherInput => {
                         if (otherInput.value !== 'all') {
                             otherInput.checked = false;
@@ -1033,14 +1357,32 @@ class App {
                         allDifficultyCheckbox.checked = false;
                     }
                 }
-                // Se todos os específicos forem desmarcados, e "Todas" também estiver desmarcado,
-                // a lógica em getSelectedDifficulties tratará como ['all'].
-                // Se todos os específicos forem marcados, o usuário pode marcar "Todas" manualmente se desejar
-                // ou deixar os específicos marcados, o resultado do filtro será o mesmo.
+                // Se todos os específicos forem desmarcados, marcar "Todas" automaticamente? (Opcional)
+                // const specificChecked = Array.from(difficultyInputs).some(cb => cb.value !== 'all' && cb.checked);
+                // if (!specificChecked && allDifficultyCheckbox && !allDifficultyCheckbox.checked) {
+                //     allDifficultyCheckbox.checked = true;
+                // }
             });
         });
+
+        // Listener para o botão "Analisar Resposta" (que agora abre o modal)
+        this.quizUI.elements.btnToggleExplanation?.addEventListener('click', () => this.quizUI.toggleExplanationModal(true));
+
+        // Listeners para fechar o NOVO modal de explicação
+        this.quizUI.elements.btnCloseExplanationModal?.addEventListener('click', () => this.quizUI.toggleExplanationModal(false));
+        this.quizUI.elements.btnGotItExplanation?.addEventListener('click', () => this.quizUI.toggleExplanationModal(false));
+        this.quizUI.elements.explanationModalOverlay?.addEventListener('click', (e) => {
+            if (e.target === this.quizUI.elements.explanationModalOverlay) { // Só fecha se clicar no overlay
+                this.quizUI.toggleExplanationModal(false);
+            }
+        });
+
     }
-    handleExplorarMais() { console.log("Botão 'Explorar Mais' clicado!"); alert("Funcionalidade 'Explorar Mais' em desenvolvimento!"); }
+    handleExplorarMais() {
+        console.log("Botão 'Explorar Mais' clicado!");
+        this.quizUI.showSection('home-section'); // Volta para a home, por exemplo
+        // Poderia ter uma lógica mais complexa aqui, como ir para uma seção de "revisão" ou "estudo"
+    }
 }
 
 // --- Inicialização ---

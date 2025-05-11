@@ -1,316 +1,2386 @@
 [
-  { "id_opcao_resposta": 101, "id_pergunta": 1, "texto_opcao": "Produzir testosterona", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 102, "id_pergunta": 1, "texto_opcao": "Formar a túnica albugínea", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 103, "id_pergunta": 1, "texto_opcao": "Fornecer sustentação e formar a barreira hematotesticular", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 104, "id_pergunta": 1, "texto_opcao": "Participar diretamente da espermiogênese", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 201, "id_pergunta": 2, "texto_opcao": "Espermatogônias", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 202, "id_pergunta": 2, "texto_opcao": "Células de Sertoli", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 203, "id_pergunta": 2, "texto_opcao": "Espermátides", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 204, "id_pergunta": 2, "texto_opcao": "Espermatócitos primários", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 301, "id_pergunta": 3, "texto_opcao": "Epitélio simples pavimentoso", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 302, "id_pergunta": 3, "texto_opcao": "Epitélio cúbico simples", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 303, "id_pergunta": 3, "texto_opcao": "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 304, "id_pergunta": 3, "texto_opcao": "Epitélio pseudoestratificado com estereocílios", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 401, "id_pergunta": 4, "texto_opcao": "Epitélio seminífero", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 402, "id_pergunta": 4, "texto_opcao": "Túnica própria", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 403, "id_pergunta": 4, "texto_opcao": "Tecido intersticial entre os túbulos seminíferos", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 404, "id_pergunta": 4, "texto_opcao": "Rede testicular (rete testis)", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 501, "id_pergunta": 5, "texto_opcao": "Possui epitélio simples cúbico e camada muscular fina", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 502, "id_pergunta": 5, "texto_opcao": "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 503, "id_pergunta": 5, "texto_opcao": "Possui epitélio estratificado pavimentoso e camada adventícia espessa", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 504, "id_pergunta": 5, "texto_opcao": "É formado por epitélio colunar ciliado e tecido fibroso denso", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 601, "id_pergunta": 6, "texto_opcao": "Retículo Endoplasmático", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 602, "id_pergunta": 6, "texto_opcao": "Complexo de Golgi", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 603, "id_pergunta": 6, "texto_opcao": "Mitocôndria", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 604, "id_pergunta": 6, "texto_opcao": "Lisossomo", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 701, "id_pergunta": 7, "texto_opcao": "Mitocôndria", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 702, "id_pergunta": 7, "texto_opcao": "Núcleo", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 703, "id_pergunta": 7, "texto_opcao": "Citosol", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 704, "id_pergunta": 7, "texto_opcao": "Peroxissomo", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 801, "id_pergunta": 8, "texto_opcao": "Contração", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 802, "id_pergunta": 8, "texto_opcao": "Sustentação", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 803, "id_pergunta": 8, "texto_opcao": "Proteção e Absorção", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 804, "id_pergunta": 8, "texto_opcao": "Transmissão de impulsos", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 901, "id_pergunta": 9, "texto_opcao": "Produzir hormônios", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 902, "id_pergunta": 9, "texto_opcao": "Realizar fagocitose", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 903, "id_pergunta": 9, "texto_opcao": "Transmitir impulsos nervosos", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 904, "id_pergunta": 9, "texto_opcao": "Armazenar gordura", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1001, "id_pergunta": 10, "texto_opcao": "Fornecer energia direta para a reação", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1002, "id_pergunta": 10, "texto_opcao": "Aumentar a energia de ativação da reação", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1003, "id_pergunta": 10, "texto_opcao": "Diminuir a energia de ativação, acelerando a velocidade da reação", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1004, "id_pergunta": 10, "texto_opcao": "Atuar como substrato principal da reação", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1005, "id_pergunta": 10, "texto_opcao": "Modificar o pH do meio reacional", "eh_correta": false, "ordem_exibicao": 4 },
-  { "id_opcao_resposta": 1101, "id_pergunta": 11, "texto_opcao": "Tradução", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1102, "id_pergunta": 11, "texto_opcao": "Replicação", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1103, "id_pergunta": 11, "texto_opcao": "Transcrição", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1201, "id_pergunta": 12, "texto_opcao": "Glicose", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1202, "id_pergunta": 12, "texto_opcao": "ATP (Trifosfato de Adenosina)", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1203, "id_pergunta": 12, "texto_opcao": "NADH", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1204, "id_pergunta": 12, "texto_opcao": "Piruvato", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1301, "id_pergunta": 13, "texto_opcao": "Dois", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1302, "id_pergunta": 13, "texto_opcao": "Três", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1303, "id_pergunta": 13, "texto_opcao": "Quatro", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1304, "id_pergunta": 13, "texto_opcao": "Cinco", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1401, "id_pergunta": 14, "texto_opcao": "Produzir todas as células sanguíneas fetais", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1402, "id_pergunta": 14, "texto_opcao": "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1403, "id_pergunta": 14, "texto_opcao": "Iniciar as contrações uterinas no início da gestação", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1404, "id_pergunta": 14, "texto_opcao": "Determinar o sexo do feto", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1501, "id_pergunta": 15, "texto_opcao": "Ocitocina", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1502, "id_pergunta": 15, "texto_opcao": "Progesterona", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1503, "id_pergunta": 15, "texto_opcao": "Prolactina", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1504, "id_pergunta": 15, "texto_opcao": "Estrogênio", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1505, "id_pergunta": 15, "texto_opcao": "Testosterona", "eh_correta": false, "ordem_exibicao": 4 },
-  { "id_opcao_resposta": 1601, "id_pergunta": 16, "texto_opcao": "Citosol", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1602, "id_pergunta": 16, "texto_opcao": "Núcleo", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1603, "id_pergunta": 16, "texto_opcao": "Membrana Plasmática", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1604, "id_pergunta": 16, "texto_opcao": "Matriz Mitocondrial", "eh_correta": true, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1701, "id_pergunta": 17, "texto_opcao": "O risco de anomalias cromossômicas", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1702, "id_pergunta": 17, "texto_opcao": "A data provável do parto (DPP)", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1703, "id_pergunta": 17, "texto_opcao": "O volume de líquido amniótico", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1704, "id_pergunta": 17, "texto_opcao": "A posição da placenta", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1801, "id_pergunta": 18, "texto_opcao": "Lobo Frontal", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1802, "id_pergunta": 18, "texto_opcao": "Lobo Parietal", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1803, "id_pergunta": 18, "texto_opcao": "Lobo Temporal", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1804, "id_pergunta": 18, "texto_opcao": "Lobo Occipital", "eh_correta": true, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 1901, "id_pergunta": 19, "texto_opcao": "Nocicepção", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 1902, "id_pergunta": 19, "texto_opcao": "Termocepção", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 1903, "id_pergunta": 19, "texto_opcao": "Propriocepção", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 1904, "id_pergunta": 19, "texto_opcao": "Interocepção", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2001, "id_pergunta": 20, "texto_opcao": "Canais Semicirculares", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2002, "id_pergunta": 20, "texto_opcao": "Utrículo", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2003, "id_pergunta": 20, "texto_opcao": "Sáculo", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2004, "id_pergunta": 20, "texto_opcao": "Cóclea (Órgão de Corti)", "eh_correta": true, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2101, "id_pergunta": 21, "texto_opcao": "Mecanorreceptores", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2102, "id_pergunta": 21, "texto_opcao": "Termorreceptores", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2103, "id_pergunta": 21, "texto_opcao": "Nociceptores", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2104, "id_pergunta": 21, "texto_opcao": "Quimiorreceptores", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2201, "id_pergunta": 22, "texto_opcao": "Trato Espinotalâmico Lateral", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2202, "id_pergunta": 22, "texto_opcao": "Sistema Coluna Dorsal-Lemnisco Medial", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2203, "id_pergunta": 22, "texto_opcao": "Trato Corticoespinal", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2204, "id_pergunta": 22, "texto_opcao": "Trato Espinocerebelar", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2301, "id_pergunta": 23, "texto_opcao": "Osteoporose", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2302, "id_pergunta": 23, "texto_opcao": "Sarcopenia", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2303, "id_pergunta": 23, "texto_opcao": "Anemia", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2304, "id_pergunta": 23, "texto_opcao": "Disfagia", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2305, "id_pergunta": 23, "texto_opcao": "Artrite", "eh_correta": false, "ordem_exibicao": 4 },
-  { "id_opcao_resposta": 2401, "id_pergunta": 24, "texto_opcao": "Demência de Alzheimer", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2402, "id_pergunta": 24, "texto_opcao": "Depressão Maior", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2403, "id_pergunta": 24, "texto_opcao": "Delirium", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2404, "id_pergunta": 24, "texto_opcao": "Doença de Parkinson", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2501, "id_pergunta": 25, "texto_opcao": "Apoptose", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2502, "id_pergunta": 25, "texto_opcao": "Necrose", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2503, "id_pergunta": 25, "texto_opcao": "Senescência Celular", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2504, "id_pergunta": 25, "texto_opcao": "Autofagia", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2601, "id_pergunta": 26, "texto_opcao": "Osteoartrite", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2602, "id_pergunta": 26, "texto_opcao": "Osteomalácia", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2603, "id_pergunta": 26, "texto_opcao": "Osteoporose", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2604, "id_pergunta": 26, "texto_opcao": "Doença de Paget", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2701, "id_pergunta": 27, "texto_opcao": "Monoterapia", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2702, "id_pergunta": 27, "texto_opcao": "Farmacocinética", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2703, "id_pergunta": 27, "texto_opcao": "Polifarmácia", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2704, "id_pergunta": 27, "texto_opcao": "Farmacodinâmica", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 2801, "id_pergunta": 28, "texto_opcao": "Articulação Fibrosa (Sinartrose)", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2802, "id_pergunta": 28, "texto_opcao": "Articulação Cartilaginosa (Anfiartrose)", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2803, "id_pergunta": 28, "texto_opcao": "Articulação Sinovial (Diartrose)", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2901, "id_pergunta": 29, "texto_opcao": "Osteoblastos", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 2902, "id_pergunta": 29, "texto_opcao": "Condrócitos", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 2903, "id_pergunta": 29, "texto_opcao": "Osteócitos", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 2904, "id_pergunta": 29, "texto_opcao": "Osteoclastos", "eh_correta": true, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3001, "id_pergunta": 30, "texto_opcao": "Tendões", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3002, "id_pergunta": 30, "texto_opcao": "Ligamentos", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3003, "id_pergunta": 30, "texto_opcao": "Fáscias", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3004, "id_pergunta": 30, "texto_opcao": "Cartilagens", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3101, "id_pergunta": 31, "texto_opcao": "Fratura Simples (Fechada)", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3102, "id_pergunta": 31, "texto_opcao": "Fratura Cominutiva", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3103, "id_pergunta": 31, "texto_opcao": "Fratura Exposta (Aberta)", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3104, "id_pergunta": 31, "texto_opcao": "Fratura em Galho Verde", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3201, "id_pergunta": 32, "texto_opcao": "Artrite Reumatoide", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3202, "id_pergunta": 32, "texto_opcao": "Gota", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3203, "id_pergunta": 32, "texto_opcao": "Osteoartrite (Artrose)", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3204, "id_pergunta": 32, "texto_opcao": "Lúpus Eritematoso Sistêmico", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3301, "id_pergunta": 33, "texto_opcao": "Angiogênese", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3302, "id_pergunta": 33, "texto_opcao": "Metástase", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3303, "id_pergunta": 33, "texto_opcao": "Apoptose", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3304, "id_pergunta": 33, "texto_opcao": "Hiperplasia", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3305, "id_pergunta": 33, "texto_opcao": "Diferenciação", "eh_correta": false, "ordem_exibicao": 4 },
-  { "id_opcao_resposta": 3401, "id_pergunta": 34, "texto_opcao": "Genes Supressores de Tumor", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3402, "id_pergunta": 34, "texto_opcao": "Proto-oncogenes (quando ativados, tornam-se Oncogenes)", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3403, "id_pergunta": 34, "texto_opcao": "Genes de Reparo do DNA", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3404, "id_pergunta": 34, "texto_opcao": "Genes da Apoptose", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3501, "id_pergunta": 35, "texto_opcao": "RAS", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3502, "id_pergunta": 35, "texto_opcao": "MYC", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3503, "id_pergunta": 35, "texto_opcao": "p53", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3504, "id_pergunta": 35, "texto_opcao": "BRCA1", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3601, "id_pergunta": 36, "texto_opcao": "Vasculogênese", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3602, "id_pergunta": 36, "texto_opcao": "Angiogênese", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3603, "id_pergunta": 36, "texto_opcao": "Linfangiogênese", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3604, "id_pergunta": 36, "texto_opcao": "Hemopoiese", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3701, "id_pergunta": 37, "texto_opcao": "Radioterapia", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3702, "id_pergunta": 37, "texto_opcao": "Cirurgia Oncológica", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3703, "id_pergunta": 37, "texto_opcao": "Quimioterapia", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3704, "id_pergunta": 37, "texto_opcao": "Imunoterapia", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3801, "id_pergunta": 38, "texto_opcao": "Bloqueio dos canais de sódio; ATPase", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3802, "id_pergunta": 38, "texto_opcao": "Inibição da recaptação de serotonina; Monoamina oxidase", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3803, "id_pergunta": 38, "texto_opcao": "Ligação e inativação da acetilcolinesterase (AChE); Acetilcolinesterase", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3804, "id_pergunta": 38, "texto_opcao": "Modulação dos receptores GABA; GABA transaminase", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 3901, "id_pergunta": 39, "texto_opcao": "É a rápida metabolização do organofosforado pelo fígado, permitindo a recuperação da AChE em poucas horas.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 3902, "id_pergunta": 39, "texto_opcao": "Refere-se à ativação compensatória de outras enzimas que degradam a acetilcolina, diminuindo a necessidade de novas AChE.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 3903, "id_pergunta": 39, "texto_opcao": "É a mudança conformacional irreversível do complexo organofosforado-AChE, exigindo a síntese de novas moléculas de AChE, o que pode levar dias.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 3904, "id_pergunta": 39, "texto_opcao": "Consiste na excreção acelerada do organofosforado pela urina, minimizando os danos à AChE.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4001, "id_pergunta": 40, "texto_opcao": "Parestesia em luvas e botas e polineuropatia motora simétrica ascendente, surgindo 1-3 semanas após a exposição.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4002, "id_pergunta": 40, "texto_opcao": "Bradicardia, broncoconstrição, miose e diaforese, iniciando-se imediatamente após a exposição.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4003, "id_pergunta": 40, "texto_opcao": "Fraqueza na flexão do pescoço, dos reflexos tendíneos profundos, anormalidades nos nervos cranianos, fraqueza muscular proximal e insuficiência respiratória, manifestando-se 24-96h após a exposição.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4004, "id_pergunta": 40, "texto_opcao": "Agitação, confusão, convulsões e coma, desenvolvendo-se em minutos.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4101, "id_pergunta": 41, "texto_opcao": "Ausência do grupo a-ciano; Tremor e hipersensibilidade.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4102, "id_pergunta": 41, "texto_opcao": "Presença do grupo a-ciano; Salivação excessiva, coreoatetose e convulsões.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4103, "id_pergunta": 41, "texto_opcao": "Cadeia lateral alifática longa; Broncodilatação e taquicardia.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4104, "id_pergunta": 41, "texto_opcao": "Anel benzênico adicional; Depressão respiratória e miose.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4201, "id_pergunta": 42, "texto_opcao": "Inibição da fotossíntese; Amarelecimento e queda das folhas.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4202, "id_pergunta": 42, "texto_opcao": "Bloqueio da síntese de aminoácidos; Necrose dos tecidos meristemáticos.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4203, "id_pergunta": 42, "texto_opcao": "Análogos da auxina, levando ao crescimento incontrolável e letal.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4204, "id_pergunta": 42, "texto_opcao": "Interferência na divisão celular; Nanismo e má formação das raízes.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4301, "id_pergunta": 43, "texto_opcao": "Fígado; Esteatose e necrose hepatocelular.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4302, "id_pergunta": 43, "texto_opcao": "Rins; Necrose tubular aguda e fibrose intersticial.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4303, "id_pergunta": 43, "texto_opcao": "Pulmões; Danos epiteliais alveolares, edema pulmonar e infiltração de células inflamatórias.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4304, "id_pergunta": 43, "texto_opcao": "Cérebro; Edema cerebral e desmielinização.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4401, "id_pergunta": 44, "texto_opcao": "Constipação e distensão abdominal; Evolução para íleo paralítico.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4402, "id_pergunta": 44, "texto_opcao": "Azia e regurgitação; Evolução para esofagite erosiva.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4403, "id_pergunta": 44, "texto_opcao": "Sintomas gastrintestinais passageiros; Evolução para hemorragia gastrintestinal, hipotensão, disfunção pulmonar e dano renal.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4404, "id_pergunta": 44, "texto_opcao": "Diarreia aquosa e cólicas leves; Evolução para desidratação severa sem outras complicações sistêmicas.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4501, "id_pergunta": 45, "texto_opcao": "Triazóis; Neurotoxicidade e distúrbios comportamentais.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4502, "id_pergunta": 45, "texto_opcao": "Estrobilurinas; Cardiotoxicidade e arritmias.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4503, "id_pergunta": 45, "texto_opcao": "Ditiocarbamatos; Efeitos na tireoide, como hipertrofia e hiperplasia.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4504, "id_pergunta": 45, "texto_opcao": "Benzimidazóis; Hepatotoxicidade e cirrose.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4601, "id_pergunta": 46, "texto_opcao": "Inibição da agregação plaquetária; Fator de von Willebrand.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4602, "id_pergunta": 46, "texto_opcao": "Ativação excessiva da plasmina; Fibrinogênio.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4603, "id_pergunta": 46, "texto_opcao": "Antagonizam a ação da vitamina K na síntese dos fatores de coagulação II, VII, IX e X.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4604, "id_pergunta": 46, "texto_opcao": "Destruição direta dos eritrócitos; Hemoglobina.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4701, "id_pergunta": 47, "texto_opcao": "SAMPLE (Sinais/Sintomas, Alergias, Medicações, Passado médico, Líquidos/alimentação, Eventos); Administração de analgésicos e antieméticos.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4702, "id_pergunta": 47, "texto_opcao": "ABC (Vias aéreas, Respiração, Circulação); Garantir vias aéreas, respiração, circulação, oxigênio, hidratação e controle de convulsões.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4703, "id_pergunta": 47, "texto_opcao": "FAST (Face, Arms, Speech, Time); Monitorização neurológica contínua e trombólise se indicado.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4704, "id_pergunta": 47, "texto_opcao": "RICE (Repouso, Gelo, Compressão, Elevação); Imobilização da área afetada e crioterapia.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4801, "id_pergunta": 48, "texto_opcao": "Ingestão ocorrida há mais de 6 horas, em qualquer dose; Quando o paciente relata alívio dos sintomas.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4802, "id_pergunta": 48, "texto_opcao": "Apenas para substâncias oleosas, independentemente do tempo de ingestão; Após a administração de 1 litro de soro fisiológico.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4803, "id_pergunta": 48, "texto_opcao": "Ingestão ocorrida em menos de 60 minutos, envolvendo dose potencialmente letal; Remoção da substância indicada pela cor clara do líquido drenado.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4804, "id_pergunta": 48, "texto_opcao": "Em todos os casos de ingestão, como medida profilática; Após 30 minutos de procedimento contínuo.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 4901, "id_pergunta": 49, "texto_opcao": "Bloqueia competitivamente os receptores muscarínicos; Trata apenas sintomas muscarínicos como salivação e broncoespasmo.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 4902, "id_pergunta": 49, "texto_opcao": "Potencializa a ação do GABA nos receptores GABA-A; Reduz convulsões e agitação.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 4903, "id_pergunta": 49, "texto_opcao": "Reativa a acetilcolinesterase removendo o grupo fosforil; Trata sintomas muscarínicos e nicotínicos (fasciculações, miastenia).", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 4904, "id_pergunta": 49, "texto_opcao": "É um agonista adrenérgico que aumenta a frequência cardíaca e pressão arterial; Usada para bradicardia e hipotensão refratárias.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5001, "id_pergunta": 50, "texto_opcao": "Via dérmica (70%); Óbito (25%).", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5002, "id_pergunta": 50, "texto_opcao": "Via inalatória (55%); Cura com sequelas graves (10%).", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5003, "id_pergunta": 50, "texto_opcao": "Via ingestão (42%); Cura sem sequelas (80%).", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5004, "id_pergunta": 50, "texto_opcao": "Via ocular (30%); Seqüelas visuais permanentes (5%).", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5101, "id_pergunta": 51, "texto_opcao": "IBAMA (eficácia agronômica e registro); Ministério da Saúde (riscos à saúde humana).", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5102, "id_pergunta": 51, "texto_opcao": "ANVISA (eficácia agronômica e registro); MAPA (riscos à saúde humana).", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5103, "id_pergunta": 51, "texto_opcao": "MAPA (Ministério da Agricultura e Pecuária - eficácia agronômica e registro); ANVISA (riscos à saúde humana).", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5104, "id_pergunta": 51, "texto_opcao": "Conselho Nacional do Meio Ambiente - CONAMA (eficácia agronômica e registro); Secretarias Estaduais de Saúde (riscos à saúde humana).", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5201, "id_pergunta": 52, "texto_opcao": "Apenas o custo de produção e a solubilidade em água.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5202, "id_pergunta": 52, "texto_opcao": "O país de origem do fabricante e a data de validade.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5203, "id_pergunta": 52, "texto_opcao": "Classificação de perigos ao meio ambiente, símbolos, palavras de advertência, frases de risco e precaução, e fichas de segurança.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5204, "id_pergunta": 52, "texto_opcao": "A cor do produto e o tipo de embalagem utilizada.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5301, "id_pergunta": 53, "texto_opcao": "Inibição irreversível da AChE; Sintomas prolongados por semanas, necessitando de antídotos específicos.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5302, "id_pergunta": 53, "texto_opcao": "Inibição da AChE rapidamente reversível; Miose, diurese, diarreia, salivação, fasciculação muscular, geralmente desaparecendo em algumas horas.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5303, "id_pergunta": 53, "texto_opcao": "Bloqueio dos canais de cálcio; Efeitos cardiovasculares graves e persistentes.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5304, "id_pergunta": 53, "texto_opcao": "Dano direto ao DNA mitocondrial; Fadiga crônica e neuropatia periférica tardia.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5401, "id_pergunta": 54, "texto_opcao": "Apenas após a confirmação laboratorial da intoxicação; Sistema de Informação de Mortalidade (SIM).", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5402, "id_pergunta": 54, "texto_opcao": "Somente em casos graves com internação hospitalar; Prontuário eletrônico do paciente (PEP).", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5403, "id_pergunta": 54, "texto_opcao": "Desde a suspeita; SINAN (Sistema de Informação de Agravos de Notificação), usando a ficha de intoxicação exógena.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5404, "id_pergunta": 54, "texto_opcao": "Após a alta hospitalar do paciente; Cadastro Nacional de Estabelecimentos de Saúde (CNES).", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5501, "id_pergunta": 55, "texto_opcao": "6 meses para análise técnica; Proibição imediata se não aprovado no Brasil.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5502, "id_pergunta": 55, "texto_opcao": "12 meses para análise técnica; Necessidade de testes adicionais em solo brasileiro.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5503, "id_pergunta": 55, "texto_opcao": "24 meses para análise técnica; Possibilidade de registro temporário.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5504, "id_pergunta": 55, "texto_opcao": "Sem prazo fixo, dependendo da complexidade; Aguardar aprovação em pelo menos três países da OCDE.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5601, "id_pergunta": 56, "texto_opcao": "Serem eficazes para espécies-alvo.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5602, "id_pergunta": 56, "texto_opcao": "Iscas devem ser atrativas para os roedores.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5603, "id_pergunta": 56, "texto_opcao": "A forma como o animal é induzido à morte não pode levantar suspeitas nos sobreviventes.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5604, "id_pergunta": 56, "texto_opcao": "Causar morte instantânea por paralisia neuromuscular para evitar sofrimento animal.", "eh_correta": true, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5701, "id_pergunta": 57, "texto_opcao": "Sistema cardiovascular e renal.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5702, "id_pergunta": 57, "texto_opcao": "Sistema respiratório e musculoesquelético.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5703, "id_pergunta": 57, "texto_opcao": "Fígado e sistema endócrino.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5704, "id_pergunta": 57, "texto_opcao": "Sistema nervoso central e periférico, exclusivamente.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5801, "id_pergunta": 58, "texto_opcao": "É a principal enzima responsável pela degradação da acetilcolina nas junções neuromusculares.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5802, "id_pergunta": 58, "texto_opcao": "Serve como biomarcador de exposição a OFs, por ser mais sensível à inibição, embora não tenha função colinérgica direta.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5803, "id_pergunta": 58, "texto_opcao": "É a enzima alvo que, quando inibida, causa diretamente os danos neurotóxicos retardados.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5804, "id_pergunta": 58, "texto_opcao": "Participa ativamente na regeneração da AChE após o processo de 'aging'.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 5901, "id_pergunta": 59, "texto_opcao": "Trabalhadores na cadeia de produção e uso dos agrotóxicos.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 5902, "id_pergunta": 59, "texto_opcao": "Gênero masculino.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 5903, "id_pergunta": 59, "texto_opcao": "Alta escolaridade e residência em grandes centros urbanos.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 5904, "id_pergunta": 59, "texto_opcao": "Moradores de áreas rurais.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6001, "id_pergunta": 60, "texto_opcao": "Ingestão ocorrida em menos de 6 horas; Neutraliza quimicamente as toxinas no estômago.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6002, "id_pergunta": 60, "texto_opcao": "Ingestão ocorrida em menos de 60 minutos; Adsorve toxinas, impedindo sua absorção intestinal e facilitando sua eliminação nas fezes.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6003, "id_pergunta": 60, "texto_opcao": "A qualquer momento após a ingestão, se o paciente estiver sintomático; Induz o vômito para expelir a substância tóxica.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6004, "id_pergunta": 60, "texto_opcao": "Apenas para substâncias ácidas, em menos de 30 minutos; Altera o pH gástrico, dificultando a absorção.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6101, "id_pergunta": 61, "texto_opcao": "Reativa a acetilcolinesterase; Trata sintomas muscarínicos e nicotínicos.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6102, "id_pergunta": 61, "texto_opcao": "Bloqueia receptores muscarínicos; Neutraliza sintomas colinérgicos como salivação, broncoespasmo e bradicardia.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6103, "id_pergunta": 61, "texto_opcao": "Potencializa a ação do GABA; Reduz convulsões e agitação.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6104, "id_pergunta": 61, "texto_opcao": "É um quelante que se liga ao organofosforado; Facilita a eliminação do tóxico.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6201, "id_pergunta": 62, "texto_opcao": "É o antídoto de primeira escolha para reverter a inibição da AChE.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6202, "id_pergunta": 62, "texto_opcao": "Utilizada para induzir êmese em pacientes conscientes com ingestão recente.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6203, "id_pergunta": 62, "texto_opcao": "Agonista adrenérgico usado como segunda linha em bradicardia ou hipotensão persistentes apesar de altas doses de atropina.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6204, "id_pergunta": 62, "texto_opcao": "Antagonista dos receptores benzodiazepínicos para reverter sedação excessiva.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6301, "id_pergunta": 63, "texto_opcao": "Apenas se houver contato direto pele a pele com o indivíduo contaminado em até 1 hora.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6302, "id_pergunta": 63, "texto_opcao": "Agrotóxicos depositados nas roupas podem permitir a exposição de outros indivíduos.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6303, "id_pergunta": 63, "texto_opcao": "A contaminação dérmica é autolimitada e não oferece risco a terceiros.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6304, "id_pergunta": 63, "texto_opcao": "Somente se a pessoa contaminada compartilhar alimentos ou bebidas.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6401, "id_pergunta": 64, "texto_opcao": "Realização de exames laboratoriais periódicos para detecção precoce de contaminação.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6402, "id_pergunta": 64, "texto_opcao": "Administração profilática de antídotos antes da jornada de trabalho.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6403, "id_pergunta": 64, "texto_opcao": "Uso de Equipamentos de Proteção Individual (EPIs) durante a aplicação e educação/treinamento.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6404, "id_pergunta": 64, "texto_opcao": "Disponibilização de unidades de terapia intensiva próximas às áreas de cultivo.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6501, "id_pergunta": 65, "texto_opcao": "Cefaleia intensa e visão turva, progredindo para cegueira.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6502, "id_pergunta": 65, "texto_opcao": "Fraqueza muscular proximal imediata, progredindo para paralisia flácida generalizada.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6503, "id_pergunta": 65, "texto_opcao": "Parestesia transitória em luva (mãos e pés), seguida por polineuropatia motora simétrica ascendente.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6504, "id_pergunta": 65, "texto_opcao": "Alterações de humor e psicose, evoluindo para demência.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6601, "id_pergunta": 66, "texto_opcao": "Salivação excessiva, coreoatetose e convulsões intensas.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6602, "id_pergunta": 66, "texto_opcao": "Depressão respiratória severa e coma profundo.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6603, "id_pergunta": 66, "texto_opcao": "Tremor, prostração e hipersensibilidade, com hiperexcitabilidade moderada.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6604, "id_pergunta": 66, "texto_opcao": "Bradicardia sinusal e bloqueio atrioventricular.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6701, "id_pergunta": 67, "texto_opcao": "Apenas sintomas neurológicos como ataxia e confusão mental.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6702, "id_pergunta": 67, "texto_opcao": "Êmese, miotonia, sensação de queimação na boca, dores abdominais, hipotensão e acometimento do SNC.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6703, "id_pergunta": 67, "texto_opcao": "Febre alta, calafrios e sudorese profusa, sem sintomas gastrointestinais.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6704, "id_pergunta": 67, "texto_opcao": "Erupção cutânea pruriginosa generalizada e angioedema.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6801, "id_pergunta": 68, "texto_opcao": "Alta toxicidade aguda, causando falência hepática fulminante; sem efeitos crônicos significativos.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6802, "id_pergunta": 68, "texto_opcao": "Baixa toxicidade aguda; exposição crônica pode causar hipertrofia e hiperplasia da tireoide devido ao metabólito ETU.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6803, "id_pergunta": 68, "texto_opcao": "Neurotoxicidade aguda severa; cronicamente causa doença de Parkinson.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6804, "id_pergunta": 68, "texto_opcao": "Cardiotoxicidade aguda; exposição crônica leva à cardiomiopatia dilatada.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 6901, "id_pergunta": 69, "texto_opcao": "Apenas a DL50 oral e dérmica em diferentes espécies animais.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 6902, "id_pergunta": 69, "texto_opcao": "O custo-benefício do agrotóxico e sua eficácia em diferentes climas.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 6903, "id_pergunta": 69, "texto_opcao": "Classificação de perigos ao meio ambiente, símbolos padronizados, palavras de advertência (Perigo, Atenção), frases de risco (H) e precaução (P), e fichas de segurança com informações detalhadas.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 6904, "id_pergunta": 69, "texto_opcao": "A popularidade do produto no mercado e o número de anos desde seu lançamento.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7001, "id_pergunta": 70, "texto_opcao": "Hiperestimulação colinérgica aguda com miose e broncoespasmo.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7002, "id_pergunta": 70, "texto_opcao": "Síndrome neurológica intermediária com fraqueza muscular proximal.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7003, "id_pergunta": 70, "texto_opcao": "Danos neurotóxicos retardados, como a polineuropatia motora simétrica ascendente, que se manifesta semanas após a exposição.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7004, "id_pergunta": 70, "texto_opcao": "Efeitos cardiotóxicos imediatos, incluindo arritmias e parada cardíaca.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7101, "id_pergunta": 71, "texto_opcao": "Exclusivamente pela inalação de vapores durante a aplicação agrícola.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7102, "id_pergunta": 71, "texto_opcao": "Pelo contato dérmico com superfícies contaminadas em áreas urbanas.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7103, "id_pergunta": 71, "texto_opcao": "Pelo consumo crônico de alimentos e água contendo resíduos de agrotóxicos.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7104, "id_pergunta": 71, "texto_opcao": "Apenas através da exposição ocupacional em fábricas de agrotóxicos.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7201, "id_pergunta": 72, "texto_opcao": "Para reverter a bradicardia, atuando como agonista beta-adrenérgico.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7202, "id_pergunta": 72, "texto_opcao": "Para controlar convulsões e agitação, potencializando a ação do GABA nos receptores GABA-A, promovendo inibição neuronal no SNC.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7203, "id_pergunta": 72, "texto_opcao": "Para neutralizar os efeitos muscarínicos, bloqueando os receptores de acetilcolina.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7204, "id_pergunta": 72, "texto_opcao": "Para acelerar a eliminação do tóxico, aumentando a diurese osmótica.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7301, "id_pergunta": 73, "texto_opcao": "Apenas alterações comportamentais como irritabilidade e miotonia leve, sem evidências de danos estruturais significativos no sistema nervoso central ou periférico que justifiquem a fraqueza e o formigamento.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7302, "id_pergunta": 73, "texto_opcao": "Neuropatias periféricas (explicando o formigamento e parte da fraqueza), desmielinização (comprometendo a transmissão nervosa), degeneração ganglionar no SNC (impactando coordenação e funções centrais), velocidade reduzida da condução nervosa (resultando em lentidão reflexa e fraqueza), miotonia (contribuindo para rigidez e fraqueza) e alterações comportamentais (como a irritabilidade).", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7303, "id_pergunta": 73, "texto_opcao": "Somente degeneração ganglionar no sistema nervoso central e uma discreta redução na velocidade de condução nervosa periférica, com as alterações comportamentais sendo o principal achado e a fraqueza muscular atribuída a fatores não neurológicos.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7304, "id_pergunta": 73, "texto_opcao": "Miotonia severa e neuropatias periféricas focais afetando exclusivamente os membros inferiores, mas com integridade preservada das estruturas mielínicas centrais e dos gânglios da base, sugerindo uma disfunção primariamente neuromuscular periférica com mínimas alterações comportamentais reativas.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7401, "id_pergunta": 74, "texto_opcao": "Inibição direta da ATPase mitocondrial, levando à necrose celular imediata; aparecimento de fibrose intersticial em 12 horas.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7402, "id_pergunta": 74, "texto_opcao": "Um ciclo de redução-oxidação (ciclo redox) com depleção de NADPH e formação de espécies reativas de oxigênio; dano às células epiteliais alveolares em 24 horas.", "eh_correta": true, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7403, "id_pergunta": 74, "texto_opcao": "Acúmulo de paraquat nos lisossomos com ruptura e liberação de enzimas hidrolíticas; extensa infiltração de eosinófilos em 48 horas.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7404, "id_pergunta": 74, "texto_opcao": "Bloqueio da síntese de surfactante pelos pneumócitos tipo II; colapso alveolar difuso nas primeiras 6 horas.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7501, "id_pergunta": 75, "texto_opcao": "Regeneração excessiva e desorganizada dos pneumócitos tipo I, resultando em hiperplasia e metaplasia escamosa.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7502, "id_pergunta": 75, "texto_opcao": "Angiogênese acentuada no interstício alveolar, levando a um shunt intrapulmonar e hipoxemia refratária.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7503, "id_pergunta": 75, "texto_opcao": "Extensa proliferação de fibroblastos pulmonares e subsequente deposição maciça de colágeno, resultando em fibrose disseminada.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7504, "id_pergunta": 75, "texto_opcao": "Infiltração crônica de macrófagos alveolares que fagocitam o paraquat residual, perpetuando a inflamação e o dano tecidual.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7601, "id_pergunta": 76, "texto_opcao": "Desenvolvimento de pneumonia bacteriana secundária devido à imunossupressão induzida pelo paraquat.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7602, "id_pergunta": 76, "texto_opcao": "Recorrência do edema pulmonar agudo devido à liberação tardia de mediadores inflamatórios.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7603, "id_pergunta": 76, "texto_opcao": "Insuficiência respiratória progressiva devido à extensa fibrose pulmonar que substitui o parênquima funcional.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7604, "id_pergunta": 76, "texto_opcao": "Complicações renais crônicas, uma vez que o paraquat também se acumula nos rins, levando à falência renal tardia.", "eh_correta": false, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7701, "id_pergunta": 77, "texto_opcao": "Ambos acumulam-se nos pulmões e causam fibrose pulmonar bifásica, mas o diquat o faz de forma mais acelerada.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7702, "id_pergunta": 77, "texto_opcao": "O diquat acumula-se preferencialmente nos pulmões causando uma lesão aguda destrutiva similar ao paraquat, porém sem a fase fibrótica tardia.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7703, "id_pergunta": 77, "texto_opcao": "O paraquat não se acumula significativamente nos pulmões, enquanto o diquat é o principal agente causador de fibrose pulmonar entre os bipiridílicos.", "eh_correta": false, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7704, "id_pergunta": 77, "texto_opcao": "O paraquat acumula-se nos pulmões e induz uma toxicidade pulmonar bifásica característica, enquanto o diquat não se acumula nos pulmões e não causa o mesmo tipo de lesão pulmonar fibrótica.", "eh_correta": true, "ordem_exibicao": 3 },
-  { "id_opcao_resposta": 7801, "id_pergunta": 78, "texto_opcao": "Broncoconstrição reflexa e aumento da produção de muco, obstruindo as vias aéreas superiores.", "eh_correta": false, "ordem_exibicao": 0 },
-  { "id_opcao_resposta": 7802, "id_pergunta": 78, "texto_opcao": "Paralisia do diafragma e dos músculos intercostais devido à neurotoxicidade do paraquat.", "eh_correta": false, "ordem_exibicao": 1 },
-  { "id_opcao_resposta": 7803, "id_pergunta": 78, "texto_opcao": "Perda do epitélio alveolar, edema pulmonar e extensa infiltração de células inflamatórias no interstício, comprometendo severamente a hematose.", "eh_correta": true, "ordem_exibicao": 2 },
-  { "id_opcao_resposta": 7804, "id_pergunta": 78, "texto_opcao": "Formação de múltiplos microtrombos na vasculatura pulmonar, levando a um quadro de embolia pulmonar maciça.", "eh_correta": false, "ordem_exibicao": 3 }
+  {
+    "id_opcao_resposta": 101,
+    "id_pergunta": 1,
+    "texto_opcao": "Produzir testosterona",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A produção de testosterona é realizada pelas células de Leydig, localizadas no tecido intersticial entre os túbulos seminíferos."
+  },
+  {
+    "id_opcao_resposta": 102,
+    "id_pergunta": 1,
+    "texto_opcao": "Formar a túnica albugínea",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A túnica albugínea é uma camada de tecido conjuntivo denso que reveste os testículos, não sendo uma função das células de Sertoli."
+  },
+  {
+    "id_opcao_resposta": 103,
+    "id_pergunta": 1,
+    "texto_opcao": "Fornecer sustentação e formar a barreira hematotesticular",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. As células de Sertoli são cruciais para o suporte nutricional e estrutural das células espermatogênicas, além de formarem a barreira hematotesticular que protege as células germinativas."
+  },
+  {
+    "id_opcao_resposta": 104,
+    "id_pergunta": 1,
+    "texto_opcao": "Participar diretamente da espermiogênese",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora as células de Sertoli auxiliem na espermiogênese (fagocitando o citoplasma residual), a transformação em espermatozoides é um processo das próprias células germinativas (espermátides)."
+  },
+  {
+    "id_opcao_resposta": 201,
+    "id_pergunta": 2,
+    "texto_opcao": "Espermatogônias",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. As espermatogônias são as células germinativas mais basais, localizadas próximas à membrana basal do túbulo seminífero, distantes do lúmen."
+  },
+  {
+    "id_opcao_resposta": 202,
+    "id_pergunta": 2,
+    "texto_opcao": "Células de Sertoli",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. As células de Sertoli são células de sustentação e não células espermatogênicas, embora se estendam até o lúmen."
+  },
+  {
+    "id_opcao_resposta": 203,
+    "id_pergunta": 2,
+    "texto_opcao": "Espermátides",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. As espermátides (especialmente as tardias, em processo de espermiogênese) são as células espermatogênicas que se encontram mais próximas ao lúmen do túbulo seminífero, antes de serem liberadas como espermatozoides."
+  },
+  {
+    "id_opcao_resposta": 204,
+    "id_pergunta": 2,
+    "texto_opcao": "Espermatócitos primários",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Os espermatócitos primários estão localizados em uma camada mais adluminal que as espermatogônias, mas as espermátides estão ainda mais próximas ao lúmen."
+  },
+  {
+    "id_opcao_resposta": 301,
+    "id_pergunta": 3,
+    "texto_opcao": "Epitélio simples pavimentoso",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este tipo de epitélio é encontrado em locais como alvéolos e vasos sanguíneos, não nos dúctulos eferentes."
+  },
+  {
+    "id_opcao_resposta": 302,
+    "id_pergunta": 3,
+    "texto_opcao": "Epitélio cúbico simples",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Embora possa haver células cúbicas, a característica dos dúctulos eferentes é a alternância de tipos celulares que lhe confere um aspecto festonado."
+  },
+  {
+    "id_opcao_resposta": 303,
+    "id_pergunta": 3,
+    "texto_opcao": "Epitélio com áreas alternadas de colunar ciliado e cúbico com microvilosidades",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Os dúctulos eferentes apresentam um epitélio característico com grupos de células colunares altas ciliadas (para propulsão dos espermatozoides) e grupos de células cúbicas mais baixas com microvilosidades (para absorção de fluido)."
+  },
+  {
+    "id_opcao_resposta": 304,
+    "id_pergunta": 3,
+    "texto_opcao": "Epitélio pseudoestratificado com estereocílios",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Este tipo de epitélio é característico do epidídimo e do ducto deferente, responsável pela absorção e secreção."
+  },
+  {
+    "id_opcao_resposta": 401,
+    "id_pergunta": 4,
+    "texto_opcao": "Epitélio seminífero",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O epitélio seminífero contém as células de Sertoli e as células espermatogênicas, mas as células de Leydig estão fora dos túbulos."
+  },
+  {
+    "id_opcao_resposta": 402,
+    "id_pergunta": 4,
+    "texto_opcao": "Túnica própria",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A túnica própria é a camada de tecido conjuntivo que envolve os túbulos seminíferos, contendo células mioides, mas não as células de Leydig."
+  },
+  {
+    "id_opcao_resposta": 403,
+    "id_pergunta": 4,
+    "texto_opcao": "Tecido intersticial entre os túbulos seminíferos",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. As células de Leydig (ou células intersticiais) estão localizadas no tecido conjuntivo frouxo encontrado nos espaços entre os túbulos seminíferos e são responsáveis pela produção de testosterona."
+  },
+  {
+    "id_opcao_resposta": 404,
+    "id_pergunta": 4,
+    "texto_opcao": "Rede testicular (rete testis)",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A rede testicular é um sistema de canais anastomosados que transporta os espermatozoides dos túbulos seminíferos para os dúctulos eferentes; é revestida por epitélio simples cúbico ou pavimentoso."
+  },
+  {
+    "id_opcao_resposta": 501,
+    "id_pergunta": 5,
+    "texto_opcao": "Possui epitélio simples cúbico e camada muscular fina",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O ducto deferente possui um epitélio pseudoestratificado e uma camada muscular notavelmente espessa, não fina."
+  },
+  {
+    "id_opcao_resposta": 502,
+    "id_pergunta": 5,
+    "texto_opcao": "É revestido por epitélio pseudoestratificado com estereocílios e possui parede muscular espessa com três camadas",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. O ducto deferente é caracterizado por seu epitélio pseudoestratificado colunar com estereocílios (que são microvilosidades longas e imóveis) e uma parede muscular muito desenvolvida, organizada em três camadas (longitudinal interna, circular média e longitudinal externa)."
+  },
+  {
+    "id_opcao_resposta": 503,
+    "id_pergunta": 5,
+    "texto_opcao": "Possui epitélio estratificado pavimentoso e camada adventícia espessa",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O epitélio estratificado pavimentoso é típico de áreas de atrito, como a pele ou o esôfago, não do ducto deferente. A camada adventícia está presente, mas a descrição do epitélio está incorreta."
+  },
+  {
+    "id_opcao_resposta": 504,
+    "id_pergunta": 5,
+    "texto_opcao": "É formado por epitélio colunar ciliado e tecido fibroso denso",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O epitélio do ducto deferente possui estereocílios, não cílios móveis, e sua parede é predominantemente muscular, não fibrosa densa, embora haja tecido conjuntivo."
+  },
+  {
+    "id_opcao_resposta": 601,
+    "id_pergunta": 6,
+    "texto_opcao": "Retículo Endoplasmático",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O Retículo Endoplasmático está envolvido na síntese de proteínas e lipídios, e no metabolismo de substâncias, mas não é o principal local da respiração celular aeróbica."
+  },
+  {
+    "id_opcao_resposta": 602,
+    "id_pergunta": 6,
+    "texto_opcao": "Complexo de Golgi",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O Complexo de Golgi é responsável pelo processamento, empacotamento e endereçamento de proteínas e lipídios, não pela respiração celular aeróbica."
+  },
+  {
+    "id_opcao_resposta": 603,
+    "id_pergunta": 6,
+    "texto_opcao": "Mitocôndria",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A mitocôndria é a organela onde ocorrem as etapas finais da respiração celular aeróbica (Ciclo de Krebs e fosforilação oxidativa), resultando na maior parte da produção de ATP da célula."
+  },
+  {
+    "id_opcao_resposta": 604,
+    "id_pergunta": 6,
+    "texto_opcao": "Lisossomo",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Os lisossomos são organelas responsáveis pela digestão intracelular de macromoléculas e resíduos celulares."
+  },
+  {
+    "id_opcao_resposta": 701,
+    "id_pergunta": 7,
+    "texto_opcao": "Mitocôndria",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A glicólise, que é a quebra inicial da glicose, não ocorre na mitocôndria. O produto da glicólise (piruvato) é que entra na mitocôndria para as etapas seguintes da respiração aeróbica."
+  },
+  {
+    "id_opcao_resposta": 702,
+    "id_pergunta": 7,
+    "texto_opcao": "Núcleo",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O núcleo contém o material genético da célula e controla as atividades celulares através da expressão gênica, mas não é o local da glicólise."
+  },
+  {
+    "id_opcao_resposta": 703,
+    "id_pergunta": 7,
+    "texto_opcao": "Citosol",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A glicólise é um processo metabólico que ocorre no citosol (ou citoplasma) de todas as células, convertendo glicose em piruvato e gerando uma pequena quantidade de ATP e NADH."
+  },
+  {
+    "id_opcao_resposta": 704,
+    "id_pergunta": 7,
+    "texto_opcao": "Peroxissomo",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Os peroxissomos estão envolvidos em diversas reações metabólicas, incluindo a detoxificação e a quebra de ácidos graxos, mas não a glicólise."
+  },
+  {
+    "id_opcao_resposta": 801,
+    "id_pergunta": 8,
+    "texto_opcao": "Contração",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A contração é a principal função do tecido muscular."
+  },
+  {
+    "id_opcao_resposta": 802,
+    "id_pergunta": 8,
+    "texto_opcao": "Sustentação",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A sustentação é uma função primária dos tecidos conjuntivos, como o ósseo e o cartilaginoso."
+  },
+  {
+    "id_opcao_resposta": 803,
+    "id_pergunta": 8,
+    "texto_opcao": "Proteção e Absorção",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. O tecido epitelial de revestimento tem como funções primárias proteger as superfícies que recobre (contra danos mecânicos, entrada de microrganismos, perda de água) e realizar absorção de substâncias (como no intestino) ou secreção."
+  },
+  {
+    "id_opcao_resposta": 804,
+    "id_pergunta": 8,
+    "texto_opcao": "Transmissão de impulsos",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A transmissão de impulsos é a principal função do tecido nervoso."
+  },
+  {
+    "id_opcao_resposta": 901,
+    "id_pergunta": 9,
+    "texto_opcao": "Produzir hormônios",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Embora alguns neurônios possam ter função neurossecretora, a produção de hormônios é uma função primária de glândulas endócrinas e células endócrinas especializadas."
+  },
+  {
+    "id_opcao_resposta": 902,
+    "id_pergunta": 9,
+    "texto_opcao": "Realizar fagocitose",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A fagocitose é uma função de células especializadas do sistema imune, como macrófagos, e de algumas outras células, mas não é a função primária dos neurônios."
+  },
+  {
+    "id_opcao_resposta": 903,
+    "id_pergunta": 9,
+    "texto_opcao": "Transmitir impulsos nervosos",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Os neurônios são células altamente especializadas na recepção, processamento e transmissão de informações na forma de impulsos nervosos (sinais elétricos e químicos), permitindo a comunicação rápida entre diferentes partes do corpo e o processamento de informações."
+  },
+  {
+    "id_opcao_resposta": 904,
+    "id_pergunta": 9,
+    "texto_opcao": "Armazenar gordura",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O armazenamento de gordura é função dos adipócitos, células do tecido adiposo."
+  },
+  {
+    "id_opcao_resposta": 1001,
+    "id_pergunta": 10,
+    "texto_opcao": "Fornecer energia direta para a reação",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. As enzimas não fornecem energia para as reações; elas facilitam a ocorrência da reação diminuindo a barreira energética. A energia é geralmente fornecida por moléculas como o ATP."
+  },
+  {
+    "id_opcao_resposta": 1002,
+    "id_pergunta": 10,
+    "texto_opcao": "Aumentar a energia de ativação da reação",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. As enzimas fazem o oposto: elas diminuem a energia de ativação, tornando a reação mais fácil e rápida de ocorrer."
+  },
+  {
+    "id_opcao_resposta": 1003,
+    "id_pergunta": 10,
+    "texto_opcao": "Diminuir a energia de ativação, acelerando a velocidade da reação",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. As enzimas são catalisadores biológicos que aumentam a velocidade das reações bioquímicas ao diminuir a energia de ativação necessária para que a reação ocorra, sem serem consumidas no processo."
+  },
+  {
+    "id_opcao_resposta": 1004,
+    "id_pergunta": 10,
+    "texto_opcao": "Atuar como substrato principal da reação",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. As enzimas atuam sobre os substratos, transformando-os em produtos. Elas não são os substratos."
+  },
+  {
+    "id_opcao_resposta": 1005,
+    "id_pergunta": 10,
+    "texto_opcao": "Modificar o pH do meio reacional",
+    "eh_correta": false,
+    "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreto. Embora a atividade enzimática seja influenciada pelo pH do meio, a função primária das enzimas não é modificar o pH, mas sim catalisar reações."
+  },
+  {
+    "id_opcao_resposta": 1101,
+    "id_pergunta": 11,
+    "texto_opcao": "Tradução",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Tradução é o processo de síntese de proteínas a partir de um molde de RNA mensageiro (mRNA)."
+  },
+  {
+    "id_opcao_resposta": 1102,
+    "id_pergunta": 11,
+    "texto_opcao": "Replicação",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Replicação é o processo de duplicação da molécula de DNA."
+  },
+  {
+    "id_opcao_resposta": 1103,
+    "id_pergunta": 11,
+    "texto_opcao": "Transcrição",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A transcrição é o processo pelo qual a informação contida em uma fita de DNA é copiada para uma molécula de RNA (como o mRNA)."
+  },
+  {
+    "id_opcao_resposta": 1201,
+    "id_pergunta": 12,
+    "texto_opcao": "Glicose",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A glicose é uma importante fonte de energia, mas ela é metabolizada para produzir a 'moeda energética' principal."
+  },
+  {
+    "id_opcao_resposta": 1202,
+    "id_pergunta": 12,
+    "texto_opcao": "ATP (Trifosfato de Adenosina)",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. O ATP é universalmente reconhecido como a principal molécula transportadora de energia nas células, utilizada para alimentar a maioria das reações celulares que requerem energia."
+  },
+  {
+    "id_opcao_resposta": 1203,
+    "id_pergunta": 12,
+    "texto_opcao": "NADH",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O NADH é uma coenzima importante que transporta elétrons e está envolvida na produção de ATP, mas não é a 'moeda energética' direta para a maioria dos trabalhos celulares."
+  },
+  {
+    "id_opcao_resposta": 1204,
+    "id_pergunta": 12,
+    "texto_opcao": "Piruvato",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O piruvato é um produto da glicólise e um intermediário metabólico que pode ser oxidado para produzir ATP, mas não é a 'moeda energética' em si."
+  },
+  {
+    "id_opcao_resposta": 1301,
+    "id_pergunta": 13,
+    "texto_opcao": "Dois",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Classicamente, o trabalho de parto é dividido em mais de dois estágios."
+  },
+  {
+    "id_opcao_resposta": 1302,
+    "id_pergunta": 13,
+    "texto_opcao": "Três",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Embora frequentemente se mencionem três estágios principais (dilatação, expulsão e dequitação), alguns manuais consideram um quarto estágio."
+  },
+  {
+    "id_opcao_resposta": 1303,
+    "id_pergunta": 13,
+    "texto_opcao": "Quatro",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. O trabalho de parto é classicamente descrito em quatro estágios clínicos: 1º) Dilatação (desde o início das contrações regulares até a dilatação total do colo), 2º) Expulsão (desde a dilatação total até a saída do feto), 3º) Dequitação ou Placentário (desde a saída do feto até a expulsão da placenta), e 4º) Período de Greenberg (primeira hora após a dequitação, crucial para a hemostasia uterina)."
+  },
+  {
+    "id_opcao_resposta": 1304,
+    "id_pergunta": 13,
+    "texto_opcao": "Cinco",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A divisão clássica mais abrangente considera quatro estágios principais no trabalho de parto."
+  },
+  {
+    "id_opcao_resposta": 1401,
+    "id_pergunta": 14,
+    "texto_opcao": "Produzir todas as células sanguíneas fetais",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A hematopoiese fetal ocorre inicialmente no saco vitelínico, depois no fígado e baço, e finalmente na medula óssea. A placenta não é o principal local de produção de células sanguíneas fetais."
+  },
+  {
+    "id_opcao_resposta": 1402,
+    "id_pergunta": 14,
+    "texto_opcao": "Facilitar as trocas gasosas, nutricionais e de excretas entre a mãe e o feto",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Uma das funções vitais da placenta é servir como interface para a troca de oxigênio, dióxido de carbono, nutrientes (glicose, aminoácidos, etc.) e produtos de excreção (ureia, creatinina) entre a circulação materna e fetal."
+  },
+  {
+    "id_opcao_resposta": 1403,
+    "id_pergunta": 14,
+    "texto_opcao": "Iniciar as contrações uterinas no início da gestação",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. A placenta produz hormônios que ajudam a manter a gestação. As contrações uterinas do trabalho de parto são um evento complexo que ocorre no final da gestação, influenciado por diversos fatores hormonais e mecânicos, não iniciadas pela placenta no começo da gravidez."
+  },
+  {
+    "id_opcao_resposta": 1404,
+    "id_pergunta": 14,
+    "texto_opcao": "Determinar o sexo do feto",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O sexo do feto é determinado geneticamente no momento da fertilização, pela combinação dos cromossomos sexuais do espermatozoide (X ou Y) e do óvulo (X)."
+  },
+  {
+    "id_opcao_resposta": 1501,
+    "id_pergunta": 15,
+    "texto_opcao": "Ocitocina",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A ocitocina é crucial para a *ejeção* do leite (descida do leite) e para as contrações uterinas, mas não para a *produção* inicial de leite (lactogênese)."
+  },
+  {
+    "id_opcao_resposta": 1502,
+    "id_pergunta": 15,
+    "texto_opcao": "Progesterona",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Durante a gravidez, altos níveis de progesterona inibem a produção de leite. A queda da progesterona após o parto é um dos gatilhos para a lactogênese."
+  },
+  {
+    "id_opcao_resposta": 1503,
+    "id_pergunta": 15,
+    "texto_opcao": "Prolactina",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A prolactina, secretada pela adeno-hipófise, é o principal hormônio responsável por estimular as glândulas mamárias a produzir leite (lactogênese) após o parto."
+  },
+  {
+    "id_opcao_resposta": 1504,
+    "id_pergunta": 15,
+    "texto_opcao": "Estrogênio",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O estrogênio contribui para o desenvolvimento das glândulas mamárias durante a gestação, mas em altos níveis pode inibir a lactação. Sua queda após o parto, junto com a progesterona, favorece a ação da prolactina."
+  },
+  {
+    "id_opcao_resposta": 1505,
+    "id_pergunta": 15,
+    "texto_opcao": "Testosterona",
+    "eh_correta": false,
+    "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreto. A testosterona é um hormônio predominantemente masculino e não tem papel primário na produção de leite em mulheres."
+  },
+  {
+    "id_opcao_resposta": 1601,
+    "id_pergunta": 16,
+    "texto_opcao": "Citosol",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O citosol é o local da glicólise, a primeira etapa da respiração celular, mas não do Ciclo de Krebs."
+  },
+  {
+    "id_opcao_resposta": 1602,
+    "id_pergunta": 16,
+    "texto_opcao": "Núcleo",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O núcleo armazena o material genético e controla as funções celulares, mas não é o local do Ciclo de Krebs."
+  },
+  {
+    "id_opcao_resposta": 1603,
+    "id_pergunta": 16,
+    "texto_opcao": "Membrana Plasmática",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Em células eucarióticas, o Ciclo de Krebs não ocorre na membrana plasmática. Em procariotos, algumas enzimas podem estar associadas à membrana, mas a pergunta se refere a compartimentos celulares em geral."
+  },
+  {
+    "id_opcao_resposta": 1604,
+    "id_pergunta": 16,
+    "texto_opcao": "Matriz Mitocondrial",
+    "eh_correta": true,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Correto. O Ciclo de Krebs (ou Ciclo do Ácido Cítrico) ocorre na matriz mitocondrial das células eucarióticas, onde o piruvato (convertido em acetil-CoA) é oxidado para produzir ATP, NADH e FADH2."
+  },
+  {
+    "id_opcao_resposta": 1701,
+    "id_pergunta": 17,
+    "texto_opcao": "O risco de anomalias cromossômicas",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A estimativa do risco de anomalias cromossômicas é feita por outros métodos, como o rastreamento bioquímico e ultrassonográfico, ou testes diagnósticos invasivos."
+  },
+  {
+    "id_opcao_resposta": 1702,
+    "id_pergunta": 17,
+    "texto_opcao": "A data provável do parto (DPP)",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A Regra de Naegele é um cálculo simples usado para estimar a data provável do parto (DPP) de uma gestante, baseando-se na data da última menstruação (DUM)."
+  },
+  {
+    "id_opcao_resposta": 1703,
+    "id_pergunta": 17,
+    "texto_opcao": "O volume de líquido amniótico",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O volume de líquido amniótico é avaliado por ultrassonografia, utilizando índices como o ILA (Índice de Líquido Amniótico)."
+  },
+  {
+    "id_opcao_resposta": 1704,
+    "id_pergunta": 17,
+    "texto_opcao": "A posição da placenta",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A posição da placenta é determinada por exame de ultrassonografia."
+  },
+  {
+    "id_opcao_resposta": 1801,
+    "id_pergunta": 18,
+    "texto_opcao": "Lobo Frontal",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O lobo frontal está associado a funções executivas, planejamento, tomada de decisões, movimento voluntário e linguagem (Área de Broca)."
+  },
+  {
+    "id_opcao_resposta": 1802,
+    "id_pergunta": 18,
+    "texto_opcao": "Lobo Parietal",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O lobo parietal é responsável pelo processamento de informações sensoriais como tato, temperatura, dor, pressão, e pela percepção espacial."
+  },
+  {
+    "id_opcao_resposta": 1803,
+    "id_pergunta": 18,
+    "texto_opcao": "Lobo Temporal",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O lobo temporal está envolvido no processamento auditivo, memória, reconhecimento de objetos e linguagem (Área de Wernicke)."
+  },
+  {
+    "id_opcao_resposta": 1804,
+    "id_pergunta": 18,
+    "texto_opcao": "Lobo Occipital",
+    "eh_correta": true,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Correto. O lobo occipital, localizado na parte posterior do cérebro, é o principal centro de processamento da informação visual."
+  },
+  {
+    "id_opcao_resposta": 1901,
+    "id_pergunta": 19,
+    "texto_opcao": "Nocicepção",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Nocicepção é a percepção de estímulos dolorosos ou potencialmente danosos."
+  },
+  {
+    "id_opcao_resposta": 1902,
+    "id_pergunta": 19,
+    "texto_opcao": "Termocepção",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Termocepção é a percepção de temperatura (calor e frio)."
+  },
+  {
+    "id_opcao_resposta": 1903,
+    "id_pergunta": 19,
+    "texto_opcao": "Propriocepção",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A propriocepção, também conhecida como cinestesia, é a capacidade do corpo de reconhecer a localização espacial, posição e orientação das suas partes, bem como a força exercida pelos músculos e o movimento das articulações, sem utilizar a visão."
+  },
+  {
+    "id_opcao_resposta": 1904,
+    "id_pergunta": 19,
+    "texto_opcao": "Interocepção",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Interocepção é a percepção de sensações internas do corpo, como fome, sede, dor visceral e batimentos cardíacos."
+  },
+  {
+    "id_opcao_resposta": 2001,
+    "id_pergunta": 20,
+    "texto_opcao": "Canais Semicirculares",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Os canais semicirculares são responsáveis pela detecção de movimentos rotacionais da cabeça, contribuindo para o equilíbrio, não para a audição."
+  },
+  {
+    "id_opcao_resposta": 2002,
+    "id_pergunta": 20,
+    "texto_opcao": "Utrículo",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O utrículo, junto com o sáculo, faz parte do sistema vestibular e detecta a aceleração linear e a posição da cabeça em relação à gravidade, contribuindo para o equilíbrio."
+  },
+  {
+    "id_opcao_resposta": 2003,
+    "id_pergunta": 20,
+    "texto_opcao": "Sáculo",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O sáculo, junto com o utrículo, faz parte do sistema vestibular e detecta a aceleração linear e a posição da cabeça, contribuindo para o equilíbrio."
+  },
+  {
+    "id_opcao_resposta": 2004,
+    "id_pergunta": 20,
+    "texto_opcao": "Cóclea (Órgão de Corti)",
+    "eh_correta": true,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Correto. A cóclea é a estrutura do ouvido interno em forma de caracol que contém o órgão de Corti. O órgão de Corti possui as células ciliadas (internas e externas) que são os mecanorreceptores responsáveis por converter as vibrações sonoras em sinais neurais que são interpretados como som."
+  },
+  {
+    "id_opcao_resposta": 2101,
+    "id_pergunta": 21,
+    "texto_opcao": "Mecanorreceptores",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Mecanorreceptores detectam estímulos mecânicos como pressão, tato, vibração e estiramento, mas não especificamente a dor."
+  },
+  {
+    "id_opcao_resposta": 2102,
+    "id_pergunta": 21,
+    "texto_opcao": "Termorreceptores",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Termorreceptores detectam variações de temperatura (calor e frio)."
+  },
+  {
+    "id_opcao_resposta": 2103,
+    "id_pergunta": 21,
+    "texto_opcao": "Nociceptores",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Nociceptores são receptores sensoriais especializados em detectar estímulos potencialmente nocivos ou dolorosos, sejam eles mecânicos, térmicos ou químicos."
+  },
+  {
+    "id_opcao_resposta": 2104,
+    "id_pergunta": 21,
+    "texto_opcao": "Quimiorreceptores",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Quimiorreceptores detectam substâncias químicas, como os envolvidos no paladar, olfato ou monitoramento de gases sanguíneos. Alguns nociceptores podem ser ativados por substâncias químicas, mas 'quimiorreceptor' não é o termo específico para receptores de dor."
+  },
+  {
+    "id_opcao_resposta": 2201,
+    "id_pergunta": 22,
+    "texto_opcao": "Trato Espinotalâmico Lateral",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O trato espinotalâmico lateral é responsável por transmitir informações de dor e temperatura."
+  },
+  {
+    "id_opcao_resposta": 2202,
+    "id_pergunta": 22,
+    "texto_opcao": "Sistema Coluna Dorsal-Lemnisco Medial",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. O sistema da coluna dorsal-lemnisco medial é a principal via ascendente que transmite informações de tato fino (discriminativo), vibração e propriocepção consciente da medula espinhal para o tálamo, e subsequentemente para o córtex somatossensorial."
+  },
+  {
+    "id_opcao_resposta": 2203,
+    "id_pergunta": 22,
+    "texto_opcao": "Trato Corticoespinal",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O trato corticoespinal (ou via piramidal) é uma via descendente motora, responsável pelo controle dos movimentos voluntários."
+  },
+  {
+    "id_opcao_resposta": 2204,
+    "id_pergunta": 22,
+    "texto_opcao": "Trato Espinocerebelar",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Os tratos espinocerebelares transmitem informações proprioceptivas inconscientes para o cerebelo, importantes para a coordenação motora e o equilíbrio."
+  },
+  {
+    "id_opcao_resposta": 2301,
+    "id_pergunta": 23,
+    "texto_opcao": "Osteoporose",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Osteoporose é a perda de densidade mineral óssea, levando a ossos frágeis."
+  },
+  {
+    "id_opcao_resposta": 2302,
+    "id_pergunta": 23,
+    "texto_opcao": "Sarcopenia",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Sarcopenia é o termo usado para descrever a perda progressiva e generalizada de massa muscular esquelética e força que ocorre com o envelhecimento."
+  },
+  {
+    "id_opcao_resposta": 2303,
+    "id_pergunta": 23,
+    "texto_opcao": "Anemia",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Anemia é a deficiência de glóbulos vermelhos ou hemoglobina no sangue."
+  },
+  {
+    "id_opcao_resposta": 2304,
+    "id_pergunta": 23,
+    "texto_opcao": "Disfagia",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Disfagia é a dificuldade de engolir."
+  },
+  {
+    "id_opcao_resposta": 2305,
+    "id_pergunta": 23,
+    "texto_opcao": "Artrite",
+    "eh_correta": false,
+    "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreto. Artrite é a inflamação das articulações. Embora possa levar à fraqueza por desuso, não é a perda primária de massa muscular."
+  },
+  {
+    "id_opcao_resposta": 2401,
+    "id_pergunta": 24,
+    "texto_opcao": "Demência de Alzheimer",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A Doença de Alzheimer é uma causa comum de demência, caracterizada por declínio cognitivo progressivo e crônico, não agudo e flutuante como descrito."
+  },
+  {
+    "id_opcao_resposta": 2402,
+    "id_pergunta": 24,
+    "texto_opcao": "Depressão Maior",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A depressão maior pode causar alterações cognitivas (pseudodemência depressiva), mas o quadro descrito como agudo, flutuante e associado a causa médica subjacente é mais característico de outra condição."
+  },
+  {
+    "id_opcao_resposta": 2403,
+    "id_pergunta": 24,
+    "texto_opcao": "Delirium",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Delirium (ou estado confusional agudo) é uma síndrome geriátrica comum caracterizada por um início agudo de alterações na atenção, consciência e cognição, com curso flutuante, frequentemente desencadeada por uma condição médica subjacente, medicação ou cirurgia."
+  },
+  {
+    "id_opcao_resposta": 2404,
+    "id_pergunta": 24,
+    "texto_opcao": "Doença de Parkinson",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A Doença de Parkinson é um distúrbio neurodegenerativo progressivo que afeta principalmente o movimento, embora possa estar associada a declínio cognitivo em fases mais tardias, o perfil agudo e flutuante não é típico."
+  },
+  {
+    "id_opcao_resposta": 2501,
+    "id_pergunta": 25,
+    "texto_opcao": "Apoptose",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Apoptose é a morte celular programada, um processo ativo de autodestruição celular que é diferente da senescência, onde a célula para de se dividir mas permanece viva."
+  },
+  {
+    "id_opcao_resposta": 2502,
+    "id_pergunta": 25,
+    "texto_opcao": "Necrose",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Necrose é a morte celular acidental causada por dano agudo (ex: trauma, isquemia), resultando em inflamação. A senescência é um processo programado e a célula permanece metabolicamente ativa."
+  },
+  {
+    "id_opcao_resposta": 2503,
+    "id_pergunta": 25,
+    "texto_opcao": "Senescência Celular",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Senescência celular é um estado estável de parada do ciclo celular no qual as células permanecem metabolicamente ativas, mas não se proliferam mais. É um dos mecanismos associados ao envelhecimento e à prevenção do câncer."
+  },
+  {
+    "id_opcao_resposta": 2504,
+    "id_pergunta": 25,
+    "texto_opcao": "Autofagia",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Autofagia é um processo de degradação e reciclagem de componentes celulares danificados ou desnecessários. Embora possa estar relacionada à senescência, não é a definição do processo em si."
+  },
+  {
+    "id_opcao_resposta": 2601,
+    "id_pergunta": 26,
+    "texto_opcao": "Osteoartrite",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Osteoartrite é uma doença degenerativa das articulações, caracterizada pelo desgaste da cartilagem."
+  },
+  {
+    "id_opcao_resposta": 2602,
+    "id_pergunta": 26,
+    "texto_opcao": "Osteomalácia",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Osteomalácia é o amolecimento dos ossos devido à mineralização óssea deficiente, geralmente por deficiência de vitamina D."
+  },
+  {
+    "id_opcao_resposta": 2603,
+    "id_pergunta": 26,
+    "texto_opcao": "Osteoporose",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A osteoporose é uma condição caracterizada pela diminuição da densidade mineral óssea e deterioração da microarquitetura do tecido ósseo, o que leva a uma maior fragilidade óssea e aumento do risco de fraturas."
+  },
+  {
+    "id_opcao_resposta": 2604,
+    "id_pergunta": 26,
+    "texto_opcao": "Doença de Paget",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A Doença de Paget do osso é um distúrbio crônico que causa remodelação óssea anormal, levando a ossos aumentados, deformados e enfraquecidos, mas não é primariamente uma diminuição da densidade mineral óssea generalizada como na osteoporose."
+  },
+  {
+    "id_opcao_resposta": 2701,
+    "id_pergunta": 27,
+    "texto_opcao": "Monoterapia",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Monoterapia refere-se ao tratamento com um único medicamento."
+  },
+  {
+    "id_opcao_resposta": 2702,
+    "id_pergunta": 27,
+    "texto_opcao": "Farmacocinética",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Farmacocinética é o estudo de como o organismo afeta um fármaco (absorção, distribuição, metabolismo e excreção)."
+  },
+  {
+    "id_opcao_resposta": 2703,
+    "id_pergunta": 27,
+    "texto_opcao": "Polifarmácia",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Polifarmácia é o uso concomitante de múltiplos medicamentos por um mesmo paciente. É comum em idosos devido à presença de múltiplas comorbidades e aumenta o risco de interações medicamentosas e efeitos adversos."
+  },
+  {
+    "id_opcao_resposta": 2704,
+    "id_pergunta": 27,
+    "texto_opcao": "Farmacodinâmica",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Farmacodinâmica é o estudo de como um fármaco afeta o organismo (mecanismos de ação e efeitos)."
+  },
+  {
+    "id_opcao_resposta": 2801,
+    "id_pergunta": 28,
+    "texto_opcao": "Articulação Fibrosa (Sinartrose)",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. As articulações fibrosas (sinartroses) são unidas por tecido fibroso e geralmente permitem pouco ou nenhum movimento (ex: suturas do crânio). Elas não possuem cavidade articular nem líquido sinovial."
+  },
+  {
+    "id_opcao_resposta": 2802,
+    "id_pergunta": 28,
+    "texto_opcao": "Articulação Cartilaginosa (Anfiartrose)",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. As articulações cartilaginosas (anfiartroses) são unidas por cartilagem e permitem movimentos limitados (ex: discos intervertebrais). Elas não possuem uma cavidade articular preenchida por líquido sinovial."
+  },
+  {
+    "id_opcao_resposta": 2803,
+    "id_pergunta": 28,
+    "texto_opcao": "Articulação Sinovial (Diartrose)",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. As articulações sinoviais (diartroses) são caracterizadas pela presença de uma cápsula articular, uma cavidade articular preenchida com líquido sinovial (que lubrifica e nutre a cartilagem), e cartilagem articular cobrindo as superfícies ósseas. Permitem ampla mobilidade."
+  },
+  {
+    "id_opcao_resposta": 2901,
+    "id_pergunta": 29,
+    "texto_opcao": "Osteoblastos",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Osteoblastos são as células responsáveis pela formação de novo tecido ósseo (osteogênese)."
+  },
+  {
+    "id_opcao_resposta": 2902,
+    "id_pergunta": 29,
+    "texto_opcao": "Condrócitos",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Condrócitos são as células que formam e mantêm a matriz cartilaginosa, encontradas no tecido cartilaginoso."
+  },
+  {
+    "id_opcao_resposta": 2903,
+    "id_pergunta": 29,
+    "texto_opcao": "Osteócitos",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Osteócitos são osteoblastos maduros que ficaram aprisionados na matriz óssea que eles mesmos secretaram. Atuam na manutenção do tecido ósseo e na detecção de estresse mecânico."
+  },
+  {
+    "id_opcao_resposta": 2904,
+    "id_pergunta": 29,
+    "texto_opcao": "Osteoclastos",
+    "eh_correta": true,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Correto. Osteoclastos são células multinucleadas grandes, derivadas de precursores hematopoiéticos, especializadas na reabsorção (degradação) da matriz óssea, um processo essencial para a remodelação óssea e a homeostase do cálcio."
+  },
+  {
+    "id_opcao_resposta": 3001,
+    "id_pergunta": 30,
+    "texto_opcao": "Tendões",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Tendões são estruturas de tecido conjuntivo denso modelado que conectam músculos a ossos, transmitindo a força da contração muscular para gerar movimento."
+  },
+  {
+    "id_opcao_resposta": 3002,
+    "id_pergunta": 30,
+    "texto_opcao": "Ligamentos",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Ligamentos são feixes de tecido conjuntivo denso, predominantemente colágeno, que conectam ossos a outros ossos, fornecendo estabilidade às articulações e limitando seus movimentos."
+  },
+  {
+    "id_opcao_resposta": 3003,
+    "id_pergunta": 30,
+    "texto_opcao": "Fáscias",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Fáscias são lâminas ou bainhas de tecido conjuntivo que envolvem e separam músculos, órgãos e outras estruturas do corpo."
+  },
+  {
+    "id_opcao_resposta": 3004,
+    "id_pergunta": 30,
+    "texto_opcao": "Cartilagens",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Cartilagem é um tipo de tecido conjuntivo especializado que reveste as superfícies articulares dos ossos, absorve choques e fornece suporte flexível em locais como orelhas e nariz. Não conecta ossos a outros ossos no sentido de estabilização articular como os ligamentos."
+  },
+  {
+    "id_opcao_resposta": 3101,
+    "id_pergunta": 31,
+    "texto_opcao": "Fratura Simples (Fechada)",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Uma fratura simples ou fechada é aquela em que o osso está quebrado, mas a pele sobrejacente permanece intacta."
+  },
+  {
+    "id_opcao_resposta": 3102,
+    "id_pergunta": 31,
+    "texto_opcao": "Fratura Cominutiva",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Uma fratura cominutiva é aquela em que o osso se quebra em três ou mais fragmentos. Pode ser aberta ou fechada."
+  },
+  {
+    "id_opcao_resposta": 3103,
+    "id_pergunta": 31,
+    "texto_opcao": "Fratura Exposta (Aberta)",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Uma fratura exposta, também chamada de fratura aberta, ocorre quando o osso quebrado rompe a pele, criando uma comunicação entre o local da fratura e o meio externo, o que aumenta o risco de infecção."
+  },
+  {
+    "id_opcao_resposta": 3104,
+    "id_pergunta": 31,
+    "texto_opcao": "Fratura em Galho Verde",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Uma fratura em galho verde é uma fratura incompleta, comum em crianças, na qual um lado do osso é quebrado e o outro lado apenas se dobra, sem romper completamente. Geralmente é uma fratura fechada."
+  },
+  {
+    "id_opcao_resposta": 3201,
+    "id_pergunta": 32,
+    "texto_opcao": "Artrite Reumatoide",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A artrite reumatoide é uma doença autoimune que causa inflamação crônica das articulações, levando à destruição da cartilagem e do osso, mas seu mecanismo primário é inflamatório, não o desgaste mecânico."
+  },
+  {
+    "id_opcao_resposta": 3202,
+    "id_pergunta": 32,
+    "texto_opcao": "Gota",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A gota é um tipo de artrite inflamatória causada pela deposição de cristais de urato monossódico nas articulações."
+  },
+  {
+    "id_opcao_resposta": 3203,
+    "id_pergunta": 32,
+    "texto_opcao": "Osteoartrite (Artrose)",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A osteoartrite (também conhecida como artrose ou doença articular degenerativa) é a forma mais comum de artrite, caracterizada pelo desgaste progressivo da cartilagem articular, levando a dor, rigidez e limitação funcional das articulações."
+  },
+  {
+    "id_opcao_resposta": 3204,
+    "id_pergunta": 32,
+    "texto_opcao": "Lúpus Eritematoso Sistêmico",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O lúpus eritematoso sistêmico é uma doença autoimune crônica que pode afetar diversas partes do corpo, incluindo as articulações (causando artrite), mas não é primariamente uma condição de desgaste da cartilagem."
+  },
+  {
+    "id_opcao_resposta": 3301,
+    "id_pergunta": 33,
+    "texto_opcao": "Angiogênese",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Angiogênese é a formação de novos vasos sanguíneos, um processo que os tumores utilizam para crescer, mas não é o processo de espalhamento em si."
+  },
+  {
+    "id_opcao_resposta": 3302,
+    "id_pergunta": 33,
+    "texto_opcao": "Metástase",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Metástase é o processo pelo qual células cancerígenas se desprendem do tumor primário, viajam através da corrente sanguínea ou linfática, e formam novos tumores (secundários ou metastáticos) em outros locais do corpo."
+  },
+  {
+    "id_opcao_resposta": 3303,
+    "id_pergunta": 33,
+    "texto_opcao": "Apoptose",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Apoptose é a morte celular programada, um mecanismo que as células normais e, às vezes, as cancerígenas podem sofrer, mas não descreve o espalhamento do câncer."
+  },
+  {
+    "id_opcao_resposta": 3304,
+    "id_pergunta": 33,
+    "texto_opcao": "Hiperplasia",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Hiperplasia é o aumento do número de células em um tecido ou órgão, o que pode ser uma alteração pré-cancerosa, mas não é o espalhamento para outros locais."
+  },
+  {
+    "id_opcao_resposta": 3305,
+    "id_pergunta": 33,
+    "texto_opcao": "Diferenciação",
+    "eh_correta": false,
+    "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreto. Diferenciação é o processo pelo qual as células se tornam especializadas. Células cancerígenas frequentemente perdem diferenciação (tornam-se menos especializadas), o que está associado à agressividade, mas não é o processo de espalhamento."
+  },
+  {
+    "id_opcao_resposta": 3401,
+    "id_pergunta": 34,
+    "texto_opcao": "Genes Supressores de Tumor",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Genes supressores de tumor normalmente inibem o crescimento celular. Mutações que inativam esses genes podem contribuir para o câncer, mas a pergunta se refere a genes que promovem o crescimento quando mutados ou superexpressos."
+  },
+  {
+    "id_opcao_resposta": 3402,
+    "id_pergunta": 34,
+    "texto_opcao": "Proto-oncogenes (quando ativados, tornam-se Oncogenes)",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Proto-oncogenes são genes normais que regulam o crescimento e a divisão celular. Quando sofrem mutações ou são superexpressos, podem se tornar oncogenes, que promovem o crescimento celular descontrolado e contribuem para o desenvolvimento do câncer."
+  },
+  {
+    "id_opcao_resposta": 3403,
+    "id_pergunta": 34,
+    "texto_opcao": "Genes de Reparo do DNA",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Genes de reparo do DNA corrigem erros no DNA. Mutações nesses genes podem levar a um acúmulo de outras mutações, incluindo em proto-oncogenes ou genes supressores de tumor, mas eles próprios não promovem crescimento diretamente."
+  },
+  {
+    "id_opcao_resposta": 3404,
+    "id_pergunta": 34,
+    "texto_opcao": "Genes da Apoptose",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Genes da apoptose regulam a morte celular programada. A inativação desses genes pode contribuir para o câncer, permitindo que células anormais sobrevivam, mas eles não promovem crescimento ativamente."
+  },
+  {
+    "id_opcao_resposta": 3501,
+    "id_pergunta": 35,
+    "texto_opcao": "RAS",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. RAS é um proto-oncogene. Quando mutado, o oncogene RAS promove o crescimento celular e é frequentemente encontrado em cânceres, mas não é conhecido como 'guardião do genoma'."
+  },
+  {
+    "id_opcao_resposta": 3502,
+    "id_pergunta": 35,
+    "texto_opcao": "MYC",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. MYC é um proto-oncogene que codifica um fator de transcrição envolvido na proliferação celular. Sua superexpressão pode levar ao câncer, mas não é o 'guardião do genoma'."
+  },
+  {
+    "id_opcao_resposta": 3503,
+    "id_pergunta": 35,
+    "texto_opcao": "p53",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A proteína p53 (codificada pelo gene TP53) é um gene supressor de tumor crucial, frequentemente chamado de 'guardião do genoma'. Em resposta a danos no DNA ou outros estresses celulares, a p53 pode induzir parada do ciclo celular (para permitir o reparo do DNA) ou apoptose (morte celular programada) se o dano for irreparável, prevenindo assim a proliferação de células defeituosas."
+  },
+  {
+    "id_opcao_resposta": 3504,
+    "id_pergunta": 35,
+    "texto_opcao": "BRCA1",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. BRCA1 é um gene supressor de tumor envolvido no reparo do DNA. Mutações no BRCA1 aumentam o risco de certos cânceres (especialmente mama e ovário), mas a p53 é a proteína classicamente conhecida como 'guardiã do genoma' por seu papel central na resposta ao dano no DNA."
+  },
+  {
+    "id_opcao_resposta": 3601,
+    "id_pergunta": 36,
+    "texto_opcao": "Vasculogênese",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Vasculogênese é a formação de novos vasos sanguíneos a partir de células precursoras endoteliais (angioblastos) durante o desenvolvimento embrionário."
+  },
+  {
+    "id_opcao_resposta": 3602,
+    "id_pergunta": 36,
+    "texto_opcao": "Angiogênese",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Angiogênese é o processo de formação de novos vasos sanguíneos a partir de vasos preexistentes. Tumores malignos induzem a angiogênese para obter o suprimento de oxigênio e nutrientes necessários para seu crescimento e disseminação."
+  },
+  {
+    "id_opcao_resposta": 3603,
+    "id_pergunta": 36,
+    "texto_opcao": "Linfangiogênese",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Linfangiogênese é a formação de novos vasos linfáticos. Embora também possa ocorrer em tumores e estar relacionada à metástase, o termo geral para formação de vasos sanguíneos é angiogênese."
+  },
+  {
+    "id_opcao_resposta": 3604,
+    "id_pergunta": 36,
+    "texto_opcao": "Hemopoiese",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Hemopoiese (ou hematopoiese) é o processo de formação e desenvolvimento das células sanguíneas na medula óssea."
+  },
+  {
+    "id_opcao_resposta": 3701,
+    "id_pergunta": 37,
+    "texto_opcao": "Radioterapia",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A radioterapia utiliza radiação ionizante para destruir células cancerígenas, geralmente de forma localizada na área do tumor."
+  },
+  {
+    "id_opcao_resposta": 3702,
+    "id_pergunta": 37,
+    "texto_opcao": "Cirurgia Oncológica",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A cirurgia oncológica é a remoção física do tumor e, possivelmente, de tecidos adjacentes ou linfonodos. É um tratamento local."
+  },
+  {
+    "id_opcao_resposta": 3703,
+    "id_pergunta": 37,
+    "texto_opcao": "Quimioterapia",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A quimioterapia é uma modalidade de tratamento sistêmico do câncer que utiliza medicamentos (quimioterápicos) que circulam pelo corpo para atingir e destruir células cancerígenas, especialmente aquelas que se dividem rapidamente. Pode ser usada para tratar tumores primários e metástases."
+  },
+  {
+    "id_opcao_resposta": 3704,
+    "id_pergunta": 37,
+    "texto_opcao": "Imunoterapia",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A imunoterapia estimula o sistema imunológico do próprio paciente a reconhecer e combater as células cancerígenas. Embora seja sistêmica, seu mecanismo de ação é diferente da quimioterapia tradicional."
+  },
+  {
+    "id_opcao_resposta": 3801,
+    "id_pergunta": 38,
+    "texto_opcao": "Bloqueio dos canais de sódio; ATPase",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Embora alguns pesticidas afetem canais de sódio (como piretroides), o mecanismo primário dos organofosforados é a inibição da acetilcolinesterase, e a ATPase não é a enzima primariamente inativada neste contexto."
+  },
+  {
+    "id_opcao_resposta": 3802,
+    "id_pergunta": 38,
+    "texto_opcao": "Inibição da recaptação de serotonina; Monoamina oxidase",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Este mecanismo descreve a ação de alguns antidepressivos, não de inseticidas organofosforados."
+  },
+  {
+    "id_opcao_resposta": 3803,
+    "id_pergunta": 38,
+    "texto_opcao": "Ligação e inativação da acetilcolinesterase (AChE); Acetilcolinesterase",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Os inseticidas organofosforados atuam fosforilando o sítio ativo da enzima acetilcolinesterase (AChE), inativando-a. Isso impede a hidrólise da acetilcolina na fenda sináptica, levando ao acúmulo desse neurotransmissor e à hiperestimulação dos receptores colinérgicos."
+  },
+  {
+    "id_opcao_resposta": 3804,
+    "id_pergunta": 38,
+    "texto_opcao": "Modulação dos receptores GABA; GABA transaminase",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A modulação dos receptores GABA é o mecanismo de ação de alguns medicamentos (como benzodiazepínicos) e outros tipos de pesticidas, mas não dos organofosforados. A GABA transaminase está envolvida no metabolismo do GABA."
+  },
+  {
+    "id_opcao_resposta": 3901,
+    "id_pergunta": 39,
+    "texto_opcao": "É a rápida metabolização do organofosforado pelo fígado, permitindo a recuperação da AChE em poucas horas.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O 'aging' não se refere à metabolização do organofosforado, mas sim a uma alteração na enzima já inibida."
+  },
+  {
+    "id_opcao_resposta": 3902,
+    "id_pergunta": 39,
+    "texto_opcao": "Refere-se à ativação compensatória de outras enzimas que degradam a acetilcolina, diminuindo a necessidade de novas AChE.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O 'aging' é um processo que ocorre na própria molécula de AChE inibida, tornando sua reativação mais difícil."
+  },
+  {
+    "id_opcao_resposta": 3903,
+    "id_pergunta": 39,
+    "texto_opcao": "É a mudança conformacional irreversível do complexo organofosforado-AChE, exigindo a síntese de novas moléculas de AChE, o que pode levar dias.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. O 'aging' (envelhecimento) é um processo dependente do tempo que ocorre após a fosforilação da acetilcolinesterase (AChE) por um organofosforado. Envolve a perda de um grupo alquila do organofosforado ligado à enzima, resultando em uma ligação mais estável e tornando a enzima refratária à reativação por oximas (antídotos como a pralidoxima). A recuperação da atividade enzimática então depende da síntese de novas moléculas de AChE."
+  },
+  {
+    "id_opcao_resposta": 3904,
+    "id_pergunta": 39,
+    "texto_opcao": "Consiste na excreção acelerada do organofosforado pela urina, minimizando os danos à AChE.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A excreção do organofosforado é um processo separado do 'aging', que se refere à alteração do complexo enzima-inibidor."
+  },
+  {
+    "id_opcao_resposta": 4001,
+    "id_pergunta": 40,
+    "texto_opcao": "Parestesia em luvas e botas e polineuropatia motora simétrica ascendente, surgindo 1-3 semanas após a exposição.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Esta descrição corresponde à Neuropatia Tardia Induzida por Organofosforados (OPIDN), que tem um início mais tardio."
+  },
+  {
+    "id_opcao_resposta": 4002,
+    "id_pergunta": 40,
+    "texto_opcao": "Bradicardia, broncoconstrição, miose e diaforese, iniciando-se imediatamente após a exposição.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Estes são sintomas da síndrome colinérgica aguda, que precede a SNI."
+  },
+  {
+    "id_opcao_resposta": 4003,
+    "id_pergunta": 40,
+    "texto_opcao": "Fraqueza na flexão do pescoço, dos reflexos tendíneos profundos, anormalidades nos nervos cranianos, fraqueza muscular proximal e insuficiência respiratória, manifestando-se 24-96h após a exposição.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A Síndrome Neurológica Intermediária (SNI) é uma complicação que pode surgir 24 a 96 horas após a exposição a organofosforados, geralmente após a melhora da crise colinérgica aguda. Caracteriza-se por fraqueza muscular, principalmente dos músculos proximais dos membros, flexores do pescoço, músculos respiratórios e alguns nervos cranianos, podendo levar à insuficiência respiratória."
+  },
+  {
+    "id_opcao_resposta": 4004,
+    "id_pergunta": 40,
+    "texto_opcao": "Agitação, confusão, convulsões e coma, desenvolvendo-se em minutos.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Estes são sintomas de efeitos no sistema nervoso central da síndrome colinérgica aguda, que ocorrem mais precocemente."
+  },
+  {
+    "id_opcao_resposta": 4101,
+    "id_pergunta": 41,
+    "texto_opcao": "Ausência do grupo a-ciano; Tremor e hipersensibilidade.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Piretroides Tipo I não possuem o grupo alfa-ciano e causam a síndrome T (tremor, hiperexcitabilidade), mas a pergunta foca na diferenciação do Tipo II e seu sintoma proeminente."
+  },
+  {
+    "id_opcao_resposta": 4102,
+    "id_pergunta": 41,
+    "texto_opcao": "Presença do grupo a-ciano; Salivação excessiva, coreoatetose e convulsões.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Os piretroides Tipo II são quimicamente diferenciados pela presença de um grupo alfa-ciano em sua molécula. Sua intoxicação é caracterizada pela síndrome CS (Coreoatetose-Salivação), que inclui movimentos involuntários (coreoatetose), salivação profusa e, em casos graves, convulsões."
+  },
+  {
+    "id_opcao_resposta": 4103,
+    "id_pergunta": 41,
+    "texto_opcao": "Cadeia lateral alifática longa; Broncodilatação e taquicardia.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. A presença do grupo alfa-ciano é a característica distintiva chave, e os sintomas descritos não correspondem à síndrome CS dos piretroides Tipo II."
+  },
+  {
+    "id_opcao_resposta": 4104,
+    "id_pergunta": 41,
+    "texto_opcao": "Anel benzênico adicional; Depressão respiratória e miose.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A característica química e os sintomas proeminentes da intoxicação por piretroides Tipo II são distintos dos descritos."
+  },
+  {
+    "id_opcao_resposta": 4201,
+    "id_pergunta": 42,
+    "texto_opcao": "Inibição da fotossíntese; Amarelecimento e queda das folhas.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este mecanismo é característico de outros tipos de herbicidas, como os inibidores do fotossistema II (ex: triazinas, ureias)."
+  },
+  {
+    "id_opcao_resposta": 4202,
+    "id_pergunta": 42,
+    "texto_opcao": "Bloqueio da síntese de aminoácidos; Necrose dos tecidos meristemáticos.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Este mecanismo é característico de herbicidas como o glifosato (inibidor da EPSPS) ou sulfonilureias (inibidores da ALS)."
+  },
+  {
+    "id_opcao_resposta": 4203,
+    "id_pergunta": 42,
+    "texto_opcao": "Análogos da auxina, levando ao crescimento incontrolável e letal.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Os herbicidas clorofenoxi (como o 2,4-D e o 2,4,5-T) mimetizam a ação das auxinas, hormônios vegetais que regulam o crescimento. Em concentrações herbicidas, causam um crescimento celular descontrolado e desorganizado nas plantas dicotiledôneas (folhas largas), levando à sua morte."
+  },
+  {
+    "id_opcao_resposta": 4204,
+    "id_pergunta": 42,
+    "texto_opcao": "Interferência na divisão celular; Nanismo e má formação das raízes.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Herbicidas que interferem na divisão celular (inibidores de microtúbulos, como as dinitroanilinas) causam outros tipos de sintomas."
+  },
+  {
+    "id_opcao_resposta": 4301,
+    "id_pergunta": 43,
+    "texto_opcao": "Fígado; Esteatose e necrose hepatocelular.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Embora o fígado possa ser afetado em intoxicações sistêmicas graves por paraquat, ele não é o principal órgão alvo de acúmulo e da lesão característica."
+  },
+  {
+    "id_opcao_resposta": 4302,
+    "id_pergunta": 43,
+    "texto_opcao": "Rins; Necrose tubular aguda e fibrose intersticial.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Os rins são importantes na excreção do paraquat e podem sofrer danos (necrose tubular aguda), especialmente em altas doses, mas o órgão com lesão mais característica e prognóstica é outro."
+  },
+  {
+    "id_opcao_resposta": 4303,
+    "id_pergunta": 43,
+    "texto_opcao": "Pulmões; Danos epiteliais alveolares, edema pulmonar e infiltração de células inflamatórias.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. O paraquat é seletivamente acumulado nas células pulmonares (especialmente pneumócitos tipo I e II) através de um sistema de transporte de poliaminas. No pulmão, ele sofre um ciclo redox que gera espécies reativas de oxigênio, causando dano oxidativo severo ao epitélio alveolar, edema, inflamação e, tardiamente, fibrose pulmonar progressiva, que é a principal causa de morte."
+  },
+  {
+    "id_opcao_resposta": 4304,
+    "id_pergunta": 43,
+    "texto_opcao": "Cérebro; Edema cerebral e desmielinização.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O paraquat atravessa pouco a barreira hematoencefálica e os efeitos neurológicos diretos não são a característica primária de sua toxicidade."
+  },
+  {
+    "id_opcao_resposta": 4401,
+    "id_pergunta": 44,
+    "texto_opcao": "Constipação e distensão abdominal; Evolução para íleo paralítico.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Os sintomas gastrintestinais iniciais do glifosato são geralmente irritativos e opostos à constipação."
+  },
+  {
+    "id_opcao_resposta": 4402,
+    "id_pergunta": 44,
+    "texto_opcao": "Azia e regurgitação; Evolução para esofagite erosiva.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Embora possa haver irritação esofágica, os sintomas mais proeminentes envolvem o trato gastrointestinal inferior, e a evolução grave é mais sistêmica."
+  },
+  {
+    "id_opcao_resposta": 4403,
+    "id_pergunta": 44,
+    "texto_opcao": "Sintomas gastrintestinais passageiros; Evolução para hemorragia gastrintestinal, hipotensão, disfunção pulmonar e dano renal.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A ingestão de glifosato (especialmente formulações concentradas) frequentemente causa sintomas gastrintestinais iniciais como náuseas, vômitos, dor abdominal e diarreia. Em casos mais graves, pode ocorrer irritação e ulceração do trato gastrointestinal, levando a hemorragias, além de toxicidade sistêmica com hipotensão, edema pulmonar não cardiogênico, insuficiência renal e alterações eletrolíticas."
+  },
+  {
+    "id_opcao_resposta": 4404,
+    "id_pergunta": 44,
+    "texto_opcao": "Diarreia aquosa e cólicas leves; Evolução para desidratação severa sem outras complicações sistêmicas.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora diarreia possa ocorrer, a evolução dos casos graves de intoxicação por glifosato pode incluir complicações sistêmicas renais e pulmonares, além de hipotensão."
+  },
+  {
+    "id_opcao_resposta": 4501,
+    "id_pergunta": 45,
+    "texto_opcao": "Triazóis; Neurotoxicidade e distúrbios comportamentais.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A ETU não é um metabólito característico dos fungicidas triazóis, e os efeitos crônicos listados não são os principais associados à ETU."
+  },
+  {
+    "id_opcao_resposta": 4502,
+    "id_pergunta": 45,
+    "texto_opcao": "Estrobilurinas; Cardiotoxicidade e arritmias.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A ETU não é um metabólito das estrobilurinas, e seus efeitos tóxicos crônicos são diferentes."
+  },
+  {
+    "id_opcao_resposta": 4503,
+    "id_pergunta": 45,
+    "texto_opcao": "Ditiocarbamatos; Efeitos na tireoide, como hipertrofia e hiperplasia.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A etilenotioureia (ETU) é um importante metabólito e produto de degradação dos fungicidas da classe dos etilenobisditiocarbamatos (EBDCs), como mancozebe e maneb. A exposição crônica à ETU tem sido associada a efeitos adversos na glândula tireoide (ação goitrogênica, levando a hipertrofia, hiperplasia e tumores) e também é considerada teratogênica e carcinogênica em estudos animais."
+  },
+  {
+    "id_opcao_resposta": 4504,
+    "id_pergunta": 45,
+    "texto_opcao": "Benzimidazóis; Hepatotoxicidade e cirrose.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A ETU não é um metabólito dos benzimidazóis, e os efeitos crônicos principais são distintos."
+  },
+  {
+    "id_opcao_resposta": 4601,
+    "id_pergunta": 46,
+    "texto_opcao": "Inibição da agregação plaquetária; Fator de von Willebrand.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este mecanismo descreve a ação de antiagregantes plaquetários, não de rodenticidas anticoagulantes."
+  },
+  {
+    "id_opcao_resposta": 4602,
+    "id_pergunta": 46,
+    "texto_opcao": "Ativação excessiva da plasmina; Fibrinogênio.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Este mecanismo está relacionado à fibrinólise, não à ação dos rodenticidas anticoagulantes."
+  },
+  {
+    "id_opcao_resposta": 4603,
+    "id_pergunta": 46,
+    "texto_opcao": "Antagonizam a ação da vitamina K na síntese dos fatores de coagulação II, VII, IX e X.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Os rodenticidas anticoagulantes (ex: varfarina, bromadiolona, brodifacum) atuam inibindo a enzima vitamina K epóxido redutase. Essa enzima é essencial para a regeneração da vitamina K, que por sua vez é um cofator necessário para a gama-carboxilação dos fatores de coagulação dependentes de vitamina K (fatores II - protrombina, VII, IX e X) no fígado. Sem essa modificação, esses fatores são produzidos de forma inativa, levando a um defeito na cascata de coagulação e a hemorragias."
+  },
+  {
+    "id_opcao_resposta": 4604,
+    "id_pergunta": 46,
+    "texto_opcao": "Destruição direta dos eritrócitos; Hemoglobina.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Este mecanismo descreveria uma anemia hemolítica, que não é o modo de ação primário dos rodenticidas anticoagulantes, embora a perda de sangue devido à hemorragia possa levar à anemia."
+  },
+  {
+    "id_opcao_resposta": 4701,
+    "id_pergunta": 47,
+    "texto_opcao": "SAMPLE (Sinais/Sintomas, Alergias, Medicações, Passado médico, Líquidos/alimentação, Eventos); Administração de analgésicos e antieméticos.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O mnemônico SAMPLE é usado para coletar a história do paciente, mas não é o universal para a estabilização inicial. As medidas de suporte vital são mais abrangentes."
+  },
+  {
+    "id_opcao_resposta": 4702,
+    "id_pergunta": 47,
+    "texto_opcao": "ABC (Vias aéreas, Respiração, Circulação); Garantir vias aéreas, respiração, circulação, oxigênio, hidratação e controle de convulsões.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. O mnemônico universalmente empregado na avaliação inicial para garantir a estabilidade do paciente é o ABCDE (A: Vias Aéreas com controle cervical, B: Boa Ventilação e Respiração, C: Circulação com controle de hemorragias, D: Déficit neurológico, E: Exposição com controle da hipotermia). As primeiras medidas de suporte vital incluem assegurar a permeabilidade das vias aéreas, ventilação adequada (com oferta de oxigênio), manutenção da circulação (com acesso venoso e hidratação se necessário) e controle de convulsões caso presentes."
+  },
+  {
+    "id_opcao_resposta": 4703,
+    "id_pergunta": 47,
+    "texto_opcao": "FAST (Face, Arms, Speech, Time); Monitorização neurológica contínua e trombólise se indicado.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. O mnemônico FAST é usado para o reconhecimento rápido de um Acidente Vascular Cerebral (AVC)."
+  },
+  {
+    "id_opcao_resposta": 4704,
+    "id_pergunta": 47,
+    "texto_opcao": "RICE (Repouso, Gelo, Compressão, Elevação); Imobilização da área afetada e crioterapia.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O mnemônico RICE é utilizado para o tratamento inicial de lesões musculoesqueléticas agudas, como entorses."
+  },
+  {
+    "id_opcao_resposta": 4801,
+    "id_pergunta": 48,
+    "texto_opcao": "Ingestão ocorrida há mais de 6 horas, em qualquer dose; Quando o paciente relata alívio dos sintomas.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A lavagem gástrica tem maior benefício se realizada precocemente (geralmente em até 1-2 horas após a ingestão) e o alívio dos sintomas não é o critério de finalização."
+  },
+  {
+    "id_opcao_resposta": 4802,
+    "id_pergunta": 48,
+    "texto_opcao": "Apenas para substâncias oleosas, independentemente do tempo de ingestão; Após a administração de 1 litro de soro fisiológico.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A lavagem gástrica não é específica para substâncias oleosas e o critério de finalização não é um volume fixo de soro administrado, mas sim o aspecto do efluente."
+  },
+  {
+    "id_opcao_resposta": 4803,
+    "id_pergunta": 48,
+    "texto_opcao": "Ingestão ocorrida em menos de 60 minutos, envolvendo dose potencialmente letal; Remoção da substância indicada pela cor clara do líquido drenado.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A lavagem gástrica é indicada em casos de ingestão de quantidade potencialmente tóxica de um agrotóxico, se realizada preferencialmente dentro de 1 hora (no máximo 2 horas) após a ingestão, e se o paciente estiver com vias aéreas protegidas. O procedimento é considerado finalizado quando o líquido drenado retorna limpo e sem resíduos do tóxico."
+  },
+  {
+    "id_opcao_resposta": 4804,
+    "id_pergunta": 48,
+    "texto_opcao": "Em todos os casos de ingestão, como medida profilática; Após 30 minutos de procedimento contínuo.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A lavagem gástrica não é indicada rotineiramente para todos os casos de ingestão e possui contraindicações (ex: ingestão de corrosivos, hidrocarbonetos). O tempo de procedimento é variável."
+  },
+  {
+    "id_opcao_resposta": 4901,
+    "id_pergunta": 49,
+    "texto_opcao": "Bloqueia competitivamente os receptores muscarínicos; Trata apenas sintomas muscarínicos como salivação e broncoespasmo.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este descreve o mecanismo da atropina, não da pralidoxima. A pralidoxima atua na própria enzima acetilcolinesterase."
+  },
+  {
+    "id_opcao_resposta": 4902,
+    "id_pergunta": 49,
+    "texto_opcao": "Potencializa a ação do GABA nos receptores GABA-A; Reduz convulsões e agitação.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Este descreve o mecanismo de ação dos benzodiazepínicos."
+  },
+  {
+    "id_opcao_resposta": 4903,
+    "id_pergunta": 49,
+    "texto_opcao": "Reativa a acetilcolinesterase removendo o grupo fosforil; Trata sintomas muscarínicos e nicotínicos (fasciculações, miastenia).",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A Pralidoxima (e outras oximas) atua como um reativador da acetilcolinesterase (AChE) que foi inibida (fosforilada) por organofosforados. Ela se liga ao organofosforado no sítio ativo da enzima e remove o grupo fosforil, restaurando a função da AChE. É mais eficaz se administrada antes do processo de 'aging'. Ao reativar a AChE, a pralidoxima ajuda a aliviar tanto os sintomas muscarínicos quanto os nicotínicos (como fraqueza muscular, fasciculações e paralisia respiratória)."
+  },
+  {
+    "id_opcao_resposta": 4904,
+    "id_pergunta": 49,
+    "texto_opcao": "É um agonista adrenérgico que aumenta a frequência cardíaca e pressão arterial; Usada para bradicardia e hipotensão refratárias.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Este descreve o mecanismo de ação de aminas vasopressoras como a epinefrina ou dopamina."
+  },
+  {
+    "id_opcao_resposta": 5001,
+    "id_pergunta": 50,
+    "texto_opcao": "Via dérmica (70%); Óbito (25%).",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Embora a via dérmica seja uma via importante, os dados epidemiológicos apresentados no documento podem indicar outra via como principal para notificações e um desfecho diferente como o mais comum."
+  },
+  {
+    "id_opcao_resposta": 5002,
+    "id_pergunta": 50,
+    "texto_opcao": "Via inalatória (55%); Cura com sequelas graves (10%).",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A via inalatória é relevante, mas os percentuais e o desfecho podem não corresponder aos dados do documento de referência."
+  },
+  {
+    "id_opcao_resposta": 5003,
+    "id_pergunta": 50,
+    "texto_opcao": "Via ingestão (42%); Cura sem sequelas (80%).",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Conforme dados epidemiológicos frequentemente reportados em documentos sobre intoxicações por agrotóxicos no Brasil, a ingestão (muitas vezes ligada a tentativas de suicídio ou acidentes) é uma via de contaminação significativa, e a cura sem sequelas é um desfecho comum quando o tratamento é instituído adequadamente, embora isso possa variar com o agente."
+  },
+  {
+    "id_opcao_resposta": 5004,
+    "id_pergunta": 50,
+    "texto_opcao": "Via ocular (30%); Seqüelas visuais permanentes (5%).",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A exposição ocular é uma preocupação, mas os dados gerais sobre a principal via notificada e o desfecho mais comum podem ser diferentes dos apresentados nesta opção."
+  },
+  {
+    "id_opcao_resposta": 5101,
+    "id_pergunta": 51,
+    "texto_opcao": "IBAMA (eficácia agronômica e registro); Ministério da Saúde (riscos à saúde humana).",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O IBAMA avalia os riscos ambientais. O Ministério da Saúde, através da ANVISA, avalia os riscos à saúde humana, mas a eficácia agronômica e o registro inicial são de responsabilidade de outro órgão."
+  },
+  {
+    "id_opcao_resposta": 5102,
+    "id_pergunta": 51,
+    "texto_opcao": "ANVISA (eficácia agronômica e registro); MAPA (riscos à saúde humana).",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A ANVISA avalia os riscos à saúde humana, e o MAPA está envolvido com a eficácia agronômica e registro, mas a atribuição de 'principal responsável' pelo registro e eficácia agronômica é do MAPA."
+  },
+  {
+    "id_opcao_resposta": 5103,
+    "id_pergunta": 51,
+    "texto_opcao": "MAPA (Ministério da Agricultura e Pecuária - eficácia agronômica e registro); ANVISA (riscos à saúde humana).",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. No Brasil, o registro de agrotóxicos envolve uma avaliação tripartite: o MAPA (Ministério da Agricultura, Pecuária e Abastecimento) é o principal responsável pela avaliação da eficácia agronômica e pelo registro do produto; a ANVISA (Agência Nacional de Vigilância Sanitária), vinculada ao Ministério da Saúde, avalia os riscos à saúde humana; e o IBAMA (Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis) avalia os riscos ambientais."
+  },
+  {
+    "id_opcao_resposta": 5104,
+    "id_pergunta": 51,
+    "texto_opcao": "Conselho Nacional do Meio Ambiente - CONAMA (eficácia agronômica e registro); Secretarias Estaduais de Saúde (riscos à saúde humana).",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O CONAMA estabelece diretrizes ambientais, mas não é o órgão registrador. As Secretarias Estaduais de Saúde atuam na vigilância, mas a avaliação de risco para fins de registro federal é da ANVISA."
+  },
+  {
+    "id_opcao_resposta": 5201,
+    "id_pergunta": 52,
+    "texto_opcao": "Apenas o custo de produção e a solubilidade em água.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O GHS considera uma gama muito mais ampla de perigos além de simples propriedades físico-químicas ou econômicas."
+  },
+  {
+    "id_opcao_resposta": 5202,
+    "id_pergunta": 52,
+    "texto_opcao": "O país de origem do fabricante e a data de validade.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Embora importantes, estes não são os aspectos de perigo considerados pelo GHS para a classificação e rotulagem."
+  },
+  {
+    "id_opcao_resposta": 5203,
+    "id_pergunta": 52,
+    "texto_opcao": "Classificação de perigos ao meio ambiente, símbolos, palavras de advertência, frases de risco e precaução, e fichas de segurança.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. O GHS (Sistema Globalmente Harmonizado de Classificação e Rotulagem de Produtos Químicos) vai além da toxicidade aguda. Ele padroniza a classificação e a comunicação de perigos, considerando perigos físicos (ex: inflamabilidade, explosividade), perigos à saúde (toxicidade aguda, corrosão/irritação da pele, mutagenicidade, carcinogenicidade, etc.) e perigos ao meio ambiente. A rotulagem inclui pictogramas, palavras de advertência, frases de perigo (H) e frases de precaução (P), além da exigência de Fichas de Dados de Segurança (FDS ou SDS)."
+  },
+  {
+    "id_opcao_resposta": 5204,
+    "id_pergunta": 52,
+    "texto_opcao": "A cor do produto e o tipo de embalagem utilizada.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A cor e o tipo de embalagem podem ter requisitos regulatórios, mas não são os aspectos de classificação de perigo definidos pelo GHS."
+  },
+  {
+    "id_opcao_resposta": 5301,
+    "id_pergunta": 53,
+    "texto_opcao": "Inibição irreversível da AChE; Sintomas prolongados por semanas, necessitando de antídotos específicos.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A inibição irreversível da AChE (com 'aging') é característica dos organofosforados, não dos carbamatos."
+  },
+  {
+    "id_opcao_resposta": 5302,
+    "id_pergunta": 53,
+    "texto_opcao": "Inibição da AChE rapidamente reversível; Miose, diurese, diarreia, salivação, fasciculação muscular, geralmente desaparecendo em algumas horas.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A principal característica da intoxicação por carbamatos é a inibição da acetilcolinesterase (AChE) de forma espontaneamente reversível (carbamilação). Isso significa que a ligação do carbamato à enzima é menos estável e se desfaz mais rapidamente que a ligação dos organofosforados. Os sintomas são colinérgicos (muscarínicos e nicotínicos), semelhantes aos organofosforados (ex: miose, salivação, broncorreia, fasciculações), porém geralmente de menor duração (algumas horas) e gravidade. Oximas (como pralidoxima) não são indicadas ou podem ser até prejudiciais."
+  },
+  {
+    "id_opcao_resposta": 5303,
+    "id_pergunta": 53,
+    "texto_opcao": "Bloqueio dos canais de cálcio; Efeitos cardiovasculares graves e persistentes.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Este mecanismo não corresponde à ação dos carbamatos."
+  },
+  {
+    "id_opcao_resposta": 5304,
+    "id_pergunta": 53,
+    "texto_opcao": "Dano direto ao DNA mitocondrial; Fadiga crônica e neuropatia periférica tardia.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Este mecanismo não é característico da intoxicação aguda por carbamatos."
+  },
+  {
+    "id_opcao_resposta": 5401,
+    "id_pergunta": 54,
+    "texto_opcao": "Apenas após a confirmação laboratorial da intoxicação; Sistema de Informação de Mortalidade (SIM).",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A notificação deve ser feita a partir da suspeita, e o SIM é para óbitos, não para agravos como intoxicações."
+  },
+  {
+    "id_opcao_resposta": 5402,
+    "id_pergunta": 54,
+    "texto_opcao": "Somente em casos graves com internação hospitalar; Prontuário eletrônico do paciente (PEP).",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A notificação é obrigatória para todos os casos suspeitos ou confirmados, não apenas os graves, e o PEP é um registro clínico, não o sistema de notificação de agravos."
+  },
+  {
+    "id_opcao_resposta": 5403,
+    "id_pergunta": 54,
+    "texto_opcao": "Desde a suspeita; SINAN (Sistema de Informação de Agravos de Notificação), usando a ficha de intoxicação exógena.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A notificação de casos de intoxicação por agrotóxicos (e outras intoxicações exógenas) é compulsória e imediata no Brasil, devendo ser realizada a partir da simples suspeita do caso. O sistema utilizado para essa notificação é o SINAN (Sistema de Informação de Agravos de Notificação), através do preenchimento da ficha específica de investigação de Intoxicação Exógena."
+  },
+  {
+    "id_opcao_resposta": 5404,
+    "id_pergunta": 54,
+    "texto_opcao": "Após a alta hospitalar do paciente; Cadastro Nacional de Estabelecimentos de Saúde (CNES).",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A notificação deve ser precoce, e o CNES é um cadastro de estabelecimentos, não um sistema para notificação de agravos."
+  },
+  {
+    "id_opcao_resposta": 5501,
+    "id_pergunta": 55,
+    "texto_opcao": "6 meses para análise técnica; Proibição imediata se não aprovado no Brasil.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Os prazos são mais longos e as consequências para produtos já aprovados em outros locais são diferentes."
+  },
+  {
+    "id_opcao_resposta": 5502,
+    "id_pergunta": 55,
+    "texto_opcao": "12 meses para análise técnica; Necessidade de testes adicionais em solo brasileiro.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O prazo estabelecido pela legislação mais recente é maior, e há disposições específicas para aprovações tácitas."
+  },
+  {
+    "id_opcao_resposta": 5503,
+    "id_pergunta": 55,
+    "texto_opcao": "24 meses para análise técnica; Possibilidade de registro temporário.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A legislação mais recente sobre agrotóxicos (Lei 14.785/2023) estabelece prazos para análise e registro, como 24 meses para produtos formulados. Além disso, prevê a possibilidade de concessão de registro temporário em certas situações ou mesmo aprovação tácita caso os prazos não sejam cumpridos para produtos com ingredientes ativos já registrados em países membros da OCDE com agricultura similar."
+  },
+  {
+    "id_opcao_resposta": 5504,
+    "id_pergunta": 55,
+    "texto_opcao": "Sem prazo fixo, dependendo da complexidade; Aguardar aprovação em pelo menos três países da OCDE.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A legislação estabelece prazos e não exige aprovação em múltiplos países da OCDE para a análise no Brasil, embora use como referência."
+  },
+  {
+    "id_opcao_resposta": 5601,
+    "id_pergunta": 56,
+    "texto_opcao": "Serem eficazes para espécies-alvo.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este é um critério essencial para que um rodenticida seja considerado eficaz."
+  },
+  {
+    "id_opcao_resposta": 5602,
+    "id_pergunta": 56,
+    "texto_opcao": "Iscas devem ser atrativas para os roedores.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A atratividade da isca é fundamental para a eficácia do rodenticida."
+  },
+  {
+    "id_opcao_resposta": 5603,
+    "id_pergunta": 56,
+    "texto_opcao": "A forma como o animal é induzido à morte não pode levantar suspeitas nos sobreviventes.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Evitar a aversão à isca pelos sobreviventes é um critério importante, especialmente para rodenticidas de ação mais lenta como os anticoagulantes."
+  },
+  {
+    "id_opcao_resposta": 5604,
+    "id_pergunta": 56,
+    "texto_opcao": "Causar morte instantânea por paralisia neuromuscular para evitar sofrimento animal.",
+    "eh_correta": true,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Correto. Embora a redução do sofrimento animal seja desejável, o critério de morte 'instantânea' por paralisia neuromuscular não é um requisito universal para todos os rodenticidas eficazes e seguros. Muitos rodenticidas eficazes, como os anticoagulantes, causam morte após alguns dias e por hemorragia, o que justamente evita a aversão imediata à isca por outros roedores. Critérios de segurança também incluem baixa toxicidade para espécies não-alvo e disponibilidade de antídoto."
+  },
+  {
+    "id_opcao_resposta": 5701,
+    "id_pergunta": 57,
+    "texto_opcao": "Sistema cardiovascular e renal.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Embora possam ocorrer efeitos nesses sistemas, outros são mais caracteristicamente afetados pela exposição crônica a organoclorados."
+  },
+  {
+    "id_opcao_resposta": 5702,
+    "id_pergunta": 57,
+    "texto_opcao": "Sistema respiratório e musculoesquelético.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Estes sistemas não são os alvos primários dos efeitos crônicos dos organoclorados."
+  },
+  {
+    "id_opcao_resposta": 5703,
+    "id_pergunta": 57,
+    "texto_opcao": "Fígado e sistema endócrino.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A exposição crônica a compostos organoclorados, que são persistentes e bioacumulativos, está associada a diversos efeitos adversos, incluindo danos hepáticos (são metabolizados no fígado e podem induzir enzimas ou causar toxicidade direta) e disrupção endócrina (podem mimetizar ou antagonizar hormônios, afetando o sistema reprodutivo e o desenvolvimento). Efeitos neurológicos e no sistema imune também são preocupações."
+  },
+  {
+    "id_opcao_resposta": 5704,
+    "id_pergunta": 57,
+    "texto_opcao": "Sistema nervoso central e periférico, exclusivamente.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora o sistema nervoso seja um alvo importante (especialmente na toxicidade aguda e crônica de alguns organoclorados), os efeitos crônicos não se limitam exclusivamente a ele, afetando também fígado e sistema endócrino, por exemplo."
+  },
+  {
+    "id_opcao_resposta": 5801,
+    "id_pergunta": 58,
+    "texto_opcao": "É a principal enzima responsável pela degradação da acetilcolina nas junções neuromusculares.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A principal enzima responsável pela degradação da acetilcolina nas sinapses colinérgicas (incluindo a junção neuromuscular) é a acetilcolinesterase (AChE) ou colinesterase verdadeira."
+  },
+  {
+    "id_opcao_resposta": 5802,
+    "id_pergunta": 58,
+    "texto_opcao": "Serve como biomarcador de exposição a OFs, por ser mais sensível à inibição, embora não tenha função colinérgica direta.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A pseudocolinesterase (BuChE), também conhecida como colinesterase plasmática ou butirilcolinesterase, é encontrada no plasma, fígado e outros tecidos. Assim como a AChE, ela é inibida por organofosforados (OFs) e carbamatos. Embora sua função fisiológica exata não seja completamente elucidada e não seja essencial para a transmissão colinérgica como a AChE, a medição da atividade da BuChE no plasma é utilizada como um biomarcador de exposição a esses pesticidas, pois seus níveis caem após a exposição."
+  },
+  {
+    "id_opcao_resposta": 5803,
+    "id_pergunta": 58,
+    "texto_opcao": "É a enzima alvo que, quando inibida, causa diretamente os danos neurotóxicos retardados.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. A enzima alvo associada à Neuropatia Tardia Induzida por Organofosforados (OPIDN) é a Esterase Alvo Neuropática (NTE), não a BuChE."
+  },
+  {
+    "id_opcao_resposta": 5804,
+    "id_pergunta": 58,
+    "texto_opcao": "Participa ativamente na regeneração da AChE após o processo de 'aging'.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A BuChE não participa da regeneração da AChE. A recuperação da AChE após o 'aging' depende da síntese de novas moléculas da enzima."
+  },
+  {
+    "id_opcao_resposta": 5901,
+    "id_pergunta": 59,
+    "texto_opcao": "Trabalhadores na cadeia de produção e uso dos agrotóxicos.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este grupo representa um fator de risco devido à exposição ocupacional."
+  },
+  {
+    "id_opcao_resposta": 5902,
+    "id_pergunta": 59,
+    "texto_opcao": "Gênero masculino.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Em muitas estatísticas, o gênero masculino aparece com maior frequência em casos de intoxicação ocupacional ou tentativas de suicídio envolvendo agrotóxicos, o que o torna um fator de risco epidemiológico."
+  },
+  {
+    "id_opcao_resposta": 5903,
+    "id_pergunta": 59,
+    "texto_opcao": "Alta escolaridade e residência em grandes centros urbanos.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Alta escolaridade geralmente está associada a maior conhecimento sobre riscos e medidas preventivas, e residência em grandes centros urbanos pode implicar menor contato direto com a aplicação de agrotóxicos em larga escala na agricultura. Portanto, este grupo tende a ter menor risco em comparação com trabalhadores rurais com baixa escolaridade."
+  },
+  {
+    "id_opcao_resposta": 5904,
+    "id_pergunta": 59,
+    "texto_opcao": "Moradores de áreas rurais.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Moradores de áreas rurais podem ter maior risco devido à proximidade com áreas de aplicação, deriva de agrotóxicos e possível contaminação de água e alimentos."
+  },
+  {
+    "id_opcao_resposta": 6001,
+    "id_pergunta": 60,
+    "texto_opcao": "Ingestão ocorrida em menos de 6 horas; Neutraliza quimicamente as toxinas no estômago.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A janela de tempo é mais restrita para máxima eficácia, e o mecanismo não é neutralização química, mas sim adsorção."
+  },
+  {
+    "id_opcao_resposta": 6002,
+    "id_pergunta": 60,
+    "texto_opcao": "Ingestão ocorrida em menos de 60 minutos; Adsorve toxinas, impedindo sua absorção intestinal e facilitando sua eliminação nas fezes.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. O carvão ativado é mais eficaz quando administrado dentro de 1 hora (no máximo 2 horas) após a ingestão do tóxico. Seu mecanismo de ação é a adsorção: as partículas de carvão possuem uma grande área superficial que se liga às moléculas do tóxico no trato gastrointestinal, impedindo sua absorção para a corrente sanguínea e facilitando sua eliminação através das fezes."
+  },
+  {
+    "id_opcao_resposta": 6003,
+    "id_pergunta": 60,
+    "texto_opcao": "A qualquer momento após a ingestão, se o paciente estiver sintomático; Induz o vômito para expelir a substância tóxica.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. A eficácia diminui significativamente com o tempo. O carvão ativado não induz o vômito; essa é a função de eméticos, que têm indicações restritas."
+  },
+  {
+    "id_opcao_resposta": 6004,
+    "id_pergunta": 60,
+    "texto_opcao": "Apenas para substâncias ácidas, em menos de 30 minutos; Altera o pH gástrico, dificultando a absorção.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O carvão ativado adsorve uma ampla gama de substâncias, não apenas ácidas, e seu mecanismo principal não é a alteração do pH para dificultar a absorção."
+  },
+  {
+    "id_opcao_resposta": 6101,
+    "id_pergunta": 61,
+    "texto_opcao": "Reativa a acetilcolinesterase; Trata sintomas muscarínicos e nicotínicos.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este descreve o mecanismo de ação das oximas (como a pralidoxima), não da atropina."
+  },
+  {
+    "id_opcao_resposta": 6102,
+    "id_pergunta": 61,
+    "texto_opcao": "Bloqueia receptores muscarínicos; Neutraliza sintomas colinérgicos como salivação, broncoespasmo e bradicardia.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A atropina é um antagonista competitivo dos receptores muscarínicos de acetilcolina. Na intoxicação por organofosforados (e carbamatos), há um excesso de acetilcolina devido à inibição da acetilcolinesterase. A atropina bloqueia os efeitos dessa acetilcolina acumulada nos receptores muscarínicos, neutralizando sintomas como hipersecreção brônquica e salivar, broncoespasmo, miose, bradicardia, cólicas abdominais e diarreia. Ela não atua nos receptores nicotínicos, portanto, não reverte a fraqueza muscular ou paralisia."
+  },
+  {
+    "id_opcao_resposta": 6103,
+    "id_pergunta": 61,
+    "texto_opcao": "Potencializa a ação do GABA; Reduz convulsões e agitação.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Este descreve o mecanismo de ação dos benzodiazepínicos."
+  },
+  {
+    "id_opcao_resposta": 6104,
+    "id_pergunta": 61,
+    "texto_opcao": "É um quelante que se liga ao organofosforado; Facilita a eliminação do tóxico.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A atropina não é um quelante e não se liga diretamente ao organofosforado."
+  },
+  {
+    "id_opcao_resposta": 6201,
+    "id_pergunta": 62,
+    "texto_opcao": "É o antídoto de primeira escolha para reverter a inibição da AChE.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Antídotos que revertem a inibição da AChE são as oximas (ex: pralidoxima), e a atropina trata os sintomas muscarínicos. A epinefrina tem outro papel."
+  },
+  {
+    "id_opcao_resposta": 6202,
+    "id_pergunta": 62,
+    "texto_opcao": "Utilizada para induzir êmese em pacientes conscientes com ingestão recente.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A epinefrina não é usada para induzir êmese."
+  },
+  {
+    "id_opcao_resposta": 6203,
+    "id_pergunta": 62,
+    "texto_opcao": "Agonista adrenérgico usado como segunda linha em bradicardia ou hipotensão persistentes apesar de altas doses de atropina.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Segundo diretrizes de tratamento de intoxicações, a epinefrina (adrenalina) é um agonista adrenérgico que pode ser considerado como droga de segunda linha para tratar bradicardia grave ou hipotensão que não respondem adequadamente a altas doses de atropina e à reposição volêmica, em casos de intoxicação por agrotóxicos com instabilidade hemodinâmica."
+  },
+  {
+    "id_opcao_resposta": 6204,
+    "id_pergunta": 62,
+    "texto_opcao": "Antagonista dos receptores benzodiazepínicos para reverter sedação excessiva.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. O antagonista dos receptores benzodiazepínicos é o flumazenil. A epinefrina não tem essa função."
+  },
+  {
+    "id_opcao_resposta": 6301,
+    "id_pergunta": 63,
+    "texto_opcao": "Apenas se houver contato direto pele a pele com o indivíduo contaminado em até 1 hora.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A contaminação secundária pode ocorrer mesmo sem contato pele a pele direto e por mais tempo se as roupas ou o ambiente estiverem contaminados."
+  },
+  {
+    "id_opcao_resposta": 6302,
+    "id_pergunta": 63,
+    "texto_opcao": "Agrotóxicos depositados nas roupas podem permitir a exposição de outros indivíduos.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A contaminação dérmica de um indivíduo que manuseia agrotóxicos pode levar à contaminação de suas roupas. Se essas roupas não forem manuseadas e lavadas adequadamente (separadas de outras, por exemplo), podem transferir o agrotóxico para outros indivíduos que entrem em contato com elas, ou mesmo contaminar o ambiente doméstico, resultando em exposição secundária."
+  },
+  {
+    "id_opcao_resposta": 6303,
+    "id_pergunta": 63,
+    "texto_opcao": "A contaminação dérmica é autolimitada e não oferece risco a terceiros.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. A contaminação dérmica pode persistir e ser transferida, oferecendo risco a terceiros, especialmente em ambientes fechados ou por meio de fômites (roupas, objetos)."
+  },
+  {
+    "id_opcao_resposta": 6304,
+    "id_pergunta": 63,
+    "texto_opcao": "Somente se a pessoa contaminada compartilhar alimentos ou bebidas.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora o compartilhamento de alimentos contaminados seja uma via oral de exposição, a contaminação dérmica secundária pode ocorrer por contato com roupas e superfícies contaminadas, independentemente do compartilhamento de alimentos."
+  },
+  {
+    "id_opcao_resposta": 6401,
+    "id_pergunta": 64,
+    "texto_opcao": "Realização de exames laboratoriais periódicos para detecção precoce de contaminação.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Isso é uma medida de prevenção secundária (detecção precoce), não primária (evitar a exposição)."
+  },
+  {
+    "id_opcao_resposta": 6402,
+    "id_pergunta": 64,
+    "texto_opcao": "Administração profilática de antídotos antes da jornada de trabalho.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A administração profilática de antídotos não é uma prática recomendada ou segura como medida de prevenção primária."
+  },
+  {
+    "id_opcao_resposta": 6403,
+    "id_pergunta": 64,
+    "texto_opcao": "Uso de Equipamentos de Proteção Individual (EPIs) durante a aplicação e educação/treinamento.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A prevenção primária visa evitar a ocorrência da intoxicação. Medidas como o uso correto de Equipamentos de Proteção Individual (EPIs) adequados para a tarefa (luvas, máscaras, vestimentas protetoras), educação e treinamento dos trabalhadores sobre os riscos, manuseio seguro, e respeito aos períodos de reentrada são fundamentais para reduzir a exposição e prevenir a intoxicação."
+  },
+  {
+    "id_opcao_resposta": 6404,
+    "id_pergunta": 64,
+    "texto_opcao": "Disponibilização de unidades de terapia intensiva próximas às áreas de cultivo.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Isso se refere à disponibilidade de tratamento (prevenção terciária ou manejo de casos), não à prevenção primária da exposição."
+  },
+  {
+    "id_opcao_resposta": 6501,
+    "id_pergunta": 65,
+    "texto_opcao": "Cefaleia intensa e visão turva, progredindo para cegueira.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Estes sintomas não são os característicos iniciais da OPIDN."
+  },
+  {
+    "id_opcao_resposta": 6502,
+    "id_pergunta": 65,
+    "texto_opcao": "Fraqueza muscular proximal imediata, progredindo para paralisia flácida generalizada.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A fraqueza muscular proximal de início mais rápido (24-96h) é característica da Síndrome Neurológica Intermediária (SNI), não da OPIDN, que é tardia."
+  },
+  {
+    "id_opcao_resposta": 6503,
+    "id_pergunta": 65,
+    "texto_opcao": "Parestesia transitória em luva (mãos e pés), seguida por polineuropatia motora simétrica ascendente.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A Neuropatia Tardia Induzida por Organofosforados (OPIDN ou OPIDP) manifesta-se tipicamente 1 a 4 semanas após a exposição aguda a certos organofosforados. Os sintomas iniciais frequentemente incluem cãibras e dores nas panturrilhas e pés, seguidas por parestesias (formigamento, dormência) distais em 'luvas e botas'. Posteriormente, desenvolve-se uma fraqueza muscular progressiva, simétrica e predominantemente distal, que pode ascender, levando a uma paralisia flácida seguida por espasticidade devido ao acometimento do neurônio motor superior."
+  },
+  {
+    "id_opcao_resposta": 6504,
+    "id_pergunta": 65,
+    "texto_opcao": "Alterações de humor e psicose, evoluindo para demência.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora efeitos neuropsiquiátricos possam ocorrer com exposição a organofosforados, o quadro motor progressivo da OPIDN é o mais característico."
+  },
+  {
+    "id_opcao_resposta": 6601,
+    "id_pergunta": 66,
+    "texto_opcao": "Salivação excessiva, coreoatetose e convulsões intensas.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Estes sintomas (Síndrome CS) são característicos da intoxicação por piretroides do Tipo II, que possuem o grupo alfa-ciano."
+  },
+  {
+    "id_opcao_resposta": 6602,
+    "id_pergunta": 66,
+    "texto_opcao": "Depressão respiratória severa e coma profundo.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Embora a toxicidade severa por qualquer agente possa levar a esses desfechos, não são os efeitos agudos primários e distintivos dos piretroides Tipo I."
+  },
+  {
+    "id_opcao_resposta": 6603,
+    "id_pergunta": 66,
+    "texto_opcao": "Tremor, prostração e hipersensibilidade, com hiperexcitabilidade moderada.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Os piretroides do Tipo I (que não contêm o grupo alfa-ciano, ex: permetrina, aletrina) causam a chamada síndrome T (de tremor). Os efeitos agudos incluem hiperexcitabilidade, tremores finos que podem progredir para tremores grosseiros, prostração, e em casos de exposição dérmica, pode ocorrer parestesia (sensação de queimação ou formigamento na pele)."
+  },
+  {
+    "id_opcao_resposta": 6604,
+    "id_pergunta": 66,
+    "texto_opcao": "Bradicardia sinusal e bloqueio atrioventricular.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Efeitos cardiovasculares não são os principais e distintivos da intoxicação aguda por piretroides Tipo I."
+  },
+  {
+    "id_opcao_resposta": 6701,
+    "id_pergunta": 67,
+    "texto_opcao": "Apenas sintomas neurológicos como ataxia e confusão mental.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A ingestão de compostos clorofenoxi também causa sintomas gastrointestinais e musculares importantes."
+  },
+  {
+    "id_opcao_resposta": 6702,
+    "id_pergunta": 67,
+    "texto_opcao": "Êmese, miotonia, sensação de queimação na boca, dores abdominais, hipotensão e acometimento do SNC.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A ingestão de herbicidas compostos clorofenoxi (como o 2,4-D) pode causar irritação gastrointestinal (náuseas, vômitos, dor abdominal, diarreia), sensação de queimação na boca e garganta. Efeitos sistêmicos podem incluir miotonia (dificuldade de relaxamento muscular após contração), fraqueza muscular, hipotensão, e em casos graves, acometimento do sistema nervoso central (convulsões, coma) e outros órgãos."
+  },
+  {
+    "id_opcao_resposta": 6703,
+    "id_pergunta": 67,
+    "texto_opcao": "Febre alta, calafrios e sudorese profusa, sem sintomas gastrointestinais.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Embora febre possa ocorrer em quadros tóxicos graves, os sintomas gastrointestinais são comuns na ingestão de clorofenoxiacéticos, e a descrição isolada de febre e sudorese não é típica."
+  },
+  {
+    "id_opcao_resposta": 6704,
+    "id_pergunta": 67,
+    "texto_opcao": "Erupção cutânea pruriginosa generalizada e angioedema.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Reações alérgicas cutâneas podem ocorrer com diversos agentes, mas não são os sintomas agudos típicos e primários da ingestão de compostos clorofenoxi."
+  },
+  {
+    "id_opcao_resposta": 6801,
+    "id_pergunta": 68,
+    "texto_opcao": "Alta toxicidade aguda, causando falência hepática fulminante; sem efeitos crônicos significativos.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Os ditiocarbamatos geralmente têm baixa toxicidade aguda, e seus metabólitos têm efeitos crônicos importantes."
+  },
+  {
+    "id_opcao_resposta": 6802,
+    "id_pergunta": 68,
+    "texto_opcao": "Baixa toxicidade aguda; exposição crônica pode causar hipertrofia e hiperplasia da tireoide devido ao metabólito ETU.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Os fungicidas ditiocarbamatos (ex: mancozebe, maneb, ziram) geralmente apresentam baixa toxicidade aguda. No entanto, um de seus principais metabólitos, a etilenotioureia (ETU) - especialmente dos etilenobisditiocarbamatos - é de preocupação toxicológica crônica. A ETU tem demonstrado ser carcinogênica (principalmente tumores de tireoide), teratogênica e goitrogênica (causando hipertrofia e hiperplasia da tireoide) em estudos com animais. Alguns ditiocarbamatos também podem causar reação tipo dissulfiram quando há consumo concomitante de álcool."
+  },
+  {
+    "id_opcao_resposta": 6803,
+    "id_pergunta": 68,
+    "texto_opcao": "Neurotoxicidade aguda severa; cronicamente causa doença de Parkinson.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Embora alguns ditiocarbamatos (como o maneb) tenham sido associados a sintomas parkinsonianos em estudos, a principal preocupação crônica ligada à ETU é com a tireoide e carcinogenicidade, e a toxicidade aguda não é tipicamente neurotoxicidade severa."
+  },
+  {
+    "id_opcao_resposta": 6804,
+    "id_pergunta": 68,
+    "texto_opcao": "Cardiotoxicidade aguda; exposição crônica leva à cardiomiopatia dilatada.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Efeitos cardiotóxicos não são a principal característica da toxicidade dos ditiocarbamatos."
+  },
+  {
+    "id_opcao_resposta": 6901,
+    "id_pergunta": 69,
+    "texto_opcao": "Apenas a DL50 oral e dérmica em diferentes espécies animais.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A DL50 (dose letal mediana) é um indicador de toxicidade aguda, mas o GHS abrange muito mais do que apenas isso."
+  },
+  {
+    "id_opcao_resposta": 6902,
+    "id_pergunta": 69,
+    "texto_opcao": "O custo-benefício do agrotóxico e sua eficácia em diferentes climas.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. Estes são aspectos econômicos e agronômicos, não elementos de classificação de perigo e rotulagem do GHS."
+  },
+  {
+    "id_opcao_resposta": 6903,
+    "id_pergunta": 69,
+    "texto_opcao": "Classificação de perigos ao meio ambiente, símbolos padronizados, palavras de advertência (Perigo, Atenção), frases de risco (H) e precaução (P), e fichas de segurança com informações detalhadas.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. O GHS (Sistema Globalmente Harmonizado de Classificação e Rotulagem de Produtos Químicos) não se limita à toxicidade aguda (que é classificada em categorias). Ele introduz uma abordagem abrangente para a comunicação de perigos, incluindo: classificação de perigos físicos, à saúde (corrosão/irritação da pele, lesões oculares graves, sensibilização respiratória ou à pele, mutagenicidade em células germinativas, carcinogenicidade, toxicidade à reprodução, toxicidade para órgãos-alvo específicos - exposição única ou repetida, perigo por aspiração) e ao meio ambiente (aquático agudo e crônico). A rotulagem padronizada inclui pictogramas de perigo, palavras de advertência ('Perigo' ou 'Atenção'), frases de perigo (Declarações H, Hazard statements) e frases de precaução (Declarações P, Precautionary statements). Além disso, exige Fichas de Dados de Segurança (FDS ou SDS) mais detalhadas."
+  },
+  {
+    "id_opcao_resposta": 6904,
+    "id_pergunta": 69,
+    "texto_opcao": "A popularidade do produto no mercado e o número de anos desde seu lançamento.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Estes são aspectos de marketing ou históricos, não elementos de classificação de perigo do GHS."
+  },
+  {
+    "id_opcao_resposta": 7001,
+    "id_pergunta": 70,
+    "texto_opcao": "Hiperestimulação colinérgica aguda com miose e broncoespasmo.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Estes são sintomas da síndrome colinérgica aguda, causada pela inibição da acetilcolinesterase (AChE), não especificamente da NTE."
+  },
+  {
+    "id_opcao_resposta": 7002,
+    "id_pergunta": 70,
+    "texto_opcao": "Síndrome neurológica intermediária com fraqueza muscular proximal.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. A Síndrome Neurológica Intermediária (SNI) também está relacionada à disfunção colinérgica na placa motora, mas não é a consequência direta da inibição da NTE."
+  },
+  {
+    "id_opcao_resposta": 7003,
+    "id_pergunta": 70,
+    "texto_opcao": "Danos neurotóxicos retardados, como a polineuropatia motora simétrica ascendente, que se manifesta semanas após a exposição.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. A inibição e subsequente 'aging' da Esterase Alvo Neuropática (NTE ou Neuropathy Target Esterase) por certos organofosforados é o evento iniciador da Neuropatia Tardia Induzida por Organofosforados (OPIDN ou OPIDP). Esta é uma polineuropatia caracterizada por degeneração axonal distal dos nervos periféricos e de alguns tratos da medula espinhal, manifestando-se clinicamente semanas após a exposição com fraqueza muscular progressiva, ataxia e parestesias, principalmente nos membros inferiores."
+  },
+  {
+    "id_opcao_resposta": 7004,
+    "id_pergunta": 70,
+    "texto_opcao": "Efeitos cardiotóxicos imediatos, incluindo arritmias e parada cardíaca.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Efeitos cardiotóxicos podem ocorrer na intoxicação aguda por organofosforados devido à hiperestimulação colinérgica, mas não são a consequência específica da inibição da NTE."
+  },
+  {
+    "id_opcao_resposta": 7101,
+    "id_pergunta": 71,
+    "texto_opcao": "Exclusivamente pela inalação de vapores durante a aplicação agrícola.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A inalação é uma via de exposição, mas não a única forma de exposição crônica a pequenas doses pela população geral."
+  },
+  {
+    "id_opcao_resposta": 7102,
+    "id_pergunta": 71,
+    "texto_opcao": "Pelo contato dérmico com superfícies contaminadas em áreas urbanas.",
+    "eh_correta": false,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreto. O contato dérmico é uma via de exposição, mas a pergunta foca na exposição oral crônica a pequenas doses."
+  },
+  {
+    "id_opcao_resposta": 7103,
+    "id_pergunta": 71,
+    "texto_opcao": "Pelo consumo crônico de alimentos e água contendo resíduos de agrotóxicos.",
+    "eh_correta": true,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Correto. Além da exposição ocupacional ou ingestões acidentais/intencionais de altas doses, a população geral pode ser exposta cronicamente a pequenas doses de agrotóxicos por via oral através do consumo de alimentos (frutas, vegetais, grãos) e água que contenham resíduos desses produtos químicos. Essa exposição dietética é uma preocupação de saúde pública."
+  },
+  {
+    "id_opcao_resposta": 7104,
+    "id_pergunta": 71,
+    "texto_opcao": "Apenas através da exposição ocupacional em fábricas de agrotóxicos.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A exposição ocupacional é uma forma importante, mas a pergunta se refere à exposição crônica da população geral, que ocorre majoritariamente por outras vias."
+  },
+  {
+    "id_opcao_resposta": 7201,
+    "id_pergunta": 72,
+    "texto_opcao": "Para reverter a bradicardia, atuando como agonista beta-adrenérgico.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. Este descreve a ação de drogas como a isoprenalina ou dobutamina, não dos benzodiazepínicos."
+  },
+  {
+    "id_opcao_resposta": 7202,
+    "id_pergunta": 72,
+    "texto_opcao": "Para controlar convulsões e agitação, potencializando a ação do GABA nos receptores GABA-A, promovendo inibição neuronal no SNC.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. No manejo da intoxicação por agrotóxicos (especialmente aqueles que causam hiperestimulação do SNC, como organofosforados e piretroides Tipo II), os benzodiazepínicos (ex: diazepam, midazolam) são indicados para o controle de convulsões e agitação psicomotora. Seu mecanismo de ação envolve a potencialização do efeito inibitório do neurotransmissor GABA (ácido gama-aminobutírico) através da ligação a sítios específicos nos receptores GABA-A, aumentando a frequência de abertura dos canais de cloreto e hiperpolarizando o neurônio."
+  },
+  {
+    "id_opcao_resposta": 7203,
+    "id_pergunta": 72,
+    "texto_opcao": "Para neutralizar os efeitos muscarínicos, bloqueando os receptores de acetilcolina.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Este descreve o mecanismo de ação da atropina."
+  },
+  {
+    "id_opcao_resposta": 7204,
+    "id_pergunta": 72,
+    "texto_opcao": "Para acelerar a eliminação do tóxico, aumentando a diurese osmótica.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora a diurese forçada possa ser usada em algumas intoxicações, não é o mecanismo de ação dos benzodiazepínicos, nem sua principal indicação no contexto de agrotóxicos."
+  },
+  {
+    "id_opcao_resposta": 7301,
+    "id_pergunta": 73,
+    "texto_opcao": "Apenas alterações comportamentais como irritabilidade e miotonia leve, sem evidências de danos estruturais significativos no sistema nervoso central ou periférico que justifiquem a fraqueza e o formigamento.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. A exposição crônica ao 2,4-D pode causar um espectro mais amplo de danos neurológicos estruturais e funcionais do que o descrito, e os sintomas de fraqueza e formigamento são consistentes com neuropatia."
+  },
+  {
+    "id_opcao_resposta": 7302,
+    "id_pergunta": 73,
+    "texto_opcao": "Neuropatias periféricas (explicando o formigamento e parte da fraqueza), desmielinização (comprometendo a transmissão nervosa), degeneração ganglionar no SNC (impactando coordenação e funções centrais), velocidade reduzida da condução nervosa (resultando em lentidão reflexa e fraqueza), miotonia (contribuindo para rigidez e fraqueza) e alterações comportamentais (como a irritabilidade).",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. A exposição crônica a herbicidas como o 2,4-D tem sido associada a um conjunto complexo de efeitos neurotóxicos. O quadro descrito pelo agricultor (fraqueza muscular progressiva, formigamento, dificuldades de coordenação, irritabilidade) pode ser explicado por uma combinação de: neuropatias periféricas (sensitivo-motoras), processos de desmielinização afetando a condução nervosa, possível degeneração de gânglios no SNC (contribuindo para problemas de coordenação), miotonia (dificuldade de relaxamento muscular), e alterações comportamentais/neuropsiquiátricas. Esses achados refletem danos estruturais e funcionais em múltiplos níveis do sistema nervoso."
+  },
+  {
+    "id_opcao_resposta": 7303,
+    "id_pergunta": 73,
+    "texto_opcao": "Somente degeneração ganglionar no sistema nervoso central e uma discreta redução na velocidade de condução nervosa periférica, com as alterações comportamentais sendo o principal achado e a fraqueza muscular atribuída a fatores não neurológicos.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Limitar os achados a apenas degeneração ganglionar e discreta redução da condução nervosa, e atribuir a fraqueza a causas não neurológicas, subestima o potencial neurotóxico do 2,4-D e não explica completamente o formigamento (sintoma neuropático clássico)."
+  },
+  {
+    "id_opcao_resposta": 7304,
+    "id_pergunta": 73,
+    "texto_opcao": "Miotonia severa e neuropatias periféricas focais afetando exclusivamente os membros inferiores, mas com integridade preservada das estruturas mielínicas centrais e dos gânglios da base, sugerindo uma disfunção primariamente neuromuscular periférica com mínimas alterações comportamentais reativas.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. A neurotoxicidade do 2,4-D pode ser mais generalizada, não se limitando a neuropatias focais dos membros inferiores ou preservando completamente as estruturas centrais. A descrição do quadro clínico sugere um envolvimento mais difuso."
+  },
+  {
+    "id_opcao_resposta": 7401,
+    "id_pergunta": 74,
+    "texto_opcao": "Inibição direta da ATPase mitocondrial, levando à necrose celular imediata; aparecimento de fibrose intersticial em 12 horas.",
+    "eh_correta": false,
+    "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreto. O mecanismo primário do paraquat no pulmão envolve a geração de espécies reativas de oxigênio, e a fibrose é uma consequência mais tardia, não em 12 horas."
+  },
+  {
+    "id_opcao_resposta": 7402,
+    "id_pergunta": 74,
+    "texto_opcao": "Um ciclo de redução-oxidação (ciclo redox) com depleção de NADPH e formação de espécies reativas de oxigênio; dano às células epiteliais alveolares em 24 horas.",
+    "eh_correta": true,
+    "ordem_exibicao": 1,
+    "feedback_opcao": "Correto. Nas células alveolares (principalmente pneumócitos tipo I e II), o paraquat sofre um ciclo redox: é reduzido pelo NADPH-citocromo P450 redutase a um radical paraquat, que então reage com o oxigênio molecular para regenerar o paraquat e formar o radical superóxido (O2•-). Este ciclo consome NADPH e gera continuamente espécies reativas de oxigênio (ROS), como superóxido, peróxido de hidrogênio e radical hidroxila. Esses ROS causam peroxidação lipídica e dano extenso às membranas celulares e outras macromoléculas, levando à necrose dos pneumócitos, edema e formação de membrana hialina, tipicamente observados em 24-72 horas em casos graves."
+  },
+  {
+    "id_opcao_resposta": 7403,
+    "id_pergunta": 74,
+    "texto_opcao": "Acúmulo de paraquat nos lisossomos com ruptura e liberação de enzimas hidrolíticas; extensa infiltração de eosinófilos em 48 horas.",
+    "eh_correta": false,
+    "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreto. Embora o dano celular seja extenso, o mecanismo primário não é o acúmulo lisossomal, e a infiltração inflamatória inicial é geralmente neutrofílica, seguida por macrófagos, não predominantemente eosinofílica como característica inicial."
+  },
+  {
+    "id_opcao_resposta": 7404,
+    "id_pergunta": 74,
+    "texto_opcao": "Bloqueio da síntese de surfactante pelos pneumócitos tipo II; colapso alveolar difuso nas primeiras 6 horas.",
+    "eh_correta": false,
+    "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreto. Embora os pneumócitos tipo II (produtores de surfactante) sejam danificados, a lesão primária é mais ampla, afetando também os pneumócitos tipo I, e o colapso alveolar não é o evento celular chave inicial, mas uma consequência do dano epitelial e do edema."
+  }
 ]

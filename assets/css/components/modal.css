@@ -1,79 +1,116 @@
-.modal {
+/* assets/css/components/modal.css */
+
+/* Overlay genérico para modais */
+.modal { /* Usado pelo modal de confirmação e como base para o overlay do explanation-modal */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--modal-backdrop-bg, rgba(0, 0, 0, 0.6));
+    background-color: var(--modal-backdrop-bg, rgba(0, 0, 0, 0.6)); /* Fundo translúcido padrão */
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: var(--z-index-modal-backdrop, 1000);
+    z-index: var(--z-index-modal-backdrop, 900); /* Padrão para backdrops */
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--transition-duration-slow, 0.3s) var(--transition-timing-function-ease, ease),
                 visibility 0s linear var(--transition-duration-slow, 0.3s);
 }
 
-.modal--visible {
+.modal--visible { /* Classe para tornar o modal visível */
     opacity: 1;
     visibility: visible;
-    transition-delay: 0s;
+    transition-delay: 0s; /* Remove o delay da transição de visibilidade ao mostrar */
 }
 
-.modal__dialog {
-    position: relative;
-    max-width: var(--modal-max-width, 450px);
-    width: var(--modal-width, 90%);
-    text-align: center;
-    transform: scale(0.95);
-    transition: transform var(--transition-duration-slow, 0.3s) var(--transition-timing-function-ease, ease);
+/* Diálogo (conteúdo) genérico do modal */
+.modal__dialog { /* Aplicado ao card interno do modal de confirmação e como base para o .explanation-modal__dialog */
+    position: relative; /* Para posicionamento de botões de fechar, etc. */
+    max-width: var(--modal-max-width, 450px); /* Largura máxima padrão */
+    width: var(--modal-width, 90%); /* Largura padrão relativa à tela */
+    text-align: center; /* Conteúdo centralizado por padrão */
+
+    /* Estilos de 'card' são aplicados diretamente no HTML (ex: <div class="modal__dialog card">) */
+    /* Isso permite que o modal__dialog herde paddings, background, border-radius, shadow de .card */
+
+    /* Animação de entrada para o diálogo */
+    transform: scale(0.95) translateY(10px); /* Começa um pouco menor e abaixo */
+    opacity: 0; /* Começa invisível para fade-in */
+    transition: transform var(--transition-duration-medium, 0.25s) var(--transition-timing-function-ease-out),
+                opacity var(--transition-duration-medium, 0.25s) var(--transition-timing-function-ease-out);
 }
 
-.modal--visible .modal__dialog {
-    transform: scale(1);
+.modal--visible .modal__dialog { /* Quando o modal está visível, anima o diálogo para o estado final */
+    transform: scale(1) translateY(0);
+    opacity: 1;
 }
 
+/* Título dentro do modal (se o card interno não tiver seu próprio .card__title) */
 .modal__title {
     font-family: var(--font-family-heading);
     font-size: var(--modal-title-font-size, 1.6rem);
     color: var(--modal-title-color, var(--color-primary-dark));
     margin-top: 0;
-    margin-bottom: var(--spacing-md, 15px);
+    margin-bottom: var(--spacing-md, 15px); /* Espaçamento padrão abaixo do título */
+     /* Se o .modal__dialog já for um .card, o .card__title deve ser usado dentro dele. */
+     /* Esta classe .modal__title é mais para quando o conteúdo do modal não é um .card completo. */
 }
 
+/* Corpo do modal */
 .modal__body {
     font-size: var(--modal-body-font-size, 1rem);
     color: var(--modal-body-color, var(--color-gray-800));
     line-height: var(--line-height-base, 1.6);
-    margin-bottom: var(--spacing-lg, 30px);
+    margin-bottom: var(--spacing-lg, 30px); /* Espaçamento padrão abaixo do corpo */
+}
+.modal__body p:last-child {
+    margin-bottom: 0; /* Remove margem do último parágrafo no corpo do modal */
 }
 
+
+/* Rodapé do modal */
 .modal__footer {
     display: flex;
-    justify-content: center;
-    gap: var(--spacing-md, 15px);
-    flex-wrap: wrap;
+    justify-content: center; /* Centraliza botões por padrão */
+    gap: var(--spacing-md, 15px); /* Espaço entre botões */
+    flex-wrap: wrap; /* Permite que botões quebrem linha se necessário */
+    /* Padding e borda são geralmente aplicados pelo .card__footer se o modal__dialog for um .card */
 }
 
+/* Modificador para rodapés com botões empilhados (comum em mobile) */
+.modal__footer--stacked {
+    flex-direction: column-reverse; /* Empilha e inverte a ordem (ação primária por último/embaixo) */
+    align-items: stretch; /* Faz os botões ocuparem a largura total */
+}
+.modal__footer--stacked .button { /* Botões dentro de um rodapé empilhado */
+    width: 100%;
+    min-width: unset; /* Remove min-width para permitir que estiquem */
+    margin-bottom: var(--spacing-xs, 8px); /* Espaço entre botões empilhados */
+}
+.modal__footer--stacked .button:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Responsividade para modais genéricos */
 @media (max-width: 480px) {
     .modal__dialog {
-        width: var(--modal-width-mobile, 90%);
+        width: var(--modal-width-mobile, 90%); /* Mantém, mas pode ser ajustado */
+        /* max-height: 85vh; */ /* Adicionar se os modais puderem ter conteúdo longo */
+        /* overflow-y: auto; */   /* Adicionar se os modais puderem ter conteúdo longo */
     }
     .modal__title {
         font-size: var(--modal-title-font-size-mobile, 1.4rem);
     }
     .modal__body {
         font-size: var(--modal-body-font-size-mobile, 0.95rem);
-        margin-bottom: var(--spacing-md, 25px);
+        margin-bottom: var(--spacing-md, 25px); /* Reduzido para mobile */
     }
-    .modal__footer {
-        flex-direction: column-reverse;
-        align-items: stretch;
-        gap: var(--spacing-sm, 10px);
-    }
-    .modal__footer--stacked .button {
-        width: 100%;
-        min-width: unset;
+    .modal__footer { /* Por padrão, já empilha via .modal__footer--stacked se aplicado no HTML */
+        /* Se não usar --stacked, pode forçar aqui: */
+        /* flex-direction: column-reverse; */
+        /* align-items: stretch; */
+        /* gap: var(--spacing-sm, 10px); */
     }
 }

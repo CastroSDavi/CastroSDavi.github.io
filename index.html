@@ -298,12 +298,16 @@
         </div>
         <div class="filter-panel__body">
             <div class="filter-group" id="filter-group-categories">
-                <div class="filter-group__header">
-                    <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
-                    <div class="filter-group__controls">
+                <div class="filter-group" id="filter-group-categories">
+                    <div class="filter-group__header">
+                        <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
+                        </div>
+                    <div class="filter-group__controls filter-group__controls--standalone">
                         <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
                         <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
                     </div>
+                    <ul class="category-tree" id="category-tree-list" role="tree" aria-labelledby="filter-group-categories-title">
+                        </ul>
                 </div>
                 <ul class="category-tree" id="category-tree-list" role="tree" aria-labelledby="filter-group-categories-title">
                 </ul>

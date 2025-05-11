@@ -1,14 +1,15 @@
-/* assets/css/components/filter-panel.css */
+/* assets/css/components/filter-panel.css (Com alternativa de layout para controles) */
 
-/* Overlay para o painel de filtros */
 .filter-panel-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--modal-backdrop-bg, rgba(0, 0, 0, 0.55)); /* Levemente mais escuro */
-    z-index: var(--z-index-modal-backdrop, 900);
+    background-color: rgba(var(--color-primary-dark-rgb), 0.2);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: var(--z-index-filter-panel-overlay); /* Certifique-se que esta variável está definida em variables.css */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s var(--transition-timing-function-ease), visibility 0s linear 0.3s;
@@ -19,24 +20,23 @@
     transition-delay: 0s;
 }
 
-/* Painel de Filtros Deslizante */
 .filter-panel {
     position: fixed;
     top: 0;
     right: 0;
     width: 100%;
-    max-width: 380px; /* Um pouco mais largo para conforto */
-    height: 100vh;
+    max-width: 390px;
+    height: 100dvh; /* Usa a altura dinâmica da viewport */
     background-color: var(--color-white);
-    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.12); /* Sombra mais suave e definida */
-    z-index: var(--z-index-modal-content, 901);
+    color: var(--color-text-primary);
+    box-shadow: -4px 0 25px rgba(var(--color-primary-dark-rgb), 0.12);
+    z-index: var(--z-index-filter-panel); /* Certifique-se que esta variável está definida em variables.css */
     transform: translateX(100%);
-    transition: transform 0.35s var(--transition-timing-function-ease-in-out);
+    transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
-
 .filter-panel--visible {
     transform: translateX(0);
 }
@@ -45,336 +45,363 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-md, 18px) var(--spacing-lg, 22px); /* Ajustado padding horizontal */
+    padding: var(--spacing-md) var(--spacing-lg);
     border-bottom: 1px solid var(--color-gray-200);
     flex-shrink: 0;
+    background-color: var(--color-white);
 }
-
 .filter-panel__title {
-    font-size: var(--font-size-h3, 1.4rem); /* Ligeiramente menor para mais espaço */
+    font-size: 1.5rem;
     font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
+    color: var(--color-primary-dark);
     margin: 0;
     line-height: 1.3;
 }
-
 .filter-panel__close-button {
-    color: var(--color-gray-600); /* Um pouco mais escuro para o ícone */
-    padding: var(--spacing-xs, 6px); /* Padding no botão de fechar */
+    color: var(--color-gray-700);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-circle);
+    transition: all 0.2s ease-out;
 }
 .filter-panel__close-button:hover,
 .filter-panel__close-button:focus-visible {
-    color: var(--color-text-primary);
-    background-color: var(--color-gray-100);
+    color: var(--color-accent-red);
+    background-color: rgba(var(--color-accent-red-rgb), 0.08);
+    transform: scale(1.1);
 }
 .filter-panel__close-button .material-symbols-outlined {
-    font-size: 26px; /* Ícone ligeiramente maior */
+    font-size: 26px;
+    display: block;
 }
 
 .filter-panel__body {
     flex-grow: 1;
     overflow-y: auto;
-    padding: var(--spacing-lg, 22px); /* Padding geral do corpo */
+    padding: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xl, 28px); /* Gap entre os GRUPOS de filtro (Categorias, Dificuldade) */
+    gap: var(--spacing-lg);
 }
 
-/* Scrollbar customizada (Webkit) */
+/* Scrollbar styling for Webkit browsers (Chrome, Safari, Edge) */
 .filter-panel__body::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 .filter-panel__body::-webkit-scrollbar-track {
-    background: var(--color-gray-50); /* Fundo mais claro */
-    border-radius: 10px;
+    background: var(--color-gray-100);
+    margin: var(--spacing-xs) 0;
 }
 .filter-panel__body::-webkit-scrollbar-thumb {
     background-color: var(--color-gray-300);
     border-radius: 10px;
-    border: 2px solid var(--color-gray-50);
 }
 .filter-panel__body::-webkit-scrollbar-thumb:hover {
     background-color: var(--color-gray-400);
 }
 
-.filter-group {
-    /* Container para cada grupo de filtro */
+/* Scrollbar styling for Firefox */
+.filter-panel__body {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray-300) var(--color-gray-100);
 }
 
+
+/* --- MODIFICAÇÕES PARA O LAYOUT DOS CONTROLES DE CATEGORIA --- */
 .filter-group__header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-sm, 12px); /* ESPAÇO ENTRE TÍTULO DO GRUPO E SEUS CONTROLES/ITENS */
+    margin-bottom: var(--spacing-xs); /* Reduzido, pois os controles virão abaixo */
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid var(--color-gray-100);
 }
 
 .filter-group__title {
-    font-size: 1rem; /* Tamanho do título "Categorias" e "Dificuldade" */
+    font-size: 1.05rem;
     font-weight: var(--font-weight-semibold);
     color: var(--color-primary-dark);
-    margin: 0;
-}
-
-/* Controles para o grupo de categorias (Selecionar/Limpar Todas) */
-.filter-group__controls {
+    position: relative;
+    padding-left: var(--spacing-sm);
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs, 8px);
+    line-height: normal;
+    flex-grow: 1; /* Para o título ocupar o espaço no header */
 }
+
+.filter-group__title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1em;
+    width: 3px;
+    background-color: var(--color-secondary-green);
+    border-radius: var(--border-radius-pill);
+}
+
+/* Estilos para o container dos controles quando posicionado de forma autônoma (abaixo do header) */
+.filter-group__controls--standalone {
+    display: flex;
+    justify-content: flex-start; /* Alinha botões à esquerda. Use 'flex-end' ou 'center' se preferir. */
+    gap: var(--spacing-sm);      /* Espaço entre os botões */
+    margin-bottom: var(--spacing-sm); /* Espaço abaixo dos botões, antes da árvore de categorias */
+    padding-left: var(--spacing-sm);  /* Opcional: Alinha com o padding do título. Remova para alinhar totalmente à esquerda. */
+}
+
+/* Estilos para os botões de texto (Selecionar Todas/Limpar Todas) */
+/* Este seletor é genérico para .filter-group__controls, então deve pegar os botões
+   se a div tiver a classe .filter-group__controls e .filter-group__controls--standalone */
 .filter-group__controls .button--text {
-    font-size: var(--font-size-xs, 0.75rem); /* Botões de texto menores */
-    padding: var(--spacing-xxs, 3px) var(--spacing-xs, 6px);
-    min-height: auto;
-    color: var(--color-text-link);
-    font-weight: var(--font-weight-normal);
-    letter-spacing: 0.2px;
+    font-size: var(--font-size-xs, 0.8rem);
+    padding: var(--spacing-xxs, 4px) var(--spacing-xs, 6px);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-primary-medium);
+    line-height: normal;
+    min-height: unset;
 }
+
 .filter-group__controls .button--text:hover,
 .filter-group__controls .button--text:focus-visible {
-    color: var(--color-text-link-hover);
-    background-color: var(--color-gray-100);
-    text-decoration: none;
+    color: var(--color-primary-dark);
+    background-color: var(--color-primary-light);
 }
+/* --- FIM DAS MODIFICAÇÕES PARA CONTROLES DE CATEGORIA --- */
 
 
 .filter-panel__footer {
-    padding: var(--spacing-md, 18px) var(--spacing-lg, 22px); /* Padding do rodapé */
+    padding: var(--spacing-md, 16px) var(--spacing-lg, 20px);
+    padding-bottom: calc(var(--spacing-md, 16px) + env(safe-area-inset-bottom, 10px));
     border-top: 1px solid var(--color-gray-200);
     display: flex;
-    gap: var(--spacing-sm, 12px); /* Gap entre botões Limpar/Aplicar */
-    background-color: var(--color-gray-50);
+    gap: var(--spacing-md, 12px);
+    background-color: var(--color-white);
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
     flex-shrink: 0;
+    position: relative;
+    z-index: 10;
 }
 .filter-panel__footer .button {
     flex-grow: 1;
-    font-size: 0.9rem; /* Tamanho de fonte dos botões do rodapé */
-    padding-top: var(--spacing-xs, 10px);
-    padding-bottom: var(--spacing-xs, 10px);
+    font-size: 0.9rem;
+    padding: var(--spacing-xs, 10px) var(--spacing-sm, 16px);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-md);
 }
 
-
-/* Estilos para a Árvore de Categorias (Category Tree) */
+/* Árvore de Categorias */
 .category-tree {
     list-style: none;
     padding-left: 0;
     margin: 0;
-    margin-top: var(--spacing-xs, 8px); /* Espaço acima da árvore se ela seguir o header do grupo */
 }
-
 .category-tree__item {
-    margin-bottom: var(--spacing-xxs, 2px);
+    margin-bottom: 0;
+    position: relative;
 }
 
 .category-tree__label-wrapper {
     display: flex;
     align-items: center;
-    padding: var(--spacing-xs, 7px) var(--spacing-xxs, 5px);
+    padding: var(--spacing-xs, 6px) var(--spacing-xxs, 4px);
     border-radius: var(--border-radius-md);
-    transition: background-color 0.15s ease-in-out;
-    cursor: default;
+    transition: background-color 0.2s ease-out;
     position: relative;
 }
 .category-tree__label-wrapper:hover {
-    background-color: var(--color-gray-100);
+    background-color: rgba(var(--color-primary-light-rgb), 0.5);
+}
+.category-tree__input:checked ~ .category-tree__label-wrapper,
+.category-tree__input.is-indeterminate ~ .category-tree__label-wrapper {
+    background-color: var(--color-primary-light);
+}
+.category-tree__label-wrapper:focus-within {
+    box-shadow: 0 0 0 2px var(--focus-outline-color) inset;
 }
 
-.category-tree__input { /* Já tem .u-sr-only */ }
+.category-tree__toggle {
+    padding: var(--spacing-xxs, 4px);
+    color: var(--color-gray-700);
+    border-radius: var(--border-radius-circle);
+    transition: all 0.2s ease-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: var(--spacing-xxs, 4px);
+}
+.category-tree__toggle .material-symbols-outlined {
+    font-size: 22px;
+    font-weight: 400;
+    display: block;
+    transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.category-tree__toggle:hover,
+.category-tree__toggle:focus-visible {
+    background-color: rgba(var(--color-primary-dark-rgb), 0.07);
+    color: var(--color-primary-dark);
+}
+.category-tree__toggle[aria-expanded="true"] .material-symbols-outlined {
+    transform: rotate(90deg);
+}
 
 .category-tree__label {
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--color-text-secondary);
     flex-grow: 1;
     user-select: none;
-    padding-left: calc(17px + var(--spacing-xs, 8px)); /* (largura_checkbox_caixa + gap_entre_checkbox_e_texto) */
-    position: relative;
-    line-height: 1.4;
+    padding-left: calc(18px + var(--spacing-xs, 6px));
+    line-height: 1.5;
     cursor: pointer;
-}
-
-.category-tree__label:focus-visible {
-    outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: 1px;
     border-radius: var(--border-radius-sm);
-    background-color: var(--color-gray-50);
+    transition: color 0.2s ease-out;
+    position: relative;
 }
-
+.category-tree__input:checked + .category-tree__label,
+.category-tree__input.is-indeterminate + .category-tree__label {
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-medium);
+}
 
 /* Checkbox customizado */
-.category-tree__label::before { /* Caixa do checkbox */
+.category-tree__label::before { /* Caixa */
     content: "";
     position: absolute;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 17px;
-    height: 17px;
-    border: 1.5px solid var(--color-gray-400);
-    border-radius: var(--border-radius-sm, 4px);
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-gray-500);
+    border-radius: 3px;
     background-color: var(--color-white);
-    transition: border-color 0.15s ease, background-color 0.15s ease;
+    transition: all 0.15s ease-out;
 }
-.category-tree__label::after { /* Marca de verificação (check) */
-    content: "check";
+.category-tree__label::after { /* Marca - Ícone */
+    content: "check_small";
     font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 1, 'wght' 700; /* Check mais visível */
-    font-size: 15px; /* Ajuste o tamanho conforme necessário */
+    font-variation-settings: 'FILL' 1, 'wght' 700;
+    font-size: 14px;
     line-height: 1;
     position: absolute;
-    left: 1px; /* Ajuste fino para centralizar */
+    left: 1px;
     top: 50%;
     transform: translateY(-50%) scale(0);
     color: var(--color-white);
-    transition: transform 0.1s ease-in-out;
+    opacity: 0;
+    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
 }
-
 .category-tree__input:focus-visible + .category-tree__label::before {
-    outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: 0px;
     border-color: var(--focus-outline-color);
+    box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3);
 }
-
 .category-tree__input:checked + .category-tree__label::before {
     background-color: var(--color-secondary-green);
     border-color: var(--color-secondary-green);
 }
 .category-tree__input:checked + .category-tree__label::after {
     transform: translateY(-50%) scale(1);
+    opacity: 1;
 }
-.category-tree__input:checked + .category-tree__label {
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-medium);
-}
-
 .category-tree__input.is-indeterminate + .category-tree__label::before {
     background-color: var(--color-secondary-green);
     border-color: var(--color-secondary-green);
 }
 .category-tree__input.is-indeterminate + .category-tree__label::after {
     content: "";
-    position: absolute;
-    left: 4px; top: 50%;
-    width: 9px; height: 2px;
+    font-family: initial;
+    left: 3.5px;
+    top: 50%;
+    width: 8px;
+    height: 2px;
     background-color: var(--color-white);
     border-radius: 1px;
     transform: translateY(-50%) scale(1);
-    transition: none;
+    opacity: 1;
 }
-
-
-.category-tree__toggle {
-    margin-right: var(--spacing-xxs, 5px);
-    padding: var(--spacing-xxs, 4px);
-    color: var(--color-gray-600);
-    background: none; border: none; cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    border-radius: var(--border-radius-circle);
-    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out, transform 0.2s ease-in-out;
-}
-.category-tree__toggle .material-symbols-outlined {
-    font-size: 22px;
-    transition: transform 0.2s var(--transition-timing-function-ease);
-    display: block;
-}
-.category-tree__toggle:hover,
-.category-tree__toggle:focus-visible {
-    background-color: var(--color-gray-100);
-    color: var(--color-primary-dark);
-}
-.category-tree__toggle:focus-visible {
-    outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: 0px;
-}
-
 
 .category-tree__submenu {
     list-style: none;
-    padding-left: calc(var(--spacing-md, 18px) + var(--spacing-xxs, 5px)); /* Ajuste de indentação dos submenus */
-    margin-top: var(--spacing-xxs, 3px);
+    padding-left: var(--spacing-lg, 24px);
+    margin-top: 0;
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.category-tree__submenu--expanded {
-    /* max-height é definido via JS */
+    transition: max-height 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
-/* Estilos para Chip Group (Dificuldade) */
+/* Chips de Dificuldade */
 .chip-group {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-xs, 8px);
-    margin-top: var(--spacing-xs, 8px); /* ESPAÇO ENTRE TÍTULO "DIFICULDADE" E OS CHIPS */
+    gap: var(--spacing-sm, 10px);
+    margin-top: var(--spacing-xs, 8px);
 }
-.chip-group__input.u-sr-only { /* u-sr-only já deve esconder */ }
-
 .chip-group__chip {
-    display: inline-block;
-    padding: var(--spacing-xs, 7px) var(--spacing-sm, 14px);
-    font-size: var(--font-size-xs, 0.85rem);
-    color: var(--color-text-secondary);
+    padding: var(--spacing-xs, 8px) var(--spacing-md, 18px);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-700);
     background-color: var(--color-gray-100);
     border: 1px solid var(--color-gray-300);
     border-radius: var(--border-radius-pill);
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    line-height: 1.3;
+    transition: all 0.2s ease-out;
 }
 .chip-group__input:hover + .chip-group__chip,
 .chip-group__input:focus-visible + .chip-group__chip {
-    background-color: var(--color-gray-200);
-    border-color: var(--color-gray-500);
+    border-color: var(--color-gray-400);
     color: var(--color-text-primary);
+    background-color: var(--color-gray-200);
+    transform: translateY(-1px);
 }
 .chip-group__input:focus-visible + .chip-group__chip {
-    border-color: var(--focus-outline-color);
     box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3);
 }
 .chip-group__input:checked + .chip-group__chip {
-    background-color: var(--color-secondary-green);
     color: var(--color-white);
     border-color: var(--color-secondary-green);
+    background-color: var(--color-secondary-green);
     font-weight: var(--font-weight-semibold);
-    box-shadow: 0 1px 3px rgba(from var(--color-secondary-green) r g b / 0.25);
+    box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.25);
+    transform: translateY(0px) scale(1.01);
 }
 
-
-/* Responsividade para o Painel de Filtros */
+/* Responsividade */
 @media (max-width: 480px) {
-    .filter-panel {
-        max-width: 100%;
+    .filter-panel { max-width: 100%; border-radius: 0; }
+    .filter-panel__header { padding: var(--spacing-sm, 14px) var(--spacing-md, 16px); }
+    .filter-panel__title { font-size: 1.3rem; }
+    .filter-panel__close-button .material-symbols-outlined { font-size: 24px; }
+
+    .filter-panel__body { padding: var(--spacing-sm, 14px) var(--spacing-md, 16px); gap: var(--spacing-md, 20px); }
+    
+    /* Ajustes responsivos para o header do grupo e título */
+    .filter-group__header { margin-bottom: var(--spacing-xs, 8px); padding-bottom: var(--spacing-xs, 6px); }
+    .filter-group__title { font-size: 1rem; padding-left: var(--spacing-xs, 10px); }
+    .filter-group__title::before { width: 3px; }
+
+    /* Ajustes responsivos para os controles standalone */
+    .filter-group__controls--standalone {
+        margin-bottom: var(--spacing-xs, 10px); /* Menor margem em mobile */
+        padding-left: var(--spacing-xs, 10px); /* Ajuste de padding se necessário */
+        gap: var(--spacing-xs, 8px); /* Menor gap entre botões */
     }
-    .filter-panel__header, .filter-panel__body, .filter-panel__footer {
-        padding: var(--spacing-md, 16px);
-    }
-    .filter-panel__body {
-        gap: var(--spacing-lg, 24px);
-    }
-     .filter-panel__footer {
-        flex-direction: column-reverse;
-        gap: var(--spacing-sm, 10px);
-    }
-    .filter-panel__footer .button {
-        width: 100%;
-    }
-    .category-tree__submenu {
-        padding-left: calc(var(--spacing-sm, 16px) + var(--spacing-xxs, 4px));
-    }
-    .category-tree__label {
-        font-size: var(--font-size-sm, 0.875rem);
-        padding-left: calc(17px + var(--spacing-xs, 6px));
+    .filter-group__controls--standalone .button--text {
+        font-size: var(--font-size-xs, 0.75rem); /* Botões ainda menores se preciso */
     }
 
-    .filter-group__title {
-        font-size: 0.95rem;
+    .category-tree__submenu { padding-left: var(--spacing-md, 20px); }
+    .category-tree__label { font-size: 0.875rem; padding-left: calc(16px + var(--spacing-xs, 6px)); }
+    .category-tree__label::before { width: 16px; height: 16px; }
+    .category-tree__label::after { left: 0.5px; top: 50%; font-size: 14px; }
+    .category-tree__input.is-indeterminate + .category-tree__label::after { left: 4px; width: 8px; height: 1.5px; }
+
+    .chip-group { gap: var(--spacing-xs, 6px); }
+    .chip-group__chip { padding: var(--spacing-xxs, 6px) var(--spacing-sm, 12px); font-size: 0.75rem; }
+
+    .filter-panel__footer {
+        padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px);
+        padding-bottom: calc(var(--spacing-xs, 10px) + env(safe-area-inset-bottom, 8px));
+        gap: var(--spacing-xs, 8px);
+        flex-direction: column-reverse;
     }
-    .filter-group__header {
-      margin-bottom: var(--spacing-xs, 10px);
-    }
-    .chip-group__chip {
-        padding: var(--spacing-xs, 6px) var(--spacing-sm, 12px);
-        font-size: var(--font-size-xs, 0.8rem);
-    }
-    .chip-group {
-        margin-top: var(--spacing-xs, 6px);
-    }
+    .filter-panel__footer .button { font-size: 0.85rem; padding: var(--spacing-xs, 10px); }
 }

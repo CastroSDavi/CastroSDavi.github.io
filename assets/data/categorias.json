@@ -21,13 +21,19 @@
     "id_categoria": 4,
     "nome_categoria": "Prática Clínica e Terapêutica",
     "id_categoria_pai": null,
-    "descricao_categoria": "Aplicação do conhecimento médico: diagnóstico, tratamento, farmacologia, cirurgia e especialidades."
+    "descricao_categoria": "Aplicação do conhecimento médico: diagnóstico, tratamento (não cirúrgico), farmacologia e especialidades clínicas."
   },
   {
     "id_categoria": 5,
     "nome_categoria": "Saúde Pública e Humanidades Médicas",
     "id_categoria_pai": null,
     "descricao_categoria": "Dimensões sociais, populacionais, éticas e preventivas da medicina."
+  },
+  {
+    "id_categoria": 6,
+    "nome_categoria": "Ciências Cirúrgicas e Anestesiologia",
+    "id_categoria_pai": null,
+    "descricao_categoria": "Princípios e práticas da cirurgia, suas especialidades e da anestesiologia."
   },
   {
     "id_categoria": 10,
@@ -106,6 +112,12 @@
     "nome_categoria": "Bioquímica e Metabolismo",
     "id_categoria_pai": 1,
     "descricao_categoria": "Estrutura e função de biomoléculas, vias metabólicas e bioenergética."
+  },
+  {
+    "id_categoria": 104,
+    "nome_categoria": "Histologia e Biologia Tecidual",
+    "id_categoria_pai": 1,
+    "descricao_categoria": "Estudo microscópico da estrutura, organização e função dos tecidos biológicos."
   },
   {
     "id_categoria": 201,
@@ -208,12 +220,6 @@
     "nome_categoria": "Semiologia Médica",
     "id_categoria_pai": 4,
     "descricao_categoria": "Técnicas de anamnese e exame físico para o diagnóstico."
-  },
-  {
-    "id_categoria": 403,
-    "nome_categoria": "Princípios de Cirurgia",
-    "id_categoria_pai": 4,
-    "descricao_categoria": "Bases da técnica cirúrgica, cicatrização, cuidados pré e pós-operatórios."
   },
   {
     "id_categoria": 404,
@@ -329,6 +335,66 @@
     "id_categoria_pai": 5,
     "descricao_categoria": "Estratégias de prevenção primária, secundária e terciária; saúde da família e comunidade."
   },
+  {
+    "id_categoria": 601,
+    "nome_categoria": "Princípios Gerais da Cirurgia",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Fundamentos da prática cirúrgica, resposta ao trauma e cuidados perioperatórios."
+  },
+  {
+    "id_categoria": 602,
+    "nome_categoria": "Anestesiologia",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Princípios e prática da anestesia e manejo da dor."
+  },
+  {
+    "id_categoria": 603,
+    "nome_categoria": "Cirurgia Geral e do Aparelho Digestivo",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Tratamento cirúrgico de afecções abdominais e do trato digestório."
+  },
+  {
+    "id_categoria": 604,
+    "nome_categoria": "Cirurgia Cardiovascular",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Tratamento cirúrgico de doenças do coração e grandes vasos."
+  },
+  {
+    "id_categoria": 605,
+    "nome_categoria": "Neurocirurgia",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Tratamento cirúrgico de doenças do sistema nervoso central e periférico."
+  },
+  {
+    "id_categoria": 606,
+    "nome_categoria": "Cirurgia Ortopédica e Traumatologia",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Tratamento cirúrgico de lesões e doenças do sistema musculoesquelético."
+  },
+  {
+    "id_categoria": 607,
+    "nome_categoria": "Cirurgia Pediátrica",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Tratamento cirúrgico de doenças em neonatos, crianças e adolescentes."
+  },
+  {
+    "id_categoria": 608,
+    "nome_categoria": "Cirurgia Plástica e Reparadora",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Correção cirúrgica de deformidades congênitas ou adquiridas e procedimentos estéticos."
+  },
+  {
+    "id_categoria": 609,
+    "nome_categoria": "Cirurgia Oncológica",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Tratamento cirúrgico de tumores malignos."
+  },
+  {
+    "id_categoria": 610,
+    "nome_categoria": "Cirurgia de Urgência e Trauma",
+    "id_categoria_pai": 6,
+    "descricao_categoria": "Abordagem cirúrgica de pacientes com condições agudas e vítimas de trauma."
+  },
   { "id_categoria": 1101, "nome_categoria": "Organelas Celulares: Estrutura e Função", "id_categoria_pai": 101 },
   { "id_categoria": 1102, "nome_categoria": "Ciclo Celular e Regulação", "id_categoria_pai": 101 },
   { "id_categoria": 1103, "nome_categoria": "Vias de Sinalização Intracelular", "id_categoria_pai": 101 },
@@ -434,11 +500,6 @@
   { "id_categoria": 1203, "nome_categoria": "Semiologia Respiratória (Inspeção, Palpação, Percussão, Ausculta Pulmonar)", "id_categoria_pai": 402 },
   { "id_categoria": 1204, "nome_categoria": "Semiologia Abdominal", "id_categoria_pai": 402 },
   { "id_categoria": 1205, "nome_categoria": "Semiologia Neurológica Básica", "id_categoria_pai": 402 },
-  { "id_categoria": 1206, "nome_categoria": "Assepsia, Antissepsia e Esterilização", "id_categoria_pai": 403 },
-  { "id_categoria": 1207, "nome_categoria": "Hemostasia Cirúrgica e Transfusão Sanguínea", "id_categoria_pai": 403 },
-  { "id_categoria": 1208, "nome_categoria": "Tipos de Incisões e Suturas", "id_categoria_pai": 403 },
-  { "id_categoria": 1209, "nome_categoria": "Complicações Cirúrgicas (Infecção, Deiscência, Hérnia Incisional)", "id_categoria_pai": 403 },
-  { "id_categoria": 1210, "nome_categoria": "Cirurgia Minimamente Invasiva (Laparoscopia, Endoscopia)", "id_categoria_pai": 403 },
   { "id_categoria": 1211, "nome_categoria": "Hematologia Laboratorial (Hemograma, Coagulograma)", "id_categoria_pai": 404 },
   { "id_categoria": 1212, "nome_categoria": "Bioquímica Clínica (Função Renal, Hepática, Eletrólitos, Glicemia)", "id_categoria_pai": 404 },
   { "id_categoria": 1213, "nome_categoria": "Urinálise e Exames Parasitológicos de Fezes", "id_categoria_pai": 404 },
@@ -541,5 +602,64 @@
   { "id_categoria": 1310, "nome_categoria": "Princípios de Diagnóstico Microbiológico (Cultura, Sorologia, Molecular)", "id_categoria_pai": 303 },
   { "id_categoria": 1311, "nome_categoria": "Mecanismos de Patogenicidade Microbiana (Toxinas, Fatores de Virulência)", "id_categoria_pai": 303 },
   { "id_categoria": 1312, "nome_categoria": "Doenças Granulomatosas", "id_categoria_pai": 304 },
-  { "id_categoria": 1313, "nome_categoria": "Patologia da Amiloidose", "id_categoria_pai": 304 }
+  { "id_categoria": 1313, "nome_categoria": "Patologia da Amiloidose", "id_categoria_pai": 304 },
+  { "id_categoria": 1314, "nome_categoria": "Técnicas Histológicas e Microscopia", "id_categoria_pai": 104 },
+  { "id_categoria": 1315, "nome_categoria": "Tecido Epitelial (Revestimento e Glandular)", "id_categoria_pai": 104 },
+  { "id_categoria": 1316, "nome_categoria": "Tecido Conjuntivo (Propriamente Dito, Adiposo, Cartilaginoso, Ósseo, Sanguíneo)", "id_categoria_pai": 104 },
+  { "id_categoria": 1317, "nome_categoria": "Tecido Muscular (Estriado Esquelético, Cardíaco, Liso)", "id_categoria_pai": 104 },
+  { "id_categoria": 1318, "nome_categoria": "Tecido Nervoso (Neurônios, Glia, Organização)", "id_categoria_pai": 104 },
+  { "id_categoria": 1319, "nome_categoria": "Avaliação Pré-operatória e Risco Cirúrgico", "id_categoria_pai": 601 },
+  { "id_categoria": 1320, "nome_categoria": "Resposta Metabólica ao Trauma e Cirurgia", "id_categoria_pai": 601 },
+  { "id_categoria": 1321, "nome_categoria": "Cicatrização de Feridas e Fatores que a Afetam", "id_categoria_pai": 601 },
+  { "id_categoria": 1322, "nome_categoria": "Infecção em Cirurgia e Profilaxia Antimicrobiana", "id_categoria_pai": 601 },
+  { "id_categoria": 1323, "nome_categoria": "Cuidados Pós-operatórios e Manejo de Complicações", "id_categoria_pai": 601 },
+  { "id_categoria": 1324, "nome_categoria": "Avaliação Pré-anestésica", "id_categoria_pai": 602 },
+  { "id_categoria": 1325, "nome_categoria": "Farmacologia dos Anestésicos", "id_categoria_pai": 602 },
+  { "id_categoria": 1326, "nome_categoria": "Técnicas de Anestesia (Geral, Regional, Local)", "id_categoria_pai": 602 },
+  { "id_categoria": 1327, "nome_categoria": "Monitorização Anestésica", "id_categoria_pai": 602 },
+  { "id_categoria": 1328, "nome_categoria": "Complicações Anestésicas e Recuperação Pós-anestésica", "id_categoria_pai": 602 },
+  { "id_categoria": 1329, "nome_categoria": "Hérnias da Parede Abdominal", "id_categoria_pai": 603 },
+  { "id_categoria": 1330, "nome_categoria": "Doenças da Vesícula Biliar e Vias Biliares", "id_categoria_pai": 603 },
+  { "id_categoria": 1331, "nome_categoria": "Apendicite Aguda: Abordagem Cirúrgica", "id_categoria_pai": 603 },
+  { "id_categoria": 1332, "nome_categoria": "Doença Diverticular dos Cólons: Tratamento Cirúrgico", "id_categoria_pai": 603 },
+  { "id_categoria": 1333, "nome_categoria": "Cirurgia Bariátrica e Metabólica: Técnicas e Indicações", "id_categoria_pai": 603 },
+  { "id_categoria": 1334, "nome_categoria": "Hemostasia Cirúrgica e Terapia Transfusional", "id_categoria_pai": 601 },
+  { "id_categoria": 1335, "nome_categoria": "Técnicas de Assepsia, Antissepsia e Esterilização", "id_categoria_pai": 601 },
+  { "id_categoria": 1336, "nome_categoria": "Instrumentação Cirúrgica, Incisões e Suturas", "id_categoria_pai": 601 },
+  { "id_categoria": 1337, "nome_categoria": "Cirurgia Robótica e Minimamente Invasiva: Princípios", "id_categoria_pai": 601 },
+  { "id_categoria": 1338, "nome_categoria": "Cirurgia de Revascularização Miocárdica (CRM)", "id_categoria_pai": 604 },
+  { "id_categoria": 1339, "nome_categoria": "Cirurgia Valvar (Troca e Plastia de Valvas Cardíacas)", "id_categoria_pai": 604 },
+  { "id_categoria": 1340, "nome_categoria": "Cirurgia de Aneurismas e Dissecções da Aorta", "id_categoria_pai": 604 },
+  { "id_categoria": 1341, "nome_categoria": "Cirurgia de Cardiopatias Congênitas", "id_categoria_pai": 604 },
+  { "id_categoria": 1342, "nome_categoria": "Transplante Cardíaco", "id_categoria_pai": 604 },
+  { "id_categoria": 1343, "nome_categoria": "Neurocirurgia de Tumores Cerebrais e Medulares", "id_categoria_pai": 605 },
+  { "id_categoria": 1344, "nome_categoria": "Neurocirurgia Vascular (Aneurismas, MAVs)", "id_categoria_pai": 605 },
+  { "id_categoria": 1345, "nome_categoria": "Cirurgia da Coluna Vertebral (Hérnias Discais, Estenoses)", "id_categoria_pai": 605 },
+  { "id_categoria": 1346, "nome_categoria": "Neurocirurgia Funcional e Estereotáxica (DBS, Epilepsia)", "id_categoria_pai": 605 },
+  { "id_categoria": 1347, "nome_categoria": "Neurotrauma: Tratamento Cirúrgico do TCE e TRM", "id_categoria_pai": 605 },
+  { "id_categoria": 1348, "nome_categoria": "Tratamento Cirúrgico de Fraturas e Luxações", "id_categoria_pai": 606 },
+  { "id_categoria": 1349, "nome_categoria": "Artroplastias (Próteses de Quadril, Joelho, Ombro)", "id_categoria_pai": 606 },
+  { "id_categoria": 1350, "nome_categoria": "Cirurgia Artroscópica (Joelho, Ombro)", "id_categoria_pai": 606 },
+  { "id_categoria": 1351, "nome_categoria": "Cirurgia da Mão e Microcirurgia", "id_categoria_pai": 606 },
+  { "id_categoria": 1352, "nome_categoria": "Ortopedia Pediátrica: Deformidades Congênitas e Adquiridas", "id_categoria_pai": 606 },
+  { "id_categoria": 1353, "nome_categoria": "Malformações Congênitas do Trato Digestório (Atresias, Estenoses)", "id_categoria_pai": 607 },
+  { "id_categoria": 1354, "nome_categoria": "Malformações Congênitas da Parede Abdominal (Onfalocele, Gastrosquise)", "id_categoria_pai": 607 },
+  { "id_categoria": 1355, "nome_categoria": "Cirurgia Neonatal", "id_categoria_pai": 607 },
+  { "id_categoria": 1356, "nome_categoria": "Tumores Sólidos na Infância (Neuroblastoma, Tumor de Wilms)", "id_categoria_pai": 607 },
+  { "id_categoria": 1357, "nome_categoria": "Cirurgia Urológica Pediátrica (Refluxo Vesicoureteral, Hipospádia)", "id_categoria_pai": 607 },
+  { "id_categoria": 1358, "nome_categoria": "Tratamento Cirúrgico de Queimaduras", "id_categoria_pai": 608 },
+  { "id_categoria": 1359, "nome_categoria": "Retalhos Cutâneos e Microcirurgia Reconstrutiva", "id_categoria_pai": 608 },
+  { "id_categoria": 1360, "nome_categoria": "Cirurgia Craniomaxilofacial (Trauma e Deformidades)", "id_categoria_pai": 608 },
+  { "id_categoria": 1361, "nome_categoria": "Cirurgia Estética (Mamoplastia, Lipoaspiração, Rinoplastia)", "id_categoria_pai": 608 },
+  { "id_categoria": 1362, "nome_categoria": "Reconstrução Mamária Pós-Mastectomia", "id_categoria_pai": 608 },
+  { "id_categoria": 1363, "nome_categoria": "Princípios da Ressecção Oncológica e Margens Cirúrgicas", "id_categoria_pai": 609 },
+  { "id_categoria": 1364, "nome_categoria": "Linfadenectomia e Biópsia de Linfonodo Sentinela", "id_categoria_pai": 609 },
+  { "id_categoria": 1365, "nome_categoria": "Cirurgia Citorredutora e Quimioterapia Hipertérmica Intraperitoneal (HIPEC)", "id_categoria_pai": 609 },
+  { "id_categoria": 1366, "nome_categoria": "Abordagem Cirúrgica dos Principais Tumores Sólidos", "id_categoria_pai": 609 },
+  { "id_categoria": 1367, "nome_categoria": "Cirurgia Paliativa em Oncologia", "id_categoria_pai": 609 },
+  { "id_categoria": 1368, "nome_categoria": "Atendimento Cirúrgico ao Politraumatizado (Controle de Danos)", "id_categoria_pai": 610 },
+  { "id_categoria": 1369, "nome_categoria": "Trauma Torácico: Abordagem Cirúrgica", "id_categoria_pai": 610 },
+  { "id_categoria": 1370, "nome_categoria": "Trauma Abdominal: Laparotomia Exploradora e Lesões Específicas", "id_categoria_pai": 610 },
+  { "id_categoria": 1371, "nome_categoria": "Trauma Vascular Periférico", "id_categoria_pai": 610 },
+  { "id_categoria": 1372, "nome_categoria": "Abdome Agudo Cirúrgico (Inflamatório, Perfurativo, Obstrutivo, Vascular)", "id_categoria_pai": 610 }
 ]

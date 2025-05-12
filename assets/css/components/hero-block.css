@@ -70,12 +70,23 @@
   .hero-block__cta-actions {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: center; /* Isto manterá o botão centralizado */
     gap: var(--hero-cta-actions-gap, var(--spacing-md, 15px));
     width: 100%;
-    max-width: var(--hero-cta-actions-max-width, 550px);
+    max-width: var(--hero-cta-actions-max-width, 550px); 
   }
-  /* Os botões dentro usam .button e modificadores de button.css */
+
+  /* Ajuste para o botão único dentro do CTA do hero */
+  .hero-block__cta-actions .button--fancy {
+    flex-grow: 0; 
+    flex-shrink: 1; 
+    flex-basis: auto; 
+
+    /* Ajuste a largura do botão aqui */
+    min-width: 280px; /* Ex: Mínimo de 280px */
+    max-width: 350px; /* Ex: Máximo de 350px */
+    width: 100%;     /* Tenta ocupar a largura do container, respeitando min/max */
+  }
   
   
   /*
@@ -83,7 +94,6 @@
     Responsive Styles for .hero-block
   --------------------------------------------------------------------------
   */
-  /* Os ajustes responsivos permanecem os mesmos da resposta anterior */
   @media (max-width: 992px) {
       /* ... (sem grandes mudanças necessárias aqui geralmente) ... */
   }
@@ -104,17 +114,19 @@
     }
     .hero-block__title {
       margin-bottom: var(--spacing-md, 15px);
-      /* --hero-title-size: clamp(1.8rem, 5.2vw, 2.5rem); */
     }
     .hero-block__subtitle {
       line-height: 1.7;
-      /* --hero-subtitle-size: clamp(0.9rem, 2.3vw, 1.1rem); */
     }
     .hero-block__cta-text {
       margin-bottom: var(--spacing-lg, 25px);
     }
     .hero-block__cta-actions {
       gap: var(--spacing-lg, 20px);
+    }
+    .hero-block__cta-actions .button--fancy {
+      min-width: 240px; /* Ajuste para telas menores */
+      max-width: 90%;   /* Pode usar porcentagem para ser mais fluido */
     }
   }
   @media (max-width: 360px) {
@@ -124,10 +136,7 @@
       --hero-padding-y-bottom: clamp(30px, 7vh, 40px);
       --hero-internal-gap: clamp(30px, 5vh, 40px);
     }
-    .hero-block__title {
-      /* --hero-title-size: clamp(1.7rem, 4.8vw, 2.3rem); */
-    }
-    .hero-block__subtitle {
-      /* --hero-subtitle-size: clamp(0.85rem, 2.2vw, 1rem); */
+    .hero-block__cta-actions .button--fancy {
+      min-width: 200px; 
     }
   }

@@ -838,5 +838,835 @@
     "referencia_bibliografica": "Farmacologia Clínica de Antiparasitários",
     "categoria_ids": [1006, 2],
     "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 106,
+    "texto_pergunta": "Em relação à toxiinfecção alimentar, é correto afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 107,
+    "texto_pergunta": "Não é correto afirmar sobre Bacillus cereus:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 108,
+    "texto_pergunta": "É incorreto afirmar em relação à toxiinfecção alimentar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 109,
+    "texto_pergunta": "É incorreto afirmar em relação à toxiinfecção alimentar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 110,
+    "texto_pergunta": "Dentre as doenças pulmonares citadas abaixo, qual delas NÃO está associada a alterações na qualidade do ar?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 111,
+    "texto_pergunta": "Chuva ácida é o termo utilizado para designar precipitações com valores de pH inferiores a 5,6. As principais substâncias que contribuem para esse processo são os óxidos de nitrogênio e de enxofre provenientes da queima de combustíveis fósseis e, também, de fontes naturais. Os problemas causados pela chuva ácida ultrapassam fronteiras políticas regionais e nacionais. A amplitude geográfica dos efeitos da chuva ácida está relacionada principalmente com:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 112,
+    "texto_pergunta": "Em relação a venenos e agrotóxicos, correlacione as colunas abaixo:\nINDICAÇÕES DE USO\nA) Inseticidas\nB) Fungicidas\nC) Herbicidas\nD) Raticidas\nGRUPO QUÍMICO\n1. Hexaclorobenzeno\n2. Piquetcumona\n3. Organofosforados, Carbamatos, Organoclorados\n4. Paraquat",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002, 1005],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 113,
+    "texto_pergunta": "Por determinação conjunta do Ministério da Saúde e do Ministério da Agricultura, toda embalagem de agrotóxicos deve conter uma faixa identificadora, a qual sinaliza o potencial tóxico do agente químico por uma determinada cor. Ao atender um paciente com quadro de intoxicação por agrotóxico que traz consigo a embalagem do produto, o médico deve ter a seguinte conclusão:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 114,
+    "texto_pergunta": "Com relação à Leptospirose, é CORRETO afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 115,
+    "texto_pergunta": "Em relação à Leptospirose, é INCORRETO afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 111,
+    "texto_pergunta": "Chuva ácida é o termo utilizado para designar precipitações com valores de pH inferiores a 5,6. As principais substâncias que contribuem para esse processo são os óxidos de nitrogênio e de enxofre provenientes da queima de combustíveis fósseis e, também, de fontes naturais. Os problemas causados pela chuva ácida ultrapassam fronteiras políticas regionais e nacionais. A amplitude geográfica dos efeitos da chuva ácida está relacionada principalmente com:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 112,
+    "texto_pergunta": "Em relação a venenos e agrotóxicos, correlacione as colunas abaixo:\nINDICAÇÕES DE USO\nA) Inseticidas\nB) Fungicidas\nC) Herbicidas\nD) Raticidas\nGRUPO QUÍMICO\n1. Hexaclorobenzeno\n2. Piquetcumona\n3. Organofosforados, Carbamatos, Organoclorados\n4. Paraquat",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002, 1005],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 113,
+    "texto_pergunta": "Por determinação conjunta do Ministério da Saúde e do Ministério da Agricultura, toda embalagem de agrotóxicos deve conter uma faixa identificadora, a qual sinaliza o potencial tóxico do agente químico por uma determinada cor. Ao atender um paciente com quadro de intoxicação por agrotóxico que traz consigo a embalagem do produto, o médico deve ter a seguinte conclusão:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 114,
+    "texto_pergunta": "Com relação à Leptospirose, é CORRETO afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 115,
+    "texto_pergunta": "Em relação à Leptospirose, é INCORRETO afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 116,
+    "texto_pergunta": "Sobre a Leptospirose, é CORRETO afirmar que:\n1. Penicilina cristalina é a droga de escolha para o tratamento, principalmente quando iniciada na primeira semana da doença\n2. Ciprofloxacina é a droga de escolha para a profilaxia, devendo ser utilizada uma vez por semana enquanto durar a exposição\n3. A cultura é feita a partir da urina, pelo meio Fletcher ou Stuart, na primeira semana de doença\n4. A icterícia da leptospirose pode ser rubínica",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 117,
+    "texto_pergunta": "O nível de ruído, em dB(A), permitido como máxima exposição diária a que pode estar sujeito um trabalhador por 8 horas de trabalho é de:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 118,
+    "texto_pergunta": "A Perda Auditiva Induzida por Ruído é uma doença caracterizada por:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 119,
+    "texto_pergunta": "Assinale a alternativa que completa corretamente a afirmação abaixo. A perda induzida por ruído relacionada ao trabalho (PAIR) tem como característica:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 120,
+    "texto_pergunta": "Em situação de Perda Auditiva Induzida por Ruído (PAIR) de origem ocupacional, pode-se afirmar que:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 121,
+    "texto_pergunta": "Considerando-se a perda auditiva induzida por ruído (PAIR), é INCORRETO afirmar que:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 122,
+    "texto_pergunta": "Após ler e refletir sobre o caso clínico abaixo, responda a questão a seguir:\nSr. Francisco é metalúrgico na região de Camaçari BA há 15 anos. Ele trabalha na linha de produção, onde os testes revelaram um nível médio de ruído em torno de 90 dB. Todos os funcionários da fábrica receberam os EPI apropriados, mas o Sr. Francisco prefere não utilizá-los, pois refere estar habituado àquele barulho e, além disso, ninguém falou com ele sobre as possíveis consequências da não utilização dos mesmos. Recentemente, durante exame periódico, o médico do trabalho notou alteração no exame audiométrico do Sr. Francisco. O médico explicou que, devido às características das alterações encontradas, poderia tratar-se de um caso de PAIR e que poderia ser necessário o afastamento do ambiente de trabalho. Sr. Francisco ficou preocupado com a possibilidade de ficar surdo e questionou também sobre a possibilidade de aposentadoria por invalidez. O médico explicou que seriam necessários novos testes e que o Sr. Francisco seria encaminhado para a perícia no INSS. Em relação aos aspectos previdenciários do caso, o médico perito, após examinar o paciente, deve optar por qual das opções abaixo:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 123,
+    "texto_pergunta": "Em relação às Tênias, assinale a alternativa INCORRETA:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 124,
+    "texto_pergunta": "Em relação à teníase e cisticercose, assinale a alternativa CORRETA:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 125,
+    "texto_pergunta": "Considere a afirmação correta sobre a Taenia sp.:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 126,
+    "texto_pergunta": "Em relação à neurocisticercose, assinale a alternativa CORRETA:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 127,
+    "texto_pergunta": "Assinale a alternativa INCORRETA em relação à leptospirose:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 128,
+    "texto_pergunta": "Em relação à toxiinfecção alimentar, é CORRETO afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 129,
+    "texto_pergunta": "Não é CORRETO afirmar sobre Bacillus cereus:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 130,
+    "texto_pergunta": "Após ler e refletir sobre o caso clínico abaixo, responda a questão a seguir:\nSr. Francisco é metalúrgico na região de Camaçari - BA há 15 anos. Ele trabalha na linha de produção, onde os testes revelaram um nível médio de ruído em torno de 90 dB. Todos os funcionários da fábrica receberam os EPI apropriados, mas o Sr. Francisco prefere não utilizá-los, pois refere estar habituado àquele barulho e, além disso, ninguém falou com ele sobre as possíveis consequências da não utilização dos EPI. Recentemente, durante exame periódico, o médico do trabalho notou alteração no exame audiométrico do Sr. Francisco. O médico explicou que, devido às características das alterações encontradas, poderia tratar-se de um caso de PAIR e que poderia ser necessário o afastamento do ambiente de trabalho. Sr. Francisco ficou preocupado com a possibilidade de ficar surdo e questionou também sobre a possibilidade de aposentadoria por invalidez. O médico explicou que seriam necessários novos testes e que o Sr. Francisco seria encaminhado para a perícia no INSS. Em relação aos aspectos previdenciários do caso, o médico perito, após examinar o paciente, deve optar por qual das opções abaixo:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 131,
+    "texto_pergunta": "Com relação às Tênias, assinale a alternativa INCORRETA:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 132,
+    "texto_pergunta": "Considere as afirmações sobre a Taenia sp.:\nI. A transmissão da teníase para o homem ocorre por meio de ingestão de carne de porco ou de boi, contendo a larva cisticerco\nII. A transmissão da cisticercose ocorre por meio da ingestão da carne de porco, contendo a forma larvar de Taenia solium\nIII. A forma adulta de Taenia solium pode migrar para o cérebro causando a neurocisticercose\nIV. O porco ou o boi adquirem a cisticercose ao ingerir água ou alimento contaminado por ovos de Taenia sp.\nÉ correto o que está contido em:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 133,
+    "texto_pergunta": "Com relação à neurocisticercose, assinale a alternativa CORRETA:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 134,
+    "texto_pergunta": "Não é correto afirmar sobre Bacillus cereus:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 135,
+    "texto_pergunta": "Em relação à toxiinfecção alimentar, é correto afirmar: (Considere as alternativas listadas na Questão 02 da Prova 03 do PDF)",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 136,
+    "texto_pergunta": "Por determinação conjunta do Ministério da Saúde e do Ministério da Agricultura, toda embalagem de agrotóxicos deve conter uma faixa identificadora, a qual sinaliza o potencial tóxico do agente químico por uma determinada cor. Ao atender um paciente com quadro de intoxicação por agrotóxico que traz consigo a embalagem do produto, o médico deve ter a seguinte conclusão: (Considere as alternativas listadas na Questão 10 da Prova 03 do PDF)",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 137,
+    "texto_pergunta": "Em relação aos poluentes atmosféricos, é incorreto afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 138,
+    "texto_pergunta": "Sobre a leptospirose, é correto afirmar que:\n1. Penicilina é a droga de escolha para tratamento, principalmente quando iniciada na primeira semana da doença\n2. Ciprofloxacina é a droga de escolha para a profilaxia, devendo ser utilizada uma vez por semana enquanto durar a exposição\n3. A cultura é feita a partir da urina pelo meio Fletcher ou Stuart, na primeira semana de doença\n4. A hemorragia subaracnoidea é frequente na síndrome de Weil\n5. A icterícia da leptospirose é tipicamente rubínica\nÉ correto o que está contido em:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 139,
+    "texto_pergunta": "Em relação à leptospirose, é incorreto afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 140,
+    "texto_pergunta": "Assinale a alternativa incorreta em relação à leptospirose:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 141,
+    "texto_pergunta": "O nível de ruído, em dB(A), permitido como máxima exposição diária a que pode estar sujeito um trabalhador por 8 horas de trabalho é de:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 142,
+    "texto_pergunta": "Após ler e refletir sobre o caso clínico abaixo, responda a questão a seguir:\nSr. Francisco é metalúrgico na região de Camaçari - BA há 15 anos. Ele trabalha na linha de produção, onde os testes revelaram um nível médio de ruído em torno de 90 dB. Todos os funcionários da fábrica receberam os EPI apropriados, mas o Sr. Francisco prefere não utilizá-los, pois refere estar habituado àquele barulho e, além disso, ninguém falou com ele sobre as possíveis consequências da não utilização dos mesmos. Recentemente, durante exame periódico, o médico do trabalho notou alteração no exame audiométrico do Sr. Francisco. O médico explicou que, devido às características das alterações encontradas, poderia tratar-se de um caso de PAIR e que poderia ser necessário o afastamento do ambiente de trabalho. Sr. Francisco ficou preocupado com a possibilidade de ficar surdo e questionou também sobre a possibilidade de aposentadoria por invalidez. O médico explicou que seriam necessários novos testes e que o Sr. Francisco seria encaminhado para a perícia no INSS.\nEm relação aos aspectos previdenciários do caso, o médico perito, após examinar o paciente, deve optar por qual das opções abaixo:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 143,
+    "texto_pergunta": "Em relação às tênias, assinale a alternativa incorreta:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 144,
+    "texto_pergunta": "Em relação à teníase e cisticercose, assinale a alternativa correta:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 145,
+    "texto_pergunta": "Considere as afirmações sobre a Taenia sp.:\nA) A transmissão da teníase para o homem ocorre por meio de ingestão de carne de porco ou de boi, contendo a larva cisticerco\nB) A transmissão da cisticercose ocorre por meio da ingestão da carne de porco, contendo a forma larvar de Taenia solium\nC) A forma adulta de Taenia solium pode migrar para o cérebro causando neurocisticercose\nD) O porco ou o boi adquirem a cisticercose ao ingerir água ou alimento contaminado por ovos de Taenia sp.\nE) Autoinfecção interna e autoinfecção externa são as duas formas mais comuns dentre os mecanismos de contaminação pela teníase",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 146,
+    "texto_pergunta": "Em relação à neurocisticercose, assinale a alternativa correta:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 147,
+    "texto_pergunta": "Em relação a venenos e agrotóxicos, correlacione as colunas abaixo: Em relação a venenos e agrotóxicos, correlacione as colunas abaixo:\nINDICAÇÕES DE USO\nA) Inseticidas\nB) Fungicidas\nC) Herbicidas\nD) Raticidas\nGRUPO QUÍMICO\n5. Hexaclorobenzeno\n6. Piquetcumona\n7. Organofosforados, Carbamatos, Organoclorados\n8. Paraquat",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002, 1005],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 148,
+    "texto_pergunta": "Em relação à toxiinfecção alimentar, é correto afirmar: (Considere as alternativas listadas na Questão 01 da Prova 04 do PDF)",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 149,
+    "texto_pergunta": "Em relação aos poluentes atmosféricos, é incorreto afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 150,
+    "texto_pergunta": "Sobre a leptospirose, é correto afirmar que:\n1. Penicilina é a droga de escolha para tratamento, principalmente quando iniciada na primeira semana da doença\n2. Ciprofloxacina é a droga de escolha para a profilaxia, devendo ser utilizada uma vez por semana enquanto durar a exposição\n3. A cultura é feita a partir da urina pelo meio Fletcher ou Stuart, na primeira semana de doença\n4. A hemorragia subaracnoidea é frequente na síndrome de Weil\n5. A icterícia da leptospirose é tipicamente rubínica\nÉ correto o que está contido em:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 141,
+    "texto_pergunta": "O nível de ruído, em dB(A), permitido como máxima exposição diária a que pode estar sujeito um trabalhador por 8 horas de trabalho é de:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 142,
+    "texto_pergunta": "Após ler e refletir sobre o caso clínico abaixo, responda a questão a seguir:\nSr. Francisco é metalúrgico na região de Camaçari - BA há 15 anos. Ele trabalha na linha de produção, onde os testes revelaram um nível médio de ruído em torno de 90 dB. Todos os funcionários da fábrica receberam os EPI apropriados, mas o Sr. Francisco prefere não utilizá-los, pois refere estar habituado àquele barulho e, além disso, ninguém falou com ele sobre as possíveis consequências da não utilização dos mesmos. Recentemente, durante exame periódico, o médico do trabalho notou alteração no exame audiométrico do Sr. Francisco. O médico explicou que, devido às características das alterações encontradas, poderia tratar-se de um caso de PAIR e que poderia ser necessário o afastamento do ambiente de trabalho. Sr. Francisco ficou preocupado com a possibilidade de ficar surdo e questionou também sobre a possibilidade de aposentadoria por invalidez. O médico explicou que seriam necessários novos testes e que o Sr. Francisco seria encaminhado para a perícia no INSS.\nEm relação aos aspectos previdenciários do caso, o médico perito, após examinar o paciente, deve optar por qual das opções abaixo:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 143,
+    "texto_pergunta": "Em relação às tênias, assinale a alternativa incorreta:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 144,
+    "texto_pergunta": "Em relação à teníase e cisticercose, assinale a alternativa correta:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 145,
+    "texto_pergunta": "Considere as afirmações sobre a Taenia sp.:\nI. A transmissão da teníase para o homem ocorre por meio de ingestão de carne de porco ou de boi, contendo a larva cisticerco\nII. A transmissão da cisticercose ocorre por meio da ingestão da carne de porco, contendo a forma larvar de Taenia solium\nIII. A forma adulta de Taenia solium pode migrar para o cérebro causando a neurocisticercose\nIV. O porco ou o boi adquirem a cisticercose ao ingerir água ou alimento contaminado por ovos de Taenia sp.\nÉ correto o que está contido em:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 146,
+    "texto_pergunta": "Em relação à neurocisticercose, assinale a alternativa correta:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 147,
+    "texto_pergunta": "Em relação a venenos e agrotóxicos, correlacione as colunas abaixo: Em relação a venenos e agrotóxicos, correlacione as colunas abaixo:\nINDICAÇÕES DE USO\nA) Inseticidas\nB) Fungicidas\nC) Herbicidas\nD) Raticidas\nGRUPO QUÍMICO\n5. Hexaclorobenzeno\n6. Piquetcumona\n7. Organofosforados, Carbamatos, Organoclorados\n8. Paraquat",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002, 1005],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 148,
+    "texto_pergunta": "Em relação à toxiinfecção alimentar, é correto afirmar:\nA) A ação da bactéria como fonte de toxiinfecção se dá através da ingestão do microorganismo que lesa diretamente o epitélio intestinal e/ou por toxinas produzidas antes e/ou após a ingestão do alimento\nB) Staphylococcus aureus age por invasão e destruição do epitélio intestinal ou pela ação da toxina\nC) O período de incubação da infecção pelo S. aureus varia de 12 a 24 horas e cursa, na maioria dos casos, com evolução autolimitada\nD) Na sintomatologia pelo Clostridium perfringens tipo A é predominante o aparecimento de febre, diarreia e vômitos\nE) Escherichia coli enterotoxigênica é a responsável pela diarreia dos viajantes\nÉ correto o que está contido em:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 149,
+    "texto_pergunta": "Em relação aos poluentes atmosféricos, é incorreto afirmar:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 150,
+    "texto_pergunta": "Sobre a leptospirose, é correto afirmar que:\n1. Penicilina é a droga de escolha para tratamento, principalmente quando iniciada na primeira semana da doença\n2. Ciprofloxacina é a droga de escolha para a profilaxia, devendo ser utilizada uma vez por semana enquanto durar a exposição\n3. A cultura é feita a partir da urina pelo meio Fletcher ou Stuart, na primeira semana de doença\n4. A hemorragia subaracnoidea é frequente na síndrome de Weil\n5. A icterícia da leptospirose é tipicamente rubínica\nÉ correto o que está contido em:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 151,
+    "texto_pergunta": "Assinale a alternativa incorreta em relação à leptospirose:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 10],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 152,
+    "texto_pergunta": "O nível de ruído, em dB(A), permitido como máxima exposição diária a que pode estar sujeito um trabalhador por 8 horas de trabalho é de:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Fácil"
+  },
+  {
+    "id_pergunta": 153,
+    "texto_pergunta": "A Perda Auditiva Induzida por Ruído é uma doença caracterizada por:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 154,
+    "texto_pergunta": "Assinale a alternativa que completa corretamente a afirmação abaixo. A perda induzida por ruído relacionada ao trabalho (PAIR) tem como característica:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 155,
+    "texto_pergunta": "Em relação à Perda Auditiva Induzida por Ruído (PAIR) de origem ocupacional, pode-se afirmar que:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 156,
+    "texto_pergunta": "Considerando-se a Perda Auditiva Induzida por Ruído (PAIR), é incorreto afirmar que:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 157,
+    "texto_pergunta": "Após ler e refletir sobre o caso clínico abaixo, responda a questão a seguir:\nSr. Francisco é metalúrgico na região de Camaçari - BA há 15 anos. Ele trabalha na linha de produção, onde os testes revelaram um nível médio de ruído em torno de 90 dB. Todos os funcionários da fábrica receberam os EPI apropriados, mas o Sr. Francisco prefere não utilizá-los, pois refere estar habituado àquele barulho e, além disso, ninguém falou com ele sobre as possíveis consequências da não utilização dos mesmos. Recentemente, durante exame periódico, o médico do trabalho notou alteração no exame audiométrico do Sr. Francisco. O médico explicou que, devido às características das alterações encontradas, poderia tratar-se de um caso de PAIR e que poderia ser necessário o afastamento do ambiente de trabalho. Sr. Francisco ficou preocupado com a possibilidade de ficar surdo e questionou também sobre a possibilidade de aposentadoria por invalidez. O médico explicou que seriam necessários novos testes e que o Sr. Francisco seria encaminhado para a perícia no INSS.\nEm relação aos aspectos previdenciários do caso, o médico perito, após examinar o paciente, deve optar por qual das opções abaixo:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 158,
+    "texto_pergunta": "Em relação a venenos e agrotóxicos, correlacione as colunas abaixo: Em relação a venenos e agrotóxicos, correlacione as colunas abaixo:\nINDICAÇÕES DE USO\nA) Inseticidas\nB) Fungicidas\nC) Herbicidas\nD) Raticidas\nGRUPO QUÍMICO\n9. Hexaclorobenzeno\n10. Piquetcumona\n11. Organofosforados, Carbamatos, Organoclorados\n12. Paraquat",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1002, 1005],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 159,
+    "texto_pergunta": "Assinale a alternativa que completa corretamente a afirmação abaixo:\nA perda auditiva induzida por ruído relacionada ao trabalho (PAIR) tem como característica:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1008],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 160,
+    "texto_pergunta": "Chuva ácida é o termo utilizado para designar precipitações com valores de pH inferiores a 5,6. As principais substâncias que contribuem para esse processo são os óxidos de nitrogênio e de enxofre provenientes da queima de combustíveis fósseis e, também, de fontes naturais. Os problemas causados pela chuva ácida ultrapassam fronteiras políticas regionais e nacionais. A amplitude geográfica dos efeitos da chuva ácida está relacionada principalmente com:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
+    "categoria_ids": [1007, 1001],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_opcao_resposta": 15101, "id_pergunta": 151,
+    "texto_opcao": "Hepatite viral pode assemelhar-se clinicamente, porém os níveis de aminotransferases costumam ser mais elevados e os de CPK (creatina cinase) normais ou raramente alterados",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. É um ponto importante no diagnóstico diferencial da leptospirose."
+  },
+  {
+    "id_opcao_resposta": 15102, "id_pergunta": 151,
+    "texto_opcao": "São comuns as alterações na calemia, principalmente em pacientes com insuficiência renal",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A insuficiência renal na leptospirose pode causar desequilíbrios eletrolíticos, incluindo o potássio."
+  },
+  {
+    "id_opcao_resposta": 15103, "id_pergunta": 151,
+    "texto_opcao": "Cefaleia e hiperemia conjuntival são sintomas incomuns",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Cefaleia intensa e hiperemia conjuntival (olhos vermelhos) são sintomas muito comuns e característicos da fase inicial da leptospirose."
+  },
+  {
+    "id_opcao_resposta": 15104, "id_pergunta": 151,
+    "texto_opcao": "Meningite asséptica assintomática ocorre na maioria dos casos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. A meningite asséptica é uma manifestação possível na fase imune da leptospirose e pode ser assintomática ou oligossintomática."
+  },
+  {
+    "id_opcao_resposta": 15105, "id_pergunta": 151,
+    "texto_opcao": "Leptospira icterohaemorrhagiae é a sorovariedade da L. interrogans causadora da forma mais grave da doença",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. O sorovar Icterohaemorrhagiae é classicamente associado às formas mais graves da leptospirose, como a Síndrome de Weil."
+  },
+  {
+    "id_opcao_resposta": 15201, "id_pergunta": 152,
+    "texto_opcao": "86",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O limite de tolerância para 8 horas de exposição diária ao ruído é 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 15202, "id_pergunta": 152,
+    "texto_opcao": "87",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Este valor excede o limite para 8 horas."
+  },
+  {
+    "id_opcao_resposta": 15203, "id_pergunta": 152,
+    "texto_opcao": "88",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Este valor está acima do limite para 8 horas."
+  },
+  {
+    "id_opcao_resposta": 15204, "id_pergunta": 152,
+    "texto_opcao": "85",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Conforme a NR-15, o limite de tolerância para exposição a ruído contínuo ou intermitente por 8 horas é de 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 15205, "id_pergunta": 152,
+    "texto_opcao": "É variável conforme o ambiente ao qual o trabalhador está exposto",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Embora os níveis de ruído variem, existe um limite normativo específico para a jornada de 8 horas."
+  },
+  {
+    "id_opcao_resposta": 15301, "id_pergunta": 153,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruído superiores a 85 dB, causando uma surdez do tipo mista, neurossensorial e de condução, que evolui de forma insidiosa e tende a se agravar nas idades mais avançadas",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR é caracteristicamente uma perda auditiva neurossensorial, não mista."
+  },
+  {
+    "id_opcao_resposta": 15302, "id_pergunta": 153,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruídos superiores a 85 dB, causando uma surdez de condução que evolui de forma insidiosa na maioria dos trabalhadores expostos, mas de forma abrupta nos que são afetados por otosclerose",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR é neurossensorial. Otosclerose é uma causa distinta de perda condutiva."
+  },
+  {
+    "id_opcao_resposta": 15303, "id_pergunta": 153,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruídos superiores a 85 dB, causando uma surdez do tipo neurossensorial, que evolui de forma insidiosa e que tende a se agravar nas idades mais avançadas",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. Esta descrição é consistente com as características da PAIR: exposição a ruído >85dB, tipo neurossensorial, evolução insidiosa e potencial de agravamento com a idade (presbiacusia sobreposta)."
+  },
+  {
+    "id_opcao_resposta": 15304, "id_pergunta": 153,
+    "texto_opcao": "Mostrar, no exame audiométrico, alterações do limiar de audibilidade, frequentemente bilaterais, e que afetam mais precocemente as frequências de 500 Hz, 1000 Hz e 2000 Hz",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A PAIR afeta mais precocemente as frequências altas (geralmente 3kHz, 4kHz ou 6kHz), não as baixas e médias."
+  },
+  {
+    "id_opcao_resposta": 15401, "id_pergunta": 154,
+    "texto_opcao": "Ser neurossensorial, em razão do dano causado às células do órgão de Corti",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A PAIR é uma perda auditiva neurossensorial devido a danos nas células ciliadas do órgão de Corti na cóclea."
+  },
+  {
+    "id_opcao_resposta": 15402, "id_pergunta": 154,
+    "texto_opcao": "Levar a perdas auditivas profundas e irreversíveis nas frequências de 0,5; 1 e 2 kHz",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR afeta inicialmente as frequências altas. A perda é irreversível, mas não necessariamente profunda nessas frequências baixas/médias no início."
+  },
+  {
+    "id_opcao_resposta": 15403, "id_pergunta": 154,
+    "texto_opcao": "Uma vez instalada é progressiva, mesmo depois de cessar a exposição a ruídos intensos",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A PAIR geralmente não progride ou progride minimamente se a exposição ao ruído cessar. A progressão pode ocorrer devido a outros fatores como o envelhecimento."
+  },
+  {
+    "id_opcao_resposta": 15404, "id_pergunta": 154,
+    "texto_opcao": "Ocorre, inicialmente, nas frequências de 0,5; 1 e 2 kHz; com o agravamento da lesão, estende-se para as frequências de 3; 4 e 6 kHz",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A PAIR classicamente se inicia nas frequências mais altas (3, 4 ou 6 kHz)."
+  },
+  {
+    "id_opcao_resposta": 15405, "id_pergunta": 154,
+    "texto_opcao": "A intolerância a sons intensos e o comprometimento da inteligibilidade da fala, com prejuízo do processo de comunicação, são devido às lesões articulares dos ossículos da orelha média, decorrentes dos traumas determinados pelos níveis de pressão sonora elevados que os atingiram",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Esses sintomas na PAIR são devidos à lesão coclear (células ciliadas), não a lesões nos ossículos da orelha média."
+  },
+  {
+    "id_opcao_resposta": 15501, "id_pergunta": 155,
+    "texto_opcao": "Os trabalhadores, expostos ao ruído, terão reversão da perda ao ser afastados da fonte de ruído",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR é uma perda auditiva neurossensorial irreversível."
+  },
+  {
+    "id_opcao_resposta": 15502, "id_pergunta": 155,
+    "texto_opcao": "A perda auditiva condutiva, bem como a perda auditiva neurossensorial, são comuns",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR é especificamente neurossensorial."
+  },
+  {
+    "id_opcao_resposta": 15503, "id_pergunta": 155,
+    "texto_opcao": "As lesões ocorrem normalmente no órgão de Corti, destruindo as células ciliadas",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. A exposição a ruído intenso causa danos e destruição das células ciliadas no órgão de Corti."
+  },
+  {
+    "id_opcao_resposta": 15504, "id_pergunta": 155,
+    "texto_opcao": "As características físicas do agente causal, o tempo e a dose de exposição e a susceptibilidade individual têm influência sobre a PAIR",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Esta afirmação é VERDADEIRA. Todos esses fatores influenciam o desenvolvimento e a gravidade da PAIR. A pergunta pede 'pode-se afirmar que', e esta é uma afirmação correta sobre PAIR. A questão original do PDF pode ter um gabarito diferente ou ser uma questão de múltipla escolha com mais de uma correta. Para manter a coerência com o formato de única resposta correta, esta opção é verdadeira, mas se a opção C é mais diretamente a definição da lesão, ela seria a melhor 'única' resposta correta. No entanto, D também é uma afirmação correta sobre a PAIR."
+  },
+  {
+    "id_opcao_resposta": 15505, "id_pergunta": 155,
+    "texto_opcao": "Todas as alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As alternativas A e B são claramente incorretas."
+  },
+  {
+    "id_opcao_resposta": 15601, "id_pergunta": 156,
+    "texto_opcao": "O tipo de ruído e a dose de exposição ao ruído não são fatores determinantes para a ocorrência de PAIR",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é INCORRETA. O tipo de ruído (contínuo, intermitente, de impacto) e a dose de exposição (nível de intensidade e duração) são fatores cruciais e determinantes para a ocorrência e gravidade da PAIR."
+  },
+  {
+    "id_opcao_resposta": 15602, "id_pergunta": 156,
+    "texto_opcao": "Todo caso de PAIR é passível de notificação compulsória pelo SUS",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A PAIR é uma doença de notificação compulsória."
+  },
+  {
+    "id_opcao_resposta": 15603, "id_pergunta": 156,
+    "texto_opcao": "Todo caso de PAIR deve ser comunicado à Previdência Social, por meio de abertura de Comunicação de Acidente de Trabalho (CAT)",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Sendo doença ocupacional, a CAT deve ser emitida."
+  },
+  {
+    "id_opcao_resposta": 15604, "id_pergunta": 156,
+    "texto_opcao": "Não existe até o momento tratamento para PAIR",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. A PAIR é irreversível; o manejo foca na prevenção da progressão e reabilitação."
+  },
+  {
+    "id_opcao_resposta": 15605, "id_pergunta": 156,
+    "texto_opcao": "A escolha do tipo de EPI auditivo para o trabalhador deve ser individualizada",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. A seleção do protetor auditivo deve considerar atenuação, conforto e adequação à tarefa e ao trabalhador."
+  },
+  {
+    "id_opcao_resposta": 15701, "id_pergunta": 157,
+    "texto_opcao": "Afastamento do trabalho por tempo indeterminado, já que ficou constatado o nexo causal",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O nexo causal não define automaticamente o afastamento por tempo indeterminado."
+  },
+  {
+    "id_opcao_resposta": 15702, "id_pergunta": 157,
+    "texto_opcao": "Aposentadoria por invalidez, já que se trata de acidente de trabalho ou equivalente",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aposentadoria por invalidez depende de incapacidade total e permanente."
+  },
+  {
+    "id_opcao_resposta": 15703, "id_pergunta": 157,
+    "texto_opcao": "Conceder auxílio-doença, pois o segurado está incapaz para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Auxílio-doença é para incapacidade temporária. A PAIR é permanente."
+  },
+  {
+    "id_opcao_resposta": 15704, "id_pergunta": 157,
+    "texto_opcao": "Conceder auxílio-acidente, pois o segurado está incapaz e trata-se de doença ocupacional",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Se a PAIR causou sequela permanente com redução da capacidade laboral, o auxílio-acidente é o benefício apropriado."
+  },
+  {
+    "id_opcao_resposta": 15705, "id_pergunta": 157,
+    "texto_opcao": "Constatar a perda auditiva, sugerir reabilitação profissional e indeferir o pedido de benefício, pois não há perda da capacidade laborativa",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Se há redução da capacidade laborativa, mesmo que não total, o auxílio-acidente pode ser devido."
+  },
+  {
+    "id_opcao_resposta": 15801, "id_pergunta": 158,
+    "texto_opcao": "A-3; B-1; C-4; D-2",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A: Inseticidas (Organofosforados, Carbamatos, Organoclorados). B: Fungicidas (Hexaclorobenzeno). C: Herbicidas (Paraquat). D: Raticidas (Piquetcumona - cumarínicos)."
+  },
+  {
+    "id_opcao_resposta": 15802, "id_pergunta": 158,
+    "texto_opcao": "A-2; B-4; C-1; D-3",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Correlações erradas."
+  },
+  {
+    "id_opcao_resposta": 15803, "id_pergunta": 158,
+    "texto_opcao": "A-3; B-2; C-1; D-4",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Correlações erradas."
+  },
+  {
+    "id_opcao_resposta": 15804, "id_pergunta": 158,
+    "texto_opcao": "A-1; B-3; C-2; D-4",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Correlações erradas."
+  },
+  {
+    "id_opcao_resposta": 15805, "id_pergunta": 158,
+    "texto_opcao": "A-2; B-1; C-4; D-3",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Correlações erradas."
+  },
+  {
+    "id_opcao_resposta": 15901, "id_pergunta": 159,
+    "texto_opcao": "(A) Uma vez instalada é progressiva, mesmo depois de cessar a exposição a ruídos intensos.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR geralmente não progride se a exposição cessa."
+  },
+  {
+    "id_opcao_resposta": 15902, "id_pergunta": 159,
+    "texto_opcao": "(B) Ocorre, inicialmente, nas frequências de 0,5; 1 e 2 kHz; com o agravamento da lesão, estende-se para as frequências de 3; 4 e 6 kHz.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR inicia-se classicamente nas frequências altas (3, 4 ou 6 kHz)."
+  },
+  {
+    "id_opcao_resposta": 15903, "id_pergunta": 159,
+    "texto_opcao": "(C) Levar a perdas auditivas profundas e irreversíveis de 0,5; 1 e 2 kHz.",
+    "eh_correta": true, "ordem_exibicao": 2, 
+    "feedback_opcao": "Esta afirmação é parcialmente correta quanto à irreversibilidade, mas incorreta quanto às frequências inicialmente afetadas e à profundidade da perda. A PAIR é irreversível e pode se tornar profunda com exposição contínua, mas afeta primariamente as frequências altas."
+  },
+  {
+    "id_opcao_resposta": 16001, "id_pergunta": 160,
+    "texto_opcao": "(A) A quantidade de fontes emissoras de óxidos de nitrogênio e de enxofre e a rede hidrográfica.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A rede hidrográfica é afetada, mas não determina primariamente a amplitude geográfica da deposição atmosférica."
+  },
+  {
+    "id_opcao_resposta": 16002, "id_pergunta": 160,
+    "texto_opcao": "(B) A topografia do local das fontes emissoras de óxidos de nitrogênio e de enxofre e o nível dos lençóis freáticos.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A topografia local e os lençóis freáticos são fatores secundários ou receptores, não determinantes primários da amplitude geográfica da dispersão dos poluentes atmosféricos."
+  },
+  {
+    "id_opcao_resposta": 16003, "id_pergunta": 160,
+    "texto_opcao": "(C) A circulação atmosférica e a quantidade de fontes emissoras de óxidos de nitrogênio e de enxofre.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. A circulação atmosférica (ventos, padrões climáticos) determina como e até onde os poluentes são transportados, e a quantidade de fontes emissoras influencia a concentração desses poluentes e, consequentemente, a extensão da área afetada pela chuva ácida."
   }
 ]

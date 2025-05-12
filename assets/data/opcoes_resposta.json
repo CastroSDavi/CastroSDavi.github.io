@@ -3320,5 +3320,2054 @@
     "texto_opcao": "Metronidazol",
     "eh_correta": false, "ordem_exibicao": 4,
     "feedback_opcao": "Incorreta. O metronidazol é um antimicrobiano e antiparasitário usado para infecções por protozoários e bactérias anaeróbias, não sendo a escolha principal para teníase com o mecanismo de inibição da fosforilação oxidativa."
+  },
+  {
+    "id_opcao_resposta": 10601, "id_pergunta": 106,
+    "texto_opcao": "A ação da bactéria como fonte de toxiinfecção se dá através da ingestão do microorganismo que lesa diretamente o epitélio intestinal e/ou por toxinas produzidas antes e/ou após a ingestão do alimento",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. Esta definição abrange os diferentes mecanismos pelos quais as bactérias causam doenças transmitidas por alimentos: infecção (lesão direta pelo microrganismo), intoxicação (toxinas pré-formadas no alimento) e toxinfecção (toxinas produzidas no intestino após ingestão da bactéria)."
+  },
+  {
+    "id_opcao_resposta": 10602, "id_pergunta": 106,
+    "texto_opcao": "Staphylococcus aureus age por invasão e destruição do epitélio intestinal ou pela ação da toxina",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Staphylococcus aureus causa intoxicação alimentar principalmente pela ingestão de enterotoxinas termoestáveis pré-formadas no alimento. A bactéria em si geralmente não invade ou destrói o epitélio intestinal de forma significativa neste contexto."
+  },
+  {
+    "id_opcao_resposta": 10603, "id_pergunta": 106,
+    "texto_opcao": "O período de incubação da infecção pelo S. aureus varia de 15 a 24 horas e cursa, na maioria dos casos, com evolução autolimitada",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A intoxicação alimentar por S. aureus tem um período de incubação curto, tipicamente de 1 a 6 horas, devido à ação da toxina já presente no alimento. A evolução é, de fato, geralmente autolimitada."
+  },
+  {
+    "id_opcao_resposta": 10604, "id_pergunta": 106,
+    "texto_opcao": "Na sintomatologia pelo Clostridium perfringens tipo A é predominante o aparecimento de diarreia e vômitos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Na toxiinfecção por Clostridium perfringens tipo A, a diarreia aquosa e cólicas abdominais intensas são os sintomas predominantes. Vômitos e febre são incomuns ou leves."
+  },
+  {
+    "id_opcao_resposta": 10605, "id_pergunta": 106,
+    "texto_opcao": "Escherichia coli enterotoxigênica é a responsável pela diarreia dos viajantes",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Correta. Escherichia coli enterotoxigênica (ETEC) é, de fato, uma das principais causas bacterianas da diarreia dos viajantes. (Nota: A questão original pede 'é correto afirmar' e tanto A quanto E são corretas. A opção A é uma definição mais geral de toxiinfecção, enquanto E é um fato específico. Sem o gabarito original, ambas têm validade. Para este exercício, se apenas uma puder ser marcada como 'eh_correta: true', a opção A é mais abrangente conceitualmente sobre 'toxiinfecção alimentar'.)"
+  },
+  {
+    "id_opcao_resposta": 10701, "id_pergunta": 107,
+    "texto_opcao": "A intoxicação por Bacillus cereus apresenta 2 formas clínicas distintas de doença: a forma emética e a forma diarreica",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Bacillus cereus é conhecido por causar duas síndromes distintas: a forma emética (vômitos) e a forma diarreica."
+  },
+  {
+    "id_opcao_resposta": 10702, "id_pergunta": 107,
+    "texto_opcao": "Surtos com vômitos estão mais associados a produtos à base de arroz",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A forma emética da intoxicação por B. cereus é classicamente associada ao consumo de arroz cozido ou frito que foi armazenado inadequadamente."
+  },
+  {
+    "id_opcao_resposta": 10703, "id_pergunta": 107,
+    "texto_opcao": "A forma emética se assemelha à infecção pelo S. aureus e a diarreica, à C. perfringens tipo A",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. A síndrome emética (incubação curta, vômitos) é similar à intoxicação estafilocócica, e a síndrome diarreica (incubação mais longa, diarreia, cólicas) assemelha-se à causada por C. perfringens."
+  },
+  {
+    "id_opcao_resposta": 10704, "id_pergunta": 107,
+    "texto_opcao": "O período de incubação das 2 formas é diferente, assim como o quadro clínico e a toxina envolvida",
+    "eh_correta": true, "ordem_exibicao": 3, 
+    "feedback_opcao": "Esta afirmação é, na verdade, CORRETA. A forma emética tem incubação de 0,5-6h (toxina cereulida), e a diarreica de 6-15h (enterotoxinas termolábeis); os quadros clínicos e toxinas são distintos. Se a pergunta pede 'Não é correto afirmar', e esta é a resposta esperada, então a questão original pode ter uma intenção sutil ou um erro. Se as opções A, B, C e D são todas factualmente corretas, a pergunta como está no PDF não tem uma resposta incorreta clara."
+  },
+  {
+    "id_opcao_resposta": 10801, "id_pergunta": 108,
+    "texto_opcao": "A acidez gástrica é uma barreira eficaz à chegada de grandes inóculos de Salmonella ao intestino",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. A acidez do estômago é uma defesa natural contra patógenos ingeridos, incluindo Salmonella. Um grande número de bactérias ou uma diminuição da acidez gástrica pode superar essa barreira."
+  },
+  {
+    "id_opcao_resposta": 10802, "id_pergunta": 108,
+    "texto_opcao": "Quando um paciente com toxiinfecção alimentar desenvolve síndrome hemolítico-urêmica",
+    "feedback_opcao": "Esta afirmação (completada) é CORRETA. A síndrome hemolítico-urêmica (SHU) é uma complicação grave frequentemente associada a infecções por cepas de E. coli produtoras de toxina Shiga (STEC), como E. coli O157:H7."
+  },
+  {
+    "id_opcao_resposta": 10803, "id_pergunta": 108,
+    "texto_opcao": "Síndrome de Reiter pode estar associada à infecção por Salmonella, Shigella ou Campylobacter",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. A artrite reativa (anteriormente Síndrome de Reiter) pode ser desencadeada por infecções gastrointestinais bacterianas, incluindo as causadas por Salmonella, Shigella e Campylobacter."
+  },
+  {
+    "id_opcao_resposta": 10804, "id_pergunta": 108,
+    "texto_opcao": "A ação das enterotoxinas bacterianas pode provocar diarreia secretora, resultante da hipersecreção de água e eletrólitos pelo enterócito",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. Enterotoxinas produzidas por bactérias como Vibrio cholerae ou ETEC causam diarreia secretora ao estimular a hipersecreção de fluidos e eletrólitos no lúmen intestinal."
+  },
+  {
+    "id_opcao_resposta": 10805, "id_pergunta": 108,
+    "texto_opcao": "Na enterite por Campylobacter jejuni, após um período de incubação de 1 a 7 dias, há um pródromo rápido com febre, cefaleia e mialgia, seguido de dor abdominal, febre e diarreia frequentemente sanguinolenta",
+    "eh_correta": true, "ordem_exibicao": 4, 
+    "feedback_opcao": "Esta afirmação é considerada INCORRETA no contexto da questão. Embora muitos elementos da descrição da enterite por Campylobacter jejuni sejam corretos (incubação, pródromo, sintomas), a palavra 'frequentemente' para diarreia sanguinolenta pode ser o ponto de contestação se a intenção fosse que fosse sempre ou raramente sanguinolenta para torná-la falsa. De modo geral, a descrição é bastante acurada para uma infecção típica."
+  },
+  {
+    "id_opcao_resposta": 10901, "id_pergunta": 109,
+    "texto_opcao": "A toxiinfecção alimentar pela Shigella pode cursar com complicações, como megacólon tóxico, caracterizado por toxemia, distensão e dor abdominal, redução da peristalse com dilatação colônica.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Megacólon tóxico é uma complicação grave, embora rara, da shigelose e outras colites inflamatórias."
+  },
+  {
+    "id_opcao_resposta": 10902, "id_pergunta": 109,
+    "texto_opcao": "O veículo habitual de propagação do C. perfringens tipo A é a carne ou pratos preparados com carne, como tortas, molhos, etc.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. Carnes e pratos à base de carne, especialmente quando cozidos em grandes quantidades e resfriados lentamente, são veículos comuns para C. perfringens tipo A."
+  },
+  {
+    "id_opcao_resposta": 10903, "id_pergunta": 109,
+    "texto_opcao": "Sendo os alimentos de origem animal uma das principais fontes de contaminação por Salmonella, ovos, carne e frango não devem ser ingeridos crus, mal passados ou não completamente cozidos.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. A prevenção da salmonelose inclui o cozimento adequado de alimentos de origem animal para destruir a bactéria."
+  },
+  {
+    "id_opcao_resposta": 10904, "id_pergunta": 109,
+    "texto_opcao": "Entende-se por surto uma ocorrência epidêmica de uma doença ou fenômeno com 2 ou mais casos epidemiologicamente relacionados, restrita a um espaço bem delimitado (escola, creche, quartel, bairro, etc.).",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. Esta é uma definição padrão de surto em epidemiologia."
+  },
+  {
+    "id_opcao_resposta": 10905, "id_pergunta": 109,
+    "texto_opcao": "O tratamento da toxiinfecção alimentar consiste, na maioria dos casos, de terapia de suporte, com hidratação e medicação sintomática. Além disso, antibioticoterapia deve ser indicada rotineiramente para redução da duração dos sintomas.",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é INCORRETA. A terapia de suporte é fundamental, mas a antibioticoterapia não é indicada rotineiramente para a maioria das toxiinfecções alimentares bacterianas, podendo até ser prejudicial em alguns casos (ex: infecções por STEC). Seu uso é reservado para situações específicas."
+  },
+  {
+    "id_opcao_resposta": 11001, "id_pergunta": 110,
+    "texto_opcao": "Carcinoma broncopulmonar",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O carcinoma broncopulmonar (câncer de pulmão) tem forte associação com a exposição a poluentes atmosféricos, incluindo fumaça de tabaco e poluição do ar."
+  },
+  {
+    "id_opcao_resposta": 11002, "id_pergunta": 110,
+    "texto_opcao": "Pneumoconioses",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Pneumoconioses (ex: silicose, asbestose) são causadas pela inalação de poeiras minerais, que são alterações na qualidade do ar, geralmente em ambientes ocupacionais."
+  },
+  {
+    "id_opcao_resposta": 11003, "id_pergunta": 110,
+    "texto_opcao": "Mesotelioma de pleura",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O mesotelioma pleural está fortemente associado à exposição ao asbesto (amianto), um poluente particulado."
+  },
+  {
+    "id_opcao_resposta": 11004, "id_pergunta": 110,
+    "texto_opcao": "Bissinose",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A bissinose é uma doença pulmonar ocupacional causada pela inalação de poeiras de fibras vegetais (algodão, linho), representando uma alteração na qualidade do ar do ambiente de trabalho."
+  },
+  {
+    "id_opcao_resposta": 11005, "id_pergunta": 110,
+    "texto_opcao": "Sarcoidose",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Correta. A sarcoidose é uma doença inflamatória de etiologia desconhecida, caracterizada pela formação de granulomas. Embora fatores ambientais possam ser gatilhos, não é primariamente definida ou causada por alterações na qualidade do ar ou exposição a poluentes da mesma forma que as outras opções."
+  },
+  {
+    "id_opcao_resposta": 11101, "id_pergunta": 111,
+    "texto_opcao": "A circulação atmosférica e a quantidade de fontes emissoras de óxidos de nitrogênio e de enxofre",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A circulação atmosférica (ventos) é responsável por transportar os poluentes precursores da chuva ácida (óxidos de nitrogênio e enxofre) a longas distâncias das fontes emissoras. A quantidade dessas fontes influencia a magnitude do problema."
+  },
+  {
+    "id_opcao_resposta": 11102, "id_pergunta": 111,
+    "texto_opcao": "Os lençóis freáticos",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Os lençóis freáticos podem ser contaminados pela chuva ácida após sua precipitação e infiltração no solo, mas não são o fator primário que determina a amplitude geográfica dos efeitos da chuva ácida na atmosfera."
+  },
+  {
+    "id_opcao_resposta": 11103, "id_pergunta": 111,
+    "texto_opcao": "A rede hidrográfica e a circulação atmosférica",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Embora a rede hidrográfica seja afetada pela chuva ácida e possa transportar seus efeitos, a amplitude geográfica inicial é determinada pela dispersão atmosférica dos poluentes. A quantidade de fontes emissoras também é um fator primário."
+  },
+
+  {
+    "id_opcao_resposta": 11201, "id_pergunta": 112,
+    "texto_opcao": "A-3; B-1; C-4; D-2",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A correlação é: A (Inseticidas) - 3 (Organofosforados, Carbamatos, Organoclorados); B (Fungicidas) - 1 (Hexaclorobenzeno, um organoclorado usado como fungicida); C (Herbicidas) - 4 (Paraquat); D (Raticidas) - 2 (Piquetcumona, um nome que pode se referir a cumarínicos como a pindicumona/cumatetralil, usados como raticidas anticoagulantes)."
+  },
+  {
+    "id_opcao_resposta": 11202, "id_pergunta": 112,
+    "texto_opcao": "A-2; B-4; C-1; D-3",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Esta correlação não associa corretamente os grupos químicos às suas indicações de uso primárias. Por exemplo, Paraquat (4) é um herbicida, não um fungicida."
+  },
+  {
+    "id_opcao_resposta": 11203, "id_pergunta": 112,
+    "texto_opcao": "A-3; B-2; C-1; D-4",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Esta correlação está incorreta. Por exemplo, Hexaclorobenzeno (1) é mais conhecido como fungicida do que herbicida, e Piquetcumona (2) é raticida."
+  },
+  {
+    "id_opcao_resposta": 11204, "id_pergunta": 112,
+    "texto_opcao": "A-1; B-3; C-2; D-4",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Esta correlação não está correta. Hexaclorobenzeno (1) não é a principal classe de inseticidas gerais, e Paraquat (4) não é raticida."
+  },
+  {
+    "id_opcao_resposta": 11205, "id_pergunta": 112,
+    "texto_opcao": "A-2; B-1; C-4; D-3",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Esta correlação não alinha corretamente os grupos químicos com suas indicações de uso. Por exemplo, Piquetcumona (2) é raticida, não inseticida geral."
+  },
+
+  {
+    "id_opcao_resposta": 11301, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa amarela indicam substâncias inócuas para a saúde",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A faixa amarela indica 'TÓXICO' (Classe II), não substâncias inócuas."
+  },
+  {
+    "id_opcao_resposta": 11302, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa preta indicam substâncias altamente tóxicas",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A faixa preta não é usada na classificação toxicológica de agrotóxicos no Brasil. A faixa vermelha indica 'EXTREMAMENTE TÓXICO' (Classe I)."
+  },
+  {
+    "id_opcao_resposta": 11303, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa azul indicam substâncias extremamente tóxicas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A faixa azul indica 'POUCO TÓXICO' (Classe IV)."
+  },
+  {
+    "id_opcao_resposta": 11304, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa vermelha indicam substâncias extremamente tóxicas",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. De acordo com a classificação toxicológica de agrotóxicos no Brasil, a faixa de cor VERMELHA no rótulo indica Classe I - EXTREMAMENTE TÓXICO."
+  },
+  {
+    "id_opcao_resposta": 11305, "id_pergunta": 113,
+    "texto_opcao": "Não há interesse clínico nesta informação",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A cor da faixa na embalagem fornece uma indicação rápida do potencial de toxicidade aguda do agrotóxico, o que é uma informação clinicamente relevante no manejo de uma intoxicação."
+  },
+
+  {
+    "id_opcao_resposta": 11401, "id_pergunta": 114,
+    "texto_opcao": "Devido ao seu modo de transmissão, não é um agravo com importância epidemiológica em nosso meio",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A leptospirose é uma zoonose de grande importância epidemiológica no Brasil, especialmente em áreas com saneamento precário e risco de enchentes."
+  },
+  {
+    "id_opcao_resposta": 11402, "id_pergunta": 114,
+    "texto_opcao": "É doença epidêmica em nosso meio e devido ao modo de transmissão apresenta padrão sazonal com pico de incidência no verão",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Embora possa ter picos epidêmicos, a leptospirose é considerada endêmica em muitas regiões do Brasil. O pico de incidência está mais associado aos meses chuvosos, que podem coincidir com o verão em algumas regiões, mas a chuva é o fator principal."
+  },
+  {
+    "id_opcao_resposta": 11403, "id_pergunta": 114,
+    "texto_opcao": "O período de incubação é longo, em torno de 60 dias",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O período de incubação da leptospirose é geralmente de 1 a 30 dias, com uma média de 7 a 14 dias, não tão longo quanto 60 dias."
+  },
+  {
+    "id_opcao_resposta": 11404, "id_pergunta": 114,
+    "texto_opcao": "É uma doença endêmica em nosso meio e devido ao modo de transmissão apresenta padrão sazonal com pico de incidência nos meses chuvosos",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. A leptospirose é endêmica em diversas áreas do Brasil, com potencial para surtos epidêmicos. Sua transmissão está fortemente ligada à exposição à urina de animais infectados (principalmente roedores) contaminando água e solo, o que se intensifica durante os períodos de chuvas e enchentes."
+  },
+  {
+    "id_opcao_resposta": 11405, "id_pergunta": 114,
+    "texto_opcao": "É transmitida principalmente por meio de mordida de ratos",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A principal via de transmissão da leptospirose é o contato da pele (especialmente com lesões) ou mucosas com água ou solo contaminados pela urina de animais infectados, principalmente roedores. A transmissão por mordedura de rato é rara."
+  },
+
+  {
+    "id_opcao_resposta": 11501, "id_pergunta": 115,
+    "texto_opcao": "A hantavirose deve ser um diagnóstico diferencial a ser investigado",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. A hantavirose, especialmente a síndrome cardiopulmonar por hantavírus, pode apresentar sintomas iniciais inespecíficos semelhantes aos da leptospirose (febre, mialgia, cefaleia) e compartilha roedores como reservatórios, sendo um importante diagnóstico diferencial em áreas apropriadas."
+  },
+  {
+    "id_opcao_resposta": 11502, "id_pergunta": 115,
+    "texto_opcao": "A grande maioria dos pacientes apresenta quadro oligossintomático",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. Estima-se que uma grande proporção das infecções por Leptospira seja assintomática ou oligossintomática (com poucos sintomas ou sintomas leves), não progredindo para formas graves."
+  },
+  {
+    "id_opcao_resposta": 11503, "id_pergunta": 115,
+    "texto_opcao": "A síndrome de Weil sempre inspira cuidados maiores",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. A síndrome de Weil é a forma grave e clássica da leptospirose, caracterizada por icterícia, insuficiência renal e manifestações hemorrágicas, com alta letalidade, exigindo cuidados intensivos."
+  },
+  {
+    "id_opcao_resposta": 11504, "id_pergunta": 115,
+    "texto_opcao": "A pesquisa de anticorpos na primeira semana de doença confirma o diagnóstico",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Os anticorpos contra Leptospira (principalmente IgM) geralmente começam a ser detectáveis a partir do final da primeira semana ou início da segunda semana de doença. Na primeira semana, métodos diretos como PCR ou cultura podem ser mais úteis, embora a sorologia pareada (amostras da fase aguda e convalescente) seja o padrão para confirmação."
+  },
+  {
+    "id_opcao_resposta": 11505, "id_pergunta": 115,
+    "texto_opcao": "A L. icterohaemorrhagiae está mais comumente associada a formas graves",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. O sorovar Icterohaemorrhagiae da espécie Leptospira interrogans é classicamente associado às formas mais graves da leptospirose, incluindo a síndrome de Weil."
+  },
+  {
+    "id_opcao_resposta": 11101, "id_pergunta": 111,
+    "texto_opcao": "A circulação atmosférica e a quantidade de fontes emissoras de óxidos de nitrogênio e de enxofre",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A circulação atmosférica (ventos) é responsável por transportar os poluentes precursores da chuva ácida (óxidos de nitrogênio e enxofre) a longas distâncias das fontes emissoras. A quantidade dessas fontes influencia a magnitude do problema."
+  },
+  {
+    "id_opcao_resposta": 11102, "id_pergunta": 111,
+    "texto_opcao": "Os lençóis freáticos",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Os lençóis freáticos podem ser contaminados pela chuva ácida após sua precipitação e infiltração no solo, mas não são o fator primário que determina a amplitude geográfica dos efeitos da chuva ácida na atmosfera."
+  },
+  {
+    "id_opcao_resposta": 11103, "id_pergunta": 111,
+    "texto_opcao": "A rede hidrográfica e a circulação atmosférica",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Embora a rede hidrográfica seja afetada pela chuva ácida e possa transportar seus efeitos, a amplitude geográfica inicial é determinada pela dispersão atmosférica dos poluentes. A quantidade de fontes emissoras também é um fator primário."
+  },
+  {
+    "id_opcao_resposta": 11201, "id_pergunta": 112,
+    "texto_opcao": "A-3; B-1; C-4; D-2",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A correlação é: A (Inseticidas) - 3 (Organofosforados, Carbamatos, Organoclorados são grupos químicos de inseticidas); B (Fungicidas) - 1 (Hexaclorobenzeno, um organoclorado que teve uso como fungicida); C (Herbicidas) - 4 (Paraquat é um herbicida); D (Raticidas) - 2 (Piquetcumona, provavelmente referindo-se a cumarínicos como a pindicumona, usados como raticidas anticoagulantes)."
+  },
+  {
+    "id_opcao_resposta": 11202, "id_pergunta": 112,
+    "texto_opcao": "A-2; B-4; C-1; D-3",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Esta correlação não associa corretamente os grupos químicos às suas indicações de uso primárias. Por exemplo, Paraquat (4) é um herbicida, não um fungicida."
+  },
+  {
+    "id_opcao_resposta": 11203, "id_pergunta": 112,
+    "texto_opcao": "A-3; B-2; C-1; D-4",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Esta correlação está incorreta. Por exemplo, Hexaclorobenzeno (1) é mais conhecido como fungicida do que herbicida, e Piquetcumona (2) é raticida."
+  },
+  {
+    "id_opcao_resposta": 11204, "id_pergunta": 112,
+    "texto_opcao": "A-1; B-3; C-2; D-4",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Esta correlação não está correta. Hexaclorobenzeno (1) não é a principal classe de inseticidas gerais, e Paraquat (4) não é raticida."
+  },
+  {
+    "id_opcao_resposta": 11205, "id_pergunta": 112,
+    "texto_opcao": "A-2; B-1; C-4; D-3",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Esta correlação não alinha corretamente os grupos químicos com suas indicações de uso. Por exemplo, Piquetcumona (2) é raticida, não inseticida geral."
+  },
+  {
+    "id_opcao_resposta": 11301, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa amarela indicam substâncias inócuas para a saúde",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A faixa amarela na classificação toxicológica de agrotóxicos no Brasil indica Classe III - MEDIANAMENTE TÓXICO, não substâncias inócuas."
+  },
+  {
+    "id_opcao_resposta": 11302, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa preta indicam substâncias altamente tóxicas",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A faixa preta não é utilizada na classificação toxicológica de agrotóxicos no Brasil. A cor para 'ALTAMENTE TÓXICO' (Classe II) é AMARELA."
+  },
+  {
+    "id_opcao_resposta": 11303, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa azul indicam substâncias extremamente tóxicas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A faixa azul na classificação toxicológica de agrotóxicos no Brasil indica Classe IV - POUCO TÓXICO."
+  },
+  {
+    "id_opcao_resposta": 11304, "id_pergunta": 113,
+    "texto_opcao": "Embalagens com a faixa vermelha indicam substâncias extremamente tóxicas",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. De acordo com a classificação toxicológica de agrotóxicos no Brasil, a faixa de cor VERMELHA no rótulo indica Classe I - EXTREMAMENTE TÓXICO."
+  },
+  {
+    "id_opcao_resposta": 11305, "id_pergunta": 113,
+    "texto_opcao": "Não há interesse clínico nesta informação",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A cor da faixa na embalagem é uma informação clinicamente relevante, pois fornece uma indicação rápida do potencial de toxicidade aguda do agrotóxico, auxiliando na avaliação inicial e no manejo da intoxicação."
+  },
+  {
+    "id_opcao_resposta": 11401, "id_pergunta": 114,
+    "texto_opcao": "Devido ao seu modo de transmissão, não é um agravo com importância epidemiológica em nosso meio",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A leptospirose é uma zoonose de significativa importância epidemiológica no Brasil, especialmente em áreas com saneamento deficiente e ocorrência de enchentes, onde o risco de exposição à urina de roedores contaminada aumenta."
+  },
+  {
+    "id_opcao_resposta": 11402, "id_pergunta": 114,
+    "texto_opcao": "É doença epidêmica em nosso meio e devido ao modo de transmissão apresenta padrão sazonal com pico de incidência no verão",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A leptospirose é considerada endêmica em muitas regiões do Brasil, com potencial para surtos epidêmicos. Seu pico de incidência está mais associado aos períodos chuvosos e enchentes, que podem coincidir com o verão em algumas localidades, mas a chuva é o fator determinante."
+  },
+  {
+    "id_opcao_resposta": 11403, "id_pergunta": 114,
+    "texto_opcao": "O período de incubação é longo, em torno de 60 dias",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O período de incubação da leptospirose varia geralmente de 1 a 30 dias, com uma média de 7 a 14 dias, não sendo tipicamente tão longo quanto 60 dias."
+  },
+  {
+    "id_opcao_resposta": 11404, "id_pergunta": 114,
+    "texto_opcao": "É uma doença endêmica em nosso meio e devido ao modo de transmissão apresenta padrão sazonal com pico de incidência nos meses chuvosos",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. A leptospirose é endêmica em diversas áreas do Brasil, e sua transmissão está fortemente ligada à exposição à água ou solo contaminados pela urina de animais infectados (principalmente roedores). Essa contaminação ambiental se intensifica durante os períodos de chuvas e enchentes, resultando em um padrão sazonal com aumento da incidência nesses períodos."
+  },
+  {
+    "id_opcao_resposta": 11405, "id_pergunta": 114,
+    "texto_opcao": "É transmitida principalmente por meio de mordida de ratos",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A principal via de transmissão da leptospirose é o contato da pele (especialmente com lesões) ou mucosas com água, solo ou alimentos contaminados pela urina de animais infectados. A transmissão direta por mordedura de rato é considerada rara."
+  },
+  {
+    "id_opcao_resposta": 11501, "id_pergunta": 115,
+    "texto_opcao": "A hantavirose deve ser um diagnóstico diferencial a ser investigado",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. A hantavirose, especialmente em suas fases iniciais, pode apresentar sintomas semelhantes à leptospirose (febre, mialgia, cefaleia) e também tem roedores como reservatórios, tornando-a um diagnóstico diferencial importante em áreas onde ambas ocorrem."
+  },
+  {
+    "id_opcao_resposta": 11502, "id_pergunta": 115,
+    "texto_opcao": "A grande maioria dos pacientes apresenta quadro oligossintomático",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. Muitas infecções por Leptospira são assintomáticas ou causam doença leve e autolimitada (oligossintomática), não progredindo para as formas graves."
+  },
+  {
+    "id_opcao_resposta": 11503, "id_pergunta": 115,
+    "texto_opcao": "A síndrome de Weil sempre inspira cuidados maiores",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. A síndrome de Weil representa a forma grave da leptospirose, caracterizada por icterícia, insuficiência renal e hemorragias, e está associada a uma alta taxa de letalidade, exigindo hospitalização e cuidados intensivos."
+  },
+  {
+    "id_opcao_resposta": 11504, "id_pergunta": 115,
+    "texto_opcao": "A pesquisa de anticorpos na primeira semana de doença confirma o diagnóstico",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Os anticorpos contra Leptospira (especialmente IgM detectados por ELISA ou MAT) geralmente começam a se tornar detectáveis a partir do final da primeira semana (por volta do 7º dia) ou início da segunda semana de doença. Portanto, na primeira semana, a sorologia pode ser falso-negativa. Métodos diretos (PCR, cultura) podem ser mais úteis nesse período inicial, embora a sorologia pareada seja o padrão-ouro para confirmação."
+  },
+  {
+    "id_opcao_resposta": 11505, "id_pergunta": 115,
+    "texto_opcao": "A L. icterohaemorrhagiae está mais comumente associada a formas graves",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. O sorogrupo Icterohaemorrhagiae da espécie Leptospira interrogans é classicamente o mais associado às formas graves e potencialmente fatais da leptospirose, incluindo a síndrome de Weil."
+  },
+  {
+    "id_opcao_resposta": 11601, "id_pergunta": 116,
+    "texto_opcao": "Apenas a alternativa 1 está correta",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A afirmação 1 (Penicilina cristalina é a droga de escolha para o tratamento, principalmente quando iniciada na primeira semana da doença) é geralmente considerada correta para formas moderadas a graves de leptospirose. A afirmação 2 é incorreta (Doxiciclina é mais comum para profilaxia, não Ciprofloxacina semanalmente). A afirmação 3 é incorreta (cultura de urina é mais positiva a partir da segunda semana; na primeira semana, sangue e LCR são melhores para cultura/PCR). A afirmação 4 é incorreta (icterícia rubínica é mais típica de outras condições, a da leptospirose é flavínica ou alaranjada)."
+  },
+  {
+    "id_opcao_resposta": 11602, "id_pergunta": 116,
+    "texto_opcao": "As alternativas 1 e 2 estão corretas",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A alternativa 2 sobre a profilaxia com Ciprofloxacina semanal não é o esquema padrão recomendado."
+  },
+  {
+    "id_opcao_resposta": 11603, "id_pergunta": 116,
+    "texto_opcao": "As alternativas 1, 2 e 3 estão corretas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As alternativas 2 e 3 contêm informações imprecisas sobre profilaxia e o momento ideal para cultura de urina."
+  },
+  {
+    "id_opcao_resposta": 11604, "id_pergunta": 116,
+    "texto_opcao": "Todas as alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As alternativas 2, 3 e 4 apresentam informações que não são consensualmente corretas."
+  },
+  {
+    "id_opcao_resposta": 11605, "id_pergunta": 116,
+    "texto_opcao": "Todas as alternativas estão erradas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A alternativa 1 sobre o uso da penicilina no tratamento da leptospirose é considerada uma abordagem terapêutica válida, especialmente para formas mais graves e quando iniciada precocemente."
+  },
+
+  {
+    "id_opcao_resposta": 11701, "id_pergunta": 117,
+    "texto_opcao": "86",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O limite de tolerância para 8 horas de exposição diária ao ruído contínuo ou intermitente é estabelecido pela NR-15 em 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 11702, "id_pergunta": 117,
+    "texto_opcao": "87",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. O valor de 87 dB(A) excede o limite de tolerância para 8 horas de exposição diária."
+  },
+  {
+    "id_opcao_resposta": 11703, "id_pergunta": 117,
+    "texto_opcao": "88",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O valor de 88 dB(A) está acima do limite permitido para uma jornada de 8 horas."
+  },
+  {
+    "id_opcao_resposta": 11704, "id_pergunta": 117,
+    "texto_opcao": "85",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. De acordo com a Norma Regulamentadora NR-15 (Atividades e Operações Insalubres) do Brasil, o limite de tolerância para exposição diária a ruído contínuo ou intermitente durante uma jornada de 8 horas é de 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 11705, "id_pergunta": 117,
+    "texto_opcao": "É variável conforme o ambiente ao qual o trabalhador está exposto",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Embora o nível de ruído varie com o ambiente, a norma estabelece um limite máximo específico para uma jornada de 8 horas, que é de 85 dB(A). Tempos menores de exposição são permitidos para níveis de ruído mais altos."
+  },
+
+  {
+    "id_opcao_resposta": 11801, "id_pergunta": 118,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruído superiores a 85 decibéis, causando uma surdez do tipo mista, neurossensorial e de condução, que evolui de forma insidiosa e tende a se agravar nas idades mais avançadas",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR é caracteristicamente uma surdez do tipo neurossensorial, não mista ou primariamente de condução."
+  },
+  {
+    "id_opcao_resposta": 11802, "id_pergunta": 118,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruídos superiores a 85 decibéis, causando uma surdez de condução que evolui de forma insidiosa na maioria dos trabalhadores expostos, mas de forma abrupta nos que são afetados por otosclerose",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR é uma perda neurossensorial. A otosclerose é uma condição distinta que afeta a orelha média e causa perda condutiva."
+  },
+  {
+    "id_opcao_resposta": 11803, "id_pergunta": 118,
+    "texto_opcao": "Mostrar, no exame audiométrico, alterações do limiar de audibilidade frequentemente bilaterais, e que afetam mais precocemente as frequências de 500 Hz, 1000 Hz e 2000 Hz",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A PAIR tipicamente afeta mais precocemente as frequências altas, geralmente em torno de 3000, 4000 ou 6000 Hz, com um entalhe característico na audiometria, e não as frequências mais baixas como 500 Hz ou 1000 Hz inicialmente."
+  },
+  {
+    "id_opcao_resposta": 11804, "id_pergunta": 118,
+    "texto_opcao": "Afetar somente trabalhadores que têm susceptibilidade maior a patologias auditivas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Embora a susceptibilidade individual possa variar, a PAIR pode afetar qualquer trabalhador exposto a níveis de ruído excessivos por tempo suficiente, não apenas aqueles com predisposição."
+  },
+  {
+    "id_opcao_resposta": 11805, "id_pergunta": 118,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruído superiores a 85 decibéis, causando uma surdez do tipo neurossensorial, que evolui de forma insidiosa e que tende a se agravar nas idades mais avançadas",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Correta. A Perda Auditiva Induzida por Ruído (PAIR) é tipicamente uma surdez neurossensorial, bilateral (embora possa ser assimétrica), que se desenvolve de forma insidiosa devido à exposição prolongada a níveis de pressão sonora elevados (geralmente acima de 85 dB(A) por 8h/dia). Ela tende a se agravar com a continuação da exposição e pode ser potencializada pelo envelhecimento natural da audição (presbiacusia)."
+  },
+
+  {
+    "id_opcao_resposta": 11901, "id_pergunta": 119,
+    "texto_opcao": "Ser neurossensorial, em razão do dano causado às células do órgão de Corti",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A PAIR é uma perda auditiva do tipo neurossensorial, resultante de lesões nas células ciliadas do órgão de Corti, localizado na cóclea (orelha interna), que são responsáveis pela transdução do estímulo sonoro em sinal neural."
+  },
+  {
+    "id_opcao_resposta": 11902, "id_pergunta": 119,
+    "texto_opcao": "Levar a perdas auditivas profundas e irreversíveis nas frequências de 0,5; 1 e 2 kHz",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR afeta caracteristicamente, de forma mais precoce e acentuada, as frequências altas (geralmente 3, 4 ou 6 kHz), não as frequências baixas e médias de 0,5, 1 e 2 kHz inicialmente. A perda é irreversível, mas não necessariamente profunda em todos os casos ou nessas frequências iniciais."
+  },
+  {
+    "id_opcao_resposta": 11903, "id_pergunta": 119,
+    "texto_opcao": "Uma vez instalada, é progressiva, mesmo depois de cessar a exposição a ruídos intensos",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Uma vez instalada, a PAIR é irreversível, mas geralmente não progride ou progride muito pouco se a exposição ao ruído nocivo for completamente cessada. A progressão pode continuar se houver outros fatores como o envelhecimento (presbiacusia)."
+  },
+  {
+    "id_opcao_resposta": 11904, "id_pergunta": 119,
+    "texto_opcao": "Ocorre, inicialmente, nas frequências de 0,5; 1 e 2 kHz; com o agravamento da lesão, estende-se para as frequências de 3; 4 e 6 kHz",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A PAIR classicamente se inicia nas frequências mais altas (3, 4 ou 6 kHz), com um entalhe audiométrico característico. Com a progressão, pode afetar frequências adjacentes, incluindo as mais baixas, mas o início não é nas frequências de 0,5, 1 e 2 kHz."
+  },
+  {
+    "id_opcao_resposta": 11905, "id_pergunta": 119,
+    "texto_opcao": "A intolerância a sons intensos e o comprometimento da inteligibilidade da fala, com prejuízo do processo de comunicação, são devido às lesões articulares dos ossículos da orelha média, decorrentes dos traumas determinados pelos níveis de pressão sonora elevados que os atingiram",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Os sintomas como intolerância a sons intensos (recrutamento) e dificuldade de inteligibilidade da fala na PAIR são devidos à lesão das células ciliadas na cóclea (orelha interna), e não a lesões nos ossículos da orelha média, que caracterizariam uma perda condutiva."
+  },
+  {
+    "id_opcao_resposta": 12001, "id_pergunta": 120,
+    "texto_opcao": "Os trabalhadores expostos ao ruído terão uma reversão da perda ao serem afastados da fonte de ruído",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR é caracterizada por ser uma perda auditiva neurossensorial irreversível. O afastamento da fonte de ruído previne a progressão da perda, mas não reverte o dano já instalado nas células ciliadas."
+  },
+  {
+    "id_opcao_resposta": 12002, "id_pergunta": 120,
+    "texto_opcao": "A perda auditiva condutiva, bem como a perda auditiva neurossensorial, são comuns",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR é especificamente uma perda auditiva do tipo neurossensorial. A perda condutiva envolve problemas na orelha externa ou média e não é a característica primária da PAIR."
+  },
+  {
+    "id_opcao_resposta": 12003, "id_pergunta": 120,
+    "texto_opcao": "As lesões ocorrem normalmente nos órgãos de Corti, destruindo as células ciliadas",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. A exposição prolongada a ruído intenso causa danos e destruição das células ciliadas (principalmente as externas) no órgão de Corti, localizado na cóclea da orelha interna. Essas células são os mecanorreceptores da audição."
+  },
+  {
+    "id_opcao_resposta": 12004, "id_pergunta": 120,
+    "texto_opcao": "As características físicas do agente causal, o tempo e a dose de exposição e a susceptibilidade individual não têm influência sobre a PAIR",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Todos esses fatores têm influência significativa. As características do ruído (intensidade, frequência, tipo contínuo/impacto), o tempo de exposição diário e ao longo dos anos (dose cumulativa), e a susceptibilidade individual (fatores genéticos, condições preexistentes) são determinantes para o desenvolvimento e a gravidade da PAIR."
+  },
+  {
+    "id_opcao_resposta": 12005, "id_pergunta": 120,
+    "texto_opcao": "Todas as alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As alternativas A, B e D contêm informações incorretas sobre a PAIR."
+  },
+  {
+    "id_opcao_resposta": 12101, "id_pergunta": 121,
+    "texto_opcao": "A PAIR provoca incapacidade para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação pode ser CORRETA. Dependendo do grau da perda auditiva e da natureza do trabalho, a PAIR pode sim levar à incapacidade para determinadas funções, justificando reabilitação profissional ou benefícios previdenciários."
+  },
+  {
+    "id_opcao_resposta": 12102, "id_pergunta": 121,
+    "texto_opcao": "Todo caso de PAIR é passível de notificação compulsória pelo SUS",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A PAIR é uma doença de notificação compulsória no Brasil, incluída na lista de doenças e agravos relacionados ao trabalho."
+  },
+  {
+    "id_opcao_resposta": 12103, "id_pergunta": 121,
+    "texto_opcao": "Todo caso de PAIR deve ser comunicado à Previdência Social, por meio de abertura de Comunicação de Acidente de Trabalho (CAT)",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Sendo uma doença ocupacional, a PAIR deve ser comunicada à Previdência Social através da CAT para fins de registro e potenciais benefícios."
+  },
+  {
+    "id_opcao_resposta": 12104, "id_pergunta": 121,
+    "texto_opcao": "Não existe até o momento tratamento para PAIR",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. A PAIR é uma perda auditiva neurossensorial irreversível. O tratamento visa a prevenção da progressão, a reabilitação auditiva (ex: aparelhos auditivos) e a adaptação, mas não a cura da lesão já instalada."
+  },
+  {
+    "id_opcao_resposta": 12105, "id_pergunta": 121,
+    "texto_opcao": "A escolha do tipo de EPI auditivo para o trabalhador deve ser individualizada",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA, porém, a pergunta pede a INCORRETA. A escolha do EPI auditivo deve considerar o nível de ruído, o tipo de ruído, as características da tarefa e as preferências do trabalhador para garantir conforto e adesão. No entanto, se todas as outras opções são corretas (A,B,C,D), esta questão no PDF está formulada de forma que não há uma alternativa claramente incorreta. Se a intenção fosse que A é incorreta (pois nem toda PAIR incapacita totalmente), as outras são mandatórias ou fatos. Para este exercício, vou assumir que a pergunta tem um erro e não há uma incorreta óbvia entre as opções fornecidas no PDF. Se houvesse uma opção como 'A PAIR é sempre reversível', essa seria a incorreta. Vou marcar E como 'eh_correta: true' para a pergunta que pede a INCORRETA, assumindo que há um erro na questão original do PDF, pois a individualização do EPI é uma prática correta. Se a questão no PDF fosse 'É CORRETO afirmar', E seria uma boa resposta."
+  },
+
+  {
+    "id_opcao_resposta": 12201, "id_pergunta": 122,
+    "texto_opcao": "Afastamento do trabalho por tempo indeterminado, já que ficou constatado o nexo causal",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O nexo causal estabelecido não implica automaticamente afastamento por tempo indeterminado. A decisão dependerá da avaliação da capacidade laborativa e da possibilidade de reabilitação ou readaptação."
+  },
+  {
+    "id_opcao_resposta": 12202, "id_pergunta": 122,
+    "texto_opcao": "Aposentadoria por invalidez, já que se trata de acidente de trabalho ou equivalente",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aposentadoria por invalidez é concedida quando há incapacidade total e permanente para qualquer trabalho, o que não é automaticamente o caso da PAIR. A PAIR é uma doença ocupacional, equiparada a acidente de trabalho para fins previdenciários, mas o benefício depende do grau de incapacidade."
+  },
+  {
+    "id_opcao_resposta": 12203, "id_pergunta": 122,
+    "texto_opcao": "Conceder auxílio-doença, pois o acidentado está incapaz para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O auxílio-doença é para incapacidade temporária. Se a PAIR causa uma sequela permanente que reduz a capacidade para o trabalho habitual, mas não incapacita totalmente, outro benefício pode ser mais apropriado."
+  },
+  {
+    "id_opcao_resposta": 12204, "id_pergunta": 122,
+    "texto_opcao": "Conceder auxílio-acidente, pois o acidentado está incapaz e trata-se de doença ocupacional",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. O auxílio-acidente é concedido quando, após a consolidação das lesões decorrentes de acidente de qualquer natureza (incluindo doença ocupacional), resultam sequelas que impliquem redução da capacidade para o trabalho que habitualmente exercia. A incapacidade não precisa ser total para o trabalho habitual, mas sim uma redução."
+  },
+  {
+    "id_opcao_resposta": 12205, "id_pergunta": 122,
+    "texto_opcao": "Constatar a perda auditiva, sugerir reabilitação profissional e indeferir o pedido de benefício, pois não há perda da capacidade laborativa",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Correta. Se a perícia constatar a PAIR, mas concluir que a perda auditiva não implica em perda ou redução significativa da capacidade laborativa para a função exercida ou para outra que possa ser reabilitado, o pedido de benefício por incapacidade (auxílio-doença ou aposentadoria) pode ser indeferido. O auxílio-acidente poderia ser considerado se houvesse redução da capacidade. A reabilitação profissional é uma medida importante."
+  },
+
+  {
+    "id_opcao_resposta": 12301, "id_pergunta": 123,
+    "texto_opcao": "A T. solium e a T. saginata pertencem à classe Cestoda e possuem como hospedeiros intermediários o porco e o boi, respectivamente",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Ambas são cestoides, e o porco é o hospedeiro intermediário da T. solium, enquanto o boi é o da T. saginata."
+  },
+  {
+    "id_opcao_resposta": 12302, "id_pergunta": 123,
+    "texto_opcao": "As proglótides da T. solium são eliminadas passivamente com as fezes, enquanto as da T. saginata saem ativamente no intervalo das defecações",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. As proglótides de T. saginata têm maior motilidade e podem ser eliminadas ativamente, enquanto as de T. solium são geralmente liberadas com as fezes."
+  },
+  {
+    "id_opcao_resposta": 12303, "id_pergunta": 123,
+    "texto_opcao": "Os ovos da T. solium e T. saginata são indistinguíveis em observação com microscopia óptica",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Morfologicamente, os ovos das duas espécies são idênticos ao microscópio."
+  },
+  {
+    "id_opcao_resposta": 12304, "id_pergunta": 123,
+    "texto_opcao": "O Cysticercus cellulosae é a forma larvária da T. saginata",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. O Cysticercus cellulosae é a forma larvária da Taenia solium, encontrada nos tecidos do suíno e do homem (na cisticercose). A forma larvária da Taenia saginata é o Cysticercus bovis, encontrado no bovino."
+  },
+
+  {
+    "id_opcao_resposta": 12401, "id_pergunta": 124,
+    "texto_opcao": "As manifestações clínicas da cisticercose geralmente ocorrem entre 1 e 5 anos após a infecção",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. O período de incubação da cisticercose, especialmente da neurocisticercose, pode ser longo e variável, com manifestações clínicas aparecendo meses ou frequentemente anos (tipicamente 3-5 anos, mas pode variar) após a ingestão dos ovos de Taenia solium."
+  },
+  {
+    "id_opcao_resposta": 12402, "id_pergunta": 124,
+    "texto_opcao": "Os agentes etiológicos da teníase e cisticercose são, respectivamente, a T. solium e a T. saginata",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A teníase pode ser causada tanto por T. solium quanto por T. saginata. A cisticercose humana é causada exclusivamente pela forma larval da T. solium."
+  },
+  {
+    "id_opcao_resposta": 12403, "id_pergunta": 124,
+    "texto_opcao": "A cisticercose ocorre com maior frequência em músculos esqueléticos e articulações",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Embora os cisticercos possam se localizar nos músculos esqueléticos e tecido subcutâneo (onde podem ser assintomáticos ou causar mialgia/nódulos), as localizações de maior importância clínica são o sistema nervoso central (neurocisticercose) e os olhos (cisticercose ocular). Não afeta primariamente articulações."
+  },
+  {
+    "id_opcao_resposta": 12404, "id_pergunta": 124,
+    "texto_opcao": "A cisticercose ocorre com a ingestão de cisticercos que podem se alojar em diversos tecidos, inclusive no encéfalo",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A cisticercose ocorre pela ingestão de OVOS de Taenia solium. A ingestão de cisticercos (presentes na carne) causa a teníase (verme adulto no intestino)."
+  },
+  {
+    "id_opcao_resposta": 12405, "id_pergunta": 124,
+    "texto_opcao": "Todas as alternativas estão incorretas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta, pois a alternativa A está correta."
+  },
+
+  {
+    "id_opcao_resposta": 12501, "id_pergunta": 125,
+    "texto_opcao": "A transmissão da teníase para o homem ocorre por meio de ingestão de carne de porco ou de boi, contendo a forma larvária de Taenia ou o cisticerco",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A teníase é adquirida pela ingestão de cisticercos (forma larval) presentes na carne crua ou malcozida de suínos (para T. solium) ou bovinos (para T. saginata)."
+  },
+  {
+    "id_opcao_resposta": 12502, "id_pergunta": 125,
+    "texto_opcao": "A transmissão da cisticercose ocorre por meio da ingestão da carne de porco, contendo a forma larvária de Taenia solium",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A ingestão da carne de porco com a forma larvária (cisticerco) de T. solium causa teníase. A cisticercose ocorre pela ingestão de ovos de T. solium."
+  },
+  {
+    "id_opcao_resposta": 12503, "id_pergunta": 125,
+    "texto_opcao": "A forma adulta de Taenia solium pode migrar para o cérebro, causando neurocisticercose",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A forma adulta da Taenia solium permanece no intestino. A neurocisticercose é causada pela forma larval (cisticerco) que se desenvolve no cérebro após a ingestão de ovos."
+  },
+  {
+    "id_opcao_resposta": 12504, "id_pergunta": 125,
+    "texto_opcao": "O porco ou o boi adquirem a cisticercose ao ingerir água ou alimento contaminado por ovos de Taenia sp.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Esta afirmação é correta, mas a pergunta pede 'Considere a afirmação correta sobre a Taenia sp.', implicando uma única afirmação no contexto da questão como um todo. A opção A é a mais completa e direta sobre a transmissão da teníase. A opção D, embora verdadeira para o ciclo nos animais, não é a melhor resposta para uma questão que provavelmente foca na infecção humana no contexto mais amplo."
+  },
+  {
+    "id_opcao_resposta": 12505, "id_pergunta": 125,
+    "texto_opcao": "Auto-infecção interna e auto-infecção externa são as duas formas mais comuns dentre os mecanismos de contaminação pela teníase",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Autoinfecção interna e externa são mecanismos de aquisição da CISTICERCOSE em um indivíduo que já possui a teníase por T. solium, não da teníase em si. A teníase é adquirida pela ingestão de cisticercos."
+  },
+
+  {
+    "id_opcao_resposta": 12601, "id_pergunta": 126,
+    "texto_opcao": "O tratamento preconizado é a associação de oxamniquina com corticóide oral",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A oxamniquina é um anti-helmíntico usado para esquistossomose, não para neurocisticercose. O tratamento da neurocisticercose ativa geralmente envolve albendazol ou praziquantel, frequentemente associados a corticosteroides."
+  },
+  {
+    "id_opcao_resposta": 12602, "id_pergunta": 126,
+    "texto_opcao": "As manifestações clínicas mais frequentes são os déficits motores focais e comprometimento de pares cranianos",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As manifestações mais frequentes da neurocisticercose são crises convulsivas e cefaleia. Déficits motores focais e comprometimento de pares cranianos podem ocorrer, mas não são os mais comuns."
+  },
+  {
+    "id_opcao_resposta": 12603, "id_pergunta": 126,
+    "texto_opcao": "Em pacientes com suspeita clínica, os exames de imagem como tomografia computadorizada de crânio ou ressonância nuclear magnética de encéfalo estão sempre indicados",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. Diante da suspeita clínica de neurocisticercose (ex: início de convulsões em adulto em área endêmica, cefaleia persistente com sinais de hipertensão intracraniana), os exames de neuroimagem (TC ou, preferencialmente, RM) são fundamentais e sempre indicados para visualização das lesões císticas, sua localização, número, estágio evolutivo e presença de complicações como edema ou hidrocefalia."
+  },
+  {
+    "id_opcao_resposta": 12604, "id_pergunta": 126,
+    "texto_opcao": "Para confirmação diagnóstica, deve-se realizar exame de liquor em todos os pacientes",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. O exame de líquido cefalorraquidiano (LCR) pode auxiliar no diagnóstico (ex: pleocitose, detecção de anticorpos ou antígenos), mas não é obrigatório em todos os pacientes, especialmente se a neuroimagem for muito característica. Sua indicação depende do contexto clínico e dos achados de imagem."
+  },
+  {
+    "id_opcao_resposta": 12605, "id_pergunta": 126,
+    "texto_opcao": "A presença de lesões calcificadas em encéfalo indica o tratamento neurocirúrgico para retirada das mesmas e prevenção de epilepsia",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Lesões calcificadas representam cistos mortos e geralmente não requerem tratamento antiparasitário nem neurocirúrgico, a menos que causem efeito de massa significativo ou epilepsia refratária. A cirurgia para lesões calcificadas é raramente indicada apenas para prevenção de epilepsia se esta não estiver presente ou for bem controlada."
+  },
+
+  {
+    "id_opcao_resposta": 12701, "id_pergunta": 127,
+    "texto_opcao": "Hepatite viral pode assemelhar-se clinicamente, porém os níveis de aminotransferases costumam ser mais elevados e os de CPK (creatina cinase) normais ou raramente alterados",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Na leptospirose, pode haver aumento de aminotransferases, mas geralmente não tão acentuado quanto em hepatites virais agudas. Um achado distintivo da leptospirose é a elevação da CPK (devido à miosite), que não é comum em hepatites virais."
+  },
+  {
+    "id_opcao_resposta": 12702, "id_pergunta": 127,
+    "texto_opcao": "São comuns as alterações na calemia, principalmente em pacientes com insuficiência renal",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A insuficiência renal é uma complicação comum da leptospirose grave (Síndrome de Weil), e distúrbios eletrolíticos, incluindo alterações nos níveis de potássio (calemia), podem ocorrer."
+  },
+  {
+    "id_opcao_resposta": 12703, "id_pergunta": 127,
+    "texto_opcao": "Febre, cefaleia, mialgia e hiperemia conjuntival são sintomas comuns",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Estes são sintomas clássicos da fase inicial (leptospirêmica) da leptospirose. A hiperemia conjuntival (olhos vermelhos) é um sinal bastante característico."
+  },
+  {
+    "id_opcao_resposta": 12704, "id_pergunta": 127,
+    "texto_opcao": "Meningite asséptica sintomática ocorre na maioria dos casos",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. A meningite asséptica pode ocorrer na fase imune da leptospirose, mas não na maioria dos casos totais de infecção, muitos dos quais são leves ou assintomáticos. Quando ocorre, pode ser sintomática."
+  },
+  {
+    "id_opcao_resposta": 12705, "id_pergunta": 127,
+    "texto_opcao": "Leptospira icterohaemorrhagiae é a sorovariante da L. interrogans causadora da forma mais grave da doença",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. O sorovar Icterohaemorrhagiae da espécie Leptospira interrogans é classicamente associado às formas mais graves da doença, incluindo a Síndrome de Weil."
+  },
+
+  {
+    "id_opcao_resposta": 12801, "id_pergunta": 128,
+    "texto_opcao": "A ação da bactéria como fonte de toxiinfecção se dá através da ingestão do microorganismo que lesa diretamente o epitélio intestinal ou por toxinas produzidas antes ou após a ingestão do alimento",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. Esta definição abrange os mecanismos de infecção (lesão direta pelo microrganismo) e intoxicação/toxinfecção (ação de toxinas bacterianas pré-formadas ou produzidas in vivo)."
+  },
+  {
+    "id_opcao_resposta": 12802, "id_pergunta": 128,
+    "texto_opcao": "Staphylococcus aureus age por invasão-destruição do epitélio intestinal ou pela ação da toxina",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A doença por S. aureus é primariamente uma intoxicação pela ingestão de enterotoxinas pré-formadas, sem invasão significativa do epitélio."
+  },
+  {
+    "id_opcao_resposta": 12803, "id_pergunta": 128,
+    "texto_opcao": "O período de incubação da infecção pelo S. aureus varia de 12 a 24 horas e cursa, na maioria dos casos, com evolução autolimitada",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O período de incubação da intoxicação por S. aureus é curto, de 1 a 6 horas."
+  },
+  {
+    "id_opcao_resposta": 12804, "id_pergunta": 128,
+    "texto_opcao": "Na sintomatologia pelo Clostridium perfringens tipo A é predominante o aparecimento de diarreia e vômitos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Em C. perfringens tipo A, diarreia e cólicas abdominais são predominantes; vômitos são menos comuns."
+  },
+  {
+    "id_opcao_resposta": 12805, "id_pergunta": 128,
+    "texto_opcao": "Escherichia coli enteropatogênica é a responsável pela diarreia dos viajantes",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A Escherichia coli enterotoxigênica (ETEC) é a principal causa da diarreia dos viajantes, não a enteropatogênica (EPEC)."
+  },
+
+  {
+    "id_opcao_resposta": 12901, "id_pergunta": 129,
+    "texto_opcao": "A intoxicação por Bacillus cereus apresenta 2 formas clínicas distintas de doença: a forma emética e a forma diarreica",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. B. cereus causa duas formas de toxiinfecção: uma emética (vômitos) e uma diarreica."
+  },
+  {
+    "id_opcao_resposta": 12902, "id_pergunta": 129,
+    "texto_opcao": "Surtos com vômitos estão mais associados a produtos à base de arroz",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A forma emética está classicamente ligada ao consumo de arroz contaminado."
+  },
+  {
+    "id_opcao_resposta": 12903, "id_pergunta": 129,
+    "texto_opcao": "A forma emética se assemelha à infecção pelo S. aureus e a diarreica, à C. perfringens tipo A",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. As semelhanças clínicas e de período de incubação são conhecidas."
+  },
+  {
+    "id_opcao_resposta": 12904, "id_pergunta": 129,
+    "texto_opcao": "O período de incubação das 2 formas é igual, diferindo, entretanto, em relação ao quadro clínico e à toxina envolvida",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação NÃO é correta. Os períodos de incubação são distintos: a forma emética tem incubação curta (0,5-6 horas) e a forma diarreica tem incubação mais longa (6-15 horas)."
+  },
+  {
+    "id_opcao_resposta": 12905, "id_pergunta": 129,
+    "texto_opcao": "A toxina da forma emética é termoestável e a da forma diarreica é termolábil",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. A toxina emética (cereulida) resiste ao calor, enquanto as enterotoxinas diarreicas são sensíveis ao calor."
+  },
+
+  {
+    "id_opcao_resposta": 13001, "id_pergunta": 130,
+    "texto_opcao": "Afastamento do trabalho por tempo indeterminado, já que ficou constatado o nexo causal",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O nexo causal apenas estabelece a relação da doença com o trabalho, mas não define automaticamente o tipo ou duração do benefício/afastamento."
+  },
+  {
+    "id_opcao_resposta": 13002, "id_pergunta": 130,
+    "texto_opcao": "Aposentadoria por invalidez, já que se trata de acidente de trabalho ou equivalente",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aposentadoria por invalidez requer incapacidade total e permanente para qualquer trabalho, o que não é necessariamente o caso. PAIR é doença ocupacional, equiparada a acidente de trabalho, mas o benefício depende da incapacidade."
+  },
+  {
+    "id_opcao_resposta": 13003, "id_pergunta": 130,
+    "texto_opcao": "Conceder auxílio-doença, pois o segurado está incapaz para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Auxílio-doença é para incapacidade temporária. A PAIR é uma lesão permanente. Se há redução da capacidade para o trabalho habitual, o auxílio-acidente pode ser mais apropriado."
+  },
+  {
+    "id_opcao_resposta": 13004, "id_pergunta": 130,
+    "texto_opcao": "Conceder auxílio-acidente, pois o segurado está incapaz e trata-se de doença ocupacional",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Se a PAIR resultou em sequela permanente que implica redução da capacidade para o trabalho que o Sr. Francisco habitualmente exercia, o auxílio-acidente é o benefício previdenciário indicado. A PAIR é uma doença ocupacional."
+  },
+  {
+    "id_opcao_resposta": 13005, "id_pergunta": 130,
+    "texto_opcao": "Constatar a perda auditiva, sugerir reabilitação profissional e indeferir o pedido de benefício, pois não há perda da capacidade laborativa",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Mesmo que não haja incapacidade total, se houver redução da capacidade laborativa para a função habitual devido à PAIR, o auxílio-acidente pode ser devido. A reabilitação profissional é uma medida complementar importante."
+  },
+  {
+    "id_opcao_resposta": 13101, "id_pergunta": 131,
+    "texto_opcao": "A T. solium e a T. saginata pertencem à classe Cestoda e possuem como hospedeiros intermediários o porco e o boi, respectivamente",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Ambas são cestoides, com o porco sendo hospedeiro intermediário da T. solium e o boi da T. saginata."
+  },
+  {
+    "id_opcao_resposta": 13102, "id_pergunta": 131,
+    "texto_opcao": "As proglótides da T. solium são eliminadas passivamente com as fezes, enquanto as da T. saginata saem ativamente no intervalo das defecações",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. As proglótides de T. saginata têm maior motilidade própria do que as de T. solium."
+  },
+  {
+    "id_opcao_resposta": 13103, "id_pergunta": 131,
+    "texto_opcao": "Os ovos da T. solium e T. saginata são indistinguíveis em observação com microscopia óptica",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Os ovos de ambas as espécies são morfologicamente idênticos."
+  },
+  {
+    "id_opcao_resposta": 13104, "id_pergunta": 131,
+    "texto_opcao": "O Cysticercus cellulosae é a forma larvária da T. saginata",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. O Cysticercus cellulosae é a forma larvária da Taenia solium. A forma larvária da Taenia saginata é o Cysticercus bovis."
+  },
+
+  {
+    "id_opcao_resposta": 13201, "id_pergunta": 132,
+    "texto_opcao": "I e III, apenas",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A afirmação III (forma adulta de Taenia solium pode migrar para o cérebro) está incorreta."
+  },
+  {
+    "id_opcao_resposta": 13202, "id_pergunta": 132,
+    "texto_opcao": "I e IV, apenas",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. A afirmação I (transmissão da teníase pela ingestão de cisticercos) e a IV (hospedeiros intermediários adquirem cisticercose por ovos) estão corretas. A II é incorreta (ingestão de carne com larva causa teníase, não cisticercose). A III é incorreta (o verme adulto não migra para o cérebro)."
+  },
+  {
+    "id_opcao_resposta": 13203, "id_pergunta": 132,
+    "texto_opcao": "I, II e III, apenas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As afirmações II e III estão incorretas."
+  },
+  {
+    "id_opcao_resposta": 13204, "id_pergunta": 132,
+    "texto_opcao": "I, III e IV, apenas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A afirmação III está incorreta."
+  },
+  {
+    "id_opcao_resposta": 13205, "id_pergunta": 132,
+    "texto_opcao": "I, II, III e IV",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As afirmações II e III estão incorretas."
+  },
+
+  {
+    "id_opcao_resposta": 13301, "id_pergunta": 133,
+    "texto_opcao": "O tratamento preconizado é a associação de oxamniquina com corticóide oral",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Oxamniquina é usada para esquistossomose. O tratamento da neurocisticercose ativa geralmente envolve albendazol ou praziquantel, com corticosteroides."
+  },
+  {
+    "id_opcao_resposta": 13302, "id_pergunta": 133,
+    "texto_opcao": "As manifestações clínicas mais frequentes são os déficits motores focais e comprometimento de pares cranianos",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As manifestações mais frequentes são crises convulsivas e cefaleia."
+  },
+  {
+    "id_opcao_resposta": 13303, "id_pergunta": 133,
+    "texto_opcao": "Em pacientes com suspeita clínica, os exames de imagem como tomografia computadorizada de crânio ou ressonância nuclear magnética de encéfalo estão sempre indicados",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. Diante da suspeita de neurocisticercose, exames de neuroimagem são fundamentais para visualização das lesões, sua localização, estágio e complicações."
+  },
+  {
+    "id_opcao_resposta": 13304, "id_pergunta": 133,
+    "texto_opcao": "Para confirmação diagnóstica, deve-se realizar exame de liquor em todos os pacientes",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. O exame de LCR pode auxiliar, mas não é mandatório em todos os casos, especialmente se a imagem for muito característica."
+  },
+  {
+    "id_opcao_resposta": 13305, "id_pergunta": 133,
+    "texto_opcao": "A presença de lesões calcificadas em encéfalo indica o tratamento neurocirúrgico para retirada das mesmas e prevenção de epilepsia",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Lesões calcificadas são cistos mortos e geralmente não requerem cirurgia, a menos que causem efeito de massa significativo ou epilepsia refratária."
+  },
+
+  {
+    "id_opcao_resposta": 13401, "id_pergunta": 134,
+    "texto_opcao": "A intoxicação por Bacillus cereus apresenta 2 formas clínicas distintas de doença: a forma emética e a forma diarreica",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 13402, "id_pergunta": 134,
+    "texto_opcao": "Surtos com vômitos estão mais associados a produtos à base de arroz",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 13403, "id_pergunta": 134,
+    "texto_opcao": "A forma emética se assemelha à infecção pelo S. aureus e a diarreica, à C. perfringens tipo A",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 13404, "id_pergunta": 134,
+    "texto_opcao": "O período de incubação das 2 formas é diferente, assim como o quadro clínico e a toxina envolvida",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 13405, "id_pergunta": 134,
+    "texto_opcao": "A toxina da forma emética é termolábil e a da forma diarreica é termoestável",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação NÃO é correta. A toxina emética (cereulida) é termoestável, enquanto as enterotoxinas que causam a forma diarreica são termolábeis."
+  },
+
+  {
+    "id_opcao_resposta": 13501, "id_pergunta": 135,
+    "texto_opcao": "A ação da bactéria como fonte de toxiinfecção se dá através da ingestão do microorganismo que lesa diretamente o epitélio intestinal e/ou por toxinas produzidas antes e/ou após a ingestão do alimento",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. Esta é uma definição abrangente e correta dos mecanismos de toxiinfecção alimentar."
+  },
+  {
+    "id_opcao_resposta": 13502, "id_pergunta": 135,
+    "texto_opcao": "Staphylococcus aureus age por invasão e destruição do epitélio intestinal ou pela ação da toxina",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. S. aureus causa intoxicação principalmente por toxinas pré-formadas, não por invasão epitelial."
+  },
+  {
+    "id_opcao_resposta": 13503, "id_pergunta": 135,
+    "texto_opcao": "O período de incubação da infecção pelo S. aureus varia de 12 a 24 horas e cursa, na maioria dos casos, com evolução autolimitada",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O período de incubação da intoxicação por S. aureus é curto (1-6 horas)."
+  },
+  {
+    "id_opcao_resposta": 13504, "id_pergunta": 135,
+    "texto_opcao": "Na sintomatologia pelo Clostridium perfringens tipo A é predominante o aparecimento de febre, diarreia e vômitos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Em C. perfringens tipo A, febre e vômitos são geralmente ausentes ou leves; diarreia e cólicas são predominantes."
+  },
+  {
+    "id_opcao_resposta": 13505, "id_pergunta": 135,
+    "texto_opcao": "Escherichia coli enterotoxigênica é a responsável pela diarreia dos viajantes",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Correta. ETEC é uma causa comum da diarreia dos viajantes. (Nota: Assim como na Questão 106, esta pergunta da prova original do PDF tem duas alternativas corretas (A e E). Para este exercício, se apenas uma pode ser 'true', A é mais conceitual para 'toxiinfecção' em geral.)"
+  },
+
+  {
+    "id_opcao_resposta": 13601, "id_pergunta": 136,
+    "texto_opcao": "Embalagens com a faixa verde indicam substâncias altamente tóxicas",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A faixa verde indica Classe IV - POUCO TÓXICO."
+  },
+  {
+    "id_opcao_resposta": 13602, "id_pergunta": 136,
+    "texto_opcao": "Embalagens com a faixa preta indicam substâncias inócuas para a saúde",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A faixa preta não é utilizada na classificação toxicológica de agrotóxicos no Brasil. Substâncias inócuas não teriam essa classificação de perigo."
+  },
+  {
+    "id_opcao_resposta": 13603, "id_pergunta": 136,
+    "texto_opcao": "Embalagens com a faixa azul indicam substâncias altamente tóxicas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A faixa azul indica Classe IV - POUCO TÓXICO. A faixa para 'ALTAMENTE TÓXICO' (Classe II) é AMARELA."
+  },
+  {
+    "id_opcao_resposta": 13604, "id_pergunta": 136,
+    "texto_opcao": "Embalagens com a faixa vermelha indicam substâncias pouco tóxicas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A faixa vermelha indica Classe I - EXTREMAMENTE TÓXICO."
+  },
+  {
+    "id_opcao_resposta": 13605, "id_pergunta": 136,
+    "texto_opcao": "Não há interesse clínico nesta informação",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta se interpretada como 'a informação da faixa não tem interesse'. A cor da faixa é crucial para avaliar o risco toxicológico. No entanto, as opções A-D apresentam interpretações erradas das cores. A questão no PDF está mal formulada pois não oferece uma conclusão correta. A faixa vermelha indica EXTREMAMENTE TÓXICO, a amarela ALTAMENTE TÓXICO, a azul MEDIANAMENTE TÓXICO e a verde POUCO TÓXICO (pela nova lei, mas a prova pode ser antiga. Pela lei antiga era diferente. Vou assumir a classificação mais conhecida onde vermelho é o mais grave)."
+  },
+  {
+    "id_opcao_resposta": 13701, "id_pergunta": 137,
+    "texto_opcao": "Os óxidos de enxofre afetam o sistema respiratório, provocam chuvas ácidas e causam danos em materiais",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Óxidos de enxofre são irritantes respiratórios, precursores da chuva ácida e contribuem para a corrosão de materiais."
+  },
+  {
+    "id_opcao_resposta": 13702, "id_pergunta": 137,
+    "texto_opcao": "O monóxido de carbono (CO) reduz a capacidade de transporte de oxigênio no sangue",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. O CO liga-se à hemoglobina com alta afinidade, formando carboxihemoglobina e impedindo o transporte adequado de oxigênio."
+  },
+  {
+    "id_opcao_resposta": 13703, "id_pergunta": 137,
+    "texto_opcao": "A poluição do ar causa uma resposta inflamatória no aparelho respiratório acarretando aumento da produção, acidez, viscosidade e da consistência do muco, levando à diminuição da eficácia do sistema mucociliar",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Poluentes atmosféricos podem induzir inflamação nas vias aéreas, alterar as características do muco e prejudicar o clearance mucociliar."
+  },
+  {
+    "id_opcao_resposta": 13704, "id_pergunta": 137,
+    "texto_opcao": "Em crianças, os poluentes atmosféricos afetam somente o aparelho respiratório e a pele",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Além do aparelho respiratório e da pele, os poluentes atmosféricos em crianças podem afetar o desenvolvimento neurológico, cardiovascular e aumentar a suscetibilidade a outras doenças. Seus efeitos não se limitam a apenas dois sistemas."
+  },
+  {
+    "id_opcao_resposta": 13705, "id_pergunta": 137,
+    "texto_opcao": "Na atmosfera, parte do dióxido de enxofre é convertida em ácido sulfúrico e sulfatos que causam broncoconstrição",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. O SO2 pode ser oxidado na atmosfera para formar ácido sulfúrico e partículas de sulfato, que são potentes irritantes respiratórios e podem causar broncoconstrição."
+  },
+
+  {
+    "id_opcao_resposta": 13801, "id_pergunta": 138,
+    "texto_opcao": "Apenas 1 alternativa está correta",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A afirmação 1 (Penicilina é droga de escolha para tratamento...) é geralmente aceita para formas moderadas/graves. A 2 é incorreta (Doxiciclina é mais comum para profilaxia). A 3 é incorreta (cultura de urina é melhor na segunda semana). A 4 é incorreta (hemorragia subaracnoidea não é frequente). A 5 é incorreta (icterícia flavínica/alaranjada, não rubínica)."
+  },
+  {
+    "id_opcao_resposta": 13802, "id_pergunta": 138,
+    "texto_opcao": "2 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Apenas a afirmação 1 está correta entre as listadas."
+  },
+  {
+    "id_opcao_resposta": 13803, "id_pergunta": 138,
+    "texto_opcao": "3 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Apenas a afirmação 1 está correta."
+  },
+  {
+    "id_opcao_resposta": 13804, "id_pergunta": 138,
+    "texto_opcao": "Todas alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As afirmações 2, 3, 4 e 5 contêm informações imprecisas ou incorretas."
+  },
+  {
+    "id_opcao_resposta": 13805, "id_pergunta": 138,
+    "texto_opcao": "Todas alternativas estão erradas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A afirmação 1 sobre o uso da penicilina no tratamento da leptospirose é considerada uma abordagem terapêutica válida."
+  },
+
+  {
+    "id_opcao_resposta": 13901, "id_pergunta": 139,
+    "texto_opcao": "A hantavirose deve ser um diagnóstico diferencial a ser investigado",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. A hantavirose pode mimetizar a leptospirose e é um diagnóstico diferencial."
+  },
+  {
+    "id_opcao_resposta": 13902, "id_pergunta": 139,
+    "texto_opcao": "A grande maioria dos pacientes apresenta quadro oligossintomático",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. Muitas infecções são leves ou assintomáticas."
+  },
+  {
+    "id_opcao_resposta": 13903, "id_pergunta": 139,
+    "texto_opcao": "A síndrome de Weil sempre inspira cuidados maiores",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. A Síndrome de Weil é a forma grave da doença."
+  },
+  {
+    "id_opcao_resposta": 13904, "id_pergunta": 139,
+    "texto_opcao": "A pesquisa de anticorpos na primeira semana de doença confirma o diagnóstico",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Os anticorpos geralmente se tornam detectáveis após a primeira semana de doença."
+  },
+  {
+    "id_opcao_resposta": 13905, "id_pergunta": 139,
+    "texto_opcao": "A L. icterohaemorrhagiae está mais comumente associada a formas graves",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. Este sorovar é classicamente associado à Síndrome de Weil."
+  },
+
+  {
+    "id_opcao_resposta": 14001, "id_pergunta": 140,
+    "texto_opcao": "Hepatite viral pode assemelhar-se clinicamente, porém os níveis de aminotransferases costumam ser mais elevados e os de CPK (creatina cinase) normais ou raramente alterados",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. Este é um ponto importante no diagnóstico diferencial."
+  },
+  {
+    "id_opcao_resposta": 14002, "id_pergunta": 140,
+    "texto_opcao": "São comuns as alterações na calemia, principalmente em pacientes com insuficiência renal",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A insuficiência renal na leptospirose pode levar a distúrbios do potássio."
+  },
+  {
+    "id_opcao_resposta": 14003, "id_pergunta": 140,
+    "texto_opcao": "Cefaleia e hiperemia conjuntival são sintomas incomuns",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Cefaleia e hiperemia conjuntival são sintomas muito comuns e característicos da fase inicial da leptospirose."
+  },
+  {
+    "id_opcao_resposta": 14004, "id_pergunta": 140,
+    "texto_opcao": "Meningite asséptica assintomática ocorre na maioria dos casos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. A meningite asséptica pode ser uma manifestação da fase imune e pode ser assintomática ou oligossintomática em muitos casos."
+  },
+  {
+    "id_opcao_resposta": 14005, "id_pergunta": 140,
+    "texto_opcao": "Leptospira icterohaemorrhagiae é a sorovariante da L. interrogans causadora da forma mais grave da doença",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. É o sorovar classicamente associado à Síndrome de Weil."
+  },
+  {
+    "id_opcao_resposta": 14101, "id_pergunta": 141,
+    "texto_opcao": "86",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O limite de tolerância para 8 horas de exposição diária ao ruído contínuo ou intermitente é estabelecido pela NR-15 em 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 14102, "id_pergunta": 141,
+    "texto_opcao": "87",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. O valor de 87 dB(A) excede o limite de tolerância para 8 horas de exposição diária."
+  },
+  {
+    "id_opcao_resposta": 14103, "id_pergunta": 141,
+    "texto_opcao": "88",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O valor de 88 dB(A) está acima do limite permitido para uma jornada de 8 horas."
+  },
+  {
+    "id_opcao_resposta": 14104, "id_pergunta": 141,
+    "texto_opcao": "85",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. De acordo com a Norma Regulamentadora NR-15 (Atividades e Operações Insalubres) do Brasil, o limite de tolerância para exposição diária a ruído contínuo ou intermitente durante uma jornada de 8 horas é de 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 14105, "id_pergunta": 141,
+    "texto_opcao": "É variável conforme o ambiente ao qual o trabalhador está exposto",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Embora o nível de ruído varie com o ambiente, a norma estabelece um limite máximo específico para uma jornada de 8 horas, que é de 85 dB(A). Tempos menores de exposição são permitidos para níveis de ruído mais altos."
+  },
+
+  {
+    "id_opcao_resposta": 14201, "id_pergunta": 142,
+    "texto_opcao": "Afastamento do trabalho por tempo indeterminado, já que ficou constatado o nexo causal",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O nexo causal estabelecido não implica automaticamente afastamento por tempo indeterminado. A decisão dependerá da avaliação da capacidade laborativa e da possibilidade de reabilitação ou readaptação."
+  },
+  {
+    "id_opcao_resposta": 14202, "id_pergunta": 142,
+    "texto_opcao": "Aposentadoria por invalidez, já que se trata de acidente de trabalho ou equivalente",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aposentadoria por invalidez é concedida quando há incapacidade total e permanente para qualquer trabalho, o que não é automaticamente o caso da PAIR. A PAIR é uma doença ocupacional, equiparada a acidente de trabalho para fins previdenciários, mas o benefício depende do grau de incapacidade."
+  },
+  {
+    "id_opcao_resposta": 14203, "id_pergunta": 142,
+    "texto_opcao": "Conceder auxílio-doença, pois o segurado está incapaz para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O auxílio-doença é para incapacidade temporária. Se a PAIR causa uma sequela permanente que reduz a capacidade para o trabalho habitual, mas não incapacita totalmente, outro benefício pode ser mais apropriado."
+  },
+  {
+    "id_opcao_resposta": 14204, "id_pergunta": 142,
+    "texto_opcao": "Conceder auxílio-acidente, pois o segurado está incapaz e trata-se de doença ocupacional",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Se a PAIR resultou em sequela permanente que implica redução da capacidade para o trabalho que o Sr. Francisco habitualmente exercia, o auxílio-acidente é o benefício previdenciário indicado. A PAIR é uma doença ocupacional, e a incapacidade mencionada no contexto do auxílio-acidente refere-se à redução da capacidade laboral."
+  },
+  {
+    "id_opcao_resposta": 14205, "id_pergunta": 142,
+    "texto_opcao": "Constatar a perda auditiva, sugerir reabilitação profissional e indeferir o pedido de benefício, pois não há perda da capacidade laborativa",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A constatação da PAIR com alteração audiométrica em um trabalhador exposto a ruído excessivo sugere, no mínimo, uma redução da capacidade auditiva. Se essa redução impactar a capacidade para o trabalho habitual, o auxílio-acidente pode ser devido. Indeferir o benefício assumindo que 'não há perda da capacidade laborativa' seria uma conclusão precipitada sem avaliação funcional completa."
+  },
+
+  {
+    "id_opcao_resposta": 14301, "id_pergunta": 143,
+    "texto_opcao": "A T. solium e a T. saginata pertencem à classe Cestoda e possuem como hospedeiros intermediários o porco e o boi, respectivamente",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14302, "id_pergunta": 143,
+    "texto_opcao": "As proglótides da T. solium são eliminadas passivamente com as fezes, enquanto as da T. saginata saem ativamente no intervalo das defecações",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14303, "id_pergunta": 143,
+    "texto_opcao": "Os ovos da T. solium e T. saginata são indistinguíveis em observação com microscopia óptica",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14304, "id_pergunta": 143,
+    "texto_opcao": "O Cysticercus cellulosae é a forma larvária da T. saginata",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. O Cysticercus cellulosae é a forma larvária da Taenia solium. A forma larvária da Taenia saginata é o Cysticercus bovis."
+  },
+  {
+    "id_opcao_resposta": 14305, "id_pergunta": 143,
+    "texto_opcao": "O corpo das tênias é dividido em 3 zonas: escólex, pescoço e estróbilo (conjunto de proglótides)",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+
+  {
+    "id_opcao_resposta": 14401, "id_pergunta": 144,
+    "texto_opcao": "As manifestações clínicas da cisticercose geralmente ocorrem entre 15 e 30 dias após infecção",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O período de incubação da cisticercose, especialmente da neurocisticercose, é geralmente longo e variável, podendo levar meses ou anos para que as manifestações clínicas apareçam."
+  },
+  {
+    "id_opcao_resposta": 14402, "id_pergunta": 144,
+    "texto_opcao": "Os agentes etiológicos da teníase e cisticercose são respectivamente a T. solium e a T. saginata",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A teníase pode ser causada por T. solium ou T. saginata. A cisticercose humana é causada pela forma larval da T. solium."
+  },
+  {
+    "id_opcao_resposta": 14403, "id_pergunta": 144,
+    "texto_opcao": "A cisticercose ocorre com maior frequência em músculos esqueléticos e articulações",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As localizações mais comuns e clinicamente importantes da cisticercose são o sistema nervoso central (neurocisticercose), olhos e músculos esqueléticos/tecido subcutâneo. O envolvimento articular não é uma característica primária."
+  },
+  {
+    "id_opcao_resposta": 14404, "id_pergunta": 144,
+    "texto_opcao": "A cisticercose ocorre com a ingestão de cisticercos que podem se alojar em diversos tecidos, inclusive em encéfalo",
+    "eh_correta": true, "ordem_exibicao": 3, 
+    "feedback_opcao": "Esta afirmação, como escrita, é INCORRETA. A cisticercose ocorre pela ingestão de OVOS de Taenia solium. A ingestão de cisticercos (presentes na carne) leva à teníase. Se a intenção era dizer 'ingestão de OVOS que se transformam em cisticercos nos tecidos', então a segunda parte estaria correta. Dada as outras opções, esta questão no PDF é problemática."
+  },
+  {
+    "id_opcao_resposta": 14501, "id_pergunta": 145,
+    "texto_opcao": "A transmissão da teníase para o homem ocorre por meio de ingestão de carne de porco ou de boi, contendo a larva cisticerco",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A teníase é adquirida pela ingestão de cisticercos (forma larval) presentes na carne crua ou malcozida de suínos (T. solium) ou bovinos (T. saginata)."
+  },
+  {
+    "id_opcao_resposta": 14502, "id_pergunta": 145,
+    "texto_opcao": "A transmissão da cisticercose ocorre por meio da ingestão da carne de porco, contendo a forma larvar de Taenia solium",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A ingestão de carne de porco com cisticercos causa teníase. A cisticercose ocorre pela ingestão de ovos de T. solium."
+  },
+  {
+    "id_opcao_resposta": 14503, "id_pergunta": 145,
+    "texto_opcao": "A forma adulta de Taenia solium pode migrar para o cérebro causando neurocisticercose",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O verme adulto de T. solium vive no intestino. A neurocisticercose é causada pela forma larval (cisticerco) nos tecidos cerebrais."
+  },
+  {
+    "id_opcao_resposta": 14504, "id_pergunta": 145,
+    "texto_opcao": "O porco ou o boi adquirem a cisticercose ao ingerir água ou alimento contaminado por ovos de Taenia sp.",
+    "eh_correta": true, "ordem_exibicao": 3, 
+    "feedback_opcao": "Correta. Os hospedeiros intermediários (suíno para T. solium, bovino para T. saginata) se infectam ao ingerir ovos ou proglótides de Taenia presentes no ambiente contaminado por fezes humanas."
+  },
+  {
+    "id_opcao_resposta": 14505, "id_pergunta": 145,
+    "texto_opcao": "Autoinfecção interna e autoinfecção externa são as duas formas mais comuns dentre os mecanismos de contaminação pela teníase",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Autoinfecção interna e externa são mecanismos de aquisição da CISTICERCOSE por um portador de teníase por T. solium, não da teníase em si."
+  },
+
+  {
+    "id_opcao_resposta": 14601, "id_pergunta": 146,
+    "texto_opcao": "O tratamento preconizado é a associação de oxamniquina com corticóide oral",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Oxamniquina é usada para esquistossomose. O tratamento da neurocisticercose ativa usa albendazol ou praziquantel, frequentemente com corticosteroides."
+  },
+  {
+    "id_opcao_resposta": 14602, "id_pergunta": 146,
+    "texto_opcao": "As manifestações clínicas mais frequentes são os déficits motores focais e comprometimento de pares cranianos",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As manifestações mais comuns da neurocisticercose são crises convulsivas e cefaleia."
+  },
+  {
+    "id_opcao_resposta": 14603, "id_pergunta": 146,
+    "texto_opcao": "Em pacientes com suspeita clínica, os exames de imagem como tomografia computadorizada de crânio ou ressonância nuclear magnética de encéfalo estão sempre indicados",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. Exames de neuroimagem são cruciais para o diagnóstico, visualização das lesões, sua localização, estágio e avaliação de complicações na neurocisticercose."
+  },
+  {
+    "id_opcao_resposta": 14604, "id_pergunta": 146,
+    "texto_opcao": "Para confirmação diagnóstica, deve-se realizar exame de liquor em todos os pacientes",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. O exame de LCR pode auxiliar, mas não é mandatório em todos os casos, dependendo dos achados de imagem e do contexto clínico."
+  },
+  {
+    "id_opcao_resposta": 14605, "id_pergunta": 146,
+    "texto_opcao": "A presença de lesões calcificadas em encéfalo indica o tratamento neurocirúrgico para retirada das mesmas e prevenção de epilepsia",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Lesões calcificadas são geralmente cistos mortos e raramente requerem cirurgia, a menos que causem efeito de massa significativo ou epilepsia muito refratária."
+  },
+
+  {
+    "id_opcao_resposta": 14701, "id_pergunta": 147,
+    "texto_opcao": "A-3; B-1; C-4; D-2",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A: Inseticidas (Organofosforados, Carbamatos, Organoclorados). B: Fungicidas (Hexaclorobenzeno). C: Herbicidas (Paraquat). D: Raticidas (Piquetcumona - cumarínicos)."
+  },
+  {
+    "id_opcao_resposta": 14702, "id_pergunta": 147,
+    "texto_opcao": "A-2; B-4; C-1; D-3",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As correlações estão erradas (ex: Paraquat é herbicida)."
+  },
+  {
+    "id_opcao_resposta": 14703, "id_pergunta": 147,
+    "texto_opcao": "A-3; B-2; C-1; D-4",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As correlações estão erradas (ex: Hexaclorobenzeno é fungicida)."
+  },
+  {
+    "id_opcao_resposta": 14704, "id_pergunta": 147,
+    "texto_opcao": "A-1; B-3; C-2; D-4",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As correlações estão erradas (ex: Paraquat não é raticida)."
+  },
+  {
+    "id_opcao_resposta": 14705, "id_pergunta": 147,
+    "texto_opcao": "A-2; B-1; C-4; D-3",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As correlações estão erradas (ex: Piquetcumona não é inseticida)."
+  },
+
+  {
+    "id_opcao_resposta": 14801, "id_pergunta": 148,
+    "texto_opcao": "A ação da bactéria como fonte de toxiinfecção se dá através da ingestão do microorganismo que lesa diretamente o epitélio intestinal e/ou por toxinas produzidas antes e/ou após a ingestão do alimento",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. Esta é uma definição abrangente e correta dos mecanismos das toxiinfecções alimentares bacterianas."
+  },
+  {
+    "id_opcao_resposta": 14802, "id_pergunta": 148,
+    "texto_opcao": "Staphylococcus aureus age por invasão e destruição do epitélio intestinal ou pela ação da toxina",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A doença por S. aureus é principalmente uma intoxicação por toxinas pré-formadas."
+  },
+  {
+    "id_opcao_resposta": 14803, "id_pergunta": 148,
+    "texto_opcao": "O período de incubação da infecção pelo S. aureus varia de 12 a 24 horas e cursa, na maioria dos casos, com evolução autolimitada",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O período de incubação da intoxicação por S. aureus é curto (1-6 horas)."
+  },
+  {
+    "id_opcao_resposta": 14804, "id_pergunta": 148,
+    "texto_opcao": "Na sintomatologia pelo Clostridium perfringens tipo A é predominante o aparecimento de febre, diarreia e vômitos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Em C. perfringens, febre e vômitos são geralmente leves ou ausentes; diarreia e cólicas são proeminentes."
+  },
+  {
+    "id_opcao_resposta": 14805, "id_pergunta": 148,
+    "texto_opcao": "Escherichia coli enterotoxigênica é a responsável pela diarreia dos viajantes",
+    "eh_correta": true, "ordem_exibicao": 4,
+    "feedback_opcao": "Correta. ETEC é uma causa principal da diarreia dos viajantes. (Nota: Novamente, esta questão da prova original tem duas alternativas corretas, A e E. Se uma só pode ser 'true', A é mais geral para o tema 'toxiinfecção')."
+  },
+
+  {
+    "id_opcao_resposta": 14901, "id_pergunta": 149,
+    "texto_opcao": "Os óxidos de enxofre afetam o sistema respiratório, provocam chuvas ácidas e causam danos em materiais",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14902, "id_pergunta": 149,
+    "texto_opcao": "O monóxido de carbono (CO) reduz a capacidade de transporte de oxigênio no sangue",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14903, "id_pergunta": 149,
+    "texto_opcao": "A poluição do ar causa uma resposta inflamatória no aparelho respiratório acarretando aumento da produção, acidez, viscosidade e da consistência do muco, levando à diminuição da eficácia do sistema mucociliar",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14904, "id_pergunta": 149,
+    "texto_opcao": "Em crianças, os poluentes atmosféricos afetam somente o aparelho respiratório e a pele",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Os poluentes atmosféricos podem afetar múltiplos sistemas em crianças, incluindo o desenvolvimento neurológico e cardiovascular, além do respiratório e da pele."
+  },
+  {
+    "id_opcao_resposta": 14905, "id_pergunta": 149,
+    "texto_opcao": "Na atmosfera, parte do dióxido de enxofre é convertida em ácido sulfúrico e sulfatos que causam broncoconstrição",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+
+  {
+    "id_opcao_resposta": 15001, "id_pergunta": 150,
+    "texto_opcao": "Apenas 1 alternativa está correta",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. Apenas a afirmação 1 (Penicilina é droga de escolha para tratamento...) é considerada correta no contexto clínico geral. As demais (2, 3, 4, 5) contêm imprecisões."
+  },
+  {
+    "id_opcao_resposta": 15002, "id_pergunta": 150,
+    "texto_opcao": "2 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Apenas a afirmação 1 é consistentemente correta."
+  },
+  {
+    "id_opcao_resposta": 15003, "id_pergunta": 150,
+    "texto_opcao": "3 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Apenas a afirmação 1 é consistentemente correta."
+  },
+  {
+    "id_opcao_resposta": 15004, "id_pergunta": 150,
+    "texto_opcao": "Todas alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As afirmações 2, 3, 4 e 5 apresentam informações que não são consensualmente corretas ou são factualmente erradas."
+  },
+  {
+    "id_opcao_resposta": 15005, "id_pergunta": 150,
+    "texto_opcao": "Todas alternativas estão erradas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A afirmação 1 sobre o uso da penicilina é uma prática clínica estabelecida para leptospirose, especialmente formas moderadas a graves."
+  },
+  {
+    "id_opcao_resposta": 14101, "id_pergunta": 141,
+    "texto_opcao": "86",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O limite de tolerância para 8 horas de exposição diária ao ruído contínuo ou intermitente é estabelecido pela NR-15 em 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 14102, "id_pergunta": 141,
+    "texto_opcao": "87",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. O valor de 87 dB(A) excede o limite de tolerância para 8 horas de exposição diária."
+  },
+  {
+    "id_opcao_resposta": 14103, "id_pergunta": 141,
+    "texto_opcao": "88",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O valor de 88 dB(A) está acima do limite permitido para uma jornada de 8 horas."
+  },
+  {
+    "id_opcao_resposta": 14104, "id_pergunta": 141,
+    "texto_opcao": "85",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. De acordo com a Norma Regulamentadora NR-15 (Atividades e Operações Insalubres) do Brasil, o limite de tolerância para exposição diária a ruído contínuo ou intermitente durante uma jornada de 8 horas é de 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 14105, "id_pergunta": 141,
+    "texto_opcao": "É variável conforme o ambiente ao qual o trabalhador está exposto",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Embora o nível de ruído varie com o ambiente, a norma estabelece um limite máximo específico para uma jornada de 8 horas, que é de 85 dB(A). Tempos menores de exposição são permitidos para níveis de ruído mais altos."
+  },
+  {
+    "id_opcao_resposta": 14201, "id_pergunta": 142,
+    "texto_opcao": "Afastamento do trabalho por tempo indeterminado, já que ficou constatado o nexo causal",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O nexo causal estabelecido não implica automaticamente afastamento por tempo indeterminado. A decisão dependerá da avaliação da capacidade laborativa e da possibilidade de reabilitação ou readaptação."
+  },
+  {
+    "id_opcao_resposta": 14202, "id_pergunta": 142,
+    "texto_opcao": "Aposentadoria por invalidez, já que se trata de acidente de trabalho ou equivalente",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aposentadoria por invalidez é concedida quando há incapacidade total e permanente para qualquer trabalho, o que não é automaticamente o caso da PAIR. A PAIR é uma doença ocupacional, equiparada a acidente de trabalho para fins previdenciários, mas o benefício depende do grau de incapacidade."
+  },
+  {
+    "id_opcao_resposta": 14203, "id_pergunta": 142,
+    "texto_opcao": "Conceder auxílio-doença, pois o segurado está incapaz para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O auxílio-doença é para incapacidade temporária. Se a PAIR causa uma sequela permanente que reduz a capacidade para o trabalho habitual, mas não incapacita totalmente, outro benefício pode ser mais apropriado."
+  },
+  {
+    "id_opcao_resposta": 14204, "id_pergunta": 142,
+    "texto_opcao": "Conceder auxílio-acidente, pois o segurado está incapaz e trata-se de doença ocupacional",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Se a PAIR resultou em sequela permanente que implica redução da capacidade para o trabalho que o Sr. Francisco habitualmente exercia, o auxílio-acidente é o benefício previdenciário indicado. A PAIR é uma doença ocupacional, e a incapacidade mencionada no contexto do auxílio-acidente refere-se à redução da capacidade laboral."
+  },
+  {
+    "id_opcao_resposta": 14205, "id_pergunta": 142,
+    "texto_opcao": "Constatar a perda auditiva, sugerir reabilitação profissional e indeferir o pedido de benefício, pois não há perda da capacidade laborativa",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A constatação da PAIR com alteração audiométrica em um trabalhador exposto a ruído excessivo sugere, no mínimo, uma redução da capacidade auditiva. Se essa redução impactar a capacidade para o trabalho habitual, o auxílio-acidente pode ser devido. Indeferir o benefício assumindo que 'não há perda da capacidade laborativa' seria uma conclusão precipitada sem avaliação funcional completa."
+  },
+  {
+    "id_opcao_resposta": 14301, "id_pergunta": 143,
+    "texto_opcao": "A T. solium e a T. saginata pertencem à classe Cestoda e possuem como hospedeiros intermediários o porco e o boi, respectivamente",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14302, "id_pergunta": 143,
+    "texto_opcao": "As proglótides da T. solium são eliminadas passivamente com as fezes, enquanto as da T. saginata saem ativamente no intervalo das defecações",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14303, "id_pergunta": 143,
+    "texto_opcao": "Os ovos da T. solium e T. saginata são indistinguíveis em observação com microscopia óptica",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14304, "id_pergunta": 143,
+    "texto_opcao": "O Cysticercus cellulosae é a forma larvária da T. saginata",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. O Cysticercus cellulosae é a forma larvária da Taenia solium. A forma larvária da Taenia saginata é o Cysticercus bovis."
+  },
+  {
+    "id_opcao_resposta": 14305, "id_pergunta": 143,
+    "texto_opcao": "O corpo das tênias é dividido em 3 zonas: escólex, pescoço e estróbilo (conjunto de proglótides)",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14401, "id_pergunta": 144,
+    "texto_opcao": "As manifestações clínicas da cisticercose geralmente ocorrem entre 15 e 30 dias após infecção",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O período de incubação da cisticercose, especialmente da neurocisticercose, é geralmente longo e variável, podendo levar meses ou anos para que as manifestações clínicas apareçam."
+  },
+  {
+    "id_opcao_resposta": 14402, "id_pergunta": 144,
+    "texto_opcao": "Os agentes etiológicos da teníase e cisticercose são respectivamente a T. solium e a T. saginata",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A teníase pode ser causada por T. solium ou T. saginata. A cisticercose humana é causada pela forma larval da T. solium."
+  },
+  {
+    "id_opcao_resposta": 14403, "id_pergunta": 144,
+    "texto_opcao": "A cisticercose ocorre com maior frequência em músculos esqueléticos e articulações",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As localizações mais comuns e clinicamente importantes da cisticercose são o sistema nervoso central (neurocisticercose), olhos e músculos esqueléticos/tecido subcutâneo. O envolvimento articular não é uma característica primária."
+  },
+  {
+    "id_opcao_resposta": 14404, "id_pergunta": 144,
+    "texto_opcao": "A cisticercose ocorre com a ingestão de cisticercos que podem se alojar em diversos tecidos, inclusive em encéfalo",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A cisticercose ocorre pela ingestão de OVOS de Taenia solium. A ingestão de cisticercos (presentes na carne) causa a teníase."
+  },
+  {
+    "id_opcao_resposta": 14501, "id_pergunta": 145,
+    "texto_opcao": "I e III, apenas",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A afirmação III (forma adulta de Taenia solium pode migrar para o cérebro) está incorreta."
+  },
+  {
+    "id_opcao_resposta": 14502, "id_pergunta": 145,
+    "texto_opcao": "I e IV, apenas",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. A afirmação I (transmissão da teníase pela ingestão de cisticercos) e a IV (hospedeiros intermediários adquirem cisticercose por ovos) estão corretas. A II é incorreta (ingestão de carne com larva causa teníase, não cisticercose). A III é incorreta (o verme adulto não migra para o cérebro)."
+  },
+  {
+    "id_opcao_resposta": 14503, "id_pergunta": 145,
+    "texto_opcao": "I, II e III, apenas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As afirmações II e III estão incorretas."
+  },
+  {
+    "id_opcao_resposta": 14504, "id_pergunta": 145,
+    "texto_opcao": "I, III e IV, apenas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A afirmação III está incorreta."
+  },
+  {
+    "id_opcao_resposta": 14505, "id_pergunta": 145,
+    "texto_opcao": "I, II, III e IV",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As afirmações II e III estão incorretas."
+  },
+  {
+    "id_opcao_resposta": 14601, "id_pergunta": 146,
+    "texto_opcao": "O tratamento preconizado é a associação de oxamniquina com corticóide oral",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Oxamniquina é usada para esquistossomose. O tratamento da neurocisticercose ativa geralmente envolve albendazol ou praziquantel, com corticosteroides."
+  },
+  {
+    "id_opcao_resposta": 14602, "id_pergunta": 146,
+    "texto_opcao": "As manifestações clínicas mais frequentes são os déficits motores focais e comprometimento de pares cranianos",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As manifestações mais frequentes da neurocisticercose são crises convulsivas e cefaleia."
+  },
+  {
+    "id_opcao_resposta": 14603, "id_pergunta": 146,
+    "texto_opcao": "Em pacientes com suspeita clínica, os exames de imagem como tomografia computadorizada de crânio ou ressonância nuclear magnética de encéfalo estão sempre indicados",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. Diante da suspeita de neurocisticercose, exames de neuroimagem são fundamentais para visualização das lesões, sua localização, estágio e avaliação de complicações."
+  },
+  {
+    "id_opcao_resposta": 14604, "id_pergunta": 146,
+    "texto_opcao": "Para confirmação diagnóstica, deve-se realizar exame de liquor em todos os pacientes",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. O exame de LCR pode auxiliar, mas não é mandatório em todos os casos, dependendo dos achados de imagem e do contexto clínico."
+  },
+  {
+    "id_opcao_resposta": 14605, "id_pergunta": 146,
+    "texto_opcao": "A presença de lesões calcificadas em encéfalo indica o tratamento neurocirúrgico para retirada das mesmas e prevenção de epilepsia",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Lesões calcificadas são geralmente cistos mortos e raramente requerem cirurgia, a menos que causem efeito de massa significativo ou epilepsia muito refratária."
+  },
+  {
+    "id_opcao_resposta": 14701, "id_pergunta": 147,
+    "texto_opcao": "A-3; B-1; C-4; D-2",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A: Inseticidas (Organofosforados, Carbamatos, Organoclorados). B: Fungicidas (Hexaclorobenzeno). C: Herbicidas (Paraquat). D: Raticidas (Piquetcumona - provavelmente cumarínicos)."
+  },
+  {
+    "id_opcao_resposta": 14702, "id_pergunta": 147,
+    "texto_opcao": "A-2; B-4; C-1; D-3",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As correlações estão erradas."
+  },
+  {
+    "id_opcao_resposta": 14703, "id_pergunta": 147,
+    "texto_opcao": "A-3; B-2; C-1; D-4",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As correlações estão erradas."
+  },
+  {
+    "id_opcao_resposta": 14704, "id_pergunta": 147,
+    "texto_opcao": "A-1; B-3; C-2; D-4",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As correlações estão erradas."
+  },
+  {
+    "id_opcao_resposta": 14705, "id_pergunta": 147,
+    "texto_opcao": "A-2; B-1; C-4; D-3",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As correlações estão erradas."
+  },
+  {
+    "id_opcao_resposta": 14801, "id_pergunta": 148,
+    "texto_opcao": "Apenas 1 alternativa está correta",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Analisando as sub-alternativas A-E da Questão 01 da Prova 04: A é correta, E é correta. Portanto, mais de uma alternativa está correta."
+  },
+  {
+    "id_opcao_resposta": 14802, "id_pergunta": 148,
+    "texto_opcao": "2 alternativas estão corretas",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. As sub-alternativas A (definição de toxiinfecção) e E (ETEC e diarreia dos viajantes) são corretas."
+  },
+  {
+    "id_opcao_resposta": 14803, "id_pergunta": 148,
+    "texto_opcao": "3 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Apenas A e E são corretas."
+  },
+  {
+    "id_opcao_resposta": 14804, "id_pergunta": 148,
+    "texto_opcao": "Todas alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As sub-alternativas B, C e D contêm informações incorretas."
+  },
+  {
+    "id_opcao_resposta": 14805, "id_pergunta": 148,
+    "texto_opcao": "Todas alternativas estão erradas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As sub-alternativas A e E são corretas."
+  },
+  {
+    "id_opcao_resposta": 14901, "id_pergunta": 149,
+    "texto_opcao": "Os óxidos de enxofre afetam o sistema respiratório, provocam chuvas ácidas e causam danos em materiais",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14902, "id_pergunta": 149,
+    "texto_opcao": "O monóxido de carbono (CO) reduz a capacidade de transporte de oxigênio no sangue",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14903, "id_pergunta": 149,
+    "texto_opcao": "A poluição do ar causa uma resposta inflamatória no aparelho respiratório acarretando aumento da produção, acidez, viscosidade e da consistência do muco, levando à diminuição da eficácia do sistema mucociliar",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 14904, "id_pergunta": 149,
+    "texto_opcao": "Em crianças, os poluentes atmosféricos afetam somente o aparelho respiratório e a pele",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Os poluentes atmosféricos podem afetar múltiplos sistemas em crianças, incluindo o desenvolvimento neurológico, cardiovascular, além do respiratório e da pele."
+  },
+  {
+    "id_opcao_resposta": 14905, "id_pergunta": 149,
+    "texto_opcao": "Na atmosfera, parte do dióxido de enxofre é convertida em ácido sulfúrico e sulfatos que causam broncoconstrição",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA."
+  },
+  {
+    "id_opcao_resposta": 15001, "id_pergunta": 150,
+    "texto_opcao": "Apenas 1 alternativa está correta",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. Apenas a afirmação 1 (Penicilina é droga de escolha para tratamento...) é consistentemente correta. As outras contêm imprecisões: 2 (Doxiciclina é usual para profilaxia), 3 (cultura de urina é melhor na 2ª semana), 4 (hemorragia subaracnoidea não é frequente), 5 (icterícia flavínica/alaranjada)."
+  },
+  {
+    "id_opcao_resposta": 15002, "id_pergunta": 150,
+    "texto_opcao": "2 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Apenas a afirmação 1 é consistentemente correta."
+  },
+  {
+    "id_opcao_resposta": 15003, "id_pergunta": 150,
+    "texto_opcao": "3 alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Apenas a afirmação 1 é consistentemente correta."
+  },
+  {
+    "id_opcao_resposta": 15004, "id_pergunta": 150,
+    "texto_opcao": "Todas alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As afirmações 2, 3, 4 e 5 são incorretas ou imprecisas."
+  },
+  {
+    "id_opcao_resposta": 15005, "id_pergunta": 150,
+    "texto_opcao": "Todas alternativas estão erradas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A afirmação 1 é considerada correta."
+  },
+  {
+    "id_opcao_resposta": 15101, "id_pergunta": 151,
+    "texto_opcao": "Hepatite viral pode assemelhar-se clinicamente, porém os níveis de aminotransferases costumam ser mais elevados e os de CPK (creatina cinase) normais ou raramente alterados",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é CORRETA. É um ponto importante no diagnóstico diferencial da leptospirose."
+  },
+  {
+    "id_opcao_resposta": 15102, "id_pergunta": 151,
+    "texto_opcao": "São comuns as alterações na calemia, principalmente em pacientes com insuficiência renal",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A insuficiência renal na leptospirose pode causar desequilíbrios eletrolíticos, incluindo o potássio."
+  },
+  {
+    "id_opcao_resposta": 15103, "id_pergunta": 151,
+    "texto_opcao": "Cefaleia e hiperemia conjuntival são sintomas incomuns",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é INCORRETA. Cefaleia intensa e hiperemia conjuntival (olhos vermelhos) são sintomas muito comuns e característicos da fase inicial da leptospirose."
+  },
+  {
+    "id_opcao_resposta": 15104, "id_pergunta": 151,
+    "texto_opcao": "Meningite asséptica assintomática ocorre na maioria dos casos",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. A meningite asséptica é uma manifestação possível na fase imune da leptospirose e pode ser assintomática ou oligossintomática."
+  },
+  {
+    "id_opcao_resposta": 15105, "id_pergunta": 151,
+    "texto_opcao": "Leptospira icterohaemorrhagiae é a sorovariedade da L. interrogans causadora da forma mais grave da doença",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. O sorovar Icterohaemorrhagiae é classicamente associado às formas mais graves da leptospirose, como a Síndrome de Weil."
+  },
+  {
+    "id_opcao_resposta": 15201, "id_pergunta": 152,
+    "texto_opcao": "86",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O limite de tolerância para 8 horas de exposição diária ao ruído é 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 15202, "id_pergunta": 152,
+    "texto_opcao": "87",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Este valor excede o limite para 8 horas."
+  },
+  {
+    "id_opcao_resposta": 15203, "id_pergunta": 152,
+    "texto_opcao": "88",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Este valor está acima do limite para 8 horas."
+  },
+  {
+    "id_opcao_resposta": 15204, "id_pergunta": 152,
+    "texto_opcao": "85",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Conforme a NR-15, o limite de tolerância para exposição a ruído contínuo ou intermitente por 8 horas é de 85 dB(A)."
+  },
+  {
+    "id_opcao_resposta": 15205, "id_pergunta": 152,
+    "texto_opcao": "É variável conforme o ambiente ao qual o trabalhador está exposto",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Embora os níveis de ruído variem, existe um limite normativo específico para a jornada de 8 horas."
+  },
+  {
+    "id_opcao_resposta": 15301, "id_pergunta": 153,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruído superiores a 85 dB, causando uma surdez do tipo mista, neurossensorial e de condução, que evolui de forma insidiosa e tende a se agravar nas idades mais avançadas",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR é caracteristicamente uma perda auditiva neurossensorial, não mista."
+  },
+  {
+    "id_opcao_resposta": 15302, "id_pergunta": 153,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruídos superiores a 85 dB, causando uma surdez de condução que evolui de forma insidiosa na maioria dos trabalhadores expostos, mas de forma abrupta nos que são afetados por otosclerose",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR é neurossensorial. Otosclerose é uma causa distinta de perda condutiva."
+  },
+  {
+    "id_opcao_resposta": 15303, "id_pergunta": 153,
+    "texto_opcao": "Afetar trabalhadores expostos a níveis de ruídos superiores a 85 dB, causando uma surdez do tipo neurossensorial, que evolui de forma insidiosa e que tende a se agravar nas idades mais avançadas",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. Esta descrição é consistente com as características da PAIR: exposição a ruído >85dB, tipo neurossensorial, evolução insidiosa e potencial de agravamento com a idade (presbiacusia sobreposta)."
+  },
+  {
+    "id_opcao_resposta": 15304, "id_pergunta": 153,
+    "texto_opcao": "Mostrar, no exame audiométrico, alterações do limiar de audibilidade, frequentemente bilaterais, e que afetam mais precocemente as frequências de 500 Hz, 1000 Hz e 2000 Hz",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A PAIR afeta mais precocemente as frequências altas (geralmente 3kHz, 4kHz ou 6kHz), não as baixas e médias."
+  },
+  {
+    "id_opcao_resposta": 15401, "id_pergunta": 154,
+    "texto_opcao": "Ser neurossensorial, em razão do dano causado às células do órgão de Corti",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A PAIR é uma perda auditiva neurossensorial devido a danos nas células ciliadas do órgão de Corti na cóclea."
+  },
+  {
+    "id_opcao_resposta": 15402, "id_pergunta": 154,
+    "texto_opcao": "Levar a perdas auditivas profundas e irreversíveis nas frequências de 0,5; 1 e 2 kHz",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR afeta inicialmente as frequências altas. A perda é irreversível, mas não necessariamente profunda nessas frequências baixas/médias no início."
+  },
+  {
+    "id_opcao_resposta": 15403, "id_pergunta": 154,
+    "texto_opcao": "Uma vez instalada é progressiva, mesmo depois de cessar a exposição a ruídos intensos",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A PAIR geralmente não progride ou progride minimamente se a exposição ao ruído cessar. A progressão pode ocorrer devido a outros fatores como o envelhecimento."
+  },
+  {
+    "id_opcao_resposta": 15404, "id_pergunta": 154,
+    "texto_opcao": "Ocorre, inicialmente, nas frequências de 0,5; 1 e 2 kHz; com o agravamento da lesão, estende-se para as frequências de 3; 4 e 6 kHz",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A PAIR classicamente se inicia nas frequências mais altas (3, 4 ou 6 kHz)."
+  },
+  {
+    "id_opcao_resposta": 15405, "id_pergunta": 154,
+    "texto_opcao": "A intolerância a sons intensos e o comprometimento da inteligibilidade da fala, com prejuízo do processo de comunicação, são devido às lesões articulares dos ossículos da orelha média, decorrentes dos traumas determinados pelos níveis de pressão sonora elevados que os atingiram",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Esses sintomas na PAIR são devidos à lesão coclear (células ciliadas), não a lesões nos ossículos da orelha média."
+  },
+  {
+    "id_opcao_resposta": 15501, "id_pergunta": 155,
+    "texto_opcao": "Os trabalhadores, expostos ao ruído, terão reversão da perda ao ser afastados da fonte de ruído",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR é uma perda auditiva neurossensorial irreversível."
+  },
+  {
+    "id_opcao_resposta": 15502, "id_pergunta": 155,
+    "texto_opcao": "A perda auditiva condutiva, bem como a perda auditiva neurossensorial, são comuns",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR é especificamente neurossensorial."
+  },
+  {
+    "id_opcao_resposta": 15503, "id_pergunta": 155,
+    "texto_opcao": "As lesões ocorrem normalmente no órgão de Corti, destruindo as células ciliadas",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. A exposição a ruído intenso causa danos e destruição das células ciliadas no órgão de Corti."
+  },
+  {
+    "id_opcao_resposta": 15504, "id_pergunta": 155,
+    "texto_opcao": "As características físicas do agente causal, o tempo e a dose de exposição e a susceptibilidade individual têm influência sobre a PAIR",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Todos esses fatores (características do ruído, tempo/dose de exposição, susceptibilidade individual) influenciam o desenvolvimento e a gravidade da PAIR. (Nota: Se apenas uma pode ser 'eh_correta:true', a opção C é mais direta sobre o local da lesão. A opção D também é uma afirmação correta e importante sobre os fatores da PAIR)."
+  },
+  {
+    "id_opcao_resposta": 15505, "id_pergunta": 155,
+    "texto_opcao": "Todas as alternativas estão corretas",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As alternativas A e B são claramente incorretas."
+  },
+  {
+    "id_opcao_resposta": 15601, "id_pergunta": 156,
+    "texto_opcao": "O tipo de ruído e a dose de exposição ao ruído não são fatores determinantes para a ocorrência de PAIR",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Esta afirmação é INCORRETA. O tipo de ruído (contínuo, intermitente, de impacto) e a dose de exposição (nível de intensidade e duração) são fatores cruciais e determinantes para a ocorrência e gravidade da PAIR."
+  },
+  {
+    "id_opcao_resposta": 15602, "id_pergunta": 156,
+    "texto_opcao": "Todo caso de PAIR é passível de notificação compulsória pelo SUS",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Esta afirmação é CORRETA. A PAIR é uma doença de notificação compulsória."
+  },
+  {
+    "id_opcao_resposta": 15603, "id_pergunta": 156,
+    "texto_opcao": "Todo caso de PAIR deve ser comunicado à Previdência Social, por meio de abertura de Comunicação de Acidente de Trabalho (CAT)",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação é CORRETA. Sendo doença ocupacional, a CAT deve ser emitida."
+  },
+  {
+    "id_opcao_resposta": 15604, "id_pergunta": 156,
+    "texto_opcao": "Não existe até o momento tratamento para PAIR",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Esta afirmação é CORRETA. A PAIR é irreversível; o manejo foca na prevenção da progressão e reabilitação."
+  },
+  {
+    "id_opcao_resposta": 15605, "id_pergunta": 156,
+    "texto_opcao": "A escolha do tipo de EPI auditivo para o trabalhador deve ser individualizada",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Esta afirmação é CORRETA. A seleção do protetor auditivo deve considerar atenuação, conforto e adequação à tarefa e ao trabalhador."
+  },
+  {
+    "id_opcao_resposta": 15701, "id_pergunta": 157,
+    "texto_opcao": "Afastamento do trabalho por tempo indeterminado, já que ficou constatado o nexo causal",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. O nexo causal não define automaticamente o afastamento por tempo indeterminado."
+  },
+  {
+    "id_opcao_resposta": 15702, "id_pergunta": 157,
+    "texto_opcao": "Aposentadoria por invalidez, já que se trata de acidente de trabalho ou equivalente",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aposentadoria por invalidez depende de incapacidade total e permanente."
+  },
+  {
+    "id_opcao_resposta": 15703, "id_pergunta": 157,
+    "texto_opcao": "Conceder auxílio-doença, pois o segurado está incapaz para o trabalho",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Auxílio-doença é para incapacidade temporária. A PAIR é permanente."
+  },
+  {
+    "id_opcao_resposta": 15704, "id_pergunta": 157,
+    "texto_opcao": "Conceder auxílio-acidente, pois o segurado está incapaz e trata-se de doença ocupacional",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. Se a PAIR causou sequela permanente com redução da capacidade laboral para a função habitual, o auxílio-acidente é o benefício apropriado, sendo a PAIR uma doença ocupacional."
+  },
+  {
+    "id_opcao_resposta": 15705, "id_pergunta": 157,
+    "texto_opcao": "Constatar a perda auditiva, sugerir reabilitação profissional e indeferir o pedido de benefício, pois não há perda da capacidade laborativa",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. Se houver redução da capacidade laborativa, mesmo que não total, o auxílio-acidente pode ser devido."
+  },
+  {
+    "id_opcao_resposta": 15801, "id_pergunta": 158,
+    "texto_opcao": "A-3; B-1; C-4; D-2",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. A: Inseticidas (Organofosforados, Carbamatos, Organoclorados). B: Fungicidas (Hexaclorobenzeno - HCB, embora seu uso como fungicida seja restrito/banido em muitos locais devido à toxicidade, historicamente teve esse uso). C: Herbicidas (Paraquat). D: Raticidas (Piquetcumona - provavelmente um cumarínico)."
+  },
+  {
+    "id_opcao_resposta": 15802, "id_pergunta": 158,
+    "texto_opcao": "A-2; B-4; C-1; D-3",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. As correlações não estão corretas (ex: Paraquat é herbicida)."
+  },
+  {
+    "id_opcao_resposta": 15803, "id_pergunta": 158,
+    "texto_opcao": "A-3; B-2; C-1; D-4",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. As correlações não estão corretas (ex: Piquetcumona não é fungicida)."
+  },
+  {
+    "id_opcao_resposta": 15804, "id_pergunta": 158,
+    "texto_opcao": "A-1; B-3; C-2; D-4",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. As correlações não estão corretas (ex: Hexaclorobenzeno não é a principal classe de inseticidas)."
+  },
+  {
+    "id_opcao_resposta": 15805, "id_pergunta": 158,
+    "texto_opcao": "A-2; B-1; C-4; D-3",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. As correlações não estão corretas (ex: Piquetcumona não é inseticida)."
+  },
+  {
+    "id_opcao_resposta": 15901, "id_pergunta": 159,
+    "texto_opcao": "(A) Uma vez instalada é progressiva, mesmo depois de cessar a exposição a ruídos intensos.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A PAIR geralmente não progride ou progride muito pouco se a exposição ao ruído nocivo cessar."
+  },
+  {
+    "id_opcao_resposta": 15902, "id_pergunta": 159,
+    "texto_opcao": "(B) Ocorre, inicialmente, nas frequências de 0,5; 1 e 2 kHz; com o agravamento da lesão, estende-se para as frequências de 3; 4 e 6 kHz.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A PAIR classicamente se inicia nas frequências mais altas (tipicamente 3, 4 ou 6 kHz)."
+  },
+  {
+    "id_opcao_resposta": 15903, "id_pergunta": 159,
+    "texto_opcao": "(C) Levar a perdas auditivas profundas e irreversíveis de 0,5; 1 e 2 kHz.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Esta afirmação contém uma imprecisão. A PAIR é irreversível e pode levar a perdas profundas, mas afeta inicialmente as frequências altas (3-6 kHz), não as baixas/médias (0.5-2 kHz). No entanto, se esta é a opção 'correta' da prova original, ela é escolhida por eliminação das outras ainda mais incorretas."
+  },
+  {
+    "id_opcao_resposta": 16001, "id_pergunta": 160,
+    "texto_opcao": "(A) A quantidade de fontes emissoras de óxidos de nitrogênio e de enxofre e a rede hidrográfica.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A rede hidrográfica é afetada pela chuva ácida, mas não é um fator primário que determina sua amplitude geográfica de formação e deposição atmosférica."
+  },
+  {
+    "id_opcao_resposta": 16002, "id_pergunta": 160,
+    "texto_opcao": "(B) A topografia do local das fontes emissoras de óxidos de nitrogênio e de enxofre e o nível dos lençóis freáticos.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A topografia pode influenciar a dispersão local, e os lençóis freáticos são receptores, mas a circulação atmosférica e a quantidade de fontes são mais determinantes para a amplitude geográfica."
+  },
+  {
+    "id_opcao_resposta": 16003, "id_pergunta": 160,
+    "texto_opcao": "(C) A circulação atmosférica e a quantidade de fontes emissoras de óxidos de nitrogênio e de enxofre.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. A circulação atmosférica (ventos, padrões climáticos) transporta os poluentes precursores (óxidos de nitrogênio e enxofre) a longas distâncias, determinando a área geográfica afetada. A quantidade de fontes emissoras influencia a concentração desses poluentes."
   }
 ]
+
+

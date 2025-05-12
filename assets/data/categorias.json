@@ -85,5 +85,23 @@
     "nome_categoria": "Infecções Parasitárias",
     "id_categoria_pai": 10,
     "descricao_categoria": "Doenças e danos celulares/teciduais causados por infecções de agentes parasitários (ex: helmintos, protozoários) e a resposta do organismo."
+  },
+  {
+  "id_categoria": 1007,
+  "nome_categoria": "Prova (DRAMA)",
+  "id_categoria_pai": 10,
+  "descricao_categoria": "Questões gerais de avaliação ou simulação de prova para o módulo DRAMA."
+  },
+  {
+    "id_categoria": 1008,
+    "nome_categoria": "PAIR e Efeitos do Ruído (DRAMA)",
+    "id_categoria_pai": 10,
+    "descricao_categoria": "Questões relacionadas à Perda Auditiva Induzida por Ruído e outros efeitos da exposição ao ruído no contexto do módulo DRAMA."
+  },
+  {
+  "id_categoria": 1009,
+  "nome_categoria": "Toxiinfecções Alimentares (DRAMA)",
+  "id_categoria_pai": 10,
+  "descricao_categoria": "Questões sobre doenças transmitidas por alimentos, incluindo intoxicações e infecções bacterianas, no contexto do módulo DRAMA."
   }
 ]

@@ -1,4 +1,4 @@
-/* assets/css/components/question-grid.css (Versão com Feedback Suave) */
+/* assets/css/components/question-grid.css (Versão com Feedback Suave e Status de Pulada) */
 
 .question-grid {
     display: flex;
@@ -18,32 +18,32 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    width: var(--question-grid-item-size, 30px);
-    height: var(--question-grid-item-size, 30px);
+
+    width: var(--question-grid-item-size, 35px);
+    height: var(--question-grid-item-size, 35px);
     flex-shrink: 0;
-    
+
     font-size: var(--question-grid-item-font-size, 0.8rem);
     font-weight: var(--font-weight-medium);
     font-family: var(--font-family-sans);
     line-height: 1;
-    
+
     color: var(--question-grid-item-color, var(--color-text-secondary));
     background-color: var(--question-grid-item-bg, var(--color-white));
     border: 1.5px solid var(--question-grid-item-border-color, var(--color-gray-200));
     border-radius: 50%;
-    
-    transition: background-color var(--transition-fast) ease-out, 
-                border-color var(--transition-fast) ease-out, 
-                color var(--transition-fast) ease-out, 
+
+    transition: background-color var(--transition-fast) ease-out,
+                border-color var(--transition-fast) ease-out,
+                color var(--transition-fast) ease-out,
                 transform var(--transition-fast) ease-out,
                 box-shadow var(--transition-fast) ease-out;
     user-select: none;
     position: relative;
 }
 
-/* HOVER (Não respondida, não atual) - Efeito Azul que você gostou */
-.question-grid__item:not([class*="--current"]):not([class*="--correct"]):not([class*="--incorrect"]):hover {
+/* HOVER (Não respondida, não atual, não pulada) - Efeito Azul */
+.question-grid__item:not([class*="--current"]):not([class*="--correct"]):not([class*="--incorrect"]):not([class*="--skipped"]):hover {
     border-color: var(--color-primary-medium);
     background-color: var(--color-primary-light); /* Azul claro */
     color: var(--color-primary-dark);
@@ -70,56 +70,50 @@
 .question-grid__item--current:hover {
     background-color: var(--color-primary-dark); /* Azul escuro no hover do atual */
     border-color: var(--color-primary-dark);
-    transform: scale(1.15);
+    transform: scale(1.15); /* Mantém o scale no hover do atual */
 }
 
-/* Feedback de Status (Correto/Incorreto) - USANDO FUNDOS PASTEL (bg-alt) */
+/* Feedback de Status (Correto/Incorreto) - Usando fundos pastel */
 .question-grid__item--correct:not(.question-grid__item--current),
 .question-grid__item--incorrect:not(.question-grid__item--current) {
-    /* A borda principal pode ser um pouco mais escura para dar definição ao fundo pastel */
-    border-width: 1.5px; 
+    border-width: 1.5px;
 }
 
 .question-grid__item--correct:not(.question-grid__item--current) {
-    background-color: var(--color-correct-bg); /* Verde MUITO claro (#e6fcf5) */
-    border-color: var(--color-correct-border); /* Borda verde clara (#a3e9c1) */
-    color: var(--color-correct-text);        /* Texto verde escuro (#1e7f74) */
-    font-weight: var(--font-weight-medium); /* Não precisa ser tão bold */
+    background-color: var(--color-correct-bg);
+    border-color: var(--color-correct-border);
+    color: var(--color-correct-text);
+    font-weight: var(--font-weight-medium);
 }
-/* Hover para item correto: pode manter o hover azul para consistência de clique,
-   ou intensificar levemente a cor de feedback */
 .question-grid__item--correct:not(.question-grid__item--current):hover {
-    background-color: var(--color-correct-bg-alt, var(--color-correct-bg)); /* Mantém ou usa --d1f7e0 */
-    border-color: var(--color-secondary-green); /* Borda verde mais forte */
+    background-color: var(--color-correct-bg-alt, var(--color-correct-bg));
+    border-color: var(--color-secondary-green);
     color: var(--color-correct-text);
     transform: scale(1.05);
     box-shadow: 0 1px 4px rgba(var(--color-secondary-green-rgb), 0.2);
 }
 
 .question-grid__item--incorrect:not(.question-grid__item--current) {
-    background-color: var(--color-incorrect-bg); /* Rosa/Vermelho MUITO claro (#fff0f1) */
-    border-color: var(--color-incorrect-border); /* Borda rosa/vermelha clara (#f1aeb5) */
-    color: var(--color-incorrect-text);        /* Texto vermelho escuro (#c12634) */
+    background-color: var(--color-incorrect-bg);
+    border-color: var(--color-incorrect-border);
+    color: var(--color-incorrect-text);
     font-weight: var(--font-weight-medium);
 }
 .question-grid__item--incorrect:not(.question-grid__item--current):hover {
-    background-color: var(--color-incorrect-bg-alt, var(--color-incorrect-bg)); /* Mantém ou usa --f8d7da */
-    border-color: var(--color-accent-red); /* Borda vermelha mais forte */
+    background-color: var(--color-incorrect-bg-alt, var(--color-incorrect-bg));
+    border-color: var(--color-accent-red);
     color: var(--color-incorrect-text);
     transform: scale(1.05);
     box-shadow: 0 1px 4px rgba(var(--color-accent-red-rgb), 0.2);
 }
 
 /* Item ATUAL e também CORRETO/INCORRETO */
-/* Agora, o item atual, se respondido, usa os fundos pastel também,
-   mas mantém o scale e a sombra do "atual" para indicar sua posição. */
 .question-grid__item--current.question-grid__item--correct {
     background-color: var(--color-correct-bg);
     border-color: var(--color-correct-border);
     color: var(--color-correct-text);
-    /* Mantém o scale e a sombra do --current original para não perder o destaque de posição */
-    transform: scale(1.15); 
-    box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.2); /* Sombra na cor do feedback */
+    transform: scale(1.15);
+    box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.2);
 }
 .question-grid__item--current.question-grid__item--incorrect {
     background-color: var(--color-incorrect-bg);
@@ -129,8 +123,34 @@
     box-shadow: 0 3px 8px rgba(var(--color-accent-red-rgb), 0.2);
 }
 
+/* === NOVOS ESTILOS PARA QUESTÕES PULADAS === */
+.question-grid__item--skipped {
+    background-color: var(--color-gray-100); /* Fundo cinza claro */
+    border-color: var(--color-gray-400);   /* Borda cinza */
+    color: var(--color-gray-700);          /* Texto cinza */
+    font-style: italic; /* Opcional: para diferenciar mais */
+}
+.question-grid__item--skipped:not(.question-grid__item--current):hover {
+    background-color: var(--color-gray-200); /* Um pouco mais escuro no hover */
+    border-color: var(--color-gray-500);
+    transform: scale(1.05); /* Leve scale no hover */
+    box-shadow: 0 1px 4px rgba(var(--color-primary-dark-rgb), 0.1); /* Sombra sutil */
+}
 
-/* Element: .question-grid__arrow (Setas de Navegação do Grid - Minimalistas) */
+/* Garante que o estilo 'current' tenha precedência se uma questão pulada for a atual */
+.question-grid__item--current.question-grid__item--skipped {
+    background-color: var(--color-primary-medium); /* Mantém o estilo de 'current' */
+    border-color: var(--color-primary-dark);
+    color: var(--color-white);
+    font-style: normal; /* Remove itálico se for a questão atual e pulada */
+    /* Mantém scale e shadow de --current original */
+    transform: scale(1.15);
+    box-shadow: 0 3px 8px rgba(var(--color-primary-medium-rgb), 0.25);
+}
+/* === FIM DOS NOVOS ESTILOS === */
+
+
+/* Element: .question-grid__arrow (Setas de Navegação do Grid) */
 .question-grid__arrow {
     border: none; background: none; padding: 0;
     color: var(--color-text-muted);
@@ -174,7 +194,7 @@
         margin-bottom: var(--question-grid-margin-y-mobile, var(--spacing-md, 20px));
     }
     .question-grid__item {
-        --question-grid-item-size: 28px;
+        --question-grid-item-size: 35px;
         font-size: 0.75rem;
         border-width: 1px;
     }
@@ -182,7 +202,7 @@
         transform: scale(1.1);
     }
     .question-grid__arrow {
-        --question-grid-arrow-size: 28px;
+        --question-grid-arrow-size: 35px;
         padding: var(--spacing-xxs, 5px);
     }
     .question-grid__arrow svg {
@@ -193,11 +213,11 @@
 @media (max-width: 480px) {
     .question-grid { gap: var(--question-grid-gap, 4px); }
     .question-grid__item {
-        --question-grid-item-size: 26px;
+        --question-grid-item-size: 30px;
         font-size: 0.7rem;
     }
     .question-grid__arrow {
-        --question-grid-arrow-size: 26px;
+        --question-grid-arrow-size: 30px;
     }
     .question-grid__arrow svg {
         --question-grid-arrow-icon-size: 16px;

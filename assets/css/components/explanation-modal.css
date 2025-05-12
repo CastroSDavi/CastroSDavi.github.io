@@ -1,237 +1,242 @@
-/* assets/css/components/explanation-modal.css */
+/* assets/css/components/explanation-modal.css (v.Elegante Sofisticado II) */
 
-/* Overlay do Modal de Explicação */
+/* Overlay */
 .explanation-modal__overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.65); /* Fundo translúcido */
+    background-color: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.6);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: var(--z-index-modal-backdrop, 1000);
     opacity: 0;
     visibility: hidden;
-    transition: opacity var(--transition-duration-medium) var(--transition-timing-function-ease-out),
-                visibility 0s linear var(--transition-duration-medium);
+    transition: opacity var(--transition-duration-medium) ease-out, visibility 0s linear var(--transition-duration-medium);
 }
-
 .explanation-modal__overlay.modal--visible {
     opacity: 1;
     visibility: visible;
     transition-delay: 0s;
 }
 
-/* Diálogo (Conteúdo) do Modal de Explicação */
-.explanation-modal__dialog { /* Esta classe já herda estilos de .card do card.css */
+/* Diálogo do Modal */
+.explanation-modal__dialog {
     width: 90%;
-    max-width: 700px;
-    /* background-color, border-radius, box-shadow são herdados de .card */
+    max-width: 700px; /* Largura máxima um pouco menor para não ser tão largo */
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl, 16px); /* Cantos mais arredondados */
+    box-shadow: 0 10px 35px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
+                0 4px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1); /* Sombra sofisticada */
     display: flex;
     flex-direction: column;
-    max-height: 90vh;
-    transform: translateY(20px) scale(0.98);
+    max-height: 88vh;
+    transform: translateY(20px) scale(0.97);
     opacity: 0;
-    transition: transform var(--transition-duration-medium) var(--transition-timing-function-ease-out),
-                opacity var(--transition-duration-medium) var(--transition-timing-function-ease-out);
-    /* Outros estilos de .card como padding são aplicados via card.css */
+    transition: transform 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s, /* Animação de entrada suave */
+                opacity 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s;
+    overflow: hidden;
 }
-
 .explanation-modal__overlay.modal--visible .explanation-modal__dialog {
     transform: translateY(0) scale(1);
     opacity: 1;
 }
 
-/* Cabeçalho do Modal */
+/* Cabeçalho */
 .explanation-modal__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-md) var(--spacing-lg); /* Padding interno do cabeçalho */
-    border-bottom: 1px solid var(--color-gray-300);
+    padding: var(--spacing-md, 20px) var(--spacing-lg, 28px); /* Padding ajustado */
+    border-bottom: 1px solid var(--color-gray-100); /* Linha muito sutil */
     flex-shrink: 0;
 }
-
-.explanation-modal__title { /* Herda .card__title de card.css para consistência */
-    /* font-family, font-size, color, margin são herdados de .card__title */
-    line-height: var(--line-height-heading); /* Garante alinhamento se necessário */
+.explanation-modal__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h2, 1.5rem); /* Título mais impactante */
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-bold); /* Bold para o título principal */
+    margin: 0;
+    line-height: 1.3;
+    letter-spacing: -0.2px; /* Ajuste fino */
 }
-
-/* Botão de Fechar específico para este modal (usa .button--icon-only como base) */
-.explanation-modal__close-button {
-    /* Estilos base de .button e .button--icon-only são de button.css */
-    color: var(--color-gray-700);
+.explanation-modal__close-button { /* Estilo já vem de .button--icon-only */
+    color: var(--color-gray-600); /* Cor do ícone */
+    background-color: transparent; /* Sem fundo por padrão */
 }
 .explanation-modal__close-button:hover,
 .explanation-modal__close-button:focus-visible {
     color: var(--color-accent-red);
-    background-color: var(--color-gray-100);
+    background-color: rgba(var(--color-accent-red-rgb), 0.07); /* Fundo vermelho muito sutil */
 }
 
-/* Corpo do Modal */
+/* Corpo */
 .explanation-modal__body {
-    padding: var(--spacing-md) var(--spacing-lg); /* Padding interno do corpo */
+    padding: var(--spacing-lg, 28px) var(--spacing-xl, 32px); /* Mais respiro */
     overflow-y: auto;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl, 30px); /* Espaço entre seções */
 }
-
-.explanation-modal__section {
-    /* Pode adicionar estilos se houver um wrapper comum para as seções */
-}
+/* Estilização da Scrollbar */
+.explanation-modal__body::-webkit-scrollbar { width: 8px; }
+.explanation-modal__body::-webkit-scrollbar-track { background: var(--color-gray-50); border-radius: 4px; }
+.explanation-modal__body::-webkit-scrollbar-thumb { background-color: var(--color-gray-300); border-radius: 4px; border: 2px solid var(--color-gray-50); }
+.explanation-modal__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
+.explanation-modal__body { scrollbar-width: auto; scrollbar-color: var(--color-gray-300) var(--color-gray-50); }
 
 .explanation-modal__subtitle {
     font-family: var(--font-family-heading);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-gray-800);
+    font-weight: var(--font-weight-semibold); /* Semibold para subtítulos */
+    color: var(--color-text-primary); /* Cor de texto principal para subtítulo */
     margin-top: 0;
-    margin-bottom: var(--spacing-sm);
-    font-size: var(--font-size-lg);
-    padding-bottom: var(--spacing-xs);
-    border-bottom: 1px dashed var(--color-gray-300);
+    margin-bottom: var(--spacing-md, 16px);
+    font-size: var(--font-size-h3, 1.15rem); /* Tamanho claro */
+    padding-bottom: 0;
+    border-bottom: none; /* Sem linha inferior para um look mais clean */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 10px); /* Espaço entre ícone e texto do subtítulo */
+}
+.explanation-modal__subtitle::before { /* Ícones para os subtítulos */
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.4em; /* Relativo ao font-size do subtítulo */
+    font-variation-settings: 'FILL' 0, 'wght' 300; /* Outline, leve */
+    color: var(--color-primary-medium); /* Cor primária média para os ícones */
+    line-height: 1;
+}
+#explanation-modal-general-block .explanation-modal__subtitle::before {
+    content: 'lightbulb';
+}
+#explanation-modal-options-block .explanation-modal__subtitle::before {
+    content: 'rule'; /* Ou 'checklist_rtl' */
 }
 
-.explanation-modal__text { /* Para o texto da explicação geral */
-    font-size: var(--font-size-base);
-    line-height: var(--line-height-base);
-    color: var(--color-text-secondary);
+.explanation-modal__text {
+    font-size: var(--font-size-base, 0.95rem); /* 15-16px */
+    line-height: 1.75;
+    color: var(--color-gray-700); /* Cinza um pouco mais claro para o texto longo */
 }
-.explanation-modal__text p { /* Tratamento para parágrafos dentro do texto */
-    margin-bottom: var(--spacing-sm);
-}
-.explanation-modal__text p:last-child {
-    margin-bottom: 0;
-}
+.explanation-modal__text p:not(:last-child) { margin-bottom: var(--spacing-sm, 14px); }
+.explanation-modal__text p:last-child { margin-bottom: 0; }
 
-/* Lista de feedback das opções */
+/* Lista de feedback das opções - REFINAMENTO ELEGANTE */
 .explanation-modal__options-list {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
+    list-style: none; padding-left: 0; margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm, 14px); /* Espaço entre os itens de feedback */
 }
 
 .explanation-modal__options-list li {
-    padding: var(--spacing-sm);
-    border: 1px solid var(--color-gray-200);
+    padding: var(--spacing-md, 16px);
+    border: 1px solid var(--color-gray-200); /* Borda geral muito sutil */
+    border-left-width: 4px; /* Borda esquerda será colorida */
+    border-left-color: var(--color-gray-300); /* Cor padrão da borda esquerda (para itens neutros, se houver) */
     border-radius: var(--border-radius-md);
-    background-color: var(--color-gray-50);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    background-color: var(--color-white); /* Fundo branco para os itens */
+    transition: border-left-color var(--transition-fast), background-color var(--transition-fast);
 }
-.explanation-modal__options-list li:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
+/* Classes JS para colorir a borda esquerda e o fundo sutilmente */
+.explanation-modal__options-list li.is-correct-feedback {
+    border-left-color: var(--color-secondary-green);
+    background-color: var(--color-correct-bg); /* Fundo pastel verde (#e6fcf5) */
+}
+.explanation-modal__options-list li.is-incorrect-feedback {
+    border-left-color: var(--color-accent-red);
+    background-color: var(--color-incorrect-bg); /* Fundo pastel vermelho (#fff0f1) */
 }
 
 .explanation-modal__options-list .option-original-text {
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-900);
+    font-weight: var(--font-weight-semibold); /* Opção original com mais destaque */
+    color: var(--color-text-primary);
     display: block;
-    margin-bottom: var(--spacing-xs);
-    font-size: 0.95rem; /* Ligeiramente menor que o texto principal da pergunta */
+    margin-bottom: var(--spacing-xs, 8px);
+    font-size: 1rem; /* Texto da opção um pouco maior */
+    font-style: normal; /* Sem itálico */
 }
 
 .explanation-modal__options-list .option-feedback-value {
-    display: block;
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-sm);
-    line-height: var(--line-height-base);
-    padding-left: var(--spacing-sm);
-    position: relative; /* Para o pseudo-elemento ::before */
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs, 10px);
+    color: var(--color-gray-700); /* Texto do feedback */
+    font-size: var(--font-size-sm, 0.9rem);
+    line-height: 1.7;
 }
-
-/* Marcadores visuais para feedback correto/incorreto */
-.explanation-modal__options-list .option-feedback-value::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: calc(var(--font-size-sm) / 2); /* Centraliza verticalmente */
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    margin-right: var(--spacing-xs); /* Espaço entre marcador e texto */
+.explanation-modal__options-list .option-feedback-value::before { /* Ícones */
+    content: '';
+    font-family: 'Material Symbols Outlined';
+    font-size: 1.3rem; 
+    line-height: 1.5; 
+    flex-shrink: 0;
+    font-variation-settings: 'FILL' 1, 'wght' 400;
+    margin-top: 2px; /* Ajuste fino de alinhamento */
 }
-
 .explanation-modal__options-list .option-feedback-value.correct::before {
-    background-color: var(--color-correct-text);
+    content: 'check_circle';
+    color: var(--color-secondary-green); /* Verde mais vibrante para ícone */
 }
 .explanation-modal__options-list .option-feedback-value.incorrect::before {
-    background-color: var(--color-incorrect-text);
-}
-/* Coloração do texto do feedback */
-.explanation-modal__options-list .option-feedback-value.correct {
-    color: var(--color-correct-text);
-}
-.explanation-modal__options-list .option-feedback-value.incorrect {
-    color: var(--color-incorrect-text);
+    content: 'highlight_off'; /* Ícone X mais robusto */
+    color: var(--color-accent-red); /* Vermelho vibrante para ícone */
 }
 
-/* Divisor entre explicação geral e de opções */
+/* Divisor */
 .explanation-modal__divider {
-    border: 0;
-    height: 1px;
-    background-color: var(--color-gray-200);
-    margin: var(--spacing-sm) 0; /* Espaçamento sutil */
+    border: 0; height: 1px; background-color: var(--color-gray-100);
+    margin: var(--spacing-md, 18px) 0;
 }
-.explanation-modal__divider.u-is-hidden { /* Para controle via JS */
-    display: none;
-}
+.explanation-modal__divider.u-is-hidden { display: none; }
 
-/* Estado Vazio do Modal */
-.explanation-modal__empty-state {
-    text-align: center;
-    padding: var(--spacing-lg);
-    color: var(--color-text-muted);
-}
-.explanation-modal__empty-state .material-symbols-outlined {
-    font-size: 3rem;
-    margin-bottom: var(--spacing-sm);
-    opacity: 0.7;
-}
+/* Estado Vazio */
+.explanation-modal__empty-state { /* ... (mantido) ... */ }
+.explanation-modal__empty-state .material-symbols-outlined { /* ... (mantido) ... */ }
 
-/* Rodapé do Modal */
+/* Rodapé */
 .explanation-modal__footer {
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-top: 1px solid var(--color-gray-300);
+    padding: var(--spacing-md, 20px) var(--spacing-lg, 28px);
+    border-top: 1px solid var(--color-gray-100);
     display: flex;
-    justify-content: flex-end; /* Botão à direita */
+    justify-content: flex-end;
     flex-shrink: 0;
-    background-color: var(--color-gray-50);
+    background-color: var(--color-white);
 }
-/* O botão #btn-got-it-explanation usará as classes .button .button--primary de button.css */
+#btn-got-it-explanation.button--primary {
+    font-weight: var(--font-weight-semibold);
+    padding: var(--spacing-sm, 12px) var(--spacing-xl, 32px); /* Botão largo e elegante */
+    border-radius: var(--border-radius-lg); /* Consistente */
+    letter-spacing: 0.3px;
+}
 
-
-/* Responsividade específica do Modal de Explicação */
-@media (max-width: 768px) {
-    .explanation-modal__dialog {
-        max-width: 95%;
-        max-height: 85vh;
-    }
+/* Responsividade */
+@media (max-width: 768px) { /* Ajustes herdados e refinados */
+    .explanation-modal__dialog { max-width: 96%; max-height: 90vh; border-radius: var(--border-radius-lg); }
     .explanation-modal__header,
     .explanation-modal__body,
-    .explanation-modal__footer {
-        padding: var(--spacing-sm) var(--spacing-md);
-    }
-    .explanation-modal__title { /* Já herda de .card__title que tem sua própria responsividade */
-        /* font-size: var(--font-size-h3-mobile, 1.3rem); (Ajuste em card.css se necessário) */
-    }
-    .explanation-modal__body {
-        gap: var(--spacing-md);
-    }
-    .explanation-modal__subtitle {
-        font-size: var(--font-size-lg-mobile, 1.05rem); /* Pode ser ajustado em typography.css se for um h-like */
-    }
-    .explanation-modal__text,
-    .explanation-modal__options-list .option-feedback-value {
-        font-size: var(--font-size-sm-mobile, 0.9rem); /* Pode ser ajustado em typography.css */
-    }
-    .explanation-modal__options-list .option-original-text {
-        font-size: 0.9rem;
-    }
+    .explanation-modal__footer { padding: var(--spacing-md, 18px); }
+    .explanation-modal__title { font-size: 1.25rem; }
+    .explanation-modal__body { gap: var(--spacing-md, 20px); padding: var(--spacing-md, 18px) var(--spacing-lg, 22px); }
+    .explanation-modal__subtitle { font-size: 1.1rem; margin-bottom: var(--spacing-sm, 12px); }
+    .explanation-modal__subtitle::before { font-size: 1.3em; }
+    .explanation-modal__text { font-size: 0.9rem; line-height: 1.7; }
+    .explanation-modal__options-list { gap: var(--spacing-sm, 12px); }
+    .explanation-modal__options-list li { padding: var(--spacing-sm, 14px); }
+    .explanation-modal__options-list .option-original-text { font-size: 0.9rem; }
+    .explanation-modal__options-list .option-feedback-value { font-size: 0.875rem; line-height: 1.65; }
+    .explanation-modal__options-list .option-feedback-value::before { font-size: 1.2rem; }
+}
+@media (max-width: 480px) {
+    .explanation-modal__header,
+    .explanation-modal__body,
+    .explanation-modal__footer { padding: var(--spacing-sm, 14px); }
+    .explanation-modal__title { font-size: 1.1rem; }
+    .explanation-modal__subtitle { font-size: 1rem; }
+    .explanation-modal__text { font-size: 0.875rem; }
+    .explanation-modal__options-list li { padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px); border-left-width: 3px;}
 }

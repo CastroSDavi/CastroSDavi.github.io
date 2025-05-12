@@ -3,16 +3,15 @@
 /*
 ==========================================================================
   Section Layout: Question Section (#question-section)
+  Refinamento Estiloso para Título, Número e Categoria da Questão (Separador Verde)
 ==========================================================================
 */
 
 /* Layout do Conteúdo Principal (.question-section__main-content) */
 .question-section__main-content {
-  /* O padding já é definido em _main-sections.css e pode ser ajustado lá */
-  /* Adiciona um gap para espaçar os filhos diretos, como quiz-controls, placeholder, aviso, quiz-section */
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md, 20px); /* Espaço entre os elementos principais da seção */
+  gap: var(--spacing-md, 20px);
 }
 
 /* Controles do Quiz (Botão de Filtro e contagem) */
@@ -20,14 +19,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: var(--spacing-sm, 10px); /* Reduzido, pois o gap da section principal cuidará do espaço abaixo */
+    padding-bottom: var(--spacing-sm, 10px);
     border-bottom: 1px solid var(--color-gray-200);
     flex-shrink: 0;
     position: relative;
 }
 
 .quiz-controls .button--with-icon {
-    padding: var(--spacing-xs, 7px) var(--spacing-sm, 14px); /* Ajustado */
+    padding: var(--spacing-xs, 7px) var(--spacing-sm, 14px);
     font-size: var(--font-size-sm, 0.9rem);
     font-weight: var(--font-weight-medium);
     gap: var(--spacing-xs, 6px);
@@ -35,86 +34,99 @@
 
 .quiz-controls .button--with-icon .button__icon {
     margin-right: 0;
-    font-size: 1.25em; /* Ajustado */
+    font-size: 1.25em;
 }
 
 .quiz-controls__count {
-    font-size: var(--font-size-sm, 0.85rem); /* Ligeiramente menor */
+    font-size: var(--font-size-sm, 0.85rem);
     color: var(--color-text-muted);
     padding-left: var(--spacing-md);
 }
 
-
 /* Layout/Contexto para #placeholder-filtros-container e #aviso-container */
-/* A estilização principal está em card.css */
 #placeholder-filtros-container,
 #aviso-container {
-    padding: 0; /* O padding está no card interno */
-    /* A margem superior será controlada pelo gap do .question-section__main-content */
-    /* margin-top: var(--spacing-md, 20px); */ /* Removido para usar o gap do pai */
+    padding: 0;
     flex-shrink: 0;
-    max-width: 950px; /* Mantido */
+    max-width: 950px;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
 }
 
-
 /* Layout para o Container do Quiz Ativo (#quiz-section interno) */
 #quiz-section {
     display: flex;
     flex-direction: column;
-    gap: 0; /* O espaçamento interno do quiz é gerenciado por seus filhos */
+    gap: 0;
     flex-shrink: 0;
-    /* margin-top: var(--spacing-md, 20px); */ /* Removido para usar o gap do pai */
 }
 
-/* Estilos para o Título da Questão */
+/* === ESTILOS REFINADOS PARA O TÍTULO DA QUESTÃO, NÚMERO E CATEGORIA === */
 #question-title {
-    font-size: var(--question-title-font-size, 1.3rem); /* Ajustado */
-    color: var(--question-title-color, var(--color-gray-900));
-    font-weight: var(--font-weight-medium);
     font-family: var(--font-family-heading);
-    margin-top: 0; /* Será espaçado pelo gap do #quiz-section ou .card--question-wrap */
-    margin-bottom: var(--spacing-md, 18px); /* Ajustado */
+    margin-top: 0;
+    margin-bottom: var(--spacing-lg, 28px);
     display: flex;
     align-items: baseline;
-    gap: var(--spacing-xs, 8px); /* Reduzido gap */
+    gap: var(--spacing-sm, 12px);
     flex-wrap: wrap;
     flex-shrink: 0;
-    line-height: var(--line-height-heading, 1.3);
+    line-height: 1.2;
     scroll-margin-top: var(--spacing-md, 20px);
-}
-
-#categoria-titulo {
-    display: inline-block;
-    background-color: var(--color-gray-100);
-    color: var(--color-text-secondary);
-    font-size: var(--font-size-xs, 0.75rem); /* Menor */
-    font-weight: var(--font-weight-medium);
-    font-family: var(--font-family-sans);
-    padding: 2px var(--spacing-xs, 6px); /* Mais compacto */
-    border-radius: var(--border-radius-sm);
-    text-transform: none;
-    letter-spacing: 0.2px;
-    white-space: nowrap;
-    border: 1px solid var(--color-gray-200);
+    /* Cor de texto padrão para o container, se necessário */
+    /* color: var(--color-gray-900); */
 }
 
 #id-questao {
-    font-weight: var(--font-weight-semibold);
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
     color: var(--color-primary-dark);
-    font-size: 1em;
-    margin-right: var(--spacing-xxs, 4px); /* Reduzido */
+    line-height: 1;
+    padding-right: var(--spacing-sm, 12px); /* Espaço para o separador */
+    position: relative;
+    background-color: transparent;
+    border: none;
+    min-width: auto;
+    height: auto;
 }
+
+/* Pseudo-elemento para a linha gráfica separadora - AGORA VERDE */
+#id-questao::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 2.5px; /* Pode ser um pouco mais espessa para cor */
+    height: 65%; /* Altura ajustada para o novo visual */
+    background-color: var(--color-secondary-green); /* <<< COR ALTERADA PARA VERDE SECUNDÁRIO */
+    border-radius: 2px; /* Cantos suavemente arredondados na linha */
+}
+
+#categoria-titulo {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-xs, 0.8rem);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background-color: transparent;
+    border: none;
+    padding: 0;
+    white-space: nowrap;
+    align-self: flex-end;
+    padding-bottom: 0.15em; /* Ajuste fino de alinhamento de baseline */
+}
+/* === FIM DOS ESTILOS REFINADOS === */
 
 
 /* Layout para o Container de Navegação (.quiz-navigation) */
 .quiz-navigation {
     display: flex;
     justify-content: space-between;
-    padding: var(--spacing-sm, 15px) 0 0 0; /* Reduzido padding-top */
-    margin-top: var(--spacing-md, 18px); /* Ajustado */
+    padding: var(--spacing-sm, 15px) 0 0 0;
+    margin-top: var(--spacing-md, 18px);
     border-top: var(--border-width) solid var(--color-gray-200);
     flex-shrink: 0;
     scroll-margin-bottom: var(--spacing-lg, 25px);
@@ -128,11 +140,10 @@
 
 @media (max-width: 768px) {
     .question-section__main-content {
-      gap: var(--spacing-md, 18px); /* Ajuste de gap para mobile */
+      gap: var(--spacing-md, 18px);
     }
     .quiz-controls {
         padding-bottom: var(--spacing-xs, 8px);
-        /* margin-bottom removido, usa gap do pai */
     }
     .quiz-controls .button--with-icon {
         padding: var(--spacing-xs, 6px) var(--spacing-sm, 10px);
@@ -141,19 +152,23 @@
         font-size: 1.2em;
     }
 
-    #placeholder-filtros-container,
-    #aviso-container {
-      /* margin-top já tratado pelo gap do pai */
-    }
-
     #question-title {
-      font-size: 1.15rem;
-      margin-bottom: var(--spacing-sm, 15px);
+      margin-bottom: var(--spacing-md, 20px);
+      gap: var(--spacing-xs, 8px);
+    }
+    #id-questao {
+        font-size: 1.6rem;
+        padding-right: var(--spacing-xs, 8px);
+    }
+    #id-questao::after { /* Separador no mobile */
+        height: 60%; /* Ajuste de altura para mobile */
+        width: 2px;   /* Mais fina no mobile */
     }
     #categoria-titulo {
-      font-size: 0.7rem;
-      padding: 2px var(--spacing-xs, 5px);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
     }
+
     .quiz-navigation {
       padding-top: var(--spacing-sm, 12px);
       margin-top: var(--spacing-sm, 12px);
@@ -162,20 +177,24 @@
 
 @media (max-width: 480px) {
     .question-section__main-content {
-      gap: var(--spacing-sm, 15px); /* Gap ainda menor para mobile pequeno */
+      gap: var(--spacing-sm, 15px);
     }
     .quiz-controls {
         flex-wrap: wrap;
-        gap: var(--spacing-xs, 8px); /* Gap interno dos controles */
+        gap: var(--spacing-xs, 8px);
     }
     .quiz-controls__count {
         width: 100%;
         text-align: right;
         padding-left: 0;
-        margin-top: var(--spacing-xxs, 5px); /* Pequena margem se quebrar linha */
+        margin-top: var(--spacing-xxs, 5px);
     }
-    #question-title {
-      font-size: 1.05rem;
+    #id-questao {
+      font-size: 1.4rem;
+    }
+    #categoria-titulo {
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
     }
     .quiz-navigation {
       gap: var(--spacing-xs, 8px);
@@ -183,6 +202,6 @@
     }
     .quiz-navigation .button {
         flex-grow: 1;
-        min-width: 100px; /* Reduzido */
+        min-width: 100px;
     }
 }

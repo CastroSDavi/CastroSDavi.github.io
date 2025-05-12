@@ -1,167 +1,159 @@
-/* assets/css/components/question-grid.css */
+/* assets/css/components/question-grid.css (Versão com Feedback Suave) */
 
-/* ... (Bloco .question-grid e estilos base de .question-grid__item como antes) ... */
 .question-grid {
     display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    gap: var(--question-grid-gap, var(--spacing-xs, 8px));
+    gap: var(--question-grid-gap, 7px);
     width: 100%;
-    margin-top: var(--question-grid-margin-y, var(--spacing-lg, 25px));
-    margin-bottom: var(--question-grid-margin-y, var(--spacing-lg, 25px));
-    padding: var(--question-grid-padding, var(--spacing-xxs, 5px));
+    margin-top: var(--question-grid-margin-y, var(--spacing-lg, 24px));
+    margin-bottom: var(--question-grid-margin-y, var(--spacing-lg, 24px));
+    padding: var(--question-grid-padding, var(--spacing-xxs, 4px)) 0;
     flex-shrink: 0;
-    overflow-x: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    position: relative;
 }
-.question-grid::-webkit-scrollbar {
-    display: none;
-}
+
 .question-grid__item {
-    border: none;
-    background: none;
-    font: inherit;
-    cursor: pointer;
-    text-align: center;
+    border: none; background: none; font: inherit; cursor: pointer; text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--question-grid-item-size, 34px);
-    height: var(--question-grid-item-size, 34px);
+    
+    width: var(--question-grid-item-size, 30px);
+    height: var(--question-grid-item-size, 30px);
     flex-shrink: 0;
-    font-size: var(--question-grid-item-font-size, var(--font-size-xs, 0.8rem));
+    
+    font-size: var(--question-grid-item-font-size, 0.8rem);
     font-weight: var(--font-weight-medium);
     font-family: var(--font-family-sans);
-    color: var(--question-grid-item-color, var(--color-gray-700));
+    line-height: 1;
+    
+    color: var(--question-grid-item-color, var(--color-text-secondary));
     background-color: var(--question-grid-item-bg, var(--color-white));
-    border: var(--question-grid-item-border-width, var(--border-width)) solid var(--question-grid-item-border-color, var(--color-gray-400));
-    border-radius: var(--question-grid-item-border-radius, var(--border-radius-sm));
-    transition: all var(--transition-fast);
-    padding: 2px;
-    line-height: normal;
+    border: 1.5px solid var(--question-grid-item-border-color, var(--color-gray-200));
+    border-radius: 50%;
+    
+    transition: background-color var(--transition-fast) ease-out, 
+                border-color var(--transition-fast) ease-out, 
+                color var(--transition-fast) ease-out, 
+                transform var(--transition-fast) ease-out,
+                box-shadow var(--transition-fast) ease-out;
     user-select: none;
-    box-shadow: var(--shadow-xs);
     position: relative;
 }
-.question-grid__item:hover {
-    border-color: var(--question-grid-item-hover-border-color, var(--color-gray-600));
-    color: var(--question-grid-item-hover-color, var(--color-gray-900));
-    background-color: var(--question-grid-item-hover-bg, var(--color-gray-100));
-    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
-    transform: translateY(-1px);
-    z-index: var(--z-index-default, 1);
-}
-.question-grid__item:focus-visible {
-    outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: var(--focus-outline-offset);
-    z-index: calc(var(--z-index-default, 1) + 1);
-    background-color: var(--color-gray-100);
+
+/* HOVER (Não respondida, não atual) - Efeito Azul que você gostou */
+.question-grid__item:not([class*="--current"]):not([class*="--correct"]):not([class*="--incorrect"]):hover {
+    border-color: var(--color-primary-medium);
+    background-color: var(--color-primary-light); /* Azul claro */
+    color: var(--color-primary-dark);
+    transform: scale(1.1);
+    box-shadow: 0 2px 5px rgba(var(--color-primary-medium-rgb), 0.12);
 }
 
-/* Modifier: .question-grid__item--current (Efeito Suavizado) */
+.question-grid__item:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+    border-color: var(--focus-outline-color);
+}
+
+/* Item Atual */
 .question-grid__item--current {
-    color: var(--question-grid-item-current-color, var(--color-primary-dark));
+    background-color: var(--color-primary-medium); /* Azul médio */
+    border-color: var(--color-primary-dark);    /* Borda azul escura */
+    color: var(--color-white);
     font-weight: var(--font-weight-bold);
-    z-index: calc(var(--z-index-default, 1) + 2);
-    border: var(--border-width-md) solid var(--question-grid-item-current-border-color, var(--color-primary-dark));
-    background-color: var(--question-grid-item-current-bg, var(--color-primary-light));
-    box-shadow: none;
-    transform: none;
+    transform: scale(1.15);
+    box-shadow: 0 3px 8px rgba(var(--color-primary-medium-rgb), 0.25);
+    z-index: 2;
 }
 .question-grid__item--current:hover {
-    filter: brightness(98%);
-    transform: none;
-    border-color: var(--question-grid-item-current-border-color, var(--color-primary-dark));
-    background-color: var(--question-grid-item-current-bg, var(--color-primary-light));
-    box-shadow: none;
+    background-color: var(--color-primary-dark); /* Azul escuro no hover do atual */
+    border-color: var(--color-primary-dark);
+    transform: scale(1.15);
 }
 
-/* Modifier: .question-grid__item--correct:not(.question-grid__item--current) */
-.question-grid__item--correct:not(.question-grid__item--current) {
-    background-color: var(--color-correct-bg);
-    border-color: var(--color-correct-border);
-    color: var(--color-correct-text);
-    font-weight: var(--font-weight-semibold);
-    box-shadow: none;
-    transition: all var(--transition-fast), transform 0.05s linear, filter 0.05s linear;
-}
-.question-grid__item--correct:not(.question-grid__item--current):hover {
-    border-color: var(--color-secondary-green-light);
-    filter: brightness(98%);
-    transform: scale(1.03);
-}
-.question-grid__item--correct:not(.question-grid__item--current):active {
-    transform: scale(0.92);
-    filter: brightness(85%);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
-}
-
-/* Modifier: .question-grid__item--incorrect:not(.question-grid__item--current) */
+/* Feedback de Status (Correto/Incorreto) - USANDO FUNDOS PASTEL (bg-alt) */
+.question-grid__item--correct:not(.question-grid__item--current),
 .question-grid__item--incorrect:not(.question-grid__item--current) {
-    background-color: var(--color-incorrect-bg);
-    border-color: var(--color-incorrect-border);
-    color: var(--color-incorrect-text);
-    font-weight: var(--font-weight-semibold);
-    box-shadow: none;
-    transition: all var(--transition-fast), transform 0.05s linear, filter 0.05s linear;
+    /* A borda principal pode ser um pouco mais escura para dar definição ao fundo pastel */
+    border-width: 1.5px; 
+}
+
+.question-grid__item--correct:not(.question-grid__item--current) {
+    background-color: var(--color-correct-bg); /* Verde MUITO claro (#e6fcf5) */
+    border-color: var(--color-correct-border); /* Borda verde clara (#a3e9c1) */
+    color: var(--color-correct-text);        /* Texto verde escuro (#1e7f74) */
+    font-weight: var(--font-weight-medium); /* Não precisa ser tão bold */
+}
+/* Hover para item correto: pode manter o hover azul para consistência de clique,
+   ou intensificar levemente a cor de feedback */
+.question-grid__item--correct:not(.question-grid__item--current):hover {
+    background-color: var(--color-correct-bg-alt, var(--color-correct-bg)); /* Mantém ou usa --d1f7e0 */
+    border-color: var(--color-secondary-green); /* Borda verde mais forte */
+    color: var(--color-correct-text);
+    transform: scale(1.05);
+    box-shadow: 0 1px 4px rgba(var(--color-secondary-green-rgb), 0.2);
+}
+
+.question-grid__item--incorrect:not(.question-grid__item--current) {
+    background-color: var(--color-incorrect-bg); /* Rosa/Vermelho MUITO claro (#fff0f1) */
+    border-color: var(--color-incorrect-border); /* Borda rosa/vermelha clara (#f1aeb5) */
+    color: var(--color-incorrect-text);        /* Texto vermelho escuro (#c12634) */
+    font-weight: var(--font-weight-medium);
 }
 .question-grid__item--incorrect:not(.question-grid__item--current):hover {
-    border-color: var(--color-accent-red);
-    filter: brightness(98%);
-    transform: scale(1.03);
-}
-.question-grid__item--incorrect:not(.question-grid__item--current):active {
-    transform: scale(0.92);
-    filter: brightness(85%);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+    background-color: var(--color-incorrect-bg-alt, var(--color-incorrect-bg)); /* Mantém ou usa --f8d7da */
+    border-color: var(--color-accent-red); /* Borda vermelha mais forte */
+    color: var(--color-incorrect-text);
+    transform: scale(1.05);
+    box-shadow: 0 1px 4px rgba(var(--color-accent-red-rgb), 0.2);
 }
 
-/* Combinações: Item ATUAL e CORRETO / INCORRETO */
+/* Item ATUAL e também CORRETO/INCORRETO */
+/* Agora, o item atual, se respondido, usa os fundos pastel também,
+   mas mantém o scale e a sombra do "atual" para indicar sua posição. */
 .question-grid__item--current.question-grid__item--correct {
     background-color: var(--color-correct-bg);
     border-color: var(--color-correct-border);
-    color: var(--question-grid-item-current-color, var(--color-primary-dark));
-    font-weight: var(--font-weight-bold);
-    box-shadow: none;
-    transform: none;
+    color: var(--color-correct-text);
+    /* Mantém o scale e a sombra do --current original para não perder o destaque de posição */
+    transform: scale(1.15); 
+    box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.2); /* Sombra na cor do feedback */
 }
 .question-grid__item--current.question-grid__item--incorrect {
     background-color: var(--color-incorrect-bg);
     border-color: var(--color-incorrect-border);
-    color: var(--question-grid-item-current-color, var(--color-primary-dark));
-    font-weight: var(--font-weight-bold);
-    box-shadow: none;
-    transform: none;
+    color: var(--color-incorrect-text);
+    transform: scale(1.15);
+    box-shadow: 0 3px 8px rgba(var(--color-accent-red-rgb), 0.2);
 }
 
-/* Element: .question-grid__arrow */
+
+/* Element: .question-grid__arrow (Setas de Navegação do Grid - Minimalistas) */
 .question-grid__arrow {
-    border: none;
-    background: none;
-    padding: 0;
-    background-color: transparent;
-    color: var(--question-grid-arrow-color, var(--color-primary-dark));
+    border: none; background: none; padding: 0;
+    color: var(--color-text-muted);
     cursor: pointer;
-    padding: var(--spacing-xxs, 5px);
-    border-radius: var(--border-radius-circle);
+    padding: var(--spacing-xs, 8px);
+    border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition: background-color var(--transition-fast), color var(--transition-fast), opacity var(--transition-fast);
-    width: var(--question-grid-arrow-size, 32px);
-    height: var(--question-grid-arrow-size, 32px);
+    transition: color var(--transition-fast), transform var(--transition-fast), background-color var(--transition-fast);
+    width: var(--question-grid-arrow-size, 30px);
+    height: var(--question-grid-arrow-size, 30px);
     flex-shrink: 0;
 }
 .question-grid__arrow:not(:disabled):hover {
-    background-color: var(--question-grid-arrow-hover-bg, var(--color-gray-200));
+    color: var(--color-primary-medium);
+    background-color: var(--color-gray-100);
+    transform: scale(1.1);
 }
 .question-grid__arrow:disabled {
-    color: var(--question-grid-arrow-disabled-color, var(--color-gray-500));
+    color: var(--color-gray-300);
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 .question-grid__arrow svg {
     width: var(--question-grid-arrow-icon-size, 20px);
@@ -169,87 +161,45 @@
     display: block;
 }
 .question-grid__arrow:focus-visible {
-    outline: var(--focus-outline-width) solid var(--focus-outline-color);
-    outline-offset: var(--focus-outline-offset);
-    z-index: calc(var(--z-index-default, 1) + 1);
-    background-color: var(--color-gray-100);
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 1px;
+    color: var(--color-primary-medium);
 }
 
 /* --- RESPONSIVIDADE --- */
-@media (max-width: 992px) {
-    .question-grid {
-        gap: var(--question-grid-gap-tablet, 6px);
-    }
-    .question-grid__item {
-        --question-grid-item-size: 32px;
-    }
-    .question-grid__item--current {
-        transform: none;
-    }
-    .question-grid__arrow {
-        --question-grid-arrow-size: 30px;
-        --question-grid-arrow-icon-size: 18px;
-    }
-}
 @media (max-width: 768px) {
     .question-grid {
-        gap: var(--question-grid-gap-mobile, 8px);
-        padding: var(--spacing-xxs, 5px);
-        margin-top: var(--question-grid-margin-y-mobile, 20px);
-        margin-bottom: var(--question-grid-margin-y-mobile, 20px);
+        gap: var(--question-grid-gap, 5px);
+        margin-top: var(--question-grid-margin-y-mobile, var(--spacing-md, 20px));
+        margin-bottom: var(--question-grid-margin-y-mobile, var(--spacing-md, 20px));
     }
     .question-grid__item {
-        font-size: var(--font-size-xs, 0.8rem);
-        --question-grid-item-size: 34px;
+        --question-grid-item-size: 28px;
+        font-size: 0.75rem;
+        border-width: 1px;
     }
     .question-grid__item--current {
-        transform: scale(1.03);
-        background-color: var(--color-primary-light);
-        border-color: var(--color-primary-dark);
-        box-shadow: none;
-    }
-    .question-grid__item--current:hover {
-        transform: scale(1.03);
-        filter: none;
-    }
-    .question-grid__item--current.question-grid__item--correct {
-        background-color: var(--color-correct-bg);
-        border-color: var(--color-correct-border);
-    }
-    .question-grid__item--current.question-grid__item--incorrect {
-        background-color: var(--color-incorrect-bg);
-        border-color: var(--color-incorrect-border);
-    }
-    .question-grid__arrow {
-        --question-grid-arrow-size: 32px;
-        --question-grid-arrow-icon-size: 20px;
-    }
-}
-@media (max-width: 480px) {
-    .question-grid {
-        gap: var(--question-grid-gap-small-mobile, 6px);
-        margin-top: 18px;
-        margin-bottom: 18px;
-    }
-    .question-grid__item {
-        font-size: var(--font-size-xxs, 0.75rem);
-        --question-grid-item-size: 32px;
-    }
-    .question-grid__arrow {
-        --question-grid-arrow-size: 30px;
-        --question-grid-arrow-icon-size: 18px;
-    }
-}
-@media (max-width: 360px) {
-    .question-grid {
-        gap: var(--question-grid-gap-tiny-mobile, 5px);
-    }
-    .question-grid__item {
-        font-size: 0.7rem;
-        --question-grid-item-size: 30px;
+        transform: scale(1.1);
     }
     .question-grid__arrow {
         --question-grid-arrow-size: 28px;
+        padding: var(--spacing-xxs, 5px);
+    }
+    .question-grid__arrow svg {
+        --question-grid-arrow-icon-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .question-grid { gap: var(--question-grid-gap, 4px); }
+    .question-grid__item {
+        --question-grid-item-size: 26px;
+        font-size: 0.7rem;
+    }
+    .question-grid__arrow {
+        --question-grid-arrow-size: 26px;
+    }
+    .question-grid__arrow svg {
         --question-grid-arrow-icon-size: 16px;
     }
 }

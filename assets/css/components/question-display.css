@@ -1,37 +1,44 @@
-/* assets/css/components/question-display.css */
+/* assets/css/components/question-display.css (Revisão focada no feedback) */
 
 /* --- ESTILOS BASE DA EXIBIÇÃO DA PERGUNTA --- */
+
 .question-display__content {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md, 20px);
+    gap: var(--spacing-md, 20px); /* Mantendo um gap razoável */
 }
 
 .question-display__image-container {
     text-align: center;
-    margin-bottom: var(--spacing-md, 20px);
+    margin-bottom: var(--spacing-md, 20px); /* Se a imagem estiver separada do enunciado */
 }
 
 .question-display__image {
     max-width: 100%;
     height: auto;
-    max-height: 350px;
-    border-radius: var(--border-radius-md);
-    border: var(--border-width) solid var(--color-gray-400);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+    max-height: 350px; /* Altura máxima padrão */
+    border-radius: var(--border-radius-md); /* Cantos suavemente arredondados */
+    border: 1px solid var(--color-gray-300); /* Borda sutil */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra leve */
     object-fit: contain;
+    background-color: var(--color-gray-50); /* Para imagens com fundo transparente */
 }
 
 .question-display__text {
-    font-size: var(--question-text-font-size, 1.2rem);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-900);
-    margin: 0 0 var(--spacing-md, 20px) 0;
-    line-height: 1.7;
+    font-size: var(--question-text-font-size, 1.15rem); /* Tamanho bom para leitura (18-19px) */
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-md, 20px) 0; /* Espaço antes das opções */
+    line-height: 1.7; /* Boa legibilidade */
 }
 
 .question-display__text p {
     margin: 0;
+    /* Se houver múltiplos parágrafos no enunciado, adicione margin-bottom aqui: */
+    /* &:not(:last-child) { margin-bottom: var(--spacing-sm); } */
+}
+.question-display__text p:not(:last-child) {
+    margin-bottom: var(--spacing-sm);
 }
 
 
@@ -39,156 +46,174 @@
 .question-display__answers-list {
   width: 100%;
   display: flex;
-  gap: var(--answer-list-gap, var(--spacing-sm, 10px));
   flex-direction: column;
   align-items: stretch;
+  gap: var(--answer-list-gap, var(--spacing-sm, 12px)); /* Espaçamento entre as opções */
 }
 
 .question-display__answer-option {
-  border: none; margin: 0; font: inherit; color: inherit; background: none;
-  text-align: left; width: 100%; display: flex; align-items: center;
-  padding: var(--answer-padding-y, 15px) var(--answer-padding-x, 25px);
-  color: var(--answer-color, var(--color-gray-900));
-  background-color: var(--answer-bg-color, var(--color-gray-100));
-  box-shadow: var(--shadow-sm);
-  border-radius: var(--border-radius-md);
-  border: var(--border-width) solid var(--answer-border-color, var(--color-gray-300));
-  font-size: var(--answer-font-size, 1.0rem);
-  transition: all var(--transition-medium);
+  /* Reset de botão */
+  border: none; margin: 0; font: inherit; /* color: inherit; */ background: none;
+  
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  
+  padding: var(--answer-padding-y, 14px) var(--answer-padding-x, 18px); /* Padding interno equilibrado */
+  color: var(--answer-color, var(--color-gray-800)); /* Cor do texto um pouco mais escura que o padrão */
+  background-color: var(--answer-bg-color, var(--color-white)); /* Fundo branco para as opções */
+  border: 1.5px solid var(--answer-border-color, var(--color-gray-300)); /* Borda um pouco mais presente */
+  border-radius: var(--border-radius-md, 8px); /* Consistente */
+  
+  font-size: var(--answer-font-size, 0.95rem); /* Tamanho de fonte legível (aprox 15px) */
+  font-weight: var(--font-weight-normal); /* Ou medium se preferir */
+  line-height: var(--line-height-base);
+  
   min-height: var(--answer-min-height, 48px);
   cursor: pointer;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  position: relative;
 }
 
+/* EFEITO HOVER EM AZUL QUE VOCÊ GOSTOU */
 .question-display__answer-option:not(.question-display__answer-option--answered):hover {
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.07);
-  border-color: var(--answer-hover-border-color, var(--color-gray-500));
-  transform: translateY(-2px);
-  background-color: var(--answer-hover-bg-color, var(--color-gray-200));
+  border-color: var(--color-primary-medium);        /* Borda azul médio */
+  background-color: var(--color-primary-light);     /* Fundo azul claro */
+  color: var(--color-primary-dark);               /* Texto azul escuro */
+  transform: translateY(-2px);                    /* Leve elevação */
+  box-shadow: 0 3px 8px rgba(var(--color-primary-medium-rgb), 0.15); /* Sombra sutil azulada */
 }
 
 .question-display__answer-option:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
     outline-offset: var(--focus-outline-offset);
     box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset)) rgba(from var(--focus-outline-color) r g b / 0.2);
-    background-color: var(--answer-focus-bg-color, var(--color-gray-100));
+    /* Pode adicionar o mesmo estilo do hover para o focus-visible se desejar */
+    /* border-color: var(--color-primary-medium);
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark); */
 }
 
 .question-display__answer-option--answered {
-    /* Estilos visuais virão de --correct / --incorrect */
+    cursor: default;
 }
-
-.question-display__answer-option:disabled {
+.question-display__answer-option--answered:hover { /* Sem transform no hover quando respondida */
+    transform: none;
+    box-shadow: none; /* Pode manter uma sombra base se quiser, ex: var(--shadow-xs) */
+    /* O filter brightness pode ser mantido se não houver cor de feedback */
+}
+.question-display__answer-option:disabled { /* Redundante se --answered já faz, mas bom ter */
     cursor: default;
 }
 
-.question-display__answer-option--answered:hover {
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
-    filter: brightness(98%);
-    cursor: pointer;
-}
-.question-display__answer-option--answered:disabled:hover {
-    cursor: default;
-    filter: none;
-}
-
+/* Cores de Feedback - Mantendo a lógica original, apenas garantindo que sobrescrevam o hover */
 .question-display__answer-option--correct {
-    background-color: var(--color-correct-bg-alt);
+    background-color: var(--color-correct-bg-alt); /* Usando -alt para suavidade */
     border-color: var(--color-correct-border);
     color: var(--color-correct-text);
-    font-weight: var(--font-weight-medium);
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
-    filter: none;
+    font-weight: var(--font-weight-semibold); /* Destaque para a correta */
 }
 .question-display__answer-option--correct:hover {
-    filter: brightness(98%);
-    background-color: var(--color-correct-bg-alt);
+    background-color: var(--color-correct-bg-alt); /* Mantém a cor no hover */
     border-color: var(--color-correct-border);
+    color: var(--color-correct-text);
+    filter: brightness(98%);
 }
 
 .question-display__answer-option--incorrect {
+    background-color: var(--color-incorrect-bg-alt); /* Usando -alt para suavidade */
+    border-color: var(--color-incorrect-border);
+    color: var(--color-incorrect-text);
+}
+.question-display__answer-option--incorrect:hover {
     background-color: var(--color-incorrect-bg-alt);
     border-color: var(--color-incorrect-border);
     color: var(--color-incorrect-text);
-    font-weight: var(--font-weight-medium);
-    transform: translateY(0);
-    box-shadow: var(--shadow-sm);
-    filter: none;
-}
-.question-display__answer-option--incorrect:hover {
     filter: brightness(98%);
-    background-color: var(--color-incorrect-bg-alt);
-    border-color: var(--color-incorrect-border);
 }
 
+/* Ícones de Feedback (Sugestão mantida, caso queira implementar no futuro) */
+/*
+.question-display__answer-option .feedback-icon {
+    font-size: 1.25rem;
+    line-height: 1;
+    margin-right: var(--spacing-sm, 10px);
+    opacity: 0;
+    transition: opacity var(--transition-fast) ease-in-out;
+    color: currentColor;
+    font-variation-settings: 'FILL' 1;
+}
+.question-display__answer-option.show-feedback-icon .feedback-icon {
+    opacity: 1;
+}
+*/
 
 /* --- REFERÊNCIA DA QUESTÃO --- */
 .question-display__reference {
-    margin-top: var(--spacing-lg, 25px);
-    padding-top: var(--spacing-md, 15px);
-    border-top: 1px solid var(--color-gray-200);
-    font-size: var(--font-size-sm, 0.9rem);
-    color: var(--color-gray-700);
+    margin-top: var(--spacing-lg, 24px); /* Espaço consistente */
+    padding-top: var(--spacing-sm, 12px);
+    border-top: 1px solid var(--color-gray-200); /* Linha sutil */
+    font-size: var(--font-size-sm, 0.875rem);
+    color: var(--color-text-muted);
     text-align: right;
     font-style: italic;
 }
 
-/* --- CONTAINER PARA AÇÕES (COMO O BOTÃO DE ANÁLISE) --- */
+/* --- CONTAINER PARA AÇÕES (BOTÃO DE ANÁLISE) --- */
 .question-display__actions {
     display: flex;
-    justify-content: center; /* Centraliza o botão de análise */
-    position: relative; /* Para garantir que a animação do botão não seja cortada */
-    /* Transição para suavizar a aparição do padding e borda */
+    justify-content: center;
+    position: relative;
     transition: margin-top var(--transition-fast) ease-out,
                 padding-top var(--transition-fast) ease-out,
-                border-top-color var(--transition-fast) ease-out, /* Transicionar cor da borda */
-                border-top-width var(--transition-fast) ease-out, /* Transicionar a largura da borda */
-                min-height var(--transition-fast) ease-out; /* Transicionar a altura mínima */
-
-    /* Estilos iniciais (quando o botão está oculto) */
-    margin-top: 0; /* Sem margem superior quando o botão está oculto */
-    padding-top: 0; /* Sem padding superior quando o botão está oculto */
-    border-top: 1px dashed transparent; /* Borda inicialmente transparente */
-    min-height: 0; /* Permite que o container "encolha" */
+                border-top-color var(--transition-fast) ease-out,
+                border-top-width var(--transition-fast) ease-out,
+                min-height var(--transition-fast) ease-out;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px dashed transparent;
+    min-height: 0;
 }
-
-/* Estilos que só se aplicam QUANDO o botão está visível (não tem .u-is-hidden) */
-/* Usando :has() para verificar a visibilidade do botão filho */
 .question-display__actions:has(#btn-toggle-explanation:not(.u-is-hidden)) {
-    margin-top: var(--spacing-lg, 25px);
-    padding-top: var(--spacing-md, 20px);
-    border-top-color: var(--color-gray-300); /* Torna a borda visível */
-    min-height: 60px; /* Altura mínima quando o botão está visível */
+    margin-top: var(--spacing-lg, 24px);
+    padding-top: var(--spacing-md, 18px);
+    border-top-color: var(--color-gray-300);
+    min-height: 50px; /* Altura para o botão */
 }
-/* O botão #btn-toggle-explanation é estilizado em button.css */
+/* O botão #btn-toggle-explanation continua estilizado em button.css ou em sua seção específica */
 
 
-/* --- RESPONSIVIDADE GERAL PARA QUESTION-DISPLAY --- */
+/* --- RESPONSIVIDADE (Mantendo a lógica original, ajustando valores se necessário) --- */
 @media (max-width: 768px) {
-    .question-display__text { font-size: 1.1rem; }
-    .question-display__answers-list { gap: var(--answer-list-gap-mobile, 12px); }
-    .question-display__answer-option { padding: 15px var(--spacing-md, 20px); font-size: 0.95rem; min-height: 46px; }
+    .question-display__text { font-size: 1.1rem; line-height: 1.65; }
+    .question-display__answers-list { gap: var(--answer-list-gap-mobile, 10px); }
+    .question-display__answer-option {
+        padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
+        font-size: 0.9rem;
+        min-height: 46px;
+    }
     .question-display__reference { margin-top: var(--spacing-md, 20px); padding-top: var(--spacing-sm, 10px); }
-
-    /* Ajustes para o container de ações em mobile quando o botão está visível */
     .question-display__actions:has(#btn-toggle-explanation:not(.u-is-hidden)) {
         margin-top: var(--spacing-md, 20px);
         padding-top: var(--spacing-sm, 15px);
-        min-height: 50px; /* Altura mínima ajustada para mobile */
     }
 }
 
 @media (max-width: 480px) {
-    .question-display__text { font-size: 1.0rem; line-height: 1.6; }
-    .question-display__image { max-height: 280px; }
-    .question-display__answers-list { gap: var(--answer-list-gap-sm-mobile, 10px); }
-    .question-display__answer-option { padding: 14px var(--spacing-sm, 18px); font-size: 0.9rem; min-height: 44px; }
-    .question-display__reference { font-size: 0.85rem; margin-top: var(--spacing-sm, 18px); padding-top: var(--spacing-xs, 10px); }
+    .question-display__text { font-size: 1.05rem; line-height: 1.6; }
+    .question-display__image { max-height: 300px; }
+    .question-display__answer-option {
+        padding: var(--spacing-xs, 12px) var(--spacing-sm, 14px);
+        font-size: 0.875rem;
+    }
+    .question-display__reference { font-size: 0.8rem; }
 }
 
 @media (max-width: 360px) {
-     .question-display__text { font-size: 0.95rem; }
-     .question-display__answers-list { gap: var(--answer-list-gap-xs-mobile, 8px); }
-    .question-display__answer-option { padding: 12px var(--spacing-sm, 15px); font-size: 0.85rem; min-height: 42px; }
+     .question-display__text { font-size: 1rem; }
+     .question-display__answer-option {
+        padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px);
+        font-size: 0.85rem;
+    }
 }

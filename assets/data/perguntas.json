@@ -622,5 +622,221 @@
     "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
     "categoria_ids": [1002],
     "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 79,
+    "texto_pergunta": "Considerando as características morfológicas distintivas entre Taenia solium e Taenia saginata adultas, qual das seguintes afirmações está CORRETA?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Parasitologia Humana: Cestoides",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 80,
+    "texto_pergunta": "No ciclo de vida do complexo teníase-cisticercose, a infecção humana pode ocorrer de duas formas principais, resultando em doenças distintas. Qual alternativa descreve corretamente a forma de infecção e a doença resultante?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Parasitologia Humana: Cestoides",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 81,
+    "texto_pergunta": "Um paciente apresenta um quadro de convulsões de início recente e cefaleia. A investigação diagnóstica por neuroimagem (RM) revela múltiplas lesões císticas intraparenquimatosas, algumas com edema perilesional e captação de contraste anelar, e uma delas exibindo um ponto hiperdenso interior (escólex). Qual dos seguintes estágios evolutivos dos cisticercos é MAIS compatível com essas lesões ativas e sintomáticas?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Parasitologia e Neurologia Clínica",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 82,
+    "texto_pergunta": "No diagnóstico laboratorial da teníase e da cisticercose, diferentes métodos podem ser empregados. Assinale a alternativa que descreve CORRETAMENTE a utilidade e as limitações de um desses métodos:",
+    "url_imagem": "",
+    "referencia_bibliografica": "Diagnóstico Laboratorial em Parasitologia",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 83,
+    "texto_pergunta": "A neurocisticercose pode se manifestar de formas variadas dependendo da localização e do estágio dos cisticercos no sistema nervoso central. Qual das seguintes apresentações clínicas é MAIS característica da neurocisticercose extraparênquimatosa envolvendo os ventrículos cerebrais ou o espaço subaracnóideo?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Parasitologia e Neurologia Clínica",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 84,
+    "texto_pergunta": "O tratamento da neurocisticercose ativa frequentemente envolve o uso de corticosteroides em conjunto com antiparasitários. Qual a principal justificativa para o uso de corticosteroides nesse contexto?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Terapêutica em Neurologia e Parasitologia",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 85,
+    "texto_pergunta": "Sobre os mecanismos de ação dos fármacos utilizados no tratamento da teníase e cisticercose, qual das seguintes associações está INCORRETA?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Farmacologia de Antiparasitários",
+    "categoria_ids": [1006, 2],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 86,
+    "texto_pergunta": "A diferenciação entre neurocisticercose intraparenquimatosa e extraparênquimatosa é crucial para o manejo clínico e prognóstico. Qual das seguintes características é mais associada à forma intraparenquimatosa?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Neurologia Clínica e Parasitologia",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 87,
+    "texto_pergunta": "No contexto do ciclo de vida da Taenia solium, qual evento é diretamente responsável pelo desenvolvimento da CISTICERCOSE no ser humano?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Ciclos Biológicos de Parasitas",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 88,
+    "texto_pergunta": "Durante a investigação de um paciente com suspeita de neurocisticercose, a avaliação oftalmológica é considerada obrigatória antes do início da terapia antiparasitária. Qual o principal motivo para esta recomendação?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Oftalmologia e Doenças Infecciosas",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 89,
+    "texto_pergunta": "No ciclo de vida da Taenia solium, os suínos atuam como hospedeiros intermediários ao ingerirem ovos ou proglótides grávidas do parasita. O que ocorre após a ingestão desses ovos pelo suíno?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Ciclos Biológicos de Parasitas",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 90,
+    "texto_pergunta": "A maioria dos portadores de teníase é assintomática. No entanto, quando os sintomas ocorrem, quais são os mais comuns relacionados à presença do verme adulto no intestino?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Parasitologia Clínica",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 91,
+    "texto_pergunta": "Qual é a principal razão pela qual a identificação da espécie de Taenia (se T. solium ou T. saginata) em um paciente com teníase é clinicamente importante do ponto de vista da saúde pública e do paciente?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Epidemiologia de Doenças Parasitárias",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 92,
+    "texto_pergunta": "Para o diagnóstico da cisticercose muscular ou subcutânea, qual achado em exames de imagem é frequentemente descrito como característico, especialmente em fases mais tardias da lesão tecidual?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Radiologia de Doenças Infecciosas",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 93,
+    "texto_pergunta": "Considerando os estágios evolutivos dos cisticercos no sistema nervoso central, em qual deles é mais provável que um cisto seja completamente assintomático e não apresente edema perilesional significativo na ressonância magnética?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Neuropatologia Parasitária",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 94,
+    "texto_pergunta": "Qual das seguintes opções representa uma limitação importante do teste ELISA para detecção de anticorpos no contexto diagnóstico da cisticercose humana?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Imunodiagnóstico de Parasitoses",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 95,
+    "texto_pergunta": "Um indivíduo que reside em uma área rural com saneamento básico precário e criação de suínos sem inspeção sanitária rigorosa, desenvolve teníase por Taenia solium. Qual é o principal mecanismo pelo qual este mesmo indivíduo pode subsequentemente desenvolver neurocisticercose por autoinfecção?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Parasitologia e Saúde Pública",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 96,
+    "texto_pergunta": "Qual das seguintes opções descreve mais acuradamente a função principal e o mecanismo de ação dos fármacos isoquinolônicos, como o praziquantel, no tratamento de infecções por tênias?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Farmacologia de Antiparasitários",
+    "categoria_ids": [1006, 2],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 97,
+    "texto_pergunta": "Considerando a epidemiologia e os ciclos de vida da Taenia solium e Taenia saginata, qual das seguintes afirmações sobre os hospedeiros e a transmissão é VERDADEIRA?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Epidemiologia de Doenças Parasitárias",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 98,
+    "texto_pergunta": "Qual das seguintes situações descreve o mecanismo mais provável de um indivíduo desenvolver neurocisticercose a partir de um contato domiciliar com um portador de teníase por Taenia solium?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Saúde Pública e Doenças Transmissíveis",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 99,
+    "texto_pergunta": "Em um paciente com neurocisticercose, a presença de um cisto intraventricular pode levar a complicações graves. Qual é o principal mecanismo pelo qual um cisto nessa localização pode causar sintomatologia neurológica aguda?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Neurologia de Doenças Infecciosas",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 100,
+    "texto_pergunta": "Durante o tratamento da neurocisticercose com agentes antiparasitários, qual dos seguintes achados nos exames de imagem e clínicos sugeriria uma resposta inflamatória exacerbada à morte do parasita, necessitando de manejo cuidadoso com corticosteroides?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Terapêutica de Doenças Parasitárias",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 101,
+    "texto_pergunta": "Qual é a principal diferença no ciclo de vida que explica por que a Taenia saginata causa apenas teníase em humanos, enquanto a Taenia solium pode causar tanto teníase quanto cisticercose em humanos?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Biologia de Cestoides",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 102,
+    "texto_pergunta": "No diagnóstico diferencial da neurocisticercose, várias outras condições podem apresentar manifestações clínicas e radiológicas semelhantes. Qual das seguintes NÃO é tipicamente considerada um diagnóstico diferencial primário importante para neurocisticercose com lesões císticas múltiplas e convulsões?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Diagnóstico Diferencial em Neurologia",
+    "categoria_ids": [1006, 5],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 103,
+    "texto_pergunta": "A prevenção da teníase e da cisticercose humana envolve um conjunto de medidas de saúde pública e higiene pessoal. Qual das seguintes medidas é MAIS eficaz para prevenir a AQUISIÇÃO DA TENÍASE por Taenia solium?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Prevenção de Doenças Parasitárias",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 104,
+    "texto_pergunta": "Qual das seguintes medidas é crucial para a PREVENÇÃO DA CISTICERCOSE HUMANA em comunidades onde a Taenia solium é endêmica?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Saúde Comunitária e Parasitoses",
+    "categoria_ids": [1006],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 105,
+    "texto_pergunta": "Em relação ao tratamento da teníase intestinal (verme adulto), qual fármaco é frequentemente utilizado e tem como mecanismo de ação a inibição da fosforilação oxidativa mitocondrial do parasita?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Farmacologia Clínica de Antiparasitários",
+    "categoria_ids": [1006, 2],
+    "nivel_dificuldade": "Médio"
   }
 ]

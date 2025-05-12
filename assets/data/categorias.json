@@ -1,48 +1,33 @@
 [
   {
     "id_categoria": 1,
-    "nome_categoria": "Concepção",
-    "id_categoria_pai": null
+    "nome_categoria": "Ciências Biomédicas Fundamentais",
+    "id_categoria_pai": null,
+    "descricao_categoria": "Bases moleculares, celulares, bioquímicas e genéticas da medicina."
   },
   {
     "id_categoria": 2,
-    "nome_categoria": "Metabolismo",
-    "id_categoria_pai": null
+    "nome_categoria": "Fisiologia e Anatomia Sistêmica",
+    "id_categoria_pai": null,
+    "descricao_categoria": "Estrutura e função normal dos órgãos e sistemas do corpo humano."
   },
   {
     "id_categoria": 3,
-    "nome_categoria": "Funções Celulares",
-    "id_categoria_pai": null
+    "nome_categoria": "Patologia e Fisiopatologia",
+    "id_categoria_pai": null,
+    "descricao_categoria": "Estudo das doenças: causas, mecanismos, alterações funcionais e estruturais."
   },
   {
     "id_categoria": 4,
-    "nome_categoria": "Nascimento",
-    "id_categoria_pai": null
+    "nome_categoria": "Prática Clínica e Terapêutica",
+    "id_categoria_pai": null,
+    "descricao_categoria": "Aplicação do conhecimento médico: diagnóstico, tratamento, farmacologia, cirurgia e especialidades."
   },
   {
     "id_categoria": 5,
-    "nome_categoria": "Percepção",
-    "id_categoria_pai": null
-  },
-  {
-    "id_categoria": 6,
-    "nome_categoria": "Locomoção",
-    "id_categoria_pai": null
-  },
-  {
-    "id_categoria": 7,
-    "nome_categoria": "Envelhecimento",
-    "id_categoria_pai": null
-  },
-  {
-    "id_categoria": 8,
-    "nome_categoria": "Proliferação",
-    "id_categoria_pai": null
-  },
-  {
-    "id_categoria": 9,
-    "nome_categoria": "Genética",
-    "id_categoria_pai": null
+    "nome_categoria": "Saúde Pública e Humanidades Médicas",
+    "id_categoria_pai": null,
+    "descricao_categoria": "Dimensões sociais, populacionais, éticas e preventivas da medicina."
   },
   {
     "id_categoria": 10,
@@ -105,303 +90,283 @@
     "descricao_categoria": "Questões sobre doenças transmitidas por alimentos, incluindo intoxicações e infecções bacterianas, no contexto do módulo DRAMA."
   },
   {
-    "id_categoria": 11,
-    "nome_categoria": "Sistema Cardiovascular",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Abrange o coração, vasos sanguíneos e o sangue, incluindo suas funções, doenças e fisiopatologia cardiovascular."
+    "id_categoria": 101,
+    "nome_categoria": "Biologia Celular e Molecular",
+    "id_categoria_pai": 1,
+    "descricao_categoria": "Estrutura, função, comunicação e ciclo vital das células."
   },
   {
-    "id_categoria": 12,
-    "nome_categoria": "Sistema Respiratório",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Inclui pulmões, vias aéreas e os processos de respiração, bem como suas patologias e fisiopatologia respiratória."
+    "id_categoria": 102,
+    "nome_categoria": "Genética Médica",
+    "id_categoria_pai": 1,
+    "descricao_categoria": "Princípios de hereditariedade, doenças genéticas e biologia molecular do gene."
   },
   {
-    "id_categoria": 13,
-    "nome_categoria": "Sistema Nervoso",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Cobre o cérebro, medula espinhal, nervos e órgãos dos sentidos, suas funções (incluindo cognição e comportamento) e distúrbios neurológicos."
+    "id_categoria": 103,
+    "nome_categoria": "Bioquímica e Metabolismo",
+    "id_categoria_pai": 1,
+    "descricao_categoria": "Estrutura e função de biomoléculas, vias metabólicas e bioenergética."
   },
   {
-    "id_categoria": 14,
-    "nome_categoria": "Sistema Imunológico e Alergias",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Refere-se aos mecanismos de defesa do organismo, respostas imunes, imunodeficiências, doenças autoimunes e reações alérgicas."
+    "id_categoria": 201,
+    "nome_categoria": "Neurociências Básicas",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Anatomia e fisiologia do sistema nervoso central, periférico e autônomo."
   },
   {
-    "id_categoria": 15,
-    "nome_categoria": "Sistema Endócrino e Hormonal",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Engloba as glândulas produtoras de hormônios, a regulação hormonal do corpo, distúrbios endócrinos e o metabolismo hormonal."
+    "id_categoria": 202,
+    "nome_categoria": "Fisiologia Cardiovascular e Hematológica",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Função normal do coração, vasos, sangue e hemostasia."
   },
   {
-    "id_categoria": 16,
-    "nome_categoria": "Sistema Digestório e Nutrição",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Trata dos órgãos responsáveis pela digestão, absorção de nutrientes, metabolismo nutricional, dietas, e suas respectivas doenças."
+    "id_categoria": 203,
+    "nome_categoria": "Fisiologia Respiratória",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Mecânica ventilatória, trocas gasosas e transporte de gases."
   },
   {
-    "id_categoria": 17,
-    "nome_categoria": "Sistema Musculoesquelético e Reumatologia",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Inclui ossos, músculos, articulações, tendões e ligamentos, suas funções (como a locomoção), doenças reumáticas e traumatologia."
+    "id_categoria": 204,
+    "nome_categoria": "Fisiologia e Anatomia Musculoesquelética",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Estrutura e função de ossos, músculos, articulações e tecido conjuntivo."
   },
   {
-    "id_categoria": 18,
-    "nome_categoria": "Sistema Urinário e Nefrologia",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Focado nos rins, bexiga, ureteres e uretra, a produção e eliminação da urina, equilíbrio hidroeletrolítico e doenças renais."
+    "id_categoria": 205,
+    "nome_categoria": "Fisiologia Digestória e Nutrição",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Processos de digestão, absorção e metabolismo de nutrientes."
   },
   {
-    "id_categoria": 19,
-    "nome_categoria": "Sistema Reprodutor e Obstetrícia/Ginecologia",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Abrange os órgãos reprodutores masculinos e femininos, saúde sexual, reprodução (complementando Concepção e Nascimento), e doenças ginecológicas e obstétricas."
+    "id_categoria": 206,
+    "nome_categoria": "Fisiologia Endócrina e Metabólica",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Função dos hormônios, glândulas endócrinas e regulação metabólica."
   },
   {
-    "id_categoria": 20,
-    "nome_categoria": "Oncologia e Hematologia Oncológica",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Estudo e tratamento de tumores, câncer e neoplasias hematológicas, abrangendo seus aspectos biológicos, diagnósticos e terapêuticos."
+    "id_categoria": 207,
+    "nome_categoria": "Fisiologia Renal e do Meio Interno",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Função renal, equilíbrio hidroeletrolítico e ácido-base."
   },
   {
-    "id_categoria": 21,
-    "nome_categoria": "Doenças Infecciosas e Microbiologia Clínica",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Cobre doenças causadas por microrganismos patogênicos (bactérias, vírus, fungos, parasitas), epidemiologia, e os princípios da microbiologia médica."
+    "id_categoria": 208,
+    "nome_categoria": "Imunologia Básica",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Componentes e mecanismos da resposta imune inata e adaptativa."
   },
   {
-    "id_categoria": 22,
-    "nome_categoria": "Saúde Mental e Psiquiatria",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Área dedicada ao diagnóstico, tratamento e prevenção de transtornos mentais, emocionais e comportamentais, e neurociências aplicadas à psiquiatria."
+    "id_categoria": 209,
+    "nome_categoria": "Embriologia e Sistema Reprodutor",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Desenvolvimento embrionário e fetal, anatomia e fisiologia reprodutiva."
   },
   {
-    "id_categoria": 23,
-    "nome_categoria": "Farmacologia e Terapêutica Médica",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Estudo dos fármacos, seus efeitos, mecanismos de ação, interações medicamentosas, farmacocinética, farmacodinâmica e princípios da terapêutica."
+    "id_categoria": 210,
+    "nome_categoria": "Anatomia e Fisiologia da Pele",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Estrutura e funções do sistema tegumentar."
   },
   {
-    "id_categoria": 24,
-    "nome_categoria": "Dermatologia e Doenças da Pele",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Estudo da pele, cabelo, unhas e membranas mucosas, suas doenças, manifestações cutâneas de doenças sistêmicas e tratamentos dermatológicos."
+    "id_categoria": 301,
+    "nome_categoria": "Patologia Geral",
+    "id_categoria_pai": 3,
+    "descricao_categoria": "Princípios de lesão celular, inflamação, reparo, neoplasia e distúrbios hemodinâmicos."
   },
   {
-    "id_categoria": 25,
-    "nome_categoria": "Cirurgia (Princípios e Especialidades)",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Abrange os princípios gerais da cirurgia, técnicas cirúrgicas, cuidados pré e pós-operatórios, e introdução às diversas especialidades cirúrgicas."
+    "id_categoria": 302,
+    "nome_categoria": "Oncologia Básica (Biologia do Câncer)",
+    "id_categoria_pai": 3,
+    "descricao_categoria": "Bases moleculares e celulares da carcinogênese e progressão tumoral."
   },
   {
-    "id_categoria": 26,
-    "nome_categoria": "Diagnóstico por Imagem e Radiologia",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Princípios e aplicações de diversas modalidades de imagem médica (Raios-X, Ultrassonografia, Tomografia Computadorizada, Ressonância Magnética) para diagnóstico e monitoramento de doenças."
+    "id_categoria": 303,
+    "nome_categoria": "Microbiologia Médica e Parasitologia",
+    "id_categoria_pai": 3,
+    "descricao_categoria": "Estudo dos microrganismos (bactérias, vírus, fungos, parasitas) e sua relação com doenças."
   },
   {
-    "id_categoria": 27,
-    "nome_categoria": "Patologia Geral e Clínica",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Estudo das causas (etiologia) e mecanismos (patogenia) das doenças, e as alterações estruturais e funcionais resultantes em células, tecidos e órgãos."
+    "id_categoria": 304,
+    "nome_categoria": "Imunopatologia",
+    "id_categoria_pai": 3,
+    "descricao_categoria": "Doenças causadas por disfunção do sistema imune (autoimunidade, hipersensibilidade, imunodeficiência)."
   },
   {
-    "id_categoria": 28,
+    "id_categoria": 305,
+    "nome_categoria": "Toxicologia Médica",
+    "id_categoria_pai": 3,
+    "descricao_categoria": "Estudo dos efeitos adversos de substâncias químicas e físicas nos organismos vivos."
+  },
+  {
+    "id_categoria": 401,
+    "nome_categoria": "Farmacologia Geral e Clínica",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Princípios de ação dos fármacos (farmacocinética, farmacodinâmica) e seu uso terapêutico."
+  },
+  {
+    "id_categoria": 402,
+    "nome_categoria": "Semiologia Médica",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Técnicas de anamnese e exame físico para o diagnóstico."
+  },
+  {
+    "id_categoria": 403,
+    "nome_categoria": "Princípios de Cirurgia",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Bases da técnica cirúrgica, cicatrização, cuidados pré e pós-operatórios."
+  },
+  {
+    "id_categoria": 404,
+    "nome_categoria": "Diagnóstico Laboratorial e por Imagem",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Interpretação de exames laboratoriais e de imagem (radiologia, USG, TC, RM)."
+  },
+  {
+    "id_categoria": 405,
+    "nome_categoria": "Medicina de Emergência",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Abordagem e manejo de condições médicas e traumáticas agudas."
+  },
+  {
+    "id_categoria": 406,
+    "nome_categoria": "Psiquiatria e Saúde Mental",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento dos transtornos mentais."
+  },
+  {
+    "id_categoria": 407,
+    "nome_categoria": "Cardiologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças cardiovasculares."
+  },
+  {
+    "id_categoria": 408,
+    "nome_categoria": "Pneumologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças respiratórias."
+  },
+  {
+    "id_categoria": 409,
+    "nome_categoria": "Gastroenterologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças do aparelho digestivo."
+  },
+  {
+    "id_categoria": 410,
+    "nome_categoria": "Endocrinologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças endócrinas e metabólicas."
+  },
+  {
+    "id_categoria": 411,
+    "nome_categoria": "Nefrologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças renais."
+  },
+  {
+    "id_categoria": 412,
+    "nome_categoria": "Reumatologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças reumáticas e do tecido conjuntivo."
+  },
+  {
+    "id_categoria": 413,
+    "nome_categoria": "Ginecologia e Obstetrícia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Cuidados da saúde da mulher, gestação e parto."
+  },
+  {
+    "id_categoria": 414,
+    "nome_categoria": "Dermatologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças da pele e anexos."
+  },
+  {
+    "id_categoria": 415,
+    "nome_categoria": "Infectologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças infecciosas."
+  },
+  {
+    "id_categoria": 416,
+    "nome_categoria": "Neurologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças do sistema nervoso."
+  },
+  {
+    "id_categoria": 417,
+    "nome_categoria": "Hematologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico e tratamento das doenças do sangue e órgãos hematopoiéticos."
+  },
+  {
+    "id_categoria": 418,
+    "nome_categoria": "Oncologia (Clínica)",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Diagnóstico, estadiamento e tratamento do câncer."
+  },
+  {
+    "id_categoria": 501,
     "nome_categoria": "Saúde Pública e Epidemiologia",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Foca na saúde de populações, prevenção de doenças, promoção da saúde, sistemas de saúde, e o estudo da distribuição e determinantes de doenças em populações."
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Estudo da distribuição e determinantes da saúde em populações, vigilância e políticas."
   },
   {
-    "id_categoria": 29,
-    "nome_categoria": "Medicina de Urgência e Emergência",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Abordagem e manejo de condições médicas agudas e emergenciais que requerem intervenção médica imediata para preservar a vida ou função."
-  },
-  {
-    "id_categoria": 30,
+    "id_categoria": 502,
     "nome_categoria": "Ética Médica e Bioética",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Estudo e aplicação dos princípios morais e valores éticos nas práticas médicas, pesquisa em saúde e tomada de decisões clínicas."
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Princípios éticos e legais na prática e pesquisa médica."
   },
   {
-    "id_categoria": 1010,
-    "nome_categoria": "Metabolismo de Carboidratos",
-    "id_categoria_pai": 2,
-    "descricao_categoria": "Vias metabólicas de glicose, glicogênio e outros carboidratos, e suas regulações."
+    "id_categoria": 503,
+    "nome_categoria": "Ciclos da Vida (Pediatria e Geriatria)",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Aspectos da saúde relacionados à idade: infância, adolescência, vida adulta e envelhecimento."
   },
   {
-    "id_categoria": 1011,
-    "nome_categoria": "Metabolismo de Lipídeos",
-    "id_categoria_pai": 2,
-    "descricao_categoria": "Síntese, degradação e transporte de ácidos graxos, triglicerídeos, colesterol e outros lipídeos."
+    "id_categoria": 504,
+    "nome_categoria": "Medicina Preventiva e Comunitária",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Estratégias de prevenção primária, secundária e terciária; saúde da família e comunidade."
   },
-  {
-    "id_categoria": 1012,
-    "nome_categoria": "Metabolismo de Proteínas e Aminoácidos",
-    "id_categoria_pai": 2,
-    "descricao_categoria": "Digestão de proteínas, catabolismo de aminoácidos, ciclo da ureia e síntese de proteínas."
-  },
-  {
-    "id_categoria": 1013,
-    "nome_categoria": "Bioenergética e Metabolismo Oxidativo",
-    "id_categoria_pai": 2,
-    "descricao_categoria": "Produção de ATP, cadeia respiratória, fosforilação oxidativa e regulação energética celular."
-  },
-  {
-    "id_categoria": 1014,
-    "nome_categoria": "Genética Molecular",
-    "id_categoria_pai": 9,
-    "descricao_categoria": "Estrutura e função do DNA e RNA, replicação, transcrição, tradução e regulação gênica."
-  },
-  {
-    "id_categoria": 1015,
-    "nome_categoria": "Genética Mendeliana e Padrões de Herança",
-    "id_categoria_pai": 9,
-    "descricao_categoria": "Leis de Mendel, herança autossômica e ligada ao sexo, árvores genealógicas."
-  },
-  {
-    "id_categoria": 1016,
-    "nome_categoria": "Genética de Populações e Evolutiva",
-    "id_categoria_pai": 9,
-    "descricao_categoria": "Variabilidade genética em populações, equilíbrio de Hardy-Weinberg, mutação, seleção natural."
-  },
-  {
-    "id_categoria": 1017,
-    "nome_categoria": "Citogenética e Doenças Cromossômicas",
-    "id_categoria_pai": 9,
-    "descricao_categoria": "Estrutura cromossômica, aberrações cromossômicas numéricas e estruturais, e síndromes associadas."
-  },
-  {
-    "id_categoria": 1018,
-    "nome_categoria": "Epigenética",
-    "id_categoria_pai": 9,
-    "descricao_categoria": "Modificações herdáveis na expressão gênica que não envolvem alterações na sequência de DNA."
-  },
-  {
-    "id_categoria": 1019,
-    "nome_categoria": "Anatomia e Fisiologia Cardíaca",
-    "id_categoria_pai": 11,
-    "descricao_categoria": "Estrutura do coração, ciclo cardíaco, sistema de condução, débito cardíaco."
-  },
-  {
-    "id_categoria": 1020,
-    "nome_categoria": "Fisiologia Vascular e Hemodinâmica",
-    "id_categoria_pai": 11,
-    "descricao_categoria": "Estrutura e função dos vasos sanguíneos, pressão arterial, microcirculação."
-  },
-  {
-    "id_categoria": 1021,
-    "nome_categoria": "Doença Coronariana e Infarto do Miocárdio",
-    "id_categoria_pai": 11,
-    "descricao_categoria": "Aterosclerose coronariana, angina, síndromes coronarianas agudas."
-  },
-  {
-    "id_categoria": 1022,
-    "nome_categoria": "Hipertensão Arterial Sistêmica",
-    "id_categoria_pai": 11,
-    "descricao_categoria": "Fisiopatologia, diagnóstico, tratamento e complicações da pressão alta."
-  },
-  {
-    "id_categoria": 1023,
-    "nome_categoria": "Arritmias Cardíacas",
-    "id_categoria_pai": 11,
-    "descricao_categoria": "Tipos, mecanismos, diagnóstico e tratamento de ritmos cardíacos anormais."
-  },
-  {
-    "id_categoria": 1024,
-    "nome_categoria": "Neuroanatomia Funcional",
-    "id_categoria_pai": 13,
-    "descricao_categoria": "Estrutura e organização do sistema nervoso central e periférico e suas correlações funcionais."
-  },
-  {
-    "id_categoria": 1025,
-    "nome_categoria": "Neurofisiologia Celular e Sináptica",
-    "id_categoria_pai": 13,
-    "descricao_categoria": "Potenciais de membrana, transmissão sináptica, neurotransmissores e plasticidade neural."
-  },
-  {
-    "id_categoria": 1026,
-    "nome_categoria": "Sistemas Sensoriais",
-    "id_categoria_pai": 13,
-    "descricao_categoria": "Processamento da informação visual, auditiva, somatossensorial, olfativa e gustativa."
-  },
-  {
-    "id_categoria": 1027,
-    "nome_categoria": "Sistemas Motores",
-    "id_categoria_pai": 13,
-    "descricao_categoria": "Controle neural do movimento, reflexos, planejamento e execução motora."
-  },
-  {
-    "id_categoria": 1028,
-    "nome_categoria": "Doenças Neurodegenerativas",
-    "id_categoria_pai": 13,
-    "descricao_categoria": "Estudo de doenças como Alzheimer, Parkinson, Esclerose Lateral Amiotrófica."
-  },
-  {
-    "id_categoria": 1029,
-    "nome_categoria": "Acidente Vascular Cerebral (AVC)",
-    "id_categoria_pai": 13,
-    "descricao_categoria": "Tipos, fisiopatologia, diagnóstico, tratamento e prevenção de AVCs."
-  },
-  {
-    "id_categoria": 1030,
-    "nome_categoria": "Bacteriologia Médica",
-    "id_categoria_pai": 21,
-    "descricao_categoria": "Estudo das bactérias de importância médica, suas patogenias e infecções associadas."
-  },
-  {
-    "id_categoria": 1031,
-    "nome_categoria": "Virologia Médica",
-    "id_categoria_pai": 21,
-    "descricao_categoria": "Estudo dos vírus de importância médica, replicação viral, e doenças virais."
-  },
-  {
-    "id_categoria": 1032,
-    "nome_categoria": "Micologia Médica",
-    "id_categoria_pai": 21,
-    "descricao_categoria": "Estudo dos fungos causadores de doenças em humanos."
-  },
-  {
-    "id_categoria": 1033,
-    "nome_categoria": "Parasitologia Médica",
-    "id_categoria_pai": 21,
-    "descricao_categoria": "Estudo dos protozoários e helmintos parasitas do homem e as doenças que causam."
-  },
-  {
-    "id_categoria": 1034,
-    "nome_categoria": "Princípios de Antimicrobianos e Resistência",
-    "id_categoria_pai": 21,
-    "descricao_categoria": "Mecanismos de ação de antibióticos, antivirais, antifúngicos e o problema da resistência microbiana."
-  },
-  {
-    "id_categoria": 1035,
-    "nome_categoria": "Farmacocinética",
-    "id_categoria_pai": 23,
-    "descricao_categoria": "Absorção, distribuição, metabolismo e excreção de fármacos."
-  },
-  {
-    "id_categoria": 1036,
-    "nome_categoria": "Farmacodinâmica",
-    "id_categoria_pai": 23,
-    "descricao_categoria": "Mecanismos de ação dos fármacos e seus efeitos no organismo."
-  },
-  {
-    "id_categoria": 1037,
-    "nome_categoria": "Farmacologia do Sistema Nervoso Autônomo",
-    "id_categoria_pai": 23,
-    "descricao_categoria": "Fármacos que atuam nos sistemas simpático e parassimpático."
-  },
-  {
-    "id_categoria": 1038,
-    "nome_categoria": "Farmacologia Cardiovascular e Renal",
-    "id_categoria_pai": 23,
-    "descricao_categoria": "Fármacos utilizados no tratamento de doenças cardíacas, vasculares e renais."
-  },
-  {
-    "id_categoria": 1039,
-    "nome_categoria": "Toxicologia Farmacológica",
-    "id_categoria_pai": 23,
-    "descricao_categoria": "Efeitos adversos, interações medicamentosas e princípios de toxicologia de fármacos."
-  }
+  { "id_categoria": 1101, "nome_categoria": "Organelas Celulares: Estrutura e Função", "id_categoria_pai": 101 },
+  { "id_categoria": 1102, "nome_categoria": "Ciclo Celular e Regulação", "id_categoria_pai": 101 },
+  { "id_categoria": 1103, "nome_categoria": "Vias de Sinalização Intracelular", "id_categoria_pai": 101 },
+  { "id_categoria": 1104, "nome_categoria": "Transporte de Membrana", "id_categoria_pai": 101 },
+  { "id_categoria": 1105, "nome_categoria": "Metabolismo de Carboidratos (Glicólise, Gliconeogênese, Via das Pentoses)", "id_categoria_pai": 103 },
+  { "id_categoria": 1106, "nome_categoria": "Metabolismo de Lipídeos (Ácidos Graxos, Colesterol)", "id_categoria_pai": 103 },
+  { "id_categoria": 1107, "nome_categoria": "Metabolismo de Aminoácidos e Ciclo da Ureia", "id_categoria_pai": 103 },
+  { "id_categoria": 1108, "nome_categoria": "Cadeia Respiratória e Fosforilação Oxidativa", "id_categoria_pai": 103 },
+  { "id_categoria": 1109, "nome_categoria": "Neuroanatomia Funcional", "id_categoria_pai": 201 },
+  { "id_categoria": 1110, "nome_categoria": "Neurofisiologia: Potencial de Ação e Sinapse", "id_categoria_pai": 201 },
+  { "id_categoria": 1111, "nome_categoria": "Fisiologia Sensorial (Visão, Audição, Tato, etc.)", "id_categoria_pai": 201 },
+  { "id_categoria": 1112, "nome_categoria": "Fisiologia Motora (Controle e Vias)", "id_categoria_pai": 201 },
+  { "id_categoria": 1113, "nome_categoria": "Bases Neurobiológicas da Cognição", "id_categoria_pai": 201 },
+  { "id_categoria": 1114, "nome_categoria": "Eletrofisiologia Cardíaca e ECG", "id_categoria_pai": 202 },
+  { "id_categoria": 1115, "nome_categoria": "Regulação Cardiovascular e Pressão Arterial", "id_categoria_pai": 202 },
+  { "id_categoria": 1116, "nome_categoria": "Eritropoiese, Leucopoiese e Plaquetopoiese", "id_categoria_pai": 202 },
+  { "id_categoria": 1117, "nome_categoria": "Fisiologia da Hemostasia e Coagulação", "id_categoria_pai": 202 },
+  { "id_categoria": 1118, "nome_categoria": "Lesão e Morte Celular (Necrose, Apoptose, Autofagia)", "id_categoria_pai": 301 },
+  { "id_categoria": 1119, "nome_categoria": "Inflamação: Mediadores e Tipos", "id_categoria_pai": 301 },
+  { "id_categoria": 1120, "nome_categoria": "Reparo Tecidual: Regeneração e Cicatrização", "id_categoria_pai": 301 },
+  { "id_categoria": 1121, "nome_categoria": "Distúrbios Hemodinâmicos e Trombose", "id_categoria_pai": 301 },
+  { "id_categoria": 1122, "nome_categoria": "Bacteriologia Médica: Principais Patógenos", "id_categoria_pai": 303 },
+  { "id_categoria": 1123, "nome_categoria": "Virologia Médica: Principais Vírus Patogênicos", "id_categoria_pai": 303 },
+  { "id_categoria": 1124, "nome_categoria": "Micologia Médica: Micoses Superficiais e Sistêmicas", "id_categoria_pai": 303 },
+  { "id_categoria": 1125, "nome_categoria": "Parasitologia Médica: Protozooses e Helmintíases", "id_categoria_pai": 303 },
+  { "id_categoria": 1126, "nome_categoria": "Farmacocinética Aplicada", "id_categoria_pai": 401 },
+  { "id_categoria": 1127, "nome_categoria": "Alvos Farmacológicos e Mecanismos de Ação", "id_categoria_pai": 401 },
+  { "id_categoria": 1128, "nome_categoria": "Farmacologia do SNA e SNC", "id_categoria_pai": 401 },
+  { "id_categoria": 1129, "nome_categoria": "Farmacovigilância e Reações Adversas", "id_categoria_pai": 401 },
+  { "id_categoria": 1130, "nome_categoria": "Fases do Desenvolvimento de Fármacos", "id_categoria_pai": 401 },
+  { "id_categoria": 1131, "nome_categoria": "Diabetes Mellitus: Tipos, Diagnóstico e Tratamento", "id_categoria_pai": 410 },
+  { "id_categoria": 1132, "nome_categoria": "Obesidade e Síndrome Metabólica: Manejo Clínico", "id_categoria_pai": 410 },
+  { "id_categoria": 1133, "nome_categoria": "Tireoidopatias: Hipo/Hipertireoidismo, Bócio, Câncer", "id_categoria_pai": 410 },
+  { "id_categoria": 1134, "nome_categoria": "Doenças da Adrenal e da Hipófise", "id_categoria_pai": 410 },
+  { "id_categoria": 1135, "nome_categoria": "Distúrbios do Metabolismo Ósseo (Osteoporose, etc.)", "id_categoria_pai": 410 },
+  { "id_categoria": 1136, "nome_categoria": "Tipos de Estudos Epidemiológicos (Coorte, Caso-Controle, etc.)", "id_categoria_pai": 501 },
+  { "id_categoria": 1137, "nome_categoria": "Medidas de Frequência e Associação em Epidemiologia", "id_categoria_pai": 501 },
+  { "id_categoria": 1138, "nome_categoria": "Vigilância em Saúde e Investigação de Surtos", "id_categoria_pai": 501 },
+  { "id_categoria": 1139, "nome_categoria": "Epidemiologia e Controle de Doenças Crônicas", "id_categoria_pai": 501 },
+  { "id_categoria": 1140, "nome_categoria": "Políticas e Sistemas de Saúde Comparados", "id_categoria_pai": 501 }
 ]

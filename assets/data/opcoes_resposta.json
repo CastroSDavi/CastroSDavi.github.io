@@ -3350,7 +3350,454 @@
     "texto_opcao": "Escherichia coli enterotoxigênica é a responsável pela diarreia dos viajantes",
     "eh_correta": true, "ordem_exibicao": 4,
     "feedback_opcao": "Correta. Escherichia coli enterotoxigênica (ETEC) é, de fato, uma das principais causas bacterianas da diarreia dos viajantes. (Nota: A questão original pede 'é correto afirmar' e tanto A quanto E são corretas. A opção A é uma definição mais geral de toxiinfecção, enquanto E é um fato específico. Sem o gabarito original, ambas têm validade. Para este exercício, se apenas uma puder ser marcada como 'eh_correta: true', a opção A é mais abrangente conceitualmente sobre 'toxiinfecção alimentar'.)"
+  },
+  {
+    "id_opcao_resposta": 10701, "id_pergunta": 107,
+    "texto_opcao": "A toxina STa ativa a adenilato ciclase, elevando o AMPc e estimulando a secreção de cloro.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A elevação de AMPc é característica da toxina termolábil (LT) da ETEC, não da STa. O documento também menciona que a STa leva à elevação de AMPc, mas seu mecanismo primário é via GMPc."
+  },
+  {
+    "id_opcao_resposta": 10702, "id_pergunta": 107,
+    "texto_opcao": "A toxina STa liga-se ao receptor da guanilato ciclase C, promovendo aumento de GMPc e consequente secreção de fluidos.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. Conforme o documento: 'A toxina STa se liga ao receptor da guanilato ciclase C no epitélio intestinal, promovendo aumento de GMPc e consequente secreção de fluidos.'"
+  },
+  {
+    "id_opcao_resposta": 10703, "id_pergunta": 107,
+    "texto_opcao": "A toxina STa causa a clivagem do RNA ribossômico, interrompendo a síntese proteica na célula intestinal.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Este é o mecanismo de ação da toxina Shiga, produzida por outras cepas de E. coli (STEC/EHEC) e Shigella."
+  },
+  {
+    "id_opcao_resposta": 10704, "id_pergunta": 107,
+    "texto_opcao": "A toxina STa induz a destruição das microvilosidades intestinais, resultando em má absorção.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A destruição de microvilosidades (lesão A/E) é característica da E. coli Enteropatogênica (EPEC)."
+  },
+  {
+    "id_opcao_resposta": 10801, "id_pergunta": 108,
+    "texto_opcao": "Fatores de colonização (CFAs) que medeiam a aderência difusa.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Fatores de colonização são importantes para ETEC. A EPEC utiliza outro tipo de adesina para a adesão inicial antes da lesão A/E."
+  },
+  {
+    "id_opcao_resposta": 10802, "id_pergunta": 108,
+    "texto_opcao": "Pili formadores de feixe (PFF), codificados pelo plasmídeo do fator de aderência.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que 'A adesão inicial é mediada pelos pili formadores de feixe (PFF), enquanto os estágios subsequentes são regulados pelo LEE' e que as formas típicas de EPEC possuem 'o plasmídeo do fator de aderência'."
+  },
+  {
+    "id_opcao_resposta": 10803, "id_pergunta": 108,
+    "texto_opcao": "Proteínas invasinas codificadas pela ilha de patogenicidade I.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A ilha de patogenicidade I e proteínas de invasão são características da Salmonella."
+  },
+  {
+    "id_opcao_resposta": 10804, "id_pergunta": 108,
+    "texto_opcao": "Fímbrias do tipo IV que permitem a motilidade 'twitching' sobre a superfície celular.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Embora fímbrias do tipo IV estejam envolvidas na motilidade de algumas bactérias, os PFF são especificamente mencionados para a adesão inicial da EPEC."
+  },
+  {
+    "id_opcao_resposta": 10901, "id_pergunta": 109,
+    "texto_opcao": "Adesão difusa com destruição das microvilosidades; diarreia aquosa com febre alta.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A destruição de microvilosidades (lesão A/E) é da EPEC. A EAEC tem um padrão de adesão agregativa."
+  },
+  {
+    "id_opcao_resposta": 10902, "id_pergunta": 109,
+    "texto_opcao": "Adesão em arranjos semelhantes a 'tijolos empilhados'; diarreia crônica e atraso do crescimento.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento descreve a EAEC como 'caracterizadas por sua capacidade de autoaglutinação, formando estruturas em arranjos semelhantes a “tijolos empilhados”' e seus sintomas incluem 'Diarreia crônica e atraso do crescimento em crianças'."
+  },
+  {
+    "id_opcao_resposta": 10903, "id_pergunta": 109,
+    "texto_opcao": "Adesão localizada com formação de pedestais de actina; diarreia com muco e sangue.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A formação de pedestais de actina é parte da lesão A/E da EPEC. Diarreia com sangue não é a principal característica da EAEC, embora possa ter células inflamatórias."
+  },
+  {
+    "id_opcao_resposta": 10904, "id_pergunta": 109,
+    "texto_opcao": "Adesão invasiva com multiplicação no citoplasma das células do cólon; disenteria com febre e tenesmo.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Este padrão de invasão é característico da EIEC e Shigella."
+  },
+  {
+    "id_opcao_resposta": 11001, "id_pergunta": 110,
+    "texto_opcao": "Ligação ao receptor GB3 e indução da apoptose da célula hospedeira.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Enquanto a ligação ao GB3 é feita pelas subunidades B, a subunidade A tem uma ação enzimática específica. A apoptose pode ser uma consequência, mas não o mecanismo direto da subunidade A."
+  },
+  {
+    "id_opcao_resposta": 11002, "id_pergunta": 110,
+    "texto_opcao": "Clivagem do RNA ribossômico, resultando na interrupção da síntese proteica.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que 'A subunidade A é tóxica e provoca a interrupção da síntese proteica na célula hospedeira por causa da clivagem do RNA ribossômico.'"
+  },
+  {
+    "id_opcao_resposta": 11003, "id_pergunta": 110,
+    "texto_opcao": "Formação de poros na membrana da célula hospedeira, levando à lise celular.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Este mecanismo é mais característico de outras toxinas bacterianas, como hemolisinas ou citolisinas."
+  },
+  {
+    "id_opcao_resposta": 11004, "id_pergunta": 110,
+    "texto_opcao": "Ativação da adenilato ciclase, causando aumento de AMPc e secreção de eletrólitos.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Este é o mecanismo da toxina termolábil (LT) da ETEC ou da toxina colérica."
+  },
+  {
+    "id_opcao_resposta": 11101, "id_pergunta": 111,
+    "texto_opcao": "Colite hemorrágica, febre alta e leucocitose acentuada.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Colite hemorrágica é a doença intestinal primária. Febre alta não é comum na infecção por STEC, e leucocitose não faz parte da tríade da SHU."
+  },
+  {
+    "id_opcao_resposta": 11102, "id_pergunta": 111,
+    "texto_opcao": "Insuficiência renal aguda, trombocitopenia e anemia hemolítica microangiopática.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento define a SHU como 'caracterizada por insuficiência renal aguda, trombocitopenia e anemia hemolítica microangiopática.'"
+  },
+  {
+    "id_opcao_resposta": 11103, "id_pergunta": 111,
+    "texto_opcao": "Diarreia aquosa profusa, desidratação severa e distúrbios eletrolíticos.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Estes são sintomas de gastroenterites secretoras graves, mas não definem a tríade específica da SHU."
+  },
+  {
+    "id_opcao_resposta": 11104, "id_pergunta": 111,
+    "texto_opcao": "Dor abdominal intensa, vômitos persistentes e paralisia flácida.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Dor abdominal e vômitos podem ocorrer na infecção por STEC, mas paralisia flácida não é um componente da SHU."
+  },
+  {
+    "id_opcao_resposta": 11201, "id_pergunta": 112,
+    "texto_opcao": "Produção de toxina Shiga que lesa o endotélio vascular do cólon.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A EIEC não produz toxina Shiga; seu mecanismo é invasivo."
+  },
+  {
+    "id_opcao_resposta": 11202, "id_pergunta": 112,
+    "texto_opcao": "Adesão através de pili formadores de feixe e destruição das microvilosidades (lesão A/E).",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Este é o mecanismo da EPEC. A EIEC invade as células."
+  },
+  {
+    "id_opcao_resposta": 11203, "id_pergunta": 112,
+    "texto_opcao": "Invasão das células epiteliais do cólon e multiplicação no citoplasma após lise de vacúolos fagocíticos.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento afirma que a EIEC 'invadem as células do Cólon e se multiplicam no citoplasma das células após a lise de vacúolos fagocíticos'. Esse processo leva à destruição do epitélio e disenteria."
+  },
+  {
+    "id_opcao_resposta": 11204, "id_pergunta": 112,
+    "texto_opcao": "Liberação de enterotoxinas termoestáveis e termolábeis que causam hipersecreção de fluidos.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Este é o mecanismo da ETEC."
+  },
+  {
+    "id_opcao_resposta": 11301, "id_pergunta": 113,
+    "texto_opcao": "Produção de uma enterotoxina potente que causa diarreia aquosa e desidratação severa, sem invasão tecidual significativa.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Embora a gastroenterite por Salmonella não tifoide possa causar diarreia, a Salmonella Typhi é caracteristicamente invasiva e causa doença sistêmica (febre tifoide), não apenas diarreia por enterotoxina."
+  },
+  {
+    "id_opcao_resposta": 11302, "id_pergunta": 113,
+    "texto_opcao": "Transporte através do citoplasma das células M e enterócitos, dentro de vacúolos endocíticos, para a circulação linfática ou sanguínea.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento descreve que a Salmonella 'invade as células M (microvilosidades) e os enterócitos. As bactérias permanecem em um vacúolo endocítico, onde se multiplicam e são transportadas pelo citoplasma até a circulação linfática ou sanguínea.' Esta passagem para a circulação é crucial para a doença sistêmica como a febre tifoide."
+  },
+  {
+    "id_opcao_resposta": 11303, "id_pergunta": 113,
+    "texto_opcao": "Adesão exclusiva à mucosa do cólon com destruição epitelial e formação de úlceras, resultando em disenteria.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A Salmonella invade primariamente o intestino delgado. A disenteria com destruição do cólon é mais característica da Shigella ou EIEC."
+  },
+  {
+    "id_opcao_resposta": 11304, "id_pergunta": 113,
+    "texto_opcao": "Liberação da toxina Shiga, que causa danos ao endotélio glomerular e pode levar à síndrome hemolítico-urêmica.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Salmonella não produz toxina Shiga. Esta toxina é associada à STEC/EHEC e Shigella dysenteriae."
+  },
+  {
+    "id_opcao_resposta": 11401, "id_pergunta": 114,
+    "texto_opcao": "Produção de urease, que neutraliza o pH ácido do estômago e permite a sobrevivência até o cólon.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A produção de urease é uma característica de Helicobacter pylori, não da Shigella como principal mecanismo de invasão ou disseminação."
+  },
+  {
+    "id_opcao_resposta": 11402, "id_pergunta": 114,
+    "texto_opcao": "Permanência e multiplicação dentro de vacúolos endocíticos nas células epiteliais, utilizando-os como um nicho protetor.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A Shigella rompe o vacúolo fagocítico para se multiplicar livremente no citoplasma da célula hospedeira."
+  },
+  {
+    "id_opcao_resposta": 11403, "id_pergunta": 114,
+    "texto_opcao": "Utilização de filamentos de actina da célula hospedeira para propulsão intracelular e invasão de células adjacentes.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento afirma que a Shigella, após se multiplicar no citoplasma, move-se 'entre células com ajuda de filamentos de actina'. Esse mecanismo de motilidade baseada em actina permite a disseminação intercelular, evitando a exposição ao sistema imune extracelular."
+  },
+  {
+    "id_opcao_resposta": 11404, "id_pergunta": 114,
+    "texto_opcao": "Liberação de uma potente toxina colérica que induz hipersecreção de fluidos e eletrólitos no lúmen do cólon.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A toxina colérica é produzida pelo Vibrio cholerae. Embora S. dysenteriae produza a toxina Shiga, a disseminação celular é por outro mecanismo."
+  },
+  {
+    "id_opcao_resposta": 11501, "id_pergunta": 115,
+    "texto_opcao": "Aumento da permeabilidade vascular da parede gastrointestinal e ativação do sistema de adenilato ciclase, elevando o AMPc.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Embora o aumento da permeabilidade vascular seja um efeito, a ativação do adenilato ciclase e elevação do AMPc é mais característica de toxinas como a LT da ETEC ou a toxina colérica."
+  },
+  {
+    "id_opcao_resposta": 11502, "id_pergunta": 115,
+    "texto_opcao": "Lise de eritrócitos, plaquetas, leucócitos e células endoteliais, levando ao aumento da permeabilidade vascular, hemorragia e toxicidade tecidual.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que a toxina alfa do Clostridium perfringens 'tem como função a lise de eritrócitos, plaquetas, leucócitos e células endoteliais, além de provocar o aumento da permeabilidade vascular, hemorragia, toxicidade hepática, destruição tecidual e disfunção miocárdica.'"
+  },
+  {
+    "id_opcao_resposta": 11503, "id_pergunta": 115,
+    "texto_opcao": "Interrupção da síntese proteica na célula hospedeira pela clivagem do RNA ribossômico 60S.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Este é o mecanismo de ação da toxina Shiga."
+  },
+  {
+    "id_opcao_resposta": 11504, "id_pergunta": 115,
+    "texto_opcao": "Estase intestinal e formação de lesões necróticas na mucosa devido à destruição da barreira intestinal.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Estes efeitos são mais especificamente atribuídos à toxina beta do Clostridium perfringens, que causa enterite necrosante."
+  },{
+    "id_opcao_resposta": 11601, "id_pergunta": 116,
+    "texto_opcao": "Sistema de secreção tipo II, que exporta toxinas como a toxina colérica para o meio extracelular.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Embora o sistema de secreção tipo II seja importante para a exportação de toxinas em algumas bactérias, a Salmonella utiliza um sistema diferente para injetar proteínas diretamente na célula hospedeira."
+  },
+  {
+    "id_opcao_resposta": 11602, "id_pergunta": 116,
+    "texto_opcao": "Sistema de secreção tipo III (SST3), codificado pela ilha de patogenicidade I, que atua como uma 'seringa molecular' injetando proteínas de invasão.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que a 'ilha de patogenicidade I codifica as proteínas de invasão secretadas por Salmonella e um sistema de secreção tipo III que injeta as proteínas na célula hospedeira', facilitando a invasão."
+  },
+  {
+    "id_opcao_resposta": 11603, "id_pergunta": 116,
+    "texto_opcao": "Sistema de secreção tipo IV, utilizado para translocar DNA ou proteínas efetoras, como na conjugação bacteriana.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. O sistema de secreção tipo IV está envolvido em outros processos, como transferência de DNA ou secreção de efetores em alguns patógenos, mas não é o principal descrito para a invasão inicial da Salmonella."
+  },
+  {
+    "id_opcao_resposta": 11604, "id_pergunta": 116,
+    "texto_opcao": "Sistema de secreção tipo V (autotransportadores), onde a própria proteína secretada forma um poro para sua passagem pela membrana externa.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Embora autotransportadores sejam importantes para a secreção de algumas adesinas ou toxinas, o mecanismo de injeção direta de proteínas efetoras para invasão da Salmonella é mediado pelo SST3."
+  },
+  {
+    "id_opcao_resposta": 11701, "id_pergunta": 117,
+    "texto_opcao": "Enterite necrosante com perfuração intestinal.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A enterite necrosante está mais associada à toxina beta do Clostridium perfringens. O dano intestinal pela toxina Shiga é significativo, mas a SHU é uma complicação sistêmica específica."
+  },
+  {
+    "id_opcao_resposta": 11702, "id_pergunta": 117,
+    "texto_opcao": "Síndrome de Guillain-Barré devido à mimetização molecular.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A Síndrome de Guillain-Barré é mais frequentemente associada a infecções anteriores por Campylobacter jejuni."
+  },
+  {
+    "id_opcao_resposta": 11703, "id_pergunta": 117,
+    "texto_opcao": "Síndrome Hemolítico-Urêmica (SHU).",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento especifica que a toxina Shiga (Stx2) 'pode destruir as células endoteliais do glomérulo' e que a SHU é 'caracterizada por insuficiência renal aguda, trombocitopenia e anemia hemolítica microangiopática', sendo uma complicação da lesão endotelial glomerular induzida pela toxina."
+  },
+  {
+    "id_opcao_resposta": 11704, "id_pergunta": 117,
+    "texto_opcao": "Artrite reativa com uveíte e uretrite.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A artrite reativa pode seguir infecções por Shigella, Salmonella, Campylobacter, mas não é uma consequência direta da ação da toxina Shiga no endotélio glomerular como a SHU."
+  },
+  {
+    "id_opcao_resposta": 11801, "id_pergunta": 118,
+    "texto_opcao": "Vômitos intensos; período de incubação de 1 a 6 horas.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Vômitos intensos e incubação curta são mais característicos da intoxicação estafilocócica ou da forma emética do Bacillus cereus."
+  },
+  {
+    "id_opcao_resposta": 11802, "id_pergunta": 118,
+    "texto_opcao": "Diarreia aquosa e cólicas abdominais; período de incubação de 8 a 12 horas.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que a intoxicação alimentar por Clostridium perfringens tipo A é 'caracterizada pelo seu curto período de incubação (8 a 12 horas)' e 'apresentação clínica com cólicas abdominais, diarreia aquosa, sem febre, náusea ou vômitos'."
+  },
+  {
+    "id_opcao_resposta": 11803, "id_pergunta": 118,
+    "texto_opcao": "Diarreia sanguinolenta e febre alta; período de incubação de 3 a 4 dias.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Diarreia sanguinolenta e febre alta são mais sugestivas de infecções invasivas como Shigella ou E. coli enteroinvasora/enterohemorrágica, com períodos de incubação geralmente mais longos que os do C. perfringens."
+  },
+  {
+    "id_opcao_resposta": 11804, "id_pergunta": 118,
+    "texto_opcao": "Náuseas, vômitos e diarreia com duração de 3 a 5 dias; período de incubação de 1 a 2 dias.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Este perfil de sintomas e incubação é mais compatível com E. coli Enterotoxigênica (ETEC)."
+  },
+  {
+    "id_opcao_resposta": 11901, "id_pergunta": 119,
+    "texto_opcao": "Toxinas termolábeis; principalmente vegetais crus contaminados.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. As enterotoxinas estafilocócicas são classicamente termoestáveis. Vegetais crus podem ser veículos, mas carnes processadas e alimentos ricos em amido ou creme são mais típicos."
+  },
+  {
+    "id_opcao_resposta": 11902, "id_pergunta": 119,
+    "texto_opcao": "Toxinas termoestáveis; carnes processadas, bolos, sorvetes e saladas de batata.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. As enterotoxinas produzidas por S. aureus são termoestáveis, resistindo ao cozimento. O documento cita 'Carnes processadas, bolos, sorvetes e saladas de batata contaminadas com a toxina' como vias de disseminação."
+  },
+  {
+    "id_opcao_resposta": 11903, "id_pergunta": 119,
+    "texto_opcao": "Toxina Shiga; carne moída malcozida e leite não pasteurizado.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A toxina Shiga é produzida por STEC/EHEC, cujos veículos podem incluir carne moída e leite não pasteurizado, mas S. aureus produz enterotoxinas distintas."
+  },
+  {
+    "id_opcao_resposta": 11904, "id_pergunta": 119,
+    "texto_opcao": "Toxinas que destroem microvilosidades; água contaminada por fezes.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A destruição de microvilosidades é característica da EPEC. As toxinas estafilocócicas atuam como superantígenos e estimulam o centro do vômito."
+  },
+  {
+    "id_opcao_resposta": 12001, "id_pergunta": 120,
+    "texto_opcao": "A toxina emética é termolábil e ativa a guanilato ciclase, enquanto a toxina diarreica é termoestável e resistente à proteólise.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. É o oposto: a toxina emética é termoestável e resistente à proteólise, enquanto a toxina diarreica é termolábil e ativa a adenilato ciclase."
+  },
+  {
+    "id_opcao_resposta": 12002, "id_pergunta": 120,
+    "texto_opcao": "A toxina emética é termoestável, resistente à proteólise e não é destruída pelo reaquecimento; a toxina diarreica é termolábil e ativa o sistema de adenilato ciclase.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que a toxina emética é 'termoestável, resistente à proteólise. Atua rapidamente e não é destruída pelo reaquecimento do alimento'. Para a forma diarreica, a toxina é 'termolábil' e 'Ativa o sistema de adenilato ciclase, elevando AMPc e provocando diarreia aquosa'."
+  },
+  {
+    "id_opcao_resposta": 12003, "id_pergunta": 120,
+    "texto_opcao": "Ambas as toxinas são termolábeis, mas a emética atua no sistema nervoso central e a diarreica no epitélio intestinal.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A toxina emética é termoestável. Ambas atuam primariamente no trato gastrointestinal ou sistemicamente após absorção, mas a distinção de termoestabilidade é crucial."
+  },
+  {
+    "id_opcao_resposta": 12004, "id_pergunta": 120,
+    "texto_opcao": "Ambas as toxinas são termoestáveis, mas a emética tem período de incubação mais longo (>6h) e a diarreica mais curto (<6h).",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A toxina diarreica é termolábil, e os períodos de incubação são o oposto: emética é <6h e diarreica >6h."
+  },
+  {
+    "id_opcao_resposta": 12101, "id_pergunta": 121,
+    "texto_opcao": "Ingestão de alimentos contaminados com esporos; múltiplas toxinas, incluindo toxina necrótica, cereolisina e fosfolipase C.",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. O documento especifica: 'Infecções oculares: Trauma ocular com objeto contaminado com solo contendo B. cereus.' e 'Envolvem múltiplas toxinas: toxina necrótica (termolábil), cereolisina (hemolisina) e fosfolipase C (lecitinase), que causam destruição rápida dos tecidos oculares.'"
+  },
+  {
+    "id_opcao_resposta": 12102, "id_pergunta": 121,
+    "texto_opcao": "Contato direto com secreções de um indivíduo infectado; apenas a toxina emética termoestável.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A transmissão de infecções oculares por B. cereus é tipicamente por trauma com material contaminado, não contato direto com secreções de infectados, e envolve múltiplas toxinas, não apenas a emética."
+  },
+  {
+    "id_opcao_resposta": 12103, "id_pergunta": 121,
+    "texto_opcao": "Via hematogênica a partir de uma gastroenterite; toxina Shiga.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Infecções oculares por B. cereus são geralmente por inoculação direta. A toxina Shiga não é produzida por B. cereus."
+  },
+  {
+    "id_opcao_resposta": 12104, "id_pergunta": 121,
+    "texto_opcao": "Inalação de esporos em ambientes empoeirados; toxina termolábil que ativa a adenilato ciclase.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A inalação não é a principal via para infecções oculares graves por B. cereus, e a toxina termolábil está associada à forma diarreica da intoxicação alimentar, não primariamente à destruição ocular."
+  },
+  {
+    "id_opcao_resposta": 12201, "id_pergunta": 122,
+    "texto_opcao": "E. coli Enterotoxigênica (ETEC)",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A ETEC causa diarreia aquosa pela produção de enterotoxinas, mas seu padrão de adesão não é descrito como 'tijolos empilhados' nem está primariamente ligada a diarreia persistente com atraso de crescimento como característica principal."
+  },
+  {
+    "id_opcao_resposta": 12202, "id_pergunta": 122,
+    "texto_opcao": "E. coli Enteropatogênica (EPEC)",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A EPEC causa a lesão de adesão e destruição (A/E) e é uma importante causa de diarreia infantil, mas o padrão de 'tijolos empilhados' e a associação com diarreia persistente/atraso de crescimento são mais distintivos de outra cepa."
+  },
+  {
+    "id_opcao_resposta": 12203, "id_pergunta": 122,
+    "texto_opcao": "E. coli Enteroagregativa (EAEC)",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento afirma que a EAEC é caracterizada 'por sua capacidade de autoaglutinação, formando estruturas em arranjos semelhantes a “tijolos empilhados”' e que causa 'Diarreia crônica e atraso do crescimento em crianças. Pode provocar diarreia secretora aquosa... Em alguns casos, evolui para diarreia persistente (≥14 dias)'."
+  },
+  {
+    "id_opcao_resposta": 12204, "id_pergunta": 122,
+    "texto_opcao": "E. coli Produtora de Toxina Shiga (STEC/EHEC)",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A STEC/EHEC é conhecida por causar colite hemorrágica e a síndrome hemolítico-urêmica, devido à produção da toxina Shiga. Seu padrão de adesão não é o de 'tijolos empilhados'."
+  },
+  {
+    "id_opcao_resposta": 12205, "id_pergunta": 122,
+    "texto_opcao": "E. coli Enteroinvasora (EIEC)",
+    "eh_correta": false, "ordem_exibicao": 4,
+    "feedback_opcao": "Incorreta. A EIEC causa disenteria por invasão das células do cólon, um mecanismo diferente da adesão agregativa e das consequências clínicas tipicamente associadas à EAEC."
+
+  },
+  {
+    "id_pergunta": 123,
+    "texto_pergunta": "Qual dos seguintes patógenos é descrito no documento como responsável por aproximadamente 30% dos casos de diarreia em viajantes e tem um período de incubação de 1 a 2 dias?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Epidemiologia de Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 124,
+    "texto_pergunta": "A E. coli Enteropatogênica (EPEC) afeta principalmente crianças. Qual é a principal alteração estrutural causada pela EPEC nas células epiteliais do intestino delgado, que é fundamental para sua patogênese?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Patogênese da EPEC",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 125,
+    "texto_pergunta": "A E. coli Produtora de Toxina Shiga (STEC/EHEC) pode causar colite hemorrágica. Qual das seguintes vias de transmissão NÃO é comumente associada à infecção por STEC, de acordo com as informações do documento?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Transmissão de STEC",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 126,
+    "texto_pergunta": "A Salmonella é um patógeno entérico invasivo. Qual é o principal local de adesão e invasão inicial da Salmonella no trato gastrointestinal humano?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Invasão por Salmonella",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 127,
+    "texto_pergunta": "A Shigella é conhecida por sua alta infectividade e por causar disenteria. Qual é o único reservatório conhecido para a Shigella, o que tem implicações diretas para as vias de transmissão?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Epidemiologia da Shigella",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 128,
+    "texto_pergunta": "O Clostridium perfringens tipo A, habitante comum do trato intestinal, pode causar intoxicação alimentar. Além da toxina alfa, qual outra toxina produzida por algumas cepas de C. perfringens é mencionada por causar estase intestinal e lesões necróticas, contribuindo para a enterite necrosante?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Toxinas de Clostridium perfringens",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 129,
+    "texto_pergunta": "A forma emética da intoxicação por Bacillus cereus é causada por uma enterotoxina específica. Qual é essa toxina e qual a sua principal característica em relação à estabilidade térmica?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Intoxicação por Bacillus cereus",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
   }
 ]
+
 
 

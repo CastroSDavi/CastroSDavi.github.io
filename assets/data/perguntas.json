@@ -849,34 +849,170 @@
   },
   {
     "id_pergunta": 107,
-    "texto_pergunta": "Não é correto afirmar sobre Bacillus cereus:",
+    "texto_pergunta": "A E. coli Enterotoxigênica (ETEC) utiliza diferentes enterotoxinas para induzir diarreia. Qual o principal mecanismo de ação da toxina termoestável STa e qual o segundo mensageiro intracelular predominantemente envolvido nesse processo, conforme descrito no documento?",
     "url_imagem": "",
-    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
-    "categoria_ids": [1007, 1009],
-    "nivel_dificuldade": "Médio"
+    "referencia_bibliografica": "Patogênese de E. coli - Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
   },
   {
     "id_pergunta": 108,
-    "texto_pergunta": "É incorreto afirmar em relação à toxiinfecção alimentar:",
+    "texto_pergunta": "A E. coli Enteropatogênica (EPEC) causa diarreia, especialmente em crianças. Qual estrutura bacteriana, codificada pelo plasmídeo do fator de aderência em cepas típicas, é crucial para a adesão inicial da EPEC às células epiteliais do intestino delgado?",
     "url_imagem": "",
-    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
-    "categoria_ids": [1007, 1009],
+    "referencia_bibliografica": "Patogênese de E. coli - Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
     "nivel_dificuldade": "Médio"
   },
   {
     "id_pergunta": 109,
-    "texto_pergunta": "É incorreto afirmar em relação à toxiinfecção alimentar:",
+    "texto_pergunta": "A E. coli Enteroagregativa (EAEC) é assim denominada devido a um padrão de adesão característico. Qual é esse padrão e qual manifestação clínica é frequentemente associada à infecção por EAEC em crianças, especialmente em países em desenvolvimento?",
     "url_imagem": "",
-    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
-    "categoria_ids": [1007, 1009],
-    "nivel_dificuldade": "Difícil"
+    "referencia_bibliografica": "Patogênese de E. coli - Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
   },
   {
     "id_pergunta": 110,
-    "texto_pergunta": "Dentre as doenças pulmonares citadas abaixo, qual delas NÃO está associada a alterações na qualidade do ar?",
+    "texto_pergunta": "A toxina Shiga, produzida pela E. coli Produtora de Toxina Shiga (STEC), possui uma estrutura com subunidades A e B. Qual é a função primordial da subunidade A após a internalização da toxina na célula hospedeira?",
     "url_imagem": "",
-    "referencia_bibliografica": "Provas Anteriores - Módulo DRAMA",
-    "categoria_ids": [1007, 1001],
+    "referencia_bibliografica": "Patogênese de E. coli - Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 111,
+    "texto_pergunta": "A Síndrome Hemolítico-Urêmica (SHU) é a complicação mais grave da infecção por STEC. Quais são os três componentes cardinais que definem esta síndrome?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Patogênese de E. coli - Toxiinfecções Alimentares",
+    "categoria_ids": [1009, 305],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 112,
+    "texto_pergunta": "A E. coli Enteroinvasora (EIEC) causa um quadro clínico semelhante à shigelose. Qual o principal mecanismo patogênico utilizado pela EIEC para causar doença no epitélio do cólon?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Patogênese de E. coli - Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 113,
+    "texto_pergunta": "A infecção por Salmonella spp. envolve um processo complexo de invasão da mucosa intestinal. Qual o papel da 'ilha de patogenicidade I' da Salmonella nesse processo infeccioso?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Patogênese de Salmonella - Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 116,
+    "texto_pergunta": "A patogênese da infecção por Salmonella envolve a adesão à mucosa intestinal e a invasão celular. Qual sistema de secreção bacteriana é crucial para injetar proteínas efetoras na célula hospedeira, facilitando o engolfamento e a multiplicação intracelular da Salmonella?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Mecanismos de Virulência de Salmonella",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 117,
+    "texto_pergunta": "A Shigella dysenteriae produz a toxina Shiga, que contribui significativamente para a patologia da shigelose. Além do dano intestinal direto, qual complicação sistêmica grave pode ser causada por esta toxina devido à sua ação em células endoteliais glomerulares?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Toxicologia da Toxina Shiga",
+    "categoria_ids": [1009, 305],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 118,
+    "texto_pergunta": "O Clostridium perfringens tipo A é uma causa comum de intoxicação alimentar, frequentemente associada a carnes mal refrigeradas. Qual é o principal sintoma gastrointestinal característico desta intoxicação e qual o período de incubação típico?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Toxiinfecção por Clostridium perfringens",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 119,
+    "texto_pergunta": "A intoxicação alimentar por Staphylococcus aureus é causada por enterotoxinas pré-formadas. Qual característica dessas toxinas e qual o principal veículo de transmissão frequentemente implicado em surtos?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Intoxicação Estafilocócica",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 120,
+    "texto_pergunta": "O Bacillus cereus pode causar duas formas distintas de doença transmitida por alimentos: a forma emética e a forma diarreica. Qual das seguintes opções compara corretamente as características das toxinas envolvidas em cada forma?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Toxinas de Bacillus cereus",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 121,
+    "texto_pergunta": "Infecções oculares por Bacillus cereus podem ser devastadoras. Qual é o principal modo de aquisição dessas infecções e quais fatores de virulência contribuem para a rápida destruição dos tecidos oculares?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Infecções Oculares por Bacillus cereus",
+    "categoria_ids": [1009, 415],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 122,
+    "texto_pergunta": "Considerando os diferentes patotipos de Escherichia coli que causam diarreia, qual deles é particularmente conhecido por sua capacidade de autoaglutinação, formando um biofilme denso sobre a mucosa intestinal, e está associado à diarreia persistente e atraso de crescimento em crianças de países em desenvolvimento?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Patotipos Diarreicos de E. coli",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 123,
+    "texto_pergunta": "Qual dos seguintes patógenos é descrito no documento como responsável por aproximadamente 30% dos casos de diarreia em viajantes e tem um período de incubação de 1 a 2 dias?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Epidemiologia de Toxiinfecções Alimentares",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 124,
+    "texto_pergunta": "A E. coli Enteropatogênica (EPEC) afeta principalmente crianças. Qual é a principal alteração estrutural causada pela EPEC nas células epiteliais do intestino delgado, que é fundamental para sua patogênese?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Patogênese da EPEC",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 125,
+    "texto_pergunta": "A E. coli Produtora de Toxina Shiga (STEC/EHEC) pode causar colite hemorrágica. Qual das seguintes vias de transmissão NÃO é comumente associada à infecção por STEC, de acordo com as informações do documento?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Transmissão de STEC",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 126,
+    "texto_pergunta": "A Salmonella é um patógeno entérico invasivo. Qual é o principal local de adesão e invasão inicial da Salmonella no trato gastrointestinal humano?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Invasão por Salmonella",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 127,
+    "texto_pergunta": "A Shigella é conhecida por sua alta infectividade e por causar disenteria. Qual é o único reservatório conhecido para a Shigella, o que tem implicações diretas para as vias de transmissão?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Epidemiologia da Shigella",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Médio"
+  },
+  {
+    "id_pergunta": 128,
+    "texto_pergunta": "O Clostridium perfringens tipo A, habitante comum do trato intestinal, pode causar intoxicação alimentar. Além da toxina alfa, qual outra toxina produzida por algumas cepas de C. perfringens é mencionada por causar estase intestinal e lesões necróticas, contribuindo para a enterite necrosante?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Toxinas de Clostridium perfringens",
+    "categoria_ids": [1009],
+    "nivel_dificuldade": "Difícil"
+  },
+  {
+    "id_pergunta": 129,
+    "texto_pergunta": "A forma emética da intoxicação por Bacillus cereus é causada por uma enterotoxina específica. Qual é essa toxina e qual a sua principal característica em relação à estabilidade térmica?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Intoxicação por Bacillus cereus",
+    "categoria_ids": [1009],
     "nivel_dificuldade": "Médio"
   }
 ]

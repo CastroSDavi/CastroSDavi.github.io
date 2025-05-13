@@ -3742,60 +3742,172 @@
 
   },
   {
-    "id_pergunta": 123,
-    "texto_pergunta": "Qual dos seguintes patógenos é descrito no documento como responsável por aproximadamente 30% dos casos de diarreia em viajantes e tem um período de incubação de 1 a 2 dias?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Epidemiologia de Toxiinfecções Alimentares",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Médio"
+    "id_opcao_resposta": 12301, "id_pergunta": 123,
+    "texto_opcao": "E. coli Enteropatogênica (EPEC)",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A EPEC afeta principalmente crianças menores de 2 anos e, embora cause diarreia, não é descrita no documento como a principal causa em viajantes com esse período de incubação específico."
   },
   {
-    "id_pergunta": 124,
-    "texto_pergunta": "A E. coli Enteropatogênica (EPEC) afeta principalmente crianças. Qual é a principal alteração estrutural causada pela EPEC nas células epiteliais do intestino delgado, que é fundamental para sua patogênese?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Patogênese da EPEC",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Médio"
+    "id_opcao_resposta": 12302, "id_pergunta": 123,
+    "texto_opcao": "E. coli Enterotoxigênica (ETEC)",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento afirma que a ETEC 'é a causa mais comum de diarreia nos países em desenvolvimento... Também é responsável por aproximadamente 30% dos casos de diarreia em viajantes' e seu 'Período de Incubação: De 1 a 2 dias'."
   },
   {
-    "id_pergunta": 125,
-    "texto_pergunta": "A E. coli Produtora de Toxina Shiga (STEC/EHEC) pode causar colite hemorrágica. Qual das seguintes vias de transmissão NÃO é comumente associada à infecção por STEC, de acordo com as informações do documento?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Transmissão de STEC",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Difícil"
+    "id_opcao_resposta": 12303, "id_pergunta": 123,
+    "texto_opcao": "E. coli Produtora de Toxina Shiga (STEC/EHEC)",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A STEC tem um período de incubação de 3 a 4 dias e, embora possa afetar viajantes, a ETEC é mais classicamente associada à 'diarreia dos viajantes' com a incubação descrita."
   },
   {
-    "id_pergunta": 126,
-    "texto_pergunta": "A Salmonella é um patógeno entérico invasivo. Qual é o principal local de adesão e invasão inicial da Salmonella no trato gastrointestinal humano?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Invasão por Salmonella",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Médio"
+    "id_opcao_resposta": 12304, "id_pergunta": 123,
+    "texto_opcao": "Salmonella spp.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A Salmonella tem um período de incubação de 6 a 48 horas e, embora possa causar diarreia em viajantes, a ETEC se encaixa melhor na descrição epidemiológica e de incubação fornecida."
   },
   {
-    "id_pergunta": 127,
-    "texto_pergunta": "A Shigella é conhecida por sua alta infectividade e por causar disenteria. Qual é o único reservatório conhecido para a Shigella, o que tem implicações diretas para as vias de transmissão?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Epidemiologia da Shigella",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Médio"
+    "id_opcao_resposta": 12401, "id_pergunta": 124,
+    "texto_opcao": "Produção de toxina Shiga, levando à lise celular.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A EPEC é caracterizada pela ausência da toxina Shiga, conforme o documento."
   },
   {
-    "id_pergunta": 128,
-    "texto_pergunta": "O Clostridium perfringens tipo A, habitante comum do trato intestinal, pode causar intoxicação alimentar. Além da toxina alfa, qual outra toxina produzida por algumas cepas de C. perfringens é mencionada por causar estase intestinal e lesões necróticas, contribuindo para a enterite necrosante?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Toxinas de Clostridium perfringens",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Difícil"
+    "id_opcao_resposta": 12402, "id_pergunta": 124,
+    "texto_opcao": "Invasão das células epiteliais e multiplicação no citoplasma.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Este mecanismo é mais característico da E. coli Enteroinvasora (EIEC) ou Shigella."
   },
   {
-    "id_pergunta": 129,
-    "texto_pergunta": "A forma emética da intoxicação por Bacillus cereus é causada por uma enterotoxina específica. Qual é essa toxina e qual a sua principal característica em relação à estabilidade térmica?",
-    "url_imagem": "",
-    "referencia_bibliografica": "Intoxicação por Bacillus cereus",
-    "categoria_ids": [1009],
-    "nivel_dificuldade": "Médio"
+    "id_opcao_resposta": 12403, "id_pergunta": 124,
+    "texto_opcao": "Destruição das microvilosidades, conhecida como lesão de adesão e destruição (A/E).",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento afirma que a patogênese da EPEC envolve a 'fixação da bactéria às células epiteliais do intestino delgado, seguida pela destruição das microvilosidades (lesão de adesão e destruição – A/E)'."
+  },
+  {
+    "id_opcao_resposta": 12404, "id_pergunta": 124,
+    "texto_opcao": "Liberação de enterotoxinas termoestáveis (ST) e termolábeis (LT).",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A produção de toxinas ST e LT é característica da E. coli Enterotoxigênica (ETEC)."
+  },
+  {
+    "id_opcao_resposta": 12501, "id_pergunta": 125,
+    "texto_opcao": "Consumo de água contaminada por fezes de animais de criação.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Embora a contaminação fecal seja a rota, o documento especifica reservatórios bovinos como uma fonte importante de STEC. Água contaminada por fezes humanas ou bovinas pode ser uma via, mas a pergunta busca uma via NÃO comumente associada, e as outras opções listam veículos típicos."
+  },
+  {
+    "id_opcao_resposta": 12502, "id_pergunta": 125,
+    "texto_opcao": "Ingestão de carne moída malcozida proveniente de bovinos.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. O documento menciona 'carne moída' como uma via de transmissão comum para STEC."
+  },
+  {
+    "id_opcao_resposta": 12503, "id_pergunta": 125,
+    "texto_opcao": "Consumo de leite não pasteurizado ou sucos contaminados.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. 'Leite não pasteurizado, sucos contaminados' são citados como vias de transmissão de STEC no documento."
+  },
+  {
+    "id_opcao_resposta": 12504, "id_pergunta": 125,
+    "texto_opcao": "Contato direto pessoa a pessoa, especialmente em ambientes como creches.",
+    "eh_correta": true, "ordem_exibicao": 3,
+    "feedback_opcao": "Correta. O documento foca nas vias de transmissão alimentar para STEC ('Alimentos como carne moída, leite não pasteurizado, sucos contaminados e vegetais mal cozidos'). Embora a transmissão pessoa a pessoa possa ocorrer para E. coli em geral (especialmente EPEC e Shigella), não é destacada como uma via COMUM para STEC no texto fornecido, que enfatiza alimentos. A baixa dose infectante (<100 bactérias) da STEC, no entanto, torna a transmissão pessoa-a-pessoa possível e significativa em certos contextos, mas o texto não a elenca entre as vias comuns."
+  },
+  {
+    "id_opcao_resposta": 12601, "id_pergunta": 126,
+    "texto_opcao": "Mucosa gástrica, onde se protege da acidez por produção de urease.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A produção de urease para proteção da acidez gástrica é uma característica do Helicobacter pylori, não da Salmonella."
+  },
+  {
+    "id_opcao_resposta": 12602, "id_pergunta": 126,
+    "texto_opcao": "Epitélio do cólon, causando inflamação e disenteria.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A Salmonella primariamente invade o intestino delgado. A inflamação e disenteria no cólon são mais características da Shigella ou EIEC."
+  },
+  {
+    "id_opcao_resposta": 12603, "id_pergunta": 126,
+    "texto_opcao": "Células M (associadas às microvilosidades) e enterócitos da mucosa do intestino delgado.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento afirma que 'A Salmonella adere à mucosa do intestino delgado, posteriormente, invade as células M (microvilosidades) e os enterócitos.'"
+  },
+  {
+    "id_opcao_resposta": 12604, "id_pergunta": 126,
+    "texto_opcao": "Linfonodos mesentéricos, onde permanece latente antes de causar doença sistêmica.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Embora a Salmonella possa atingir os linfonodos mesentéricos após a invasão intestinal, o local de adesão e invasão INICIAL é a mucosa do intestino delgado."
+  },
+  {
+    "id_opcao_resposta": 12701, "id_pergunta": 127,
+    "texto_opcao": "Suínos e bovinos, que eliminam a bactéria nas fezes.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. Suínos e bovinos podem ser reservatórios de Salmonella e E. coli, mas não da Shigella."
+  },
+  {
+    "id_opcao_resposta": 12702, "id_pergunta": 127,
+    "texto_opcao": "Aves domésticas e ovos contaminados.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. Aves e ovos são importantes reservatórios e veículos de Salmonella."
+  },
+  {
+    "id_opcao_resposta": 12703, "id_pergunta": 127,
+    "texto_opcao": "Seres humanos, sendo a transmissão predominantemente pessoa a pessoa pela via fecal-oral.",
+    "eh_correta": true, "ordem_exibicao": 2,
+    "feedback_opcao": "Correta. O documento afirma que 'Os seres humanos são o único reservatório para Shigella' e que é 'Transmitida de pessoa para pessoa pela via orofecal por pessoas com mãos contaminadas'."
+  },
+  {
+    "id_opcao_resposta": 12704, "id_pergunta": 127,
+    "texto_opcao": "O solo e a água contaminados com esporos bacterianos resistentes.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. Shigella não forma esporos. O solo e a água podem ser veículos de contaminação se contaminados por fezes humanas, mas não são reservatórios primários."
+  },
+  {
+    "id_opcao_resposta": 12801, "id_pergunta": 128,
+    "texto_opcao": "Toxina beta.",
+    "eh_correta": true, "ordem_exibicao": 0,
+    "feedback_opcao": "Correta. O documento menciona que 'A Toxina Beta causa estase intestinal, devido à destruição da mucosa com formação de lesões necróticas e progressão de enterite necrosante.'"
+  },
+  {
+    "id_opcao_resposta": 12802, "id_pergunta": 128,
+    "texto_opcao": "Toxina épsilon.",
+    "eh_correta": false, "ordem_exibicao": 1,
+    "feedback_opcao": "Incorreta. A toxina épsilon é descrita como uma pró-toxina ativada pela tripsina que aumenta a permeabilidade vascular da parede gastrointestinal, mas não primariamente a estase e lesões necróticas da enterite necrosante como a toxina beta."
+  },
+  {
+    "id_opcao_resposta": 12803, "id_pergunta": 128,
+    "texto_opcao": "Enterotoxina termolábil (semelhante à de E. coli).",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. Embora C. perfringens produza uma enterotoxina (CPE) responsável pela diarreia na intoxicação alimentar comum, a enterite necrosante é uma condição mais grave associada à toxina beta."
+  },
+  {
+    "id_opcao_resposta": 12804, "id_pergunta": 128,
+    "texto_opcao": "Toxina Shiga (Stx).",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A toxina Shiga é produzida por E. coli (STEC) e Shigella dysenteriae, não por Clostridium perfringens."
+  },
+  {
+    "id_opcao_resposta": 12901, "id_pergunta": 129,
+    "texto_opcao": "Toxina diarreica; termolábil.",
+    "eh_correta": false, "ordem_exibicao": 0,
+    "feedback_opcao": "Incorreta. A forma emética é causada pela toxina emética (cereulida), que é termoestável."
+  },
+  {
+    "id_opcao_resposta": 12902, "id_pergunta": 129,
+    "texto_opcao": "Enterotoxina termoestável (cereulida); termoestável.",
+    "eh_correta": true, "ordem_exibicao": 1,
+    "feedback_opcao": "Correta. O documento especifica que a forma emética é uma 'Intoxicação causada pela enterotoxina termoestável, resistente à proteólise. Atua rapidamente e não é destruída pelo reaquecimento do alimento'. Esta toxina é a cereulida."
+  },
+  {
+    "id_opcao_resposta": 12903, "id_pergunta": 129,
+    "texto_opcao": "Toxina necrótica; termolábil.",
+    "eh_correta": false, "ordem_exibicao": 2,
+    "feedback_opcao": "Incorreta. A toxina necrótica é uma das toxinas envolvidas em infecções oculares por B. cereus e é termolábil, mas não é a principal da forma emética da intoxicação alimentar."
+  },
+  {
+    "id_opcao_resposta": 12904, "id_pergunta": 129,
+    "texto_opcao": "Cereolisina; termoestável.",
+    "eh_correta": false, "ordem_exibicao": 3,
+    "feedback_opcao": "Incorreta. A cereolisina é uma hemolisina envolvida em infecções oculares e outras infecções invasivas, não a principal toxina da forma emética."
   }
 ]
 

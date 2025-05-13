@@ -1589,7 +1589,7 @@
     "texto_opcao": "Via dérmica (70%); Óbito (25%).",
     "eh_correta": false,
     "ordem_exibicao": 0,
-    "feedback_opcao": "Incorreto. Embora a via dérmica seja uma via importante, os dados epidemiológicos apresentados no documento podem indicar outra via como principal para notificações e um desfecho diferente como o mais comum."
+    "feedback_opcao": "Incorreto. Embora a via dérmica seja uma via importante, os dados epidemiológicos apresentados podem indicar outra via como principal para notificações e um desfecho diferente como o mais comum."
   },
   {
     "id_opcao_resposta": 5002,
@@ -1597,7 +1597,7 @@
     "texto_opcao": "Via inalatória (55%); Cura com sequelas graves (10%).",
     "eh_correta": false,
     "ordem_exibicao": 1,
-    "feedback_opcao": "Incorreto. A via inalatória é relevante, mas os percentuais e o desfecho podem não corresponder aos dados do documento de referência."
+    "feedback_opcao": "Incorreto. A via inalatória é relevante, mas os percentuais e o desfecho podem não corresponder aos dados da  de referência."
   },
   {
     "id_opcao_resposta": 5003,

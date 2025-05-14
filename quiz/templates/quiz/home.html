@@ -1,0 +1,58 @@
+{# Arquivo: templates/quiz/home.html #}
+{% extends "quiz/base.html" %} {# Certifique-se que o caminho para base.html está correto #}
+{% load static %}
+
+{% block title %}{{ page_title|default:"MedQuiz - Início" }}{% endblock title %}
+
+{% block content %}
+    <section id="home-section" class="main-section">
+         <div class="hero-block">
+            <div class="hero-block__welcome">
+                <h1 class="hero-block__title">Olá</h1> {# Futuramente: Olá {{ request.user.first_name|default:"Visitante" }} #}
+                <p class="hero-block__subtitle">Pronto para expandir seus conhecimentos hoje?</p>
+            </div>
+            <div class="stats-deck">
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">checklist</span>
+                    <span class="stat-card__label">Respondidas Hoje</span>
+                    <span class="stat-card__value" id="daily-questions">0</span> {# JS ou Django podem popular #}
+                </div>
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">target</span>
+                    <span class="stat-card__label">Acertos Hoje</span>
+                    <span class="stat-card__value" id="daily-accuracy">0%</span>
+                </div>
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">military_tech</span>
+                    <span class="stat-card__label">Pontos</span>
+                    <span class="stat-card__value" id="daily-points">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">local_fire_department</span>
+                    <span class="stat-card__label">Sequência</span>
+                    <span class="stat-card__value" id="streak-value">0</span>
+                </div>
+            </div>
+            <div class="hero-block__cta">
+                <p class="hero-block__cta-text">Pronto para testar seus conhecimentos?</p>
+                <div class="hero-block__cta-actions">
+                    {# Este botão agora deve ser um link para a página de questões #}
+                    <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-primary" id="go-to-challenges-hub-link">
+                        <span class="material-symbols-outlined button__icon">rocket_launch</span>
+                        <span class="button__label">Iniciar Desafio</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="home-section__additional-content">
+             <div class="card card--additional-content card--centered-content">
+                 <h2 class="card__title">Explore Mais</h2>
+                <div class="card__body">
+                    <p>Ainda desenvolvendo esta área, mas aqui você poderá encontrar artigos, dicas de estudo e outros recursos para complementar seu aprendizado em histologia.</p>
+                    {# Este também deve ser um link para a página de questões #}
+                    <a href="{% url 'quiz:questions' %}" class="button button--outline button--small" id="view-all-questions-alt-link">Ver Banco de Questões</a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

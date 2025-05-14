@@ -1,0 +1,183 @@
+{# Arquivo: templates/quiz/questions_page.html #}
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}MedQuiz - Questões{% endblock title %}
+
+{% block content %}
+    <section id="question-section" class="main-section"> {# A classe u-is-hidden pode ser removida se esta página sempre mostra esta seção #}
+        <aside class="score-panel u-is-hidden"> {# O JS controlará a visibilidade disto ao iniciar um quiz #}
+            <div class="score-panel__timer">
+                <span id="timer-display" class="score-panel__timer-value">00:00</span>
+                <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
+            </div>
+            <div class="score-panel__stats-group">
+                <div class="score-panel__stat score-panel__stat--points">
+                     <span class="material-symbols-outlined score-panel__stat-icon">military_tech</span>
+                    <div class="score-panel__stat-content">
+                        <span class="score-panel__stat-label">PONTOS</span>
+                        <span id="pontuacao" class="score-panel__stat-value">0</span>
+                    </div>
+                </div>
+                <div class="score-panel__stat score-panel__stat--correct">
+                    <span class="material-symbols-outlined score-panel__stat-icon">check_circle</span>
+                    <div class="score-panel__stat-content">
+                        <span class="score-panel__stat-label">ACERTOS</span>
+                        <span id="acertos-numero" class="score-panel__stat-value">0</span>
+                    </div>
+                </div>
+                <div class="score-panel__stat score-panel__stat--incorrect">
+                     <span class="material-symbols-outlined score-panel__stat-icon">cancel</span>
+                    <div class="score-panel__stat-content">
+                        <span class="score-panel__stat-label">ERROS</span>
+                        <span id="erros-numero" class="score-panel__stat-value">0</span>
+                    </div>
+                </div>
+            </div>
+            <button id="btn-encerrar-sessao" class="button button--outline button--small score-panel__action-button u-is-hidden">Encerrar</button>
+        </aside>
+
+        <div class="question-section__main-content">
+            {# O Hub de Desafios será mostrado inicialmente nesta página #}
+            <div id="challenge-hub-container" class="challenge-hub"> {# Removido u-is-hidden para aparecer por padrão #}
+                <div class="challenge-hub__header">
+                    <h2 class="challenge-hub__title">Escolha seu Desafio</h2>
+                    <p class="challenge-hub__subtitle">Explore nosso banco de <span id="hub-total-questions-count">0</span> questões.</p>
+                </div>
+                <div class="challenge-hub__options-grid">
+                    <button id="hub-customize-quiz-btn" class="challenge-card">
+                        <div class="challenge-card__icon-wrapper">
+                            <span class="material-symbols-outlined challenge-card__icon">tune</span>
+                        </div>
+                        <div class="challenge-card__content">
+                            <h3 class="challenge-card__title">Personalizar Quiz</h3>
+                            <p class="challenge-card__description">Escolha temas, dificuldade e modo de estudo.</p>
+                        </div>
+                    </button>
+                    <button id="hub-quick-quiz-btn" class="challenge-card">
+                        <div class="challenge-card__icon-wrapper">
+                            <span class="material-symbols-outlined challenge-card__icon">bolt</span>
+                        </div>
+                        <div class="challenge-card__content">
+                            <h3 class="challenge-card__title">Quiz Rápido</h3>
+                            <p class="challenge-card__description">Um desafio de <span id="hub-quick-quiz-count">10</span> questões aleatórias para começar.</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            {# Estes ficam escondidos inicialmente e são controlados pelo JS #}
+            <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
+                <div class="card__body">
+                    <span class="material-symbols-outlined placeholder-icon">fact_check</span>
+                    <h3>Ajuste seus Filtros</h3>
+                    <p>O painel de filtros está aberto. Selecione as categorias e a dificuldade das questões que deseja praticar.</p>
+                    <p>Após ajustar suas preferências, clique em "Aplicar Filtros" no painel lateral para começar!</p>
+                     <button class="button button--secondary button--small" id="close-filters-and-show-hub-btn">
+                        <span class="material-symbols-outlined button__icon">arrow_back</span>
+                        Voltar para Modos de Jogo
+                    </button>
+                </div>
+            </div>
+
+            <div id="aviso-container" class="u-is-hidden">
+                 <div class="card card--aviso">
+                    <p>Nenhuma questão encontrada para os filtros selecionados. Por favor, ajuste os filtros e tente novamente.</p>
+                 </div>
+            </div>
+
+            <section id="quiz-section" class="u-is-hidden">
+                <div id="progress-container" class="progress-bar u-is-hidden">
+                    <div id="progress-bar-fill" class="progress-bar__fill"></div>
+                </div>
+                <span id="progress-text" class="progress-bar__text u-is-hidden">0 / 0</span>
+
+                <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+
+                <div class="card card--question-wrap">
+                    <div class="card__body">
+                        <div class="question-display__text">
+                            <p id="pergunta-texto">Carregando pergunta...</p>
+                        </div>
+                        <div class="question-display__content">
+                            <div class="question-display__image-container">
+                                <img src="" alt="" id="pergunta-imagem" class="question-display__image u-is-hidden">
+                            </div>
+                            <div class="question-display__answers-list" id="respostas-container">
+                            </div>
+                            <span id="feedback-acessivel" class="u-sr-only" aria-live="polite" aria-atomic="true"></span>
+                        </div>
+                        <p id="referencia-questao" class="question-display__reference"></p>
+
+                        <div class="question-display__actions">
+                            <button id="btn-toggle-explanation" class="button button--analysis-link u-is-hidden" aria-expanded="false">
+                                <span class="material-symbols-outlined button__icon">manage_search</span>
+                                <span class="button__label">Analisar Resposta</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="quiz-navigation u-is-hidden">
+                    <button id="prev-btn" class="button button--secondary button--small quiz-navigation__button" disabled>Anterior</button>
+                    <button id="next-btn" class="button button--primary button--small quiz-navigation__button">Avançar</button>
+                </div>
+            </section>
+
+            <div id="confirm-encerrar-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="modalConfirmTitle" aria-modal="true">
+                <div id="confirm-encerrar-modal" class="card modal__dialog">
+                    <div class="modal__header">
+                        <h3 id="modalConfirmTitle" class="modal__title card__title">Confirmar Encerramento</h3>
+                    </div>
+                    <div class="modal__body">
+                        <p>Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
+                    </div>
+                    <div class="modal__footer modal__footer--stacked">
+                        <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
+                        <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card--quiz-result u-is-hidden">
+                <div class="card__body quiz-results__body"> <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
+
+                    <div class="quiz-results__primary-score">
+                        <span class="quiz-results__primary-score-value" id="resultado-pontos">0</span>
+                        <span class="quiz-results__primary-score-label">PONTOS</span>
+                    </div>
+
+                    <div class="quiz-results__secondary-stats">
+                        <div class="stat-block"> <span class="material-symbols-outlined stat-block__icon">timer</span>
+                            <span class="stat-block__label">Tempo</span>
+                            <span class="stat-block__value" id="resultado-tempo">00:00</span>
+                        </div>
+                        <div class="stat-block stat-block--correct"> <span class="material-symbols-outlined stat-block__icon">check_circle</span>
+                            <span class="stat-block__label">Acertos</span>
+                            <span class="stat-block__value" id="resultado-acertos">0</span>
+                        </div>
+                        <div class="stat-block stat-block--incorrect"> <span class="material-symbols-outlined stat-block__icon">cancel</span>
+                            <span class="stat-block__label">Erros</span>
+                            <span class="stat-block__value" id="resultado-erros">0</span>
+                        </div>
+                    </div>
+
+                    <p class="quiz-results__message" id="resultado-mensagem-motivacional">Continue praticando!</p>
+                </div>
+
+                <div class="card__footer quiz-results__actions">
+                    <button id="btn-recomecar" class="button button--primary quiz-results__action-button">
+                        <span class="material-symbols-outlined button__icon">refresh</span>
+                        Nova Tentativa
+                    </button>
+                    <button id="btn-explorar-mais" class="button button--outline quiz-results__action-button">
+                        <span class="material-symbols-outlined button__icon">home</span>
+                        Voltar ao Início
+                    </button>
+                </div>
+            </div>
+            <div id="question-grid-container" class="question-grid u-is-hidden">
+            </div>
+
+         </div>
+    </section>
+{% endblock content %}

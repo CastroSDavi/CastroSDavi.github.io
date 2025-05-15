@@ -1,0 +1,90 @@
+/* assets/css/components/messages.css */
+
+.form-message {
+    padding: 12px 18px; /* Ajuste no padding para um visual mais espaçado */
+    margin-bottom: var(--spacing-md, 20px); /* Espaço abaixo da mensagem */
+    border-radius: var(--border-radius-md);
+    font-size: 0.9rem; /* Tamanho da fonte base */
+    line-height: 1.5;
+    border-width: 1px;
+    border-style: solid;
+    display: flex; /* Para alinhar ícone e texto, se adicionar ícones no futuro */
+    align-items: flex-start; /* Alinha itens ao topo */
+    gap: var(--spacing-xs, 10px); /* Espaço entre ícone e texto */
+}
+
+.form-message p {
+    margin: 0; /* Remove margem padrão do parágrafo dentro da mensagem */
+    flex-grow: 1; /* Faz o texto ocupar o espaço restante */
+}
+
+/* Mensagem de Erro Geral do Formulário ou Erros de Campo Agrupados */
+.form-message--error {
+    background-color: var(--color-incorrect-bg, #fff0f1);
+    color: var(--color-incorrect-text, #c12634);
+    border-color: var(--color-incorrect-border, #f1aeb5);
+    /* Adicionando um ícone (opcional, mas recomendado para acessibilidade e visual) */
+}
+.form-message--error::before {
+    /* content: 'error_outline';
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings: 'FILL' 0, 'wght' 400;
+    font-size: 1.3em;
+    line-height: 1.3;
+    color: var(--color-accent-red);
+    margin-right: var(--spacing-xs, 8px);
+    flex-shrink: 0; */
+}
+
+
+/* Mensagem Informativa (a azul que você mencionou) */
+.form-message--info {
+    background-color: var(--color-primary-light, #eef3f8);
+    color: var(--color-primary-dark, #0d3b66);
+    border-color: var(--color-primary-medium, #1a5f9e);
+}
+.form-message--info::before {
+    /* content: 'info_outline';
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings: 'FILL' 0, 'wght' 400;
+    font-size: 1.3em;
+    line-height: 1.3;
+    color: var(--color-primary-dark);
+    margin-right: var(--spacing-xs, 8px);
+    flex-shrink: 0; */
+}
+
+/* Mensagem de Sucesso (se você for usar) */
+.form-message--success {
+    background-color: var(--color-correct-bg, #e6fcf5);
+    color: var(--color-correct-text, #1e7f74);
+    border-color: var(--color-correct-border, #a3e9c1);
+}
+.form-message--success::before {
+    /* content: 'check_circle_outline';
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings: 'FILL' 0, 'wght' 400;
+    font-size: 1.3em;
+    line-height: 1.3;
+    color: var(--color-secondary-green);
+    margin-right: var(--spacing-xs, 8px);
+    flex-shrink: 0; */
+}
+
+
+/* Mensagem de Erro Específica de Campo */
+.form-message--field-error {
+    color: var(--color-accent-red);
+    font-size: 0.8rem;
+    margin-top: var(--spacing-xxs, 5px); /* Espaço acima da mensagem de erro do campo */
+    padding-left: var(--spacing-xs, 8px); /* Leve indentação */
+    display: block; /* Garante que ocupe a linha */
+}
+.form-message--field-error::before {
+    /* content: 'chevron_right';
+    font-family: 'Material Symbols Outlined';
+    font-size: 1em;
+    margin-right: 4px;
+    position: relative;
+    top: 1px; */
+}

@@ -1,4 +1,4 @@
-{% load static %} {# ADICIONADO #}
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -10,14 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     
-    {# CAMINHOS CSS MODIFICADOS PARA USAR {% static %} #}
-    <link rel="stylesheet" href="{% static 'css/base/variables.css' %}">
-    <link rel="stylesheet" href="{% static 'css/base/reset.css' %}">
-    <link rel="stylesheet" href="{% static 'css/base/typography.css' %}">
-    <link rel="stylesheet" href="{% static 'css/components/button.css' %}">
-    <link rel="stylesheet" href="{% static 'css/components/card.css' %}">
-    
-    <link rel="stylesheet" href="{% static 'css/login.css' %}"> {# Assumindo que login.css está em assets/css/login.css #}
+    {# Arquivos CSS Globais #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {# CSS Específico da Página de Login (se houver mais estilos além do global) #}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body class="login-body-bg">
 
@@ -44,12 +40,6 @@
                      <div class="form-message form-message--error" role="alert">
                         <p>Por favor, corrija os erros abaixo.</p>
                     </div>
-                {% endif %}
-
-                {% if next and not user.is_authenticated %} {# Mensagem para fazer login se redirecionado #}
-                <div class="form-message form-message--info" role="alert">
-                    <p>Por favor, faça login para ver esta página.</p>
-                </div>
                 {% endif %}
 
                 {# FORMULÁRIO MODIFICADO PARA DJANGO #}
@@ -110,33 +100,5 @@
             </footer>
         </div>
     </main>
-    {# Estilos adicionais para erros de campo #}
-    <style>
-        .form-message { padding: 10px 15px; margin-bottom: 15px; border-radius: var(--border-radius-md); font-size: 0.9em; }
-        .form-message--error { background-color: var(--color-incorrect-bg, #fff0f1); color: var(--color-incorrect-text, #c12634); border: 1px solid var(--color-incorrect-border, #f1aeb5); }
-        .form-message--info { background-color: var(--color-primary-light, #eef3f8); color: var(--color-primary-dark, #0d3b66); border: 1px solid var(--color-primary-medium, #1a5f9e); }
-        .form-message--field-error { color: var(--color-accent-red); font-size: 0.8em; margin-top: 4px; }
-        /* Ajuste para os inputs do Django se não pegarem o estilo do login.css */
-        .login-form input[type="text"],
-        .login-form input[type="password"],
-        .login-form input[type="email"] { /* Adicionado email caso use no futuro */
-            background-color: var(--color-gray-50);
-            border: 1.5px solid var(--color-gray-300);
-            padding: var(--spacing-sm, 12px) var(--spacing-sm, 12px) var(--spacing-sm, 12px) calc(var(--spacing-sm, 12px) + 20px + var(--spacing-xs, 8px));
-            font-size: 0.95rem;
-            border-radius: var(--border-radius-md, 8px);
-            width: 100%;
-            transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
-            box-sizing: border-box; /* Importante para o padding não estourar a largura */
-        }
-        .login-form input[type="text"]:focus,
-        .login-form input[type="password"]:focus,
-        .login-form input[type="email"]:focus {
-            background-color: var(--color-white);
-            border-color: var(--color-primary-medium);
-            box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.15);
-            outline: none;
-        }
-    </style>
 </body>
 </html>

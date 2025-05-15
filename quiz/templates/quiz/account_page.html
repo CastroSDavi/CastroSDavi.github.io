@@ -44,7 +44,12 @@
              
              <div class="profile-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
                 <a href="{% url 'password_change' %}" class="button button--secondary" style="width: 100%;">Alterar Senha</a>
-                <a href="{% url 'logout' %}" class="button button--outline" style="width: 100%; border-color: var(--color-accent-red); color: var(--color-accent-red);">Sair (Logout)</a>
+                
+                {# Formulário de Logout #}
+                <form method="post" action="{% url 'logout' %}" style="display: inline; margin: 0;">
+                    {% csrf_token %}
+                    <button type="submit" class="button button--outline" style="width: 100%; border-color: var(--color-accent-red); color: var(--color-accent-red); cursor: pointer;">Sair (Logout)</button>
+                </form>
              </div>
          </div>
      </div>
@@ -62,6 +67,10 @@
      .profile-info-table tr:last-child th,
      .profile-info-table tr:last-child td {
         border-bottom: none;
+    }
+    /* Garante que o formulário não adicione margens extras inesperadas */
+    .profile-actions form {
+        margin-bottom: 0; /* Remove margem inferior padrão do formulário, se houver */
     }
 </style>
 {% endblock content %}

@@ -1,0 +1,67 @@
+{# quiz/templates/quiz/account_page.html #}
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title|default:"Minha Conta" }} - MedQuiz{% endblock title %}
+
+{% block content %}
+<section id="account-section-page" class="main-section">
+     <div class="card card--conta-perfil" style="max-width: 700px; margin: 40px auto;">
+         <h2 class="card__title">Minha Conta</h2>
+         <div class="card__body">
+             <h3>Informações do Perfil</h3>
+             <table class="profile-info-table" style="width: 100%; text-align: left; margin-bottom: 25px;">
+                 <tbody>
+                     <tr>
+                         <th style="width: 30%;">Nome de Usuário:</th>
+                         <td>{{ user.username }}</td>
+                     </tr>
+                     <tr>
+                         <th>Email:</th>
+                         <td>{{ user.email }}</td>
+                     </tr>
+                     <tr>
+                         <th>Nome:</th>
+                         <td>{{ user.first_name|default:"Não informado" }}</td>
+                     </tr>
+                     <tr>
+                         <th>Sobrenome:</th>
+                         <td>{{ user.last_name|default:"Não informado" }}</td>
+                     </tr>
+                     <tr>
+                         <th>Data de Cadastro:</th>
+                         <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                     </tr>
+                     <tr>
+                         <th>Último Login:</th>
+                         <td>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
+                     </tr>
+                 </tbody>
+             </table>
+
+             {# FUTURO: Formulário para editar perfil aqui #}
+             {# <form method="post" action="{% url 'quiz:update_profile' %}" class="profile-form"> ... </form> #}
+             
+             <div class="profile-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                <a href="{% url 'password_change' %}" class="button button--secondary" style="width: 100%;">Alterar Senha</a>
+                <a href="{% url 'logout' %}" class="button button--outline" style="width: 100%; border-color: var(--color-accent-red); color: var(--color-accent-red);">Sair (Logout)</a>
+             </div>
+         </div>
+     </div>
+</section>
+
+<style>
+    .profile-info-table th, .profile-info-table td {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--color-gray-200);
+    }
+    .profile-info-table th {
+        font-weight: var(--font-weight-medium);
+        color: var(--color-text-secondary);
+    }
+     .profile-info-table tr:last-child th,
+     .profile-info-table tr:last-child td {
+        border-bottom: none;
+    }
+</style>
+{% endblock content %}

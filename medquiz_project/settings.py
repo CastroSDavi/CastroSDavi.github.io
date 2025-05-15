@@ -125,3 +125,7 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_URL = 'login'  # Ou '/accounts/login/' se você estiver usando as URLs padrão do Django Auth diretamente
+LOGIN_REDIRECT_URL = 'quiz:home' # Para onde ir após o login bem-sucedido
+LOGOUT_REDIRECT_URL = 'quiz:home' # Para onde ir após o logout

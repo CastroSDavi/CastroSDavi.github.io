@@ -1,0 +1,100 @@
+{# quiz/templates/quiz/register.html #}
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title|default:"Cadastro" }} - MedQuiz{% endblock title %}
+
+{% block content %}
+<section id="register-section" class="main-section">
+    <div class="card card--conta-perfil" style="max-width: 550px; margin: 40px auto;"> {# Um pouco mais largo para acomodar mais campos #}
+        <h2 class="card__title">Crie sua Conta</h2>
+        <div class="card__body" style="text-align: left;">
+            <form method="post" action="{% url 'quiz:register' %}" class="profile-form">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="form-group">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label_tag }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted" style="display: block; font-size: 0.8em; color: var(--color-text-muted); margin-top: 4px;">
+                                {{ field.help_text|safe }}
+                            </small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="form-message form-message--error" role="alert" style="margin-top: 5px; padding: 8px 12px; font-size: 0.85em;">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                
+                {% if form.non_field_errors %}
+                    <div class="form-message form-message--error" role="alert" style="margin-top: 15px;">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <button type="submit" class="button button--primary" style="margin-top: 25px; width: 100%;">Cadastrar</button>
+            </form>
+            
+            <div style="margin-top: 25px; text-align: center; font-size: 0.9em;">
+                <p>Já tem uma conta? <a href="{% url 'login' %}" class="text-link">Faça login aqui</a>.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# Reutilizando estilos definidos no login.html ou mova-os para um CSS global #}
+<style>
+    .form-message {
+        padding: 10px 15px;
+        margin-bottom: 10px; /* Ajuste para formulários de cadastro */
+        border-radius: var(--border-radius-md);
+        font-size: 0.9em;
+    }
+    .form-message--error {
+        background-color: var(--color-incorrect-bg, #fff0f1);
+        color: var(--color-incorrect-text, #c12634);
+        border: 1px solid var(--color-incorrect-border, #f1aeb5);
+    }
+    .text-link {
+        color: var(--color-primary-medium);
+        text-decoration: none;
+    }
+    .text-link:hover {
+        text-decoration: underline;
+        color: var(--color-primary-dark);
+    }
+    .form-group { /* Adicionando para espaçamento entre os campos do formulário de cadastro */
+        margin-bottom: 18px;
+    }
+    .form-group:last-of-type {
+        margin-bottom: 0;
+    }
+    /* Estilizando os inputs e textareas para consistência (já deve vir do seu CSS, mas como exemplo) */
+    .profile-form input[type="text"],
+    .profile-form input[type="email"],
+    .profile-form input[type="password"] {
+        display: block;
+        width: 100%;
+        padding: var(--form-control-padding-y, var(--spacing-xs, 10px)) var(--form-control-padding-x, var(--spacing-sm, 12px));
+        font-size: var(--form-control-font-size, var(--font-size-base, 0.95rem));
+        line-height: var(--line-height-base);
+        color: var(--form-control-color, var(--color-gray-900));
+        background-color: var(--form-control-bg, var(--color-white));
+        border: var(--border-width) solid var(--form-control-border-color, var(--color-gray-500));
+        border-radius: var(--form-control-border-radius, var(--border-radius-sm));
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .profile-form input[type="text"]:focus,
+    .profile-form input[type="email"]:focus,
+    .profile-form input[type="password"]:focus {
+        border-color: var(--focus-outline-color);
+        outline: 0;
+        box-shadow: 0 0 0 var(--focus-outline-width) rgba(var(--color-primary-medium-rgb), 0.25);
+    }
+</style>
+{% endblock content %}

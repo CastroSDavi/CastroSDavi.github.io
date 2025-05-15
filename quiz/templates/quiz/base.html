@@ -1,51 +1,92 @@
-{# Arquivo: templates/quiz/base.html #}
+{# Arquivo: quiz/templates/quiz/base.html #}
 {% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}MedQuiz{% endblock title %}</title>
 </head>
+
 <body>
     <header class="site-header">
         <div class="site-header__logo">
             <a href="{% url 'quiz:home' %}">Med<b>Quiz</b></a>
         </div>
         <div class="site-header__actions">
-            <a href="{% url 'quiz:account' %}" class="site-header__action-link" data-section-target-django="account" aria-label="Ir para Conta">
-                 <span class="material-symbols-outlined">
-                     account_circle
-                 </span>
+            {% if user.is_authenticated %}
+            <a href="{% url 'quiz:account' %}" class="site-header__action-link" aria-label="Minha Conta"
+                title="Minha Conta">
+                <span class="material-symbols-outlined">account_circle</span>
             </a>
+            <a href="{% url 'logout' %}" class="site-header__action-link" aria-label="Sair" title="Sair">
+                <span class="material-symbols-outlined">logout</span>
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="site-header__action-link" aria-label="Fazer Login" title="Fazer Login">
+                <span class="material-symbols-outlined">login</span>
+            </a>
+            <a href="{% url 'quiz:register' %}" class="site-header__action-link" aria-label="Cadastrar-se"
+                title="Cadastrar-se">
+                <span class="material-symbols-outlined">person_add</span>
+            </a>
+            {% endif %}
         </div>
     </header>
 
     <nav class="main-nav">
         <ul class="main-nav__list">
-            <li class="main-nav__item"><a href="{% url 'quiz:home' %}" class="main-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}main-nav__link--active{% endif %}" data-section-target-django="home">Início</a></li>
-            <li class="main-nav__item"><a href="{% url 'quiz:questions' %}" class="main-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}main-nav__link--active{% endif %}" data-section-target-django="questions">Questões</a></li>
+            <li class="main-nav__item"><a href="{% url 'quiz:home' %}"
+                    class="main-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}main-nav__link--active{% endif %}"
+                    data-section-target-django="home">Início</a></li>
+            <li class="main-nav__item"><a href="{% url 'quiz:questions' %}"
+                    class="main-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}main-nav__link--active{% endif %}"
+                    data-section-target-django="questions">Questões</a></li>
+            {# Adicionar link para 'Minha Conta' se o usuário estiver logado, opcional aqui se já estiver no header #}
+            {% if user.is_authenticated %}
+            <li class="main-nav__item"><a href="{% url 'quiz:account' %}"
+                    class="main-nav__link {% if request.resolver_match.view_name == 'quiz:account' %}main-nav__link--active{% endif %}"
+                    data-section-target-django="account">Minha Conta</a></li>
+            {% endif %}
         </ul>
     </nav>
 
     <main>
+        {# Bloco para exibir mensagens do Django (opcional, mas recomendado) #}
+        {% if messages %}
+        <div class="messages-container" style="padding: 10px 20px; text-align: center;">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert"
+                style="padding: 10px; margin-bottom: 10px; border-radius: 5px; color: #fff; background-color: {% if message.tags == 'success' %}var(--color-secondary-green, #2a9d8f){% elif message.tags == 'error' %}var(--color-accent-red, #e63946){% else %}var(--color-primary-medium, #1a5f9e){% endif %};">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         {% block content %}
         {% endblock content %}
     </main>
 
     {# Painel de Filtros (geralmente associado à seção de questões) #}
     <div class="filter-panel-overlay u-is-hidden" id="filter-panel-overlay" aria-hidden="true"></div>
-    <aside class="filter-panel" id="filter-panel" aria-labelledby="filter-panel-title" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
+    <aside class="filter-panel" id="filter-panel" aria-labelledby="filter-panel-title" role="dialog" aria-modal="true"
+        aria-hidden="true" tabindex="-1">
         <div class="filter-panel__header">
             <h2 id="filter-panel-title" class="filter-panel__title">Filtros</h2>
-            <button class="button button--icon-only filter-panel__close-button" id="btn-fechar-filtros" aria-label="Fechar painel de filtros">
+            <button class="button button--icon-only filter-panel__close-button" id="btn-fechar-filtros"
+                aria-label="Fechar painel de filtros">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
@@ -58,39 +99,49 @@
                     <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
                     <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
                 </div>
-                <ul class="category-tree" id="category-tree-list" role="tree" aria-labelledby="filter-group-categories-title">
+                <ul class="category-tree" id="category-tree-list" role="tree"
+                    aria-labelledby="filter-group-categories-title">
                     {# As categorias serão populadas pelo JavaScript ou, futuramente, pelo Django aqui #}
                 </ul>
             </div>
             <div class="filter-group" id="filter-group-difficulty">
                 <h3 class="filter-group__title" id="filter-group-difficulty-title">Dificuldade</h3>
                 <div class="chip-group" role="group" aria-labelledby="filter-group-difficulty-title">
-                    <input type="checkbox" name="difficulty" id="diff-all" value="all" class="chip-group__input u-sr-only" checked>
+                    <input type="checkbox" name="difficulty" id="diff-all" value="all"
+                        class="chip-group__input u-sr-only" checked>
                     <label for="diff-all" class="chip-group__chip">Todas</label>
 
-                    <input type="checkbox" name="difficulty" id="diff-easy" value="fácil" class="chip-group__input u-sr-only">
+                    <input type="checkbox" name="difficulty" id="diff-easy" value="fácil"
+                        class="chip-group__input u-sr-only">
                     <label for="diff-easy" class="chip-group__chip">Fácil</label>
 
-                    <input type="checkbox" name="difficulty" id="diff-medium" value="médio" class="chip-group__input u-sr-only">
+                    <input type="checkbox" name="difficulty" id="diff-medium" value="médio"
+                        class="chip-group__input u-sr-only">
                     <label for="diff-medium" class="chip-group__chip">Médio</label>
 
-                    <input type="checkbox" name="difficulty" id="diff-hard" value="difícil" class="chip-group__input u-sr-only">
+                    <input type="checkbox" name="difficulty" id="diff-hard" value="difícil"
+                        class="chip-group__input u-sr-only">
                     <label for="diff-hard" class="chip-group__chip">Difícil</label>
                 </div>
             </div>
         </div>
         <div class="filter-panel__footer">
-            <button class="button button--secondary button--panel-footer" id="btn-limpar-filtros-painel">Limpar Filtros</button>
-            <button class="button button--primary button--panel-footer" id="btn-aplicar-filtros-painel">Aplicar Filtros</button>
+            <button class="button button--secondary button--panel-footer" id="btn-limpar-filtros-painel">Limpar
+                Filtros</button>
+            <button class="button button--primary button--panel-footer" id="btn-aplicar-filtros-painel">Aplicar
+                Filtros</button>
         </div>
     </aside>
 
     {# Modal de Explicação (geralmente associado à seção de questões) #}
-    <div id="explanation-modal-overlay" class="modal explanation-modal__overlay u-is-hidden" role="dialog" aria-labelledby="explanationModalTitle" aria-modal="true" aria-hidden="true">
+    <div id="explanation-modal-overlay" class="modal explanation-modal__overlay u-is-hidden" role="dialog"
+        aria-labelledby="explanationModalTitle" aria-modal="true" aria-hidden="true">
         <div id="explanation-modal-dialog" class="explanation-modal__dialog card" aria-hidden="true" tabindex="-1">
             <div class="explanation-modal__header">
-                <h3 id="explanationModalTitle" class="explanation-modal__title card__title">Análise Detalhada da Questão</h3>
-                <button id="btn-close-explanation-modal" class="button button--icon-only explanation-modal__close-button" aria-label="Fechar análise">
+                <h3 id="explanationModalTitle" class="explanation-modal__title card__title">Análise Detalhada da Questão
+                </h3>
+                <button id="btn-close-explanation-modal"
+                    class="button button--icon-only explanation-modal__close-button" aria-label="Fechar análise">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
@@ -120,51 +171,66 @@
     <nav class="bottom-nav" aria-label="Navegação principal móvel">
         <ul class="bottom-nav__list">
             <li class="bottom-nav__item">
-                 <a href="{% url 'quiz:home' %}" class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}bottom-nav__link--active{% endif %}" data-section-target-django="home" aria-label="Ir para Início" {% if request.resolver_match.view_name == 'quiz:home' %}aria-current="page"{% endif %}>
+                <a href="{% url 'quiz:home' %}"
+                    class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}bottom-nav__link--active{% endif %}"
+                    data-section-target-django="home" aria-label="Ir para Início" {% if request.resolver_match.view_name == 'quiz:home' %}aria-current="page"{% endif %}>
                     <span class="material-symbols-outlined bottom-nav__icon"> home </span>
                     <span class="bottom-nav__label">Início</span>
                 </a>
             </li>
             <li class="bottom-nav__item">
-                 <a href="{% url 'quiz:questions' %}" class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}bottom-nav__link--active{% endif %}" data-section-target-django="questions" aria-label="Ir para Questões" {% if request.resolver_match.view_name == 'quiz:questions' %}aria-current="page"{% endif %}>
-                     <span class="material-symbols-outlined bottom-nav__icon"> quiz </span>
+                <a href="{% url 'quiz:questions' %}"
+                    class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}bottom-nav__link--active{% endif %}"
+                    data-section-target-django="questions" aria-label="Ir para Questões" {% if request.resolver_match.view_name == 'quiz:questions' %}aria-current="page"{% endif %}>
+                    <span class="material-symbols-outlined bottom-nav__icon"> quiz </span>
                     <span class="bottom-nav__label">Questões</span>
                 </a>
             </li>
+            {# Adicionar link para 'Minha Conta' se o usuário estiver logado, opcional aqui se já estiver no header #}
+            {% if user.is_authenticated %}
+            <li class="bottom-nav__item">
+                <a href="{% url 'quiz:account' %}"
+                    class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:account' %}bottom-nav__link--active{% endif %}"
+                    data-section-target-django="account" aria-label="Minha Conta" {% if request.resolver_match.view_name == 'quiz:account' %}aria-current="page"{% endif %}>
+                    <span class="material-symbols-outlined bottom-nav__icon"> person </span>
+                    <span class="bottom-nav__label">Conta</span>
+                </a>
+            </li>
+            {% endif %}
         </ul>
     </nav>
 
     <footer id="footer" class="site-footer">
         <p class="site-footer__text">&copy; {% now "Y" %} Desenvolvido por Davi Castro</p>
     </footer>
-
     {% block scripts %}
-        <script id="django-quiz-data" type="application/json">
+    <script id="django-quiz-data" type="application/json">
             {{ django_quiz_data_json|safe }}
         </script>
-        <script>
-          try {
+    <script>
+        try {
             const dataElement = document.getElementById('django-quiz-data');
             if (dataElement) {
-              const parsedDataString = dataElement.textContent;
-              const parsedDataObject = JSON.parse(parsedDataString);
+                const parsedDataString = dataElement.textContent;
+                const parsedDataObject = JSON.parse(parsedDataString);
 
-              window.djangoQuizData = {
-                perguntas: parsedDataObject.perguntas || [],
-                categorias: parsedDataObject.categorias || [],
-                opcoesResposta: parsedDataObject.opcoesResposta || []
-              };
-              console.log("Dados do Django parseados e prontos em window.djangoQuizData:", window.djangoQuizData);
+                window.djangoQuizData = {
+                    perguntas: parsedDataObject.perguntas || [],
+                    categorias: parsedDataObject.categorias || [],
+                    opcoesResposta: parsedDataObject.opcoesResposta || []
+                };
+                console.log("Dados do Django parseados e prontos em window.djangoQuizData:", window.djangoQuizData);
             } else {
-              window.djangoQuizData = { perguntas: [], categorias: [], opcoesResposta: [] };
-              console.warn("Elemento de dados django-quiz-data não encontrado.");
+                window.djangoQuizData = { perguntas: [], categorias: [], opcoesResposta: [] };
+                console.warn("Elemento de dados django-quiz-data não encontrado.");
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Erro ao processar dados JSON injetados em window.djangoQuizData:", error);
             window.djangoQuizData = { perguntas: [], categorias: [], opcoesResposta: [] };
-          }
-        </script>
-        <script src="{% static 'js/script.js' %}" defer></script>
+        }
+    </script>
+    <script src="{% static 'js/script.js' %}" defer></script>
     {% endblock scripts %}
 </body>
+
 </html>

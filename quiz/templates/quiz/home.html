@@ -1,5 +1,5 @@
 {# Arquivo: templates/quiz/home.html #}
-{% extends "quiz/base.html" %} {# Certifique-se que o caminho para base.html está correto #}
+{% extends "quiz/base.html" %}
 {% load static %}
 
 {% block title %}{{ page_title|default:"MedQuiz - Início" }}{% endblock title %}
@@ -8,7 +8,12 @@
     <section id="home-section" class="main-section">
          <div class="hero-block">
             <div class="hero-block__welcome">
-                <h1 class="hero-block__title">Olá</h1> {# Futuramente: Olá {{ request.user.first_name|default:"Visitante" }} #}
+                {# MODIFICADO AQUI para saudação personalizada #}
+                {% if user.is_authenticated %}
+                    <h1 class="hero-block__title">Olá, {{ user.first_name|default:user.username }}!</h1>
+                {% else %}
+                    <h1 class="hero-block__title">Olá</h1>
+                {% endif %}
                 <p class="hero-block__subtitle">Pronto para expandir seus conhecimentos hoje?</p>
             </div>
             <div class="stats-deck">

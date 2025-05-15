@@ -1,0 +1,113 @@
+{# quiz/templates/registration/login.html #}
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}Login - MedQuiz{% endblock title %}
+
+{% block content %}
+<section id="login-section" class="main-section">
+    <div class="card card--conta-perfil" style="max-width: 500px; margin: 40px auto;">
+        <h2 class="card__title">Login</h2>
+        <div class="card__body" style="text-align: left;">
+            {% if form.errors %}
+                <div class="form-message form-message--error" role="alert">
+                    <p>Seu nome de usuário e senha não conferem. Por favor, tente novamente.</p>
+                </div>
+            {% endif %}
+
+            {% if next %} {# Esta variável 'next' é passada pela LoginView do Django #}
+                {% if user.is_authenticated %}
+                <div class="form-message form-message--warning" role="alert">
+                    <p>Sua conta não tem acesso a esta página. Para prosseguir, por favor, faça login com uma conta que tenha acesso.</p>
+                </div>
+                {% else %}
+                <div class="form-message form-message--info" role="alert">
+                    <p>Por favor, faça login para ver esta página.</p>
+                </div>
+                {% endif %}
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}" class="profile-form">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label_tag }}</label>
+                    {{ form.username }}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label_tag }}</label>
+                    {{ form.password }}
+                </div>
+                
+                <button type="submit" class="button button--primary" style="margin-top: 20px; width: 100%;">Login</button>
+                {# MODIFICADO AQUI: Usar a variável 'next' do contexto, se existir #}
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+            
+            <div style="margin-top: 25px; text-align: center; font-size: 0.9em;">
+                <p><a href="{% url 'password_reset' %}" class="text-link">Esqueceu a senha?</a></p>
+                <p style="margin-top: 10px;">
+                    Ainda não tem uma conta? <a href="{% url 'quiz:register' %}" class="text-link">Cadastre-se aqui</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ... (seus estilos <style> ... ) #}
+<style>
+    .form-message {
+        padding: 10px 15px;
+        margin-bottom: 20px;
+        border-radius: var(--border-radius-md);
+        font-size: 0.9em;
+    }
+    .form-message--error {
+        background-color: var(--color-incorrect-bg, #fff0f1);
+        color: var(--color-incorrect-text, #c12634);
+        border: 1px solid var(--color-incorrect-border, #f1aeb5);
+    }
+    .form-message--warning {
+        background-color: #fff9e6; /* Amarelo claro para aviso */
+        color: #856404; /* Marrom escuro para texto de aviso */
+        border: 1px solid #ffeeba; /* Borda amarela clara */
+    }
+    .form-message--info {
+        background-color: var(--color-primary-light, #eef3f8);
+        color: var(--color-primary-dark, #0d3b66);
+        border: 1px solid var(--color-primary-medium, #1a5f9e);
+    }
+    .text-link {
+        color: var(--color-primary-medium);
+        text-decoration: none;
+    }
+    .text-link:hover {
+        text-decoration: underline;
+        color: var(--color-primary-dark);
+    }
+    .profile-form input[type="text"],
+    .profile-form input[type="password"] {
+        display: block;
+        width: 100%;
+        padding: var(--form-control-padding-y, var(--spacing-xs, 10px)) var(--form-control-padding-x, var(--spacing-sm, 12px));
+        font-size: var(--form-control-font-size, var(--font-size-base, 0.95rem));
+        line-height: var(--line-height-base);
+        color: var(--form-control-color, var(--color-gray-900));
+        background-color: var(--form-control-bg, var(--color-white));
+        border: var(--border-width) solid var(--form-control-border-color, var(--color-gray-500));
+        border-radius: var(--form-control-border-radius, var(--border-radius-sm));
+        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        margin-top: 5px;
+    }
+    .profile-form input[type="text"]:focus,
+    .profile-form input[type="password"]:focus {
+        border-color: var(--focus-outline-color);
+        outline: 0;
+        box-shadow: 0 0 0 var(--focus-outline-width) rgba(var(--color-primary-medium-rgb), 0.25);
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock content %}

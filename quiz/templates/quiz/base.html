@@ -30,9 +30,7 @@
                 title="Minha Conta">
                 <span class="material-symbols-outlined">account_circle</span>
             </a>
-            <a href="{% url 'logout' %}" class="site-header__action-link" aria-label="Sair" title="Sair">
-                <span class="material-symbols-outlined">logout</span>
-            </a>
+            {# O LINK DE LOGOUT FOI REMOVIDO DAQUI #}
             {% else %}
             <a href="{% url 'login' %}" class="site-header__action-link" aria-label="Fazer Login" title="Fazer Login">
                 <span class="material-symbols-outlined">login</span>

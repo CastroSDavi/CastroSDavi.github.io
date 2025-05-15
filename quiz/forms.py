@@ -1,6 +1,6 @@
 # quiz/forms.py
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm # AuthenticationForm adicionado
 from django.contrib.auth.models import User # Modelo de usuário padrão do Django
 
 class CustomUserCreationForm(UserCreationForm):
@@ -41,3 +41,17 @@ class CustomUserCreationForm(UserCreationForm):
             # Se o email já existe, levanta um erro de validação.
             raise forms.ValidationError("Este endereço de email já está cadastrado. Por favor, utilize outro.")
         return email # Retorna o email limpo se for válido e único.
+
+# NOVO CÓDIGO ABAIXO:
+class CustomAuthenticationForm(AuthenticationForm):
+    """
+    Formulário de autenticação personalizado para adicionar classes CSS aos campos.
+    """
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Usuário'}
+        )
+        self.fields['password'].widget.attrs.update(
+            {'class': 'form-control', 'placeholder': 'Senha'}
+        )

@@ -16,5 +16,5 @@ urlpatterns = [
     path('api/quiz/end-session/', views.end_quiz_session_view, name='end_quiz_session'),
 
     # NOVA URL para buscar todos os dados do quiz
-    path('api/quiz/alldata/', views.api_get_all_quiz_data_view, name='api_get_all_quiz_data'),
+    path('api/quiz/alldata/', views.api_get_quiz_data_view, name='api_get_quiz_data')
 ]

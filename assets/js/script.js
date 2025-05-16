@@ -2,6 +2,13 @@
  * script.js - Lógica principal do MedQuiz
  */
 
+// Variável global para armazenar URLs do Django injetadas pelo template
+var DJANGO_URLS = {
+    start_quiz_session: '/api/quiz/start-session/', // Fallback se não injetado
+    register_answer: '/api/quiz/register-answer/',   // Fallback
+    end_quiz_session: '/api/quiz/end-session/'      // Fallback
+};
+
 class UserData {
     constructor() {
         this.reset();
@@ -10,17 +17,29 @@ class UserData {
     get erros() { return this._erros; }
     get pontos() { return this._pontos; }
     incrementarAcertos() { this._acertos++; this._atualizarPontos(); }
-    incrementarErros() { this._erros++; this._atualizarPontos(); }
-    _atualizarPontos() { this._pontos = Math.max(0, (15 * this._acertos) - (5 * this._erros)); }
-    reset() { this._acertos = 0; this._erros = 0; this._pontos = 0; }
+    incrementarErros() { this._erros++; this._atualizarPontos(); } // Assume que erros podem diminuir pontos
+    _atualizarPontos() {
+        // Lógica de pontuação: 15 pontos por acerto, -5 por erro (não pode ser negativo)
+        this._pontos = Math.max(0, (15 * this._acertos) - (5 * this._erros));
+    }
+    reset() {
+        this._acertos = 0;
+        this._erros = 0;
+        this._pontos = 0;
+    }
+    // Método para atualizar dados com base na resposta do backend (se necessário no futuro)
+    // updateFromServer(acertos, erros, pontos) {
+    //     this._acertos = acertos;
+    //     this._erros = erros;
+    //     this._pontos = pontos;
+    // }
 }
 
 class QuizData {
     constructor(
-        // As URLs são agora apenas fallbacks teóricos, não devem ser usadas se os dados são injetados
-        urlPerguntas = 'assets/data/perguntas.json',
-        urlCategorias = 'assets/data/categorias.json',
-        urlOpcoes = 'assets/data/opcoes_resposta.json'
+        urlPerguntas = 'assets/data/perguntas.json', // Fallback, não usado se dados injetados
+        urlCategorias = 'assets/data/categorias.json', // Fallback
+        urlOpcoes = 'assets/data/opcoes_resposta.json' // Fallback
     ) {
         this.urlPerguntas = urlPerguntas;
         this.urlCategorias = urlCategorias;
@@ -32,11 +51,9 @@ class QuizData {
     }
 
     async _fetchJson(url, required = true) {
-        // Esta função agora é um fallback e não deve ser chamada se os dados
-        // forem injetados corretamente pelo Django.
         console.warn(`QuizData._fetchJson: Tentando buscar de ${url}. Isto é um fallback e indica que os dados pré-carregados não foram usados ou estavam incompletos.`);
         try {
-            const timestamp = Date.now();
+            const timestamp = Date.now(); // Cache busting
             const response = await fetch(`${url}?t=${timestamp}`);
             if (!response.ok) {
                 if (required) throw new Error(`Falha ao carregar ${url}: ${response.statusText} (status ${response.status})`);
@@ -52,40 +69,42 @@ class QuizData {
     }
 
     setPreloadedData(perguntasData, categoriasData, opcoesData) {
-        console.log("QUIZDATA.setPreloadedData: Recebido para pré-carregar. Perguntas array:", Array.isArray(perguntasData), "Tamanho:", perguntasData ? perguntasData.length : 'N/A');
         this.perguntas = Array.isArray(perguntasData) ? perguntasData : [];
         this.categorias = Array.isArray(categoriasData) ? categoriasData : [];
         this.opcoesResposta = Array.isArray(opcoesData) ? opcoesData : [];
 
-        this._validateDataIntegrity();
+        this._validateDataIntegrity(); // Você pode implementar validações mais robustas aqui
 
         if (this.perguntas.length > 0) {
             this.dadosCarregadosCompletamente = true;
-            console.log(`QUIZDATA.setPreloadedData: 'this.dadosCarregadosCompletamente' DEFINIDO PARA TRUE. Perguntas: ${this.perguntas.length}`);
+            console.log(`QUIZDATA: Dados pré-carregados com sucesso. Perguntas: ${this.perguntas.length}`);
         } else {
             this.dadosCarregadosCompletamente = false;
-            console.warn(`QUIZDATA.setPreloadedData: 'this.dadosCarregadosCompletamente' MANTIDO/DEFINIDO COMO FALSE. this.perguntas.length: ${this.perguntas.length}`);
+            console.warn(`QUIZDATA: Dados pré-carregados incompletos ou ausentes. Perguntas: ${this.perguntas.length}`);
         }
         return this.dadosCarregadosCompletamente;
     }
 
     async loadAllData() {
-        console.log(`QUIZDATA.loadAllData: Iniciando. Flag 'dadosCarregadosCompletamente': ${this.dadosCarregadosCompletamente}. Perguntas já em this.perguntas: ${this.perguntas ? this.perguntas.length : 'N/A'}`);
         if (this.dadosCarregadosCompletamente && this.perguntas && this.perguntas.length > 0) {
-            console.log("QUIZDATA.loadAllData: Pulando fetch pois dados pré-carregados são suficientes.");
+            console.log("QUIZDATA: Usando dados pré-carregados. Fetch de JSONs pulado.");
             return true;
         }
-        console.log("QUIZDATA.loadAllData: Condição para pular fetch não atendida. Tentando carregar dos arquivos JSON (fallback)...");
+        console.log("QUIZDATA: Tentando carregar dados dos arquivos JSON (fallback)...");
         try {
             const [perguntasData, categoriasData, opcoesData] = await Promise.all([
                 this._fetchJson(this.urlPerguntas, true),
                 this._fetchJson(this.urlCategorias, true),
                 this._fetchJson(this.urlOpcoes, true)
             ]);
-            this.perguntas = perguntasData; this.categorias = categoriasData; this.opcoesResposta = opcoesData;
+            this.perguntas = perguntasData;
+            this.categorias = categoriasData;
+            this.opcoesResposta = opcoesData;
+
             if (!this.perguntas.length) {
                 console.warn("QuizData.loadAllData (fetch): Nenhuma pergunta carregada.");
-                this.dadosCarregadosCompletamente = false; return false;
+                this.dadosCarregadosCompletamente = false;
+                return false;
             }
             this._validateDataIntegrity();
             this.dadosCarregadosCompletamente = true;
@@ -93,11 +112,12 @@ class QuizData {
             return true;
         } catch (error) {
             console.error("QuizData.loadAllData (fetch): Erro CRÍTICO ao carregar dados JSON:", error);
-            this._resetProcessedData(); throw error;
+            this._resetProcessedData();
+            throw error;
         }
     }
     _resetProcessedData() { this.perguntas = []; this.categorias = []; this.opcoesResposta = []; this.dadosCarregadosCompletamente = false; }
-    _validateDataIntegrity() { /* TODO: Implementar */ }
+    _validateDataIntegrity() { /* TODO: Implementar validações de dados se necessário */ }
     getPerguntas() { return [...this.perguntas]; }
     getTotalPerguntas() { return this.perguntas.length; }
     getCategorias() { return [...this.categorias]; }
@@ -106,32 +126,48 @@ class QuizData {
         const categoriasMap = new Map(this.categorias.map(cat => [cat.id_categoria, { ...cat, subcategorias: [] }]));
         const categoriasRaiz = [];
         categoriasMap.forEach(node => {
-            if (node.id_categoria_pai === null || !categoriasMap.has(node.id_categoria_pai)) categoriasRaiz.push(node);
-            else { const parentNode = categoriasMap.get(node.id_categoria_pai); if (parentNode) parentNode.subcategorias.push(node); }
+            if (node.id_categoria_pai === null || !categoriasMap.has(node.id_categoria_pai)) {
+                categoriasRaiz.push(node);
+            } else {
+                const parentNode = categoriasMap.get(node.id_categoria_pai);
+                if (parentNode) parentNode.subcategorias.push(node);
+            }
         });
         const sortRecursive = (nodes) => {
             nodes.sort((a, b) => a.nome_categoria.localeCompare(b.nome_categoria));
             nodes.forEach(node => { if (node.subcategorias.length > 0) sortRecursive(node.subcategorias); });
         };
-        sortRecursive(categoriasRaiz); return categoriasRaiz;
+        sortRecursive(categoriasRaiz);
+        return categoriasRaiz;
     }
     getOpcoesPorPerguntaId(idPergunta) { return this.opcoesResposta.filter(op => op.id_pergunta === idPergunta).sort((a, b) => (a.ordem_exibicao || 0) - (b.ordem_exibicao || 0)); }
     getRelacaoPerguntaCategorias() {
-        const relacao = []; this.perguntas.forEach(p => { if (p.categoria_ids && Array.isArray(p.categoria_ids)) { p.categoria_ids.forEach(catId => { if (this.categorias.some(cat => cat.id_categoria === catId)) relacao.push({ id_pergunta: p.id_pergunta, id_categoria: catId }); }); } }); return relacao;
+        const relacao = [];
+        this.perguntas.forEach(p => {
+            if (p.categoria_ids && Array.isArray(p.categoria_ids)) {
+                p.categoria_ids.forEach(catId => {
+                    if (this.categorias.some(cat => cat.id_categoria === catId)) {
+                        relacao.push({ id_pergunta: p.id_pergunta, id_categoria: catId });
+                    }
+                });
+            }
+        });
+        return relacao;
     }
 }
 
-class QuizState { /* ... (sem alterações, código como antes) ... */ 
+class QuizState {
     constructor() {
         this.allQuestions = [];
         this.filteredQuestions = [];
         this.currentQuestionIndex = 0;
-        this.selectedCategories = [];
-        this.selectedDifficulties = ['all'];
+        this.selectedCategories = []; // IDs das categorias selecionadas
+        this.selectedDifficulties = ['all']; // 'all', 'fácil', 'médio', 'difícil'
         this.isInitialQuestionLoad = true;
         this.isQuickQuizMode = false;
-        this.QUICK_QUIZ_COUNT = 10;
+        this.QUICK_QUIZ_COUNT = 10; // Número de perguntas para o quiz rápido
     }
+
     initialize(perguntas) { this.allQuestions = perguntas; this.resetQuizState(); }
     resetQuizState() {
         this.filteredQuestions = []; this.currentQuestionIndex = 0; this.isInitialQuestionLoad = true;
@@ -162,7 +198,7 @@ class QuizState { /* ... (sem alterações, código como antes) ... */
                 const idsPerguntasComCategoria = new Set(relacaoPerguntaCategorias.filter(pc => idsCategoriasRelevantes.has(pc.id_categoria)).map(pc => pc.id_pergunta));
                 perguntasPotenciais = perguntasPotenciais.filter(p => idsPerguntasComCategoria.has(p.id_pergunta));
             }
-            if (!this.selectedDifficulties.includes('all')) {
+            if (!this.selectedDifficulties.includes('all') && this.selectedDifficulties.length > 0) {
                 perguntasPotenciais = perguntasPotenciais.filter(p => p.nivel_dificuldade && this.selectedDifficulties.includes(p.nivel_dificuldade.toLowerCase()));
             }
             this.filteredQuestions = perguntasPotenciais;
@@ -182,28 +218,25 @@ class QuizState { /* ... (sem alterações, código como antes) ... */
     goToPreviousQuestion() { if (this.currentQuestionIndex > 0) { this.currentQuestionIndex--; this.markNavigated(); return true; } return false; }
 }
 
-class LayoutManager { /* ... (sem alterações) ... */
+class LayoutManager {
     constructor() {
         this.footerElement = document.getElementById('footer') || document.querySelector('.site-footer');
         this.hiddenClassName = 'u-is-hidden';
         if (!this.footerElement) console.warn("LayoutManager: Rodapé não encontrado!");
     }
-    handleSectionChange(sectionId) { // Esta lógica agora é mais para sub-componentes DENTRO de uma página Django
+    handleSectionChange(sectionId) {
         if (!this.footerElement) return;
-        // A visibilidade do footer agora é mais consistentemente controlada pelo Django (está no base.html)
-        // Mas podemos manter a lógica se houver casos específicos onde ele deve sumir.
-        // Se a seção de questões (como um todo) está ativa e o quiz está em andamento, talvez esconda.
-        const quizContentActive = this.quizUI && this.quizUI.elements.quizSectionContent && !this.quizUI.elements.quizSectionContent.classList.contains('u-is-hidden');
-
-        if (sectionId === 'question-section' && quizContentActive) {
-             this.footerElement.classList.add(this.hiddenClassName);
-        } else {
-             this.footerElement.classList.remove(this.hiddenClassName);
-        }
+        // Esta lógica pode ser simplificada se o footer sempre for visível ou controlado pelo Django
+        // const quizContentActive = this.quizUI && this.quizUI.elements.quizSectionContent && !this.quizUI.elements.quizSectionContent.classList.contains(this.hiddenClassName);
+        // if (sectionId === 'question-section' && quizContentActive) {
+        //     this.footerElement.classList.add(this.hiddenClassName);
+        // } else {
+        //     this.footerElement.classList.remove(this.hiddenClassName);
+        // }
     }
 }
 
-class ChallengeHubManager { /* ... (sem alterações) ... */
+class ChallengeHubManager {
     constructor(uiElements, quizLogic) {
         this.elements = {
             challengeHubContainer: uiElements.challengeHubContainer, hubCustomizeQuizBtn: uiElements.hubCustomizeQuizBtn,
@@ -225,11 +258,7 @@ class ChallengeHubManager { /* ... (sem alterações) ... */
             if (this.quizUI) { this.quizUI.toggleFilterPanel(true); if(this.elements.placeholderFiltrosContainer) this.quizUI.showElement(this.elements.placeholderFiltrosContainer); }
         });
         this.elements.hubQuickQuizBtn?.addEventListener('click', () => {
-            if (this.quizLogic) {
-                // A UI para o quiz já deve estar visível se estamos na página de questões.
-                // Apenas iniciamos a lógica do quiz rápido.
-                this.quizLogic.startQuickQuiz();
-            }
+            if (this.quizLogic) { this.quizLogic.startQuickQuiz(); }
         });
         this.elements.closeFiltersAndShowHubBtn?.addEventListener('click', () => {
             if(this.quizUI) this.quizUI.toggleFilterPanel(false); this.showHub();
@@ -237,11 +266,10 @@ class ChallengeHubManager { /* ... (sem alterações) ... */
     }
 }
 
-class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada para navegação principal) ... */
+class QuizUI {
     constructor(onSectionChangeCallback = null) {
         this.hiddenClassName = 'u-is-hidden';
-        // currentSection agora reflete mais o estado da UI DENTRO da página Django atual
-        this.currentSection = null; // Será definido no App.initialize
+        this.currentSection = null;
         this.QUESTOES_POR_PAGINA_GRID = 5; this.TRANSITION_DURATION = 300;
         this.onSectionChange = onSectionChangeCallback;
         this.timerInterval = null; this.timerSeconds = 0; this.timerRunning = false;
@@ -251,19 +279,17 @@ class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada 
     cacheDOMelements() {
         this.elements = {
             homeSection: document.getElementById('home-section'),
-            questionSection: document.getElementById('question-section'), // A <section> principal
+            questionSection: document.getElementById('question-section'),
             accountSection: document.getElementById('account-section'),
-            navElements: document.querySelectorAll('[data-section], [data-section-target-django]'), // Para destacar o link ativo se o Django não o fizer
-            mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'), // Conteúdo principal DENTRO de #question-section
+            mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'),
             scorePanel: document.querySelector('.score-panel'),
             challengeHubContainer: document.getElementById('challenge-hub-container'),
             hubCustomizeQuizBtn: document.getElementById('hub-customize-quiz-btn'), hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'),
             hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'), hubQuickQuizCount: document.getElementById('hub-quick-quiz-count'),
             closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'), avisoContainer: document.getElementById('aviso-container'),
             avisoMensagem: document.querySelector('#aviso-container .card--aviso p'), placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
-            quizSectionContent: document.getElementById('quiz-section'), // A <section id="quiz-section"> interna para o quiz ativo
+            quizSectionContent: document.getElementById('quiz-section'),
             questionWrap: document.querySelector('#quiz-section .card--question-wrap'),
-            // ... (resto dos elementos como antes)
             progressContainer: document.getElementById('progress-container'), progressBarFill: document.getElementById('progress-bar-fill'),
             progressText: document.getElementById('progress-text'), questionTitle: document.getElementById('question-title'),
             categoriaTitulo: document.getElementById('categoria-titulo'), idQuestao: document.getElementById('id-questao'),
@@ -292,46 +318,9 @@ class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada 
             explanationModalDivider: document.querySelector('.explanation-modal__divider'), explanationModalEmptyState: document.getElementById('explanation-modal-empty-state'),
             btnGotItExplanation: document.getElementById('btn-got-it-explanation'),
         };
-        // sectionElements agora se refere às seções principais que o Django pode estar servindo como páginas distintas
-        this.sectionElements = {
-            'home-section': this.elements.homeSection,
-            'question-section-page': this.elements.questionSection, // A <section id="question-section"> principal
-            'account-section-page': this.elements.accountSection
-        };
         this._validateCache();
     }
-
-    // showSection agora é mais para controlar a UI *dentro* de uma página já carregada pelo Django.
-    // A navegação entre /home, /questions, /account é feita pelo Django.
-    showSection(sectionId) {
-        console.log(`QuizUI.showSection (interno): Chamado para '${sectionId}'`);
-        // Lógica para mostrar/esconder sub-componentes DENTRO da página atual.
-        // Ex: dentro de question-section-page, alternar entre challengeHub e quiz-section (interno)
-        if (this.currentSection === 'question-section-page') {
-            if (sectionId === 'challenge-hub') { // Assumindo que ChallengeHubManager chama isso
-                this.showElement(this.elements.challengeHubContainer);
-                this.hideElement(this.elements.quizSectionContent); // O quiz ativo
-                this.hideElement(this.elements.scorePanel);
-                // ... outros elementos a esconder/mostrar
-            } else if (sectionId === 'quiz-active') { // QuizLogic chamaria isso
-                this.hideElement(this.elements.challengeHubContainer);
-                this.showElement(this.elements.quizSectionContent); // O quiz ativo
-                this.showElement(this.elements.scorePanel);
-                // ...
-            }
-        }
-        // A lógica anterior de getSectionUIConfig e esconder todas as outras seções principais
-        // não é mais necessária se o Django está servindo páginas separadas.
-        // Se você ainda estiver em uma abordagem SPA com o Django apenas servindo o "esqueleto",
-        // a lógica anterior de showSection precisaria ser mantida.
-
-        // A chamada onSectionChange ainda pode ser útil para o LayoutManager
-        if (this.onSectionChange && typeof this.onSectionChange === 'function') {
-             this.onSectionChange(this.currentSection); // Passa a seção da página atual
-        }
-    }
-    // ... (Resto da classe QuizUI, como _updateActiveNavLinks, showWarning, displayQuizContent, displayQuestion, etc., permanece o mesmo)
-    _validateCache() { /* Validations for DOM elements */ }
+    _validateCache() { Object.keys(this.elements).forEach(key => { if (!this.elements[key] && key !== 'homeSection' && key !== 'accountSection' && !(key.startsWith('navElement'))) { /* console.warn(`QuizUI: Elemento '${key}' não encontrado no DOM.`); */ } }); } // Ajustado para não avisar sobre seções de outras páginas
     showElement(el) { el?.classList.remove(this.hiddenClassName); }
     hideElement(el) { el?.classList.add(this.hiddenClassName); }
     stopTimer() { if (this.timerInterval) { clearInterval(this.timerInterval); this.timerInterval = null; } this.timerRunning = false; }
@@ -353,26 +342,8 @@ class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada 
             panel.classList.remove(pVis); overlay.classList.remove(oVis);
             const onEnd = () => { if (!panel.classList.contains(pVis)) { this.hideElement(panel); this.hideElement(overlay); panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true'); } panel.removeEventListener('transitionend', onEnd); this.focusedElementBeforePanel?.focus(); if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) && this.elements.resultadoCard?.classList.contains(this.hiddenClassName)) { this.hideElement(this.elements.placeholderFiltrosContainer); this.showElement(this.elements.challengeHubContainer); }};
             panel.addEventListener('transitionend', onEnd, { once: true });
-            setTimeout(() => { if (!panel.classList.contains(pVis)) { this.hideElement(panel); this.hideElement(overlay); panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true'); this.focusedElementBeforePanel?.focus(); if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) && this.elements.resultadoCard?.classList.contains(this.hiddenClassName)) { this.hideElement(this.elements.placeholderFiltrosContainer); this.showElement(this.elements.challengeHubContainer); }} panel.removeEventListener('transitionend', onEnd); }, this.TRANSITION_DURATION + 50);
+            setTimeout(() => { if (!panel.classList.contains(pVis)) { this.hideElement(panel); this.hideElement(overlay); panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true'); this.focusedElementBeforePanel?.focus(); if (this.elements.quizSectionContent?.classList.contains(this.hiddenClassName) && this.elements.resultadoCard?.classList.contains(this.hiddenClassName)) { this.hideElement(this.elements.placeholderFiltrosContainer); this.showElement(this.elements.challengeHubContainer); }} panel.removeEventListener('transitionend', onEnd); }, this.TRANSITION_DURATION + 70);
         }
-    }
-    // _updateActiveNavLinks pode ser removida se o Django já estiver tratando isso no template com request.resolver_match.view_name
-    _updateActiveNavLinks(activeSectionId) {
-        this.elements.navElements?.forEach(navEl => {
-            if (navEl) {
-                const navElSection = navEl.dataset.sectionTargetDjango || navEl.dataset.section;
-                const isActive = navElSection === activeSectionId;
-                const mainCl = "main-nav__link", bottomCl = "bottom-nav__link", activeMod = "--active";
-                navEl.classList.remove(`${mainCl}${activeMod}`, `${bottomCl}${activeMod}`);
-                if (isActive) {
-                    if (navEl.classList.contains(mainCl)) navEl.classList.add(`${mainCl}${activeMod}`);
-                    else if (navEl.classList.contains(bottomCl)) navEl.classList.add(`${bottomCl}${activeMod}`);
-                    navEl.setAttribute("aria-current", "page");
-                } else {
-                    navEl.removeAttribute("aria-current");
-                }
-            }
-        });
     }
     showWarning(message) {
         const { avisoContainer, avisoMensagem, placeholderFiltrosContainer, challengeHubContainer } = this.elements;
@@ -381,17 +352,13 @@ class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada 
             this.showElement(avisoContainer);
             this.hideElement(placeholderFiltrosContainer);
             this.hideElement(challengeHubContainer);
-            // Se estivermos na página de questões, esconda a UI do quiz ativo.
-            if (document.getElementById('question-section-page')) { // Checa se estamos na página de questões
-                this.hideQuizElements();
-            }
+            if (document.getElementById('question-section')) { this.hideQuizElements(); }
         }
     }
     clearWarning() {
         const { avisoContainer, avisoMensagem, placeholderFiltrosContainer, challengeHubContainer, quizSectionContent, resultadoCard } = this.elements;
         this.hideElement(avisoContainer); avisoMensagem?.removeAttribute("role");
-        // Mostra o hub de desafios se estivermos na página de questões e não houver quiz ou resultado ativo.
-        if (document.getElementById('question-section-page')) {
+        if (document.getElementById('question-section')) {
             if (quizSectionContent?.classList.contains(this.hiddenClassName) && resultadoCard?.classList.contains(this.hiddenClassName)) {
                 this.hideElement(placeholderFiltrosContainer);
                 this.showElement(challengeHubContainer);
@@ -457,7 +424,7 @@ class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada 
         if ((hasGenExpl || hasOptExpl) && this.elements.btnToggleExplanation) this.showElement(this.elements.btnToggleExplanation);
         else this.hideElement(this.elements.btnToggleExplanation);
     }
-    toggleExplanationModal(show){const o=this.elements.explanationModalOverlay,d=this.elements.explanationModalDialog;if(!o||!d||!this.quizState||!this.quizData)return;const mVis='modal--visible';if(show){const q=this.quizState.getCurrentQuestion();if(!q)return;const opts=this.quizData.getOpcoesPorPerguntaId(q.id_pergunta);let hasCont=false;const genBlk=this.elements.explanationModalGeneralBlock,genTxt=this.elements.explanationModalGeneralText;if(q.explicacao_resposta?.trim()){genTxt.innerHTML=q.explicacao_resposta.replace(/\n/g,'<br>');this.showElement(genBlk);hasCont=true;}else this.hideElement(genBlk);const optsBlk=this.elements.explanationModalOptionsBlock,optsList=this.elements.explanationModalOptionsList;optsList.innerHTML='';let hasSpecOptFeed=false;opts.forEach(opt=>{if(opt.feedback_opcao?.trim()){hasSpecOptFeed=true;const li=document.createElement('li');const origSpan=document.createElement('span');origSpan.className='option-original-text';origSpan.textContent=`Alternativa: "${opt.texto_opcao}"`;li.appendChild(origSpan);const feedSpan=document.createElement('span');feedSpan.className='option-feedback-value';feedSpan.classList.add(opt.eh_correta?'correct':'incorrect');feedSpan.innerHTML=opt.feedback_opcao.replace(/\n/g,'<br>');li.appendChild(feedSpan);optsList.appendChild(li);}});if(hasSpecOptFeed){this.showElement(optsBlk);hasCont=true;}else this.hideElement(optsBlk);const div=this.elements.explanationModalDivider;if(genBlk&&!genBlk.classList.contains(this.hiddenClassName)&&optsBlk&&!optsBlk.classList.contains(this.hiddenClassName)&&div)this.showElement(div);else if(div)this.hideElement(div);const empty=this.elements.explanationModalEmptyState;if(!hasCont&&empty)this.showElement(empty);else if(empty)this.hideElement(empty);this.focusedElementBeforeExplanationModal=document.activeElement;this.showElement(o);o.scrollTop;requestAnimationFrame(()=>{o.classList.add(mVis);d.focus();});}else{o.classList.remove(mVis);const end=()=>{if(!o.classList.contains(mVis))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforeExplanationModal?.focus();};o.addEventListener('transitionend',end,{once:true});setTimeout(()=>{if(!o.classList.contains(mVis))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforeExplanationModal?.focus();},this.TRANSITION_DURATION+50);}}
+    toggleExplanationModal(show){const o=this.elements.explanationModalOverlay,d=this.elements.explanationModalDialog;if(!o||!d||!this.quizState||!this.quizData)return;const mVis='modal--visible';if(show){const q=this.quizState.getCurrentQuestion();if(!q)return;const opts=this.quizData.getOpcoesPorPerguntaId(q.id_pergunta);let hasCont=false;const genBlk=this.elements.explanationModalGeneralBlock,genTxt=this.elements.explanationModalGeneralText;if(q.explicacao_resposta?.trim()){genTxt.innerHTML=q.explicacao_resposta.replace(/\n/g,'<br>');this.showElement(genBlk);hasCont=true;}else this.hideElement(genBlk);const optsBlk=this.elements.explanationModalOptionsBlock,optsList=this.elements.explanationModalOptionsList;optsList.innerHTML='';let hasSpecOptFeed=false;opts.forEach(opt=>{if(opt.feedback_opcao?.trim()){hasSpecOptFeed=true;const li=document.createElement('li');li.classList.add(opt.eh_correta ? 'is-correct-feedback' : 'is-incorrect-feedback'); const origSpan=document.createElement('span');origSpan.className='option-original-text';origSpan.textContent=`Alternativa: "${opt.texto_opcao}"`;li.appendChild(origSpan);const feedSpan=document.createElement('span');feedSpan.className='option-feedback-value';feedSpan.classList.add(opt.eh_correta?'correct':'incorrect');feedSpan.innerHTML=opt.feedback_opcao.replace(/\n/g,'<br>');li.appendChild(feedSpan);optsList.appendChild(li);}});if(hasSpecOptFeed){this.showElement(optsBlk);hasCont=true;}else this.hideElement(optsBlk);const div=this.elements.explanationModalDivider;if(genBlk&&!genBlk.classList.contains(this.hiddenClassName)&&optsBlk&&!optsBlk.classList.contains(this.hiddenClassName)&&div)this.showElement(div);else if(div)this.hideElement(div);const empty=this.elements.explanationModalEmptyState;if(!hasCont&&empty)this.showElement(empty);else if(empty)this.hideElement(empty);this.focusedElementBeforeExplanationModal=document.activeElement;this.showElement(o);o.scrollTop;requestAnimationFrame(()=>{o.classList.add(mVis);d.focus();});}else{o.classList.remove(mVis);const end=()=>{if(!o.classList.contains(mVis))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforeExplanationModal?.focus();};o.addEventListener('transitionend',end,{once:true});setTimeout(()=>{if(!o.classList.contains(mVis))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforeExplanationModal?.focus();},this.TRANSITION_DURATION+70);}}
     updateProgressBar(current,total){const p=this.elements.progressContainer,f=this.elements.progressBarFill,x=this.elements.progressText;if(p&&f&&x){if(total>0){f.style.width=`${Math.min(current,total)/total*100}%`;x.textContent=`${current} / ${total}`;this.showElement(p);this.showElement(x);}else this.hideProgressBar();}}
     hideProgressBar(){this.hideElement(this.elements.progressContainer);this.hideElement(this.elements.progressText);if(this.elements.progressBarFill)this.elements.progressBarFill.style.width="0%";if(this.elements.progressText)this.elements.progressText.textContent="";}
     updateNavigationButtons(isFirst,isLast,totalQuestions){const n=this.elements.navigationButtons,p=this.elements.prevBtn,nxt=this.elements.nextBtn;if(n&&p&&nxt){if(totalQuestions<=0)this.hideElement(n);else{this.showElement(n);p.disabled=isFirst;nxt.disabled=false;nxt.textContent=isLast?"Ver Resultado":" Avançar";}}}
@@ -599,63 +566,164 @@ class QuizUI { /* ... (sem grandes alterações, mas showSection é menos usada 
         this.showElement(resultadoCard); resultadoTitulo?.focus();
     }
     hideResults() { this.hideElement(this.elements.resultadoCard); }
-    toggleConfirmModal(show) {const o=this.elements.confirmEncerrarOverlay;if(!o)return;const m='modal--visible';if(show){this.focusedElementBeforePanel=document.activeElement;this.showElement(o);o.scrollTop;requestAnimationFrame(()=>{o.classList.add(m);this.elements.cancelEncerrarBtn?.focus();});}else{o.classList.remove(m);const end=()=>{if(!o.classList.contains(m))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforePanel?.focus();};o.addEventListener('transitionend',end,{once:true});setTimeout(()=>{if(!o.classList.contains(m))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforePanel?.focus();},this.TRANSITION_DURATION+50);}}
+    toggleConfirmModal(show) {const o=this.elements.confirmEncerrarOverlay;if(!o)return;const m='modal--visible';if(show){this.focusedElementBeforePanel=document.activeElement;this.showElement(o);o.scrollTop;requestAnimationFrame(()=>{o.classList.add(m);this.elements.cancelEncerrarBtn?.focus();});}else{o.classList.remove(m);const end=()=>{if(!o.classList.contains(m))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforePanel?.focus();};o.addEventListener('transitionend',end,{once:true});setTimeout(()=>{if(!o.classList.contains(m))this.hideElement(o);o.removeEventListener('transitionend',end);this.focusedElementBeforePanel?.focus();},this.TRANSITION_DURATION+70);}}
     scrollToQuestionStart(){const t=this.elements.questionTitle;if(this.currentSection==="question-section"&&t)t.scrollIntoView({behavior:"smooth",block:"nearest"});}
     focusNextButton(preventScroll=false){this.elements.nextBtn?.focus({preventScroll:preventScroll});}
     smoothScrollToNextButton(){const t=this.elements.navigationButtons;t&&t.scrollIntoView({behavior:"smooth",block:"nearest"});}
 }
 
-class QuizLogic { /* ... (sem alterações) ... */
+class QuizLogic {
     constructor(quizState, quizUI, userData, quizData) {
-        this.state = quizState; this.ui = quizUI; this.user = userData; this.quizData = quizData;
+        this.state = quizState;
+        this.ui = quizUI;
+        this.user = userData;
+        this.quizData = quizData;
         this.challengeHubManager = null;
+        this.currentSessionId = null; // ID da sessão de quiz atual com o backend
     }
+
     setChallengeHubManager(manager) { this.challengeHubManager = manager; }
+
     applyFiltersAndStartQuiz() {
-        const selCatIds = this.ui.getSelectedCategoriesFromTree(); const selDiffs = this.ui.getSelectedDifficulties();
-        this.state.setQuickQuizMode(false); this.state.setFilters(selCatIds, selDiffs);
-        this.ui.toggleFilterPanel(false); this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
-        this.startQuiz();
+        const selCatIds = this.ui.getSelectedCategoriesFromTree();
+        const selDiffs = this.ui.getSelectedDifficulties();
+        this.state.setQuickQuizMode(false);
+        this.state.setFilters(selCatIds, selDiffs);
+        this.ui.toggleFilterPanel(false);
+        this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
+        this.startQuiz(selCatIds);
     }
+
     clearAllFiltersInPanel() { this.ui.setCategoryTreeState([]); this.ui.setDifficultyState(['all']); }
-    startQuiz() {
+
+    async startQuiz(selectedCategoryIds = []) {
         this.user.reset();
         this.state.filterQuestions(this.quizData.getCategorias(), this.quizData.getRelacaoPerguntaCategorias());
         this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
-        this.ui.hideResults(); this.ui.resetTimer(); this.ui.toggleExplanationModal(false);
+        this.ui.hideResults();
+        this.ui.resetTimer();
+        this.ui.toggleExplanationModal(false);
+
         const fQs = this.state.filteredQuestions;
         if (fQs.length > 0) {
-            this.ui.hideElement(this.ui.elements.challengeHubContainer); this.ui.showElement(this.ui.elements.scorePanel);
-            this.ui.displayQuizContent(true); this._displayCurrentQuestion(false); this.ui.startTimer();
+            try {
+                const response = await fetch(DJANGO_URLS.start_quiz_session, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        modo_quiz: this.state.isQuickQuizMode ? 'Rápido' : 'Por Categoria',
+                        categoria_ids: this.state.isQuickQuizMode ? [] : selectedCategoryIds,
+                        total_perguntas_sessao: fQs.length,
+                    }),
+                });
+                const data = await response.json();
+                if (response.ok && data.status === 'success' && data.session_id) {
+                    this.currentSessionId = data.session_id;
+                    console.log("Backend: Sessão de Quiz iniciada, ID:", this.currentSessionId);
+                    this.ui.hideElement(this.ui.elements.challengeHubContainer);
+                    this.ui.showElement(this.ui.elements.scorePanel);
+                    this.ui.displayQuizContent(true);
+                    this._displayCurrentQuestion(false);
+                    this.ui.startTimer();
+                } else {
+                    console.error("Backend: Falha ao iniciar sessão de quiz:", data.message || response.statusText);
+                    this.ui.showWarning(`Não foi possível iniciar a sessão de quiz: ${data.message || 'Erro do servidor'}. Tente novamente.`);
+                }
+            } catch (error) {
+                console.error("Erro de rede ao iniciar sessão de quiz:", error);
+                this.ui.showWarning("Erro de conexão ao iniciar o quiz. Verifique sua internet.");
+            }
         } else {
             this.ui.displayQuizContent(false);
             this.ui.showWarning(this.state.isQuickQuizMode ? "Nenhuma pergunta disponível para um Quiz Rápido no momento." : "Nenhuma questão encontrada com os filtros selecionados. Tente outros filtros!");
             this.ui.stopTimer();
         }
     }
-    startQuickQuiz() { this.state.setQuickQuizMode(true); this.state.setFilters([], ['all']); this.ui.toggleFilterPanel(false); this.startQuiz(); }
-    answerQuestion(selectedOpId) {
-        const currQ = this.state.getCurrentQuestion(); if (!currQ) return;
+
+    startQuickQuiz() {
+        this.state.setQuickQuizMode(true);
+        this.state.setFilters([], ['all']);
+        this.ui.toggleFilterPanel(false); // Garante que o painel de filtros seja fechado
+        this.startQuiz();
+    }
+
+    async answerQuestion(selectedOpId) {
+        const currQ = this.state.getCurrentQuestion();
+        if (!currQ) { console.error("Erro: Tentando responder sem questão atual."); return; }
+        if (!this.currentSessionId) { console.warn("Aviso: ID da sessão de quiz não definido. A resposta não será salva no backend."); }
+
         const opts = this.quizData.getOpcoesPorPerguntaId(currQ.id_pergunta);
         const selOpt = opts.find(op => op.id_opcao_resposta === selectedOpId);
+
         if (selOpt && this.state.recordAnswer(selectedOpId)) {
-            currQ.foiCorretaNaSessao = selOpt.eh_correta;
-            if (selOpt.eh_correta) this.user.incrementarAcertos(); else this.user.incrementarErros();
-            this.ui.disableAnswers(); this.ui.applyAnswerFeedback(selectedOpId, opts);
+            currQ.foiCorretaNaSessao = selOpt.eh_correta; // Lógica frontend para feedback imediato
+            if (selOpt.eh_correta) this.user.incrementarAcertos();
+            else this.user.incrementarErros();
+
+            this.ui.disableAnswers();
+            this.ui.applyAnswerFeedback(selectedOpId, opts);
             this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
             this.ui.renderQuestionGrid(this.state.filteredQuestions, this.state.currentQuestionIndex, (idx) => this.goToQuestion(idx));
             this.ui.updateNavigationButtons(this.state.isFirstQuestion(), this.state.isLastQuestion(), this.state.getTotalFilteredQuestions());
-            this.ui.focusNextButton(true); this.ui.smoothScrollToNextButton();
+            this.ui.focusNextButton(true);
+            this.ui.smoothScrollToNextButton();
+
+            if (this.currentSessionId) {
+                try {
+                    const response = await fetch(DJANGO_URLS.register_answer, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': getCookie('csrftoken'),
+                        },
+                        body: JSON.stringify({
+                            session_id: this.currentSessionId,
+                            pergunta_id: currQ.id_pergunta,
+                            opcao_id: selectedOpId,
+                        }),
+                    });
+                    const data = await response.json();
+                    if (response.ok && data.status === 'success') {
+                        console.log("Backend: Resposta registrada. Correta (backend):", data.foi_correta);
+                        // Opcional: sincronizar estado do frontend com o backend se houver discrepâncias
+                        // if (data.foi_correta !== currQ.foiCorretaNaSessao) {
+                        //     console.warn("Discrepância entre frontend e backend na correção da resposta!");
+                        // }
+                    } else {
+                        console.error("Backend: Falha ao registrar resposta:", data.message || response.statusText);
+                    }
+                } catch (error) {
+                    console.error("Erro de rede ao registrar resposta:", error);
+                }
+            }
         }
     }
+
     nextQuestion() {
-        const isLast = this.state.isLastQuestion(); const currentQ = this.state.getCurrentQuestion();
+        const isLast = this.state.isLastQuestion();
+        const currentQ = this.state.getCurrentQuestion();
         if (currentQ && !currentQ.hasOwnProperty('respostaDadaId') && !currentQ.foiPulada) {
             currentQ.foiPulada = true;
             this.ui.renderQuestionGrid(this.state.filteredQuestions, this.state.currentQuestionIndex, (idx) => this.goToQuestion(idx));
+            // Informar o backend sobre a pergunta pulada (opcional, mas bom para estatísticas mais precisas)
+            if (this.currentSessionId) {
+                fetch(DJANGO_URLS.register_answer, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')},
+                    body: JSON.stringify({ session_id: this.currentSessionId, pergunta_id: currentQ.id_pergunta, opcao_id: null })
+                }).then(res => res.json()).then(data => console.log("Backend: Pergunta pulada registrada.", data))
+                  .catch(err => console.error("Erro ao registrar pulo no backend:", err));
+            }
         }
-        if (this.state.goToNextQuestion()) { if (this.state.isQuizComplete()) this.endQuiz(); else this._displayCurrentQuestion(); }
-        else if (isLast) this.endQuiz();
+        if (this.state.goToNextQuestion()) {
+            if (this.state.isQuizComplete()) this.endQuiz();
+            else this._displayCurrentQuestion();
+        } else if (isLast) {
+            this.endQuiz();
+        }
     }
     previousQuestion() { if (this.state.goToPreviousQuestion()) this._displayCurrentQuestion(); }
     goToQuestion(idx) { if (idx >= this.state.getTotalFilteredQuestions()) this.endQuiz(); else if (this.state.goToQuestion(idx)) this._displayCurrentQuestion(); }
@@ -671,26 +739,75 @@ class QuizLogic { /* ... (sem alterações) ... */
                 this.ui.renderQuestionGrid(this.state.filteredQuestions,this.state.currentQuestionIndex,(idx)=>this.goToQuestion(idx));
                 if(shouldScroll) this.ui.scrollToQuestionStart();
                 if (p.hasOwnProperty('respostaDadaId') && p.respostaDadaId !== null) this.ui.applyAnswerFeedback(p.respostaDadaId, opts);
-            } else this.endQuiz();
+            } else this.endQuiz(); // Pode acontecer se filteredQuestions ficar vazio inesperadamente
         };
         if(!init && el){ el.classList.add("is-fading-out"); await new Promise(resolve => { let ended = false; const handler = () => { if (!ended) { el.removeEventListener("transitionend", handler); ended = true; resolve(); } }; el.addEventListener("transitionend", handler); setTimeout(() => { if (!ended) { el.removeEventListener("transitionend", handler); ended = true; resolve(); } }, this.ui.TRANSITION_DURATION + 50); }); el.classList.remove("is-fading-out"); el.classList.add("is-transparent"); requestAnimationFrame(() => { logic(); requestAnimationFrame(() => el.classList.remove("is-transparent")); }); }
         else { logic(); if (el) el.classList.remove("is-fading-out", "is-transparent"); if (this.state.getTotalFilteredQuestions() > 0) this.state.markNavigated(); }
     }
-    endQuiz() { this.ui.stopTimer(); this.ui.showResults(this.user, this.state.getTotalFilteredQuestions()); this.ui.toggleExplanationModal(false); }
+
+    async endQuiz() {
+        this.ui.stopTimer();
+        this.ui.toggleExplanationModal(false);
+
+        if (this.currentSessionId) {
+            try {
+                const response = await fetch(DJANGO_URLS.end_quiz_session, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        session_id: this.currentSessionId,
+                        tempo_total_segundos: this.ui.timerSeconds,
+                        // O backend já deve ter os acertos/erros/pontos corretos
+                    }),
+                });
+                const data = await response.json();
+                if (response.ok && data.status === 'success') {
+                    console.log("Backend: Sessão finalizada. Pontuação (backend):", data.pontuacao_final);
+                    // Usar os dados do frontend para exibição, já que UserData está atualizado
+                    this.ui.showResults(this.user, this.state.getTotalFilteredQuestions());
+                } else {
+                    console.error("Backend: Falha ao finalizar sessão:", data.message || response.statusText);
+                    this.ui.showResults(this.user, this.state.getTotalFilteredQuestions()); // Mostrar com dados do frontend
+                }
+            } catch (error) {
+                console.error("Erro de rede ao finalizar sessão:", error);
+                this.ui.showResults(this.user, this.state.getTotalFilteredQuestions()); // Mostrar com dados do frontend
+            }
+            this.currentSessionId = null;
+        } else {
+            console.warn("Nenhum ID de sessão ativo para finalizar no backend.");
+            this.ui.showResults(this.user, this.state.getTotalFilteredQuestions());
+        }
+    }
+
     restartQuiz() {
-        this.user.reset(); this.state.fullReset();
+        this.user.reset();
+        this.state.fullReset();
+        this.currentSessionId = null; // Limpar ID da sessão
         this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
-        this.ui.hideResults(); this.ui.resetTimer(); this.ui.toggleExplanationModal(false);
-        this.ui.displayQuizContent(false); this.ui.clearWarning(); this.clearAllFiltersInPanel();
+        this.ui.hideResults();
+        this.ui.resetTimer();
+        this.ui.toggleExplanationModal(false);
+        this.ui.displayQuizContent(false); // Esconde a UI do quiz ativo
+        this.ui.clearWarning();
+        this.clearAllFiltersInPanel();
         if (this.challengeHubManager) this.challengeHubManager.showHub();
         this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
     }
-    forceEndQuiz() { this.ui.stopTimer(); this.endQuiz(); this.ui.toggleConfirmModal(false); this.ui.toggleExplanationModal(false); }
+
+    async forceEndQuiz() { // Já que endQuiz agora é async
+        this.ui.stopTimer();
+        await this.endQuiz(); // Espera a finalização da sessão no backend
+        this.ui.toggleConfirmModal(false);
+        this.ui.toggleExplanationModal(false);
+    }
 }
 
 class App {
     constructor() {
-        console.log("APP CONSTRUCTOR: Iniciando. window.djangoQuizData neste momento:", window.djangoQuizData ? JSON.parse(JSON.stringify(window.djangoQuizData)) : 'NÃO DEFINIDO');
         this.userData = new UserData();
         this.quizData = new QuizData();
         this.quizState = new QuizState();
@@ -699,34 +816,48 @@ class App {
         this.quizLogic = new QuizLogic(this.quizState, this.quizUI, this.userData, this.quizData);
         this.challengeHubManager = new ChallengeHubManager(this.quizUI.elements, this.quizLogic);
 
-        this.quizUI.quizState = this.quizState;
+        this.quizUI.quizState = this.quizState; // Injetar dependências
         this.quizUI.quizData = this.quizData;
         this.quizLogic.setChallengeHubManager(this.challengeHubManager);
         this.challengeHubManager.setQuizUI(this.quizUI);
+
+        // Carregar URLs do Django
+        const urlsElement = document.getElementById('django-urls');
+        if (urlsElement) {
+            try {
+                const parsedUrls = JSON.parse(urlsElement.textContent);
+                DJANGO_URLS.start_quiz_session = parsedUrls.start_quiz_session || DJANGO_URLS.start_quiz_session;
+                DJANGO_URLS.register_answer = parsedUrls.register_answer || DJANGO_URLS.register_answer;
+                DJANGO_URLS.end_quiz_session = parsedUrls.end_quiz_session || DJANGO_URLS.end_quiz_session;
+                console.log("URLs do Django carregadas:", DJANGO_URLS);
+            } catch (e) {
+                console.error("Erro ao parsear URLs do Django:", e, "Usando fallbacks.");
+            }
+        } else {
+            console.warn("Elemento #django-urls não encontrado. Usando URLs de fallback.");
+        }
     }
 
     async initialize() {
-        console.log("APP INITIALIZE: Começando. window.djangoQuizData neste momento:", window.djangoQuizData ? JSON.parse(JSON.stringify(window.djangoQuizData)) : 'NÃO DEFINIDO');
+        console.log("APP INITIALIZE: Começando.");
         try {
             if (window.djangoQuizData && typeof window.djangoQuizData === 'object' &&
                 Array.isArray(window.djangoQuizData.perguntas) &&
                 Array.isArray(window.djangoQuizData.categorias) &&
                 Array.isArray(window.djangoQuizData.opcoesResposta)
             ) {
-                console.log("APP.INITIALIZE: window.djangoQuizData é válido. Chamando setPreloadedData. Perguntas:", window.djangoQuizData.perguntas.length);
                 this.quizData.setPreloadedData(
                     window.djangoQuizData.perguntas,
                     window.djangoQuizData.categorias,
                     window.djangoQuizData.opcoesResposta
                 );
             } else {
-                console.warn("APP.INITIALIZE: window.djangoQuizData não está no formato esperado ou está incompleto. O fallback para fetch será tentado.");
+                console.warn("APP.INITIALIZE: window.djangoQuizData não está no formato esperado ou está incompleto.");
             }
 
             const dadosForamCarregados = await this.quizData.loadAllData();
 
             if (dadosForamCarregados && this.quizData.getPerguntas().length > 0) {
-                console.log("APP.INITIALIZE: Dados carregados e perguntas disponíveis. Inicializando quiz UI.");
                 this.quizState.initialize(this.quizData.getPerguntas());
                 this.challengeHubManager.updateTotalQuestionsCount(this.quizData.getTotalPerguntas());
                 this.challengeHubManager.updateQuickQuizCount(this.quizState.QUICK_QUIZ_COUNT);
@@ -737,34 +868,27 @@ class App {
                 }
                 this.setupEventListeners();
 
-                // Lógica simplificada para initialSection agora que temos páginas Django distintas
                 if (document.getElementById('home-section')) {
-                    this.quizUI.currentSection = 'home-section'; // Define a seção lógica da UI
-                    // Configurações específicas da UI para a home, se necessário (ex: esconder elementos não usados)
-                    this.quizUI.hideElement(this.quizUI.elements.challengeHubContainer);
-                    this.quizUI.hideElement(this.quizUI.elements.scorePanel);
-                    this.quizUI.hideElement(this.quizUI.elements.questionSection); // Esconde a <section> principal de questões
+                    this.quizUI.currentSection = 'home-section';
+                    this.quizUI.hideElement(this.quizUI.elements.questionSection);
                     this.quizUI.hideElement(this.quizUI.elements.accountSection);
-                } else if (document.getElementById('question-section')) { // Este é o ID da <section> principal na questions_page.html
-                    this.quizUI.currentSection = 'question-section-page'; // Identificador para a página de questões
-                     // Garante que o hub de desafios seja mostrado por padrão na página de questões
+                } else if (document.getElementById('question-section')) {
+                    this.quizUI.currentSection = 'question-section-page';
                     if (this.challengeHubManager) this.challengeHubManager.showHub();
                     this.quizUI.hideElement(this.quizUI.elements.placeholderFiltrosContainer);
-                    this.quizUI.hideElement(this.quizUI.elements.quizSectionContent); // O quiz em si começa escondido
+                    this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
                     this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
-                    this.quizUI.hideElement(this.quizUI.elements.scorePanel); // Painel de score só com quiz ativo
+                    this.quizUI.hideElement(this.quizUI.elements.scorePanel);
                     this.quizUI.hideElement(this.quizUI.elements.homeSection);
                     this.quizUI.hideElement(this.quizUI.elements.accountSection);
                 } else if (document.getElementById('account-section')) {
                     this.quizUI.currentSection = 'account-section-page';
-                    // Configurações específicas da UI para a página de conta
                     this.quizUI.hideElement(this.quizUI.elements.homeSection);
                     this.quizUI.hideElement(this.quizUI.elements.questionSection);
                 } else {
-                    // Fallback se nenhuma seção principal for identificada, pode mostrar a home por padrão
-                    this.quizUI.currentSection = 'home-section';
+                    this.quizUI.currentSection = 'home-section'; // Fallback
                     if (this.quizUI.elements.homeSection) this.quizUI.showElement(this.quizUI.elements.homeSection);
-                    console.warn("App.initialize: Nenhuma seção principal identificada, mostrando home-section por padrão.");
+                    console.warn("App.initialize: Nenhuma seção principal identificada.");
                 }
                 console.log("App.initialize: Seção da página atual (lógica UI):", this.quizUI.currentSection);
 
@@ -778,28 +902,18 @@ class App {
         }
     }
 
-    handleLoadError(message) { /* ... (código como antes) ... */
+    handleLoadError(message) {
         console.error("handleLoadError:", message);
         try {
-            if (this.quizUI && this.quizUI.elements.questionSection) { // Checa o elemento da página de questões
-                // Se estiver na página de questões, mostra o aviso lá
-                if (document.getElementById('question-section')) { // Confirma se estamos na página de questões
-                     this.quizUI.showWarning(message); // showWarning já esconde o hub
-                } else if (this.quizUI.elements.homeSection) { // Fallback para home se não estiver na pág de questões
-                     if(this.quizUI.elements.homeSection) this.quizUI.showElement(this.quizUI.elements.homeSection); // Garante que a home está visível
-                     const homeWarningContainer = this.quizUI.elements.homeSection.querySelector('.hero-block') || this.quizUI.elements.homeSection;
-                     const homeWarning = document.createElement('p');
-                     homeWarning.textContent = message;
-                     homeWarning.style.color = 'red'; homeWarning.style.backgroundColor = 'white'; homeWarning.style.padding = '10px'; homeWarning.style.border = '1px solid red'; homeWarning.style.textAlign = 'center';
-                     homeWarningContainer.prepend(homeWarning);
-                }
+            if (this.quizUI && document.getElementById('question-section')) {
+                 this.quizUI.showWarning(message);
             } else if (this.quizUI && this.quizUI.elements.homeSection) {
-                if(this.quizUI.elements.homeSection) this.quizUI.showElement(this.quizUI.elements.homeSection);
-                const homeWarningContainer = this.quizUI.elements.homeSection.querySelector('.hero-block') || this.quizUI.elements.homeSection;
-                const homeWarning = document.createElement('p');
-                homeWarning.textContent = message;
-                homeWarning.style.color = 'red'; homeWarning.style.backgroundColor = 'white'; homeWarning.style.padding = '10px'; homeWarning.style.border = '1px solid red'; homeWarning.style.textAlign = 'center';
-                homeWarningContainer.prepend(homeWarning);
+                 if(this.quizUI.elements.homeSection) this.quizUI.showElement(this.quizUI.elements.homeSection);
+                 const homeWarningContainer = this.quizUI.elements.homeSection.querySelector('.hero-block') || this.quizUI.elements.homeSection;
+                 const homeWarning = document.createElement('p');
+                 homeWarning.textContent = message;
+                 homeWarning.style.color = 'red'; homeWarning.style.backgroundColor = 'white'; homeWarning.style.padding = '10px'; homeWarning.style.border = '1px solid red'; homeWarning.style.textAlign = 'center';
+                 homeWarningContainer.prepend(homeWarning);
             } else {
                  alert(message);
             }
@@ -811,20 +925,19 @@ class App {
         }
     }
 
-    disableCoreFunctionality() { /* ... (código como antes) ... */
+    disableCoreFunctionality() {
         console.warn("Desabilitando funcionalidades principais do quiz devido a erro de carregamento.");
         if (this.quizUI && this.quizUI.elements) {
             this.quizUI.hideElement(this.quizUI.elements.hubCustomizeQuizBtn);
             this.quizUI.hideElement(this.quizUI.elements.hubQuickQuizBtn);
-            const goToHubBtn = document.getElementById('go-to-challenges-hub-link'); // Atualizado para o ID do link
-            if (goToHubBtn) this.quizUI.hideElement(goToHubBtn); // Esconder o link se der erro
+            const goToHubLink = document.getElementById('go-to-challenges-hub-link');
+            if (goToHubLink) this.quizUI.hideElement(goToHubLink);
 
             if (this.quizUI.elements.challengeHubContainer) {
                  const title = this.quizUI.elements.challengeHubContainer.querySelector('.challenge-hub__title');
                  if (title) title.textContent = "Erro ao Carregar";
                  const subtitle = this.quizUI.elements.challengeHubContainer.querySelector('.challenge-hub__subtitle');
                  if (subtitle) subtitle.textContent = "Não foi possível carregar as questões.";
-                 // Se estamos na página de questões e o hub deve ser visível
                  if(document.getElementById('question-section') && this.quizUI.elements.challengeHubContainer.classList.contains('u-is-hidden')) {
                     this.quizUI.showElement(this.quizUI.elements.challengeHubContainer);
                  }
@@ -833,37 +946,7 @@ class App {
     }
 
     setupEventListeners() {
-        // A navegação principal (Home, Questões, Conta) agora é feita por links <a> com href para URLs Django.
-        // Não precisamos de e.preventDefault() para eles, pois queremos que o Django carregue a nova página.
-        // Os atributos data-section-target-django podem ser usados em App.initialize para
-        // configurar a UI da página recém-carregada.
-
-        // Botões INTERNOS que ainda controlam a UI da página atual (SPA-like dentro da página Django)
-        // devem manter seus listeners.
-        const goToChallengesHubButton = document.getElementById('go-to-challenges-hub'); // ID original do botão na home
-        if (goToChallengesHubButton) { // Se você manteve o botão em vez do link na home.html
-            goToChallengesHubButton.addEventListener('click', (e) => {
-                e.preventDefault(); // Se ainda for um botão
-                // Idealmente, isso seria um link <a> para a URL de questões.
-                // Se for um botão, e você está em uma SPA simulada, esta lógica é ok.
-                // Se for multi-page Django, este botão deveria ser um link <a href="{% url 'quiz:questions' %}">
-                this.quizUI.showSection('question-section'); // Lógica SPA antiga
-            });
-        }
-
-        const viewAllQuestionsAltButton = document.getElementById('view-all-questions-alt'); // ID original do botão na home
-         if (viewAllQuestionsAltButton) { // Se manteve o botão
-            viewAllQuestionsAltButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                this.quizUI.showSection('question-section'); // Lógica SPA antiga
-            });
-        }
-
-
-        this.challengeHubManager.setupEventListeners(); // Continua relevante DENTRO da página de questões
-
-        // ... (resto dos event listeners para filtros, quiz, modais, etc., permanecem os mesmos,
-        // pois controlam a interatividade DENTRO da página de questões ou outros componentes) ...
+        this.challengeHubManager.setupEventListeners();
         this.quizUI.elements.btnFecharFiltros?.addEventListener('click', () => this.quizUI.toggleFilterPanel(false));
         this.quizUI.elements.filterPanelOverlay?.addEventListener('click', (e) => { if (e.target === this.quizUI.elements.filterPanelOverlay) this.quizUI.toggleFilterPanel(false); });
         this.quizUI.elements.btnAplicarFiltrosPainel?.addEventListener('click', () => this.quizLogic.applyFiltersAndStartQuiz());
@@ -873,9 +956,13 @@ class App {
         this.quizUI.elements.prevBtn?.addEventListener('click', () => this.quizLogic.previousQuestion());
         this.quizUI.elements.nextBtn?.addEventListener('click', () => this.quizLogic.nextQuestion());
         this.quizUI.elements.btnRecomecar?.addEventListener('click', () => this.quizLogic.restartQuiz());
-        this.quizUI.elements.btnExplorarMais?.addEventListener('click', () => this.handleExplorarMais()); // Leva para a home URL
+        this.quizUI.elements.btnExplorarMais?.addEventListener('click', () => {
+            const homeLink = document.querySelector('.site-header__logo a, .main-nav__link[data-section-target-django="home"], .bottom-nav__link[data-section-target-django="home"]');
+            if (homeLink && homeLink.href) window.location.href = homeLink.href;
+            else console.warn("Link para home não encontrado para 'Explorar Mais'");
+        });
         this.quizUI.elements.btnEncerrarSessao?.addEventListener('click', () => this.quizUI.toggleConfirmModal(true));
-        this.quizUI.elements.confirmEncerrarBtn?.addEventListener('click', () => { this.quizLogic.forceEndQuiz(); });
+        this.quizUI.elements.confirmEncerrarBtn?.addEventListener('click', () => { this.quizLogic.forceEndQuiz(); }); // Agora async
         this.quizUI.elements.cancelEncerrarBtn?.addEventListener('click', () => { this.quizUI.toggleConfirmModal(false); });
         this.quizUI.elements.confirmEncerrarOverlay?.addEventListener('click', (e)=>{if(e.target===this.quizUI.elements.confirmEncerrarOverlay)this.quizUI.toggleConfirmModal(false);});
         document.addEventListener('keydown', (e) => {
@@ -900,58 +987,20 @@ class App {
         this.quizUI.elements.btnGotItExplanation?.addEventListener('click', () => this.quizUI.toggleExplanationModal(false));
         this.quizUI.elements.explanationModalOverlay?.addEventListener('click', (e)=>{if(e.target===this.quizUI.elements.explanationModalOverlay)this.quizUI.toggleExplanationModal(false);});
 
-        const profileForm = document.querySelector('#account-section .profile-form');
+        // Event listener para o formulário de perfil (simulado, pois não há endpoint real no backend ainda)
+        const profileForm = document.querySelector('#account-section .profile-form'); // Se você tiver um form com esta classe
         if (profileForm) {
             profileForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
-                const formData = new FormData(profileForm);
-                const userName = formData.get('user-name');
-                const userEmail = formData.get('user-email');
-                const dataToSend = { nome: userName, email: userEmail };
-                console.log('Dados do perfil para "salvar" (simulado):', dataToSend);
-                const saveButton = profileForm.querySelector('button[type="submit"]');
-                const originalButtonText = saveButton.innerHTML;
-                saveButton.disabled = true;
-                saveButton.innerHTML = '<span class="button__label">Salvando...</span>';
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                try {
-                    // const csrfToken = getCookie('csrftoken');
-                    // const response = await fetch('/api/v1/user/profile/', {
-                    // method: 'POST',
-                    // headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
-                    // body: JSON.stringify(dataToSend)
-                    // });
-                    // if (response.ok) { console.log('Perfil salvo!'); alert('Perfil salvo!'); }
-                    // else { alert(`Erro: ${await response.text()}`); }
-                    console.log('Perfil "salvo" com sucesso (simulado).');
-                    alert('Perfil "salvo" com sucesso! (Simulado)');
-                } catch (error) {
-                    console.error('Erro de rede (simulado):', error);
-                    alert('Erro de conexão.');
-                } finally {
-                    saveButton.disabled = false;
-                    saveButton.innerHTML = originalButtonText;
-                }
+                // Lógica de submissão do formulário de perfil aqui (simulada ou real)
+                console.log('Formulário de perfil submetido (simulação).');
+                alert('Funcionalidade de salvar perfil ainda não implementada no backend.');
             });
-        }
-    }
-
-    handleExplorarMais() {
-        // Agora que temos páginas Django, o ideal é redirecionar para a URL da home.
-        // Se o botão "Voltar ao Início" estiver no base.html ou for um link <a>,
-        // ele já terá o href="{% url 'quiz:home' %}"
-        // Se for um botão que chama esta função, fazemos o redirecionamento.
-        const homeUrl = this.quizUI.elements.navElements[0]?.href; // Pega o href do primeiro link de navegação (Home)
-        if (homeUrl) {
-            window.location.href = homeUrl;
-        } else {
-            console.warn("Não foi possível determinar a URL da home para redirecionar.");
-            // Fallback para a lógica SPA antiga, se ainda existir essa função na QuizUI
-            // this.quizUI.showSection('home-section');
         }
     }
 }
 
+// Função para obter o CSRF token dos cookies
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -967,8 +1016,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// Inicialização da Aplicação
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM completamente carregado e parseado.");
+    console.log("MedQuiz: DOM completamente carregado e parseado.");
     const app = new App();
     app.initialize();
 });

@@ -8,56 +8,111 @@
     <section id="home-section" class="main-section">
          <div class="hero-block">
             <div class="hero-block__welcome">
-                {# MODIFICADO AQUI para saudação personalizada #}
                 {% if user.is_authenticated %}
                     <h1 class="hero-block__title">Olá, {{ user.first_name|default:user.username }}!</h1>
                 {% else %}
-                    <h1 class="hero-block__title">Olá</h1>
+                    <h1 class="hero-block__title">Bem-vindo ao MedQuiz!</h1>
                 {% endif %}
                 <p class="hero-block__subtitle">Pronto para expandir seus conhecimentos hoje?</p>
             </div>
+
+            {% if user.is_authenticated and daily_stats %}
             <div class="stats-deck">
                 <div class="stat-card">
                     <span class="material-symbols-outlined stat-card__icon">checklist</span>
                     <span class="stat-card__label">Respondidas Hoje</span>
-                    <span class="stat-card__value" id="daily-questions">0</span> {# JS ou Django podem popular #}
+                    <span class="stat-card__value" id="daily-questions">{{ daily_stats.perguntas_respondidas_dia }}</span>
                 </div>
                 <div class="stat-card">
                     <span class="material-symbols-outlined stat-card__icon">target</span>
                     <span class="stat-card__label">Acertos Hoje</span>
-                    <span class="stat-card__value" id="daily-accuracy">0%</span>
+                    {# Exibindo a porcentagem calculada na view #}
+                    <span class="stat-card__value" id="daily-accuracy">{{ accuracy_percentage }}</span>
                 </div>
                 <div class="stat-card">
                     <span class="material-symbols-outlined stat-card__icon">military_tech</span>
-                    <span class="stat-card__label">Pontos</span>
-                    <span class="stat-card__value" id="daily-points">0</span>
+                    <span class="stat-card__label">Pontos Hoje</span>
+                    <span class="stat-card__value" id="daily-points">{{ daily_stats.pontos_dia }}</span>
                 </div>
                 <div class="stat-card">
                     <span class="material-symbols-outlined stat-card__icon">local_fire_department</span>
-                    <span class="stat-card__label">Sequência</span>
-                    <span class="stat-card__value" id="streak-value">0</span>
+                    <span class="stat-card__label">Sequência Dias</span>
+                    <span class="stat-card__value" id="streak-value">{{ daily_stats.sequencia_dias_quiz }}</span>
                 </div>
             </div>
-            <div class="hero-block__cta">
-                <p class="hero-block__cta-text">Pronto para testar seus conhecimentos?</p>
-                <div class="hero-block__cta-actions">
-                    {# Este botão agora deve ser um link para a página de questões #}
-                    <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-primary" id="go-to-challenges-hub-link">
-                        <span class="material-symbols-outlined button__icon">rocket_launch</span>
-                        <span class="button__label">Iniciar Desafio</span>
-                    </a>
+            {% else %}
+            <div class="stats-deck">
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">quiz</span>
+                    <span class="stat-card__label">Muitas Questões</span>
+                    <span class="stat-card__value" id="hub-total-questions-count">...</span>
                 </div>
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">school</span>
+                    <span class="stat-card__label">Aprenda Mais</span>
+                    <span class="stat-card__value">Sempre!</span>
+                </div>
+                 <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">military_tech</span>
+                    <span class="stat-card__label">Ganhe Pontos</span>
+                    <span class="stat-card__value">Jogue!</span>
+                </div>
+                <div class="stat-card">
+                    <span class="material-symbols-outlined stat-card__icon">person_add</span>
+                    <span class="stat-card__label">Crie Conta</span>
+                    <span class="stat-card__value">Grátis!</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="hero-block__cta">
+                {% if user.is_authenticated %}
+                    <p class="hero-block__cta-text">Pronto para testar seus conhecimentos?</p>
+                    <div class="hero-block__cta-actions">
+                        <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-primary" id="go-to-challenges-hub-link">
+                            <span class="material-symbols-outlined button__icon">rocket_launch</span>
+                            <span class="button__label">Iniciar Desafio</span>
+                        </a>
+                    </div>
+                {% else %}
+                    <p class="hero-block__cta-text">Crie sua conta ou faça login para salvar seu progresso e competir!</p>
+                    <div class="hero-block__cta-actions" style="display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                        <a href="{% url 'quiz:register' %}" class="button button--fancy button--fancy-primary">
+                            <span class="material-symbols-outlined button__icon">person_add</span>
+                            Cadastre-se Gratuitamente
+                        </a>
+                        <a href="{% url 'login' %}" class="button button--fancy button--fancy-secondary">
+                            <span class="material-symbols-outlined button__icon">login</span>
+                            Fazer Login
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="home-section__additional-content">
              <div class="card card--additional-content card--centered-content">
                  <h2 class="card__title">Explore Mais</h2>
                 <div class="card__body">
-                    <p>Ainda desenvolvendo esta área, mas aqui você poderá encontrar artigos, dicas de estudo e outros recursos para complementar seu aprendizado em histologia.</p>
-                    {# Este também deve ser um link para a página de questões #}
+                    <p>Ainda desenvolvendo esta área, mas aqui você poderá encontrar artigos, dicas de estudo e outros recursos para complementar seu aprendizado.</p>
                     <a href="{% url 'quiz:questions' %}" class="button button--outline button--small" id="view-all-questions-alt-link">Ver Banco de Questões</a>
                 </div>
             </div>
         </div>
     </section>
 {% endblock content %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const totalQuestionsSpan = document.getElementById('hub-total-questions-count');
+            if (totalQuestionsSpan && (!{{ user.is_authenticated|yesno:"true,false" }} || !{{ daily_stats|yesno:"true,false" }})) {
+                 if (window.djangoQuizData && window.djangoQuizData.perguntas) {
+                    totalQuestionsSpan.textContent = window.djangoQuizData.perguntas.length;
+                } else {
+                    totalQuestionsSpan.textContent = "N/A";
+                }
+            }
+        });
+    </script>
+{% endblock scripts %}

@@ -94,7 +94,7 @@
                 </div>
                 <ul class="category-tree" id="category-tree-list" role="tree"
                     aria-labelledby="filter-group-categories-title">
-                    {# As categorias serão populadas pelo JavaScript ou, futuramente, pelo Django aqui #}
+                    {# As categorias serão populadas pelo JavaScript #}
                 </ul>
             </div>
             <div class="filter-group" id="filter-group-difficulty">
@@ -185,33 +185,18 @@
     <footer id="footer" class="site-footer">
         <p class="site-footer__text">&copy; {% now "Y" %} Desenvolvido por Davi Castro</p>
     </footer>
-    {% block scripts %}
-    <script id="django-quiz-data" type="application/json">
-            {{ django_quiz_data_json|safe }}
-        </script>
-    <script>
-        try {
-            const dataElement = document.getElementById('django-quiz-data');
-            if (dataElement) {
-                const parsedDataString = dataElement.textContent;
-                const parsedDataObject = JSON.parse(parsedDataString);
 
-                window.djangoQuizData = {
-                    perguntas: parsedDataObject.perguntas || [],
-                    categorias: parsedDataObject.categorias || [],
-                    opcoesResposta: parsedDataObject.opcoesResposta || []
-                };
-                console.log("Dados do Django parseados e prontos em window.djangoQuizData:", window.djangoQuizData);
-            } else {
-                window.djangoQuizData = { perguntas: [], categorias: [], opcoesResposta: [] };
-                console.warn("Elemento de dados django-quiz-data não encontrado.");
+    {% block scripts %}
+        <script id="django-urls" type="application/json">
+            {
+                "start_quiz_session": "{% url 'quiz:start_quiz_session' %}",
+                "register_answer": "{% url 'quiz:register_answer' %}",
+                "end_quiz_session": "{% url 'quiz:end_quiz_session' %}",
+                "api_get_all_quiz_data": "{% url 'quiz:api_get_all_quiz_data' %}"
             }
-        } catch (error) {
-            console.error("Erro ao processar dados JSON injetados em window.djangoQuizData:", error);
-            window.djangoQuizData = { perguntas: [], categorias: [], opcoesResposta: [] };
-        }
-    </script>
-    <script src="{% static 'js/script.js' %}" defer></script>
+        </script>
+
+        <script src="{% static 'js/script.js' %}" defer></script>
     {% endblock scripts %}
 </body>
 

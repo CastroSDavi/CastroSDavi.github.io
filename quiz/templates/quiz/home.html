@@ -45,6 +45,7 @@
                 <div class="stat-card">
                     <span class="material-symbols-outlined stat-card__icon">quiz</span>
                     <span class="stat-card__label">Muitas Questões</span>
+                    {# Este span será preenchido pelo script.js após carregar os dados da API #}
                     <span class="stat-card__value" id="hub-total-questions-count">...</span>
                 </div>
                 <div class="stat-card">
@@ -100,19 +101,20 @@
         </div>
     </section>
 {% endblock content %}
-
-{% block scripts %}
-    {{ block.super }}
+{# {% block scripts %} #}
+{#    {{ block.super }} #}
+    {# O script abaixo foi removido:
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const totalQuestionsSpan = document.getElementById('hub-total-questions-count');
             if (totalQuestionsSpan && (!{{ user.is_authenticated|yesno:"true,false" }} || !{{ daily_stats|yesno:"true,false" }})) {
-                 if (window.djangoQuizData && window.djangoQuizData.perguntas) {
+                 if (window.djangoQuizData && window.djangoQuizData.perguntas) { // window.djangoQuizData não é mais usado
                     totalQuestionsSpan.textContent = window.djangoQuizData.perguntas.length;
                 } else {
-                    totalQuestionsSpan.textContent = "N/A";
+                    totalQuestionsSpan.textContent = "N/A"; // Ou "..." enquanto espera o JS principal
                 }
             }
         });
     </script>
-{% endblock scripts %}
+    #}
+{# {% endblock scripts %} #}

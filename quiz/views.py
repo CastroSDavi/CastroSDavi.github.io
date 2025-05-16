@@ -3,8 +3,8 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
+from django.http import JsonResponse # Adicionado JsonResponse
+from django.views.decorators.http import require_POST, require_GET # Adicionado require_GET
 from django.utils import timezone
 from datetime import date
 
@@ -14,16 +14,8 @@ from .models import (
 )
 from .forms import CustomUserCreationForm
 
-def get_or_create_daily_stats(user):
-    today = date.today()
-    stats, created = EstatisticasDiariasUsuario.objects.get_or_create(
-        id_usuario=user,
-        data_estatistica=today
-    )
-    return stats
-
-@login_required
-def home_view(request):
+# Função auxiliar para obter dados do quiz (reutilizada)
+def get_quiz_data_dict():
     todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
     perguntas_data_qs = Pergunta.objects.filter(ativa=True).prefetch_related('categorias', 'opcoes')
     opcoes_data_qs = OpcaoResposta.objects.all().select_related('pergunta')
@@ -45,49 +37,52 @@ def home_view(request):
          'eh_correta': o.eh_correta, 'ordem_exibicao': o.ordem_exibicao,
          'feedback_opcao': o.feedback_opcao} for o in opcoes_data_qs
     ]
+    return {
+        'perguntas': perguntas_data_list,
+        'categorias': categorias_data_list,
+        'opcoesResposta': opcoes_data_list
+    }
 
+# NOVA VIEW para a API de dados do quiz
+@require_GET # Garante que esta view só aceite requisições GET
+def api_get_all_quiz_data_view(request):
+    quiz_data = get_quiz_data_dict()
+    return JsonResponse(quiz_data)
+
+
+def get_or_create_daily_stats(user):
+    today = date.today()
+    stats, created = EstatisticasDiariasUsuario.objects.get_or_create(
+        id_usuario=user,
+        data_estatistica=today
+    )
+    return stats
+
+@login_required
+def home_view(request):
     daily_stats = None
-    accuracy_percentage_str = "0%" # Valor padrão
+    accuracy_percentage_str = "0%"
 
     if request.user.is_authenticated:
         daily_stats = get_or_create_daily_stats(request.user)
         if daily_stats:
             if daily_stats.perguntas_respondidas_dia > 0:
                 accuracy = (daily_stats.acertos_dia / daily_stats.perguntas_respondidas_dia) * 100
-                accuracy_percentage_str = f"{accuracy:.0f}%" # Formata como inteiro com %
-            # Se não respondeu perguntas, accuracy_percentage_str permanece "0%"
+                accuracy_percentage_str = f"{accuracy:.0f}%"
 
     context = {
         'page_title': 'MedQuiz - Início',
-        'django_quiz_data_json': json.dumps({
-            'perguntas': perguntas_data_list,
-            'categorias': categorias_data_list,
-            'opcoesResposta': opcoes_data_list
-        }),
+        # REMOVIDO: 'django_quiz_data_json': json.dumps(get_quiz_data_dict()),
         'daily_stats': daily_stats,
-        'accuracy_percentage': accuracy_percentage_str, # Passando a porcentagem calculada
+        'accuracy_percentage': accuracy_percentage_str,
     }
     return render(request, 'quiz/home.html', context)
 
 @login_required
 def questions_view(request):
-    todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
-    perguntas_data_qs = Pergunta.objects.filter(ativa=True).prefetch_related('categorias', 'opcoes')
-    opcoes_data_qs = OpcaoResposta.objects.all().select_related('pergunta')
-
-    categorias_data_list = [{'id_categoria': c.pk, 'nome_categoria': c.nome_categoria, 'id_categoria_pai': c.id_categoria_pai.pk if c.id_categoria_pai else None, 'descricao_categoria': c.descricao_categoria} for c in todas_categorias_qs]
-    perguntas_data_list = [{'id_pergunta': p.pk, 'texto_pergunta': p.texto_pergunta, 'url_imagem': p.url_imagem, 'referencia_bibliografica': p.referencia_bibliografica,
-                            'categoria_ids': [cat.pk for cat in p.categorias.all()],
-                            'nivel_dificuldade': p.nivel_dificuldade, 'explicacao_resposta': p.explicacao_resposta} for p in perguntas_data_qs]
-    opcoes_data_list = [{'id_opcao_resposta': o.pk, 'id_pergunta': o.pergunta.pk, 'texto_opcao': o.texto_opcao, 'eh_correta': o.eh_correta, 'ordem_exibicao': o.ordem_exibicao, 'feedback_opcao': o.feedback_opcao} for o in opcoes_data_qs]
-
     context = {
         'page_title': 'MedQuiz - Questões',
-        'django_quiz_data_json': json.dumps({
-            'perguntas': perguntas_data_list,
-            'categorias': categorias_data_list,
-            'opcoesResposta': opcoes_data_list
-        })
+        # REMOVIDO: 'django_quiz_data_json': json.dumps(get_quiz_data_dict())
     }
     return render(request, 'quiz/questions_page.html', context)
 
@@ -110,7 +105,7 @@ def register_view(request):
 def account_view(request):
     user_sessions = SessoesQuizUsuario.objects.filter(id_usuario=request.user).order_by('-data_inicio')[:10]
     user_daily_stats_summary = EstatisticasDiariasUsuario.objects.filter(id_usuario=request.user).order_by('-data_estatistica')[:30]
-    
+
     context = {
         'page_title': 'MedQuiz - Minha Conta',
         'user_sessions': user_sessions,
@@ -169,7 +164,7 @@ def register_answer_view(request):
             return JsonResponse({'status': 'error', 'message': 'Esta sessão de quiz não está mais em andamento.'}, status=400)
 
         pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
-        
+
         opcao_selecionada = None
         foi_correta_calc = None
 
@@ -189,7 +184,7 @@ def register_answer_view(request):
                 'data_resposta': timezone.now()
             }
         )
-        
+
         respostas_da_sessao = RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_quiz)
         total_acertos_sessao = respostas_da_sessao.filter(foi_correta=True).count()
         total_erros_sessao = respostas_da_sessao.filter(foi_correta=False).count()
@@ -222,7 +217,7 @@ def end_quiz_session_view(request):
         tempo_total_segundos_frontend = int(data.get('tempo_total_segundos', 0))
 
         sessao_quiz = get_object_or_404(SessoesQuizUsuario, pk=session_id, id_usuario=request.user)
-        
+
         if sessao_quiz.status_sessao != 'Em Andamento':
             return JsonResponse({'status': 'info', 'message': 'Sessão já finalizada.', 'pontuacao_final': sessao_quiz.pontuacao_final}, status=200)
 
@@ -232,7 +227,7 @@ def end_quiz_session_view(request):
         sessao_quiz.save()
 
         stats = get_or_create_daily_stats(request.user)
-        
+
         perguntas_respondidas_nesta_sessao = RespostasUsuarioPorSessao.objects.filter(
             id_sessao_quiz=sessao_quiz
         ).exclude(id_opcao_resposta_selecionada__isnull=True).count()
@@ -241,13 +236,7 @@ def end_quiz_session_view(request):
         stats.acertos_dia += sessao_quiz.total_acertos
         stats.pontos_dia += sessao_quiz.pontuacao_final
         stats.tempo_estudo_segundos_dia += tempo_total_segundos_frontend
-        
-        # Lógica placeholder para sequência de dias - precisa ser melhorada
-        if stats.perguntas_respondidas_dia > 0:
-            # Esta lógica de sequência não está correta, precisa comparar com o dia anterior.
-            # stats.sequencia_dias_quiz = (stats.sequencia_dias_quiz or 0) + 1 
-            pass # Manter a lógica de sequência para ser implementada depois
-        
+
         stats.save()
 
         return JsonResponse({

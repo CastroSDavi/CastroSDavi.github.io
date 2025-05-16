@@ -1,12 +1,8 @@
-/**
- * script.js - Lógica principal do MedQuiz
- */
 
-// Variável global para armazenar URLs do Django injetadas pelo template
 var DJANGO_URLS = {
-    start_quiz_session: '/api/quiz/start-session/', // Fallback se não injetado
-    register_answer: '/api/quiz/register-answer/',   // Fallback
-    end_quiz_session: '/api/quiz/end-session/'      // Fallback
+    start_quiz_session: '/api/quiz/start-session/', 
+    register_answer: '/api/quiz/register-answer/',   
+    end_quiz_session: '/api/quiz/end-session/'   
 };
 
 class UserData {
@@ -17,9 +13,8 @@ class UserData {
     get erros() { return this._erros; }
     get pontos() { return this._pontos; }
     incrementarAcertos() { this._acertos++; this._atualizarPontos(); }
-    incrementarErros() { this._erros++; this._atualizarPontos(); } // Assume que erros podem diminuir pontos
+    incrementarErros() { this._erros++; this._atualizarPontos(); }
     _atualizarPontos() {
-        // Lógica de pontuação: 15 pontos por acerto, -5 por erro (não pode ser negativo)
         this._pontos = Math.max(0, (15 * this._acertos) - (5 * this._erros));
     }
     reset() {
@@ -27,45 +22,14 @@ class UserData {
         this._erros = 0;
         this._pontos = 0;
     }
-    // Método para atualizar dados com base na resposta do backend (se necessário no futuro)
-    // updateFromServer(acertos, erros, pontos) {
-    //     this._acertos = acertos;
-    //     this._erros = erros;
-    //     this._pontos = pontos;
-    // }
 }
 
 class QuizData {
-    constructor(
-        urlPerguntas = 'assets/data/perguntas.json', // Fallback, não usado se dados injetados
-        urlCategorias = 'assets/data/categorias.json', // Fallback
-        urlOpcoes = 'assets/data/opcoes_resposta.json' // Fallback
-    ) {
-        this.urlPerguntas = urlPerguntas;
-        this.urlCategorias = urlCategorias;
-        this.urlOpcoes = urlOpcoes;
+    constructor() {
         this.perguntas = [];
         this.categorias = [];
         this.opcoesResposta = [];
         this.dadosCarregadosCompletamente = false;
-    }
-
-    async _fetchJson(url, required = true) {
-        console.warn(`QuizData._fetchJson: Tentando buscar de ${url}. Isto é um fallback e indica que os dados pré-carregados não foram usados ou estavam incompletos.`);
-        try {
-            const timestamp = Date.now(); // Cache busting
-            const response = await fetch(`${url}?t=${timestamp}`);
-            if (!response.ok) {
-                if (required) throw new Error(`Falha ao carregar ${url}: ${response.statusText} (status ${response.status})`);
-                return [];
-            }
-            const data = await response.json();
-            return Array.isArray(data) ? data : (data || []);
-        } catch (error) {
-            if (required) throw error;
-            console.warn(`Erro ao processar ${url} (não obrigatório): ${error.message}. Retornando array vazio.`);
-            return [];
-        }
     }
 
     setPreloadedData(perguntasData, categoriasData, opcoesData) {
@@ -73,51 +37,63 @@ class QuizData {
         this.categorias = Array.isArray(categoriasData) ? categoriasData : [];
         this.opcoesResposta = Array.isArray(opcoesData) ? opcoesData : [];
 
-        this._validateDataIntegrity(); // Você pode implementar validações mais robustas aqui
+        this._validateDataIntegrity();
 
-        if (this.perguntas.length > 0) {
+        if (this.perguntas.length > 0 && this.categorias.length > 0 && this.opcoesResposta.length > 0) {
             this.dadosCarregadosCompletamente = true;
-            console.log(`QUIZDATA: Dados pré-carregados com sucesso. Perguntas: ${this.perguntas.length}`);
+            // Mensagem ajustada para refletir a origem dos dados (API)
+            console.log(`QUIZDATA: Dados carregados da API. Perguntas: ${this.perguntas.length}, Categorias: ${this.categorias.length}, Opções: ${this.opcoesResposta.length}`);
         } else {
             this.dadosCarregadosCompletamente = false;
-            console.warn(`QUIZDATA: Dados pré-carregados incompletos ou ausentes. Perguntas: ${this.perguntas.length}`);
+            console.warn(`QUIZDATA: Dados da API incompletos ou ausentes. Perguntas: ${this.perguntas.length}, Categorias: ${this.categorias.length}, Opções: ${this.opcoesResposta.length}.`);
         }
         return this.dadosCarregadosCompletamente;
     }
 
     async loadAllData() {
-        if (this.dadosCarregadosCompletamente && this.perguntas && this.perguntas.length > 0) {
-            console.log("QUIZDATA: Usando dados pré-carregados. Fetch de JSONs pulado.");
-            return true;
-        }
-        console.log("QUIZDATA: Tentando carregar dados dos arquivos JSON (fallback)...");
+        console.log("QUIZDATA: Buscando dados do quiz da API Django em /api/quiz/alldata/ ...");
         try {
-            const [perguntasData, categoriasData, opcoesData] = await Promise.all([
-                this._fetchJson(this.urlPerguntas, true),
-                this._fetchJson(this.urlCategorias, true),
-                this._fetchJson(this.urlOpcoes, true)
-            ]);
-            this.perguntas = perguntasData;
-            this.categorias = categoriasData;
-            this.opcoesResposta = opcoesData;
-
-            if (!this.perguntas.length) {
-                console.warn("QuizData.loadAllData (fetch): Nenhuma pergunta carregada.");
-                this.dadosCarregadosCompletamente = false;
-                return false;
+            const response = await fetch('/api/quiz/alldata/'); // URL do novo endpoint
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`QUIZDATA: Falha na resposta da API: ${response.status} ${response.statusText}`, errorText);
+                throw new Error(`Falha ao carregar dados da API: ${response.statusText} (status ${response.status})`);
             }
-            this._validateDataIntegrity();
-            this.dadosCarregadosCompletamente = true;
-            console.log("QuizData.loadAllData (fetch): Dados carregados dos JSONs com sucesso. Perguntas:", this.perguntas.length);
-            return true;
+            const data = await response.json();
+
+            if (data && data.perguntas && data.categorias && data.opcoesResposta) {
+                // Utiliza setPreloadedData para processar e validar os dados recebidos
+                return this.setPreloadedData(data.perguntas, data.categorias, data.opcoesResposta);
+            } else {
+                console.error("QUIZDATA: Formato de dados inválido recebido da API.", data);
+                throw new Error("Formato de dados inválido recebido da API.");
+            }
         } catch (error) {
-            console.error("QuizData.loadAllData (fetch): Erro CRÍTICO ao carregar dados JSON:", error);
+            console.error("QUIZDATA: Erro CRÍTICO ao carregar dados da API Django:", error);
             this._resetProcessedData();
-            throw error;
+            throw error; // Re-lança o erro para ser tratado pelo App.initialize
         }
     }
-    _resetProcessedData() { this.perguntas = []; this.categorias = []; this.opcoesResposta = []; this.dadosCarregadosCompletamente = false; }
-    _validateDataIntegrity() { /* TODO: Implementar validações de dados se necessário */ }
+
+    _resetProcessedData() {
+        this.perguntas = [];
+        this.categorias = [];
+        this.opcoesResposta = [];
+        this.dadosCarregadosCompletamente = false;
+    }
+
+    _validateDataIntegrity() {
+        if (!this.perguntas.every(p => p.hasOwnProperty('id_pergunta') && p.hasOwnProperty('texto_pergunta'))) {
+            console.warn("QUIZDATA: Algumas perguntas da API podem estar malformadas.");
+        }
+        if (!this.categorias.every(c => c.hasOwnProperty('id_categoria') && c.hasOwnProperty('nome_categoria'))) {
+            console.warn("QUIZDATA: Algumas categorias da API podem estar malformadas.");
+        }
+        if (!this.opcoesResposta.every(o => o.hasOwnProperty('id_opcao_resposta') && o.hasOwnProperty('id_pergunta') && o.hasOwnProperty('texto_opcao'))) {
+            console.warn("QUIZDATA: Algumas opções de resposta da API podem estar malformadas.");
+        }
+    }
+
     getPerguntas() { return [...this.perguntas]; }
     getTotalPerguntas() { return this.perguntas.length; }
     getCategorias() { return [...this.categorias]; }
@@ -161,11 +137,11 @@ class QuizState {
         this.allQuestions = [];
         this.filteredQuestions = [];
         this.currentQuestionIndex = 0;
-        this.selectedCategories = []; // IDs das categorias selecionadas
-        this.selectedDifficulties = ['all']; // 'all', 'fácil', 'médio', 'difícil'
+        this.selectedCategories = [];
+        this.selectedDifficulties = ['all'];
         this.isInitialQuestionLoad = true;
         this.isQuickQuizMode = false;
-        this.QUICK_QUIZ_COUNT = 10; // Número de perguntas para o quiz rápido
+        this.QUICK_QUIZ_COUNT = 10;
     }
 
     initialize(perguntas) { this.allQuestions = perguntas; this.resetQuizState(); }
@@ -226,13 +202,6 @@ class LayoutManager {
     }
     handleSectionChange(sectionId) {
         if (!this.footerElement) return;
-        // Esta lógica pode ser simplificada se o footer sempre for visível ou controlado pelo Django
-        // const quizContentActive = this.quizUI && this.quizUI.elements.quizSectionContent && !this.quizUI.elements.quizSectionContent.classList.contains(this.hiddenClassName);
-        // if (sectionId === 'question-section' && quizContentActive) {
-        //     this.footerElement.classList.add(this.hiddenClassName);
-        // } else {
-        //     this.footerElement.classList.remove(this.hiddenClassName);
-        // }
     }
 }
 
@@ -320,7 +289,7 @@ class QuizUI {
         };
         this._validateCache();
     }
-    _validateCache() { Object.keys(this.elements).forEach(key => { if (!this.elements[key] && key !== 'homeSection' && key !== 'accountSection' && !(key.startsWith('navElement'))) { /* console.warn(`QuizUI: Elemento '${key}' não encontrado no DOM.`); */ } }); } // Ajustado para não avisar sobre seções de outras páginas
+    _validateCache() { Object.keys(this.elements).forEach(key => { if (!this.elements[key] && key !== 'homeSection' && key !== 'accountSection' && !(key.startsWith('navElement'))) { /* console.warn(`QuizUI: Elemento '${key}' não encontrado no DOM.`); */ } }); }
     showElement(el) { el?.classList.remove(this.hiddenClassName); }
     hideElement(el) { el?.classList.add(this.hiddenClassName); }
     stopTimer() { if (this.timerInterval) { clearInterval(this.timerInterval); this.timerInterval = null; } this.timerRunning = false; }
@@ -579,7 +548,7 @@ class QuizLogic {
         this.user = userData;
         this.quizData = quizData;
         this.challengeHubManager = null;
-        this.currentSessionId = null; // ID da sessão de quiz atual com o backend
+        this.currentSessionId = null;
     }
 
     setChallengeHubManager(manager) { this.challengeHubManager = manager; }
@@ -646,7 +615,7 @@ class QuizLogic {
     startQuickQuiz() {
         this.state.setQuickQuizMode(true);
         this.state.setFilters([], ['all']);
-        this.ui.toggleFilterPanel(false); // Garante que o painel de filtros seja fechado
+        this.ui.toggleFilterPanel(false);
         this.startQuiz();
     }
 
@@ -659,7 +628,7 @@ class QuizLogic {
         const selOpt = opts.find(op => op.id_opcao_resposta === selectedOpId);
 
         if (selOpt && this.state.recordAnswer(selectedOpId)) {
-            currQ.foiCorretaNaSessao = selOpt.eh_correta; // Lógica frontend para feedback imediato
+            currQ.foiCorretaNaSessao = selOpt.eh_correta;
             if (selOpt.eh_correta) this.user.incrementarAcertos();
             else this.user.incrementarErros();
 
@@ -688,10 +657,6 @@ class QuizLogic {
                     const data = await response.json();
                     if (response.ok && data.status === 'success') {
                         console.log("Backend: Resposta registrada. Correta (backend):", data.foi_correta);
-                        // Opcional: sincronizar estado do frontend com o backend se houver discrepâncias
-                        // if (data.foi_correta !== currQ.foiCorretaNaSessao) {
-                        //     console.warn("Discrepância entre frontend e backend na correção da resposta!");
-                        // }
                     } else {
                         console.error("Backend: Falha ao registrar resposta:", data.message || response.statusText);
                     }
@@ -708,7 +673,6 @@ class QuizLogic {
         if (currentQ && !currentQ.hasOwnProperty('respostaDadaId') && !currentQ.foiPulada) {
             currentQ.foiPulada = true;
             this.ui.renderQuestionGrid(this.state.filteredQuestions, this.state.currentQuestionIndex, (idx) => this.goToQuestion(idx));
-            // Informar o backend sobre a pergunta pulada (opcional, mas bom para estatísticas mais precisas)
             if (this.currentSessionId) {
                 fetch(DJANGO_URLS.register_answer, {
                     method: 'POST',
@@ -739,7 +703,7 @@ class QuizLogic {
                 this.ui.renderQuestionGrid(this.state.filteredQuestions,this.state.currentQuestionIndex,(idx)=>this.goToQuestion(idx));
                 if(shouldScroll) this.ui.scrollToQuestionStart();
                 if (p.hasOwnProperty('respostaDadaId') && p.respostaDadaId !== null) this.ui.applyAnswerFeedback(p.respostaDadaId, opts);
-            } else this.endQuiz(); // Pode acontecer se filteredQuestions ficar vazio inesperadamente
+            } else this.endQuiz();
         };
         if(!init && el){ el.classList.add("is-fading-out"); await new Promise(resolve => { let ended = false; const handler = () => { if (!ended) { el.removeEventListener("transitionend", handler); ended = true; resolve(); } }; el.addEventListener("transitionend", handler); setTimeout(() => { if (!ended) { el.removeEventListener("transitionend", handler); ended = true; resolve(); } }, this.ui.TRANSITION_DURATION + 50); }); el.classList.remove("is-fading-out"); el.classList.add("is-transparent"); requestAnimationFrame(() => { logic(); requestAnimationFrame(() => el.classList.remove("is-transparent")); }); }
         else { logic(); if (el) el.classList.remove("is-fading-out", "is-transparent"); if (this.state.getTotalFilteredQuestions() > 0) this.state.markNavigated(); }
@@ -760,21 +724,19 @@ class QuizLogic {
                     body: JSON.stringify({
                         session_id: this.currentSessionId,
                         tempo_total_segundos: this.ui.timerSeconds,
-                        // O backend já deve ter os acertos/erros/pontos corretos
                     }),
                 });
                 const data = await response.json();
                 if (response.ok && data.status === 'success') {
                     console.log("Backend: Sessão finalizada. Pontuação (backend):", data.pontuacao_final);
-                    // Usar os dados do frontend para exibição, já que UserData está atualizado
                     this.ui.showResults(this.user, this.state.getTotalFilteredQuestions());
                 } else {
                     console.error("Backend: Falha ao finalizar sessão:", data.message || response.statusText);
-                    this.ui.showResults(this.user, this.state.getTotalFilteredQuestions()); // Mostrar com dados do frontend
+                    this.ui.showResults(this.user, this.state.getTotalFilteredQuestions());
                 }
             } catch (error) {
                 console.error("Erro de rede ao finalizar sessão:", error);
-                this.ui.showResults(this.user, this.state.getTotalFilteredQuestions()); // Mostrar com dados do frontend
+                this.ui.showResults(this.user, this.state.getTotalFilteredQuestions());
             }
             this.currentSessionId = null;
         } else {
@@ -786,21 +748,21 @@ class QuizLogic {
     restartQuiz() {
         this.user.reset();
         this.state.fullReset();
-        this.currentSessionId = null; // Limpar ID da sessão
+        this.currentSessionId = null;
         this.ui.updateScoreDisplay(this.user.pontos, this.user.acertos, this.user.erros);
         this.ui.hideResults();
         this.ui.resetTimer();
         this.ui.toggleExplanationModal(false);
-        this.ui.displayQuizContent(false); // Esconde a UI do quiz ativo
+        this.ui.displayQuizContent(false);
         this.ui.clearWarning();
         this.clearAllFiltersInPanel();
         if (this.challengeHubManager) this.challengeHubManager.showHub();
         this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
     }
 
-    async forceEndQuiz() { // Já que endQuiz agora é async
+    async forceEndQuiz() {
         this.ui.stopTimer();
-        await this.endQuiz(); // Espera a finalização da sessão no backend
+        await this.endQuiz();
         this.ui.toggleConfirmModal(false);
         this.ui.toggleExplanationModal(false);
     }
@@ -809,19 +771,18 @@ class QuizLogic {
 class App {
     constructor() {
         this.userData = new UserData();
-        this.quizData = new QuizData();
+        this.quizData = new QuizData(); // Não mais recebe URLs de fallback
         this.quizState = new QuizState();
         this.layoutManager = new LayoutManager();
         this.quizUI = new QuizUI(this.layoutManager.handleSectionChange.bind(this.layoutManager));
         this.quizLogic = new QuizLogic(this.quizState, this.quizUI, this.userData, this.quizData);
         this.challengeHubManager = new ChallengeHubManager(this.quizUI.elements, this.quizLogic);
 
-        this.quizUI.quizState = this.quizState; // Injetar dependências
+        this.quizUI.quizState = this.quizState;
         this.quizUI.quizData = this.quizData;
         this.quizLogic.setChallengeHubManager(this.challengeHubManager);
         this.challengeHubManager.setQuizUI(this.quizUI);
 
-        // Carregar URLs do Django
         const urlsElement = document.getElementById('django-urls');
         if (urlsElement) {
             try {
@@ -829,45 +790,44 @@ class App {
                 DJANGO_URLS.start_quiz_session = parsedUrls.start_quiz_session || DJANGO_URLS.start_quiz_session;
                 DJANGO_URLS.register_answer = parsedUrls.register_answer || DJANGO_URLS.register_answer;
                 DJANGO_URLS.end_quiz_session = parsedUrls.end_quiz_session || DJANGO_URLS.end_quiz_session;
-                console.log("URLs do Django carregadas:", DJANGO_URLS);
+                console.log("URLs de sessão do Django carregadas:", DJANGO_URLS);
             } catch (e) {
                 console.error("Erro ao parsear URLs do Django:", e, "Usando fallbacks.");
             }
         } else {
-            console.warn("Elemento #django-urls não encontrado. Usando URLs de fallback.");
+            console.warn("Elemento #django-urls não encontrado. Usando URLs de fallback para APIs de sessão.");
         }
     }
 
     async initialize() {
         console.log("APP INITIALIZE: Começando.");
         try {
-            if (window.djangoQuizData && typeof window.djangoQuizData === 'object' &&
-                Array.isArray(window.djangoQuizData.perguntas) &&
-                Array.isArray(window.djangoQuizData.categorias) &&
-                Array.isArray(window.djangoQuizData.opcoesResposta)
-            ) {
-                this.quizData.setPreloadedData(
-                    window.djangoQuizData.perguntas,
-                    window.djangoQuizData.categorias,
-                    window.djangoQuizData.opcoesResposta
-                );
-            } else {
-                console.warn("APP.INITIALIZE: window.djangoQuizData não está no formato esperado ou está incompleto.");
-            }
-
+            // Chama loadAllData que agora faz o fetch da API.
+            // Não há mais tentativa de ler de window.djangoQuizData aqui.
             const dadosForamCarregados = await this.quizData.loadAllData();
 
             if (dadosForamCarregados && this.quizData.getPerguntas().length > 0) {
                 this.quizState.initialize(this.quizData.getPerguntas());
                 this.challengeHubManager.updateTotalQuestionsCount(this.quizData.getTotalPerguntas());
                 this.challengeHubManager.updateQuickQuizCount(this.quizState.QUICK_QUIZ_COUNT);
+
+                // Atualiza a contagem de questões na home page, se o elemento existir
+                const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
+                if (totalQuestionsSpanHome) {
+                    // Verifica se o usuário não está autenticado OU se não há daily_stats
+                    // Esta lógica pode precisar ser ajustada dependendo de quando você quer mostrar a contagem geral
+                    // No momento, ela preenche o span se ele existir, independentemente do estado de login.
+                    totalQuestionsSpanHome.textContent = this.quizData.getTotalPerguntas();
+                }
+
                 if (this.quizData.getCategorias().length > 0) {
                     this.quizUI.generateCategoryTree(this.quizData.getCategoriasHierarquicamente());
                 } else {
-                    console.warn("App.initialize: Nenhuma categoria carregada, a árvore de categorias não será gerada.");
+                    console.warn("App.initialize: Nenhuma categoria carregada da API, a árvore de categorias não será gerada.");
                 }
                 this.setupEventListeners();
 
+                // Lógica de exibição de seção inicial (mantida)
                 if (document.getElementById('home-section')) {
                     this.quizUI.currentSection = 'home-section';
                     this.quizUI.hideElement(this.quizUI.elements.questionSection);
@@ -886,19 +846,22 @@ class App {
                     this.quizUI.hideElement(this.quizUI.elements.homeSection);
                     this.quizUI.hideElement(this.quizUI.elements.questionSection);
                 } else {
-                    this.quizUI.currentSection = 'home-section'; // Fallback
+                    this.quizUI.currentSection = 'home-section';
                     if (this.quizUI.elements.homeSection) this.quizUI.showElement(this.quizUI.elements.homeSection);
                     console.warn("App.initialize: Nenhuma seção principal identificada.");
                 }
                 console.log("App.initialize: Seção da página atual (lógica UI):", this.quizUI.currentSection);
 
             } else {
-                console.error("APP.INITIALIZE: Falha ao carregar dados das perguntas. Quiz não pode ser iniciado.");
-                this.handleLoadError("Não foi possível carregar as perguntas do quiz. Verifique o console.");
+                // Este bloco é alcançado se loadAllData retorna false (devido a dados incompletos da API)
+                // ou se this.quizData.getPerguntas().length for 0.
+                console.error("APP.INITIALIZE: Falha ao carregar dados das perguntas da API ou dados vazios. Quiz não pode ser iniciado.");
+                this.handleLoadError("Não foi possível carregar os dados do quiz. Verifique o console para mais detalhes.");
             }
         } catch (error) {
+            // Este bloco captura erros lançados por this.quizData.loadAllData() ou outros erros fatais.
             console.error("APP.INITIALIZE: Erro fatal durante a inicialização:", error);
-            this.handleLoadError(`Erro fatal ao inicializar o quiz: ${error.message}`);
+            this.handleLoadError(`Erro fatal ao inicializar o quiz: ${error.message}. Tente recarregar a página.`);
         }
     }
 
@@ -910,10 +873,14 @@ class App {
             } else if (this.quizUI && this.quizUI.elements.homeSection) {
                  if(this.quizUI.elements.homeSection) this.quizUI.showElement(this.quizUI.elements.homeSection);
                  const homeWarningContainer = this.quizUI.elements.homeSection.querySelector('.hero-block') || this.quizUI.elements.homeSection;
-                 const homeWarning = document.createElement('p');
-                 homeWarning.textContent = message;
-                 homeWarning.style.color = 'red'; homeWarning.style.backgroundColor = 'white'; homeWarning.style.padding = '10px'; homeWarning.style.border = '1px solid red'; homeWarning.style.textAlign = 'center';
-                 homeWarningContainer.prepend(homeWarning);
+                 if (homeWarningContainer) { // Adicionada verificação
+                     const homeWarning = document.createElement('p');
+                     homeWarning.textContent = message;
+                     homeWarning.style.color = 'red'; homeWarning.style.backgroundColor = 'white'; homeWarning.style.padding = '10px'; homeWarning.style.border = '1px solid red'; homeWarning.style.textAlign = 'center';
+                     homeWarningContainer.prepend(homeWarning);
+                 } else {
+                    alert(message); // Fallback se o container específico não for encontrado
+                 }
             } else {
                  alert(message);
             }
@@ -928,8 +895,9 @@ class App {
     disableCoreFunctionality() {
         console.warn("Desabilitando funcionalidades principais do quiz devido a erro de carregamento.");
         if (this.quizUI && this.quizUI.elements) {
-            this.quizUI.hideElement(this.quizUI.elements.hubCustomizeQuizBtn);
-            this.quizUI.hideElement(this.quizUI.elements.hubQuickQuizBtn);
+            if(this.quizUI.elements.hubCustomizeQuizBtn) this.quizUI.hideElement(this.quizUI.elements.hubCustomizeQuizBtn);
+            if(this.quizUI.elements.hubQuickQuizBtn) this.quizUI.hideElement(this.quizUI.elements.hubQuickQuizBtn);
+
             const goToHubLink = document.getElementById('go-to-challenges-hub-link');
             if (goToHubLink) this.quizUI.hideElement(goToHubLink);
 
@@ -962,7 +930,7 @@ class App {
             else console.warn("Link para home não encontrado para 'Explorar Mais'");
         });
         this.quizUI.elements.btnEncerrarSessao?.addEventListener('click', () => this.quizUI.toggleConfirmModal(true));
-        this.quizUI.elements.confirmEncerrarBtn?.addEventListener('click', () => { this.quizLogic.forceEndQuiz(); }); // Agora async
+        this.quizUI.elements.confirmEncerrarBtn?.addEventListener('click', () => { this.quizLogic.forceEndQuiz(); });
         this.quizUI.elements.cancelEncerrarBtn?.addEventListener('click', () => { this.quizUI.toggleConfirmModal(false); });
         this.quizUI.elements.confirmEncerrarOverlay?.addEventListener('click', (e)=>{if(e.target===this.quizUI.elements.confirmEncerrarOverlay)this.quizUI.toggleConfirmModal(false);});
         document.addEventListener('keydown', (e) => {
@@ -987,12 +955,10 @@ class App {
         this.quizUI.elements.btnGotItExplanation?.addEventListener('click', () => this.quizUI.toggleExplanationModal(false));
         this.quizUI.elements.explanationModalOverlay?.addEventListener('click', (e)=>{if(e.target===this.quizUI.elements.explanationModalOverlay)this.quizUI.toggleExplanationModal(false);});
 
-        // Event listener para o formulário de perfil (simulado, pois não há endpoint real no backend ainda)
-        const profileForm = document.querySelector('#account-section .profile-form'); // Se você tiver um form com esta classe
+        const profileForm = document.querySelector('#account-section .profile-form');
         if (profileForm) {
             profileForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
-                // Lógica de submissão do formulário de perfil aqui (simulada ou real)
                 console.log('Formulário de perfil submetido (simulação).');
                 alert('Funcionalidade de salvar perfil ainda não implementada no backend.');
             });
@@ -1000,7 +966,6 @@ class App {
     }
 }
 
-// Função para obter o CSRF token dos cookies
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -1016,7 +981,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Inicialização da Aplicação
 document.addEventListener('DOMContentLoaded', () => {
     console.log("MedQuiz: DOM completamente carregado e parseado.");
     const app = new App();

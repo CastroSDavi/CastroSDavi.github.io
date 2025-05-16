@@ -1,0 +1,53 @@
+{% load static %}
+<div class="filter-panel-overlay u-is-hidden" id="filter-panel-overlay" aria-hidden="true"></div>
+<aside class="filter-panel" id="filter-panel" aria-labelledby="filter-panel-title" role="dialog" aria-modal="true"
+    aria-hidden="true" tabindex="-1">
+    <div class="filter-panel__header">
+        <h2 id="filter-panel-title" class="filter-panel__title">Filtros</h2>
+        <button class="button button--icon-only filter-panel__close-button" id="btn-fechar-filtros"
+            aria-label="Fechar painel de filtros">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+    <div class="filter-panel__body">
+        <div class="filter-group" id="filter-group-categories">
+            <div class="filter-group__header">
+                <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
+            </div>
+            <div class="filter-group__controls filter-group__controls--standalone">
+                <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
+                <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
+            </div>
+            <ul class="category-tree" id="category-tree-list" role="tree"
+                aria-labelledby="filter-group-categories-title">
+                {# As categorias serão populadas pelo JavaScript #}
+            </ul>
+        </div>
+        <div class="filter-group" id="filter-group-difficulty">
+            <h3 class="filter-group__title" id="filter-group-difficulty-title">Dificuldade</h3>
+            <div class="chip-group" role="group" aria-labelledby="filter-group-difficulty-title">
+                <input type="checkbox" name="difficulty" id="diff-all" value="all"
+                    class="chip-group__input u-sr-only" checked>
+                <label for="diff-all" class="chip-group__chip">Todas</label>
+
+                <input type="checkbox" name="difficulty" id="diff-easy" value="fácil"
+                    class="chip-group__input u-sr-only">
+                <label for="diff-easy" class="chip-group__chip">Fácil</label>
+
+                <input type="checkbox" name="difficulty" id="diff-medium" value="médio"
+                    class="chip-group__input u-sr-only">
+                <label for="diff-medium" class="chip-group__chip">Médio</label>
+
+                <input type="checkbox" name="difficulty" id="diff-hard" value="difícil"
+                    class="chip-group__input u-sr-only">
+                <label for="diff-hard" class="chip-group__chip">Difícil</label>
+            </div>
+        </div>
+    </div>
+    <div class="filter-panel__footer">
+        <button class="button button--secondary button--panel-footer" id="btn-limpar-filtros-painel">Limpar
+            Filtros</button>
+        <button class="button button--primary button--panel-footer" id="btn-aplicar-filtros-painel">Aplicar
+            Filtros</button>
+    </div>
+</aside>

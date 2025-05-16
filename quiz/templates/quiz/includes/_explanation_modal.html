@@ -1,0 +1,34 @@
+{% load static %}
+<div id="explanation-modal-overlay" class="modal explanation-modal__overlay u-is-hidden" role="dialog"
+    aria-labelledby="explanationModalTitle" aria-modal="true" aria-hidden="true">
+    <div id="explanation-modal-dialog" class="explanation-modal__dialog card" aria-hidden="true" tabindex="-1">
+        <div class="explanation-modal__header">
+            <h3 id="explanationModalTitle" class="explanation-modal__title card__title">Análise Detalhada da Questão
+            </h3>
+            <button id="btn-close-explanation-modal"
+                class="button button--icon-only explanation-modal__close-button" aria-label="Fechar análise">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="explanation-modal__body">
+            <div id="explanation-modal-general-block" class="explanation-modal__section u-is-hidden">
+                <h4 class="explanation-modal__subtitle">Entendimento da Pergunta:</h4>
+                <p id="explanation-modal-general-text" class="explanation-modal__text"></p>
+            </div>
+            <hr class="explanation-modal__divider u-is-hidden">
+            <div id="explanation-modal-options-block" class="explanation-modal__section u-is-hidden">
+                <h4 class="explanation-modal__subtitle">Detalhamento das Alternativas:</h4>
+                <ul id="explanation-modal-options-list" class="explanation-modal__options-list">
+                    {# O JavaScript irá popular esta lista com base na questão atual #}
+                </ul>
+            </div>
+            <div id="explanation-modal-empty-state" class="explanation-modal__empty-state u-is-hidden">
+                <span class="material-symbols-outlined">info</span>
+                <p>Nenhuma análise detalhada disponível para esta questão no momento.</p>
+            </div>
+        </div>
+        <div class="explanation-modal__footer">
+            <button id="btn-got-it-explanation" class="button button--primary">Entendido!</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+{% load static %}
+<header class="site-header">
+    <div class="site-header__logo">
+        <a href="{% url 'quiz:home' %}">Med<b>Quiz</b></a>
+    </div>
+    <div class="site-header__actions">
+        {% if user.is_authenticated %}
+        <a href="{% url 'quiz:account' %}" class="site-header__action-link" aria-label="Minha Conta"
+            title="Minha Conta">
+            <span class="material-symbols-outlined">account_circle</span>
+        </a>
+        {# O LINK DE LOGOUT FOI REMOVIDO DAQUI intencionalmente, ele está na account_page.html #}
+        {% else %}
+        <a href="{% url 'login' %}" class="site-header__action-link" aria-label="Fazer Login" title="Fazer Login">
+            <span class="material-symbols-outlined">login</span>
+        </a>
+        <a href="{% url 'quiz:register' %}" class="site-header__action-link" aria-label="Cadastrar-se"
+            title="Cadastrar-se">
+            <span class="material-symbols-outlined">person_add</span>
+        </a>
+        {% endif %}
+    </div>
+</header>

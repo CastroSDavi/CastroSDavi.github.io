@@ -1,0 +1,21 @@
+{% load static %}
+<nav class="bottom-nav" aria-label="Navegação principal móvel">
+    <ul class="bottom-nav__list">
+        <li class="bottom-nav__item">
+            <a href="{% url 'quiz:home' %}"
+                class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}bottom-nav__link--active{% endif %}"
+                data-section-target-django="home" aria-label="Ir para Início" {% if request.resolver_match.view_name == 'quiz:home' %}aria-current="page"{% endif %}>
+                <span class="material-symbols-outlined bottom-nav__icon"> home </span>
+                <span class="bottom-nav__label">Início</span>
+            </a>
+        </li>
+        <li class="bottom-nav__item">
+            <a href="{% url 'quiz:questions' %}"
+                class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}bottom-nav__link--active{% endif %}"
+                data-section-target-django="questions" aria-label="Ir para Questões" {% if request.resolver_match.view_name == 'quiz:questions' %}aria-current="page"{% endif %}>
+                <span class="material-symbols-outlined bottom-nav__icon"> quiz </span>
+                <span class="bottom-nav__label">Questões</span>
+            </a>
+        </li>
+    </ul>
+</nav>

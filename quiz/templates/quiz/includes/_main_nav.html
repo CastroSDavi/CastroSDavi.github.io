@@ -1,0 +1,12 @@
+{% load static %}
+<nav class="main-nav">
+    <ul class="main-nav__list">
+        <li class="main-nav__item"><a href="{% url 'quiz:home' %}"
+                class="main-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}main-nav__link--active{% endif %}"
+                data-section-target-django="home">Início</a></li>
+        <li class="main-nav__item"><a href="{% url 'quiz:questions' %}"
+                class="main-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}main-nav__link--active{% endif %}"
+                data-section-target-django="questions">Questões</a></li>
+        {# Adicionar link para 'Minha Conta' se o usuário estiver logado, opcional aqui se já estiver no header #}
+    </ul>
+</nav>

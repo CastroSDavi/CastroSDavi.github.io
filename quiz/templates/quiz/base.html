@@ -52,11 +52,6 @@
                     class="main-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}main-nav__link--active{% endif %}"
                     data-section-target-django="questions">Questões</a></li>
             {# Adicionar link para 'Minha Conta' se o usuário estiver logado, opcional aqui se já estiver no header #}
-            {% if user.is_authenticated %}
-            <li class="main-nav__item"><a href="{% url 'quiz:account' %}"
-                    class="main-nav__link {% if request.resolver_match.view_name == 'quiz:account' %}main-nav__link--active{% endif %}"
-                    data-section-target-django="account">Minha Conta</a></li>
-            {% endif %}
         </ul>
     </nav>
 
@@ -184,17 +179,6 @@
                     <span class="bottom-nav__label">Questões</span>
                 </a>
             </li>
-            {# Adicionar link para 'Minha Conta' se o usuário estiver logado, opcional aqui se já estiver no header #}
-            {% if user.is_authenticated %}
-            <li class="bottom-nav__item">
-                <a href="{% url 'quiz:account' %}"
-                    class="bottom-nav__link {% if request.resolver_match.view_name == 'quiz:account' %}bottom-nav__link--active{% endif %}"
-                    data-section-target-django="account" aria-label="Minha Conta" {% if request.resolver_match.view_name == 'quiz:account' %}aria-current="page"{% endif %}>
-                    <span class="material-symbols-outlined bottom-nav__icon"> person </span>
-                    <span class="bottom-nav__label">Conta</span>
-                </a>
-            </li>
-            {% endif %}
         </ul>
     </nav>
 

@@ -1,0 +1,293 @@
+/* assets/css/sections/cadastro-section.css - REFINADO */
+
+/* Estilo para o corpo da página de cadastro dedicada */
+body.cadastro-page {
+    background-color: var(--color-gray-100);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: var(--spacing-md, 20px);
+    font-family: var(--font-family-sans); /* Garante a fonte base */
+}
+
+/* Container principal para o formulário na página dedicada */
+.cadastro-container {
+    width: 100%;
+    /* AUMENTANDO A LARGURA MÁXIMA DO CONTAINER DO FORMULÁRIO */
+    max-width: 650px; /* Antes 500px, agora 650px. Ajuste conforme necessário. */
+    margin: 0 auto;
+}
+
+/* Cabeçalho simples da página de cadastro */
+.cadastro-header {
+    padding: var(--spacing-md, 20px) 0 var(--spacing-lg, 30px) 0; /* Mais espaço abaixo */
+    text-align: center;
+}
+
+.site-logo-link {
+    font-family: var(--font-family-heading);
+    font-size: 2.5rem; /* Logo um pouco maior */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    transition: transform var(--transition-medium);
+}
+.site-logo-link:hover {
+    transform: scale(1.03);
+}
+.site-logo-link b {
+    font-weight: var(--font-weight-extrabold);
+    color: var(--color-secondary-green);
+}
+
+/* Card do formulário de cadastro */
+.card--cadastro-form {
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-xl, 20px);
+    box-shadow: 0 15px 35px rgba(var(--color-primary-dark-rgb), 0.1), 0 5px 15px rgba(0,0,0,0.07); /* Sombra mais suave e ampla */
+    padding: var(--spacing-xl, 40px) var(--spacing-xl, 50px); /* Mais padding horizontal */
+    text-align: center;
+}
+
+.card--cadastro-form .card__title {
+    font-size: 2.2rem; /* Título mais impactante */
+    color: var(--color-primary-dark);
+    margin-bottom: var(--spacing-sm, 10px);
+    font-weight: var(--font-weight-bold);
+}
+
+.cadastro-form__subtitle {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xl, 40px); /* Mais espaço antes do formulário */
+    font-size: 1.05rem; /* Subtítulo um pouco maior */
+    line-height: 1.6;
+}
+
+.cadastro-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg, 28px); /* Espaçamento consistente entre grupos */
+    text-align: left;
+}
+
+/* Layout dos campos: 1 coluna por padrão, 2 colunas em telas maiores */
+.form-group-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md, 24px); /* Espaço entre os campos */
+}
+
+@media (min-width: 600px) {
+    .form-group-grid {
+        grid-template-columns: 1fr 1fr; /* Duas colunas */
+    }
+    /* Campos que podem ocupar a largura total */
+    .form-group-grid .form-group.full-width,
+    .form-group-grid .form-group:nth-child(1), /* Username */
+    .form-group-grid .form-group:nth-child(4)  /* Email */
+    {
+        grid-column: 1 / -1;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 8px); /* Espaço entre label e input-wrapper */
+}
+
+.form-label {
+    font-weight: var(--font-weight-semibold); /* Label um pouco mais forte */
+    font-size: 0.9rem; /* Tamanho do label */
+    color: var(--color-gray-800);
+    padding-left: 2px;
+}
+
+.form-control-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* ESTILO PARA OS ÍCONES DENTRO DOS CAMPOS */
+.form-control-icon {
+    position: absolute;
+    left: 18px; /* Posição do ícone */
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-500);
+    font-size: 1.4rem; /* Tamanho do ícone */
+    pointer-events: none;
+    transition: color var(--transition-fast);
+    line-height: 1; /* Importante para alinhamento vertical */
+    z-index: 2; /* Para garantir que fique acima de qualquer pseudo-elemento do input */
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 15px 20px; /* Padding vertical e horizontal */
+    padding-left: 52px; /* Padding esquerdo aumentado para o ícone */
+    font-size: 1rem; /* Fonte do input */
+    line-height: 1.5; /* Altura da linha */
+    color: var(--color-gray-900);
+    background-color: var(--color-gray-100); /* Fundo levemente acinzentado */
+    border: 2px solid var(--color-gray-200); /* Borda mais suave */
+    border-radius: var(--border-radius-md, 8px); /* Bordas um pouco menos arredondadas que o card */
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+
+.form-control::placeholder {
+    color: var(--color-gray-500);
+    opacity: 1;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary-medium);
+    background-color: var(--color-white);
+    outline: 0;
+    box-shadow: 0 0 0 3.5px rgba(var(--color-primary-medium-rgb), 0.2);
+}
+
+.form-control-wrapper:focus-within .form-control-icon {
+    color: var(--color-primary-medium);
+}
+
+/* Feedback de validação */
+.form-text-feedback {
+    font-size: 0.8rem;
+    margin-top: 6px;
+    padding-left: 2px;
+    font-weight: var(--font-weight-medium);
+}
+.form-text-feedback.is-valid { color: var(--color-correct-text); }
+.form-text-feedback.is-invalid { color: var(--color-accent-red); }
+
+.form-control.is-valid {
+    border-color: var(--color-secondary-green) !important;
+    background-color: var(--color-white); /* Fundo branco quando válido */
+}
+.form-control.is-valid:focus {
+    box-shadow: 0 0 0 3.5px rgba(var(--color-secondary-green-rgb), 0.2);
+}
+.form-control-wrapper:has(.form-control.is-valid) .form-control-icon {
+    color: var(--color-secondary-green);
+}
+
+.form-control.is-invalid {
+    border-color: var(--color-accent-red) !important;
+    background-color: var(--color-white); /* Fundo branco quando inválido */
+}
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3.5px rgba(var(--color-accent-red-rgb), 0.2);
+}
+.form-control-wrapper:has(.form-control.is-invalid) .form-control-icon {
+    color: var(--color-accent-red);
+}
+
+.form-group--actions {
+    margin-top: var(--spacing-md, 20px); /* Espaço acima do botão */
+    display: flex;
+    justify-content: center;
+}
+
+.cadastro-form__submit {
+    width: 100%;
+    background-image: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-medium) 70%, var(--color-secondary-green) 100%);
+    color: var(--color-white);
+    border: none;
+    padding: 16px 25px; /* Botão mais robusto */
+    font-size: 1.1rem;
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--border-radius-md, 8px);
+    box-shadow: 0 4px 15px rgba(var(--color-primary-dark-rgb), 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-position 0.3s ease;
+    background-size: 200% auto; /* Para efeito de hover no gradiente */
+    background-position: 0% center; /* Posição inicial do gradiente */
+}
+
+.cadastro-form__submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(var(--color-primary-dark-rgb), 0.25);
+    background-position: right center; /* Move o gradiente no hover */
+}
+
+.cadastro-form__submit .button__icon {
+    margin-right: var(--spacing-sm, 10px);
+    font-size: 1.35em; /* Ícone do botão maior */
+}
+
+.login-prompt {
+    text-align: center;
+    font-size: 0.9rem; /* Link de login um pouco maior */
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-lg, 30px);
+}
+.login-prompt a {
+    color: var(--color-primary-medium);
+    font-weight: var(--font-weight-semibold);
+}
+.login-prompt a:hover {
+    color: var(--color-primary-dark);
+}
+
+/* Footer específico para a página de cadastro */
+.footer-cadastro {
+    text-align: center;
+    padding: var(--spacing-md, 20px) 0;
+    font-size: 0.85rem;
+    color: var(--color-gray-600);
+    width: 100%;
+    max-width: 650px; /* Consistente com o container */
+    margin-top: var(--spacing-lg, 30px);
+}
+
+/* Responsividade */
+@media (max-width: 700px) {
+    .cadastro-container {
+        max-width: 95%;
+    }
+    .card--cadastro-form {
+        padding: var(--spacing-lg, 30px) var(--spacing-lg, 30px);
+    }
+     .form-group-grid { /* Volta para uma coluna em telas menores */
+        grid-template-columns: 1fr;
+    }
+    .form-group-grid .form-group.full-width,
+    .form-group-grid .form-group:nth-child(1),
+    .form-group-grid .form-group:nth-child(4) {
+        grid-column: auto; /* Reseta o grid-column */
+    }
+}
+
+@media (max-width: 480px) {
+    .card--cadastro-form {
+        padding: var(--spacing-lg, 25px) var(--spacing-md, 20px);
+    }
+    .card--cadastro-form .card__title {
+        font-size: 1.9rem;
+    }
+    .cadastro-form__subtitle {
+        font-size: 1rem;
+        margin-bottom: var(--spacing-lg, 30px);
+    }
+    .form-control {
+        padding: 14px 18px;
+        padding-left: 48px; /* Manter espaço para o ícone */
+        font-size: 0.95rem;
+    }
+    .form-control-icon {
+        left: 16px;
+        font-size: 1.3rem;
+    }
+    .cadastro-form__submit {
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+    .footer-cadastro {
+        font-size: 0.8rem;
+        margin-top: var(--spacing-md, 25px);
+    }
+}

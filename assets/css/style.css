@@ -7,6 +7,7 @@
 
 @import 'login.css';
 
+
 /* 3. COMPONENTS */
 @import 'components/button.css';
 @import 'components/card.css';
@@ -27,3 +28,4 @@
 @import 'sections/home-section.css';
 @import 'sections/question-section.css';
 @import 'sections/conta-section.css';
+@import 'sections/cadastro-section.css';

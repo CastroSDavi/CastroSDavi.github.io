@@ -1,100 +1,196 @@
 {# quiz/templates/quiz/register.html #}
-{% extends "quiz/base.html" %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block title %}{{ page_title|default:"Cadastro" }} - MedQuiz{% endblock title %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
-{% block content %}
-<section id="register-section" class="main-section">
-    <div class="card card--conta-perfil" style="max-width: 550px; margin: 40px auto;"> {# Um pouco mais largo para acomodar mais campos #}
-        <h2 class="card__title">Crie sua Conta</h2>
-        <div class="card__body" style="text-align: left;">
-            <form method="post" action="{% url 'quiz:register' %}" class="profile-form">
-                {% csrf_token %}
-                
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label_tag }}</label>
-                        {{ field }}
-                        {% if field.help_text %}
-                            <small class="form-text text-muted" style="display: block; font-size: 0.8em; color: var(--color-text-muted); margin-top: 4px;">
-                                {{ field.help_text|safe }}
-                            </small>
-                        {% endif %}
-                        {% for error in field.errors %}
-                            <div class="form-message form-message--error" role="alert" style="margin-top: 5px; padding: 8px 12px; font-size: 0.85em;">
-                                {{ error }}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {# Se você criou um cadastro-section.css e o importou em style.css, ele será incluído aqui.
+       Caso contrário, e se 'cadastro-section.css' não estiver em 'style.css', adicione:
+       <link rel="stylesheet" href="{% static 'css/sections/cadastro-section.css' %}">
+    #}
+    <title>{{ page_title|default:"Criar Conta" }} - MedQuiz</title>
+</head>
+<body class="cadastro-page"> {# Aplicando a classe do seu CSS #}
+
+    <div class="cadastro-container">
+        <header class="cadastro-header">
+            {# Você pode usar a URL para a home do quiz ou uma página inicial simples #}
+            <a href="{% url 'quiz:home' %}" class="site-logo-link">Med<b>Quiz</b></a>
+        </header>
+
+        <main>
+            <section id="cadastro-section" class="main-section-focused">
+                <div class="card card--cadastro-form">
+                    <h2 class="card__title">Criar Nova Conta</h2>
+                    <div class="card__body">
+                        <p class="cadastro-form__subtitle">Preencha os campos abaixo para se registrar.</p>
+
+                        {# Exibição de erros não relacionados a campos específicos (non_field_errors) #}
+                        {% if form.non_field_errors %}
+                            <div class="form-message form-message--error" role="alert" style="margin-bottom: 20px; text-align: left;">
+                                {% for error in form.non_field_errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
                             </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-                
-                {% if form.non_field_errors %}
-                    <div class="form-message form-message--error" role="alert" style="margin-top: 15px;">
-                        {% for error in form.non_field_errors %}
-                            <p>{{ error }}</p>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-                
-                <button type="submit" class="button button--primary" style="margin-top: 25px; width: 100%;">Cadastrar</button>
-            </form>
-            
-            <div style="margin-top: 25px; text-align: center; font-size: 0.9em;">
-                <p>Já tem uma conta? <a href="{% url 'login' %}" class="text-link">Faça login aqui</a>.</p>
-            </div>
-        </div>
-    </div>
-</section>
+                        {% endif %}
 
-{# Reutilizando estilos definidos no login.html ou mova-os para um CSS global #}
-<style>
-    .form-message {
-        padding: 10px 15px;
-        margin-bottom: 10px; /* Ajuste para formulários de cadastro */
-        border-radius: var(--border-radius-md);
-        font-size: 0.9em;
-    }
-    .form-message--error {
-        background-color: var(--color-incorrect-bg, #fff0f1);
-        color: var(--color-incorrect-text, #c12634);
-        border: 1px solid var(--color-incorrect-border, #f1aeb5);
-    }
-    .text-link {
-        color: var(--color-primary-medium);
-        text-decoration: none;
-    }
-    .text-link:hover {
-        text-decoration: underline;
-        color: var(--color-primary-dark);
-    }
-    .form-group { /* Adicionando para espaçamento entre os campos do formulário de cadastro */
-        margin-bottom: 18px;
-    }
-    .form-group:last-of-type {
-        margin-bottom: 0;
-    }
-    /* Estilizando os inputs e textareas para consistência (já deve vir do seu CSS, mas como exemplo) */
-    .profile-form input[type="text"],
-    .profile-form input[type="email"],
-    .profile-form input[type="password"] {
-        display: block;
-        width: 100%;
-        padding: var(--form-control-padding-y, var(--spacing-xs, 10px)) var(--form-control-padding-x, var(--spacing-sm, 12px));
-        font-size: var(--form-control-font-size, var(--font-size-base, 0.95rem));
-        line-height: var(--line-height-base);
-        color: var(--form-control-color, var(--color-gray-900));
-        background-color: var(--form-control-bg, var(--color-white));
-        border: var(--border-width) solid var(--form-control-border-color, var(--color-gray-500));
-        border-radius: var(--form-control-border-radius, var(--border-radius-sm));
-        transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    }
-    .profile-form input[type="text"]:focus,
-    .profile-form input[type="email"]:focus,
-    .profile-form input[type="password"]:focus {
-        border-color: var(--focus-outline-color);
-        outline: 0;
-        box-shadow: 0 0 0 var(--focus-outline-width) rgba(var(--color-primary-medium-rgb), 0.25);
-    }
-</style>
-{% endblock content %}
+                        <form method="post" action="{% url 'quiz:register' %}" class="cadastro-form" id="signupForm">
+                            {% csrf_token %}
+                            <div class="form-group-grid">
+                                {# Username #}
+                                <div class="form-group">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">{{ form.username.label_tag }}</label>
+                                    <div class="form-control-wrapper">
+                                        <span class="material-symbols-outlined form-control-icon">account_circle</span>
+                                        {{ form.username }}
+                                    </div>
+                                    {% for error in form.username.errors %}
+                                        <small class="form-text-feedback is-invalid" style="display: block;">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                {# Nome #}
+                                <div class="form-group">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label_tag }}</label>
+                                    <div class="form-control-wrapper">
+                                         <span class="material-symbols-outlined form-control-icon">person</span>
+                                        {{ form.first_name }}
+                                    </div>
+                                    {% for error in form.first_name.errors %}
+                                        <small class="form-text-feedback is-invalid" style="display: block;">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                {# Sobrenome #}
+                                <div class="form-group">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label_tag }}</label>
+                                    <div class="form-control-wrapper">
+                                         <span class="material-symbols-outlined form-control-icon">badge</span>
+                                        {{ form.last_name }}
+                                    </div>
+                                    {% for error in form.last_name.errors %}
+                                        <small class="form-text-feedback is-invalid" style="display: block;">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                {# Email - Ocupando largura total conforme seu CSS planejado #}
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label_tag }}</label>
+                                    <div class="form-control-wrapper">
+                                        <span class="material-symbols-outlined form-control-icon">email</span>
+                                        {{ form.email }}
+                                    </div>
+                                    {% if form.email.help_text %}
+                                        <small class="form-text-feedback" style="display: block; color: var(--color-text-muted); font-weight: normal;">{{ form.email.help_text|safe }}</small>
+                                    {% endif %}
+                                    {% for error in form.email.errors %}
+                                        <small class="form-text-feedback is-invalid" style="display: block;">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                {# Senha (password1) #}
+                                <div class="form-group">
+                                    <label for="{{ form.password1.id_for_label }}" class="form-label">{{ form.password1.label_tag }}</label>
+                                    <div class="form-control-wrapper">
+                                        <span class="material-symbols-outlined form-control-icon">lock</span>
+                                        {{ form.password1 }}
+                                    </div>
+                                    {% if form.password1.help_text %}
+                                        <small class="form-text-feedback" style="display: block; color: var(--color-text-muted); font-weight: normal;">{{ form.password1.help_text|safe }}</small>
+                                    {% endif %}
+                                    {% for error in form.password1.errors %}
+                                        <small class="form-text-feedback is-invalid" style="display: block;">{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+
+                                {# Confirmar Senha (password2) #}
+                                <div class="form-group">
+                                    <label for="{{ form.password2.id_for_label }}" class="form-label">{{ form.password2.label_tag }}</label>
+                                    <div class="form-control-wrapper">
+                                         <span class="material-symbols-outlined form-control-icon">enhanced_encryption</span>
+                                        {{ form.password2 }}
+                                    </div>
+                                    {% for error in form.password2.errors %}
+                                        <small class="form-text-feedback is-invalid" style="display: block;">{{ error }}</small>
+                                    {% endfor %}
+                                    {# O feedback de senha correspondente (is-valid/is-invalid) precisaria de JS #}
+                                    <small class="form-text-feedback u-is-hidden" id="password-feedback-django"></small>
+                                </div>
+                            </div>
+
+                            <div class="form-group form-group--actions">
+                                <button type="submit" class="button cadastro-form__submit">
+                                    <span class="material-symbols-outlined button__icon">person_add</span>
+                                    Criar Conta
+                                </button>
+                            </div>
+                             <p class="login-prompt">
+                                Já tem uma conta? <a href="{% url 'login' %}">Faça login</a>
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer-cadastro">
+            <p>&copy; <span id="current-year">{% now "Y" %}</span> MedQuiz. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+    {# Script para feedback de senha, se necessário (simplificado) #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) {
+                // {% now "Y" %} já faz isso no Django, mas se fosse JS puro:
+                // yearSpan.textContent = new Date().getFullYear();
+            }
+
+            // Validação de confirmação de senha (exemplo básico, pode ser mais robusto)
+            const passwordField = document.getElementById('{{ form.password1.id_for_label }}'); // Usa o ID do Django
+            const confirmPasswordField = document.getElementById('{{ form.password2.id_for_label }}'); // Usa o ID do Django
+            const feedbackElement = document.getElementById('password-feedback-django');
+
+            function validatePasswords() {
+                if (!passwordField || !confirmPasswordField || !feedbackElement) return;
+
+                if (passwordField.value === "" && confirmPasswordField.value === "") {
+                    feedbackElement.classList.add('u-is-hidden');
+                    confirmPasswordField.classList.remove('is-valid', 'is-invalid');
+                    return;
+                }
+
+                if (passwordField.value === confirmPasswordField.value && confirmPasswordField.value.length > 0) {
+                    feedbackElement.textContent = 'As senhas coincidem.';
+                    feedbackElement.classList.remove('u-is-hidden', 'is-invalid');
+                    feedbackElement.classList.add('is-valid');
+                    confirmPasswordField.classList.remove('is-invalid');
+                    confirmPasswordField.classList.add('is-valid');
+                } else if (confirmPasswordField.value.length > 0) {
+                    feedbackElement.textContent = 'As senhas não coincidem.';
+                    feedbackElement.classList.remove('u-is-hidden', 'is-valid');
+                    feedbackElement.classList.add('is-invalid');
+                    confirmPasswordField.classList.remove('is-valid');
+                    confirmPasswordField.classList.add('is-invalid');
+                } else {
+                     feedbackElement.classList.add('u-is-hidden');
+                     confirmPasswordField.classList.remove('is-valid', 'is-invalid');
+                }
+            }
+
+            if (passwordField && confirmPasswordField) {
+                passwordField.addEventListener('input', validatePasswords);
+                confirmPasswordField.addEventListener('input', validatePasswords);
+            }
+        });
+    </script>
+</body>
+</html>

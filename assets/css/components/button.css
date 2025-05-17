@@ -1,71 +1,85 @@
 /* assets/css/components/button.css */
 
+/*
+==========================================================================
+  COMPONENT: BOTÕES (BUTTONS)
+==========================================================================
+*/
+
+/* --- ESTILOS BASE PARA .button --- */
 .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    vertical-align: middle;
-    padding: var(--button-padding-y, 10px) var(--button-padding-x, 20px);
-    font-family: var(--font-family-heading);
+    display: inline-flex;       /* Alinha conteúdo interno e permite comportamento de bloco/linha */
+    align-items: center;        /* Alinha itens verticalmente ao centro */
+    justify-content: center;    /* Alinha itens horizontalmente ao centro */
+    vertical-align: middle;     /* Alinhamento vertical do botão em relação ao texto ao redor */
+    
+    padding: var(--button-padding-y, 10px) var(--button-padding-x, 20px); /* Padding interno */
+    
+    font-family: var(--font-family-heading); /* Fonte para botões */
     font-weight: var(--font-weight-semibold);
     font-size: var(--button-font-size, 0.95rem);
-    line-height: var(--line-height-tight, 1.2);
+    line-height: var(--line-height-tight, 1.2); /* Altura da linha mais justa para botões */
+    letter-spacing: 0.5px;      /* Espaçamento sutil entre letras */
+    
     text-align: center;
-    text-decoration: none;
-    white-space: nowrap;
-    user-select: none;
-    color: var(--button-color, var(--color-white));
-    border: var(--button-border-width, var(--border-width-md)) solid var(--button-border-color, transparent);
-    border-radius: var(--button-border-radius, var(--border-radius-xl));
+    text-decoration: none;      /* Remove sublinhado de links estilizados como botões */
+    white-space: nowrap;        /* Impede que o texto do botão quebre linha */
+    user-select: none;          /* Impede que o texto do botão seja selecionado */
+    
+    color: var(--button-color, var(--color-white)); /* Cor do texto padrão (para botões com fundo) */
+    border: var(--button-border-width, var(--border-width-md)) solid var(--button-border-color, transparent); /* Borda padrão */
+    border-radius: var(--button-border-radius, var(--border-radius-xl)); /* Raio da borda */
+    
     cursor: pointer;
     transition: transform var(--transition-fast),
                 box-shadow var(--transition-fast),
                 background-color var(--transition-fast),
-                background-image var(--transition-fast), /* Adicionado para gradientes */
+                background-image var(--transition-fast),
                 border-color var(--transition-fast),
                 color var(--transition-fast),
                 filter var(--transition-fast),
-                opacity var(--transition-medium) var(--transition-timing-function-ease-out); /* Para fade-in/out geral */
-    box-shadow: var(--shadow-button);
-    letter-spacing: 0.5px;
-    min-height: var(--button-min-height, 40px);
-    min-width: var(--button-min-width, 40px); /* Para botões de ícone */
+                opacity var(--transition-medium) var(--transition-timing-function-ease-out);
+    
+    box-shadow: var(--shadow-button); /* Sombra padrão sutil */
+    
+    min-height: var(--button-min-height, 40px); /* Altura mínima para consistência */
+    min-width: var(--button-min-width, 40px);  /* Largura mínima (útil para botões de ícone) */
 }
 
-/* Estados base */
+/* --- ESTADOS BASE DO BOTÃO --- */
 .button:not(:disabled):hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-button-hover);
-    filter: brightness(105%);
+    transform: translateY(-1px); /* Leve elevação no hover */
+    box-shadow: var(--shadow-button-hover); /* Sombra um pouco mais pronunciada */
+    filter: brightness(105%); /* Leve brilho */
 }
 .button:not(:disabled):active {
-    transform: translateY(0px);
-    box-shadow: var(--shadow-inner); /* Sombra interna sutil ao clicar */
-    filter: brightness(95%);
+    transform: translateY(0px); /* Retorna à posição original ao clicar */
+    box-shadow: var(--shadow-inner); /* Sombra interna para efeito de pressionado */
+    filter: brightness(95%); /* Leve escurecimento */
 }
-.button:focus-visible { /* :focus-visible já tem estilos globais em base.css, mas podemos refinar */
+.button:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
     outline-offset: var(--focus-outline-offset);
-    box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset) - 1px) rgba(from var(--focus-outline-color) r g b / 0.25); /* Sombra de foco mais integrada */
+    box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset) - 1px) rgba(from var(--focus-outline-color) r g b / 0.25);
 }
 .button:disabled {
-    background-image: none !important;
-    background-color: var(--color-gray-300) !important;
-    color: var(--color-gray-600);
-    border-color: var(--color-gray-400);
-    box-shadow: none;
-    cursor: not-allowed;
+    background-image: none !important; /* Remove gradientes se houver */
+    background-color: var(--color-gray-300) !important; /* Fundo cinza claro */
+    color: var(--color-gray-600); /* Texto cinza */
+    border-color: var(--color-gray-400); /* Borda cinza */
+    box-shadow: none; /* Sem sombra */
+    cursor: not-allowed; /* Cursor indica que não é clicável */
     transform: translateY(0);
     filter: none;
-    opacity: 0.7;
+    opacity: 0.7; /* Levemente translúcido */
 }
 
-/* Modificadores de aparência */
+/* --- MODIFICADORES DE APARÊNCIA (CORES) --- */
 .button--primary {
     background-image: linear-gradient(to right, var(--color-primary-dark), var(--color-primary-medium));
-    background-color: var(--color-primary-medium);
+    background-color: var(--color-primary-medium); /* Fallback se gradiente não for suportado */
     color: var(--color-white);
-    border-color: transparent;
+    border-color: transparent; /* Remove borda se houver cor de fundo sólida/gradiente */
 }
 .button--primary:not(:disabled):hover {
     box-shadow: 0 5px 12px rgba(from var(--color-primary-dark) r g b / 0.3); /* Sombra mais temática */
@@ -85,39 +99,40 @@
     background-color: transparent;
     color: var(--color-primary-dark);
     border-color: var(--color-primary-dark);
-    box-shadow: none;
+    box-shadow: none; /* Botões outline geralmente não têm sombra base */
 }
 .button--outline:not(:disabled):hover {
-    background-color: var(--color-primary-light);
-    color: var(--color-primary-dark); /* Mantém a cor do texto */
-    border-color: var(--color-primary-dark); /* Mantém a cor da borda */
+    background-color: var(--color-primary-light); /* Fundo sutil no hover */
+    color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
 }
 .button--outline:not(:disabled):active {
-    background-color: rgba(from var(--color-primary-light) r g b / 0.7); /* Um pouco mais escuro no active */
+    background-color: rgba(from var(--color-primary-light) r g b / 0.7);
     transform: translateY(0px);
 }
 .button--outline:disabled {
     background-color: transparent !important;
     color: var(--color-gray-600);
-    border-color: var(--color-gray-500); /* Borda um pouco mais clara para desabilitado */
+    border-color: var(--color-gray-500);
     opacity: 0.6;
 }
 
-/* Botão apenas com ícone (base para o botão de favorito antes da remoção das classes .button) */
+/* --- BOTÃO APENAS COM ÍCONE --- */
+/* Usado como base para botões que contêm apenas um ícone.
+   A classe .favorite-star-action usará alguns desses princípios, mas com seus próprios tamanhos. */
 .button--icon-only {
-    padding: var(--spacing-xs, 8px); /* Padding igual em todos os lados */
-    min-width: var(--button-min-height, 40px); /* Garante que seja quadrado ou redondo */
-    aspect-ratio: 1 / 1; /* Mantém proporção 1:1 se min-width e min-height forem iguais */
-    border-radius: var(--border-radius-circle); /* Para botões de ícone redondos */
+    padding: var(--spacing-xs, 8px);
+    min-width: var(--button-min-height, 40px); /* Garante que seja quadrado ou redondo se min-height também for 40px */
+    aspect-ratio: 1 / 1; /* Força proporção 1:1 */
+    border-radius: var(--border-radius-circle); /* Torna redondo */
 }
-.button--icon-only .button__icon,
-.button--icon-only .material-symbols-outlined { /* Para ícones diretos */
-    margin: 0; /* Remove margens padrão do ícone */
-    font-size: 1.3em; /* Ajusta tamanho do ícone relativo ao botão */
+.button--icon-only .button__icon, /* Se usar a estrutura <span class="button__icon"> */
+.button--icon-only .material-symbols-outlined { /* Se usar diretamente o ícone */
+    margin: 0; /* Remove margens do ícone */
+    font-size: 1.3em; /* Ícone ligeiramente maior em relação ao tamanho do botão */
 }
 
-
-/* --- MODIFICADORES DE TAMANHO --- */
+/* --- MODIFICADORES DE TAMANHO PARA BOTÕES GENÉRICOS --- */
 .button--small {
     --button-font-size: 0.9rem;
     --button-padding-y: 8px;
@@ -130,13 +145,14 @@
     --button-font-size: 0.85rem;
     --button-padding-y: 6px;
     --button-padding-x: 12px;
-    --button-min-height: auto; /* Permite altura menor */
+    --button-min-height: auto;
     letter-spacing: 0.3px;
+    /* Aplicando diretamente para garantir que sobrescreva a base .button se necessário */
     font-size: var(--button-font-size);
     padding: var(--button-padding-y) var(--button-padding-x);
     min-height: var(--button-min-height);
     border-radius: var(--border-radius-md);
-    border-width: var(--border-width);
+    border-width: var(--border-width); /* Borda mais fina para compactos */
 }
 
 .button--large {
@@ -145,7 +161,7 @@
     min-height: 48px;
 }
 
-/* Modificador para botões de texto (usado nos filtros de categoria) */
+/* --- BOTÃO DE TEXTO (TEXT BUTTON) --- */
 .button--text {
     background-color: transparent;
     background-image: none;
@@ -153,7 +169,7 @@
     border-color: transparent;
     box-shadow: none;
     font-weight: var(--font-weight-medium);
-    padding: var(--spacing-xxs, 4px) var(--spacing-xs, 8px); /* Padding menor */
+    padding: var(--spacing-xxs, 4px) var(--spacing-xs, 8px);
     min-height: auto;
 }
 .button--text:not(:disabled):hover,
@@ -161,7 +177,7 @@
     background-color: var(--color-gray-100);
     color: var(--color-text-link-hover);
     box-shadow: none;
-    filter: none; /* Remove filtro de brilho do hover base */
+    filter: none;
     text-decoration: underline;
 }
 .button--text:not(:disabled):active {
@@ -175,25 +191,31 @@
     opacity: 0.7;
 }
 
-/* Elementos internos do botão */
-.button__icon { margin-right: var(--spacing-xs, 8px); }
-.button__icon--right { margin-right: 0; margin-left: var(--spacing-xs, 8px); }
-.button__label { display: inline-block; }
+/* --- ELEMENTOS INTERNOS DO BOTÃO (ÍCONE, LABEL) --- */
+.button__icon {
+    margin-right: var(--spacing-xs, 8px); /* Espaço padrão à direita do ícone (se à esquerda do label) */
+}
+.button__icon--right {
+    margin-right: 0;
+    margin-left: var(--spacing-xs, 8px); /* Espaço à esquerda do ícone (se à direita do label) */
+}
+.button__label {
+    display: inline-block; /* Comportamento padrão para texto */
+}
 
-
-/* Fancy buttons (usados na Home) */
+/* --- BOTÕES "FANCY" (Ex: Usados na Home) --- */
 .button--fancy {
-    padding: clamp(12px, 2.5vh, 14px) clamp(20px, 4vw, 28px);
-    font-size: clamp(0.9rem, 2.2vw, 1rem);
-    border-radius: var(--border-radius-xl);
-    border: none;
+    padding: clamp(12px, 2.5vh, 14px) clamp(20px, 4vw, 28px); /* Padding responsivo */
+    font-size: clamp(0.9rem, 2.2vw, 1rem); /* Tamanho da fonte responsivo */
+    border-radius: var(--border-radius-xl); /* Bordas bem arredondadas */
+    border: none; /* Sem borda */
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, background-image 0.2s ease;
-    flex: 1 1 200px;
+    flex: 1 1 200px; /* Flex para se ajustar em layouts flexíveis */
     text-align: center;
 }
 .button--fancy .button__icon {
-    font-size: clamp(1.1em, 2.5vw, 1.2em);
+    font-size: clamp(1.1em, 2.5vw, 1.2em); /* Ícone responsivo */
 }
 
 .button--fancy-primary {
@@ -209,9 +231,9 @@
 }
 
 .button--fancy-secondary {
-    background-color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.95); /* Branco levemente translúcido */
     color: var(--color-primary-dark);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05); /* Borda muito sutil */
 }
 .button--fancy-secondary:not(:disabled):hover {
     background-color: var(--color-white);
@@ -220,20 +242,23 @@
     filter: none;
 }
 
-/* Botões específicos de contexto (Ex: rodapé de painel/modal) */
-.button--panel-footer {
-    flex-grow: 1;
+/* --- BOTÕES ESPECÍFICOS DE CONTEXTO --- */
+.button--panel-footer { /* Usado no rodapé do painel de filtros */
+    flex-grow: 1; /* Para ocupar espaço igualitário no flex container */
     padding-top: var(--spacing-sm, 12px);
     padding-bottom: var(--spacing-sm, 12px);
     font-size: 0.9rem;
 }
-.button--modal-action {
-    min-width: 120px;
+.button--modal-action { /* Usado em rodapés de modais */
+    min-width: 120px; /* Largura mínima para botões de ação em modais */
 }
 
-/* ESTILOS REFINADOS PARA O BOTÃO "ANALISAR RESPOSTA" USANDO SEU ID */
-#btn-toggle-explanation {
-    /* Herda de .button */
+/* --- BOTÃO "ANALISAR RESPOSTA" (ID ESPECÍFICO) --- */
+/* Este botão é específico e pode herdar de .button e ter modificadores,
+   mas como tem um ID, podemos também estilizá-lo diretamente.
+   Assumindo que ele tenha a classe .button e .button--analysis-link.
+*/
+#btn-toggle-explanation.button--analysis-link { /* Se tiver a classe .button também */
     background-color: transparent;
     color: var(--color-primary-dark);
     border: 1.5px solid var(--color-primary-dark);
@@ -243,13 +268,13 @@
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size-sm, 0.9rem);
     letter-spacing: 0.4px;
-    box-shadow: none;
-    text-transform: none;
-    min-height: auto;
+    box-shadow: none; /* Sem sombra base para este tipo */
+    text-transform: none; /* Sem text-transform padrão se houver */
+    min-height: auto; /* Altura baseada no conteúdo */
     line-height: var(--line-height-tight);
 
-    opacity: 0; /* Começa invisível para animação de entrada */
-    transform: translateY(15px); /* Começa um pouco mais abaixo */
+    opacity: 0;
+    transform: translateY(15px);
     transition: opacity 0.25s var(--transition-timing-function-ease-out),
                 transform 0.25s var(--transition-timing-function-ease-out),
                 background-color var(--transition-fast),
@@ -257,55 +282,143 @@
                 border-color var(--transition-fast),
                 box-shadow var(--transition-fast);
 }
-#btn-toggle-explanation:not(.u-is-hidden) { /* Quando visível */
+#btn-toggle-explanation.button--analysis-link:not(.u-is-hidden) {
     opacity: 1;
     transform: translateY(0);
 }
-#btn-toggle-explanation:hover,
-#btn-toggle-explanation:focus-visible {
-    background-color: var(--color-white);
+#btn-toggle-explanation.button--analysis-link:hover,
+#btn-toggle-explanation.button--analysis-link:focus-visible {
+    background-color: var(--color-white); /* Leve destaque no fundo */
     color: var(--color-primary-dark);
     border-color: var(--color-primary-dark);
     box-shadow: var(--shadow-xs);
     transform: translateY(-2px);
-    filter: none;
+    filter: none; /* Remove filtro de brilho padrão se houver */
     text-decoration: none;
 }
-#btn-toggle-explanation:active {
+#btn-toggle-explanation.button--analysis-link:active {
     background-color: var(--color-gray-300);
     color: var(--color-primary-dark);
     border-color: var(--color-primary-dark);
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
     transform: translateY(0px) scale(0.98);
 }
-#btn-toggle-explanation:focus-visible { 
+#btn-toggle-explanation.button--analysis-link:focus-visible { 
     outline: 2px solid var(--color-primary-medium);
     outline-offset: 2px;
-    background-color: var(--color-primary-light);
+    background-color: var(--color-primary-light); /* Fundo no foco */
 }
-#btn-toggle-explanation .button__icon {
+#btn-toggle-explanation.button--analysis-link .button__icon { /* Se usar a estrutura .button__icon */
     margin-right: var(--spacing-xs, 6px);
     font-size: 1.2em;
-    color: currentColor;
+    color: currentColor; /* Herda cor do botão */
     transition: transform 0.2s ease-out;
 }
-#btn-toggle-explanation:hover .button__icon {
+#btn-toggle-explanation.button--analysis-link:hover .button__icon {
     transform: scale(1.05);
 }
 
 
-/* --- RESPONSIVIDADE --- */
+/*
+==========================================================================
+  BOTÃO DE FAVORITO (ESPECÍFICO)
+  Classe: .favorite-star-action (geralmente com ID #btn-toggle-favorite)
+  Este é um botão de ícone especializado.
+==========================================================================
+*/
+.favorite-star-action { /* Seletor base para o botão de favorito */
+    /* Reset e Base - Similar a um .button--icon-only mas sem herdar de .button */
+    background: none;
+    border: none;
+    padding: var(--spacing-xxs, 5px);
+    margin: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    
+    /* Aparência do Botão */
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background-color: transparent; /* Fundo transparente inicialmente */
+    color: var(--color-gray-600); /* Cor do ícone (herdada pelo span) */
+    
+    transition: background-color 0.2s ease-out, color 0.2s ease-out, transform 0.15s ease-out;
+    outline-offset: 2px;
+}
+
+.favorite-star-action .material-symbols-outlined { /* O ícone span dentro do botão */
+    font-size: 22px;
+    font-variation-settings: 'FILL' 0, 'wght' 300; /* Outline por padrão */
+    color: inherit; /* Herda a cor do .favorite-star-action */
+    transition: font-variation-settings 0.2s ease-out, transform 0.15s ease-out;
+    display: block;
+}
+
+/* Estado Hover (quando NÃO está favoritado) */
+.favorite-star-action:not(.is-favorited):hover {
+    background-color: var(--color-gray-100); /* Fundo sutil no hover */
+    color: var(--color-accent-yellow, gold);  /* Ícone fica amarelo */
+    transform: scale(1.1);
+}
+
+/* Estado Favoritado (classe .is-favorited no botão) */
+.favorite-star-action.is-favorited {
+    color: var(--color-accent-yellow, gold); /* Ícone fica amarelo sólido */
+    transform: scale(1.05); /* Leve destaque de tamanho */
+}
+
+.favorite-star-action.is-favorited .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400; /* Ícone PREENCHIDO */
+    animation: favoritePulseComponent 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Estado Hover (quando JÁ ESTÁ favoritado) */
+.favorite-star-action.is-favorited:hover {
+    background-color: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.25); /* Fundo amarelo um pouco mais forte */
+    color: var(--color-accent-yellow, gold);
+    transform: scale(1.1);
+}
+
+/* Foco Visível para o botão de favorito */
+.favorite-star-action:focus-visible {
+   outline: 2px solid var(--color-primary-medium); /* Ou var(--color-accent-yellow) */
+   /* background-color: var(--color-gray-100); */ /* Opcional: Fundo no foco */
+}
+
+/* Animação de pulso para o ícone favorito (reutilizada/renomeada) */
+@keyframes favoritePulseComponent {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* --- RESPONSIVIDADE GERAL DE BOTÕES (SE NECESSÁRIO) --- */
 @media (max-width: 768px) {
-    #btn-toggle-explanation {
+    /* Ajustes para o botão "Analisar Resposta" em telas menores */
+    #btn-toggle-explanation.button--analysis-link {
         font-size: var(--font-size-base, 1rem); 
         padding: var(--spacing-sm, 10px) var(--spacing-md, 20px);
     }
-     #btn-toggle-explanation .button__icon {
+     #btn-toggle-explanation.button--analysis-link .button__icon {
         font-size: 1.25em;
+    }
+
+    /* Ajustes para o botão de favorito em telas menores */
+    .favorite-star-action {
+        width: 36px;
+        height: 36px;
+        padding: var(--spacing-xxs, 4px);
+    }
+    .favorite-star-action .material-symbols-outlined {
+        font-size: 20px;
     }
 }
 
 @media (max-width: 480px) {
+    /* Modificadores de tamanho genéricos */
     .button--small {
         --button-font-size: 0.8rem;
         --button-padding-y: 6px;
@@ -323,19 +436,32 @@
         font-size: 1rem;
         min-height: 44px;
     }
-     .button--modal-action {
+    .button--modal-action {
         min-width: 100px;
     }
-    #btn-toggle-explanation {
+
+    /* Ajustes para o botão "Analisar Resposta" */
+    #btn-toggle-explanation.button--analysis-link {
         padding: var(--spacing-xs, 8px) var(--spacing-sm, 15px);
         font-size: var(--font-size-sm, 0.9rem);
     }
-    #btn-toggle-explanation .button__icon {
+    #btn-toggle-explanation.button--analysis-link .button__icon {
         font-size: 1.2em;
+    }
+
+    /* Ajustes para o botão de favorito */
+    .favorite-star-action {
+        width: 32px;
+        height: 32px;
+        padding: var(--spacing-xxs, 3px);
+    }
+    .favorite-star-action .material-symbols-outlined {
+        font-size: 18px;
     }
 }
 
 @media (max-width: 360px) {
+    /* Modificadores de tamanho genéricos */
     .button--small {
         --button-font-size: 0.75rem;
         --button-padding-x: 10px;
@@ -345,7 +471,8 @@
         --button-padding-y: 4px;
         --button-padding-x: 8px;
     }
-    #btn-toggle-explanation {
+    /* Ajustes para o botão "Analisar Resposta" */
+    #btn-toggle-explanation.button--analysis-link {
         font-size: var(--font-size-xs, 0.85rem);
     }
 }

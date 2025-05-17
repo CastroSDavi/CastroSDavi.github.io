@@ -32,6 +32,8 @@
     --color-incorrect-text-rgb: 193, 38, 52; /* Adicionado para rgba() */
     --color-incorrect-bg-alt: #f8d7da;
 
+    --color-accent-yellow: gold;
+    --color-accent-yellow-rgb: 255, 215, 0;
     /* Tons de cinza e neutros */
     --color-gray-900: #343a40;
     --color-gray-800: #495057;

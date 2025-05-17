@@ -90,22 +90,21 @@
                 </div>
                 <span id="progress-text" class="progress-bar__text u-is-hidden">0 / 0</span>
 
-                {# ===== MODIFICAÇÃO NO WRAPPER DO TÍTULO E FAVORITO ===== #}
-                <div class="question-header-actions"> {# Este é o novo wrapper #}
+                {# ===== NOVO WRAPPER DO TÍTULO E BOTÃO DE FAVORITO ===== #}
+                <div class="question-header-actions">
                     <h2 id="question-title" tabindex="-1">
                         <span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
                     </h2>
-                    <button class="favorite-star-action u-is-hidden" id="btn-toggle-favorite" 
+                    <button class="favorite-star-action u-is-hidden" id="btn-toggle-favorite"
                             aria-label="Adicionar aos Favoritos" title="Adicionar aos Favoritos">
                         <span class="material-symbols-outlined">star_outline</span>
                     </button>
                 </div>
-                {# ===== FIM DA MODIFICAÇÃO ===== #}
+                {# ===== FIM DO NOVO WRAPPER ===== #}
 
                 <div class="card card--question-wrap">
                     <div class="card__body">
-                        {# O wrapper .question-display__text-wrapper foi removido daqui #}
-                        <div class="question-display__text"> {# O texto da pergunta agora está diretamente aqui #}
+                        <div class="question-display__text">
                             <p id="pergunta-texto">Carregando pergunta...</p>
                         </div>
                         
@@ -125,7 +124,6 @@
                                 <span class="material-symbols-outlined button__icon">manage_search</span>
                                 <span class="button__label">Analisar Resposta</span>
                             </button>
-                            {# O botão de favoritar foi movido para cima, para o .question-header-actions #}
                         </div>
                     </div>
                 </div>

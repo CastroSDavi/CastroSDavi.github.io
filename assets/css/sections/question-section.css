@@ -3,18 +3,15 @@
 /*
 ==========================================================================
   Section Layout: Question Section (#question-section)
-  Refinamento Estiloso para Título, Número e Categoria da Questão (Separador Verde)
 ==========================================================================
 */
 
-/* Layout do Conteúdo Principal (.question-section__main-content) */
 .question-section__main-content {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md, 20px);
 }
 
-/* Controles do Quiz (Botão de Filtro e contagem) */
 .quiz-controls {
     display: flex;
     justify-content: space-between;
@@ -43,7 +40,6 @@
     padding-left: var(--spacing-md);
 }
 
-/* Layout/Contexto para #placeholder-filtros-container e #aviso-container */
 #placeholder-filtros-container,
 #aviso-container {
     padding: 0;
@@ -54,28 +50,32 @@
     width: 100%;
 }
 
-/* Layout para o Container do Quiz Ativo (#quiz-section interno) */
 #quiz-section {
     display: flex;
     flex-direction: column;
-    gap: 0;
     flex-shrink: 0;
 }
 
-/* === ESTILOS REFINADOS PARA O TÍTULO DA QUESTÃO, NÚMERO E CATEGORIA === */
+/* --- ESTILOS PARA O CABEÇALHO DA QUESTÃO (TÍTULO E BOTÃO FAVORITO) --- */
+.question-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm, 12px);
+    margin-bottom: var(--spacing-md, 20px);
+    position: relative;
+}
+
 #question-title {
     font-family: var(--font-family-heading);
-    margin-top: 0;
-    margin-bottom: var(--spacing-lg, 28px);
+    margin: 0;
     display: flex;
     align-items: baseline;
     gap: var(--spacing-sm, 12px);
-    flex-wrap: wrap;
-    flex-shrink: 0;
+    flex-grow: 1;
     line-height: 1.2;
     scroll-margin-top: var(--spacing-md, 20px);
-    /* Cor de texto padrão para o container, se necessário */
-    /* color: var(--color-gray-900); */
+    color: var(--color-gray-900);
 }
 
 #id-questao {
@@ -83,7 +83,7 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-primary-dark);
     line-height: 1;
-    padding-right: var(--spacing-sm, 12px); /* Espaço para o separador */
+    padding-right: var(--spacing-sm, 12px);
     position: relative;
     background-color: transparent;
     border: none;
@@ -91,17 +91,16 @@
     height: auto;
 }
 
-/* Pseudo-elemento para a linha gráfica separadora - AGORA VERDE */
 #id-questao::after {
     content: '';
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 2.5px; /* Pode ser um pouco mais espessa para cor */
-    height: 65%; /* Altura ajustada para o novo visual */
-    background-color: var(--color-secondary-green); /* <<< COR ALTERADA PARA VERDE SECUNDÁRIO */
-    border-radius: 2px; /* Cantos suavemente arredondados na linha */
+    width: 2.5px;
+    height: 65%;
+    background-color: var(--color-secondary-green);
+    border-radius: 2px;
 }
 
 #categoria-titulo {
@@ -116,12 +115,15 @@
     padding: 0;
     white-space: nowrap;
     align-self: flex-end;
-    padding-bottom: 0.15em; /* Ajuste fino de alinhamento de baseline */
+    padding-bottom: 0.15em;
 }
-/* === FIM DOS ESTILOS REFINADOS === */
 
+/* Os estilos específicos do botão de favorito foram movidos para 
+   assets/css/components/favorite-button.css 
+   Apenas ajustes de posicionamento ou margens específicas para este contexto
+   deveriam permanecer aqui, se necessários. No momento, não são.
+*/
 
-/* Layout para o Container de Navegação (.quiz-navigation) */
 .quiz-navigation {
     display: flex;
     justify-content: space-between;
@@ -152,7 +154,7 @@
         font-size: 1.2em;
     }
 
-    #question-title {
+    .question-header-actions {
       margin-bottom: var(--spacing-md, 20px);
       gap: var(--spacing-xs, 8px);
     }
@@ -160,14 +162,16 @@
         font-size: 1.6rem;
         padding-right: var(--spacing-xs, 8px);
     }
-    #id-questao::after { /* Separador no mobile */
-        height: 60%; /* Ajuste de altura para mobile */
-        width: 2px;   /* Mais fina no mobile */
+    #id-questao::after {
+        height: 60%;
+        width: 2px;
     }
     #categoria-titulo {
       font-size: 0.75rem;
       letter-spacing: 0.06em;
     }
+
+    /* A responsividade do tamanho do botão de favorito está agora em favorite-button.css */
 
     .quiz-navigation {
       padding-top: var(--spacing-sm, 12px);
@@ -196,6 +200,9 @@
       font-size: 0.7rem;
       letter-spacing: 0.05em;
     }
+
+    /* A responsividade do tamanho do botão de favorito está agora em favorite-button.css */
+
     .quiz-navigation {
       gap: var(--spacing-xs, 8px);
       flex-wrap: wrap;

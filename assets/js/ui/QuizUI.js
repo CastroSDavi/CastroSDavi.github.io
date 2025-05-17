@@ -1,10 +1,11 @@
 // File: assets/js/ui/QuizUI.js
-import { QUESTOES_POR_PAGINA_GRID, TRANSITION_DURATION } from '../utils/constants.js'; // Mantenha seus imports
+import { QUESTOES_POR_PAGINA_GRID, TRANSITION_DURATION } from '../utils/constants.js';
 
 export default class QuizUI {
     constructor(onSectionChangeCallback = null) {
-        console.log("QuizUI: Constructor called");
+        // console.log("QuizUI: Constructor called");
         this.hiddenClassName = 'u-is-hidden';
+        this.loadingClassName = 'is-loading'; // Classe para feedback de carregamento
         this.currentSection = null;
         this.onSectionChange = onSectionChangeCallback;
 
@@ -20,50 +21,44 @@ export default class QuizUI {
         this.quizData = null;
         this.filterPanelInstance = null;
         
-        this.userIsAuthenticated = false; // <<< NOVA PROPRIEDADE
+        this.userIsAuthenticated = false;
         
         this._cacheDOMelements();
-        this._checkUserAuthentication(); // <<< CHAMADA DO NOVO MÉTODO
+        this._checkUserAuthentication();
     }
 
-    _checkUserAuthentication() { // <<< NOVO MÉTODO
+    _checkUserAuthentication() {
         const bodyEl = document.body;
-        // Prioriza o data-attribute se existir, pois é mais explícito
         if (bodyEl && bodyEl.dataset.userAuthenticated === 'true') {
             this.userIsAuthenticated = true;
         } else if (bodyEl && bodyEl.dataset.userAuthenticated === 'false') {
             this.userIsAuthenticated = false;
         }
         else {
-            // Fallback: verificar se existe algum elemento que só aparece para usuários logados
-            // Este seletor deve ser robusto e específico para um elemento que SÓ existe se logado.
             const accountLinkInHeader = document.querySelector('.site-header__actions a[href*="/account/"]');
-             if (accountLinkInHeader) { // Se o link para "Minha Conta" no header estiver presente
+             if (accountLinkInHeader) {
                  this.userIsAuthenticated = true;
              } else {
                 this.userIsAuthenticated = false;
              }
         }
-        console.log("QuizUI: User authenticated status:", this.userIsAuthenticated);
+        // console.log("QuizUI: User authenticated status:", this.userIsAuthenticated);
     }
 
     setQuizState(quizStateInstance) {
-        console.log("QuizUI: Setting QuizState instance:", quizStateInstance);
         this.quizState = quizStateInstance;
     }
 
     setQuizData(quizDataInstance) {
-        console.log("QuizUI: Setting QuizData instance:", quizDataInstance);
         this.quizData = quizDataInstance;
     }
 
     setFilterPanelInstance(filterPanelInstance) {
-        console.log("QuizUI: Setting FilterPanel instance:", filterPanelInstance);
         this.filterPanelInstance = filterPanelInstance;
     }
 
     _cacheDOMelements() {
-        console.log("QuizUI: _cacheDOMelements - Iniciando cache de elementos DOM.");
+        // console.log("QuizUI: _cacheDOMelements - Iniciando cache de elementos DOM.");
         this.elements = {
             homeSection: document.getElementById('home-section'),
             questionSection: document.getElementById('question-section'),
@@ -82,8 +77,8 @@ export default class QuizUI {
             hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'),
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
             closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'),
-            avisoContainer: document.getElementById('aviso-container'),
-            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'),
+            avisoContainer: document.getElementById('aviso-container'), // O <div id="aviso-container">
+            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'), // O <p> dentro do avisoContainer
             quizSectionContent: document.getElementById('quiz-section'),
             questionWrap: document.querySelector('#quiz-section .card--question-wrap'),
             progressContainer: document.getElementById('progress-container'),
@@ -103,7 +98,7 @@ export default class QuizUI {
             nextBtn: document.getElementById('next-btn'),
             questionGridContainer: document.getElementById('question-grid-container'),
             confirmEncerrarOverlay: document.getElementById('confirm-encerrar-overlay'),
-            confirmEncerrarModal: document.getElementById('confirm-encerrar-modal'), // Para focar
+            confirmEncerrarModal: document.getElementById('confirm-encerrar-modal'),
             confirmEncerrarBtn: document.getElementById('confirm-encerrar-btn'),
             cancelEncerrarBtn: document.getElementById('cancel-encerrar-btn'),
             resultadoCard: document.querySelector('#question-section .card--quiz-result'),
@@ -118,6 +113,7 @@ export default class QuizUI {
             filterPanel: document.getElementById('filter-panel'),
             btnFecharFiltros: document.getElementById('btn-fechar-filtros'),
             filterPanelOverlay: document.getElementById('filter-panel-overlay'),
+            btnAplicarFiltrosPainel: document.getElementById('btn-aplicar-filtros-painel'),
             explanationModalOverlay: document.getElementById('explanation-modal-overlay'),
             explanationModalDialog: document.getElementById('explanation-modal-dialog'),
             btnCloseExplanationModal: document.getElementById('btn-close-explanation-modal'),
@@ -128,13 +124,11 @@ export default class QuizUI {
             explanationModalDivider: document.querySelector('.explanation-modal__divider'),
             explanationModalEmptyState: document.getElementById('explanation-modal-empty-state'),
             btnGotItExplanation: document.getElementById('btn-got-it-explanation'),
-
-            // <<< NOVOS ELEMENTOS PARA FAVORITOS >>>
             btnToggleFavorite: document.getElementById('btn-toggle-favorite'),
             favoriteQuestionsContainer: document.getElementById('favorite-questions-container'),
             favoriteQuestionsEmptyState: document.getElementById('favorite-questions-empty-state'),
         };
-        console.log("QuizUI _cacheDOMelements: Elementos cacheados, incluindo para favoritos:", this.elements);
+        // console.log("QuizUI _cacheDOMelements: Elementos cacheados:", this.elements);
     }
 
     showElement(element) {
@@ -145,9 +139,45 @@ export default class QuizUI {
         element?.classList.add(this.hiddenClassName);
     }
 
+    setButtonLoading(buttonElement, isLoading, originalText = null) {
+        if (!buttonElement) return;
+
+        // Encontra o span do label dentro do botão, ou usa o próprio botão se não houver span.
+        const textDisplayElement = buttonElement.querySelector('.button__label') || buttonElement;
+
+        if (isLoading) {
+            buttonElement.classList.add(this.loadingClassName);
+            buttonElement.disabled = true;
+            
+            // Guarda o texto original no dataset do botão se ainda não foi guardado e se fornecido
+            if (!buttonElement.dataset.originalText && originalText) {
+                buttonElement.dataset.originalText = originalText;
+            } else if (!buttonElement.dataset.originalText && textDisplayElement.textContent !== 'Carregando...') {
+                // Fallback: se originalText não foi passado, mas o botão tem um texto que não é "Carregando..."
+                buttonElement.dataset.originalText = textDisplayElement.textContent;
+            }
+            
+            textDisplayElement.textContent = 'Carregando...';
+            // Aqui você poderia adicionar um spinner real se quisesse,
+            // por exemplo, antes do textDisplayElement.
+        } else {
+            buttonElement.classList.remove(this.loadingClassName);
+            buttonElement.disabled = false;
+            
+            if (buttonElement.dataset.originalText) {
+                textDisplayElement.textContent = buttonElement.dataset.originalText;
+                // delete buttonElement.dataset.originalText; // Opcional: Limpar após restaurar
+            } else if (originalText) { // Fallback se dataset não foi setado mas temos o originalText da chamada
+                 textDisplayElement.textContent = originalText;
+            }
+            // Se nenhuma das condições acima, o texto permanece como "Carregando..."
+            // o que pode ser um bug se originalText nunca foi capturado.
+            // Seria bom garantir que o texto original seja sempre capturado ou passado.
+        }
+    }
+
     startTimer() {
         if (this.timerRunning) return;
-        console.log("QuizUI: Starting timer");
         this.timerRunning = true;
         this.timerInterval = setInterval(() => {
             this.timerSeconds++;
@@ -159,7 +189,6 @@ export default class QuizUI {
 
     stopTimer() {
         if (this.timerInterval) {
-            console.log("QuizUI: Stopping timer");
             clearInterval(this.timerInterval);
             this.timerInterval = null;
         }
@@ -167,7 +196,6 @@ export default class QuizUI {
     }
 
     resetTimer() {
-        console.log("QuizUI: Resetting timer");
         this.stopTimer();
         this.timerSeconds = 0;
         if (this.elements.timerDisplay) this.elements.timerDisplay.textContent = "00:00";
@@ -183,14 +211,12 @@ export default class QuizUI {
     }
 
     updateScoreDisplay(pontos, acertos, erros) {
-        console.log(`QuizUI: Updating score display - Pontos: ${pontos}, Acertos: ${acertos}, Erros: ${erros}`);
         if (this.elements.pontuacaoDisplay) this.elements.pontuacaoDisplay.textContent = pontos;
         if (this.elements.acertosNumDisplay) this.elements.acertosNumDisplay.textContent = acertos;
         if (this.elements.errosNumDisplay) this.elements.errosNumDisplay.textContent = erros;
     }
 
     displayQuizContent(show = true) {
-        console.log(`QuizUI: displayQuizContent - Tentando ${show ? 'MOSTRAR' : 'ESCONDER'} conteúdo do quiz.`);
         const { quizSectionContent, btnEncerrarSessao, progressContainer, progressText, questionGridContainer, scorePanel, challengeHubContainer, placeholderFiltrosContainer, resultadoCard, btnToggleFavorite } = this.elements;
         if (show) {
             this.showElement(scorePanel);
@@ -200,11 +226,9 @@ export default class QuizUI {
             this.showElement(progressContainer);
             this.showElement(progressText);
             this.showElement(questionGridContainer);
-            // O botão de favorito (btnToggleFavorite) é controlado dentro de displayQuestion
             this.clearWarning();
             this.hideElement(placeholderFiltrosContainer);
             this.hideElement(resultadoCard);
-            console.log("QuizUI: displayQuizContent - Conteúdo do quiz MOSTRADO.");
         } else {
             this.hideElement(scorePanel);
             this.hideElement(quizSectionContent);
@@ -212,37 +236,32 @@ export default class QuizUI {
             this.hideProgressBar();
             this.hideElement(questionGridContainer);
             this.hideElement(this.elements.btnToggleExplanation);
-            if (btnToggleFavorite) this.hideElement(btnToggleFavorite); // Esconder botão de favorito também
+            if (btnToggleFavorite) this.hideElement(btnToggleFavorite);
             this.toggleExplanationModal(false);
             
             if (resultadoCard && !resultadoCard.classList.contains(this.hiddenClassName)) {
-                 console.log("QuizUI: displayQuizContent - Resultados estão visíveis, hub permanecerá escondido.");
                 this.hideElement(challengeHubContainer);
             } else {
-                console.log("QuizUI: displayQuizContent - Quiz escondido, mostrando hub e escondendo placeholder de filtros.");
                 if(challengeHubContainer) this.showElement(challengeHubContainer);
                 this.hideElement(placeholderFiltrosContainer);
             }
-             console.log("QuizUI: displayQuizContent - Conteúdo do quiz ESCONDIDO.");
         }
     }
 
     hideQuizElements() {
-        console.log("QuizUI: hideQuizElements - Escondendo todos os elementos ativos do quiz.");
         const { quizSectionContent, resultadoCard, questionGridContainer, btnEncerrarSessao, scorePanel, btnToggleFavorite } = this.elements;
         this.hideElement(quizSectionContent);
         this.hideElement(resultadoCard);
         this.hideElement(questionGridContainer);
         this.hideElement(btnEncerrarSessao);
         this.hideElement(scorePanel);
-        if (btnToggleFavorite) this.hideElement(btnToggleFavorite); // <<< ADICIONADO
+        if (btnToggleFavorite) this.hideElement(btnToggleFavorite);
         this.hideProgressBar();
         this.toggleExplanationModal(false);
         this.hideElement(this.elements.btnToggleExplanation);
     }
 
     displayQuestion(perguntaObj, qNum, totalQ, todasCategorias, relacaoPerguntaCategorias, isQuickQuizMode) {
-        console.log(`QuizUI: displayQuestion - Exibindo pergunta #${qNum}/${totalQ}. Autenticado: ${this.userIsAuthenticated}. Dados da pergunta:`, perguntaObj);
         if (!perguntaObj || !this.quizData || !this.quizState) {
             console.error("QuizUI: displayQuestion - ERRO: Não é possível exibir a pergunta, faltam dados ou estado.");
             return;
@@ -270,9 +289,7 @@ export default class QuizUI {
                     if (catEnc) {
                         caminho.unshift(catEnc.nome_categoria);
                         idAtual = catEnc.id_categoria_pai;
-                    } else {
-                        break;
-                    }
+                    } else { break; }
                     i++;
                 }
                 tituloCat = caminho.length > 0 ? caminho.join(' › ') : "Tópicos Diversos";
@@ -287,11 +304,9 @@ export default class QuizUI {
         this.updateProgressBar(qNum, totalQ);
         this.elements.questionTitle?.focus({ preventScroll: true });
 
-        // Lógica do botão de Favoritar <<< MODIFICADO/MOVIDO AQUI
         if (this.elements.btnToggleFavorite) {
             if (this.userIsAuthenticated && perguntaObj && perguntaObj.id_pergunta !== undefined) {
                 this.showElement(this.elements.btnToggleFavorite);
-                // O campo 'is_favorited' deve vir do backend (via get_quiz_data_dict)
                 this.updateFavoriteButton(perguntaObj.is_favorited || false); 
                 this.elements.btnToggleFavorite.dataset.perguntaId = perguntaObj.id_pergunta.toString();
             } else {
@@ -301,7 +316,6 @@ export default class QuizUI {
 
         this.hideElement(this.elements.btnToggleExplanation);
         this.toggleExplanationModal(false);
-        console.log("QuizUI: displayQuestion - Pergunta renderizada na UI.");
     }
     
     _getCategoriaProfundidade(cat, allCats) {
@@ -325,10 +339,7 @@ export default class QuizUI {
                 imgElement.src = url;
                 imgElement.alt = `Ilustração para questão ${qNum}`;
                 this.showElement(imgElement);
-                imgElement.onerror = () => {
-                    this.hideElement(imgElement);
-                    imgElement.onerror = null; 
-                };
+                imgElement.onerror = () => { this.hideElement(imgElement); imgElement.onerror = null; };
             } else {
                 this.hideElement(imgElement);
                 imgElement.src = "";
@@ -338,17 +349,10 @@ export default class QuizUI {
     }
 
     generateAnswerButtons(perguntaId, opcoes, respostaDadaId, callbackResposta) {
-        // console.log(`QuizUI: generateAnswerButtons - Gerando botões para pergunta ID ${perguntaId}. Já respondida (ID): ${respostaDadaId}`);
         const container = this.elements.respostasContainer;
-        if (!container) {
-            console.error("QuizUI: generateAnswerButtons - ERRO: Container de respostas não encontrado.");
-            return;
-        }
+        if (!container) return;
         container.innerHTML = '';
-        if (!opcoes || !Array.isArray(opcoes) || opcoes.length === 0) {
-            // console.warn("QuizUI: generateAnswerButtons - Nenhuma opção fornecida para a pergunta ID", perguntaId);
-            return;
-        }
+        if (!opcoes || !Array.isArray(opcoes) || opcoes.length === 0) return;
 
         const temResposta = typeof respostaDadaId !== 'undefined' && respostaDadaId !== null;
         const baseClass = 'question-display__answer-option';
@@ -364,23 +368,16 @@ export default class QuizUI {
 
             if (temResposta) {
                 button.classList.add(`${baseClass}--answered`);
-                if (opt.eh_correta) {
-                    button.classList.add(`${baseClass}--correct`);
-                } else if (opt.id_opcao_resposta === respostaDadaId) {
-                    button.classList.add(`${baseClass}--incorrect`);
-                }
+                if (opt.eh_correta) button.classList.add(`${baseClass}--correct`);
+                else if (opt.id_opcao_resposta === respostaDadaId) button.classList.add(`${baseClass}--incorrect`);
             } else if (callbackResposta && typeof callbackResposta === 'function') {
-                button.onclick = () => {
-                    // console.log(`QuizUI: Botão de resposta CLICADO. Pergunta ID: ${perguntaId}, Opção ID: ${opt.id_opcao_resposta}`);
-                    callbackResposta(opt.id_opcao_resposta);
-                };
+                button.onclick = () => callbackResposta(opt.id_opcao_resposta);
             }
             container.appendChild(button);
         });
     }
 
     disableAnswers() {
-        // console.log("QuizUI: disableAnswers - Desabilitando botões de resposta.");
         const baseClass = 'question-display__answer-option';
         const answeredClass = `${baseClass}--answered`;
         this.elements.respostasContainer?.querySelectorAll(`button.${baseClass}`).forEach(button => {
@@ -393,32 +390,21 @@ export default class QuizUI {
     }
 
     applyAnswerFeedback(selectedOpId, opcoes) {
-        // console.log(`QuizUI: applyAnswerFeedback - Aplicando feedback para opção ID selecionada: ${selectedOpId}`);
         const baseCl = "question-display__answer-option";
         const corrCl = `${baseCl}--correct`;
         const incorrCl = `${baseCl}--incorrect`;
         let userCorrect = false;
 
-        if (!Array.isArray(opcoes)) {
-            console.error("QuizUI: applyAnswerFeedback - ERRO: 'opcoes' não é um array.");
-            return;
-        }
+        if (!Array.isArray(opcoes)) return;
 
         this.elements.respostasContainer?.querySelectorAll(`button.${baseCl}`).forEach(btn => {
             const btnOpId = parseInt(btn.dataset.opcaoId, 10);
             const optionData = opcoes.find(op => op.id_opcao_resposta === btnOpId);
-            if (!optionData) {
-                // console.warn("QuizUI: applyAnswerFeedback - Não encontrou dados para a opção do botão ID:", btnOpId);
-                return;
-            }
+            if (!optionData) return;
 
             if (btnOpId === selectedOpId) {
-                if (optionData.eh_correta) {
-                    btn.classList.add(corrCl);
-                    userCorrect = true;
-                } else {
-                    btn.classList.add(incorrCl);
-                }
+                if (optionData.eh_correta) { btn.classList.add(corrCl); userCorrect = true; }
+                else { btn.classList.add(incorrCl); }
             } else if (optionData.eh_correta) {
                 btn.classList.add(corrCl);
             }
@@ -433,7 +419,6 @@ export default class QuizUI {
         const hasOptionSpecificFeedback = opcoes.some(op => op.feedback_opcao && op.feedback_opcao.trim() !== '');
 
         if ((hasGeneralExplanation || hasOptionSpecificFeedback) && this.elements.btnToggleExplanation) {
-            // console.log("QuizUI: applyAnswerFeedback - Mostrando botão 'Analisar Resposta'.");
             this.showElement(this.elements.btnToggleExplanation);
         } else {
             this.hideElement(this.elements.btnToggleExplanation);
@@ -447,8 +432,7 @@ export default class QuizUI {
                 const percentage = Math.min(current, total) / total * 100;
                 progressBarFill.style.width = `${percentage}%`;
                 progressText.textContent = `${Math.min(current,total)} / ${total}`;
-                this.showElement(progressContainer);
-                this.showElement(progressText);
+                this.showElement(progressContainer); this.showElement(progressText);
             } else {
                 this.hideProgressBar();
             }
@@ -463,7 +447,6 @@ export default class QuizUI {
     }
 
     updateNavigationButtons(isFirst, isLast, totalQuestions) {
-        // console.log(`QuizUI: updateNavigationButtons - É a primeira: ${isFirst}, É a última: ${isLast}, Total de questões: ${totalQuestions}`);
         const { navigationButtons, prevBtn, nextBtn } = this.elements;
         if (navigationButtons && prevBtn && nextBtn) {
             if (totalQuestions <= 0) {
@@ -474,63 +457,52 @@ export default class QuizUI {
                 nextBtn.disabled = false;
                 const nextButtonLabel = nextBtn.querySelector('.button__label') || nextBtn;
                 let iconSpan = nextBtn.querySelector('.material-symbols-outlined.button__icon--right');
+                
                 if (isLast) {
                     nextButtonLabel.textContent = "Ver Resultado";
                     if (iconSpan) iconSpan.remove();
                 } else {
                     nextButtonLabel.textContent = "Avançar";
-                    if (!iconSpan) {
-                        iconSpan = document.createElement('span');
-                        iconSpan.className = 'material-symbols-outlined button__icon button__icon--right';
-                        if (nextBtn === nextButtonLabel) nextBtn.appendChild(iconSpan); // Se o texto está diretamente no botão
-                        else nextButtonLabel.parentNode.insertBefore(iconSpan, nextButtonLabel.nextSibling); // Se houver um .button__label
+                    if (iconSpan) {
+                        iconSpan.remove(); 
                     }
-                    iconSpan.textContent = 'arrow_forward';
                 }
             }
         }
     }
 
-    // <<< NOVO MÉTODO >>>
     updateFavoriteButton(isFavorited) {
         const btn = this.elements.btnToggleFavorite;
         if (!btn) return;
-
         const icon = btn.querySelector('.material-symbols-outlined');
         if (isFavorited) {
             btn.classList.add('is-favorited');
-            if (icon) icon.textContent = 'star'; // Ícone preenchido (Material Symbols)
+            if (icon) icon.textContent = 'star';
             btn.setAttribute('aria-label', 'Remover dos Favoritos');
             btn.title = 'Remover dos Favoritos';
         } else {
             btn.classList.remove('is-favorited');
-            if (icon) icon.textContent = 'star_outline'; // Ícone contorno (Material Symbols)
+            if (icon) icon.textContent = 'star_outline';
             btn.setAttribute('aria-label', 'Adicionar aos Favoritos');
             btn.title = 'Adicionar aos Favoritos';
         }
     }
 
-    // <<< NOVO MÉTODO >>>
     renderFavoriteQuestions(favoriteQuestionsData, allCategoriesForMapping) {
         const container = this.elements.favoriteQuestionsContainer;
         const emptyState = this.elements.favoriteQuestionsEmptyState;
         const placeholder = container?.querySelector('.placeholder-text');
 
-        if (!container) {
-            console.error("QuizUI: Container de questões favoritas não encontrado.");
-            return;
-        }
-        if (placeholder) this.hideElement(placeholder); // Esconde o "Carregando..."
-        container.innerHTML = ''; // Limpa conteúdo anterior
+        if (!container) return;
+        if (placeholder) this.hideElement(placeholder);
+        container.innerHTML = '';
 
         if (!favoriteQuestionsData || favoriteQuestionsData.length === 0) {
             if (emptyState) this.showElement(emptyState);
             return;
         }
-
         if (emptyState) this.hideElement(emptyState);
         
-        // Criar um mapa de categorias para fácil busca de nomes
         const categoryMap = new Map();
         if (allCategoriesForMapping) {
             allCategoriesForMapping.forEach(cat => categoryMap.set(cat.id_categoria, cat.nome_categoria));
@@ -538,27 +510,16 @@ export default class QuizUI {
 
         favoriteQuestionsData.forEach(fav => {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'favorite-question-item'; // Classe para estilização CSS
-            
+            itemDiv.className = 'favorite-question-item';
             const questionLink = document.createElement('a');
-            questionLink.href = `#q${fav.id_pergunta}`; // Link para âncora ou futura funcionalidade
+            questionLink.href = `#q${fav.id_pergunta}`;
             questionLink.className = 'favorite-question-link';
             questionLink.textContent = `P${fav.id_pergunta}: ${fav.texto_pergunta.substring(0, 120)}${fav.texto_pergunta.length > 120 ? '...' : ''}`;
             questionLink.title = `Revisar questão P${fav.id_pergunta}`;
-            // Adicionar um data attribute para o ID da pergunta pode ser útil
             questionLink.dataset.perguntaId = fav.id_pergunta;
-            // O listener de clique para o link pode ser adicionado aqui ou delegado em App.js/QuizLogic.js
-            // Exemplo:
-            // questionLink.addEventListener('click', (e) => {
-            // e.preventDefault();
-            // window.location.hash = `q${fav.id_pergunta}`; // Simplesmente muda o hash
-            // quizLogicInstance.reviewQuestion(fav.id_pergunta); // Chama método para carregar a questão
-            // });
-
 
             const detailsDiv = document.createElement('div');
             detailsDiv.className = 'favorite-question-details';
-
             let categoriasText = "Não especificadas";
             if (fav.categoria_ids && fav.categoria_ids.length > 0) {
                 categoriasText = fav.categoria_ids.map(id => categoryMap.get(id) || `ID ${id}`).join(', ');
@@ -567,130 +528,56 @@ export default class QuizUI {
             catSmall.className = 'favorite-question-categories';
             catSmall.textContent = `Categorias: ${categoriasText}`;
             
-            const dataFavoritada = new Date(fav.data_favoritada).toLocaleDateString('pt-BR', {
-                day: '2-digit', month: 'short', year: 'numeric'
-            });
+            const dataFavoritada = new Date(fav.data_favoritada).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
             const dataSmall = document.createElement('small');
             dataSmall.className = 'favorite-question-date';
             dataSmall.textContent = `Favoritada em: ${dataFavoritada}`;
 
             detailsDiv.appendChild(catSmall);
             detailsDiv.appendChild(dataSmall);
-
             itemDiv.appendChild(questionLink);
             itemDiv.appendChild(detailsDiv);
             container.appendChild(itemDiv);
         });
-        
-        // Remove a borda inferior do último item para um visual mais limpo
         const lastItem = container.querySelector('.favorite-question-item:last-child');
         if(lastItem) lastItem.style.borderBottom = 'none';
     }
 
     setupGlobalEventListeners(quizLogicInstance) {
-        console.log("QuizUI: setupGlobalEventListeners - Configurando listeners globais da UI.");
-        if (!quizLogicInstance) {
-            console.error("QuizUI: setupGlobalEventListeners - ERRO: Instância de QuizLogic não fornecida.");
-            return;
-        }
+        if (!quizLogicInstance) return;
 
-        this.elements.btnFecharFiltros?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Fechar Filtros' (painel) CLICADO.");
-            this.toggleFilterPanel(false);
-        });
-        this.elements.filterPanelOverlay?.addEventListener('click', (e) => {
-            if (e.target === this.elements.filterPanelOverlay) {
-                console.log("QuizUI Event: Overlay do painel de filtros CLICADO.");
-                this.toggleFilterPanel(false);
-            }
-        });
+        this.elements.btnFecharFiltros?.addEventListener('click', () => this.toggleFilterPanel(false));
+        this.elements.filterPanelOverlay?.addEventListener('click', (e) => { if (e.target === this.elements.filterPanelOverlay) this.toggleFilterPanel(false); });
         this.elements.closeFiltersAndShowHubBtn?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Voltar para Modos de Jogo' (placeholder) CLICADO.");
             this.toggleFilterPanel(false);
             if(this.elements.challengeHubContainer) this.showElement(this.elements.challengeHubContainer);
             this.hideElement(this.elements.placeholderFiltrosContainer);
         });
-
-        this.elements.prevBtn?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Anterior' (navegação do quiz) CLICADO.");
-            quizLogicInstance.previousQuestion();
-        });
-        this.elements.nextBtn?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Avançar/Ver Resultado' (navegação do quiz) CLICADO.");
-            quizLogicInstance.nextQuestion();
-        });
-
-        this.elements.btnRecomecar?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Nova Tentativa' (resultados) CLICADO.");
-            quizLogicInstance.restartQuiz();
-        });
+        this.elements.prevBtn?.addEventListener('click', () => quizLogicInstance.previousQuestion());
+        this.elements.nextBtn?.addEventListener('click', () => quizLogicInstance.nextQuestion());
+        this.elements.btnRecomecar?.addEventListener('click', () => quizLogicInstance.restartQuiz());
         this.elements.btnExplorarMais?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Voltar ao Início' (resultados) CLICADO.");
-            const homeLink = document.querySelector('a[href="/"], a[href="{% url \'quiz:home\' %}"], .site-header__logo a, .main-nav__link[data-section-target-django="home"], .bottom-nav__link[data-section-target-django="home"]');
-            if (homeLink && homeLink.href) {
-                window.location.href = homeLink.href;
-            } else {
-                window.location.href = '/'; // Fallback para a raiz
-            }
+            const homeLink = document.querySelector('a[href="/"], a[href*="quiz:home"], .site-header__logo a, .main-nav__link[data-section-target-django="home"], .bottom-nav__link[data-section-target-django="home"]');
+            window.location.href = homeLink?.href || '/';
         });
-
-        this.elements.btnEncerrarSessao?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Encerrar Sessão' (score panel) CLICADO - abrindo modal.");
-            this.toggleConfirmModal(true);
-        });
-        this.elements.confirmEncerrarBtn?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Confirmar Encerramento' (modal) CLICADO.");
-            quizLogicInstance.forceEndQuizByUser();
-        });
-        this.elements.cancelEncerrarBtn?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Cancelar Encerramento' (modal) CLICADO.");
-            this.toggleConfirmModal(false);
-        });
-        this.elements.confirmEncerrarOverlay?.addEventListener('click', (e) => {
-            if (e.target === this.elements.confirmEncerrarOverlay) {
-                console.log("QuizUI Event: Overlay do modal de confirmação de encerramento CLICADO.");
-                this.toggleConfirmModal(false);
-            }
-        });
-
-        this.elements.btnToggleExplanation?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Analisar Resposta' CLICADO.");
-            this.toggleExplanationModal(true);
-        });
-        this.elements.btnCloseExplanationModal?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Fechar Análise' (modal de explicação) CLICADO.");
-            this.toggleExplanationModal(false);
-        });
-        this.elements.btnGotItExplanation?.addEventListener('click', () => {
-            console.log("QuizUI Event: Botão 'Entendido!' (modal de explicação) CLICADO.");
-            this.toggleExplanationModal(false);
-        });
-        this.elements.explanationModalOverlay?.addEventListener('click', (e) => {
-            if (e.target === this.elements.explanationModalOverlay) {
-                console.log("QuizUI Event: Overlay do modal de explicação CLICADO.");
-                this.toggleExplanationModal(false);
-            }
-        });
-
-        // <<< NOVO LISTENER PARA O BOTÃO DE FAVORITAR >>>
+        this.elements.btnEncerrarSessao?.addEventListener('click', () => this.toggleConfirmModal(true));
+        this.elements.confirmEncerrarBtn?.addEventListener('click', () => quizLogicInstance.forceEndQuizByUser());
+        this.elements.cancelEncerrarBtn?.addEventListener('click', () => this.toggleConfirmModal(false));
+        this.elements.confirmEncerrarOverlay?.addEventListener('click', (e) => { if (e.target === this.elements.confirmEncerrarOverlay) this.toggleConfirmModal(false); });
+        this.elements.btnToggleExplanation?.addEventListener('click', () => this.toggleExplanationModal(true));
+        this.elements.btnCloseExplanationModal?.addEventListener('click', () => this.toggleExplanationModal(false));
+        this.elements.btnGotItExplanation?.addEventListener('click', () => this.toggleExplanationModal(false));
+        this.elements.explanationModalOverlay?.addEventListener('click', (e) => { if (e.target === this.elements.explanationModalOverlay) this.toggleExplanationModal(false); });
         this.elements.btnToggleFavorite?.addEventListener('click', () => {
             const perguntaId = this.elements.btnToggleFavorite.dataset.perguntaId;
-            if (perguntaId && quizLogicInstance && this.userIsAuthenticated) { // Adicionada verificação de autenticação
-                console.log(`QuizUI Event: Botão 'Favoritar' CLICADO para pergunta ID: ${perguntaId}.`);
+            if (perguntaId && quizLogicInstance && this.userIsAuthenticated) {
                 quizLogicInstance.toggleFavoriteCurrentQuestion();
             } else if (!this.userIsAuthenticated) {
-                 // Você pode usar o sistema de mensagens/avisos da UI aqui
-                 // this.showWarning("Você precisa estar logado para favoritar questões.");
                  alert("Você precisa estar logado para favoritar questões.");
-            } else {
-                console.warn("QuizUI Event: Não foi possível favoritar - ID da pergunta ou quizLogic ausente.");
             }
         });
-        
-        console.log("QuizUI: setupGlobalEventListeners - Listeners globais da UI configurados.");
     }
 
-    // ... (demais métodos da QuizUI como toggleFilterPanel, toggleExplanationModal, etc.)
     toggleFilterPanel(show) {
         const panel = this.elements.filterPanel;
         const overlay = this.elements.filterPanelOverlay;
@@ -707,9 +594,7 @@ export default class QuizUI {
                 this.showElement(this.elements.placeholderFiltrosContainer);
             }
             panel.removeAttribute('aria-hidden'); overlay.removeAttribute('aria-hidden');
-            requestAnimationFrame(() => {
-                overlay.classList.add(overlayVisibleClass); panel.classList.add(panelVisibleClass); panel.focus();
-            });
+            requestAnimationFrame(() => { overlay.classList.add(overlayVisibleClass); panel.classList.add(panelVisibleClass); panel.focus(); });
         } else {
             panel.classList.remove(panelVisibleClass); overlay.classList.remove(overlayVisibleClass);
             const onTransitionEnd = (event) => {
@@ -728,7 +613,7 @@ export default class QuizUI {
             };
             panel.addEventListener('transitionend', onTransitionEnd, { once: true });
             setTimeout(() => {
-                if (!panel.classList.contains(panelVisibleClass)) {
+                if (!panel.classList.contains(panelVisibleClass)) { // Fallback
                     this.hideElement(panel); this.hideElement(overlay);
                     panel.setAttribute('aria-hidden', 'true'); overlay.setAttribute('aria-hidden', 'true');
                     this.focusedElementBeforePanel?.focus();
@@ -791,7 +676,7 @@ export default class QuizUI {
             if (!hasContent && emptyState) this.showElement(emptyState);
             else if (emptyState) this.hideElement(emptyState);
             this.focusedElementBeforeExplanationModal = document.activeElement;
-            this.showElement(overlay); overlay.scrollTop; // Força reflow
+            this.showElement(overlay); overlay.scrollTop;
             requestAnimationFrame(() => { overlay.classList.add(modalVisibleClass); dialog.focus(); });
         } else {
             overlay.classList.remove(modalVisibleClass);
@@ -816,10 +701,10 @@ export default class QuizUI {
         const modalVisibleClass = 'modal--visible';
         if (show) {
             this.focusedElementBeforeConfirmModal = document.activeElement;
-            this.showElement(overlay); overlay.scrollTop; // Força reflow
+            this.showElement(overlay); overlay.scrollTop;
             requestAnimationFrame(() => {
                 overlay.classList.add(modalVisibleClass);
-                this.elements.cancelEncerrarBtn?.focus(); // Foco no botão de cancelar por padrão
+                this.elements.cancelEncerrarBtn?.focus();
             });
         } else {
             overlay.classList.remove(modalVisibleClass);
@@ -850,7 +735,7 @@ export default class QuizUI {
         if(resultadoMensagemMotivacional) {
             const pontos = userData.pontos || 0; const acertos = userData.acertos || 0; let mensagem = "Continue praticando para melhorar!";
             if (totalQuestionsInSession > 0) {
-                const maxPontosPossiveis = totalQuestionsInSession * 15;
+                const maxPontosPossiveis = totalQuestionsInSession * 15; // Assumindo 15 pontos por acerto
                 if (pontos >= maxPontosPossiveis * 0.9) mensagem = "Resultado Incrível! Parabéns!";
                 else if (pontos >= maxPontosPossiveis * 0.7) mensagem = "Excelente desempenho! Continue assim!";
                 else if (pontos >= maxPontosPossiveis * 0.5) mensagem = "Muito bom! Você está no caminho certo.";
@@ -865,12 +750,39 @@ export default class QuizUI {
 
     hideResults() { this.hideElement(this.elements.resultadoCard); }
 
-    showWarning(message) {
+    /**
+     * Mostra uma mensagem de aviso/erro na UI.
+     * @param {string} message - A mensagem a ser exibida (pode conter HTML simples).
+     * @param {string} [type='warning'] - O tipo de mensagem ('error', 'warning', 'info', 'success').
+     * @param {boolean} [isTextCentered=false] - Se o texto dentro da mensagem deve ser centralizado.
+     */
+    showWarning(message, type = 'warning', isTextCentered = false) {
         const { avisoContainer, avisoMensagem, placeholderFiltrosContainer, challengeHubContainer, quizSectionContent, resultadoCard } = this.elements;
         if (avisoContainer && avisoMensagem) {
-            avisoMensagem.textContent = message; avisoMensagem.setAttribute("role", "alert");
+            // O elemento avisoMensagem é o <p> dentro do #aviso-container.card--aviso
+            // Para usar a estrutura com ícone via ::before, a mensagem vai direto no <p>
+            // e as classes de tipo vão no avisoContainer.
+            avisoMensagem.innerHTML = message; // Permite HTML básico na mensagem
+            avisoMensagem.setAttribute("role", "alert");
+
+            // Limpa classes de tipo anteriores e adiciona as novas ao #aviso-container
+            // A classe base '.card--aviso' deve permanecer se for importante para o layout base.
+            // As classes 'form-message' e 'form-message--${type}' aplicam o novo estilo.
+            const baseClasses = ['card', 'card--aviso']; // Classes que o avisoContainer sempre deve ter
+            avisoContainer.className = baseClasses.join(' '); // Reseta para classes base
+            
+            avisoContainer.classList.add('form-message', `form-message--${type}`);
+            if (isTextCentered) {
+                avisoContainer.classList.add('text-centered'); // Adiciona classe para centralizar o <p> interno
+            } else {
+                avisoContainer.classList.remove('text-centered');
+            }
+
             this.showElement(avisoContainer);
-            this.hideElement(placeholderFiltrosContainer); this.hideElement(challengeHubContainer); this.hideElement(quizSectionContent); this.hideElement(resultadoCard);
+            this.hideElement(placeholderFiltrosContainer);
+            this.hideElement(challengeHubContainer);
+            this.hideElement(quizSectionContent);
+            this.hideElement(resultadoCard);
         }
     }
 
@@ -878,6 +790,13 @@ export default class QuizUI {
         const { avisoContainer, avisoMensagem, placeholderFiltrosContainer, challengeHubContainer, quizSectionContent, resultadoCard } = this.elements;
         this.hideElement(avisoContainer);
         if (avisoMensagem) avisoMensagem.removeAttribute("role");
+
+        if (avisoContainer) {
+            // Reseta para as classes originais do avisoContainer, removendo as de mensagem
+             const baseClasses = ['card', 'card--aviso', this.hiddenClassName];
+            avisoContainer.className = baseClasses.join(' ');
+        }
+
         if (document.getElementById('question-section')) {
             if (quizSectionContent?.classList.contains(this.hiddenClassName) &&
                 resultadoCard?.classList.contains(this.hiddenClassName) &&
@@ -890,13 +809,13 @@ export default class QuizUI {
 
     scrollToQuestionStart() {
         const titleElement = this.elements.questionTitle;
-        // Verifica se a seção de questões está visível antes de tentar rolar
         if (this.elements.questionSection && !this.elements.questionSection.classList.contains(this.hiddenClassName) && titleElement) {
             titleElement.scrollIntoView({ behavior: "smooth", block: "center" });
         }
     }
 
     focusNextButton(preventScroll = false) { this.elements.nextBtn?.focus({ preventScroll: preventScroll }); }
+
     smoothScrollToNextButton() { this.elements.navigationButtons?.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
 
     renderQuestionGrid(questions, currentIndex, callbackSelectQuestion) {

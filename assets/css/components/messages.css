@@ -1,90 +1,133 @@
-/* assets/css/components/messages.css */
+/* assets/css/components/messages.css - REFINADO com texto centralizado/justificado */
 
+/* Base para todas as mensagens de formulário/sistema */
 .form-message {
-    padding: 12px 18px; /* Ajuste no padding para um visual mais espaçado */
-    margin-bottom: var(--spacing-md, 20px); /* Espaço abaixo da mensagem */
-    border-radius: var(--border-radius-md);
-    font-size: 0.9rem; /* Tamanho da fonte base */
-    line-height: 1.5;
+    padding: var(--spacing-sm, 14px) var(--spacing-md, 18px);
+    margin-bottom: var(--spacing-md, 20px);
+    border-radius: var(--border-radius-md, 8px);
+    font-size: var(--font-size-sm, 0.9rem);
+    line-height: 1.6;
     border-width: 1px;
     border-style: solid;
-    display: flex; /* Para alinhar ícone e texto, se adicionar ícones no futuro */
-    align-items: flex-start; /* Alinha itens ao topo */
-    gap: var(--spacing-xs, 10px); /* Espaço entre ícone e texto */
+    box-shadow: var(--shadow-sm);
+
+    /* Alterações para alinhamento do conteúdo da mensagem */
+    display: flex; /* Mantém flex para alinhar ícone e texto */
+    /* align-items: center; */ /* Comentado ou removido se o texto justificado precisar de mais espaço vertical e o ícone ficar no topo */
+    align-items: flex-start; /* Ícone alinhado ao topo se o texto tiver múltiplas linhas */
+    gap: var(--spacing-sm, 12px);
 }
 
 .form-message p {
-    margin: 0; /* Remove margem padrão do parágrafo dentro da mensagem */
-    flex-grow: 1; /* Faz o texto ocupar o espaço restante */
+    margin: 0;
+    flex-grow: 1;
+    /* ALTERAÇÕES AQUI para o parágrafo dentro da mensagem */
+    text-align: justify; /* Justifica o texto principal da mensagem */
+}
+.form-message p:not(:last-child) {
+    margin-bottom: var(--spacing-xs, 8px);
 }
 
-/* Mensagem de Erro Geral do Formulário ou Erros de Campo Agrupados */
+/* Ícone Padrão (será colorido por tipo) */
+.form-message::before {
+    font-family: 'Material Symbols Outlined';
+    font-variation-settings: 'FILL' 0, 'wght' 400;
+    font-size: 1.4em;
+    line-height: 1.3; /* Ajustado para o texto justificado */
+    flex-shrink: 0;
+    margin-top: 1px; /* Pode precisar de ajuste fino com text-align: justify */
+}
+
+/* Para centralizar TODO o bloco da mensagem (incluindo ícone e texto como um todo)
+   você aplicaria text-align: center ao container PAI da .form-message,
+   ou se a .form-message for ela mesma o container principal, você pode
+   adicionar 'justify-content: center;' se o display do pai for flex,
+   ou 'margin-left: auto; margin-right: auto;' se for um bloco.
+
+   Se você quer APENAS O TEXTO DENTRO da mensagem centralizado, e não o bloco inteiro,
+   e manter o ícone à esquerda:
+*/
+.form-message.text-centered p { /* Adicione a classe 'text-centered' à .form-message via HTML/JS */
+    text-align: center; /* Centraliza apenas o parágrafo */
+}
+
+
+/* --- MENSAGEM DE ERRO --- */
 .form-message--error {
     background-color: var(--color-incorrect-bg, #fff0f1);
     color: var(--color-incorrect-text, #c12634);
     border-color: var(--color-incorrect-border, #f1aeb5);
-    /* Adicionando um ícone (opcional, mas recomendado para acessibilidade e visual) */
 }
 .form-message--error::before {
-    /* content: 'error_outline';
-    font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 0, 'wght' 400;
-    font-size: 1.3em;
-    line-height: 1.3;
+    content: 'error';
     color: var(--color-accent-red);
-    margin-right: var(--spacing-xs, 8px);
-    flex-shrink: 0; */
 }
 
-
-/* Mensagem Informativa (a azul que você mencionou) */
+/* --- MENSAGEM INFORMATIVA (Azul) --- */
 .form-message--info {
     background-color: var(--color-primary-light, #eef3f8);
     color: var(--color-primary-dark, #0d3b66);
     border-color: var(--color-primary-medium, #1a5f9e);
 }
 .form-message--info::before {
-    /* content: 'info_outline';
-    font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 0, 'wght' 400;
-    font-size: 1.3em;
-    line-height: 1.3;
-    color: var(--color-primary-dark);
-    margin-right: var(--spacing-xs, 8px);
-    flex-shrink: 0; */
+    content: 'info';
+    color: var(--color-primary-medium);
 }
 
-/* Mensagem de Sucesso (se você for usar) */
+/* --- MENSAGEM DE SUCESSO (Verde) --- */
 .form-message--success {
     background-color: var(--color-correct-bg, #e6fcf5);
     color: var(--color-correct-text, #1e7f74);
     border-color: var(--color-correct-border, #a3e9c1);
 }
 .form-message--success::before {
-    /* content: 'check_circle_outline';
-    font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 0, 'wght' 400;
-    font-size: 1.3em;
-    line-height: 1.3;
+    content: 'check_circle';
     color: var(--color-secondary-green);
-    margin-right: var(--spacing-xs, 8px);
-    flex-shrink: 0; */
+}
+
+/* --- MENSAGEM DE AVISO (Amarelo/Laranja) --- */
+.form-message--warning {
+    background-color: var(--color-accent-yellow-bg, #fffbea);
+    color: var(--color-accent-yellow-text, #7a5b00);
+    border-color: var(--color-accent-yellow-border, #ffe58f);
+}
+.form-message--warning::before {
+    content: 'warning';
+    color: var(--color-accent-yellow-text, #7a5b00);
 }
 
 
-/* Mensagem de Erro Específica de Campo */
+/* --- MENSAGEM DE ERRO ESPECÍFICA DE CAMPO --- */
 .form-message--field-error {
     color: var(--color-accent-red);
-    font-size: 0.8rem;
-    margin-top: var(--spacing-xxs, 5px); /* Espaço acima da mensagem de erro do campo */
-    padding-left: var(--spacing-xs, 8px); /* Leve indentação */
-    display: block; /* Garante que ocupe a linha */
+    font-size: var(--font-size-xs, 0.8rem);
+    margin-top: var(--spacing-xxs, 5px);
+    padding-left: 0;
+    display: block;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    text-align: left; /* Geralmente erros de campo são alinhados à esquerda */
 }
 .form-message--field-error::before {
-    /* content: 'chevron_right';
+    content: 'arrow_right_alt';
     font-family: 'Material Symbols Outlined';
     font-size: 1em;
     margin-right: 4px;
     position: relative;
-    top: 1px; */
+    top: 1px;
+    color: var(--color-accent-red);
+    margin-top: 0;
+}
+
+/* --- ESTILIZAÇÃO PARA O CONTAINER DE AVISO GLOBAL (#aviso-container) --- */
+#aviso-container.form-message {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: var(--spacing-md, 20px);
+}
+/* Se você quiser que o texto no #aviso-container também seja justificado/centralizado: */
+#aviso-container.form-message p {
+    text-align: justify; /* Ou 'center' se preferir centralizado para o aviso global */
 }

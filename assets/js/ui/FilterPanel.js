@@ -179,7 +179,7 @@ export default class FilterPanel {
 
         if (maxQuestions !== null && maxQuestions >= 0) { // maxQuestions pode ser 0
             input.setAttribute('max', maxQuestions.toString());
-            input.placeholder = maxQuestions > 0 ? `Máx: ${maxQuestions}` : "0"; // Se max é 0, placeholder é "0"
+            input.placeholder = maxQuestions > 0 ? `${maxQuestions}` : "0"; // Se max é 0, placeholder é "0"
             
             feedbackTextEl.textContent = maxQuestions > 0 
                 ? `Disponíveis: ${maxQuestions}`

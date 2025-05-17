@@ -344,6 +344,7 @@
     border-radius: 50%;
     background-color: transparent; /* Fundo transparente inicialmente */
     color: var(--color-gray-600); /* Cor do ícone (herdada pelo span) */
+    box-shadow: var(--shadow-button);
     
     transition: background-color 0.2s ease-out, color 0.2s ease-out, transform 0.15s ease-out;
     outline-offset: 2px;
@@ -366,6 +367,7 @@
 
 /* Estado Favoritado (classe .is-favorited no botão) */
 .favorite-star-action.is-favorited {
+
     color: var(--color-accent-yellow, gold); /* Ícone fica amarelo sólido */
     transform: scale(1.05); /* Leve destaque de tamanho */
 }

@@ -26,7 +26,24 @@ SECRET_KEY = 'django-insecure-66aois=68ij*lt^k%liy0v@w-omj&z+0-1$w=13n-akp*+9n*z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',  # Mantém isso para cobrir o acesso geral
+    '67a7-149-102-242-98.ngrok-free.app', # Adicione o host específico também
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://67a7-149-102-242-98.ngrok-free.app',
+    # Se o ngrok gerar uma nova URL na próxima vez, você precisará atualizá-la aqui também
+    # ou, se o ngrok sempre usar o mesmo domínio base (ex: .ngrok-free.app) e você confia nele,
+    # algumas versões mais recentes do Django podem permitir wildcards aqui com cuidado,
+    # mas para ngrok, é mais seguro ser explícito com a URL HTTPS completa.
+    # Para maior flexibilidade com subdomínios aleatórios, você pode tentar:
+    # 'https://*.ngrok-free.app' (verifique a documentação do Django para a sua versão
+    # sobre o suporte a wildcards em CSRF_TRUSTED_ORIGINS).
+    # No entanto, a URL HTTPS completa é a mais segura.
+]
 
 
 # Application definition

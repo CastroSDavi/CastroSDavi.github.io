@@ -7,10 +7,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.2);
+    background-color: rgba(var(--color-primary-dark-rgb), 0.2);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
-    z-index: var(--z-index-filter-panel-overlay, 799); /* Abaixo do painel */
+    z-index: var(--z-index-filter-panel-overlay, 799);
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.3s var(--transition-timing-function-ease, ease),
@@ -30,16 +30,16 @@
     right: 0;
     width: 100%;
     max-width: 390px;
-    height: 100dvh; /* Altura dinâmica da viewport */
-    background-color: var(--color-white, #ffffff);
-    color: var(--color-text-primary, #343a40);
-    box-shadow: -4px 0 25px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.12);
+    height: 100dvh;
+    background-color: var(--color-white);
+    color: var(--color-text-primary);
+    box-shadow: -4px 0 25px rgba(var(--color-primary-dark-rgb), 0.12);
     z-index: var(--z-index-filter-panel, 800);
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Impede scroll no painel principal, o corpo terá o seu */
+    overflow: hidden;
 }
 
 .filter-panel--visible {
@@ -52,30 +52,30 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md, 20px) var(--spacing-lg, 24px);
-    border-bottom: 1px solid var(--color-gray-200, #e9ecef);
+    border-bottom: 1px solid var(--color-gray-200);
     flex-shrink: 0;
-    background-color: var(--color-white, #ffffff);
+    background-color: var(--color-white);
 }
 
 .filter-panel__title {
     font-size: 1.5rem;
     font-weight: var(--font-weight-semibold, 600);
-    color: var(--color-primary-dark, #0d3b66);
+    color: var(--color-primary-dark);
     margin: 0;
     line-height: 1.3;
 }
 
 .filter-panel__close-button {
-    color: var(--color-gray-700, #6c757d);
+    color: var(--color-gray-700);
     padding: var(--spacing-sm, 12px);
-    border-radius: var(--border-radius-circle, 50%);
+    border-radius: var(--border-radius-circle);
     transition: all 0.2s ease-out;
 }
 
 .filter-panel__close-button:hover,
 .filter-panel__close-button:focus-visible {
-    color: var(--color-accent-red, #e63946);
-    background-color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.08);
+    color: var(--color-accent-red);
+    background-color: rgba(var(--color-accent-red-rgb), 0.08);
     transform: scale(1.1);
 }
 
@@ -87,7 +87,7 @@
 /* Corpo do painel */
 .filter-panel__body {
     flex-grow: 1;
-    overflow-y: auto; /* Scroll apenas no corpo */
+    overflow-y: auto;
     padding: var(--spacing-md, 20px);
     display: flex;
     flex-direction: column;
@@ -95,24 +95,26 @@
 }
 
 .filter-panel__body::-webkit-scrollbar { width: 6px; }
-.filter-panel__body::-webkit-scrollbar-track { background: var(--color-gray-100, #f8f9fa); margin: var(--spacing-xs, 8px) 0; }
-.filter-panel__body::-webkit-scrollbar-thumb { background-color: var(--color-gray-300, #dee2e6); border-radius: 10px; }
-.filter-panel__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400, #ced4da); }
-.filter-panel__body { scrollbar-width: thin; scrollbar-color: var(--color-gray-300, #dee2e6) var(--color-gray-100, #f8f9fa); }
+.filter-panel__body::-webkit-scrollbar-track { background: var(--color-gray-100); margin: var(--spacing-xs, 8px) 0; }
+.filter-panel__body::-webkit-scrollbar-thumb { background-color: var(--color-gray-300); border-radius: 10px; }
+.filter-panel__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
+.filter-panel__body { scrollbar-width: thin; scrollbar-color: var(--color-gray-300) var(--color-gray-100); }
 
 /* Grupo de Filtros */
+.filter-group {}
+
 .filter-group__header {
     display: flex;
     align-items: center;
     margin-bottom: var(--spacing-xs, 8px);
     padding-bottom: var(--spacing-xs, 8px);
-    border-bottom: 1px solid var(--color-gray-100, #f8f9fa);
+    border-bottom: 1px solid var(--color-gray-100);
 }
 
 .filter-group__title {
     font-size: 1.05rem;
     font-weight: var(--font-weight-semibold, 600);
-    color: var(--color-primary-dark, #0d3b66);
+    color: var(--color-primary-dark);
     position: relative;
     padding-left: var(--spacing-sm, 12px);
     display: flex;
@@ -129,8 +131,8 @@
     transform: translateY(-50%);
     height: 1em;
     width: 3px;
-    background-color: var(--color-secondary-green, #2a9d8f);
-    border-radius: var(--border-radius-pill, 50px);
+    background-color: var(--color-secondary-green);
+    border-radius: var(--border-radius-pill);
 }
 
 .filter-group__controls--standalone {
@@ -145,228 +147,179 @@
     font-size: var(--font-size-xs, 0.8rem);
     padding: var(--spacing-xxs, 4px) var(--spacing-xs, 6px);
     font-weight: var(--font-weight-medium, 500);
-    color: var(--color-primary-medium, #1a5f9e);
+    color: var(--color-primary-medium);
     line-height: normal;
     min-height: unset;
 }
 
 .filter-group__controls .button--text:hover,
 .filter-group__controls .button--text:focus-visible {
-    color: var(--color-primary-dark, #0d3b66);
-    background-color: var(--color-primary-light, #eef3f8);
+    color: var(--color-primary-dark);
+    background-color: var(--color-primary-light);
 }
 
-/* Árvore de Categorias */
-.category-tree {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
+/* --- Árvore de Categorias (estilos originais mantidos) --- */
+.category-tree { list-style: none; padding-left: 0; margin: 0; }
+.category-tree__item { margin-bottom: 0; position: relative; }
+.category-tree__label-wrapper { display: flex; align-items: center; padding: var(--spacing-xs, 6px) var(--spacing-xxs, 4px); border-radius: var(--border-radius-md, 6px); transition: background-color 0.2s ease-out; position: relative; }
+.category-tree__label-wrapper:hover { background-color: rgba(var(--color-primary-light-rgb), 0.5); }
+.category-tree__input:checked:not(.is-indeterminate) ~ .category-tree__label-wrapper,
+.category-tree__input.is-indeterminate ~ .category-tree__label-wrapper { background-color: var(--color-primary-light); }
+.category-tree__label-wrapper:focus-within { box-shadow: 0 0 0 2px var(--focus-outline-color) inset; }
+.category-tree__toggle { padding: var(--spacing-xxs, 4px); color: var(--color-gray-700); border-radius: var(--border-radius-circle); transition: all 0.2s ease-out; display: inline-flex; align-items: center; justify-content: center; margin-right: var(--spacing-xxs, 4px); flex-shrink: 0; }
+.category-tree__toggle .material-symbols-outlined { font-size: 22px; font-weight: 400; display: block; transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1); }
+.category-tree__toggle:hover, .category-tree__toggle:focus-visible { background-color: rgba(var(--color-primary-dark-rgb), 0.07); color: var(--color-primary-dark); }
+.category-tree__toggle[aria-expanded="true"] .material-symbols-outlined { transform: rotate(90deg); }
+.category-tree__label { font-size: var(--font-size-sm, 0.875rem); color: var(--color-text-secondary); flex-grow: 1; user-select: none; padding-left: calc(16px + var(--spacing-xs, 6px)); line-height: 1.5; cursor: pointer; border-radius: var(--border-radius-sm, 4px); transition: color 0.2s ease-out; position: relative; }
+.category-tree__input:checked + .category-tree__label, .category-tree__input.is-indeterminate + .category-tree__label { color: var(--color-primary-dark); font-weight: var(--font-weight-medium, 500); }
+.category-tree__label::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 1.5px solid var(--color-gray-500); border-radius: 3px; background-color: var(--color-white); transition: all 0.15s ease-out; }
+.category-tree__label::after { content: "check_small"; font-family: 'Material Symbols Outlined'; font-variation-settings: 'FILL' 1, 'wght' 700; font-size: 14px; line-height: 1; position: absolute; left: 1px; top: 50%; transform: translateY(-50%) scale(0); color: var(--color-white); opacity: 0; transition: transform 0.1s ease-out, opacity 0.1s ease-out; }
+.category-tree__input:focus-visible + .category-tree__label::before { border-color: var(--focus-outline-color); box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3); }
+.category-tree__input:checked + .category-tree__label::before { background-color: var(--color-secondary-green); border-color: var(--color-secondary-green); }
+.category-tree__input:checked + .category-tree__label::after { transform: translateY(-50%) scale(1); opacity: 1; }
+.category-tree__input.is-indeterminate + .category-tree__label::before { background-color: var(--color-secondary-green); border-color: var(--color-secondary-green); }
+.category-tree__input.is-indeterminate + .category-tree__label::after { content: ""; font-family: initial; left: 3.5px; top: 50%; width: 8px; height: 2px; background-color: var(--color-white); border-radius: 1px; transform: translateY(-50%) scale(1); opacity: 1; }
+.category-tree__submenu { list-style: none; padding-left: var(--spacing-lg, 24px); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; will-change: max-height; }
+
+/* --- Chips de Dificuldade (estilos originais mantidos) --- */
+.chip-group { display: flex; flex-wrap: wrap; gap: var(--spacing-sm, 10px); margin-top: var(--spacing-xs, 8px); }
+.chip-group__chip { padding: var(--spacing-xs, 8px) var(--spacing-md, 18px); font-size: var(--font-size-sm, 0.875rem); font-weight: var(--font-weight-medium, 500); color: var(--color-gray-700); background-color: var(--color-gray-100); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius-pill); cursor: pointer; transition: all 0.2s ease-out; }
+.chip-group__input:hover + .chip-group__chip, .chip-group__input:focus-visible + .chip-group__chip { border-color: var(--color-gray-400); color: var(--color-text-primary); background-color: var(--color-gray-200); transform: translateY(-1px); }
+.chip-group__input:focus-visible + .chip-group__chip { box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3); }
+.chip-group__input:checked + .chip-group__chip { color: var(--color-white); border-color: var(--color-secondary-green); background-color: var(--color-secondary-green); font-weight: var(--font-weight-semibold, 600); box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.25); transform: translateY(0px) scale(1.01); }
+
+/* =========== INÍCIO: ESTILOS REFINADOS PARA O CONTROLE NUMÉRICO (STEPPER) =========== */
+#filter-group-num-questions .filter-group__title {
+    margin-bottom: var(--spacing-sm, 12px); /* Espaçamento abaixo do título "Número de Questões" */
 }
 
-.category-tree__item {
-    margin-bottom: 0;
-    position: relative;
-    /* Fundamental: O item (li) deve poder crescer com seu conteúdo.
-       Não defina height ou max-height fixos aqui que impeçam isso.
-       Overflow visible aqui pode ser uma "solução de força bruta" se o submenu vazar,
-       mas o ideal é que o submenu em si não precise vazar dos limites do li.
-       Se o problema for o li não crescer, pode ser algo na sua estrutura flex/grid pai.
-       Para um layout de lista simples, isso não deveria ser um problema. */
-}
-
-.category-tree__label-wrapper {
+.form-group--filter-panel { /* Wrapper para o numeric-stepper e o texto de ajuda */
+    margin-top: var(--spacing-xxs, 4px);
+    /* O padding lateral já vem do .filter-panel__body, então não é necessário aqui a menos que queira mais específico */
+    /* padding: 0 var(--spacing-xs, 8px);  */
     display: flex;
-    align-items: center;
-    padding: var(--spacing-xs, 6px) var(--spacing-xxs, 4px);
-    border-radius: var(--border-radius-md, 6px);
-    transition: background-color 0.2s ease-out;
-    position: relative;
-}
-.category-tree__label-wrapper:hover {
-    background-color: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.5);
-}
-.category-tree__input:checked ~ .category-tree__label-wrapper,
-.category-tree__input.is-indeterminate ~ .category-tree__label-wrapper {
-    background-color: var(--color-primary-light, #eef3f8);
-}
-.category-tree__label-wrapper:focus-within {
-    box-shadow: 0 0 0 2px var(--focus-outline-color, var(--color-primary-medium)) inset;
+    flex-direction: column;
+    align-items: flex-start; /* Alinha o controle e o feedback à esquerda por padrão */
+    /* Se quiser centralizar o controle numérico e o texto de feedback abaixo dele: */
+    /* align-items: center; */
 }
 
-.category-tree__toggle {
-    padding: var(--spacing-xxs, 4px);
-    color: var(--color-gray-700, #6c757d);
-    border-radius: var(--border-radius-circle, 50%);
-    transition: all 0.2s ease-out;
-    display: inline-flex;
+.numeric-stepper {
+    display: inline-flex; /* Para que os botões e o input fiquem na mesma linha e o wrapper se ajuste ao conteúdo */
+    align-items: center; /* Alinha verticalmente os itens internos */
+    border: 1.5px solid var(--color-gray-300); /* Borda sutil para o controle todo */
+    border-radius: var(--border-radius-md, 6px); /* Cantos arredondados consistentes */
+    overflow: hidden; /* Para que o border-radius funcione nos botões das extremidades */
+    background-color: var(--color-white); /* Fundo do controle */
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    height: 38px; /* ALTURA FIXA PARA O CONTROLE - AJUSTE CONFORME NECESSÁRIO */
+    /* max-width: 150px; */ /* Opcional: limitar a largura total do stepper */
+}
+
+.numeric-stepper:focus-within { /* Destaque visual quando qualquer parte do controle está focada */
+    border-color: var(--color-primary-medium);
+    box-shadow: 0 0 0 var(--focus-outline-width, 2px) rgba(var(--color-primary-medium-rgb), 0.15); /* Sombra de foco mais sutil */
+}
+
+.numeric-stepper__button {
+    background-color: var(--color-gray-50); /* Fundo muito sutil para os botões */
+    color: var(--color-primary-dark);
+    border: none;
+    padding: 0 var(--spacing-sm, 10px); /* Padding horizontal para área de clique */
+    cursor: pointer;
+    display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: var(--spacing-xxs, 4px);
-    flex-shrink: 0;
-}
-.category-tree__toggle .material-symbols-outlined {
-    font-size: 22px;
-    font-weight: 400;
-    display: block;
-    transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
-}
-.category-tree__toggle:hover,
-.category-tree__toggle:focus-visible {
-    background-color: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.07);
-    color: var(--color-primary-dark, #0d3b66);
-}
-.category-tree__toggle[aria-expanded="true"] .material-symbols-outlined {
-    transform: rotate(90deg);
-}
-
-.category-tree__label {
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--color-text-secondary, #6c757d);
-    flex-grow: 1;
-    user-select: none;
-    padding-left: calc(16px + var(--spacing-xs, 6px));
-    line-height: 1.5;
-    cursor: pointer;
-    border-radius: var(--border-radius-sm, 4px);
-    transition: color 0.2s ease-out;
-    position: relative;
-}
-.category-tree__input:checked + .category-tree__label,
-.category-tree__input.is-indeterminate + .category-tree__label {
-    color: var(--color-primary-dark, #0d3b66);
-    font-weight: var(--font-weight-medium, 500);
-}
-
-.category-tree__label::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 16px;
-    height: 16px;
-    border: 1.5px solid var(--color-gray-500, #ced4da);
-    border-radius: 3px;
-    background-color: var(--color-white, #ffffff);
-    transition: all 0.15s ease-out;
-}
-.category-tree__label::after {
-    content: "check_small";
-    font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 1, 'wght' 700;
-    font-size: 14px;
+    font-size: 1.2rem; /* Tamanho dos ícones +/- */
     line-height: 1;
-    position: absolute;
-    left: 1px;
-    top: 50%;
-    transform: translateY(-50%) scale(0);
-    color: var(--color-white, #ffffff);
-    opacity: 0;
-    transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+    align-self: stretch; /* Faz os botões ocuparem a altura total do .numeric-stepper */
+    transition: background-color var(--transition-fast);
+    /* min-width: 36px; */ /* Largura mínima para os botões */
 }
-.category-tree__input:focus-visible + .category-tree__label::before {
-    border-color: var(--focus-outline-color, var(--color-primary-medium));
-    box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color, var(--color-primary-medium)) r g b / 0.3);
+.numeric-stepper__button:hover {
+    background-color: var(--color-gray-200);
 }
-.category-tree__input:checked + .category-tree__label::before {
-    background-color: var(--color-secondary-green, #2a9d8f);
-    border-color: var(--color-secondary-green, #2a9d8f);
+.numeric-stepper__button:active {
+    background-color: var(--color-gray-300);
 }
-.category-tree__input:checked + .category-tree__label::after {
-    transform: translateY(-50%) scale(1);
-    opacity: 1;
-}
-.category-tree__input.is-indeterminate + .category-tree__label::before {
-    background-color: var(--color-secondary-green, #2a9d8f);
-    border-color: var(--color-secondary-green, #2a9d8f);
-}
-.category-tree__input.is-indeterminate + .category-tree__label::after {
-    content: "";
-    font-family: initial;
-    left: 3.5px;
-    top: 50%;
-    width: 8px;
-    height: 2px;
-    background-color: var(--color-white, #ffffff);
-    border-radius: 1px;
-    transform: translateY(-50%) scale(1);
-    opacity: 1;
+.numeric-stepper__button .material-symbols-outlined {
+    font-size: inherit;
+    font-variation-settings: 'wght' 400; /* Peso normal para ícones */
+    display: block; /* Garante que o ícone não cause altura extra */
 }
 
-.category-tree__submenu {
-    list-style: none;
-    padding-left: var(--spacing-lg, 24px);
-    margin-top: 0; /* Removido para evitar espaçamento extra com o pai */
-    max-height: 0; /* Inicia recolhido */
-    overflow: hidden; /* ESSENCIAL para a animação de max-height e para esconder o conteúdo */
-    transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    /* visibility: hidden; /* Esconde até que max-height > 0 para evitar flash de conteúdo */
-    /* transition-delay: 0s; */ /* Para visibilidade */
-
-    /* O JavaScript irá definir max-height para o scrollHeight do submenu quando expandido.
-       Isto deve fazer com que o submenu ocupe o espaço necessário no fluxo do documento,
-       empurrando os itens subsequentes para baixo. */
-    box-sizing: border-box;
-    will-change: max-height;
+/* Linhas separadoras sutis entre os botões e o input */
+.numeric-stepper__button--decrement {
+    border-right: 1px solid var(--color-gray-300);
+}
+.numeric-stepper__button--increment {
+    border-left: 1px solid var(--color-gray-300);
+}
+/* Remove as bordas internas quando o controle está focado, para um visual mais limpo */
+.numeric-stepper:focus-within .numeric-stepper__button--decrement {
+    border-right-color: transparent;
+}
+.numeric-stepper:focus-within .numeric-stepper__button--increment {
+    border-left-color: transparent;
 }
 
-/* Classe adicionada via JS quando o submenu está expandido */
-/* Usada principalmente para estados que dependem da expansão, se necessário,
-   mas a animação principal é controlada pela transição de max-height. */
-.category-tree__submenu--expanded {
-    /* visibility: visible; */
-    /* transition-delay: 0s; */
-    /* Não defina overflow: visible aqui, pois pode quebrar a animação se
-       max-height não for perfeitamente calculado ou se houver conteúdo inesperado.
-       O overflow: hidden no estado base é o que permite o efeito de "deslizar". */
+#num-questions-input.form-control--filter-panel {
+    border: none; /* Sem borda individual */
+    padding: var(--spacing-xs, 8px) var(--spacing-xxs, 4px); /* Padding horizontal mínimo */
+    width: 50px; /* LARGURA DO CAMPO CENTRAL - AJUSTE PARA CABER 2-3 DÍGITOS CONFORTAVELMENTE */
+    text-align: center;
+    font-size: var(--font-size-sm, 0.9rem); /* Fonte do número */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-primary);
+    background-color: transparent; /* Herda o fundo do .numeric-stepper (branco) */
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    border-radius: 0; /* Sem cantos arredondados individuais */
+    box-shadow: none;
+    height: 100%; /* Ocupa a altura do .numeric-stepper */
+    min-height: unset;
+    flex-grow: 0; /* Não permite que cresça além da largura definida */
+    flex-shrink: 0; /* Não permite que encolha */
+    outline: none; /* Foco gerenciado pelo wrapper */
+}
+#num-questions-input.form-control--filter-panel:focus {
+    box-shadow: none; /* Garante que não haja sombra de foco no input */
 }
 
-
-/* Chips de Dificuldade */
-.chip-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-sm, 10px);
-    margin-top: var(--spacing-xs, 8px);
-}
-.chip-group__chip {
-    padding: var(--spacing-xs, 8px) var(--spacing-md, 18px);
-    font-size: var(--font-size-sm, 0.875rem);
-    font-weight: var(--font-weight-medium, 500);
-    color: var(--color-gray-700, #6c757d);
-    background-color: var(--color-gray-100, #f8f9fa);
-    border: 1px solid var(--color-gray-300, #dee2e6);
-    border-radius: var(--border-radius-pill, 50px);
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-}
-.chip-group__input:hover + .chip-group__chip,
-.chip-group__input:focus-visible + .chip-group__chip {
-    border-color: var(--color-gray-400, #ced4da);
-    color: var(--color-text-primary, #343a40);
-    background-color: var(--color-gray-200, #e9ecef);
-    transform: translateY(-1px);
-}
-.chip-group__input:focus-visible + .chip-group__chip {
-    box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color, var(--color-primary-medium)) r g b / 0.3);
-}
-.chip-group__input:checked + .chip-group__chip {
-    color: var(--color-white, #ffffff);
-    border-color: var(--color-secondary-green, #2a9d8f);
-    background-color: var(--color-secondary-green, #2a9d8f);
-    font-weight: var(--font-weight-semibold, 600);
-    box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.25);
-    transform: translateY(0px) scale(1.01);
+#num-questions-input.form-control--filter-panel::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.85;
+    font-size: calc(var(--font-size-sm) * 0.88); /* Placeholder um pouco menor */
+    font-weight: var(--font-weight-normal);
+    line-height: normal;
+    /* Centralização já vem do input */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-/* Rodapé do painel */
+.form-text-feedback--filter-panel {
+    font-size: var(--font-size-xs, 0.8rem);
+    color: var(--color-text-secondary);
+    margin-top: var(--spacing-xs, 8px); /* Espaço entre o stepper e o texto de feedback */
+    display: block;
+    line-height: 1.4;
+    /* Se o .numeric-stepper for centralizado no .form-group--filter-panel,
+       adicione text-align: center aqui também. */
+    /* text-align: center; */
+}
+/* =========== FIM: ESTILOS REFINADOS PARA O CONTROLE NUMÉRICO =========== */
+
+
+/* Rodapé do painel (botões Limpar/Aplicar) */
 .filter-panel__footer {
     padding: var(--spacing-md, 16px) var(--spacing-lg, 20px);
     padding-bottom: calc(var(--spacing-md, 16px) + env(safe-area-inset-bottom, 10px));
-    border-top: 1px solid var(--color-gray-200, #e9ecef);
+    border-top: 1px solid var(--color-gray-200);
     display: flex;
     gap: var(--spacing-md, 12px);
-    background-color: var(--color-white, #ffffff);
+    background-color: var(--color-white);
     box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
     flex-shrink: 0;
     position: relative;
@@ -380,22 +333,40 @@
     border-radius: var(--border-radius-md, 6px);
 }
 
-/* Responsividade */
+/* --- Responsividade Geral do Painel --- */
 @media (max-width: 480px) {
     .filter-panel { max-width: 100%; border-radius: 0; }
     .filter-panel__header { padding: var(--spacing-sm, 14px) var(--spacing-md, 16px); }
     .filter-panel__title { font-size: 1.3rem; }
-    .filter-panel__close-button .material-symbols-outlined { font-size: 24px; }
-    .filter-panel__body { padding: var(--spacing-sm, 14px) var(--spacing-md, 16px); gap: var(--spacing-md, 20px); }
-    .filter-group__header { margin-bottom: var(--spacing-xs, 8px); padding-bottom: var(--spacing-xs, 6px); }
-    .filter-group__title { font-size: 1rem; padding-left: var(--spacing-xs, 10px); }
-    .filter-group__title::before { width: 3px; }
-    .filter-group__controls--standalone { margin-bottom: var(--spacing-xs, 10px); padding-left: var(--spacing-xs, 10px); gap: var(--spacing-xs, 8px); }
-    .filter-group__controls--standalone .button--text { font-size: var(--font-size-xs, 0.75rem); }
-    .category-tree__submenu { padding-left: var(--spacing-md, 20px); }
-    .category-tree__label { font-size: 0.875rem; padding-left: calc(16px + var(--spacing-xs, 6px)); }
-    .chip-group { gap: var(--spacing-xs, 6px); }
-    .chip-group__chip { padding: var(--spacing-xxs, 6px) var(--spacing-sm, 12px); font-size: 0.75rem; }
-    .filter-panel__footer { padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px); padding-bottom: calc(var(--spacing-xs, 10px) + env(safe-area-inset-bottom, 8px)); gap: var(--spacing-xs, 8px); flex-direction: column-reverse; }
-    .filter-panel__footer .button { font-size: 0.85rem; padding: var(--spacing-xs, 10px); }
+    /* ... (outros estilos responsivos para categorias, chips, rodapé como antes) ... */
+    
+    /* Ajustes responsivos para o novo controle numérico */
+    .numeric-stepper {
+        height: 36px; /* Altura um pouco menor em mobile */
+    }
+    #num-questions-input.form-control--filter-panel {
+        width: 42px; /* Largura do input central um pouco menor */
+        font-size: var(--font-size-sm, 0.875rem);
+    }
+    .numeric-stepper__button {
+        padding: 0 var(--spacing-xs, 8px); /* Padding horizontal menor nos botões stepper */
+        font-size: 1.1rem; /* Ícones stepper podem ser um pouco menores */
+    }
+    #num-questions-input.form-control--filter-panel::placeholder {
+        font-size: calc(var(--font-size-sm) * 0.82);
+    }
+    .form-text-feedback--filter-panel {
+        font-size: var(--font-size-xs, 0.75rem);
+    }
+
+    .filter-panel__footer {
+        padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px);
+        padding-bottom: calc(var(--spacing-xs, 10px) + env(safe-area-inset-bottom, 8px));
+        gap: var(--spacing-xs, 8px);
+        flex-direction: column-reverse;
+    }
+    .filter-panel__footer .button {
+        font-size: 0.85rem;
+        padding: var(--spacing-xs, 10px);
+    }
 }

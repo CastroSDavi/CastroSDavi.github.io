@@ -32,9 +32,10 @@ export function getCookie(name) {
 export function debounce(func, delay) {
     let timeoutId;
     return function(...args) {
+        const context = this; // Captura o contexto (this) se a função original o utilizar
         clearTimeout(timeoutId);
         timeoutId = setTimeout(() => {
-            func.apply(this, args);
+            func.apply(context, args); // Aplica o contexto e os argumentos
         }, delay);
     };
 }
@@ -42,8 +43,6 @@ export function debounce(func, delay) {
 /**
  * Função throttle para garantir que uma função seja chamada no máximo uma vez
  * dentro de um intervalo de tempo especificado.
- * Útil para eventos que disparam rapidamente, como scroll ou mousemove,
- * para melhorar a performance.
  * @param {Function} func - A função a ser executada.
  * @param {number} limit - O intervalo de tempo mínimo em milissegundos entre chamadas.
  * @returns {Function} A nova função "throttled".
@@ -61,7 +60,7 @@ export function throttle(func, limit) {
             setTimeout(() => {
                 inThrottle = false;
                 if (lastFunc) {
-                    lastFunc.apply(context, args); // Chama a última tentativa se houver
+                    lastFunc.apply(context, args);
                     lastFunc = null;
                     lastRan = Date.now();
                 }
@@ -80,17 +79,9 @@ export function throttle(func, limit) {
 
 /**
  * Gera um ID único simples.
- * Não é criptograficamente seguro nem universalmente único (UUID),
- * mas útil para gerar IDs para elementos DOM ou componentes JS localmente.
  * @param {string} prefix - Um prefixo opcional para o ID.
  * @returns {string} Um ID relativamente único.
  */
 export function simpleUniqueId(prefix = 'id_') {
     return prefix + Math.random().toString(36).substr(2, 9);
 }
-
-// Adicione outras funções auxiliares pequenas, puras e reutilizáveis aqui conforme necessário.
-// Exemplos:
-// - Funções para formatação de datas ou números.
-// - Funções para manipulação de strings.
-// - Funções para checagem de tipos (embora o TypeScript seja melhor para isso).

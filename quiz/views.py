@@ -1,13 +1,13 @@
 # quiz/views.py
 import json
-import random # Para o modo Quiz Rápido
+import random # Para o modo Quiz Rápido e seleção de número customizado
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
-from datetime import date
+from datetime import date # MODIFICADO: datetime.date para date
 from django.db.models import Q # Para queries OR complexas
 
 from .models import (
@@ -56,13 +56,15 @@ def get_descendant_category_ids(category_ids_str_list):
     return all_descendant_ids
 
 
-def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, quiz_mode=None, question_count=None):
+# MODIFICADO: Adicionado num_questions_custom à assinatura e lógica
+def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, quiz_mode=None, question_count=None, num_questions_custom=None):
     """
     Monta o dicionário de dados do quiz, com filtros opcionais.
     - category_ids_filter: lista de strings de IDs de categorias para filtrar perguntas.
     - difficulty_levels_filter: lista de strings de níveis de dificuldade para filtrar perguntas.
     - quiz_mode: 'quick' para selecionar um número aleatório de perguntas.
     - question_count: número de perguntas para o modo 'quick'.
+    - num_questions_custom: número de perguntas para o modo personalizado (quando não é 'quick').
     """
     todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
     
@@ -70,38 +72,34 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
     perguntas_qs = Pergunta.objects.filter(ativa=True)
 
     # Aplicar filtro de dificuldade
-    # Certifique-se que os valores em difficulty_levels_filter correspondem aos choices do modelo Pergunta.NIVEL_CHOICES
     if difficulty_levels_filter and 'all' not in (level.lower() for level in difficulty_levels_filter):
-        # Normaliza os níveis de dificuldade recebidos para minúsculas para comparação flexível
         normalized_difficulty_filter = [level.lower() for level in difficulty_levels_filter]
         
         q_difficulty_objects = Q()
-        # Mapeia os níveis do filtro para os valores reais do modelo (ex: 'fácil' -> 'Fácil')
         valid_model_difficulties = [choice[0] for choice in Pergunta.NIVEL_CHOICES]
         
         for level_from_filter in normalized_difficulty_filter:
             for model_level in valid_model_difficulties:
                 if level_from_filter == model_level.lower():
                     q_difficulty_objects |= Q(nivel_dificuldade=model_level)
-                    break # Encontrou o correspondente, vai para o próximo nível do filtro
+                    break 
         
-        if q_difficulty_objects: # Apenas filtra se algum nível válido foi encontrado
+        if q_difficulty_objects: 
             perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
-        else: # Se nenhum nível de dificuldade válido foi passado no filtro, retorna nenhuma pergunta
+        else: 
             perguntas_qs = perguntas_qs.none()
 
 
     # Aplicar filtro de categoria (incluindo descendentes)
     if category_ids_filter:
-        # Garante que apenas strings que representam inteiros sejam passadas para get_descendant_category_ids
         valid_category_ids_str_list = [cid for cid in category_ids_filter if cid.isdigit()]
         if valid_category_ids_str_list:
             descendant_ids = get_descendant_category_ids(valid_category_ids_str_list)
             if descendant_ids:
                 perguntas_qs = perguntas_qs.filter(categorias__pk__in=descendant_ids).distinct()
-            else: # Se get_descendant_category_ids retornar vazio (ex: categoria não existe)
+            else: 
                 perguntas_qs = perguntas_qs.none()
-        else: # Se a lista de category_ids_filter não contiver IDs válidos
+        else: 
              perguntas_qs = perguntas_qs.none()
 
 
@@ -113,8 +111,16 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
             perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids) 
         # Se menos perguntas disponíveis que o solicitado, usa todas as que correspondem (perguntas_qs já está assim)
     
+    # ADICIONADO: Lógica para aplicar limite de número de questões para modo personalizado (NÃO 'quick')
+    elif quiz_mode != 'quick' and num_questions_custom is not None and num_questions_custom > 0:
+        all_matching_question_ids = list(perguntas_qs.values_list('pk', flat=True))
+        if len(all_matching_question_ids) > num_questions_custom:
+            selected_ids = random.sample(all_matching_question_ids, num_questions_custom)
+            perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids)
+        # Se menos perguntas disponíveis que o solicitado, usa todas as que correspondem
+    
     # Prefetch e select_related para otimizar queries
-    perguntas_data_qs = perguntas_qs.prefetch_related('categorias', 'opcoes').distinct() # Adicionado distinct aqui também
+    perguntas_data_qs = perguntas_qs.prefetch_related('categorias', 'opcoes').distinct()
     
     # Coleta IDs das perguntas filtradas para buscar apenas opções relevantes
     filtered_pergunta_ids = [p.pk for p in perguntas_data_qs]
@@ -129,7 +135,7 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
     perguntas_data_list = [
         {'id_pergunta': p.pk, 'texto_pergunta': p.texto_pergunta, 'url_imagem': p.url_imagem,
          'referencia_bibliografica': p.referencia_bibliografica,
-         'categoria_ids': [cat.pk for cat in p.categorias.all()], # Categorias associadas à pergunta
+         'categoria_ids': [cat.pk for cat in p.categorias.all()], 
          'nivel_dificuldade': p.nivel_dificuldade,
          'explicacao_resposta': p.explicacao_resposta} for p in perguntas_data_qs
     ]
@@ -140,7 +146,7 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
     ]
     return {
         'perguntas': perguntas_data_list,
-        'categorias': categorias_data_list, # Sempre retorna todas as categorias para o painel de filtro
+        'categorias': categorias_data_list, 
         'opcoesResposta': opcoes_data_list
     }
 
@@ -153,20 +159,22 @@ def api_get_quiz_data_view(request):
     Parâmetros GET:
     - category_ids: string de IDs de categoria separados por vírgula (ex: "1,5,10")
     - difficulty_levels: string de níveis de dificuldade separados por vírgula (ex: "Fácil,Médio")
-                    (Os valores devem corresponder aos usados nos choices do modelo Pergunta, ex: "Fácil", "Médio", "Difícil")
     - mode: 'quick' para modo quiz rápido
     - count: número de perguntas para o modo quiz rápido (usado com mode=quick)
+    - num_questions: número de perguntas para o modo personalizado (quando não é 'quick') # <- ADICIONADO
     """
     category_ids_str = request.GET.get('category_ids')
     difficulty_levels_str = request.GET.get('difficulty_levels')
     quiz_mode_str = request.GET.get('mode')
     question_count_str = request.GET.get('count')
+    num_questions_custom_str = request.GET.get('num_questions') # ADICIONADO: Ler o novo parâmetro
 
     category_ids_filter = [cid.strip() for cid in category_ids_str.split(',') if cid.strip()] if category_ids_str else None
     difficulty_levels_filter = [diff.strip() for diff in difficulty_levels_str.split(',') if diff.strip()] if difficulty_levels_str else None
     
     quiz_mode = quiz_mode_str if quiz_mode_str else None
-    question_count = None
+    question_count = None # Para modo 'quick'
+    num_questions_custom_val = None # Para modo personalizado
 
     if quiz_mode == 'quick' and question_count_str:
         try:
@@ -175,12 +183,21 @@ def api_get_quiz_data_view(request):
                 question_count = None 
         except ValueError:
             question_count = None 
+    # ADICIONADO: Processar num_questions se não for modo 'quick'
+    elif num_questions_custom_str: 
+        try:
+            num_questions_custom_val = int(num_questions_custom_str)
+            if num_questions_custom_val <= 0: 
+                num_questions_custom_val = None 
+        except ValueError:
+            num_questions_custom_val = None 
 
     quiz_data = get_quiz_data_dict(
         category_ids_filter=category_ids_filter,
         difficulty_levels_filter=difficulty_levels_filter,
         quiz_mode=quiz_mode,
-        question_count=question_count
+        question_count=question_count,
+        num_questions_custom=num_questions_custom_val # ADICIONADO: Passar o valor processado
     )
     return JsonResponse(quiz_data)
 
@@ -190,23 +207,21 @@ def get_or_create_daily_stats(user):
     stats, created = EstatisticasDiariasUsuario.objects.get_or_create(
         id_usuario=user,
         data_estatistica=today
-        # Defaults podem ser omitidos se os campos do modelo tiverem default=0
     )
     return stats
 
 @login_required
 def home_view(request):
     daily_stats = None
-    accuracy_percentage_str = "0%" # Default
+    accuracy_percentage_str = "0%" 
 
     if request.user.is_authenticated:
         daily_stats = get_or_create_daily_stats(request.user)
         if daily_stats and daily_stats.perguntas_respondidas_dia > 0:
             accuracy = (daily_stats.acertos_dia / daily_stats.perguntas_respondidas_dia) * 100
             accuracy_percentage_str = f"{accuracy:.0f}%"
-        elif daily_stats: # daily_stats existe mas perguntas_respondidas_dia é 0
+        elif daily_stats: 
              accuracy_percentage_str = "0%"
-
 
     context = {
         'page_title': 'MedQuiz - Início',
@@ -256,25 +271,16 @@ def start_quiz_session_view(request):
         data = json.loads(request.body.decode('utf-8'))
         modo_quiz = data.get('modo_quiz')
         categoria_ids_str_list = data.get('categoria_ids', []) 
-        
-        # O frontend DEVE enviar este campo com os IDs das perguntas que compõem esta sessão
         question_ids_in_session = data.get('question_ids_in_session', []) 
         
         if not isinstance(question_ids_in_session, list) or not all(isinstance(qid, int) for qid in question_ids_in_session):
              return JsonResponse({'status': 'error', 'message': 'IDs de perguntas da sessão inválidos ou ausentes.'}, status=400)
 
-        # O total de perguntas da sessão é o número de IDs de perguntas recebidos
         total_perguntas_sessao = len(question_ids_in_session)
 
-        if not modo_quiz or total_perguntas_sessao < 0: # 0 é permitido se nenhuma pergunta for encontrada
+        if not modo_quiz or total_perguntas_sessao < 0: 
             return JsonResponse({'status': 'error', 'message': 'Dados inválidos para iniciar sessão (modo_quiz, total_perguntas_sessao).'}, status=400)
         
-        # Validação se o total de perguntas no payload corresponde aos IDs enviados,
-        # exceto se for um quiz rápido onde o count pode ser maior que o disponível.
-        # if 'total_perguntas_sessao' in data and int(data.get('total_perguntas_sessao', 0)) != total_perguntas_sessao and modo_quiz != "Rápido":
-        #     return JsonResponse({'status': 'error', 'message': 'Contagem de perguntas inconsistente.'}, status=400)
-
-
         nova_sessao = SessoesQuizUsuario.objects.create(
             id_usuario=request.user,
             modo_quiz=modo_quiz,
@@ -283,23 +289,19 @@ def start_quiz_session_view(request):
             data_inicio=timezone.now()
         )
         
-        # Se o modo for por categoria, podemos salvar as categorias selecionadas para referência
         if modo_quiz == 'Por Categoria' and categoria_ids_str_list:
             try:
-                # Filtra apenas IDs que são dígitos antes de converter
                 categoria_ids_int = [int(cat_id) for cat_id in categoria_ids_str_list if str(cat_id).strip().isdigit()]
                 if categoria_ids_int:
                     categorias_selecionadas_objs = Categoria.objects.filter(pk__in=categoria_ids_int)
                     nova_sessao.categorias_selecionadas.set(categorias_selecionadas_objs)
             except ValueError:
-                 # Não crítico, apenas log ou ignora se os IDs de categoria forem inválidos.
                 pass 
 
         return JsonResponse({'status': 'success', 'session_id': nova_sessao.pk})
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
     except Exception as e:
-        # Considerar logar o erro 'e' aqui para depuração no servidor
         return JsonResponse({'status': 'error', 'message': f'Erro interno ao iniciar sessão: {str(e)}'}, status=500)
 
 @login_required

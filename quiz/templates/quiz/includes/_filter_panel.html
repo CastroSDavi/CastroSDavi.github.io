@@ -23,6 +23,7 @@
                 {# As categorias serão populadas pelo JavaScript #}
             </ul>
         </div>
+
         <div class="filter-group" id="filter-group-difficulty">
             <h3 class="filter-group__title" id="filter-group-difficulty-title">Dificuldade</h3>
             <div class="chip-group" role="group" aria-labelledby="filter-group-difficulty-title">
@@ -43,6 +44,38 @@
                 <label for="diff-hard" class="chip-group__chip">Difícil</label>
             </div>
         </div>
+
+        {# ========================================================================== #}
+        {# ============ CAMPO NÚMERO DE QUESTÕES COM BOTÕES STEPPER ============ #}
+        {# ========================================================================== #}
+        <div class="filter-group" id="filter-group-num-questions">
+            <h3 class="filter-group__title" id="filter-group-num-questions-title">Número de Questões</h3>
+            <div class="form-group form-group--filter-panel">
+                <label for="num-questions-input" class="form-label u-sr-only">Quantidade de Questões</label>
+                
+                {# NOVO WRAPPER .numeric-stepper para o input e botões +/- #}
+                <div class="numeric-stepper">
+                    <button type="button" class="numeric-stepper__button numeric-stepper__button--decrement" aria-label="Diminuir quantidade de questões">
+                        <span class="material-symbols-outlined">remove</span>
+                    </button>
+                    <input type="number" id="num-questions-input" name="num_questions"
+                           class="form-control--filter-panel" {# A classe genérica .form-control pode ser removida se o CSS específico for suficiente #}
+                           placeholder="Qtd." {# Placeholder inicial bem curto, JS irá atualizar #}
+                           min="1" 
+                           step="1"
+                           aria-describedby="num-questions-feedback"> {# Para acessibilidade, associa com o texto de feedback #}
+                    <button type="button" class="numeric-stepper__button numeric-stepper__button--increment" aria-label="Aumentar quantidade de questões">
+                        <span class="material-symbols-outlined">add</span>
+                    </button>
+                </div>
+                
+                <small class="form-text-feedback form-text-feedback--filter-panel" id="num-questions-feedback">
+                    Carregando informações... {# Texto inicial enquanto JS não atualiza #}
+                </small>
+            </div>
+        </div>
+        {# =================== FIM DO CAMPO NÚMERO DE QUESTÕES =================== #}
+
     </div>
     <div class="filter-panel__footer">
         <button class="button button--secondary button--panel-footer" id="btn-limpar-filtros-painel">Limpar

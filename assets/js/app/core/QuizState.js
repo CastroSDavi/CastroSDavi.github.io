@@ -14,7 +14,9 @@ export default class QuizState {
         this.activeFiltersForCurrentSet = {
             category_ids: [],
             difficulty_levels: ['all'], // Default para 'all' se não especificado
+            num_questions: null, // NOVO: Filtro para número de questões (null significa "todas")
         };
+        console.log("QUIZSTATE.JS: Estado inicial dos filtros:", JSON.parse(JSON.stringify(this.activeFiltersForCurrentSet)));
     }
 
     initializeWithQuestions(questions) {
@@ -25,33 +27,42 @@ export default class QuizState {
             foiPulada: undefined,            // true se o usuário pulou a questão
         }));
         this.currentQuestionIndex = 0;
-        this.isInitialQuestionLoad = true;
+        this.isInitialQuestionLoad = true; // Resetar para a carga inicial de um novo conjunto
+        console.log("QUIZSTATE.JS: initializeWithQuestions - Quiz inicializado com", questions.length, "perguntas.");
     }
 
     resetQuizStateForNewSession() {
         this.currentQuestionsSet = [];
         this.currentQuestionIndex = 0;
         this.isInitialQuestionLoad = true;
-        // Não reseta isQuickQuizMode ou activeFiltersForCurrentSet aqui,
-        // pois eles são definidos antes de uma nova sessão começar.
+        // Nota: activeFiltersForCurrentSet e isQuickQuizMode NÃO são resetados aqui.
+        // Eles são redefinidos explicitamente antes de iniciar um novo tipo de quiz
+        // ou através do fullReset. Isso permite que o usuário possa, por exemplo,
+        // reiniciar um quiz com os mesmos filtros.
+        console.log("QUIZSTATE.JS: resetQuizStateForNewSession - Estado da sessão de quiz resetado (perguntas, índice).");
     }
 
-    // Reseta completamente, incluindo modo e filtros (para quando o usuário quer recomeçar do zero)
+    // Reseta completamente, incluindo modo e filtros (para quando o usuário quer recomeçar do zero do Hub)
     fullReset() {
-        this.resetQuizStateForNewSession();
+        this.resetQuizStateForNewSession(); // Reseta perguntas e índice
         this.isQuickQuizMode = false;
-        this.activeFiltersForCurrentSet = {
+        this.activeFiltersForCurrentSet = { // Reseta todos os filtros para o padrão
             category_ids: [],
             difficulty_levels: ['all'],
+            num_questions: null, // Número de questões volta para "todas"
         };
+        console.log("QUIZSTATE.JS: fullReset - Estado completo resetado, incluindo filtros:", JSON.parse(JSON.stringify(this.activeFiltersForCurrentSet)));
     }
 
-    setQuizModeAndFilters(isQuick, categories = [], difficulties = ['all']) {
+    // MODIFICADO: Adicionado numQuestions como parâmetro e no objeto activeFiltersForCurrentSet
+    setQuizModeAndFilters(isQuick, categories = [], difficulties = ['all'], numQuestions = null) {
         this.isQuickQuizMode = isQuick;
         this.activeFiltersForCurrentSet = {
             category_ids: categories,
             difficulty_levels: difficulties,
+            num_questions: numQuestions, // Armazena o filtro de número de questões
         };
+        console.log("QUIZSTATE.JS: setQuizModeAndFilters - Modo e filtros definidos. É rápido:", isQuick, "Filtros:", JSON.parse(JSON.stringify(this.activeFiltersForCurrentSet)));
     }
 
     getCurrentQuestion() {
@@ -67,8 +78,7 @@ export default class QuizState {
     }
 
     isQuizComplete() {
-        // O quiz é considerado completo se o índice ultrapassar o número de perguntas
-        return this.currentQuestionIndex >= this.currentQuestionsSet.length;
+        return this.currentQuestionIndex >= this.currentQuestionsSet.length && this.currentQuestionsSet.length > 0;
     }
 
     isFirstQuestion() {
@@ -76,66 +86,76 @@ export default class QuizState {
     }
 
     isLastQuestion() {
-        return this.currentQuestionIndex === this.currentQuestionsSet.length - 1;
+        // Verdadeiro se o índice atual é o último de um conjunto de questões não vazio
+        return this.currentQuestionsSet.length > 0 && this.currentQuestionIndex === this.currentQuestionsSet.length - 1;
     }
 
     recordAnswer(selectedOptionId, isCorrect) {
         const currentQuestion = this.getCurrentQuestion();
-        if (currentQuestion && currentQuestion.respostaDadaId === undefined) { // Só registra se não foi respondida
+        if (currentQuestion && currentQuestion.respostaDadaId === undefined) {
             currentQuestion.respostaDadaId = selectedOptionId;
             currentQuestion.foiCorretaNaSessao = isCorrect;
-            currentQuestion.foiPulada = false; // Se respondeu, não pulou
+            currentQuestion.foiPulada = false;
+            // console.log(`QUIZSTATE.JS: recordAnswer - Pergunta ID ${currentQuestion.id_pergunta} respondida. Correta: ${isCorrect}`);
             return true;
         }
+        // console.log(`QUIZSTATE.JS: recordAnswer - Não foi possível registrar resposta. Pergunta atual:`, currentQuestion);
         return false;
     }
 
     markAsSkipped() {
         const currentQuestion = this.getCurrentQuestion();
-        if (currentQuestion && currentQuestion.respostaDadaId === undefined) { // Só marca como pulada se não foi respondida
+        if (currentQuestion && currentQuestion.respostaDadaId === undefined) {
             currentQuestion.foiPulada = true;
-            currentQuestion.respostaDadaId = null; // ou um valor específico para pulada
-            currentQuestion.foiCorretaNaSessao = undefined; // Pulada não é correta nem incorreta
+            currentQuestion.respostaDadaId = null; 
+            currentQuestion.foiCorretaNaSessao = undefined;
+            // console.log(`QUIZSTATE.JS: markAsSkipped - Pergunta ID ${currentQuestion.id_pergunta} marcada como pulada.`);
             return true;
         }
         return false;
     }
 
     markNavigated() {
-        // Usado para indicar que o usuário já navegou além da primeira questão
-        // e a lógica de animação inicial pode não ser mais necessária.
-        this.isInitialQuestionLoad = false;
+        if (this.isInitialQuestionLoad) {
+            this.isInitialQuestionLoad = false;
+            // console.log("QUIZSTATE.JS: markNavigated - isInitialQuestionLoad definido como false.");
+        }
     }
 
     goToQuestion(index) {
         if (index >= 0 && index < this.currentQuestionsSet.length) {
             this.currentQuestionIndex = index;
-            this.markNavigated();
+            this.markNavigated(); // Usuário navegou, não é mais a carga inicial "pura"
+            // console.log(`QUIZSTATE.JS: goToQuestion - Movido para índice ${index}.`);
             return true;
         }
+        // console.log(`QUIZSTATE.JS: goToQuestion - Índice ${index} fora dos limites.`);
         return false;
     }
 
     goToNextQuestion() {
-        if (this.currentQuestionIndex < this.currentQuestionsSet.length) { // Permite ir uma além para marcar como completo
+        // Permite avançar até um índice além do último para indicar que o quiz terminou
+        if (this.currentQuestionIndex < this.currentQuestionsSet.length) {
             this.currentQuestionIndex++;
             this.markNavigated();
+            // console.log(`QUIZSTATE.JS: goToNextQuestion - Avançou para índice ${this.currentQuestionIndex}. Completo: ${this.isQuizComplete()}`);
             return true;
         }
-        return false; // Já está além da última ou no estado "completo"
+        // console.log(`QUIZSTATE.JS: goToNextQuestion - Não pôde avançar, já no final ou além. Índice: ${this.currentQuestionIndex}`);
+        return false;
     }
 
     goToPreviousQuestion() {
         if (this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
-            this.markNavigated(); // Mesmo voltando, a carga inicial já ocorreu
+            this.markNavigated();
+            // console.log(`QUIZSTATE.JS: goToPreviousQuestion - Voltou para índice ${this.currentQuestionIndex}.`);
             return true;
         }
+        // console.log(`QUIZSTATE.JS: goToPreviousQuestion - Já na primeira questão. Índice: ${this.currentQuestionIndex}`);
         return false;
     }
 
-    // Getter para obter as respostas do usuário para a sessão atual
-    // Pode ser útil para enviar ao backend ou para re-renderizar o grid de questões.
     getUserResponsesForCurrentSet() {
         return this.currentQuestionsSet.map(q => ({
             id_pergunta: q.id_pergunta,

@@ -5,8 +5,8 @@
 {% block title %}MedQuiz - Questões{% endblock title %}
 
 {% block content %}
-    <section id="question-section" class="main-section"> {# A classe u-is-hidden pode ser removida se esta página sempre mostra esta seção #}
-        <aside class="score-panel u-is-hidden"> {# O JS controlará a visibilidade disto ao iniciar um quiz #}
+    <section id="question-section" class="main-section">
+        <aside class="score-panel u-is-hidden">
             <div class="score-panel__timer">
                 <span id="timer-display" class="score-panel__timer-value">00:00</span>
                 <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
@@ -38,8 +38,7 @@
         </aside>
 
         <div class="question-section__main-content">
-            {# O Hub de Desafios será mostrado inicialmente nesta página #}
-            <div id="challenge-hub-container" class="challenge-hub"> {# Removido u-is-hidden para aparecer por padrão #}
+            <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__header">
                     <h2 class="challenge-hub__title">Escolha seu Desafio</h2>
                     <p class="challenge-hub__subtitle">Explore nosso banco de <span id="hub-total-questions-count">0</span> questões.</p>
@@ -66,7 +65,6 @@
                 </div>
             </div>
 
-            {# Estes ficam escondidos inicialmente e são controlados pelo JS #}
             <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
                 <div class="card__body">
                     <span class="material-symbols-outlined placeholder-icon">fact_check</span>
@@ -92,18 +90,31 @@
                 </div>
                 <span id="progress-text" class="progress-bar__text u-is-hidden">0 / 0</span>
 
-                <h2 id="question-title" tabindex="-1"><span id="id-questao">1</span><span id="categoria-titulo">Questão</span></h2>
+                {# ===== MODIFICAÇÃO NO WRAPPER DO TÍTULO E FAVORITO ===== #}
+                <div class="question-header-actions"> {# Este é o novo wrapper #}
+                    <h2 id="question-title" tabindex="-1">
+                        <span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
+                    </h2>
+                    <button class="favorite-star-action u-is-hidden" id="btn-toggle-favorite" 
+                            aria-label="Adicionar aos Favoritos" title="Adicionar aos Favoritos">
+                        <span class="material-symbols-outlined">star_outline</span>
+                    </button>
+                </div>
+                {# ===== FIM DA MODIFICAÇÃO ===== #}
 
                 <div class="card card--question-wrap">
                     <div class="card__body">
-                        <div class="question-display__text">
+                        {# O wrapper .question-display__text-wrapper foi removido daqui #}
+                        <div class="question-display__text"> {# O texto da pergunta agora está diretamente aqui #}
                             <p id="pergunta-texto">Carregando pergunta...</p>
                         </div>
+                        
                         <div class="question-display__content">
                             <div class="question-display__image-container">
                                 <img src="" alt="" id="pergunta-imagem" class="question-display__image u-is-hidden">
                             </div>
                             <div class="question-display__answers-list" id="respostas-container">
+                                {# As opções de resposta serão renderizadas aqui pelo JS #}
                             </div>
                             <span id="feedback-acessivel" class="u-sr-only" aria-live="polite" aria-atomic="true"></span>
                         </div>
@@ -114,6 +125,7 @@
                                 <span class="material-symbols-outlined button__icon">manage_search</span>
                                 <span class="button__label">Analisar Resposta</span>
                             </button>
+                            {# O botão de favoritar foi movido para cima, para o .question-header-actions #}
                         </div>
                     </div>
                 </div>
@@ -140,12 +152,10 @@
 
             <div class="card card--quiz-result u-is-hidden">
                 <div class="card__body quiz-results__body"> <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
-
                     <div class="quiz-results__primary-score">
                         <span class="quiz-results__primary-score-value" id="resultado-pontos">0</span>
                         <span class="quiz-results__primary-score-label">PONTOS</span>
                     </div>
-
                     <div class="quiz-results__secondary-stats">
                         <div class="stat-block"> <span class="material-symbols-outlined stat-block__icon">timer</span>
                             <span class="stat-block__label">Tempo</span>
@@ -160,10 +170,8 @@
                             <span class="stat-block__value" id="resultado-erros">0</span>
                         </div>
                     </div>
-
                     <p class="quiz-results__message" id="resultado-mensagem-motivacional">Continue praticando!</p>
                 </div>
-
                 <div class="card__footer quiz-results__actions">
                     <button id="btn-recomecar" class="button button--primary quiz-results__action-button">
                         <span class="material-symbols-outlined button__icon">refresh</span>
@@ -177,7 +185,6 @@
             </div>
             <div id="question-grid-container" class="question-grid u-is-hidden">
             </div>
-
          </div>
     </section>
 {% endblock content %}

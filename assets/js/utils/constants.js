@@ -8,9 +8,10 @@ export const API_URLS = {
     api_get_quiz_data: '/api/quiz/alldata/',       // Endpoint para buscar todos os dados do quiz (perguntas, categorias, opções)
     start_quiz_session: '/api/quiz/start-session/', // Endpoint para iniciar uma nova sessão de quiz
     register_answer: '/api/quiz/register-answer/', // Endpoint para registrar a resposta de um usuário a uma pergunta
-    end_quiz_session: '/api/quiz/end-session/'     // Endpoint para finalizar uma sessão de quiz
-    // Adicione outras URLs da API aqui conforme necessário.
-    // Ex: '/api/user/profile/', '/api/leaderboard/'
+    end_quiz_session: '/api/quiz/end-session/',
+    toggle_favorite_status: (perguntaId) => `/api/question/${perguntaId}/toggle_favorite/`,
+    get_favorite_questions: '/api/favorites/'     // Endpoint para finalizar uma sessão de quiz
+
 };
 
 /**

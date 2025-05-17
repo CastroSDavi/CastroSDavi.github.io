@@ -9,43 +9,44 @@ import ApiService from './services/ApiService.js';
 import QuizUI from '../ui/QuizUI.js';
 import ChallengeHub from '../ui/ChallengeHub.js';
 import LayoutManager from '../ui/LayoutManager.js';
-import FilterPanel from '../ui/FilterPanel.js'; // FilterPanel já importado
+import FilterPanel from '../ui/FilterPanel.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
-// A função debounce não é importada aqui, pois é usada internamente pelo FilterPanel.
 
 export default class App {
     constructor() {
         console.log("APP.JS: Constructor - Iniciando a aplicação MedQuiz.");
 
-        // Instanciação dos serviços e gerenciadores de dados/estado
-        this.apiService = new ApiService(); // ApiService é instanciado primeiro
+        this.apiService = new ApiService();
         this.userData = new UserData();
-        this.quizData = new QuizData(this.apiService); // QuizData depende de ApiService
+        this.quizData = new QuizData(this.apiService);
         this.quizState = new QuizState();
         this.layoutManager = new LayoutManager();
 
-        // Instanciação dos componentes de UI
         this.quizUI = new QuizUI(
             this.layoutManager.handleActiveSectionChange.bind(this.layoutManager)
         );
 
         if (!this.quizUI.elements.filterPanel) {
-            console.error("APP.JS: CRITICAL - Elemento do painel de filtros (filterPanel) não encontrado no DOM pela QuizUI. FilterPanel não será instanciado corretamente e suas funcionalidades podem falhar.");
+            console.error("APP.JS: CRITICAL - Elemento do painel de filtros (filterPanel) não encontrado no DOM pela QuizUI. FilterPanel não será instanciado corretamente.");
+            // Considerar não instanciar FilterPanel se o elemento não existe para evitar erros.
+            this.filterPanel = null; 
+        } else {
+            this.filterPanel = new FilterPanel(
+                this.quizUI.elements.filterPanel,
+                null, // QuizLogic (será injetado via setter)
+                this.quizState,
+                this.quizData,
+                this.quizUI,
+                this.apiService
+            );
         }
-        
-        // MODIFICADO: Passar this.apiService para o construtor do FilterPanel
-        this.filterPanel = new FilterPanel(
-            this.quizUI.elements.filterPanel, // O elemento DOM <aside>
-            null, // QuizLogic (será injetado via setter para evitar dependência circular no construtor)
-            this.quizState,
-            this.quizData,
-            this.quizUI,
-            this.apiService // Injetando ApiService aqui para que FilterPanel possa usá-lo
-        );
-        this.quizUI.setFilterPanelInstance(this.filterPanel); // QuizUI pode precisar de uma referência ao FilterPanel
+        if (this.quizUI && this.filterPanel) {
+            this.quizUI.setFilterPanelInstance(this.filterPanel);
+        }
+
 
         this.challengeHub = new ChallengeHub(
-            this.quizUI.elements,
+            this.quizUI.elements, // Passa todos os elementos cacheados da QuizUI
             null // QuizLogic será injetado via setter
         );
 
@@ -58,19 +59,24 @@ export default class App {
         );
 
         // Injeção de dependências cruzadas / Setters
-        this.challengeHub.setQuizLogic(this.quizLogic);
-        this.challengeHub.setQuizUI(this.quizUI);
+        if (this.challengeHub) {
+            this.challengeHub.setQuizLogic(this.quizLogic);
+            this.challengeHub.setQuizUI(this.quizUI); // Garante que ChallengeHub tenha referência à QuizUI
+        }
         
-        // FilterPanel agora recebe quizLogic via setter (ou pode ser diretamente se a ordem de instanciação permitir)
-        if(this.filterPanel) { // Garante que filterPanel foi instanciado
+        if(this.filterPanel) { 
             this.filterPanel.quizLogic = this.quizLogic; 
         }
 
-        this.quizLogic.setChallengeHub(this.challengeHub);
-        this.quizLogic.setFilterPanel(this.filterPanel);
-
-        this.quizUI.setQuizState(this.quizState);
-        this.quizUI.setQuizData(this.quizData);
+        if(this.quizLogic){
+            this.quizLogic.setChallengeHub(this.challengeHub);
+            this.quizLogic.setFilterPanel(this.filterPanel);
+        }
+        
+        if(this.quizUI){
+            this.quizUI.setQuizState(this.quizState);
+            this.quizUI.setQuizData(this.quizData);
+        }
 
         console.log("APP.JS: Constructor - Todas as instâncias principais criadas e dependências configuradas.");
     }
@@ -78,17 +84,24 @@ export default class App {
     async initialize() {
         console.log("APP.JS: initialize - Iniciando a lógica de inicialização da aplicação.");
         try {
+            // _checkUserAuthentication na QuizUI é chamado em seu construtor,
+            // então this.quizUI.userIsAuthenticated já deve estar definido.
+            
+            // fetchInitialData não precisa mais do user como argumento,
+            // pois a view Django api_get_quiz_data_view usa request.user.
             const initialDataLoaded = await this.quizData.fetchInitialData();
 
             if (initialDataLoaded) {
                 console.log("APP.JS: initialize - Dados iniciais carregados com sucesso.");
-                this.challengeHub.updateTotalQuestionsCount(this.quizData.getTotalPerguntasParaHub());
-                this.challengeHub.updateQuickQuizCount(QUICK_QUIZ_COUNT);
+                if (this.challengeHub) { // Verifica se challengeHub foi instanciado
+                    this.challengeHub.updateTotalQuestionsCount(this.quizData.getTotalPerguntasParaHub());
+                    this.challengeHub.updateQuickQuizCount(QUICK_QUIZ_COUNT);
+                }
 
-                this.setupEventListeners();
+                this.setupEventListeners(); // Configura listeners primeiro
                 console.log("APP.JS: initialize - Event listeners configurados.");
 
-                this.determineInitialSection();
+                this.determineInitialSection(); // Depois determina a seção e carrega dados específicos da seção
                 console.log("APP.JS: initialize - Seção inicial determinada e exibida.");
 
             } else {
@@ -103,9 +116,11 @@ export default class App {
 
     setupEventListeners() {
         console.log("APP.JS: setupEventListeners - Configurando listeners da aplicação.");
-        this.quizUI.setupGlobalEventListeners(this.quizLogic);
+        if (this.quizUI) { // Verifica se quizUI foi instanciado
+            this.quizUI.setupGlobalEventListeners(this.quizLogic);
+        }
 
-        if (this.filterPanel && this.quizUI.elements.filterPanel) {
+        if (this.filterPanel && this.quizUI && this.quizUI.elements.filterPanel) {
             this.filterPanel.setupEventListeners();
         } else {
             console.warn("APP.JS: setupEventListeners - FilterPanel ou seu elemento DOM não encontrado. Listeners do painel de filtros não serão configurados.");
@@ -118,15 +133,15 @@ export default class App {
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 let wasHandled = false;
-                if (this.quizUI.elements.filterPanel?.classList.contains('filter-panel--visible')) {
+                if (this.quizUI && this.quizUI.elements.filterPanel?.classList.contains('filter-panel--visible')) {
                     this.quizUI.toggleFilterPanel(false);
                     wasHandled = true;
                 }
-                if (!wasHandled && this.quizUI.elements.explanationModalOverlay?.classList.contains('modal--visible')) {
+                if (!wasHandled && this.quizUI && this.quizUI.elements.explanationModalOverlay?.classList.contains('modal--visible')) {
                     this.quizUI.toggleExplanationModal(false);
                     wasHandled = true;
                 }
-                if (!wasHandled && this.quizUI.elements.confirmEncerrarOverlay?.classList.contains('modal--visible')) {
+                if (!wasHandled && this.quizUI && this.quizUI.elements.confirmEncerrarOverlay?.classList.contains('modal--visible')) {
                     this.quizUI.toggleConfirmModal(false);
                 }
             }
@@ -144,42 +159,57 @@ export default class App {
 
     determineInitialSection() {
         console.log("APP.JS: determineInitialSection - Determinando seção inicial.");
+        if (!this.quizUI) {
+            console.error("APP.JS: determineInitialSection - QuizUI não está instanciada. Não é possível determinar a seção.");
+            return;
+        }
+
         const homeSectionEl = this.quizUI.elements.homeSection;
         const questionSectionEl = this.quizUI.elements.questionSection;
         const accountSectionEl = this.quizUI.elements.accountSection;
 
+        // Esconder todas as seções principais primeiro para evitar overlap
+        if(homeSectionEl) this.quizUI.hideElement(homeSectionEl);
+        if(questionSectionEl) this.quizUI.hideElement(questionSectionEl);
+        if(accountSectionEl) this.quizUI.hideElement(accountSectionEl);
+
+        // Determina qual seção mostrar com base no ID do elemento presente no HTML
         if (document.getElementById('home-section') && homeSectionEl) {
             this.quizUI.currentSection = 'home-section';
             this.quizUI.showElement(homeSectionEl);
-            this.quizUI.hideElement(questionSectionEl);
-            this.quizUI.hideElement(accountSectionEl);
         } else if (document.getElementById('question-section') && questionSectionEl) {
-            this.quizUI.currentSection = 'question-section-page';
+            this.quizUI.currentSection = 'question-section';
             this.quizUI.showElement(questionSectionEl);
-            if (this.challengeHub) this.challengeHub.showHub();
-            this.quizUI.hideElement(this.quizUI.elements.placeholderFiltrosContainer);
-            this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
-            this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
-            this.quizUI.hideElement(this.quizUI.elements.scorePanel);
-            this.quizUI.hideElement(homeSectionEl);
-            this.quizUI.hideElement(accountSectionEl);
+            if (this.challengeHub) this.challengeHub.showHub(); // Mostra o hub por padrão na página de questões
+            if (this.quizUI.elements.placeholderFiltrosContainer) this.quizUI.hideElement(this.quizUI.elements.placeholderFiltrosContainer);
+            if (this.quizUI.elements.quizSectionContent) this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
+            if (this.quizUI.elements.resultadoCard) this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
+            if (this.quizUI.elements.scorePanel) this.quizUI.hideElement(this.quizUI.elements.scorePanel);
         } else if (document.getElementById('account-section-page') && accountSectionEl) {
             this.quizUI.currentSection = 'account-section-page';
             this.quizUI.showElement(accountSectionEl);
-            this.quizUI.hideElement(homeSectionEl);
-            this.quizUI.hideElement(questionSectionEl);
+            // <<< CHAMADA PARA CARREGAR QUESTÕES FAVORITAS >>>
+            if (this.quizLogic) { 
+                // O método loadAndDisplayFavoriteQuestions em QuizLogic já verifica a autenticação
+                this.quizLogic.loadAndDisplayFavoriteQuestions();
+            }
         } else {
-            console.warn("APP.JS: determineInitialSection - Nenhuma seção principal identificada, tentando mostrar home.");
-            this.quizUI.currentSection = 'home-section';
+            console.warn("APP.JS: determineInitialSection - Nenhuma seção principal identificada, tentando mostrar 'home-section'.");
+            this.quizUI.currentSection = 'home-section'; // Fallback
             if (homeSectionEl) this.quizUI.showElement(homeSectionEl);
         }
         
-        this.layoutManager.handleActiveSectionChange(this.quizUI.currentSection);
+        if (this.layoutManager) {
+            this.layoutManager.handleActiveSectionChange(this.quizUI.currentSection);
+        }
         console.log("APP.JS: determineInitialSection - Seção ativa definida como:", this.quizUI.currentSection);
 
+        // Atualiza a contagem de questões no hub da home page, se estivermos na home
         if (this.quizUI.currentSection === 'home-section') {
             const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
-            if (totalQuestionsSpanHome && this.quizData) {
+            // Verifica se o span existe, se quizData está carregado, e se o span é diferente do que ChallengeHub usa
+            if (totalQuestionsSpanHome && this.quizData && this.quizData.isInitialFetchDone &&
+                this.quizUI.elements.hubTotalQuestionsCount !== totalQuestionsSpanHome) {
                  totalQuestionsSpanHome.textContent = this.quizData.getTotalPerguntasParaHub() || '0';
             }
         }
@@ -193,6 +223,7 @@ export default class App {
             if (!errorDisplay) {
                 errorDisplay = document.createElement('div');
                 errorDisplay.className = 'app-critical-error-display card';
+                // Aplicar estilos de forma mais robusta
                 errorDisplay.style.padding = 'var(--spacing-lg, 30px)'; 
                 errorDisplay.style.margin = 'var(--spacing-xl, 40px) auto';
                 errorDisplay.style.maxWidth = '600px';
@@ -213,6 +244,7 @@ export default class App {
             this.disableCoreFunctionality();
         } catch (uiError) {
             console.error("APP.JS: handleLoadError - Erro ao tentar manipular UI para exibir erro:", uiError);
+            // Fallback muito simples se tudo mais falhar
             document.body.innerHTML = `<div style="padding:20px;text-align:center;color:red;background:white;border:1px solid red;font-family:sans-serif;">${message}</div>`;
         }
     }
@@ -235,6 +267,7 @@ export default class App {
             if (title) title.textContent = "Funcionalidade Indisponível";
             const subtitle = hubContainer.querySelector('.challenge-hub__subtitle');
             if (subtitle) subtitle.textContent = "Não foi possível carregar os dados necessários.";
+            // Se estiver na página de questões e o hub estiver escondido, mostre-o com a mensagem de erro.
             if (document.getElementById('question-section') && hubContainer.classList.contains('u-is-hidden') && this.quizUI) {
                  this.quizUI.showElement(hubContainer);
             }

@@ -12,7 +12,8 @@ from django.db.models import Q # Para queries OR complexas
 
 from .models import (
     Pergunta, Categoria, OpcaoResposta,
-    SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario
+    SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
+    QuestaoFavorita # << NOVO IMPORT
 )
 from .forms import CustomUserCreationForm
 
@@ -56,8 +57,8 @@ def get_descendant_category_ids(category_ids_str_list):
     return all_descendant_ids
 
 
-# MODIFICADO: Adicionado num_questions_custom à assinatura e lógica
-def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, quiz_mode=None, question_count=None, num_questions_custom=None):
+# MODIFICADO: Adicionado user à assinatura para buscar favoritos
+def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, quiz_mode=None, question_count=None, num_questions_custom=None, user=None):
     """
     Monta o dicionário de dados do quiz, com filtros opcionais.
     - category_ids_filter: lista de strings de IDs de categorias para filtrar perguntas.
@@ -65,6 +66,7 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
     - quiz_mode: 'quick' para selecionar um número aleatório de perguntas.
     - question_count: número de perguntas para o modo 'quick'.
     - num_questions_custom: número de perguntas para o modo personalizado (quando não é 'quick').
+    - user: o objeto User atual, para verificar questões favoritas.
     """
     todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
     
@@ -111,7 +113,7 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
             perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids) 
         # Se menos perguntas disponíveis que o solicitado, usa todas as que correspondem (perguntas_qs já está assim)
     
-    # ADICIONADO: Lógica para aplicar limite de número de questões para modo personalizado (NÃO 'quick')
+    # Lógica para aplicar limite de número de questões para modo personalizado (NÃO 'quick')
     elif quiz_mode != 'quick' and num_questions_custom is not None and num_questions_custom > 0:
         all_matching_question_ids = list(perguntas_qs.values_list('pk', flat=True))
         if len(all_matching_question_ids) > num_questions_custom:
@@ -122,9 +124,17 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
     # Prefetch e select_related para otimizar queries
     perguntas_data_qs = perguntas_qs.prefetch_related('categorias', 'opcoes').distinct()
     
-    # Coleta IDs das perguntas filtradas para buscar apenas opções relevantes
+    # Coleta IDs das perguntas filtradas para buscar apenas opções relevantes e status de favorito
     filtered_pergunta_ids = [p.pk for p in perguntas_data_qs]
     opcoes_data_qs = OpcaoResposta.objects.filter(pergunta__pk__in=filtered_pergunta_ids).select_related('pergunta')
+
+    # Buscar favoritos do usuário se o usuário estiver autenticado
+    user_favorite_ids = set()
+    if user and user.is_authenticated: # << VERIFICAÇÃO ADICIONADA
+        user_favorite_ids = set(QuestaoFavorita.objects.filter(
+            usuario=user, 
+            pergunta__pk__in=filtered_pergunta_ids
+        ).values_list('pergunta__pk', flat=True))
 
     # Serialização
     categorias_data_list = [
@@ -137,7 +147,9 @@ def get_quiz_data_dict(category_ids_filter=None, difficulty_levels_filter=None, 
          'referencia_bibliografica': p.referencia_bibliografica,
          'categoria_ids': [cat.pk for cat in p.categorias.all()], 
          'nivel_dificuldade': p.nivel_dificuldade,
-         'explicacao_resposta': p.explicacao_resposta} for p in perguntas_data_qs
+         'explicacao_resposta': p.explicacao_resposta,
+         'is_favorited': p.pk in user_favorite_ids if user and user.is_authenticated else False # << NOVO CAMPO
+        } for p in perguntas_data_qs
     ]
     opcoes_data_list = [
         {'id_opcao_resposta': o.pk, 'id_pergunta': o.pergunta.pk, 'texto_opcao': o.texto_opcao,
@@ -161,13 +173,13 @@ def api_get_quiz_data_view(request):
     - difficulty_levels: string de níveis de dificuldade separados por vírgula (ex: "Fácil,Médio")
     - mode: 'quick' para modo quiz rápido
     - count: número de perguntas para o modo quiz rápido (usado com mode=quick)
-    - num_questions: número de perguntas para o modo personalizado (quando não é 'quick') # <- ADICIONADO
+    - num_questions: número de perguntas para o modo personalizado (quando não é 'quick')
     """
     category_ids_str = request.GET.get('category_ids')
     difficulty_levels_str = request.GET.get('difficulty_levels')
     quiz_mode_str = request.GET.get('mode')
     question_count_str = request.GET.get('count')
-    num_questions_custom_str = request.GET.get('num_questions') # ADICIONADO: Ler o novo parâmetro
+    num_questions_custom_str = request.GET.get('num_questions')
 
     category_ids_filter = [cid.strip() for cid in category_ids_str.split(',') if cid.strip()] if category_ids_str else None
     difficulty_levels_filter = [diff.strip() for diff in difficulty_levels_str.split(',') if diff.strip()] if difficulty_levels_str else None
@@ -183,7 +195,6 @@ def api_get_quiz_data_view(request):
                 question_count = None 
         except ValueError:
             question_count = None 
-    # ADICIONADO: Processar num_questions se não for modo 'quick'
     elif num_questions_custom_str: 
         try:
             num_questions_custom_val = int(num_questions_custom_str)
@@ -197,7 +208,8 @@ def api_get_quiz_data_view(request):
         difficulty_levels_filter=difficulty_levels_filter,
         quiz_mode=quiz_mode,
         question_count=question_count,
-        num_questions_custom=num_questions_custom_val # ADICIONADO: Passar o valor processado
+        num_questions_custom=num_questions_custom_val,
+        user=request.user # << PASSAR O USUÁRIO AQUI
     )
     return JsonResponse(quiz_data)
 
@@ -324,7 +336,7 @@ def register_answer_view(request):
         opcao_selecionada = None
         foi_correta_calc = None 
 
-        if opcao_id_str is not None:
+        if opcao_id_str is not None: # Permite null para registrar pulo
             try:
                 opcao_selecionada = get_object_or_404(OpcaoResposta, pk=int(opcao_id_str), pergunta=pergunta)
                 foi_correta_calc = opcao_selecionada.eh_correta
@@ -332,6 +344,8 @@ def register_answer_view(request):
                 return JsonResponse({'status': 'error', 'message': 'ID da opção de resposta inválido.'}, status=400)
             except OpcaoResposta.DoesNotExist:
                  return JsonResponse({'status': 'error', 'message': 'Opção de resposta inválida para a pergunta fornecida.'}, status=400)
+        else: # Se opcao_id_str é None, significa que a pergunta foi pulada
+            foi_correta_calc = None # Ou False, dependendo de como quer tratar pulos na pontuação
         
         resposta_usuario, created = RespostasUsuarioPorSessao.objects.update_or_create(
             id_sessao_quiz=sessao_quiz,
@@ -345,6 +359,7 @@ def register_answer_view(request):
 
         respostas_da_sessao = RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_quiz)
         total_acertos_sessao = respostas_da_sessao.filter(foi_correta=True).count()
+        # Contar como erro apenas se uma opção foi selecionada e estava errada
         total_erros_sessao = respostas_da_sessao.filter(foi_correta=False, id_opcao_resposta_selecionada__isnull=False).count()
 
         sessao_quiz.total_acertos = total_acertos_sessao
@@ -396,9 +411,10 @@ def end_quiz_session_view(request):
 
         stats = get_or_create_daily_stats(request.user)
         
+        # Contar apenas perguntas que foram efetivamente respondidas (não apenas "vistas" ou puladas sem resposta)
         perguntas_respondidas_nesta_sessao = RespostasUsuarioPorSessao.objects.filter(
             id_sessao_quiz=sessao_quiz
-        ).exclude(id_opcao_resposta_selecionada__isnull=True).count()
+        ).exclude(id_opcao_resposta_selecionada__isnull=True).count() # Exclui as que não tiveram opção selecionada
 
         stats.perguntas_respondidas_dia += perguntas_respondidas_nesta_sessao
         stats.acertos_dia += sessao_quiz.total_acertos 
@@ -419,3 +435,68 @@ def end_quiz_session_view(request):
         return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': f'Erro interno ao finalizar sessão: {str(e)}'}, status=500)
+
+# --- VIEWS PARA FAVORITAR QUESTÕES ---
+
+@login_required
+@require_POST
+def toggle_favorite_status_view(request, pergunta_id):
+    pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+    favorito, created = QuestaoFavorita.objects.get_or_create(usuario=request.user, pergunta=pergunta)
+
+    if not created:
+        # Se já existia (created=False), então estamos desfavoritando
+        favorito.delete()
+        is_favorited_now = False
+        message = "Questão removida dos favoritos."
+    else:
+        # Se foi criado (created=True), então estamos favoritando
+        is_favorited_now = True
+        message = "Questão adicionada aos favoritos."
+
+    return JsonResponse({'status': 'success', 'is_favorited': is_favorited_now, 'message': message})
+
+@login_required
+@require_GET
+def get_favorite_questions_view(request):
+    favoritos = QuestaoFavorita.objects.filter(usuario=request.user).select_related('pergunta').order_by('-data_favoritada')
+    
+    perguntas_favoritas_data = []
+    todas_categorias_qs = Categoria.objects.all() # Para obter nomes de categoria
+    
+    for fav in favoritos:
+        p = fav.pergunta
+        # Coletar IDs das categorias da pergunta favorita
+        categoria_ids_da_pergunta = [cat.pk for cat in p.categorias.all()]
+        
+        # Coletar opções para a pergunta favorita
+        opcoes_da_pergunta = OpcaoResposta.objects.filter(pergunta=p).order_by('ordem_exibicao')
+        opcoes_data_list = [
+            {'id_opcao_resposta': o.pk, 'id_pergunta': o.pergunta.pk, 'texto_opcao': o.texto_opcao,
+             'eh_correta': o.eh_correta, 'ordem_exibicao': o.ordem_exibicao,
+             'feedback_opcao': o.feedback_opcao} for o in opcoes_da_pergunta
+        ]
+
+        perguntas_favoritas_data.append({
+            'id_pergunta': p.pk,
+            'texto_pergunta': p.texto_pergunta,
+            'url_imagem': p.url_imagem,
+            'referencia_bibliografica': p.referencia_bibliografica,
+            'categoria_ids': categoria_ids_da_pergunta,
+            'nivel_dificuldade': p.nivel_dificuldade,
+            'explicacao_resposta': p.explicacao_resposta,
+            'opcoes': opcoes_data_list,
+            'data_favoritada': fav.data_favoritada.isoformat()
+        })
+
+    categorias_data_list = [
+        {'id_categoria': c.pk, 'nome_categoria': c.nome_categoria,
+         'id_categoria_pai': c.id_categoria_pai.pk if c.id_categoria_pai else None,
+         'descricao_categoria': c.descricao_categoria} for c in todas_categorias_qs
+    ]
+
+    return JsonResponse({
+        'status': 'success',
+        'favorite_questions': perguntas_favoritas_data,
+        'all_categories_for_mapping': categorias_data_list
+    })

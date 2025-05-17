@@ -1,4 +1,8 @@
-{# quiz/templates/quiz/account_page.html #}
+
+profile-info-table th, .profile-info-table td {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--color-gray-200);
+    }{# quiz/templates/quiz/account_page.html #}
 {% extends "quiz/base.html" %}
 {% load static %}
 
@@ -38,14 +42,10 @@
                      </tr>
                  </tbody>
              </table>
-
-             {# FUTURO: Formulário para editar perfil aqui #}
-             {# <form method="post" action="{% url 'quiz:update_profile' %}" class="profile-form"> ... </form> #}
              
              <div class="profile-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
                 <a href="{% url 'password_change' %}" class="button button--secondary" style="width: 100%;">Alterar Senha</a>
                 
-                {# Formulário de Logout #}
                 <form method="post" action="{% url 'logout' %}" style="display: inline; margin: 0;">
                     {% csrf_token %}
                     <button type="submit" class="button button--outline" style="width: 100%; border-color: var(--color-accent-red); color: var(--color-accent-red); cursor: pointer;">Sair (Logout)</button>
@@ -53,24 +53,41 @@
              </div>
          </div>
      </div>
+
+     <div class="card card--conta-perfil" id="favorite-questions-section" style="max-width: 700px; margin: 30px auto 40px auto;">
+        <h3 class="card__title">Minhas Questões Favoritas</h3>
+        <div class="card__body" id="favorite-questions-container">
+            <p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>
+            {# O JavaScript irá popular esta área. 
+               As classes usadas pelo JS para popular serão:
+               - favorite-question-item
+               - favorite-question-link
+               - favorite-question-details
+               - favorite-question-categories
+               - favorite-question-date
+            #}
+        </div>
+        <div class="card__footer u-is-hidden" id="favorite-questions-empty-state" style="text-align:center; padding-top: var(--spacing-md, 20px); border-top: 1px solid var(--color-gray-200);">
+            <span class="material-symbols-outlined" style="font-size: 2.5rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">playlist_add_check</span>
+            <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Você ainda não favoritou nenhuma questão.</p>
+            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 5px;">Use o ícone <span class="material-symbols-outlined" style="font-size: 1em; vertical-align: middle; color: var(--color-accent-yellow, gold);">star_outline</span> durante os quizzes para salvar questões aqui!</p>
+        </div>
+     </div>
 </section>
 
 <style>
-    .profile-info-table th, .profile-info-table td {
-        padding: 8px 0;
-        border-bottom: 1px solid var(--color-gray-200);
-    }
     .profile-info-table th {
         font-weight: var(--font-weight-medium);
         color: var(--color-text-secondary);
     }
-     .profile-info-table tr:last-child th,
-     .profile-info-table tr:last-child td {
+    .profile-info-table tr:last-child th,
+    .profile-info-table tr:last-child td {
         border-bottom: none;
     }
     /* Garante que o formulário não adicione margens extras inesperadas */
     .profile-actions form {
-        margin-bottom: 0; /* Remove margem inferior padrão do formulário, se houver */
-    }
+        margin-bottom: 0; 
+    }/* Remove margem inferior padrão do formulário, se houver */
 </style>
+
 {% endblock content %}

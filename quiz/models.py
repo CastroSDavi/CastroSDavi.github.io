@@ -297,3 +297,27 @@ class EstatisticasDiariasUsuario(models.Model):
         verbose_name_plural = "Estatísticas Diárias dos Usuários"
         unique_together = ('id_usuario', 'data_estatistica')
         ordering = ['id_usuario', '-data_estatistica']
+        
+class QuestaoFavorita(models.Model):
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='questoes_favoritas',
+        verbose_name="Usuário"
+    )
+    pergunta = models.ForeignKey(
+        Pergunta,
+        on_delete=models.CASCADE,
+        related_name='favoritada_por',
+        verbose_name="Pergunta"
+    )
+    data_favoritada = models.DateTimeField(auto_now_add=True, verbose_name="Data de Inclusão nos Favoritos")
+
+    class Meta:
+        verbose_name = "Questão Favorita"
+        verbose_name_plural = "Questões Favoritas"
+        unique_together = ('usuario', 'pergunta') # Garante que um usuário não favorite a mesma questão múltiplas vezes
+        ordering = ['-data_favoritada']
+
+    def __str__(self):
+        return f"'{self.pergunta.texto_pergunta[:30]}...' favorita de {self.usuario.username}"

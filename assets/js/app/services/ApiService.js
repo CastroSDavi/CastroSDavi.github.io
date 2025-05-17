@@ -23,6 +23,7 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
             // e se não for uma string vazia (para evitar ?param=)
             if (paramValue !== undefined && paramValue !== null && paramValue.toString().trim() !== '') {
                 if (Array.isArray(paramValue)) {
+                    // Se for um array, adiciona cada valor como um parâmetro separado com a mesma chave
                     paramValue.forEach(value => {
                         if (value.toString().trim() !== '') { // Garante que valores do array não sejam vazios
                             url.searchParams.append(key, value.toString());
@@ -39,7 +40,7 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
         method,
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'), 
+            'X-CSRFToken': getCookie('csrftoken'), // Essencial para requisições POST/PUT etc. no Django
         },
     };
 
@@ -50,22 +51,28 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
     try {
         console.log(`ApiService: Enviando ${method} para ${url.toString()}`, options.body ? `corpo: ${options.body}` : '');
         const response = await fetch(url.toString(), options);
+        // Tenta parsear JSON mesmo para respostas não-ok, pois podem conter mensagens de erro úteis.
+        // Se o status for 204 (No Content), não haverá corpo para parsear.
         const responseData = response.status !== 204 ? await response.json().catch(() => null) : null;
 
         if (!response.ok) {
+            // Tenta obter a mensagem de erro do corpo da resposta, senão usa o statusText.
             const errorMessage = responseData?.message || responseData?.detail || `API Error: ${response.status} ${response.statusText}`;
             console.error(`ApiService Error (${method} ${url.pathname}): Status ${response.status}`, responseData || response.statusText);
             const error = new Error(errorMessage);
-            error.response = response;
-            error.data = responseData;
+            error.response = response; // Anexa a resposta completa ao erro para depuração
+            error.data = responseData; // Anexa os dados parseados (se houver) ao erro
             throw error;
         }
         // console.log(`ApiService: Resposta de ${method} ${url.pathname}:`, responseData);
         return responseData;
     } catch (error) {
+        // Se o erro já tem 'response', ele foi lançado pelo bloco 'if (!response.ok)'
+        // Caso contrário, é provavelmente um erro de rede ou falha na requisição fetch.
         if (!error.response) {
             console.error(`ApiService Network/Request Error (${method} ${url.pathname}):`, error.message, error);
         }
+        // Relança o erro para ser tratado pelo chamador.
         throw error;
     }
 }
@@ -79,12 +86,13 @@ export default class ApiService {
      * @param {string} [filterParams.mode] - Modo do quiz (ex: 'quick').
      * @param {number} [filterParams.count] - Número de questões para o modo 'quick'.
      * @param {number|null} [filterParams.num_questions] - Número de questões para modo personalizado.
+     * @param {Object|null} [filterParams.user] - Objeto usuário (se necessário para o backend, ex: ver favoritos na listagem).
      * @returns {Promise<Object|null>} Dados do quiz.
      */
     async fetchQuizData(filterParams = {}) {
         const queryParams = {};
 
-        if (filterParams.category_ids?.length > 0) { // Verifica se existe e tem itens
+        if (filterParams.category_ids?.length > 0) {
             queryParams.category_ids = filterParams.category_ids.join(',');
         }
 
@@ -92,20 +100,19 @@ export default class ApiService {
             queryParams.difficulty_levels = filterParams.difficulty_levels.join(',');
         }
 
-        // Lógica para modo 'quick' vs. 'num_questions' personalizado
         if (filterParams.mode === 'quick') {
             queryParams.mode = filterParams.mode;
             if (filterParams.count && Number.isInteger(filterParams.count) && filterParams.count > 0) {
                 queryParams.count = filterParams.count;
             }
         } else if (filterParams.num_questions && Number.isInteger(filterParams.num_questions) && filterParams.num_questions > 0) {
-            // Se não for 'quick' e num_questions for válido, adiciona-o.
-            // O backend (views.py) já foi ajustado para usar num_questions_custom
-            // quando 'mode' não é 'quick'.
             queryParams.num_questions = filterParams.num_questions;
         }
-        // Se nenhum 'mode' ou 'num_questions' específico for passado para um quiz não-rápido,
-        // o backend retornará todas as questões que correspondem aos filtros de categoria/dificuldade.
+        
+        // O backend já foi ajustado para usar request.user diretamente em api_get_quiz_data_view
+        // para determinar o status de favorito, então não precisamos passar o usuário aqui explicitamente
+        // para esse propósito específico em fetchQuizData.
+        // No entanto, se 'user' fosse usado para outros filtros no backend, poderia ser adicionado.
 
         console.log("APISERVICE.JS: fetchQuizData - Query params a serem enviados para _request:", queryParams);
         return _request(API_URLS.api_get_quiz_data, 'GET', null, queryParams);
@@ -139,5 +146,25 @@ export default class ApiService {
     async endQuizSession(sessionEndData) {
         // sessionEndData: { session_id: number, tempo_total_segundos: number }
         return _request(API_URLS.end_quiz_session, 'POST', sessionEndData);
+    }
+
+    /**
+     * Adiciona ou remove uma pergunta dos favoritos do usuário.
+     * @param {number} perguntaId - O ID da pergunta.
+     * @returns {Promise<Object|null>} Resposta da API indicando o novo status de favorito.
+     */
+    async toggleFavoriteStatus(perguntaId) {
+        const endpoint = API_URLS.toggle_favorite_status(perguntaId);
+        // O corpo da requisição POST pode ser vazio se a informação principal (perguntaId) está na URL
+        // e o usuário é identificado pela sessão/token CSRF.
+        return _request(endpoint, 'POST', {});
+    }
+
+    /**
+     * Busca as questões favoritas do usuário logado.
+     * @returns {Promise<Object|null>} Dados das questões favoritas.
+     */
+    async getFavoriteQuestions() {
+        return _request(API_URLS.get_favorite_questions, 'GET');
     }
 }

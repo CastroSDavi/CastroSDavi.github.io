@@ -103,7 +103,7 @@
     opacity: 0.6;
 }
 
-/* Botão apenas com ícone */
+/* Botão apenas com ícone (base para o botão de favorito antes da remoção das classes .button) */
 .button--icon-only {
     padding: var(--spacing-xs, 8px); /* Padding igual em todos os lados */
     min-width: var(--button-min-height, 40px); /* Garante que seja quadrado ou redondo */
@@ -232,28 +232,24 @@
 }
 
 /* ESTILOS REFINADOS PARA O BOTÃO "ANALISAR RESPOSTA" USANDO SEU ID */
-/* Aplicado ao <button id="btn-toggle-explanation" class="button u-is-hidden">...</button> */
 #btn-toggle-explanation {
-    /* Herda display, align-items, justify-content, vertical-align, cursor, user-select da classe .button */
-    /* Sobrescrevendo ou complementando estilos de .button */
-    background-color: transparent; /* Fundo transparente */
-    color: var(--color-primary-dark); /* Cor do texto e ícone */
-    border: 1.5px solid var(--color-primary-dark); /* Borda na cor secundária verde */
-    border-radius: var(--border-radius-lg); /* Cantos elegantemente arredondados */
-    padding: var(--spacing-xs, 8px) var(--spacing-md, 16px); /* Padding interno */
-    font-family: var(--font-family-heading); /* Fonte consistente */
+    /* Herda de .button */
+    background-color: transparent;
+    color: var(--color-primary-dark);
+    border: 1.5px solid var(--color-primary-dark);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xs, 8px) var(--spacing-md, 16px);
+    font-family: var(--font-family-heading);
     font-weight: var(--font-weight-medium);
     font-size: var(--font-size-sm, 0.9rem);
     letter-spacing: 0.4px;
-    box-shadow: none; /* Sem sombra por padrão, para um visual mais limpo */
-    text-transform: none; /* Garante que não haja text-transform do .button base */
-    min-height: auto; /* Altura baseada no conteúdo e padding */
-    line-height: var(--line-height-tight); /* Manter consistência com outros botões */
+    box-shadow: none;
+    text-transform: none;
+    min-height: auto;
+    line-height: var(--line-height-tight);
 
-    /* Animação de entrada */
-    opacity: 0;
-    transform: translateY(15px); /* Começa um pouco mais abaixo para um slide mais suave */
-    /* Transições mais suaves e diretas */
+    opacity: 0; /* Começa invisível para animação de entrada */
+    transform: translateY(15px); /* Começa um pouco mais abaixo */
     transition: opacity 0.25s var(--transition-timing-function-ease-out),
                 transform 0.25s var(--transition-timing-function-ease-out),
                 background-color var(--transition-fast),
@@ -261,64 +257,51 @@
                 border-color var(--transition-fast),
                 box-shadow var(--transition-fast);
 }
-
-/* Estado quando o botão está visível (JS remove .u-is-hidden) */
-#btn-toggle-explanation:not(.u-is-hidden) {
+#btn-toggle-explanation:not(.u-is-hidden) { /* Quando visível */
     opacity: 1;
     transform: translateY(0);
 }
-
 #btn-toggle-explanation:hover,
 #btn-toggle-explanation:focus-visible {
-    background-color: var(--color-white); /* Fundo muito suave no hover */
-    color: var(--color-primary-dark); /* Texto escurece para contraste */
-    border-color: var(--color-primary-dark); /* Mantém ou escurece levemente a borda */
-    box-shadow: var(--shadow-xs); /* Sombra muito sutil no hover para leve destaque */
-    transform: translateY(-2px); /* Leve elevação */
-    filter: none; /* Garante que não haja filtro de brilho do .button base */
-    text-decoration: none; /* Garante que não haja sublinhado */
-}
-
-#btn-toggle-explanation:active {
-    background-color: var(--color-gray-300); /* Cor de fundo mais sólida no active */
-    color: var(--color-primary-dark); /* Texto branco para contraste no active */
-    border-color: var(--color-primary-dark); /* Mantém a cor da borda */
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1); /* Sombra interna sutil */
-    transform: translateY(0px) scale(0.98); /* Efeito de pressionar */
-}
-
-/* Assegurar que o :focus-visible do .button base não interfira negativamente */
-#btn-toggle-explanation:focus-visible { 
-    outline: 2px solid var(--color-secondary-green); /* Outline na cor do botão */
-    outline-offset: 2px;
-    /* Mantém o estilo de hover para o foco visível, ou pode ter um específico */
-    background-color: var(--color-secondary-green-light);
+    background-color: var(--color-white);
     color: var(--color-primary-dark);
-    border-color: var(--color-secondary-green);
+    border-color: var(--color-primary-dark);
     box-shadow: var(--shadow-xs);
+    transform: translateY(-2px);
+    filter: none;
+    text-decoration: none;
 }
-
+#btn-toggle-explanation:active {
+    background-color: var(--color-gray-300);
+    color: var(--color-primary-dark);
+    border-color: var(--color-primary-dark);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    transform: translateY(0px) scale(0.98);
+}
+#btn-toggle-explanation:focus-visible { 
+    outline: 2px solid var(--color-primary-medium);
+    outline-offset: 2px;
+    background-color: var(--color-primary-light);
+}
 #btn-toggle-explanation .button__icon {
-    margin-right: var(--spacing-xs, 6px); /* Espaço um pouco menor */
-    font-size: 1.2em; /* Ajuste relativo ao font-size do botão */
-    color: currentColor; /* Herda a cor do texto do botão */
+    margin-right: var(--spacing-xs, 6px);
+    font-size: 1.2em;
+    color: currentColor;
     transition: transform 0.2s ease-out;
 }
-
 #btn-toggle-explanation:hover .button__icon {
-    transform: scale(1.05); /* Animação mais sutil no ícone */
+    transform: scale(1.05);
 }
 
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
-    /* Ajustes gerais para botões em tablet, se necessário */
-    #btn-toggle-explanation { /* Manter o tamanho de toque adequado */
-        font-size: var(--font-size-base, 1rem); /* Pode aumentar um pouco em mobile para toque */
-        padding: var(--spacing-sm, 10px) var(--spacing-md, 20px); /* Padding maior para área de toque */
+    #btn-toggle-explanation {
+        font-size: var(--font-size-base, 1rem); 
+        padding: var(--spacing-sm, 10px) var(--spacing-md, 20px);
     }
      #btn-toggle-explanation .button__icon {
-        font-size: 1.25em; /* Ajusta ícone com a fonte maior */
+        font-size: 1.25em;
     }
 }
 
@@ -344,8 +327,8 @@
         min-width: 100px;
     }
     #btn-toggle-explanation {
-        padding: var(--spacing-xs, 8px) var(--spacing-sm, 15px); /* Padding menor para telas pequenas */
-        font-size: var(--font-size-sm, 0.9rem); /* Fonte de volta ao default de small */
+        padding: var(--spacing-xs, 8px) var(--spacing-sm, 15px);
+        font-size: var(--font-size-sm, 0.9rem);
     }
     #btn-toggle-explanation .button__icon {
         font-size: 1.2em;
@@ -363,6 +346,6 @@
         --button-padding-x: 8px;
     }
     #btn-toggle-explanation {
-        font-size: var(--font-size-xs, 0.85rem); /* Ainda menor se necessário */
+        font-size: var(--font-size-xs, 0.85rem);
     }
 }

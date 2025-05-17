@@ -14,7 +14,9 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}MedQuiz{% endblock title %}</title>
 </head>
-<body>
+{# ===== MODIFICAÇÃO AQUI ===== #}
+<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
+{# ===== FIM DA MODIFICAÇÃO ===== #}
     {% include "quiz/includes/_header.html" %}
     {% include "quiz/includes/_main_nav.html" %}
 
@@ -40,13 +42,13 @@
                     // Auto-fechar alertas após um tempo
                     setTimeout(() => {
                         document.querySelectorAll('.alert').forEach(alertEl => {
-                            if (alertEl.style.display !== 'none') { // Só fecha se não foi fechado manualmente
+                            if (alertEl.style.display !== 'none') { 
                                 alertEl.style.transition = 'opacity 0.5s ease';
                                 alertEl.style.opacity = '0';
                                 setTimeout(() => alertEl.style.display = 'none', 500);
                             }
                         });
-                    }, 7000); // Fecha após 7 segundos
+                    }, 7000); 
                 });
             </script>
         {% endif %}
@@ -55,7 +57,6 @@
         {% block content %}{% endblock content %}
     </main>
 
-    {# Estes includes são para componentes de UI que o JavaScript irá popular ou controlar #}
     {% include "quiz/includes/_filter_panel.html" %}
     {% include "quiz/includes/_explanation_modal.html" %}
     {% include "quiz/includes/_bottom_nav.html" %}
@@ -65,10 +66,7 @@
     {% endblock site_footer_wrapper %}
 
     {% block scripts %}
-        {# --- MODIFICAÇÃO PRINCIPAL AQUI --- #}
-        {# Carrega o main.js como um módulo ES6 #}
         <script src="{% static 'js/main.js' %}" type="module" defer></script>
-        {# --- FIM DA MODIFICAÇÃO PRINCIPAL --- #}
     {% endblock scripts %}
 </body>
 </html>

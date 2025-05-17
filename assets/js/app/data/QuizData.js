@@ -28,7 +28,6 @@ export default class QuizData {
         this.allFetchedOptions = Array.isArray(opcoesData) ? opcoesData : [];
 
         // Atualiza todas as categorias apenas se for a carga inicial ou se ainda não foram carregadas.
-        // Isso evita que uma busca filtrada (que pode não retornar todas as categorias) sobrescreva a lista completa.
         if (isInitialLoad || this.allCategories.length === 0) {
             this.allCategories = Array.isArray(categoriasData) ? categoriasData : [];
             console.log("QUIZDATA.JS: _setQuizData - Todas as categorias carregadas/atualizadas:",
@@ -38,13 +37,11 @@ export default class QuizData {
         }
 
         // Define o total de perguntas para o hub apenas na carga inicial.
-        // A carga inicial (fetchInitialData) deve buscar todas as perguntas ativas sem filtro de contagem.
         if (isInitialLoad && Array.isArray(perguntasData)) {
             this.totalQuestionsCountForHub = perguntasData.length;
             console.log("QUIZDATA.JS: _setQuizData - totalQuestionsCountForHub definido para:", this.totalQuestionsCountForHub);
         }
 
-        // Considera carregado completamente se houver perguntas e categorias (opções são dependentes das perguntas)
         this.dadosCarregadosCompletamente = this.allFetchedQuestions.length > 0 && this.allCategories.length > 0;
         console.log("QUIZDATA.JS: _setQuizData - dadosCarregadosCompletamente:", this.dadosCarregadosCompletamente);
         return this.dadosCarregadosCompletamente;
@@ -53,6 +50,7 @@ export default class QuizData {
     /**
      * Busca os dados iniciais do quiz (todas as perguntas ativas e todas as categorias).
      * Só executa uma vez.
+     * O backend já usa request.user para determinar o status de favorito.
      * @returns {Promise<boolean>} True se os dados foram carregados com sucesso.
      * @throws {Error} Se ocorrer um erro na API.
      */
@@ -64,13 +62,19 @@ export default class QuizData {
         }
         try {
             // Para a carga inicial, não passamos filtros para pegar todos os dados relevantes.
+            // O backend (api_get_quiz_data_view) usará request.user para adicionar 'is_favorited'.
             console.log("QUIZDATA.JS: fetchInitialData - Chamando apiService.fetchQuizData com params: {}");
-            const data = await this.apiService.fetchQuizData({}); // SEM FILTROS
+            const data = await this.apiService.fetchQuizData({}); // SEM FILTROS explícitos aqui.
             
             console.log("QUIZDATA.JS: fetchInitialData - Dados recebidos da API:", data ? "Objeto recebido" : "Nada recebido");
             if (data) {
                 console.log("QUIZDATA.JS: fetchInitialData - Detalhes:",
-                    { perguntas: data.perguntas?.length, categorias: data.categorias?.length, opcoes: data.opcoesResposta?.length }
+                    { 
+                        perguntas: data.perguntas?.length, 
+                        categorias: data.categorias?.length, 
+                        opcoes: data.opcoesResposta?.length,
+                        primeiraPerguntaExemplo: data.perguntas?.[0] // Para verificar se 'is_favorited' está vindo
+                    }
                 );
             }
 
@@ -81,7 +85,7 @@ export default class QuizData {
                 return true;
             }
             console.warn("QUIZDATA.JS: fetchInitialData - Formato de dados da API inválido/incompleto. Resposta:", data);
-            this.isInitialFetchDone = false; // Permite nova tentativa se falhar
+            this.isInitialFetchDone = false;
             return false;
         } catch (error) {
             console.error("QUIZDATA.JS: fetchInitialData - ERRO CRÍTICO:", error);
@@ -93,46 +97,52 @@ export default class QuizData {
 
     /**
      * Busca perguntas (e suas opções) da API com base nos filtros fornecidos.
-     * @param {Object} [filterParams={}] - Parâmetros de filtro, pode incluir:
-     * `category_ids`, `difficulty_levels`, `mode`, `count`, `num_questions`.
+     * @param {Object} [filterParams={}] - Parâmetros de filtro.
      * @returns {Promise<Array>} Array de objetos de pergunta filtrados.
      * @throws {Error} Se ocorrer um erro na API.
      */
     async fetchFilteredQuestions(filterParams = {}) {
         console.log("QUIZDATA.JS: fetchFilteredQuestions - Buscando com filtros:", filterParams);
         try {
-            // O objeto filterParams é passado diretamente. O ApiService montará os query params.
+            // O ApiService.fetchQuizData já não precisa mais do 'user' explicitamente,
+            // pois o backend (views.py) usa request.user.
             const data = await this.apiService.fetchQuizData(filterParams);
             
             console.log("QUIZDATA.JS: fetchFilteredQuestions - Dados filtrados da API:", data ? "Objeto recebido" : "Nada recebido");
              if (data) {
                 console.log("QUIZDATA.JS: fetchFilteredQuestions - Detalhes:",
-                    { perguntas: data.perguntas?.length, categorias: data.categorias?.length, opcoes: data.opcoesResposta?.length }
+                    { 
+                        perguntas: data.perguntas?.length, 
+                        categorias: data.categorias?.length, // Categorias aqui podem ser um subconjunto
+                        opcoes: data.opcoesResposta?.length,
+                        primeiraPerguntaFiltradaExemplo: data.perguntas?.[0]
+                    }
                 );
             }
 
             if (data && Array.isArray(data.perguntas) && Array.isArray(data.opcoesResposta)) {
-                // NÃO sobrescreve this.allCategories com data.categorias aqui, pois data.categorias
-                // na resposta de uma busca filtrada pode não conter TODAS as categorias.
+                // NÃO sobrescreve this.allCategories com data.categorias aqui,
+                // pois data.categorias na resposta de uma busca filtrada pode não conter TODAS as categorias.
                 // this.allCategories deve ter sido populado por fetchInitialData.
-                this._setQuizData(data.perguntas, this.allCategories, data.opcoesResposta, false); // false para isInitialLoad
+                // data.categorias retornado aqui pode ser usado se você precisar de um subconjunto relevante aos filtros.
+                this._setQuizData(data.perguntas, this.allCategories, data.opcoesResposta, false);
                 console.log("QUIZDATA.JS: fetchFilteredQuestions - Perguntas filtradas definidas. Total:", this.allFetchedQuestions.length);
-                return this.allFetchedQuestions; // Retorna as perguntas filtradas
+                return this.allFetchedQuestions;
             }
             console.warn("QUIZDATA.JS: fetchFilteredQuestions - Formato de dados da API inválido/incompleto. Resposta:", data);
-            this.allFetchedQuestions = []; // Limpa em caso de dados inválidos
+            this.allFetchedQuestions = [];
             this.allFetchedOptions = [];
-            return []; // Retorna array vazio
+            return [];
         } catch (error) {
             console.error("QUIZDATA.JS: fetchFilteredQuestions - ERRO ao carregar perguntas filtradas:", error);
             this.allFetchedQuestions = [];
             this.allFetchedOptions = [];
-            throw error; // Relança o erro
+            throw error;
         }
     }
 
     /**
-     * Retorna uma cópia do array de perguntas atualmente carregadas (da última busca).
+     * Retorna uma cópia do array de perguntas atualmente carregadas.
      * @returns {Array}
      */
     getPerguntas() {
@@ -140,7 +150,7 @@ export default class QuizData {
     }
 
     /**
-     * Retorna o número total de perguntas da última busca realizada (seja inicial ou filtrada).
+     * Retorna o número total de perguntas da última busca realizada.
      * @returns {number}
      */
     getTotalPerguntasDisponiveisNaBuscaAtual() {
@@ -149,7 +159,6 @@ export default class QuizData {
 
     /**
      * Retorna o número total de perguntas ativas no sistema (definido na carga inicial).
-     * Usado para exibir no Challenge Hub.
      * @returns {number}
      */
     getTotalPerguntasParaHub() {
@@ -166,7 +175,7 @@ export default class QuizData {
 
     /**
      * Organiza as categorias carregadas em uma estrutura hierárquica (árvore).
-     * @returns {Array} Array de objetos de categoria raiz, cada um podendo conter 'subcategorias'.
+     * @returns {Array} Array de objetos de categoria raiz.
      */
     getCategoriasHierarquicamente() {
         if (!this.allCategories?.length) return [];
@@ -209,7 +218,6 @@ export default class QuizData {
     }
 
     /**
-     * (Não usado atualmente, mas pode ser útil)
      * Retorna um array de objetos representando a relação entre perguntas e suas categorias.
      * @returns {Array} Ex: [{id_pergunta: 1, id_categoria: 5}, ...]
      */

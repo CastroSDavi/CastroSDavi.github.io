@@ -182,7 +182,7 @@ export default class FilterPanel {
             input.placeholder = maxQuestions > 0 ? `Máx: ${maxQuestions}` : "0"; // Se max é 0, placeholder é "0"
             
             feedbackTextEl.textContent = maxQuestions > 0 
-                ? `Disponíveis: ${maxQuestions} (Branco/0 para todas)`
+                ? `Disponíveis: ${maxQuestions}`
                 : "Nenhuma questão encontrada para os filtros selecionados.";
             this._validateNumQuestionsInput(input); // Valida o valor atual contra o novo max
         } else { // Erro ao buscar contagem

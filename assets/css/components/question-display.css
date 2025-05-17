@@ -1,46 +1,47 @@
-/* assets/css/components/question-display.css (Revisão focada no feedback) */
+/* assets/css/components/question-display.css */
 
-/* --- ESTILOS BASE DA EXIBIÇÃO DA PERGUNTA --- */
+/* --- ESTILOS BASE DA EXIBIÇÃO DA PERGUNTA (DENTRO DO CARD) --- */
 
+/* O card em si (.card--question-wrap) é estilizado em card.css ou question-section.css */
+/* Esta seção foca nos elementos internos ao card__body da pergunta */
+
+/* Estilo para o texto da pergunta */
+.question-display__text {
+    font-size: var(--question-text-font-size, 1.15rem);
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-md, 20px) 0; /* Espaço antes do .question-display__content (imagem/opções) */
+    line-height: 1.7;
+}
+
+.question-display__text p {
+    margin: 0;
+}
+.question-display__text p:not(:last-child) {
+    margin-bottom: var(--spacing-sm, 12px); /* Espaço entre parágrafos se houver múltiplos */
+}
+
+/* Conteúdo principal da pergunta (imagem e opções) */
 .question-display__content {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md, 20px); /* Mantendo um gap razoável */
+    gap: var(--spacing-md, 20px); /* Espaço entre imagem (se houver) e lista de respostas */
 }
 
 .question-display__image-container {
     text-align: center;
-    margin-bottom: var(--spacing-md, 20px); /* Se a imagem estiver separada do enunciado */
 }
 
 .question-display__image {
     max-width: 100%;
     height: auto;
-    max-height: 350px; /* Altura máxima padrão */
-    border-radius: var(--border-radius-md); /* Cantos suavemente arredondados */
-    border: 1px solid var(--color-gray-300); /* Borda sutil */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.07); /* Sombra leve */
+    max-height: 350px;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--color-gray-300);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.07);
     object-fit: contain;
-    background-color: var(--color-gray-50); /* Para imagens com fundo transparente */
+    background-color: var(--color-gray-50);
 }
-
-.question-display__text {
-    font-size: var(--question-text-font-size, 1.15rem); /* Tamanho bom para leitura (18-19px) */
-    font-weight: var(--font-weight-normal);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--spacing-md, 20px) 0; /* Espaço antes das opções */
-    line-height: 1.7; /* Boa legibilidade */
-}
-
-.question-display__text p {
-    margin: 0;
-    /* Se houver múltiplos parágrafos no enunciado, adicione margin-bottom aqui: */
-    /* &:not(:last-child) { margin-bottom: var(--spacing-sm); } */
-}
-.question-display__text p:not(:last-child) {
-    margin-bottom: var(--spacing-sm);
-}
-
 
 /* --- ESTILOS PARA A LISTA DE RESPOSTAS E OPÇÕES --- */
 .question-display__answers-list {
@@ -48,71 +49,60 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--answer-list-gap, var(--spacing-sm, 12px)); /* Espaçamento entre as opções */
+  gap: var(--answer-list-gap, var(--spacing-sm, 12px));
 }
 
 .question-display__answer-option {
-  /* Reset de botão */
-  border: none; margin: 0; font: inherit; /* color: inherit; */ background: none;
-  
+  border: none; margin: 0; font: inherit; background: none;
   display: flex;
   align-items: center;
   width: 100%;
   text-align: left;
-  
-  padding: var(--answer-padding-y, 14px) var(--answer-padding-x, 18px); /* Padding interno equilibrado */
-  color: var(--answer-color, var(--color-gray-800)); /* Cor do texto um pouco mais escura que o padrão */
-  background-color: var(--answer-bg-color, var(--color-white)); /* Fundo branco para as opções */
-  border: 1.5px solid var(--answer-border-color, var(--color-gray-300)); /* Borda um pouco mais presente */
-  border-radius: var(--border-radius-md, 8px); /* Consistente */
-  
-  font-size: var(--answer-font-size, 0.95rem); /* Tamanho de fonte legível (aprox 15px) */
-  font-weight: var(--font-weight-normal); /* Ou medium se preferir */
+  padding: var(--answer-padding-y, 14px) var(--answer-padding-x, 18px);
+  color: var(--answer-color, var(--color-gray-800));
+  background-color: var(--answer-bg-color, var(--color-white));
+  border: 1.5px solid var(--answer-border-color, var(--color-gray-300));
+  border-radius: var(--border-radius-md, 8px);
+  font-size: var(--answer-font-size, 0.95rem);
+  font-weight: var(--font-weight-normal);
   line-height: var(--line-height-base);
-  
   min-height: var(--answer-min-height, 48px);
   cursor: pointer;
   transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   position: relative;
 }
 
-/* EFEITO HOVER EM AZUL QUE VOCÊ GOSTOU */
 .question-display__answer-option:not(.question-display__answer-option--answered):hover {
-  border-color: var(--color-primary-medium);        /* Borda azul médio */
-  background-color: var(--color-primary-light);     /* Fundo azul claro */
-  color: var(--color-primary-dark);               /* Texto azul escuro */
-  transform: translateY(-2px);                    /* Leve elevação */
-  box-shadow: 0 3px 8px rgba(var(--color-primary-medium-rgb), 0.15); /* Sombra sutil azulada */
+  border-color: var(--color-primary-medium);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 3px 8px rgba(var(--color-primary-medium-rgb), 0.15);
 }
 
 .question-display__answer-option:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
     outline-offset: var(--focus-outline-offset);
     box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset)) rgba(from var(--focus-outline-color) r g b / 0.2);
-    /* Pode adicionar o mesmo estilo do hover para o focus-visible se desejar */
-    /* border-color: var(--color-primary-medium);
-    background-color: var(--color-primary-light);
-    color: var(--color-primary-dark); */
 }
 
 .question-display__answer-option--answered {
     cursor: default;
 }
-.question-display__answer-option--answered:hover { /* Sem transform no hover quando respondida */
+.question-display__answer-option--answered:hover {
     transform: none;
-    box-shadow: none; /* Pode manter uma sombra base se quiser, ex: var(--shadow-xs) */
-    /* O filter brightness pode ser mantido se não houver cor de feedback */
+    box-shadow: none;
 }
 .question-display__answer-option:disabled { /* Redundante se --answered já faz, mas bom ter */
     cursor: default;
 }
 
-/* Cores de Feedback - Mantendo a lógica original, apenas garantindo que sobrescrevam o hover */
+/* Cores de Feedback */
 .question-display__answer-option--correct {
-    background-color: var(--color-correct-bg-alt); /* Usando -alt para suavidade */
+    background-color: var(--color-correct-bg-alt);
     border-color: var(--color-correct-border);
     color: var(--color-correct-text);
-    font-weight: var(--font-weight-semibold); /* Destaque para a correta */
+    font-weight: var(--font-weight-semibold);
 }
 .question-display__answer-option--correct:hover {
     background-color: var(--color-correct-bg-alt); /* Mantém a cor no hover */
@@ -122,7 +112,7 @@
 }
 
 .question-display__answer-option--incorrect {
-    background-color: var(--color-incorrect-bg-alt); /* Usando -alt para suavidade */
+    background-color: var(--color-incorrect-bg-alt);
     border-color: var(--color-incorrect-border);
     color: var(--color-incorrect-text);
 }
@@ -133,27 +123,11 @@
     filter: brightness(98%);
 }
 
-/* Ícones de Feedback (Sugestão mantida, caso queira implementar no futuro) */
-/*
-.question-display__answer-option .feedback-icon {
-    font-size: 1.25rem;
-    line-height: 1;
-    margin-right: var(--spacing-sm, 10px);
-    opacity: 0;
-    transition: opacity var(--transition-fast) ease-in-out;
-    color: currentColor;
-    font-variation-settings: 'FILL' 1;
-}
-.question-display__answer-option.show-feedback-icon .feedback-icon {
-    opacity: 1;
-}
-*/
-
 /* --- REFERÊNCIA DA QUESTÃO --- */
 .question-display__reference {
-    margin-top: var(--spacing-lg, 24px); /* Espaço consistente */
+    margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-sm, 12px);
-    border-top: 1px solid var(--color-gray-200); /* Linha sutil */
+    border-top: 1px solid var(--color-gray-200);
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--color-text-muted);
     text-align: right;
@@ -161,32 +135,36 @@
 }
 
 /* --- CONTAINER PARA AÇÕES (BOTÃO DE ANÁLISE) --- */
+/* Agora só contém o botão de Análise, o de favorito foi movido para question-header-actions,
+   cujos estilos estão em question-section.css */
 .question-display__actions {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Ou flex-end se preferir o botão à direita */
     position: relative;
     transition: margin-top var(--transition-fast) ease-out,
                 padding-top var(--transition-fast) ease-out,
                 border-top-color var(--transition-fast) ease-out,
                 border-top-width var(--transition-fast) ease-out,
                 min-height var(--transition-fast) ease-out;
-    margin-top: 0;
+    margin-top: 0; /* Começa sem margem/padding */
     padding-top: 0;
-    border-top: 1px dashed transparent;
+    border-top: 1px dashed transparent; /* Começa com borda transparente */
     min-height: 0;
 }
+/* Adiciona espaço e borda SOMENTE se o botão de explicação estiver visível */
 .question-display__actions:has(#btn-toggle-explanation:not(.u-is-hidden)) {
     margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-md, 18px);
-    border-top-color: var(--color-gray-300);
-    min-height: 50px; /* Altura para o botão */
+    border-top-color: var(--color-gray-300); /* Linha pontilhada visível */
+    min-height: 50px; /* Altura para o botão, ajuste se necessário */
 }
-/* O botão #btn-toggle-explanation continua estilizado em button.css ou em sua seção específica */
+/* O botão #btn-toggle-explanation em si é estilizado em button.css */
 
 
-/* --- RESPONSIVIDADE (Mantendo a lógica original, ajustando valores se necessário) --- */
+/* --- RESPONSIVIDADE --- */
 @media (max-width: 768px) {
-    .question-display__text { font-size: 1.1rem; line-height: 1.65; }
+    .question-display__text { font-size: 1.1rem; line-height: 1.65; margin-bottom: var(--spacing-sm, 15px); }
+    .question-display__content { gap: var(--spacing-sm, 15px); }
     .question-display__answers-list { gap: var(--answer-list-gap-mobile, 10px); }
     .question-display__answer-option {
         padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);

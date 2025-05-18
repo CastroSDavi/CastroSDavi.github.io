@@ -459,6 +459,7 @@
         padding: var(--spacing-xxs, 3px);
     }
     .favorite-star-action .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined'; 
         font-size: 18px;
     }
 }

@@ -1,121 +1,142 @@
 // File: assets/js/ui/ChallengeHub.js
 
 export default class ChallengeHub {
-    constructor(uiElements, quizLogicInstance = null) {
-        console.log("CHALLENGEHUB.JS: Constructor - uiElements recebidos:", uiElements);
-        // uiElements é o objeto this.elements da QuizUI, passado para ter acesso rápido
-        // aos elementos DOM relevantes que QuizUI já cacheou.
+    constructor(quizUIInstance, quizLogicInstance = null) {
+        // console.log("CHALLENGEHUB.JS: Constructor - Instanciando ChallengeHub.");
+        this.quizUI = quizUIInstance; 
+        this.quizLogic = quizLogicInstance;
+        
+        // Atalho para os elementos DOM relevantes gerenciados por QuizUI
         this.elements = {
-            challengeHubContainer: uiElements.challengeHubContainer,
-            hubCustomizeQuizBtn: uiElements.hubCustomizeQuizBtn,
-            hubQuickQuizBtn: uiElements.hubQuickQuizBtn,
-            hubTotalQuestionsCount: uiElements.hubTotalQuestionsCount, // Span na home e na página de questões
-            hubQuickQuizCount: uiElements.hubQuickQuizCount,           // Span na página de questões
-            placeholderFiltrosContainer: uiElements.placeholderFiltrosContainer,
-            closeFiltersAndShowHubBtn: uiElements.closeFiltersAndShowHubBtn, // Botão no placeholder de filtros
+            challengeHubContainer: this.quizUI.elements.challengeHubContainer,
+            hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
+            hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
+            hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
+            hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
+            placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
+            // O closeFiltersAndShowHubBtn é referenciado, mas seu listener principal
+            // para fechar o painel de filtros é gerenciado externamente (ModalManager/QuizUI).
+            closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
         };
-        this.quizLogic = quizLogicInstance; // Instância de QuizLogic para delegar ações
-        this.quizUI = null; // Referência para a instância principal da QuizUI
-        console.log("CHALLENGEHUB.JS: Constructor - Elementos cacheados:", this.elements);
+        // console.log("CHALLENGEHUB.JS: Constructor - Elementos relevantes:", this.elements);
     }
 
-    // Método para injetar a instância de QuizLogic após a criação
+    /**
+     * Define a instância de QuizLogic.
+     * @param {QuizLogic} quizLogicInstance - A instância de QuizLogic.
+     */
     setQuizLogic(quizLogicInstance) {
-        console.log("CHALLENGEHUB.JS: setQuizLogic - Instância de QuizLogic definida:", quizLogicInstance);
+        // console.log("CHALLENGEHUB.JS: setQuizLogic - Instância de QuizLogic definida.");
         this.quizLogic = quizLogicInstance;
     }
 
-    // Método para injetar a instância principal da QuizUI
-    setQuizUI(quizUIInstance) {
-        console.log("CHALLENGEHUB.JS: setQuizUI - Instância de QuizUI definida:", quizUIInstance);
-        this.quizUI = quizUIInstance;
-    }
-
+    /**
+     * Mostra o hub de desafios e garante que outros painéis conflitantes estejam escondidos.
+     */
     showHub() {
-        console.log("CHALLENGEHUB.JS: showHub - Tentando mostrar o hub.");
+        // console.log("CHALLENGEHUB.JS: showHub - Mostrando hub.");
         if (this.elements.challengeHubContainer) {
-            this.quizUI?.showElement(this.elements.challengeHubContainer);
-            console.log("CHALLENGEHUB.JS: showHub - Hub principal mostrado (ou tentativa).");
+            this.quizUI.showElement(this.elements.challengeHubContainer);
+        }
+        
+        // Garante que outros elementos da UI do quiz estejam escondidos
+        this.quizUI.hideElement(this.elements.placeholderFiltrosContainer);
+        this.quizUI.hideElement(this.quizUI.elements.quizSectionContent); // Esconde a área de quiz ativo
+        this.quizUI.hideElement(this.quizUI.elements.resultadoCard);    // Esconde o card de resultados
+        
+        // Esconde o painel de pontuação usando o submódulo ScorePanel de QuizUI
+        if (this.quizUI.scorePanel) {
+            this.quizUI.scorePanel.hide();
         } else {
-            console.warn("CHALLENGEHUB.JS: showHub - Elemento challengeHubContainer não encontrado.");
+            // Fallback se scorePanel não estiver disponível (menos provável com a nova estrutura)
+            this.quizUI.hideElement(this.quizUI.elements.scorePanel);
         }
-        if (this.elements.placeholderFiltrosContainer) {
-            this.quizUI?.hideElement(this.elements.placeholderFiltrosContainer);
+        
+        // Limpa quaisquer avisos usando o submódulo WarningDisplay de QuizUI
+        if (this.quizUI.warningDisplay) {
+            this.quizUI.warningDisplay.clear(); 
+        } else {
+            // Fallback ou aviso no console se warningDisplay não estiver disponível
+            // console.warn("ChallengeHub.showHub: warningDisplay não foi encontrado na instância de quizUI.");
         }
-        // Garante que outros painéis/seções do quiz estejam escondidos
-        this.quizUI?.hideElement(this.quizUI?.elements.quizSectionContent);
-        this.quizUI?.hideElement(this.quizUI?.elements.resultadoCard);
-        this.quizUI?.hideElement(this.quizUI?.elements.scorePanel);
-        this.quizUI?.clearWarning();
     }
 
+    /**
+     * Esconde o hub de desafios.
+     */
     hideHub() {
-        console.log("CHALLENGEHUB.JS: hideHub - Tentando esconder o hub.");
+        // console.log("CHALLENGEHUB.JS: hideHub - Escondendo hub.");
         if (this.elements.challengeHubContainer) {
-            this.quizUI?.hideElement(this.elements.challengeHubContainer);
-            console.log("CHALLENGEHUB.JS: hideHub - Hub principal escondido (ou tentativa).");
-        } else {
-            console.warn("CHALLENGEHUB.JS: hideHub - Elemento challengeHubContainer não encontrado.");
+            this.quizUI.hideElement(this.elements.challengeHubContainer);
         }
     }
 
+    /**
+     * Atualiza a contagem total de questões exibida no hub.
+     * @param {number|string} count - O número de questões.
+     */
     updateTotalQuestionsCount(count) {
-        console.log("CHALLENGEHUB.JS: updateTotalQuestionsCount - Atualizando contagem total para:", count);
+        // console.log("CHALLENGEHUB.JS: updateTotalQuestionsCount - Atualizando contagem total para:", count);
         if (this.elements.hubTotalQuestionsCount) {
             this.elements.hubTotalQuestionsCount.textContent = count || '0';
         }
-        // Atualiza também o span na home page, se existir
-        const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count'); // Este ID pode estar duplicado
-        if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) { // Evita re-setar o mesmo elemento se for o caso
+        // Atualiza também o span na home page, se existir e for diferente,
+        // para manter a consistência se o mesmo ID for usado.
+        const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
+        if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) {
             totalQuestionsSpanHome.textContent = count || '0';
         }
     }
 
+    /**
+     * Atualiza a contagem de questões para o modo "Quiz Rápido".
+     * @param {number|string} count - O número de questões para o quiz rápido.
+     */
     updateQuickQuizCount(count) {
-        console.log("CHALLENGEHUB.JS: updateQuickQuizCount - Atualizando contagem do quiz rápido para:", count);
+        // console.log("CHALLENGEHUB.JS: updateQuickQuizCount - Atualizando contagem do quiz rápido para:", count);
         if (this.elements.hubQuickQuizCount) {
             this.elements.hubQuickQuizCount.textContent = count || '0';
         }
     }
 
+    /**
+     * Configura os event listeners para os botões dentro do hub de desafios.
+     */
     setupEventListeners() {
-        console.log("CHALLENGEHUB.JS: setupEventListeners - Anexando listeners.");
-        console.log("CHALLENGEHUB.JS: setupEventListeners - Botão Personalizar Quiz (hubCustomizeQuizBtn):", this.elements.hubCustomizeQuizBtn);
-        console.log("CHALLENGEHUB.JS: setupEventListeners - Botão Quiz Rápido (hubQuickQuizBtn):", this.elements.hubQuickQuizBtn);
-        console.log("CHALLENGEHUB.JS: setupEventListeners - Botão Fechar Filtros e Mostrar Hub (closeFiltersAndShowHubBtn):", this.elements.closeFiltersAndShowHubBtn);
+        // console.log("CHALLENGEHUB.JS: setupEventListeners - Configurando listeners do hub.");
 
         this.elements.hubCustomizeQuizBtn?.addEventListener('click', () => {
-            console.log("CHALLENGEHUB.JS: Botão PERSONALIZAR QUIZ CLICADO");
-            if (!this.quizUI || !this.quizLogic) {
-                console.error("CHALLENGEHUB.JS: quizUI ou quizLogic INDISPONÍVEL ao clicar em Personalizar!");
+            // console.log("CHALLENGEHUB.JS: Botão PERSONALIZAR QUIZ CLICADO");
+            if (!this.quizLogic) { 
+                console.error("CHALLENGEHUB.JS: quizLogic INDISPONÍVEL ao clicar em Personalizar!");
                 return;
             }
-            console.log("CHALLENGEHUB.JS: Personalizar Quiz - Escondendo hub e mostrando painel de filtros.");
             this.hideHub();
             // Mostra o placeholder de filtros e abre o painel de filtros
             if (this.elements.placeholderFiltrosContainer) {
                 this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
             }
-            this.quizUI.toggleFilterPanel(true);
+            // Usa o ModalManager (através de QuizUI) para abrir o painel de filtros
+            if (this.quizUI.modalManager) { 
+                this.quizUI.modalManager.toggleFilterPanel(true);
+            } else {
+                console.warn("ChallengeHub: modalManager não encontrado em quizUI para abrir painel de filtros.");
+            }
         });
 
         this.elements.hubQuickQuizBtn?.addEventListener('click', () => {
-            console.log("CHALLENGEHUB.JS: Botão QUIZ RÁPIDO CLICADO");
+            // console.log("CHALLENGEHUB.JS: Botão QUIZ RÁPIDO CLICADO");
             if (this.quizLogic) {
-                console.log("CHALLENGEHUB.JS: Quiz Rápido - Chamando quizLogic.startQuickQuiz()");
                 this.hideHub();
-                this.quizLogic.startQuickQuiz();
+                this.quizLogic.startQuickQuiz(); // Delega para QuizLogic iniciar o quiz rápido
             } else {
                 console.error("CHALLENGEHUB.JS: quizLogic INDISPONÍVEL ao clicar em Quiz Rápido!");
             }
         });
 
-        this.elements.closeFiltersAndShowHubBtn?.addEventListener('click', () => {
-            console.log("CHALLENGEHUB.JS: Botão 'Voltar para Modos de Jogo' (placeholder de filtros) CLICADO");
-            if (this.quizUI) {
-                this.quizUI.toggleFilterPanel(false); // Fecha o painel de filtros
-            }
-            this.showHub(); // Mostra o hub novamente
-        });
+        // O listener para this.elements.closeFiltersAndShowHubBtn (botão "Voltar para Modos de Jogo"
+        // dentro do placeholder de filtros) é melhor gerenciado em QuizUI.setupGlobalEventListeners,
+        // pois precisa coordenar o fechamento do painel de filtros (via ModalManager)
+        // E a exibição do hub (via esta instância de ChallengeHub).
     }
 }

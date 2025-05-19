@@ -268,7 +268,7 @@ export default class FilterPanel {
                  // A ação correta aqui seria desabilitar o botão Aplicar, pois o estado é inválido.
                  // No entanto, _validateAndProcessNumQuestionsInput deveria ter corrigido o valor no input e no quizState.
             } else {
-                feedbackTextEl.textContent = `"Selecionadas: ${currentSelectedNum} de ${maxQuestions} questões.`;
+                feedbackTextEl.textContent = `Selecionadas: ${currentSelectedNum} de ${maxQuestions} questões.`;
             }
             enableAplicarFiltros(true);
         }

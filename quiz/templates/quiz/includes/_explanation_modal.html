@@ -3,25 +3,48 @@
     aria-labelledby="explanationModalTitle" aria-modal="true" aria-hidden="true">
     <div id="explanation-modal-dialog" class="explanation-modal__dialog card" aria-hidden="true" tabindex="-1">
         <div class="explanation-modal__header">
-            <h3 id="explanationModalTitle" class="explanation-modal__title card__title">Análise Detalhada da Questão
-            </h3>
+            <h3 id="explanationModalTitle" class="explanation-modal__title card__title">Análise Detalhada da Questão</h3>
             <button id="btn-close-explanation-modal"
                 class="button button--icon-only explanation-modal__close-button" aria-label="Fechar análise">
                 <span class="material-symbols-outlined">close</span>
             </button>
         </div>
+
+        {# NOVA SEÇÃO DE META INFORMAÇÕES DA QUESTÃO #}
+        <div class="explanation-modal__meta-info u-is-hidden" id="explanation-modal-meta-container">
+            <p class="meta-item">
+                <span class="material-symbols-outlined meta-icon">signal_cellular_alt</span>
+                <strong>Dificuldade:</strong> <span id="explanation-modal-difficulty">Não informada</span>
+            </p>
+            <p class="meta-item">
+                <span class="material-symbols-outlined meta-icon">sell</span>
+                <strong>Categorias:</strong> <span id="explanation-modal-categories">Não informadas</span>
+            </p>
+        </div>
+
         <div class="explanation-modal__body">
             <div id="explanation-modal-general-block" class="explanation-modal__section u-is-hidden">
                 <h4 class="explanation-modal__subtitle">Entendimento da Pergunta:</h4>
                 <p id="explanation-modal-general-text" class="explanation-modal__text"></p>
             </div>
-            <hr class="explanation-modal__divider u-is-hidden">
+            
+            <hr class="explanation-modal__divider u-is-hidden" id="explanation-divider-general-options">
+
             <div id="explanation-modal-options-block" class="explanation-modal__section u-is-hidden">
                 <h4 class="explanation-modal__subtitle">Detalhamento das Alternativas:</h4>
                 <ul id="explanation-modal-options-list" class="explanation-modal__options-list">
                     {# O JavaScript irá popular esta lista com base na questão atual #}
                 </ul>
             </div>
+
+            <hr class="explanation-modal__divider u-is-hidden" id="explanation-divider-options-reference">
+
+            {# NOVA SEÇÃO PARA REFERÊNCIA BIBLIOGRÁFICA #}
+            <div id="explanation-modal-reference-block" class="explanation-modal__section u-is-hidden">
+                <h4 class="explanation-modal__subtitle">Referência Bibliográfica:</h4>
+                <p id="explanation-modal-reference-text" class="explanation-modal__text">Não informada.</p>
+            </div>
+
             <div id="explanation-modal-empty-state" class="explanation-modal__empty-state u-is-hidden">
                 <span class="material-symbols-outlined">info</span>
                 <p>Nenhuma análise detalhada disponível para esta questão no momento.</p>

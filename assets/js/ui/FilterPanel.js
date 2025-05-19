@@ -5,7 +5,6 @@ import { debounce } from '../utils/helpers.js';
 
 export default class FilterPanel {
     constructor(filterPanelElement, quizLogicInstance, quizStateInstance, quizDataInstance, quizUIInstance, apiServiceInstance) {
-        console.log("FILTERPANEL.JS: Constructor - Iniciando FilterPanel.");
         if (!filterPanelElement) {
             console.error("FilterPanel: Elemento principal do painel de filtros não fornecido.");
             return;
@@ -18,68 +17,58 @@ export default class FilterPanel {
         this.apiService = apiServiceInstance;
 
         this.isFetchingCount = false;
-        this.debouncedFetchFilteredQuestionCount = debounce(this._fetchFilteredQuestionCount.bind(this), 650); // Ajuste o delay conforme necessário
+        this.debouncedFetchFilteredQuestionCount = debounce(this._fetchFilteredQuestionCount.bind(this), 600);
+
+        this.lastProcessedNumQuestionsValue = undefined; // Usar undefined para estado inicial não processado
 
         this._cacheOwnElements();
-        // A chamada para setupEventListeners é feita no App.js após todas as instâncias estarem prontas.
     }
 
     _cacheOwnElements() {
         this.elements = {
-            // Elementos da árvore de categorias e controles
             categoryTreeList: this.panelElement.querySelector('#category-tree-list'),
             btnCatSelectAll: this.panelElement.querySelector('#btn-cat-select-all'),
             btnCatClearAll: this.panelElement.querySelector('#btn-cat-clear-all'),
-
-            // Elementos do filtro de dificuldade
             filterGroupDifficulty: this.panelElement.querySelector('#filter-group-difficulty'),
-            
-            // Elementos para o input de número de questões com steppers
             numQuestionsInput: this.panelElement.querySelector('#num-questions-input'),
             btnNumDecrement: this.panelElement.querySelector('.numeric-stepper__button--decrement'),
             btnNumIncrement: this.panelElement.querySelector('.numeric-stepper__button--increment'),
-            numQuestionsFeedbackText: this.panelElement.querySelector('#num-questions-feedback'), // O <small> para feedback
-
-            // Botões do rodapé do painel
+            numQuestionsFeedbackText: this.panelElement.querySelector('#num-questions-feedback'),
             btnLimparFiltrosPainel: this.panelElement.querySelector('#btn-limpar-filtros-painel'),
             btnAplicarFiltrosPainel: this.panelElement.querySelector('#btn-aplicar-filtros-painel'),
         };
-        console.log("FILTERPANEL.JS _cacheOwnElements: Elementos cacheados. numQuestionsInput:", this.elements.numQuestionsInput);
     }
 
     setupEventListeners() {
-        console.log("FILTERPANEL.JS: setupEventListeners - Configurando listeners do painel.");
+        const triggerCountFetch = () => {
+            // console.log("Triggering count fetch due to filter change.");
+            this.debouncedFetchFilteredQuestionCount();
+        }
 
-        // Botões do rodapé
         this.elements.btnAplicarFiltrosPainel?.addEventListener('click', () => {
             if (this.quizLogic) this.quizLogic.applyFiltersAndStartQuiz();
         });
         this.elements.btnLimparFiltrosPainel?.addEventListener('click', () => this.resetFiltersToDefault());
 
-        // Controles da árvore de categorias
         this.elements.btnCatSelectAll?.addEventListener('click', () => {
             if (this.quizData && this.elements.categoryTreeList.hasChildNodes()) {
                 const allCategoryIds = this.quizData.getCategorias().map(c => c.id_categoria.toString());
                 this.setCategoryTreeState(allCategoryIds);
                 if (this.quizState) this.quizState.activeFiltersForCurrentSet.category_ids = allCategoryIds;
-                this.debouncedFetchFilteredQuestionCount();
+                triggerCountFetch();
             }
         });
         this.elements.btnCatClearAll?.addEventListener('click', () => {
             this.setCategoryTreeState([]);
             if (this.quizState) this.quizState.activeFiltersForCurrentSet.category_ids = [];
-            this.debouncedFetchFilteredQuestionCount();
+            triggerCountFetch();
         });
 
-        // Listener na árvore de categorias (delegação)
-        this.elements.categoryTreeList?.addEventListener('change', (event) => {
-            if (event.target?.type === 'checkbox' && event.target.classList.contains('category-tree__input')) {
-                // _handleCategoryCheckboxChange já atualiza o QuizState
-                this.debouncedFetchFilteredQuestionCount();
-            }
-        });
+        // _handleCategoryCheckboxChange chama triggerCountFetch internamente
+        // então não precisamos de um listener separado aqui no categoryTreeList para 'change'
+        // a menos que _handleCategoryCheckboxChange seja refatorado para não chamá-lo.
+        // Por agora, vamos assumir que _handleCategoryCheckboxChange lida com isso.
 
-        // Listeners para chips de dificuldade
         this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]').forEach(input => {
             input.addEventListener('change', () => {
                 const diffInputs = Array.from(this.elements.filterGroupDifficulty.querySelectorAll('input[name="difficulty"]'));
@@ -93,18 +82,17 @@ export default class FilterPanel {
                 if (!anySpecificChecked && allDiffCb && !allDiffCb.checked) allDiffCb.checked = true;
                 
                 if (this.quizState) this.quizState.activeFiltersForCurrentSet.difficulty_levels = this.getSelectedDifficulties();
-                this.debouncedFetchFilteredQuestionCount();
+                triggerCountFetch();
             });
         });
 
-        // Listeners para o input de número de questões e seus botões stepper
         this.elements.numQuestionsInput?.addEventListener('input', (event) => {
-            this._validateNumQuestionsInput(event.target);
-            if (this.quizState) this.quizState.activeFiltersForCurrentSet.num_questions = this.getSelectedNumberOfQuestions();
+            this._validateAndProcessNumQuestionsInput(event.target, false); // false: não forçar no input, apenas se valor mudar
         });
-        this.elements.numQuestionsInput?.addEventListener('blur', (event) => { // Validar também ao perder o foco
-            this._validateNumQuestionsInput(event.target);
-             if (this.quizState) this.quizState.activeFiltersForCurrentSet.num_questions = this.getSelectedNumberOfQuestions();
+        this.elements.numQuestionsInput?.addEventListener('blur', (event) => {
+            // No blur, sempre revalidamos e potencialmente atualizamos o feedback se o campo estiver vazio,
+            // para garantir que "Listando todas..." seja mostrado corretamente.
+            this._validateAndProcessNumQuestionsInput(event.target, true);
         });
 
         this.elements.btnNumDecrement?.addEventListener('click', () => {
@@ -112,43 +100,107 @@ export default class FilterPanel {
                 let currentValue = parseInt(this.elements.numQuestionsInput.value, 10);
                 const min = parseInt(this.elements.numQuestionsInput.min, 10) || 1;
                 
-                if (isNaN(currentValue) || currentValue <= min) {
-                    this.elements.numQuestionsInput.value = ""; // Limpa para "todas" se já no mínimo ou inválido
+                if (isNaN(currentValue)) {
+                    const maxAttr = this.elements.numQuestionsInput.getAttribute('max');
+                    currentValue = maxAttr && !isNaN(parseInt(maxAttr)) ? parseInt(maxAttr, 10) : 10; 
+                    if (isNaN(currentValue) || currentValue < min ) currentValue = min; // Garante que não seja menor que o min
+                    this.elements.numQuestionsInput.value = Math.max(min, currentValue -1).toString(); // Decrementa se possível
+                } else if (currentValue <= min) {
+                     this.elements.numQuestionsInput.value = ""; 
                 } else {
-                    this.elements.numQuestionsInput.value = (currentValue - 1).toString();
+                    currentValue -= (parseInt(this.elements.numQuestionsInput.step, 10) || 1);
+                    this.elements.numQuestionsInput.value = Math.max(min, currentValue).toString();
                 }
-                // Dispara o evento 'input' para que o listener do input e a validação sejam acionados
+                // Dispara o evento input para que a lógica de _validateAndProcessNumQuestionsInput seja acionada
                 this.elements.numQuestionsInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
 
         this.elements.btnNumIncrement?.addEventListener('click', () => {
             if (this.elements.numQuestionsInput) {
-                let currentValue = parseInt(this.elements.numQuestionsInput.value, 10) || 0; // Se vazio, começa do 0 para lógica abaixo
+                let currentValue = parseInt(this.elements.numQuestionsInput.value, 10) || 0; 
                 const min = parseInt(this.elements.numQuestionsInput.min, 10) || 1;
+                const step = parseInt(this.elements.numQuestionsInput.step, 10) || 1;
                 const maxStr = this.elements.numQuestionsInput.getAttribute('max');
-                const max = maxStr ? parseInt(maxStr, 10) : Infinity; // Se não houver max, permite incrementar
+                // Se maxQuestions for 0, max será 0. Não permitir incremento.
+                const max = maxStr && !isNaN(parseInt(maxStr)) ? parseInt(maxStr, 10) : Infinity;
 
-                if (currentValue < min) { // Se estava vazio ou 0, e clicou em +, começa do min (ou 1)
+                if (max === 0) return; // Não incrementa se o máximo é 0
+
+                if (currentValue < min) { 
                     currentValue = min;
                 } else {
-                    currentValue += 1;
+                    currentValue += step;
                 }
                 
                 this.elements.numQuestionsInput.value = Math.min(max, currentValue).toString();
                 this.elements.numQuestionsInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
-        console.log("FILTERPANEL.JS: setupEventListeners - Listeners configurados.");
+    }
+
+    _validateAndProcessNumQuestionsInput(inputElement, forceFetchOnEmptyBlur = false) {
+        if (!inputElement) return;
+
+        let currentValueStr = inputElement.value.trim();
+        let processedValue = null; 
+
+        if (currentValueStr !== "") {
+            let numValue = parseInt(currentValueStr, 10);
+            const min = parseInt(inputElement.min, 10) || 1;
+            const maxStr = inputElement.getAttribute('max');
+            // max pode ser 0 se não houver questões.
+            const max = (maxStr && !isNaN(parseInt(maxStr, 10)) && parseInt(maxStr, 10) >= 0) ? parseInt(maxStr, 10) : null;
+
+            if (isNaN(numValue) || numValue <= 0) { // Se for inválido ou 0/negativo, trata como "todas"
+                inputElement.value = ""; 
+                processedValue = null;
+            } else if (max !== null && numValue > max && max >= 0) { // Se exceder um max válido (incluindo 0)
+                numValue = max;
+                inputElement.value = max === 0 ? "" : numValue.toString(); // Se max é 0, limpa o campo
+                processedValue = max === 0 ? null : numValue;
+            } else {
+                processedValue = numValue;
+            }
+        } else { 
+            processedValue = null; // Vazio significa "todas"
+        }
+
+        const oldValueInState = this.quizState?.activeFiltersForCurrentSet?.num_questions;
+        if (this.quizState) {
+            this.quizState.activeFiltersForCurrentSet.num_questions = processedValue;
+        }
+
+        // Dispara a busca da contagem se o valor lógico mudou,
+        // ou se estamos no blur de um campo que ficou vazio (para atualizar "Listando todas...").
+        if (this.lastProcessedNumQuestionsValue !== processedValue || (forceFetchOnEmptyBlur && currentValueStr === "")) {
+            // console.log(`Num questions changed from ${this.lastProcessedNumQuestionsValue} to ${processedValue}. Triggering fetch.`);
+            this.lastProcessedNumQuestionsValue = processedValue;
+            this.debouncedFetchFilteredQuestionCount();
+        } else if (oldValueInState !== processedValue) {
+            // Se o valor lógico mudou mas o lastProcessedNumQuestionsValue era o mesmo (ex: de null para "" que ainda é null lógico)
+            // mas o estado precisa ser atualizado no feedback (ex: maxQuestions mudou).
+            // Força a atualização do feedback, mas não necessariamente uma nova busca se a lógica acima não pegar.
+            // No entanto, a _updateNumQuestionsFeedback já usa o valor do quizState.
+            // O importante é que debouncedFetchFilteredQuestionCount seja chamado se a *interpretação* do filtro mudou.
+        }
     }
 
     async _fetchFilteredQuestionCount() {
         if (this.isFetchingCount || !this.apiService) {
-            if(!this.apiService) console.error("FilterPanel: ApiService indisponível para buscar contagem.");
             return;
         }
         this.isFetchingCount = true;
-        console.log("FilterPanel: Buscando contagem de questões...");
+        
+        const feedbackTextEl = this.elements.numQuestionsFeedbackText;
+        const aplicarFiltrosBtn = this.elements.btnAplicarFiltrosPainel;
+
+        // APENAS MUDAR O TEXTO E ESTADO DO BOTÃO "APLICAR" SE ESTIVER REALMENTE BUSCANDO
+        if (feedbackTextEl) {
+            feedbackTextEl.textContent = "Verificando questões...";
+            feedbackTextEl.className = 'form-text-feedback form-text-feedback--filter-panel is-loading';
+        }
+        // Não mexer no botão aqui ainda. Apenas no final da operação.
 
         const countFilterParams = {
             category_ids: this.quizState?.activeFiltersForCurrentSet?.category_ids || [],
@@ -157,76 +209,77 @@ export default class FilterPanel {
 
         try {
             const data = await this.apiService.fetchQuizData(countFilterParams);
-            const maxQuestions = (data?.perguntas?.length) || 0; // Garante que seja um número
-            console.log(`FilterPanel: Contagem de questões disponíveis: ${maxQuestions}`);
-            this._updateNumQuestionsInputConstraints(maxQuestions);
+            const maxQuestions = (data?.perguntas?.length) || 0;
+            this._updateNumQuestionsFeedback(maxQuestions); // Atualiza o feedback e o botão "Aplicar"
         } catch (error) {
             console.error("FilterPanel: Erro ao buscar contagem de questões:", error);
-            this._updateNumQuestionsInputConstraints(null); // null indica erro ou contagem desconhecida
+            this._updateNumQuestionsFeedback(null); // Trata erro e atualiza botão "Aplicar"
         } finally {
             this.isFetchingCount = false;
+            // A classe 'is-loading' é removida e o botão "Aplicar" é ajustado dentro de _updateNumQuestionsFeedback
         }
     }
 
-    _updateNumQuestionsInputConstraints(maxQuestions) {
+    _updateNumQuestionsFeedback(maxQuestions) {
         const input = this.elements.numQuestionsInput;
         const feedbackTextEl = this.elements.numQuestionsFeedbackText;
+        const aplicarFiltrosBtn = this.elements.btnAplicarFiltrosPainel;
         
         if (!input || !feedbackTextEl) return;
 
-        const defaultPlaceholder = "Qtd."; // Placeholder bem curto para o input com steppers
-        const defaultFeedback = "Deixe em branco ou 0 para incluir todas as questões dos filtros.";
+        feedbackTextEl.className = 'form-text-feedback form-text-feedback--filter-panel'; // Reseta classes
+        const defaultPlaceholder = "Qtd.";
+        let currentSelectedNum = this.quizState?.activeFiltersForCurrentSet?.num_questions;
 
-        if (maxQuestions !== null && maxQuestions >= 0) { // maxQuestions pode ser 0
-            input.setAttribute('max', maxQuestions.toString());
-            input.placeholder = maxQuestions > 0 ? `${maxQuestions}` : "0"; // Se max é 0, placeholder é "0"
-            
-            feedbackTextEl.textContent = maxQuestions > 0 
-                ? `Disponíveis: ${maxQuestions}`
-                : "Nenhuma questão encontrada para os filtros selecionados.";
-            this._validateNumQuestionsInput(input); // Valida o valor atual contra o novo max
-        } else { // Erro ao buscar contagem
+        // Gerencia o botão "Aplicar Filtros"
+        const enableAplicarFiltros = (enable) => {
+            if (aplicarFiltrosBtn) {
+                aplicarFiltrosBtn.disabled = !enable;
+            }
+        };
+
+        if (maxQuestions === null) { // Erro
             input.removeAttribute('max');
             input.placeholder = defaultPlaceholder;
-            feedbackTextEl.textContent = "Erro ao carregar contagem. " + defaultFeedback;
+            feedbackTextEl.textContent = "Erro ao carregar contagem.";
+            feedbackTextEl.classList.add('has-error');
+            enableAplicarFiltros(false);
+        } else if (maxQuestions === 0) {
+            input.setAttribute('max', '0');
+            input.placeholder = "0";
+            // Se maxQuestions é 0, currentSelectedNum no quizState deve ser null (ou 0 e tratado como null).
+            // E o input.value deve ser limpo por _validateAndProcessNumQuestionsInput.
+            if (input.value !== "" && parseInt(input.value, 10) !== 0) { // Garante que o input esteja vazio se max é 0
+                 // input.value = ""; // Comentado para ver se a validação resolve
+            }
+            feedbackTextEl.textContent = "Nenhuma questão encontrada.";
+            feedbackTextEl.classList.add('is-empty');
+            enableAplicarFiltros(false);
+        } else { // maxQuestions > 0
+            input.setAttribute('max', maxQuestions.toString());
+            input.placeholder = `${maxQuestions}`;
+
+            if (currentSelectedNum === null || currentSelectedNum === 0) {
+                feedbackTextEl.textContent = `Disponíveis: ${maxQuestions} questões.`;
+            } else if (currentSelectedNum > maxQuestions) {
+                // A validação deveria ter corrigido input.value, aqui apenas refletimos o estado.
+                feedbackTextEl.textContent = `Disponíveis: ${maxQuestions}. (Definido: ${currentSelectedNum})`;
+                 // Se quizState.num_questions ainda for > maxQuestions, pode ser um problema de timing.
+                 // A ação correta aqui seria desabilitar o botão Aplicar, pois o estado é inválido.
+                 // No entanto, _validateAndProcessNumQuestionsInput deveria ter corrigido o valor no input e no quizState.
+            } else {
+                feedbackTextEl.textContent = `"Selecionadas: ${currentSelectedNum} de ${maxQuestions} questões.`;
+            }
+            enableAplicarFiltros(true);
         }
     }
     
-    _validateNumQuestionsInput(inputElement) {
-        if (!inputElement) return;
-        let currentValueStr = inputElement.value.trim();
-        
-        if (currentValueStr === "") return; // Permite campo vazio (significa "todas")
-
-        let currentValue = parseInt(currentValueStr, 10);
-        const min = parseInt(inputElement.min, 10) || 1; // min definido no HTML é 1
-        const maxStr = inputElement.getAttribute('max');
-        // Só considera o max se ele for um número válido e >= 0
-        const max = (maxStr && !isNaN(parseInt(maxStr, 10)) && parseInt(maxStr, 10) >= 0) ? parseInt(maxStr, 10) : null;
-
-
-        if (isNaN(currentValue)) {
-            inputElement.value = ""; // Limpa se não for número
-            return;
-        }
-
-        if (currentValue <= 0) { 
-            inputElement.value = ""; // Trata 0 ou negativo como "todas" limpando o campo
-            return;
-        }
-
-        if (max !== null && currentValue > max) {
-            inputElement.value = max.toString(); // Corrige para o máximo se exceder
-        }
-    }
-
     loadCurrentFilters() {
-        console.log("FILTERPANEL.JS: loadCurrentFilters - INICIADO.");
         const filters = this.quizState?.activeFiltersForCurrentSet || { difficulty_levels: ['all'], category_ids: [], num_questions: null };
         
-        console.log("FILTERPANEL.JS: loadCurrentFilters - Carregando com filtros:", JSON.parse(JSON.stringify(filters)));
         this.setDifficultyState(filters.difficulty_levels);
-        this.setNumberOfQuestionsState(filters.num_questions);
+        this.setNumberOfQuestionsState(filters.num_questions); 
+        this.lastProcessedNumQuestionsValue = filters.num_questions;
         
         if (this.quizData && this.elements.categoryTreeList) {
             const categorias = this.quizData.getCategorias();
@@ -235,36 +288,32 @@ export default class FilterPanel {
                 if (categoriasHierarquicas && categoriasHierarquicas.length > 0) {
                     this.generateCategoryTree(categoriasHierarquicas);
                     this.setCategoryTreeState(filters.category_ids);
-                    this.debouncedFetchFilteredQuestionCount(); 
                 } else {
                     this.elements.categoryTreeList.innerHTML = '<li class="category-tree__empty-state">Nenhuma categoria para filtrar.</li>';
-                    this._updateNumQuestionsInputConstraints(0);
                 }
             } else {
                 this.elements.categoryTreeList.innerHTML = '<li class="category-tree__empty-state">Categorias indisponíveis.</li>';
-                this._updateNumQuestionsInputConstraints(0);
             }
         } else {
              if (this.elements.categoryTreeList) {
                  this.elements.categoryTreeList.innerHTML = '<li class="category-tree__empty-state">Erro ao carregar categorias.</li>';
             }
-            this._updateNumQuestionsInputConstraints(null);
         }
-        console.log("FILTERPANEL.JS: loadCurrentFilters - FINALIZADO.");
+        this._fetchFilteredQuestionCount();
     }
 
     resetFiltersToDefault() {
-        console.log("FILTERPANEL.JS: resetFiltersToDefault - Resetando filtros.");
         this.setCategoryTreeState([]);
         this.setDifficultyState(['all']);
         this.setNumberOfQuestionsState(null); 
+        this.lastProcessedNumQuestionsValue = undefined; // Reset para indefinido
 
         if (this.quizState) {
             this.quizState.activeFiltersForCurrentSet.category_ids = [];
             this.quizState.activeFiltersForCurrentSet.difficulty_levels = ['all'];
             this.quizState.activeFiltersForCurrentSet.num_questions = null;
         }
-        this.debouncedFetchFilteredQuestionCount(); 
+        this._fetchFilteredQuestionCount();
     }
 
     _updateSubmenuHeight(subMenuElement, isExpanding) {
@@ -304,119 +353,170 @@ export default class FilterPanel {
             treeContainer.innerHTML = '<li class="category-tree__empty-state">Nenhuma categoria para exibir.</li>';
             return;
         }
-        treeContainer.innerHTML = '';
+        treeContainer.innerHTML = ''; 
+
         const createTreeNodes = (nodes, parentElement) => {
             nodes.forEach(catNode => {
                 const listItem = document.createElement('li');
                 listItem.className = 'category-tree__item';
                 listItem.setAttribute('role', 'treeitem');
-                listItem.setAttribute('aria-checked', 'false');
+                
                 const labelWrapper = document.createElement('div');
                 labelWrapper.className = 'category-tree__label-wrapper';
+
                 const inputCheckbox = document.createElement('input');
                 inputCheckbox.type = 'checkbox';
                 inputCheckbox.id = `cat-tree-${catNode.id_categoria}`;
                 inputCheckbox.className = 'category-tree__input u-sr-only';
                 inputCheckbox.value = catNode.id_categoria.toString();
-                inputCheckbox.tabIndex = -1;
+                inputCheckbox.tabIndex = -1; 
                 inputCheckbox.addEventListener('change', (e) => this._handleCategoryCheckboxChange(e.target));
+
                 const label = document.createElement('label');
                 label.htmlFor = inputCheckbox.id;
                 label.className = 'category-tree__label';
                 label.textContent = catNode.nome_categoria;
-                label.tabIndex = 0;
+                label.tabIndex = 0; 
                 label.addEventListener('keydown', (e) => {
                     if (e.key === ' ' || e.key === 'Enter') {
                         inputCheckbox.checked = !inputCheckbox.checked;
                         inputCheckbox.dispatchEvent(new Event('change', { bubbles: true }));
-                        e.preventDefault();
+                        e.preventDefault(); 
                     }
                 });
+
                 if (catNode.subcategorias?.length > 0) {
                     listItem.classList.add('category-tree__item--has-children');
-                    listItem.setAttribute('aria-expanded', 'false');
+                    listItem.setAttribute('aria-expanded', 'false'); 
+
                     const toggleButton = document.createElement('button');
                     toggleButton.type = 'button';
                     toggleButton.className = 'category-tree__toggle';
                     toggleButton.setAttribute('aria-label', `Expandir categoria ${catNode.nome_categoria}`);
                     toggleButton.setAttribute('aria-expanded', 'false');
                     toggleButton.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>`;
-                    labelWrapper.appendChild(toggleButton);
+                    
+                    labelWrapper.appendChild(toggleButton); 
                     labelWrapper.appendChild(inputCheckbox);
                     labelWrapper.appendChild(label);
+
                     const subMenu = document.createElement('ul');
                     subMenu.className = 'category-tree__submenu';
                     subMenu.setAttribute('role', 'group');
-                    subMenu.style.maxHeight = '0'; subMenu.style.overflow = 'hidden'; subMenu.style.display = 'block';
+                    subMenu.style.maxHeight = '0'; 
+                    subMenu.style.overflow = 'hidden';
+                    subMenu.style.display = 'block'; 
+                    
                     createTreeNodes(catNode.subcategorias, subMenu);
-                    listItem.appendChild(labelWrapper); listItem.appendChild(subMenu);
+                    
+                    listItem.appendChild(labelWrapper);
+                    listItem.appendChild(subMenu);
+
                     const toggleAction = (event) => {
-                        event.stopPropagation();
-                        const isExp = listItem.getAttribute('aria-expanded') === 'true';
-                        listItem.setAttribute('aria-expanded', String(!isExp));
-                        toggleButton.setAttribute('aria-expanded', String(!isExp));
-                        toggleButton.setAttribute('aria-label', `${!isExp ? 'Recolher' : 'Expandir'} ${catNode.nome_categoria}`);
-                        toggleButton.querySelector('.material-symbols-outlined').textContent = !isExp ? 'expand_more' : 'chevron_right';
-                        this._updateSubmenuHeight(subMenu, !isExp);
-                        if (!isExp) subMenu.classList.add('category-tree__submenu--expanded');
-                        else setTimeout(() => { if (listItem.getAttribute('aria-expanded') === 'false') subMenu.classList.remove('category-tree__submenu--expanded'); }, TRANSITION_DURATION);
-                        this._updateParentSubmenuHeights(listItem);
+                        event.stopPropagation(); 
+                        const isCurrentlyExpanded = listItem.getAttribute('aria-expanded') === 'true';
+                        listItem.setAttribute('aria-expanded', String(!isCurrentlyExpanded));
+                        toggleButton.setAttribute('aria-expanded', String(!isCurrentlyExpanded));
+                        toggleButton.setAttribute('aria-label', `${!isCurrentlyExpanded ? 'Recolher' : 'Expandir'} ${catNode.nome_categoria}`);
+                        toggleButton.querySelector('.material-symbols-outlined').textContent = !isCurrentlyExpanded ? 'expand_more' : 'chevron_right';
+                        this._updateSubmenuHeight(subMenu, !isCurrentlyExpanded);
+                        
+                        if (!isCurrentlyExpanded) {
+                            this._updateParentSubmenuHeights(listItem);
+                        }
                     };
+
                     toggleButton.addEventListener('click', toggleAction);
-                    toggleButton.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') { toggleAction(e); e.preventDefault(); }});
-                } else {
-                    labelWrapper.appendChild(inputCheckbox); labelWrapper.appendChild(label); listItem.appendChild(labelWrapper);
+                    toggleButton.addEventListener('keydown', (e) => {
+                        if (e.key === ' ' || e.key === 'Enter') {
+                            toggleAction(e);
+                            e.preventDefault();
+                        }
+                    });
+
+                } else { 
+                    labelWrapper.appendChild(inputCheckbox);
+                    labelWrapper.appendChild(label);
+                    listItem.appendChild(labelWrapper);
                 }
                 parentElement.appendChild(listItem);
             });
         };
+
         createTreeNodes(categoriesHierarchical, treeContainer);
+        
         const parentListItems = Array.from(treeContainer.querySelectorAll('.category-tree__item--has-children'));
-        for (let i = parentListItems.length - 1; i >= 0; i--) this._updateParentCheckboxState(parentListItems[i]);
+        for (let i = parentListItems.length - 1; i >= 0; i--) {
+            this._updateParentCheckboxState(parentListItems[i]);
+        }
     }
 
     _handleCategoryCheckboxChange(checkboxElement) {
         const isChecked = checkboxElement.checked;
         const listItem = checkboxElement.closest('.category-tree__item');
         if (!listItem) return;
+
         checkboxElement.classList.remove('is-indeterminate');
         listItem.setAttribute('aria-checked', String(isChecked));
+
         const childCheckboxes = listItem.querySelectorAll(':scope > .category-tree__submenu .category-tree__input');
         childCheckboxes.forEach(childCb => {
             childCb.checked = isChecked;
-            childCb.classList.remove('is-indeterminate');
+            childCb.classList.remove('is-indeterminate'); 
             const childLi = childCb.closest('.category-tree__item');
             if (childLi) childLi.setAttribute('aria-checked', String(isChecked));
         });
+
         this._updateParentCheckboxState(listItem.parentElement?.closest('.category-tree__item'));
+        
         if (this.quizState) {
             this.quizState.activeFiltersForCurrentSet.category_ids = this.getSelectedCategories();
-            // A chamada para debouncedFetchFilteredQuestionCount é feita pelo listener geral na árvore.
+            this.debouncedFetchFilteredQuestionCount();
         }
     }
-
+    
     _updateParentCheckboxState(parentListItem) {
-        if (!parentListItem) return;
+        if (!parentListItem) return; 
+
         const parentCheckbox = parentListItem.querySelector(':scope > .category-tree__label-wrapper > .category-tree__input');
         if (!parentCheckbox) return;
+
         const childListItems = parentListItem.querySelectorAll(':scope > .category-tree__submenu > .category-tree__item');
-        if (childListItems.length === 0) return;
-        let todosMarcados = true, nenhumMarcado = true, algumIndeterminado = false;
+        if (childListItems.length === 0) return; 
+
+        let todosMarcados = true;
+        let nenhumMarcado = true;
+        let algumIndeterminado = false;
+
         childListItems.forEach(childLi => {
             const childInput = childLi.querySelector(':scope > .category-tree__label-wrapper > .category-tree__input');
             if (childInput) {
-                if (childInput.classList.contains('is-indeterminate')) algumIndeterminado = true;
-                if (childInput.checked || childInput.classList.contains('is-indeterminate')) nenhumMarcado = false;
-                if (!childInput.checked) todosMarcados = false;
-            } else { todosMarcados = false; }
+                if (childInput.classList.contains('is-indeterminate')) {
+                    algumIndeterminado = true;
+                }
+                if (childInput.checked || childInput.classList.contains('is-indeterminate')) {
+                    nenhumMarcado = false; 
+                }
+                if (!childInput.checked) { 
+                    todosMarcados = false;
+                }
+            } else { 
+                todosMarcados = false;
+            }
         });
-        parentCheckbox.classList.remove('is-indeterminate');
+
+        parentCheckbox.classList.remove('is-indeterminate'); 
+
         if (algumIndeterminado || (!todosMarcados && !nenhumMarcado)) {
-            parentCheckbox.checked = false; parentCheckbox.classList.add('is-indeterminate'); parentListItem.setAttribute('aria-checked', 'mixed');
+            parentCheckbox.checked = false; 
+            parentCheckbox.classList.add('is-indeterminate');
+            parentListItem.setAttribute('aria-checked', 'mixed');
         } else if (todosMarcados) {
-            parentCheckbox.checked = true; parentListItem.setAttribute('aria-checked', 'true');
-        } else {
-            parentCheckbox.checked = false; parentListItem.setAttribute('aria-checked', 'false');
+            parentCheckbox.checked = true;
+            parentListItem.setAttribute('aria-checked', 'true');
+        } else { 
+            parentCheckbox.checked = false;
+            parentListItem.setAttribute('aria-checked', 'false');
         }
         this._updateParentCheckboxState(parentListItem.parentElement?.closest('.category-tree__item'));
     }
@@ -430,18 +530,23 @@ export default class FilterPanel {
         });
         return selectedIds;
     }
-
+    
     setCategoryTreeState(selectedCategoryIds = []) {
         const allCategoryCheckboxes = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__input') || []);
-        if (allCategoryCheckboxes.length === 0 && selectedCategoryIds.length > 0) return;
+        if (allCategoryCheckboxes.length === 0 && selectedCategoryIds.length > 0) {
+            return;
+        }
+        
         allCategoryCheckboxes.forEach(cb => {
             cb.checked = selectedCategoryIds.includes(cb.value);
-            cb.classList.remove('is-indeterminate');
+            cb.classList.remove('is-indeterminate'); 
             const li = cb.closest('.category-tree__item');
             if (li) li.setAttribute('aria-checked', String(cb.checked));
         });
         const parentListItems = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__item--has-children') || []);
-        for (let i = parentListItems.length - 1; i >= 0; i--) this._updateParentCheckboxState(parentListItems[i]);
+        for (let i = parentListItems.length - 1; i >= 0; i--) {
+            this._updateParentCheckboxState(parentListItems[i]);
+        }
     }
 
     getSelectedDifficulties() {
@@ -449,7 +554,9 @@ export default class FilterPanel {
         const selectedSpecificDifficulties = [];
         difficultyCheckboxes?.forEach(cb => { if (cb.checked) selectedSpecificDifficulties.push(cb.value); });
         const allDifficultiesCheckbox = this.elements.filterGroupDifficulty?.querySelector('input[value="all"]');
-        if (allDifficultiesCheckbox?.checked || selectedSpecificDifficulties.length === 0) return ['all'];
+        if (allDifficultiesCheckbox?.checked || selectedSpecificDifficulties.length === 0) {
+            return ['all'];
+        }
         return selectedSpecificDifficulties;
     }
 
@@ -470,9 +577,9 @@ export default class FilterPanel {
     getSelectedNumberOfQuestions() {
         if (this.elements.numQuestionsInput) {
             const valueStr = this.elements.numQuestionsInput.value.trim();
-            if (valueStr === '') return null;
+            if (valueStr === '') return null; 
             const value = parseInt(valueStr, 10);
-            return !isNaN(value) && value > 0 ? value : null;
+            return !isNaN(value) && value > 0 ? value : null; 
         }
         return null;
     }

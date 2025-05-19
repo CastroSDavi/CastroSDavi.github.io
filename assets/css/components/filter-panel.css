@@ -30,7 +30,7 @@
     right: 0;
     width: 100%;
     max-width: 390px;
-    height: 100dvh;
+    height: 100dvh; /* Usa dvh para melhor consistência em mobile browsers com barras dinâmicas */
     background-color: var(--color-white);
     color: var(--color-text-primary);
     box-shadow: -4px 0 25px rgba(var(--color-primary-dark-rgb), 0.12);
@@ -39,7 +39,7 @@
     transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow: hidden; /* Para que o border-radius do painel seja respeitado pelos filhos */
 }
 
 .filter-panel--visible {
@@ -54,7 +54,7 @@
     padding: var(--spacing-md, 20px) var(--spacing-lg, 24px);
     border-bottom: 1px solid var(--color-gray-200);
     flex-shrink: 0;
-    background-color: var(--color-white);
+    background-color: var(--color-white); /* Garante fundo branco mesmo que o painel mude */
 }
 
 .filter-panel__title {
@@ -66,8 +66,9 @@
 }
 
 .filter-panel__close-button {
+    /* Estilos de .button e .button--icon-only são herdados/aplicados via HTML */
     color: var(--color-gray-700);
-    padding: var(--spacing-sm, 12px);
+    padding: var(--spacing-sm, 12px); /* Ajuste se o padding do .button--icon-only não for ideal aqui */
     border-radius: var(--border-radius-circle);
     transition: all 0.2s ease-out;
 }
@@ -76,11 +77,11 @@
 .filter-panel__close-button:focus-visible {
     color: var(--color-accent-red);
     background-color: rgba(var(--color-accent-red-rgb), 0.08);
-    transform: scale(1.1);
+    transform: scale(1.1); /* Efeito de zoom sutil */
 }
 
 .filter-panel__close-button .material-symbols-outlined {
-    font-size: 26px;
+    font-size: 26px; /* Tamanho do ícone de fechar */
     display: block;
 }
 
@@ -91,24 +92,28 @@
     padding: var(--spacing-md, 20px);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg, 24px);
+    gap: var(--spacing-lg, 24px); /* Espaço entre os grupos de filtro */
 }
 
+/* Estilização da Scrollbar (Webkit e Firefox) */
 .filter-panel__body::-webkit-scrollbar { width: 6px; }
 .filter-panel__body::-webkit-scrollbar-track { background: var(--color-gray-100); margin: var(--spacing-xs, 8px) 0; }
 .filter-panel__body::-webkit-scrollbar-thumb { background-color: var(--color-gray-300); border-radius: 10px; }
 .filter-panel__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
 .filter-panel__body { scrollbar-width: thin; scrollbar-color: var(--color-gray-300) var(--color-gray-100); }
 
-/* Grupo de Filtros */
-.filter-group {}
 
-.filter-group__header {
+/* Grupo de Filtros */
+.filter-group {
+    /* Conteúdo estilizado individualmente (título, árvore, chips, etc.) */
+}
+
+.filter-group__header { /* Usado para o título "Categorias" */
     display: flex;
     align-items: center;
     margin-bottom: var(--spacing-xs, 8px);
     padding-bottom: var(--spacing-xs, 8px);
-    border-bottom: 1px solid var(--color-gray-100);
+    border-bottom: 1px solid var(--color-gray-100); /* Linha divisória sutil */
 }
 
 .filter-group__title {
@@ -116,31 +121,32 @@
     font-weight: var(--font-weight-semibold, 600);
     color: var(--color-primary-dark);
     position: relative;
-    padding-left: var(--spacing-sm, 12px);
+    padding-left: var(--spacing-sm, 12px); /* Espaço para a barrinha vertical */
     display: flex;
     align-items: center;
-    line-height: normal;
-    flex-grow: 1;
+    line-height: normal; /* Evita altura extra */
+    flex-grow: 1; /* Para ocupar espaço se houver controles ao lado */
 }
 
-.filter-group__title::before {
+.filter-group__title::before { /* Barrinha vertical decorativa */
     content: '';
     position: absolute;
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    height: 1em;
+    height: 1em; /* Altura relativa ao tamanho da fonte do título */
     width: 3px;
     background-color: var(--color-secondary-green);
     border-radius: var(--border-radius-pill);
 }
 
+/* Controles dentro de um grupo (ex: Selecionar Todas/Limpar Todas para categorias) */
 .filter-group__controls--standalone {
     display: flex;
     justify-content: flex-start;
     gap: var(--spacing-sm, 12px);
     margin-bottom: var(--spacing-sm, 12px);
-    padding-left: var(--spacing-sm, 12px);
+    padding-left: var(--spacing-sm, 12px); /* Alinha com o título */
 }
 
 .filter-group__controls .button--text {
@@ -149,208 +155,228 @@
     font-weight: var(--font-weight-medium, 500);
     color: var(--color-primary-medium);
     line-height: normal;
-    min-height: unset;
+    min-height: unset; /* Remove altura mínima de botões padrão */
 }
-
 .filter-group__controls .button--text:hover,
 .filter-group__controls .button--text:focus-visible {
     color: var(--color-primary-dark);
     background-color: var(--color-primary-light);
 }
 
-/* --- Árvore de Categorias (estilos originais mantidos) --- */
+/* --- Árvore de Categorias --- */
 .category-tree { list-style: none; padding-left: 0; margin: 0; }
 .category-tree__item { margin-bottom: 0; position: relative; }
 .category-tree__label-wrapper { display: flex; align-items: center; padding: var(--spacing-xs, 6px) var(--spacing-xxs, 4px); border-radius: var(--border-radius-md, 6px); transition: background-color 0.2s ease-out; position: relative; }
 .category-tree__label-wrapper:hover { background-color: rgba(var(--color-primary-light-rgb), 0.5); }
-.category-tree__input:checked:not(.is-indeterminate) ~ .category-tree__label-wrapper,
+.category-tree__input:checked:not(.is-indeterminate) ~ .category-tree__label-wrapper, /* JS vai remover .is-indeterminate ao checar */
 .category-tree__input.is-indeterminate ~ .category-tree__label-wrapper { background-color: var(--color-primary-light); }
 .category-tree__label-wrapper:focus-within { box-shadow: 0 0 0 2px var(--focus-outline-color) inset; }
+
 .category-tree__toggle { padding: var(--spacing-xxs, 4px); color: var(--color-gray-700); border-radius: var(--border-radius-circle); transition: all 0.2s ease-out; display: inline-flex; align-items: center; justify-content: center; margin-right: var(--spacing-xxs, 4px); flex-shrink: 0; }
 .category-tree__toggle .material-symbols-outlined { font-size: 22px; font-weight: 400; display: block; transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1); }
 .category-tree__toggle:hover, .category-tree__toggle:focus-visible { background-color: rgba(var(--color-primary-dark-rgb), 0.07); color: var(--color-primary-dark); }
 .category-tree__toggle[aria-expanded="true"] .material-symbols-outlined { transform: rotate(90deg); }
-.category-tree__label { font-size: var(--font-size-sm, 0.875rem); color: var(--color-text-secondary); flex-grow: 1; user-select: none; padding-left: calc(16px + var(--spacing-xs, 6px)); line-height: 1.5; cursor: pointer; border-radius: var(--border-radius-sm, 4px); transition: color 0.2s ease-out; position: relative; }
+
+.category-tree__label { font-size: var(--font-size-sm, 0.875rem); color: var(--color-text-secondary); flex-grow: 1; user-select: none; padding-left: calc(16px + var(--spacing-xs, 6px)); /* 16px para o checkbox customizado + espaço */ line-height: 1.5; cursor: pointer; border-radius: var(--border-radius-sm, 4px); transition: color 0.2s ease-out; position: relative; }
 .category-tree__input:checked + .category-tree__label, .category-tree__input.is-indeterminate + .category-tree__label { color: var(--color-primary-dark); font-weight: var(--font-weight-medium, 500); }
+
+/* Checkbox customizado */
 .category-tree__label::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 1.5px solid var(--color-gray-500); border-radius: 3px; background-color: var(--color-white); transition: all 0.15s ease-out; }
-.category-tree__label::after { content: "check_small"; font-family: 'Material Symbols Outlined'; font-variation-settings: 'FILL' 1, 'wght' 700; font-size: 14px; line-height: 1; position: absolute; left: 1px; top: 50%; transform: translateY(-50%) scale(0); color: var(--color-white); opacity: 0; transition: transform 0.1s ease-out, opacity 0.1s ease-out; }
+.category-tree__label::after { content: "check_small"; font-family: 'Material Symbols Outlined'; font-variation-settings: 'FILL' 1, 'wght' 700; font-size: 14px; line-height: 1; position: absolute; left: 1px; /* Ajuste fino para o ícone dentro do box */ top: 50%; transform: translateY(-50%) scale(0); color: var(--color-white); opacity: 0; transition: transform 0.1s ease-out, opacity 0.1s ease-out; }
 .category-tree__input:focus-visible + .category-tree__label::before { border-color: var(--focus-outline-color); box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3); }
 .category-tree__input:checked + .category-tree__label::before { background-color: var(--color-secondary-green); border-color: var(--color-secondary-green); }
 .category-tree__input:checked + .category-tree__label::after { transform: translateY(-50%) scale(1); opacity: 1; }
 .category-tree__input.is-indeterminate + .category-tree__label::before { background-color: var(--color-secondary-green); border-color: var(--color-secondary-green); }
-.category-tree__input.is-indeterminate + .category-tree__label::after { content: ""; font-family: initial; left: 3.5px; top: 50%; width: 8px; height: 2px; background-color: var(--color-white); border-radius: 1px; transform: translateY(-50%) scale(1); opacity: 1; }
-.category-tree__submenu { list-style: none; padding-left: var(--spacing-lg, 24px); margin-top: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; will-change: max-height; }
+.category-tree__input.is-indeterminate + .category-tree__label::after { content: ""; /* Remove ícone de check */ font-family: initial; left: 3.5px; /* Centraliza o traço */ top: 50%; width: 8px; height: 2px; background-color: var(--color-white); border-radius: 1px; transform: translateY(-50%) scale(1); opacity: 1; }
 
-/* --- Chips de Dificuldade (estilos originais mantidos) --- */
-.chip-group { display: flex; flex-wrap: wrap; gap: var(--spacing-sm, 10px); margin-top: var(--spacing-xs, 8px); }
+.category-tree__submenu { list-style: none; padding-left: var(--spacing-lg, 24px); margin-top: 0; /* Sem margem superior para submenus */ max-height: 0; overflow: hidden; transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-sizing: border-box; will-change: max-height; }
+/* .category-tree__submenu.is-expanded { /* JS pode adicionar/remover esta classe para animação de altura */ /* max-height: ... set by JS ...; */ /* } */
+
+.category-tree__empty-state {
+    padding: var(--spacing-sm, 12px) var(--spacing-xs, 8px);
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-size: var(--font-size-sm, 0.9rem);
+    text-align: center;
+}
+
+
+/* --- Chips de Dificuldade --- */
+.chip-group { display: flex; flex-wrap: wrap; gap: var(--spacing-sm, 10px); margin-top: var(--spacing-xs, 8px); /* Espaço acima dos chips */ }
 .chip-group__chip { padding: var(--spacing-xs, 8px) var(--spacing-md, 18px); font-size: var(--font-size-sm, 0.875rem); font-weight: var(--font-weight-medium, 500); color: var(--color-gray-700); background-color: var(--color-gray-100); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius-pill); cursor: pointer; transition: all 0.2s ease-out; }
 .chip-group__input:hover + .chip-group__chip, .chip-group__input:focus-visible + .chip-group__chip { border-color: var(--color-gray-400); color: var(--color-text-primary); background-color: var(--color-gray-200); transform: translateY(-1px); }
 .chip-group__input:focus-visible + .chip-group__chip { box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3); }
-.chip-group__input:checked + .chip-group__chip { color: var(--color-white); border-color: var(--color-secondary-green); background-color: var(--color-secondary-green); font-weight: var(--font-weight-semibold, 600); box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.25); transform: translateY(0px) scale(1.01); }
+.chip-group__input:checked + .chip-group__chip { color: var(--color-white); border-color: var(--color-secondary-green); background-color: var(--color-secondary-green); font-weight: var(--font-weight-semibold, 600); box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.25); transform: translateY(0px) scale(1.01); /* Efeito sutil de 'pressionado' */ }
 
-/* =========== INÍCIO: ESTILOS REFINADOS PARA O CONTROLE NUMÉRICO (STEPPER) =========== */
+
+/* --- Controle Numérico (Stepper) e Feedback --- */
 #filter-group-num-questions .filter-group__title {
-    margin-bottom: var(--spacing-sm, 12px); /* Espaçamento abaixo do título "Número de Questões" */
+    margin-bottom: var(--spacing-sm, 12px);
 }
 
-.form-group--filter-panel { /* Wrapper para o numeric-stepper e o texto de ajuda */
+.form-group--filter-panel {
     margin-top: var(--spacing-xxs, 4px);
-    /* O padding lateral já vem do .filter-panel__body, então não é necessário aqui a menos que queira mais específico */
-    /* padding: 0 var(--spacing-xs, 8px);  */
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Alinha o controle e o feedback à esquerda por padrão */
-    /* Se quiser centralizar o controle numérico e o texto de feedback abaixo dele: */
-    /* align-items: center; */
+    align-items: flex-start;
 }
 
 .numeric-stepper {
-    display: inline-flex; /* Para que os botões e o input fiquem na mesma linha e o wrapper se ajuste ao conteúdo */
-    align-items: center; /* Alinha verticalmente os itens internos */
-    border: 1.5px solid var(--color-gray-300); /* Borda sutil para o controle todo */
-    border-radius: var(--border-radius-md, 6px); /* Cantos arredondados consistentes */
-    overflow: hidden; /* Para que o border-radius funcione nos botões das extremidades */
-    background-color: var(--color-white); /* Fundo do controle */
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md, 6px);
+    overflow: hidden;
+    background-color: var(--color-white);
     transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-    height: 38px; /* ALTURA FIXA PARA O CONTROLE - AJUSTE CONFORME NECESSÁRIO */
-    /* max-width: 150px; */ /* Opcional: limitar a largura total do stepper */
+    height: 38px;
 }
-
-.numeric-stepper:focus-within { /* Destaque visual quando qualquer parte do controle está focada */
+.numeric-stepper:focus-within {
     border-color: var(--color-primary-medium);
-    box-shadow: 0 0 0 var(--focus-outline-width, 2px) rgba(var(--color-primary-medium-rgb), 0.15); /* Sombra de foco mais sutil */
+    box-shadow: 0 0 0 var(--focus-outline-width, 2px) rgba(var(--color-primary-medium-rgb), 0.15);
 }
 
 .numeric-stepper__button {
-    background-color: var(--color-gray-50); /* Fundo muito sutil para os botões */
+    background-color: var(--color-gray-50);
     color: var(--color-primary-dark);
     border: none;
-    padding: 0 var(--spacing-sm, 10px); /* Padding horizontal para área de clique */
+    padding: 0 var(--spacing-sm, 10px);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem; /* Tamanho dos ícones +/- */
+    font-size: 1.2rem;
     line-height: 1;
-    align-self: stretch; /* Faz os botões ocuparem a altura total do .numeric-stepper */
+    align-self: stretch;
     transition: background-color var(--transition-fast);
-    /* min-width: 36px; */ /* Largura mínima para os botões */
 }
-.numeric-stepper__button:hover {
-    background-color: var(--color-gray-200);
-}
-.numeric-stepper__button:active {
-    background-color: var(--color-gray-300);
-}
-.numeric-stepper__button .material-symbols-outlined {
-    font-size: inherit;
-    font-variation-settings: 'wght' 400; /* Peso normal para ícones */
-    display: block; /* Garante que o ícone não cause altura extra */
-}
+.numeric-stepper__button:hover { background-color: var(--color-gray-200); }
+.numeric-stepper__button:active { background-color: var(--color-gray-300); }
+.numeric-stepper__button .material-symbols-outlined { font-size: inherit; font-variation-settings: 'wght' 400; display: block; }
 
-/* Linhas separadoras sutis entre os botões e o input */
-.numeric-stepper__button--decrement {
-    border-right: 1px solid var(--color-gray-300);
-}
-.numeric-stepper__button--increment {
-    border-left: 1px solid var(--color-gray-300);
-}
-/* Remove as bordas internas quando o controle está focado, para um visual mais limpo */
-.numeric-stepper:focus-within .numeric-stepper__button--decrement {
-    border-right-color: transparent;
-}
-.numeric-stepper:focus-within .numeric-stepper__button--increment {
-    border-left-color: transparent;
-}
+.numeric-stepper__button--decrement { border-right: 1px solid var(--color-gray-300); }
+.numeric-stepper__button--increment { border-left: 1px solid var(--color-gray-300); }
+.numeric-stepper:focus-within .numeric-stepper__button--decrement { border-right-color: transparent; }
+.numeric-stepper:focus-within .numeric-stepper__button--increment { border-left-color: transparent; }
 
 #num-questions-input.form-control--filter-panel {
-    border: none; /* Sem borda individual */
-    padding: var(--spacing-xs, 8px) var(--spacing-xxs, 4px); /* Padding horizontal mínimo */
-    width: 50px; /* LARGURA DO CAMPO CENTRAL - AJUSTE PARA CABER 2-3 DÍGITOS CONFORTAVELMENTE */
+    border: none;
+    padding: var(--spacing-xs, 8px) var(--spacing-xxs, 4px);
+    width: 50px;
     text-align: center;
-    font-size: var(--font-size-sm, 0.9rem); /* Fonte do número */
+    font-size: var(--font-size-sm, 0.9rem);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-primary);
-    background-color: transparent; /* Herda o fundo do .numeric-stepper (branco) */
+    background-color: transparent;
     -webkit-appearance: textfield;
     -moz-appearance: textfield;
     appearance: textfield;
-    border-radius: 0; /* Sem cantos arredondados individuais */
+    border-radius: 0;
     box-shadow: none;
-    height: 100%; /* Ocupa a altura do .numeric-stepper */
+    height: 100%;
     min-height: unset;
-    flex-grow: 0; /* Não permite que cresça além da largura definida */
-    flex-shrink: 0; /* Não permite que encolha */
-    outline: none; /* Foco gerenciado pelo wrapper */
+    flex-grow: 0;
+    flex-shrink: 0;
+    outline: none;
 }
-#num-questions-input.form-control--filter-panel:focus {
-    box-shadow: none; /* Garante que não haja sombra de foco no input */
-}
-
+#num-questions-input.form-control--filter-panel:focus { box-shadow: none; }
 #num-questions-input.form-control--filter-panel::placeholder {
     color: var(--color-text-muted);
     opacity: 0.85;
-    font-size: calc(var(--font-size-sm) * 0.88); /* Placeholder um pouco menor */
+    font-size: calc(var(--font-size-sm) * 0.88);
     font-weight: var(--font-weight-normal);
     line-height: normal;
-    /* Centralização já vem do input */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* Estilos para o feedback do número de questões */
 .form-text-feedback--filter-panel {
     font-size: var(--font-size-xs, 0.8rem);
     color: var(--color-text-secondary);
-    margin-top: var(--spacing-xs, 8px); /* Espaço entre o stepper e o texto de feedback */
+    margin-top: var(--spacing-xs, 8px);
     display: block;
     line-height: 1.4;
-    /* Se o .numeric-stepper for centralizado no .form-group--filter-panel,
-       adicione text-align: center aqui também. */
-    /* text-align: center; */
+    transition: color 0.2s ease-out, font-weight 0.2s ease-out; /* Adicionada transição para font-weight */
+    min-height: 1.4em; /* Evita "pulo" de layout */
+    text-align: left; /* Garante alinhamento padrão */
+    padding-left: 2px; /* Pequeno ajuste de alinhamento */
 }
-/* =========== FIM: ESTILOS REFINADOS PARA O CONTROLE NUMÉRICO =========== */
+
+.form-text-feedback--filter-panel.is-loading {
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.form-text-feedback--filter-panel.is-empty,
+.form-text-feedback--filter-panel.has-error {
+    color: var(--color-accent-red);
+    font-weight: var(--font-weight-medium); /* Torna o texto um pouco mais forte */
+}
 
 
 /* Rodapé do painel (botões Limpar/Aplicar) */
 .filter-panel__footer {
     padding: var(--spacing-md, 16px) var(--spacing-lg, 20px);
+    /* Adiciona padding para safe area em iOS */
     padding-bottom: calc(var(--spacing-md, 16px) + env(safe-area-inset-bottom, 10px));
     border-top: 1px solid var(--color-gray-200);
     display: flex;
     gap: var(--spacing-md, 12px);
-    background-color: var(--color-white);
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
+    background-color: var(--color-white); /* Garante fundo */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05); /* Sombra sutil no topo */
+    flex-shrink: 0; /* Impede que o rodapé encolha */
+    position: relative; /* Para z-index se necessário */
+    z-index: 10; /* Acima do conteúdo rolável do body */
 }
 .filter-panel__footer .button {
-    flex-grow: 1;
+    flex-grow: 1; /* Faz os botões ocuparem espaço igual */
     font-size: 0.9rem;
     padding: var(--spacing-xs, 10px) var(--spacing-sm, 16px);
     font-weight: var(--font-weight-semibold, 600);
     border-radius: var(--border-radius-md, 6px);
 }
 
+/* Estilo para o botão "Aplicar Filtros" quando desabilitado */
+.filter-panel__footer .button:disabled {
+    background-color: var(--color-gray-300) !important;
+    background-image: none !important;
+    border-color: var(--color-gray-400) !important;
+    color: var(--color-gray-600) !important;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+    transform: none; /* Remove transform do estado normal/hover */
+    filter: none; /* Remove filtro do estado normal/hover */
+}
+
+
 /* --- Responsividade Geral do Painel --- */
 @media (max-width: 480px) {
-    .filter-panel { max-width: 100%; border-radius: 0; }
-    .filter-panel__header { padding: var(--spacing-sm, 14px) var(--spacing-md, 16px); }
-    .filter-panel__title { font-size: 1.3rem; }
-    /* ... (outros estilos responsivos para categorias, chips, rodapé como antes) ... */
-    
-    /* Ajustes responsivos para o novo controle numérico */
-    .numeric-stepper {
-        height: 36px; /* Altura um pouco menor em mobile */
+    .filter-panel {
+        max-width: 100%; /* Ocupa tela inteira em mobile */
+        border-radius: 0; /* Remove cantos arredondados */
     }
+    .filter-panel__header {
+        padding: var(--spacing-sm, 14px) var(--spacing-md, 16px);
+    }
+    .filter-panel__title {
+        font-size: 1.3rem;
+    }
+    .filter-panel__body {
+        padding: var(--spacing-sm, 16px); /* Padding um pouco menor no corpo */
+        gap: var(--spacing-md, 20px);
+    }
+    
+    .numeric-stepper { height: 36px; }
     #num-questions-input.form-control--filter-panel {
-        width: 42px; /* Largura do input central um pouco menor */
+        width: 42px;
         font-size: var(--font-size-sm, 0.875rem);
     }
     .numeric-stepper__button {
-        padding: 0 var(--spacing-xs, 8px); /* Padding horizontal menor nos botões stepper */
-        font-size: 1.1rem; /* Ícones stepper podem ser um pouco menores */
+        padding: 0 var(--spacing-xs, 8px);
+        font-size: 1.1rem;
     }
     #num-questions-input.form-control--filter-panel::placeholder {
         font-size: calc(var(--font-size-sm) * 0.82);
@@ -363,10 +389,10 @@
         padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px);
         padding-bottom: calc(var(--spacing-xs, 10px) + env(safe-area-inset-bottom, 8px));
         gap: var(--spacing-xs, 8px);
-        flex-direction: column-reverse;
+        flex-direction: column-reverse; /* Botões empilhados em mobile */
     }
     .filter-panel__footer .button {
         font-size: 0.85rem;
-        padding: var(--spacing-xs, 10px);
+        padding: var(--spacing-xs, 10px); /* Padding uniforme para botões empilhados */
     }
 }

@@ -53,24 +53,23 @@
             <div class="form-group form-group--filter-panel">
                 <label for="num-questions-input" class="form-label u-sr-only">Quantidade de Questões</label>
                 
-                {# NOVO WRAPPER .numeric-stepper para o input e botões +/- #}
                 <div class="numeric-stepper">
                     <button type="button" class="numeric-stepper__button numeric-stepper__button--decrement" aria-label="Diminuir quantidade de questões">
                         <span class="material-symbols-outlined">remove</span>
                     </button>
                     <input type="number" id="num-questions-input" name="num_questions"
-                           class="form-control--filter-panel" {# A classe genérica .form-control pode ser removida se o CSS específico for suficiente #}
-                           placeholder="Qtd." {# Placeholder inicial bem curto, JS irá atualizar #}
+                           class="form-control--filter-panel"
+                           placeholder="Qtd." 
                            min="1" 
                            step="1"
-                           aria-describedby="num-questions-feedback"> {# Para acessibilidade, associa com o texto de feedback #}
+                           aria-describedby="num-questions-feedback">
                     <button type="button" class="numeric-stepper__button numeric-stepper__button--increment" aria-label="Aumentar quantidade de questões">
                         <span class="material-symbols-outlined">add</span>
                     </button>
                 </div>
                 
-                <small class="form-text-feedback form-text-feedback--filter-panel" id="num-questions-feedback">
-                    Carregando informações... {# Texto inicial enquanto JS não atualiza #}
+                <small class="form-text-feedback form-text-feedback--filter-panel" id="num-questions-feedback" aria-live="polite">
+                    Carregando informações...
                 </small>
             </div>
         </div>

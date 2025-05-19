@@ -31,8 +31,8 @@ export default class ResultDisplay {
             resultadoCard, resultadoTitulo, resultadoPontos, resultadoAcertos, resultadoErros, 
             resultadoTempo, resultadoMensagemMotivacional, 
             placeholderFiltrosContainer, 
-            challengeHubContainer // Referência direta ao elemento do Challenge Hub
-        } = this.elements; // this.elements é this.quizUI.elements
+            challengeHubContainer 
+        } = this.elements; 
 
         if (!resultadoCard || !userData) {
             console.error("ResultDisplay: Elemento do card de resultado ou dados do usuário ausentes.");
@@ -44,7 +44,7 @@ export default class ResultDisplay {
             this.quizUI.hideActiveQuizElements(); 
         } else {
             console.error("ResultDisplay.show: quizUI.hideActiveQuizElements não é uma função ou quizUI não está definido.");
-            this.quizUI.hideElement(this.quizUI.elements.quizSectionContent); // Fallback
+            this.quizUI.hideElement(this.quizUI.elements.quizSectionContent); 
             this.quizUI.hideElement(this.elements.questionGridContainer); 
             if (this.quizUI.questionDisplay && typeof this.quizUI.questionDisplay.hideProgressBar === 'function') {
                 this.quizUI.questionDisplay.hideProgressBar();
@@ -57,33 +57,22 @@ export default class ResultDisplay {
         } else {
             this.quizUI.hideElement(this.elements.scorePanel); 
         }
-
-        // 3. Esconder o Challenge Hub - Tentativa mais direta e com logging
-        // console.log("ResultDisplay.show: Tentando esconder o Challenge Hub.");
-        if (challengeHubContainer) {
-            // console.log("ResultDisplay.show: challengeHubContainer encontrado. Classes antes de esconder:", challengeHubContainer.className);
-            this.quizUI.hideElement(challengeHubContainer); 
-            // console.log("ResultDisplay.show: challengeHubContainer classes depois de esconder:", challengeHubContainer.className);
-            if (challengeHubContainer.classList.contains(this.quizUI.hiddenClassName)) {
-                // console.log("ResultDisplay.show: challengeHubContainer ESCONDIDO com sucesso.");
-            } else {
-                console.warn("ResultDisplay.show: FALHA ao esconder challengeHubContainer. A classe 'u-is-hidden' não foi aplicada.");
-            }
-        } else {
-            console.warn("ResultDisplay.show: this.elements.challengeHubContainer é nulo ou indefinido. Não foi possível esconder o Challenge Hub diretamente.");
-        }
-        // Tentar também através da instância, se existir, como uma segunda garantia (embora o acima deva ser suficiente)
-        if (this.quizUI.challengeHubInstance && typeof this.quizUI.challengeHubInstance.hideHub === 'function') {
-            // console.log("ResultDisplay.show: Chamando challengeHubInstance.hideHub()");
-            this.quizUI.challengeHubInstance.hideHub();
-        }
         
-        // 4. Esconder o placeholder de filtros
+        // 3. Esconder o placeholder de filtros
         this.quizUI.hideElement(placeholderFiltrosContainer);
     
-        // 5. Limpar quaisquer mensagens de aviso
+        // 4. Limpar quaisquer mensagens de aviso (Esta chamada pode reexibir o hub)
         if (this.quizUI.warningDisplay && typeof this.quizUI.warningDisplay.clear === 'function') {
             this.quizUI.warningDisplay.clear();
+        }
+
+        // 5. Garantir que o Challenge Hub esteja escondido APÓS limpar avisos e ANTES de mostrar resultados
+        // Esta é a correção chave: re-esconder o hub aqui.
+        if (challengeHubContainer) {
+            this.quizUI.hideElement(challengeHubContainer); 
+        } 
+        if (this.quizUI.challengeHubInstance && typeof this.quizUI.challengeHubInstance.hideHub === 'function') {
+            this.quizUI.challengeHubInstance.hideHub();
         }
     
         // Preencher os dados do resultado

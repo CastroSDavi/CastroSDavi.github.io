@@ -4,10 +4,10 @@
 {% block title %}{{ page_title|default:"Minha Conta" }} - MedQuiz{% endblock title %}
 
 {% block content %}
-<section id="account-section-page" class="main-section"> {# Este ID é usado pelo AccountPageManager.js e QuizUI.js #}
+<section id="account-section-page" class="main-section">
     <div class="account-layout-container">
         {# ========================== #}
-        {# === BARRA LATERAL FIXA === #}
+        {# === BARRA LATERAL (MENU) === #}
         {# ========================== #}
         <aside class="account-sidebar">
             <nav class="account-sidebar__nav">
@@ -58,6 +58,10 @@
         {# === ÁREA DE CONTEÚDO PRINCIPAL === #}
         {# =================================== #}
         <main class="account-content">
+            {# BOTÃO VOLTAR MODIFICADO - APENAS ÍCONE, MAIS INTEGRADO #}
+            <button id="account-back-to-menu" class="button button--icon-only account-content__back-button u-is-hidden" aria-label="Voltar ao Menu">
+                <span class="material-symbols-outlined">arrow_back_ios_new</span> {# Ícone de seta mais moderno #}
+            </button>
 
             {# --- Seção: Informações do Perfil --- #}
             <div id="profile-info-content" class="account-content__section is-visible">
@@ -92,7 +96,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                        {# Futuramente, aqui poderia ter um botão para "Editar Perfil" que levaria a um formulário #}
                     </div>
                 </div>
             </div>
@@ -102,7 +105,6 @@
                 <div class="card card--conta-perfil">
                     <h2 class="card__title">Minhas Questões Favoritas</h2>
                     <div class="card__body" id="favorite-questions-container">
-                        {# O JavaScript (FavoriteManager via AccountPageManager) irá popular esta área #}
                         <p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>
                     </div>
                     <div class="card__footer u-is-hidden" id="favorite-questions-empty-state" style="text-align:center; padding-top: var(--spacing-md); border-top: 1px solid var(--color-gray-200);">
@@ -157,12 +159,12 @@
                                 <tbody>
                                 {% for stat in user_daily_stats_summary %}
                                     <tr>
-                                        <td>{{ stat.data_estatistica|date:"d/m/Y" }}</td>
-                                        <td>{{ stat.perguntas_respondidas_dia }}</td>
-                                        <td>{{ stat.acertos_dia }}</td>
-                                        <td>{{ stat.precisao_dia|floatformat:0 }}%</td>
-                                        <td>{{ stat.pontos_dia }}</td>
-                                        <td>{{ stat.tempo_estudo_formatado }}</td>
+                                        <td data-label="Data">{{ stat.data_estatistica|date:"d/m/Y" }}</td>
+                                        <td data-label="Respondidas">{{ stat.perguntas_respondidas_dia }}</td>
+                                        <td data-label="Acertos">{{ stat.acertos_dia }}</td>
+                                        <td data-label="Precisão">{{ stat.precisao_dia|floatformat:0 }}%</td>
+                                        <td data-label="Pontos">{{ stat.pontos_dia }}</td>
+                                        <td data-label="Tempo Estudo">{{ stat.tempo_estudo_formatado }}</td>
                                     </tr>
                                 {% endfor %}
                                 </tbody>
@@ -185,7 +187,6 @@
                                 <span class="material-symbols-outlined button__icon">password</span>
                                 Alterar Senha
                             </a>
-                            {# Adicionar link para editar email/outras informações se implementado #}
                             <a href="#" class="button button--secondary">Editar Email</a>
                             
                             <hr style="margin: var(--spacing-md) 0; border-color: var(--color-gray-200);">
@@ -198,12 +199,12 @@
                                 </button>
                             </form>
                             
-                            {# Futuramente: Opção para deletar conta #}
                              <button type="button" class="button button--danger-outline" style="margin-top: var(--spacing-md);">Deletar Minha Conta</button> 
                         </div>
                     </div>
                 </div>
             </div>
+            {# --- Seção: Preferências --- #}
             <div id="preferences-content" class="account-content__section">
                  <div class="card card--conta-perfil">
                     <h2 class="card__title">Preferências</h2>

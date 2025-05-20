@@ -1,0 +1,1210 @@
+[
+    {
+        "id_pergunta": 1,
+        "texto_pergunta": "Qual é a principal função das células de Sertoli localizadas no epitélio seminífero dos túbulos seminíferos?",
+        "url_imagem": "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1",
+        "referencia_bibliografica": "Gartner, 5ª ed.",
+        "categoria_ids": [1],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 2,
+        "texto_pergunta": "Quais são as células espermatogênicas localizadas mais próximas ao lúmen do túbulo seminífero?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Gartner, 5ª ed.",
+        "categoria_ids": [1],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 3,
+        "texto_pergunta": "Que tipo de epitélio reveste os dúctulos eferentes do sistema genital masculino?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Gartner, 5ª ed.",
+        "categoria_ids": [1],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 4,
+        "texto_pergunta": "Qual estrutura testicular contém as células de Leydig responsáveis pela produção de testosterona?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Gartner, 5ª ed.",
+        "categoria_ids": [1],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 5,
+        "texto_pergunta": "Sobre o ducto deferente, é correto afirmar que:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Gartner, 5ª ed.",
+        "categoria_ids": [1],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 6,
+        "texto_pergunta": "Qual organela celular é a principal responsável pela respiração celular aeróbica?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Biologia Celular Básica",
+        "categoria_ids": [2, 3],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 7,
+        "texto_pergunta": "O processo de glicólise ocorre em qual compartimento celular?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Bioquímica Ilustrada",
+        "categoria_ids": [2],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 8,
+        "texto_pergunta": "Qual a principal função do tecido epitelial de revestimento?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Histologia Básica",
+        "categoria_ids": [3],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 9,
+        "texto_pergunta": "Os neurônios são células especializadas na função de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neurociência Fundamental",
+        "categoria_ids": [3],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 10,
+        "texto_pergunta": "Qual é a função primária das enzimas nas reações bioquímicas celulares?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Princípios de Bioquímica de Lehninger",
+        "categoria_ids": [2, 3],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 11,
+        "texto_pergunta": "O processo de síntese de RNA a partir de um molde de DNA é denominado:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Biologia Molecular da Célula",
+        "categoria_ids": [2],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 12,
+        "texto_pergunta": "Qual molécula é frequentemente referida como a principal 'moeda energética' utilizada pelas células para realizar trabalho?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Bioquímica Ilustrada",
+        "categoria_ids": [2, 3],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 13,
+        "texto_pergunta": "Quantos estágios clínicos principais são classicamente descritos no trabalho de parto?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Manual de Obstetrícia de Williams",
+        "categoria_ids": [4],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 14,
+        "texto_pergunta": "Qual é uma das funções vitais da placenta durante a gestação humana?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fisiologia Médica de Guyton e Hall",
+        "categoria_ids": [4, 3],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 15,
+        "texto_pergunta": "Qual hormônio é essencial primariamente para a *produção* de leite (lactogênese) nas glândulas mamárias após o parto?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Tratado de Ginecologia e Obstetrícia",
+        "categoria_ids": [4, 3],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 16,
+        "texto_pergunta": "O Ciclo de Krebs (ou Ciclo do Ácido Cítrico), uma etapa crucial da respiração celular aeróbica, ocorre em qual compartimento celular?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Bioquímica Básica",
+        "categoria_ids": [2],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 17,
+        "texto_pergunta": "A Regra de Naegele é um método comum em obstetrícia utilizado para estimar:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Obstetrícia Fundamental",
+        "categoria_ids": [4],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 18,
+        "texto_pergunta": "Qual lobo cerebral é primariamente responsável pelo processamento da informação visual?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neurociência Fundamental",
+        "categoria_ids": [5],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 19,
+        "texto_pergunta": "A capacidade do corpo de sentir a posição e o movimento das suas partes (membros, articulações) é chamada de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fisiologia Humana",
+        "categoria_ids": [5, 6],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 20,
+        "texto_pergunta": "Qual estrutura do ouvido interno contém as células ciliadas responsáveis pela transdução do estímulo sonoro em sinal neural?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neurociência: Desvendando o Sistema Nervoso",
+        "categoria_ids": [5],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 21,
+        "texto_pergunta": "Receptores sensoriais na pele que detectam estímulos dolorosos são chamados de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Bases da Fisiologia",
+        "categoria_ids": [5],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 22,
+        "texto_pergunta": "A via neural que transmite informações táteis finas e proprioceptivas da medula espinhal para o tálamo é conhecida como:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neuroanatomia Clínica",
+        "categoria_ids": [5],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 23,
+        "texto_pergunta": "A perda progressiva de massa e força muscular associada ao envelhecimento é denominada:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Tratado de Geriatria",
+        "categoria_ids": [7, 6],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 24,
+        "texto_pergunta": "Qual das seguintes condições é uma síndrome geriátrica comum caracterizada por declínio cognitivo agudo e flutuante, geralmente associado a uma causa médica subjacente?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Geriatria Básica",
+        "categoria_ids": [7],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 25,
+        "texto_pergunta": "O processo de envelhecimento celular, onde as células param de se dividir, mas permanecem metabolicamente ativas, é chamado de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Biologia Molecular do Envelhecimento",
+        "categoria_ids": [7, 8],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 26,
+        "texto_pergunta": "A diminuição da densidade mineral óssea que aumenta o risco de fraturas em idosos é conhecida como:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Endocrinologia e Metabologia",
+        "categoria_ids": [7, 6],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 27,
+        "texto_pergunta": "O uso concomitante de múltiplos medicamentos, comum em idosos e que aumenta o risco de interações e efeitos adversos, é conhecido como:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Farmacologia Clínica",
+        "categoria_ids": [7],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 28,
+        "texto_pergunta": "Qual tipo de articulação é caracterizado pela presença de uma cavidade articular preenchida por líquido sinovial, permitindo ampla mobilidade?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Anatomia Humana",
+        "categoria_ids": [6],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 29,
+        "texto_pergunta": "Quais células são primariamente responsáveis pela reabsorção (degradação) do tecido ósseo?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Histologia Básica - Junqueira e Carneiro",
+        "categoria_ids": [6, 3],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 30,
+        "texto_pergunta": "Estruturas de tecido conjuntivo denso que conectam ossos a outros ossos em uma articulação são chamadas de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Ortopedia Essencial",
+        "categoria_ids": [6],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 31,
+        "texto_pergunta": "Uma fratura óssea na qual o osso quebrado perfura a pele é classificada como:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Princípios de Cirurgia Ortopédica",
+        "categoria_ids": [6],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 32,
+        "texto_pergunta": "Qual condição ortopédica comum é caracterizada pelo desgaste da cartilagem articular, levando a dor e rigidez nas articulações?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Reumatologia Clínica",
+        "categoria_ids": [6, 7],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 33,
+        "texto_pergunta": "O processo pelo qual células cancerígenas se espalham do tumor primário para outras partes do corpo, formando novos tumores, é chamado de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Oncologia Básica",
+        "categoria_ids": [8],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 34,
+        "texto_pergunta": "Genes que, quando mutados ou superexpressos, podem promover o crescimento celular descontrolado e contribuir para o câncer são chamados de:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Biologia Molecular do Câncer",
+        "categoria_ids": [8, 9],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 35,
+        "texto_pergunta": "Qual proteína, conhecida como 'guardiã do genoma', atua como um gene supressor de tumor, induzindo parada do ciclo celular ou apoptose em resposta a danos no DNA?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Biologia Celular e Molecular",
+        "categoria_ids": [8, 3],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 36,
+        "texto_pergunta": "O desenvolvimento de novos vasos sanguíneos, um processo frequentemente explorado por tumores para obter nutrientes e oxigênio, é denominado:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patologia Oncológica",
+        "categoria_ids": [8],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 37,
+        "texto_pergunta": "Qual modalidade de tratamento do câncer utiliza medicamentos que circulam pelo corpo para destruir células cancerígenas de crescimento rápido?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Oncologia Clínica",
+        "categoria_ids": [8],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 38,
+        "texto_pergunta": "Qual o principal mecanismo de ação dos inseticidas organofosforados e qual enzima é primariamente inativada, levando à hiperestimulação colinérgica?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 39,
+        "texto_pergunta": "O que é o processo de 'aging' relacionado à intoxicação por organofosforados e qual a sua consequência principal para a recuperação do organismo?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 40,
+        "texto_pergunta": "A Síndrome Neurológica Intermediária (SNI) pode ocorrer após a exposição a organofosforados. Quais são as principais características clínicas e o período típico de manifestação?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 41,
+        "texto_pergunta": "Piretroides são classificados em Tipo I e Tipo II, com quadros clínicos distintos. Qual característica química diferencia os piretroides Tipo II e qual sintoma é proeminente em sua intoxicação?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 42,
+        "texto_pergunta": "Qual o mecanismo de ação dos herbicidas compostos clorofenoxi e qual o principal efeito observado em plantas-alvo?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 43,
+        "texto_pergunta": "O paraquat é um herbicida bipiridílico de alta toxicidade. Qual órgão é particularmente afetado pelo acúmulo de paraquat e qual a consequência histopatológica primária nesse órgão?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 44,
+        "texto_pergunta": "Na intoxicação por glifosato, quais são os sintomas gastrintestinais iniciais mais comuns e como os casos mais graves podem evoluir?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 45,
+        "texto_pergunta": "A etilenotioureia (ETU) é um metabólito de qual classe de fungicidas e qual é o principal efeito adverso crônico associado à ETU em mamíferos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002, 1005],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 46,
+        "texto_pergunta": "Qual o mecanismo de ação dos rodenticidas anticoagulantes e quais fatores de coagulação têm sua síntese afetada?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 47,
+        "texto_pergunta": "Na avaliação inicial de um paciente com suspeita de intoxicação por agrotóxico, qual o mnemônico universalmente empregado para garantir a estabilidade e quais as primeiras medidas de suporte vital?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 48,
+        "texto_pergunta": "A lavagem gástrica é um procedimento de descontaminação em casos de ingestão de agrotóxicos. Em que situação específica ela é indicada e qual o critério para considerar sua finalização?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 49,
+        "texto_pergunta": "Qual o mecanismo de ação da Pralidoxima no tratamento da intoxicação por organofosforados e quais tipos de sintomas ela visa tratar?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 50,
+        "texto_pergunta": "Qual a principal via de contaminação por agrotóxicos notificada no Brasil entre janeiro de 2013 e junho de 2022, e qual o desfecho mais comum nesses casos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 51,
+        "texto_pergunta": "Qual órgão regulador no Brasil é o principal responsável pela avaliação da eficácia agronômica e registro de agrotóxicos, e qual outro órgão avalia os riscos à saúde humana?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 52,
+        "texto_pergunta": "Segundo a nova classificação da OMS (GHS) para agrotóxicos, além da toxicidade aguda, quais outros aspectos são considerados na rotulagem dos produtos químicos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 53,
+        "texto_pergunta": "Qual a principal característica da intoxicação por carbamatos em relação à sua reversibilidade e quais são os sintomas comuns?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 54,
+        "texto_pergunta": "A notificação de casos de intoxicação por agrotóxicos é obrigatória no Brasil. A partir de qual momento essa notificação deve ser realizada e qual sistema é utilizado?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 55,
+        "texto_pergunta": "Qual o critério de tempo estabelecido em 2023 para a análise técnica de registro de agrotóxicos no Brasil e o que pode ocorrer em casos de produtos com ingredientes já aprovados em outros países?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 56,
+        "texto_pergunta": "Qual dos seguintes NÃO é um critério para que rodenticidas sejam considerados eficazes e seguros?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 57,
+        "texto_pergunta": "A exposição crônica a compostos organoclorados, mesmo que apresentem toxicidade aguda moderada, pode estar associada a efeitos adversos em quais sistemas orgânicos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002, 1005],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 58,
+        "texto_pergunta": "Qual o papel da enzima pseudocolinesterase (BuChE) no contexto da exposição a organofosforados?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 59,
+        "texto_pergunta": "Qual dos seguintes NÃO é um fator de risco para intoxicação por agrotóxicos ?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 60,
+        "texto_pergunta": "A administração de carvão ativado é uma medida de descontaminação. Em que janela de tempo após a ingestão ele é mais eficaz e qual o seu mecanismo de ação?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 61,
+        "texto_pergunta": "Qual o efeito da Atropina no tratamento da síndrome colinérgica por organofosforados e quais sintomas ela visa neutralizar?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 62,
+        "texto_pergunta": "Qual o papel da Epinefrina no manejo da intoxicação por agrotóxicos, segundo o documento?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 63,
+        "texto_pergunta": "O documento menciona que a contaminação por agrotóxicos pode ocorrer por via dérmica. Como essa via de exposição pode afetar outros indivíduos além daquele que manuseou diretamente o produto?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 64,
+        "texto_pergunta": "Qual das seguintes é uma medida de prevenção primária contra intoxicação por agrotóxicos em trabalhadores?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Fácil"
+    },
+    {
+        "id_pergunta": 65,
+        "texto_pergunta": "A Neuropatia Tardia Induzida por Organofosforados (OPIDN) manifesta-se semanas após a exposição. Qual o sintoma inicial característico e como a condição progride?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 66,
+        "texto_pergunta": "Qual o principal efeito agudo da intoxicação por piretroides do Tipo I, que não possuem o grupo a-ciano?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 67,
+        "texto_pergunta": "No caso de ingestão de compostos clorofenoxi, quais sintomas agudos são tipicamente observados?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002, 1005],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 68,
+        "texto_pergunta": "Qual das seguintes opções descreve corretamente a toxicidade dos fungicidas ditiocarbamatos e um de seus efeitos crônicos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002, 1005],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 69,
+        "texto_pergunta": "O Sistema Harmonizado Globalmente de Classificação e Rotulagem de Produtos Químicos (GHS) substituiu a antiga classificação da OMS para agrotóxicos. Além da toxicidade aguda (categorias I a IV), que outros elementos são cruciais na nova abordagem do GHS para a rotulagem?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 70,
+        "texto_pergunta": "A Esterase Alvo Neuropática (NTE) é inibida por alguns organofosforados específicos. Qual é a principal consequência clínica associada à inibição da NTE?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 71,
+        "texto_pergunta": "Além da ingestão intencional ou acidental de altas doses, de que outra forma a população geral pode ser cronicamente exposta a pequenas doses de agrotóxicos por via oral?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10, 1002],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 72,
+        "texto_pergunta": "No tratamento da intoxicação por agrotóxicos, qual a principal indicação para o uso de benzodiazepínicos e qual o seu mecanismo de ação?",
+        "url_imagem": "",
+        "referencia_bibliografica": "P05 - Agrotóxicos.pdf",
+        "categoria_ids": [10],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 73,
+        "texto_pergunta": "Um agricultor, que utiliza regularmente herbicidas contendo 2,4-D há vários anos, começa a apresentar fraqueza muscular progressiva, formigamento persistente nas mãos e pés, dificuldades de coordenação motora e episódios de irritabilidade notados pela família. Investigações clínicas e neurológicas posteriores revelam múltiplos déficits. Considerando os potenciais efeitos neurológicos da exposição crônica ao 2,4-D, qual das seguintes opções descreve o espectro MAIS completo e preciso de achados que poderiam estar contribuindo para o quadro clínico complexo do agricultor, abrangendo danos estruturais e funcionais no sistema nervoso?",
+        "url_imagem": "image_198721.jpg",
+        "referencia_bibliografica": "image_198721.jpg",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 74,
+        "texto_pergunta": "Na intoxicação aguda por paraquat, a lesão pulmonar inicial é desencadeada por um processo bioquímico específico nas células alveolares. Qual é este evento celular chave e qual sua consequência histopatológica inicial mais característica em casos graves?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 75,
+        "texto_pergunta": "Em pacientes que sobrevivem à fase aguda da pneumopatia por paraquat, uma segunda fase proliferativa pode se instalar. Qual alteração celular fundamental caracteriza esta fase tardia, resultando paradoxalmente em deterioração funcional pulmonar crônica?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 76,
+        "texto_pergunta": "Após um indivíduo superar a fase inflamatória e destrutiva inicial da intoxicação pulmonar por paraquat, qual complicação tardia, decorrente da subsequente fase proliferativa, representa o maior risco de mortalidade semanas ou meses depois?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 77,
+        "texto_pergunta": "Herbicidas bipiridílicos como paraquat e diquat possuem diferentes perfis de toxicidade. Qual é a distinção crucial entre eles no que tange à sua tendência de acúmulo no tecido pulmonar e à indução de lesão pulmonar fibrótica característica?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 78,
+        "texto_pergunta": "A letalidade na fase aguda da intoxicação por paraquat frequentemente se due à anóxia grave. Qual conjunto de alterações patológicas pulmonares primárias é o principal responsável pela falha catastrófica das trocas gasosas nesse estágio?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
+        "categoria_ids": [1002],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 79,
+        "texto_pergunta": "Considerando as características morfológicas distintivas entre Taenia solium e Taenia saginata adultas, qual das seguintes afirmações está CORRETA?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Parasitologia Humana: Cestoides",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 80,
+        "texto_pergunta": "No ciclo de vida do complexo teníase-cisticercose, a infecção humana pode ocorrer de duas formas principais, resultando em doenças distintas. Qual alternativa descreve corretamente a forma de infecção e a doença resultante?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Parasitologia Humana: Cestoides",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 81,
+        "texto_pergunta": "Um paciente apresenta um quadro de convulsões de início recente e cefaleia. A investigação diagnóstica por neuroimagem (RM) revela múltiplas lesões císticas intraparenquimatosas, algumas com edema perilesional e captação de contraste anelar, e uma delas exibindo um ponto hiperdenso interior (escólex). Qual dos seguintes estágios evolutivos dos cisticercos é MAIS compatível com essas lesões ativas e sintomáticas?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Parasitologia e Neurologia Clínica",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 82,
+        "texto_pergunta": "No diagnóstico laboratorial da teníase e da cisticercose, diferentes métodos podem ser empregados. Assinale a alternativa que descreve CORRETAMENTE a utilidade e as limitações de um desses métodos:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Diagnóstico Laboratorial em Parasitologia",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 83,
+        "texto_pergunta": "A neurocisticercose pode se manifestar de formas variadas dependendo da localização e do estágio dos cisticercos no sistema nervoso central. Qual das seguintes apresentações clínicas é MAIS característica da neurocisticercose extraparênquimatosa envolvendo os ventrículos cerebrais ou o espaço subaracnóideo?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Parasitologia e Neurologia Clínica",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 84,
+        "texto_pergunta": "O tratamento da neurocisticercose ativa frequentemente envolve o uso de corticosteroides em conjunto com antiparasitários. Qual a principal justificativa para o uso de corticosteroides nesse contexto?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Terapêutica em Neurologia e Parasitologia",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 85,
+        "texto_pergunta": "Sobre os mecanismos de ação dos fármacos utilizados no tratamento da teníase e cisticercose, qual das seguintes associações está INCORRETA?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Farmacologia de Antiparasitários",
+        "categoria_ids": [1006, 2],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 86,
+        "texto_pergunta": "A diferenciação entre neurocisticercose intraparenquimatosa e extraparênquimatosa é crucial para o manejo clínico e prognóstico. Qual das seguintes características é mais associada à forma intraparenquimatosa?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neurologia Clínica e Parasitologia",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 87,
+        "texto_pergunta": "No contexto do ciclo de vida da Taenia solium, qual evento é diretamente responsável pelo desenvolvimento da CISTICERCOSE no ser humano?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Ciclos Biológicos de Parasitas",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 88,
+        "texto_pergunta": "Durante a investigação de um paciente com suspeita de neurocisticercose, a avaliação oftalmológica é considerada obrigatória antes do início da terapia antiparasitária. Qual o principal motivo para esta recomendação?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Oftalmologia e Doenças Infecciosas",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 89,
+        "texto_pergunta": "No ciclo de vida da Taenia solium, os suínos atuam como hospedeiros intermediários ao ingerirem ovos ou proglótides grávidas do parasita. O que ocorre após a ingestão desses ovos pelo suíno?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Ciclos Biológicos de Parasitas",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 90,
+        "texto_pergunta": "A maioria dos portadores de teníase é assintomática. No entanto, quando os sintomas ocorrem, quais são os mais comuns relacionados à presença do verme adulto no intestino?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Parasitologia Clínica",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 91,
+        "texto_pergunta": "Qual é a principal razão pela qual a identificação da espécie de Taenia (se T. solium ou T. saginata) em um paciente com teníase é clinicamente importante do ponto de vista da saúde pública e do paciente?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Epidemiologia de Doenças Parasitárias",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 92,
+        "texto_pergunta": "Para o diagnóstico da cisticercose muscular ou subcutânea, qual achado em exames de imagem é frequentemente descrito como característico, especialmente em fases mais tardias da lesão tecidual?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Radiologia de Doenças Infecciosas",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 93,
+        "texto_pergunta": "Considerando os estágios evolutivos dos cisticercos no sistema nervoso central, em qual deles é mais provável que um cisto seja completamente assintomático e não apresente edema perilesional significativo na ressonância magnética?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neuropatologia Parasitária",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 94,
+        "texto_pergunta": "Qual das seguintes opções representa uma limitação importante do teste ELISA para detecção de anticorpos no contexto diagnóstico da cisticercose humana?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Imunodiagnóstico de Parasitoses",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 95,
+        "texto_pergunta": "Um indivíduo que reside em uma área rural com saneamento básico precário e criação de suínos sem inspeção sanitária rigorosa, desenvolve teníase por Taenia solium. Qual é o principal mecanismo pelo qual este mesmo indivíduo pode subsequentemente desenvolver neurocisticercose por autoinfecção?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Parasitologia e Saúde Pública",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 96,
+        "texto_pergunta": "Qual das seguintes opções descreve mais acuradamente a função principal e o mecanismo de ação dos fármacos isoquinolônicos, como o praziquantel, no tratamento de infecções por tênias?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Farmacologia de Antiparasitários",
+        "categoria_ids": [1006, 2],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 97,
+        "texto_pergunta": "Considerando a epidemiologia e os ciclos de vida da Taenia solium e Taenia saginata, qual das seguintes afirmações sobre os hospedeiros e a transmissão é VERDADEIRA?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Epidemiologia de Doenças Parasitárias",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 98,
+        "texto_pergunta": "Qual das seguintes situações descreve o mecanismo mais provável de um indivíduo desenvolver neurocisticercose a partir de um contato domiciliar com um portador de teníase por Taenia solium?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Saúde Pública e Doenças Transmissíveis",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 99,
+        "texto_pergunta": "Em um paciente com neurocisticercose, a presença de um cisto intraventricular pode levar a complicações graves. Qual é o principal mecanismo pelo qual um cisto nessa localização pode causar sintomatologia neurológica aguda?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Neurologia de Doenças Infecciosas",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 100,
+        "texto_pergunta": "Durante o tratamento da neurocisticercose com agentes antiparasitários, qual dos seguintes achados nos exames de imagem e clínicos sugeriria uma resposta inflamatória exacerbada à morte do parasita, necessitando de manejo cuidadoso com corticosteroides?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Terapêutica de Doenças Parasitárias",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 101,
+        "texto_pergunta": "Qual é a principal diferença no ciclo de vida que explica por que a Taenia saginata causa apenas teníase em humanos, enquanto a Taenia solium pode causar tanto teníase quanto cisticercose em humanos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Biologia de Cestoides",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 102,
+        "texto_pergunta": "No diagnóstico diferencial da neurocisticercose, várias outras condições podem apresentar manifestações clínicas e radiológicas semelhantes. Qual das seguintes NÃO é tipicamente considerada um diagnóstico diferencial primário importante para neurocisticercose com lesões císticas múltiplas e convulsões?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Diagnóstico Diferencial em Neurologia",
+        "categoria_ids": [1006, 5],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 103,
+        "texto_pergunta": "A prevenção da teníase e da cisticercose humana envolve um conjunto de medidas de saúde pública e higiene pessoal. Qual das seguintes medidas é MAIS eficaz para prevenir a AQUISIÇÃO DA TENÍASE por Taenia solium?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Prevenção de Doenças Parasitárias",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 104,
+        "texto_pergunta": "Qual das seguintes medidas é crucial para a PREVENÇÃO DA CISTICERCOSE HUMANA em comunidades onde a Taenia solium é endêmica?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Saúde Comunitária e Parasitoses",
+        "categoria_ids": [1006],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 105,
+        "texto_pergunta": "Em relação ao tratamento da teníase intestinal (verme adulto), qual fármaco é frequentemente utilizado e tem como mecanismo de ação a inibição da fosforilação oxidativa mitocondrial do parasita?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Farmacologia Clínica de Antiparasitários",
+        "categoria_ids": [1006, 2],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 106,
+        "texto_pergunta": "Em relação à toxinfecção alimentar, é correto afirmar:",
+        "url_imagem": "",
+        "referencia_bibliografica": "Toxiinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 107,
+        "texto_pergunta": "A E. coli Enterotoxigênica (ETEC) utiliza diferentes enterotoxinas para induzir diarreia. Qual o principal mecanismo de ação da toxina termoestável STa e qual o segundo mensageiro intracelular predominantemente envolvido nesse processo, conforme descrito no documento?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de E. coli - Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 108,
+        "texto_pergunta": "A E. coli Enteropatogênica (EPEC) causa diarreia, especialmente em crianças. Qual estrutura bacteriana, codificada pelo plasmídeo do fator de aderência em cepas típicas, é crucial para a adesão inicial da EPEC às células epiteliais do intestino delgado?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de E. coli - Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 109,
+        "texto_pergunta": "A E. coli Enteroagregativa (EAEC) é assim denominada devido a um padrão de adesão característico. Qual é esse padrão e qual manifestação clínica é frequentemente associada à infecção por EAEC em crianças, especialmente em países em desenvolvimento?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de E. coli - Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 110,
+        "texto_pergunta": "A toxina Shiga, produzida pela E. coli Produtora de Toxina Shiga (STEC), possui uma estrutura com subunidades A e B. Qual é a função primordial da subunidade A após a internalização da toxina na célula hospedeira?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de E. coli - Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 111,
+        "texto_pergunta": "A Síndrome Hemolítico-Urêmica (SHU) é a complicação mais grave da infecção por STEC. Quais são os três componentes cardinais que definem esta síndrome?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de E. coli - Toxinfecções Alimentares",
+        "categoria_ids": [1009, 305],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 112,
+        "texto_pergunta": "A E. coli Enteroinvasora (EIEC) causa um quadro clínico semelhante à shigelose. Qual o principal mecanismo patogênico utilizado pela EIEC para causar doença no epitélio do cólon?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de E. coli - Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 113,
+        "texto_pergunta": "A infecção por Salmonella spp. envolve um processo complexo de invasão da mucosa intestinal. Qual o papel da 'ilha de patogenicidade I' da Salmonella nesse processo infeccioso?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese de Salmonella - Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 116,
+        "texto_pergunta": "A patogênese da infecção por Salmonella envolve a adesão à mucosa intestinal e a invasão celular. Qual sistema de secreção bacteriana é crucial para injetar proteínas efetoras na célula hospedeira, facilitando o engolfamento e a multiplicação intracelular da Salmonella?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Mecanismos de Virulência de Salmonella",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 117,
+        "texto_pergunta": "A Shigella dysenteriae produz a toxina Shiga, que contribui significativamente para a patologia da shigelose. Além do dano intestinal direto, qual complicação sistêmica grave pode ser causada por esta toxina devido à sua ação em células endoteliais glomerulares?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Toxicologia da Toxina Shiga",
+        "categoria_ids": [1009, 305],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 118,
+        "texto_pergunta": "O Clostridium perfringens tipo A é uma causa comum de intoxicação alimentar, frequentemente associada a carnes mal refrigeradas. Qual é o principal sintoma gastrointestinal característico desta intoxicação e qual o período de incubação típico?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Toxinfecção por Clostridium perfringens",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 119,
+        "texto_pergunta": "A intoxicação alimentar por Staphylococcus aureus é causada por enterotoxinas pré-formadas. Qual característica dessas toxinas e qual o principal veículo de transmissão frequentemente implicado em surtos?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Intoxicação Estafilocócica",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 120,
+        "texto_pergunta": "O Bacillus cereus pode causar duas formas distintas de doença transmitida por alimentos: a forma emética e a forma diarreica. Qual das seguintes opções compara corretamente as características das toxinas envolvidas em cada forma?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Toxinas de Bacillus cereus",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 121,
+        "texto_pergunta": "Infecções oculares por Bacillus cereus podem ser devastadoras. Qual é o principal modo de aquisição dessas infecções e quais fatores de virulência contribuem para a rápida destruição dos tecidos oculares?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Infecções Oculares por Bacillus cereus",
+        "categoria_ids": [1009, 415],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 122,
+        "texto_pergunta": "Considerando os diferentes patotipos de Escherichia coli que causam diarreia, qual deles é particularmente conhecido por sua capacidade de autoaglutinação, formando um biofilme denso sobre a mucosa intestinal, e está associado à diarreia persistente e atraso de crescimento em crianças de países em desenvolvimento?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patotipos Diarreicos de E. coli",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 123,
+        "texto_pergunta": "Qual dos seguintes patógenos é descrito no documento como responsável por aproximadamente 30% dos casos de diarreia em viajantes e tem um período de incubação de 1 a 2 dias?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Epidemiologia de Toxinfecções Alimentares",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 124,
+        "texto_pergunta": "A E. coli Enteropatogênica (EPEC) afeta principalmente crianças. Qual é a principal alteração estrutural causada pela EPEC nas células epiteliais do intestino delgado, que é fundamental para sua patogênese?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Patogênese da EPEC",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 125,
+        "texto_pergunta": "A E. coli Produtora de Toxina Shiga (STEC/EHEC) pode causar colite hemorrágica. Qual das seguintes vias de transmissão NÃO é comumente associada à infecção por STEC, de acordo com as informações do documento?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Transmissão de STEC",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 126,
+        "texto_pergunta": "A Salmonella é um patógeno entérico invasivo. Qual é o principal local de adesão e invasão inicial da Salmonella no trato gastrointestinal humano?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Invasão por Salmonella",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 127,
+        "texto_pergunta": "A Shigella é conhecida por sua alta infectividade e por causar disenteria. Qual é o único reservatório conhecido para a Shigella, o que tem implicações diretas para as vias de transmissão?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Epidemiologia da Shigella",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+        "id_pergunta": 128,
+        "texto_pergunta": "O Clostridium perfringens tipo A, habitante comum do trato intestinal, pode causar intoxicação alimentar. Além da toxina alfa, qual outra toxina produzida por algumas cepas de C. perfringens é mencionada por causar estase intestinal e lesões necróticas, contribuindo para a enterite necrosante?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Toxinas de Clostridium perfringens",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Difícil"
+    },
+    {
+        "id_pergunta": 129,
+        "texto_pergunta": "A forma emética da intoxicação por Bacillus cereus é causada por uma enterotoxina específica. Qual é essa toxina e qual a sua principal característica em relação à estabilidade térmica?",
+        "url_imagem": "",
+        "referencia_bibliografica": "Intoxicação por Bacillus cereus",
+        "categoria_ids": [1009],
+        "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 171,
+    "texto_pergunta": "De acordo com a semiologia cardíaca, qual das seguintes afirmações sobre o deslocamento do ictus cordis é CORRETA?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 172,
+    "texto_pergunta": "A posição de cócoras, frequentemente adotada por portadores de cardiopatia congênita cianótica com fluxo sanguíneo pulmonar diminuído, tem qual principal efeito fisiológico que alivia a dispneia, segundo a teoria mais aceita?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202, 3, 301],
+    "nivel_dificuldade": "Difícil"
+    },
+    {
+    "id_pergunta": 173,
+    "texto_pergunta": "Qual é a divisão principal da aorta que se origina na raiz da aorta e se estende até a altura do ângulo esternal, continuando-se com a crossa da aorta?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [2, 202, 1115],
+    "nivel_dificuldade": "Fácil"
+    },
+    {
+    "id_pergunta": 174,
+    "texto_pergunta": "Durante o exame físico do precórdio em crianças, o abaulamento desta região é mais frequentemente causado por quais condições, devido à maior flexibilidade da parede torácica infantil?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 175,
+    "texto_pergunta": "Ao detectar um frêmito cardiovascular, quais são as três características semiológicas que precisam ser investigadas para uma correta avaliação clínica?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 176,
+    "texto_pergunta": "Quais são os três ramos arteriais principais que se originam diretamente da crossa da aorta?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [2, 202, 1373],
+    "nivel_dificuldade": "Fácil"
+    },
+    {
+    "id_pergunta": 177,
+    "texto_pergunta": "Em pacientes com insuficiência cardíaca, a astenia está primariamente relacionada a qual mecanismo fisiopatológico, desconsiderando os efeitos de terapia diurética ou desequilíbrios eletrolíticos secundários?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 407, 1227],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 178,
+    "texto_pergunta": "Considerando os focos ou áreas de ausculta cardíaca, qual das seguintes afirmações é VERDADEIRA de acordo com o material de referência?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Fácil"
+    },
+    {
+    "id_pergunta": 179,
+    "texto_pergunta": "Quais dos seguintes achados semiológicos, obtidos pela inspeção e palpação do precórdio, são caracteristicamente observados na dilatação do ventrículo direito?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 180,
+    "texto_pergunta": "Qual das seguintes características é um elemento distintivo fundamental entre o estalido de abertura mitral e a terceira bulha cardíaca (B3)?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 181,
+    "texto_pergunta": "Segundo o texto, qual dos seguintes mecanismos NÃO é uma causa primária para a formação de sopros cardíacos por alteração do fluxo sanguíneo?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202, 3, 301],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 182,
+    "texto_pergunta": "Em relação à sua ocorrência no ciclo cardíaco, como se caracteriza tipicamente um sopro sistólico de ejeção?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 183,
+    "texto_pergunta": "A manobra de Rivero-Carvallo é um procedimento semiológico útil para diferenciar sopros. Qual é a interpretação de um aumento da intensidade do sopro durante a inspiração profunda nesta manobra?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Difícil"
+    },
+    {
+    "id_pergunta": 184,
+    "texto_pergunta": "Quais são as características semiológicas que, em conjunto, são típicas de um sopro cardíaco classificado como 'inocente'?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 185,
+    "texto_pergunta": "Qual é considerada a principal característica semiológica que auxilia no diagnóstico diferencial do atrito pericárdico em relação a outros ruídos cardíacos como sopros e estalidos?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 186,
+    "texto_pergunta": "O rumor venoso é um ruído contínuo que pode ser auscultado na base do pescoço. Qual das seguintes manobras ou condições tipicamente faz o rumor venoso DESAPARECER ou diminuir de intensidade?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 187,
+    "texto_pergunta": "Durante o exame físico da aorta, a presença de um abaulamento pulsátil projetado à direita do esterno, no nível do 2º e 3º espaço intercostal, é mais sugestiva de dilatação ou aneurisma de qual segmento aórtico?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 188,
+    "texto_pergunta": "Ao examinar o pulso radial de um paciente, o examinador nota que a parede arterial é endurecida, irregular e tortuosa, com uma sensação tátil comparada à \"traqueia de passarinho\". Segundo o texto de referência, esta alteração na artéria radial é mais indicativa de qual condição específica?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 189,
+    "texto_pergunta": "O que define o \"déficit de pulso\" e qual o mecanismo fisiopatológico subjacente a este achado semiológico?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 190,
+    "texto_pergunta": "O estalido protossistólico pulmonar, também chamado de ruído de ejeção pulmonar, possui características específicas de ausculta e causas associadas. Qual das seguintes opções descreve corretamente o local de melhor ausculta e uma condição em que este estalido pode ser encontrado?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Difícil"
+    },
+    {
+    "id_pergunta": 191,
+    "texto_pergunta": "Quais são as características estetoacústicas distintivas do sopro diastólico da estenose mitral, incluindo seu timbre e momento de ocorrência na diástole?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 192,
+    "texto_pergunta": "Como se caracteriza o sopro diastólico que surge devido à insuficiência das valvas sigmoides (aórtica ou pulmonar) em relação ao seu início no ciclo cardíaco e sua qualidade sonora?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 193,
+    "texto_pergunta": "Qual das seguintes condições é citada no texto como uma causa clássica para a ausculta de um sopro contínuo, também conhecido como sopro 'em maquinaria'?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Médio"
+    },
+    {
+    "id_pergunta": 194,
+    "texto_pergunta": "No sistema de graduação da intensidade dos sopros cardíacos utilizando cruzes, como é definido um sopro classificado como de intensidade ++++ (quatro cruzes)?",
+    "url_imagem": "",
+    "referencia_bibliografica": "Porto & Porto, Semiologia Médica, 8ª Ed.",
+    "categoria_ids": [4, 402, 1202],
+    "nivel_dificuldade": "Fácil"
+}
+]

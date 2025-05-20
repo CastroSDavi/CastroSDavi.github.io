@@ -76,6 +76,7 @@
     line-height: 1.2;
     scroll-margin-top: var(--spacing-md, 20px);
     color: var(--color-gray-900);
+    min-width: 0; /* Ajuda o flex a encolher corretamente se o conteúdo for muito grande */
 }
 
 #id-questao {
@@ -89,6 +90,7 @@
     border: none;
     min-width: auto;
     height: auto;
+    flex-shrink: 0; /* Para não ser esmagado pelo título da categoria */
 }
 
 #id-questao::after {
@@ -113,10 +115,18 @@
     background-color: transparent;
     border: none;
     padding: 0;
-    white-space: nowrap;
+    white-space: nowrap;       /* Impede a quebra de linha */
+    overflow: hidden;          /* Esconde o texto que transbordar */
+    text-overflow: ellipsis;   /* Adiciona "..." ao final do texto cortado */
     align-self: flex-end;
     padding-bottom: 0.15em;
+    max-width: 250px;          /* Defina uma largura máxima apropriada (ajuste conforme necessário) */
+                               /* Exemplo alternativo: max-width: calc(100% - 50px); se #id-questao tiver largura fixa */
+    display: inline-block;     /* Necessário para text-overflow funcionar com max-width em alguns contextos */
+    vertical-align: baseline;  /* Ou outro alinhamento vertical se necessário */
+    min-width: 0; /* Importante para que o flex item possa encolher adequadamente */
 }
+
 
 /* Os estilos específicos do botão de favorito foram movidos para 
    assets/css/components/favorite-button.css 
@@ -169,6 +179,7 @@
     #categoria-titulo {
       font-size: 0.75rem;
       letter-spacing: 0.06em;
+      max-width: 180px; /* Ajuste de max-width para telas menores */
     }
 
     /* A responsividade do tamanho do botão de favorito está agora em favorite-button.css */
@@ -199,6 +210,7 @@
     #categoria-titulo {
       font-size: 0.7rem;
       letter-spacing: 0.05em;
+      max-width: 150px; /* Ajuste de max-width para telas ainda menores */
     }
 
     /* A responsividade do tamanho do botão de favorito está agora em favorite-button.css */

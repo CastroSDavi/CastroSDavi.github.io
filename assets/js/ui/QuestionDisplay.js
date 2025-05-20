@@ -30,7 +30,6 @@ export default class QuestionDisplay {
         });
     }
 
-    // Método auxiliar movido de QuizUI
     _getCategoriaProfundidade(cat, allCats) {
         if (!cat || !allCats || !Array.isArray(allCats)) return -1;
         let depth = 0;
@@ -45,7 +44,6 @@ export default class QuestionDisplay {
         return depth;
     }
 
-    // Método movido de QuizUI
     _displayQuestionImage(url, qNum) {
         const imgElement = this.elements.perguntaImagem;
         if (imgElement) {
@@ -62,11 +60,116 @@ export default class QuestionDisplay {
         }
     }
 
+    _formatCategoriaDisplay(question, todasCategorias, isQuickQuizMode) {
+        let tituloCatDisplay = "Questão"; // Fallback inicial
+        let fullCategoryTooltip = "Categorias não especificadas";
+        const MAX_DISPLAY_LENGTH = 45; // Máximo de caracteres para o título antes de truncar com (+N) ou "..."
+
+        if (isQuickQuizMode) {
+            tituloCatDisplay = "Quiz Rápido";
+            fullCategoryTooltip = "Modo Quiz Rápido";
+        } else {
+            const idsCatPerg = question.categoria_ids || [];
+            const totalCategoriasPergunta = idsCatPerg.length;
+
+            if (totalCategoriasPergunta > 0 && Array.isArray(todasCategorias) && todasCategorias.length > 0) {
+                // Mapear todos os nomes de categoria para o tooltip
+                const nomesCategoriasQuestao = idsCatPerg
+                    .map(id => todasCategorias.find(cat => cat.id_categoria === id)?.nome_categoria)
+                    .filter(name => name);
+                
+                if (nomesCategoriasQuestao.length > 0) {
+                    fullCategoryTooltip = `Categorias: ${nomesCategoriasQuestao.join(', ')}`;
+                }
+
+                // Lógica para exibir a categoria mais específica ou um resumo
+                let idCatMaisEspecifica = idsCatPerg[0];
+                if (totalCategoriasPergunta > 1) {
+                    const catObjsPerg = todasCategorias.filter(c => idsCatPerg.includes(c.id_categoria));
+                    if (catObjsPerg.length > 0) {
+                        idCatMaisEspecifica = catObjsPerg.reduce((deepest, curr) =>
+                            this._getCategoriaProfundidade(curr, todasCategorias) > this._getCategoriaProfundidade(deepest, todasCategorias) ? curr : deepest,
+                            catObjsPerg[0]
+                        ).id_categoria;
+                    }
+                }
+
+                // Montar o breadcrumb para a categoria mais específica
+                let caminhoBreadcrumb = [];
+                let idAtual = idCatMaisEspecifica;
+                let iteracoes = 0;
+                while (idAtual != null && iteracoes < 5) { // Limite de profundidade do breadcrumb
+                    const catEncontrada = todasCategorias.find(cat => cat.id_categoria === idAtual);
+                    if (catEncontrada) {
+                        caminhoBreadcrumb.unshift(catEncontrada.nome_categoria);
+                        idAtual = catEncontrada.id_categoria_pai;
+                    } else {
+                        break;
+                    }
+                    iteracoes++;
+                }
+
+                let breadcrumbDisplay = caminhoBreadcrumb.length > 0 ? caminhoBreadcrumb.join(' › ') : "Tópicos Diversos";
+
+                if (breadcrumbDisplay.length > MAX_DISPLAY_LENGTH) {
+                    // Se o breadcrumb da mais específica for muito longo, truncá-lo
+                    tituloCatDisplay = `${breadcrumbDisplay.substring(0, MAX_DISPLAY_LENGTH - 3)}...`;
+                    if (totalCategoriasPergunta > caminhoBreadcrumb.length) {
+                        // Se há mais categorias do que as mostradas no breadcrumb truncado
+                        // (isso pode acontecer se a mais específica for muito aninhada e houver outras de nível superior)
+                        const outrasCategoriasCount = totalCategoriasPergunta - caminhoBreadcrumb.length; // Ou um cálculo mais preciso se necessário
+                        if (outrasCategoriasCount > 0) {
+                           tituloCatDisplay += ` (+${outrasCategoriasCount} outras)`;
+                        }
+                    }
+                } else if (totalCategoriasPergunta > 1) {
+                    // Se o breadcrumb couber mas houver outras categorias além das que formam o breadcrumb da mais específica
+                    // (e.g., a pergunta está em "Cardio > Arritmia" e também em "Emergência")
+                    // Contamos quantas categorias não estão no caminho do breadcrumb da mais específica
+                    const idsNoBreadcrumb = new Set();
+                    let tempId = idCatMaisEspecifica;
+                    let tempIter = 0;
+                     while (tempId != null && tempIter < 5) {
+                        const catEnc = todasCategorias.find(cat => cat.id_categoria === tempId);
+                        if (catEnc) { idsNoBreadcrumb.add(catEnc.id_categoria); tempId = catEnc.id_categoria_pai; }
+                        else { break; }
+                        tempIter++;
+                    }
+                    // A lógica acima está um pouco simplificada, pois o breadcrumb é o caminho para UMA categoria.
+                    // Se a pergunta tem múltiplas categorias principais (não hierárquicas entre si),
+                    // o "+N" deve refletir isso.
+                    // Uma forma mais simples: se o breadcrumb da mais específica couber,
+                    // e houver mais de uma categoria na pergunta, mostre a contagem.
+                    const outrasNaoNoBreadcrumb = idsCatPerg.filter(id => !idsNoBreadcrumb.has(id)).length;
+                    
+                    if (totalCategoriasPergunta > caminhoBreadcrumb.length || outrasNaoNoBreadcrumb > 0) {
+                         // Ajuste para mostrar o número total de categorias se for mais de uma
+                         // e o breadcrumb da mais específica for o principal.
+                         // Ex: "Cardio › Arritmias (+1)" se ela também estiver em "Terapia Intensiva"
+                         // Poderíamos simplificar para:
+                         tituloCatDisplay = `${breadcrumbDisplay} (+${totalCategoriasPergunta - 1} outras)`;
+                    } else {
+                        tituloCatDisplay = breadcrumbDisplay;
+                    }
+
+
+                } else {
+                    tituloCatDisplay = breadcrumbDisplay;
+                }
+
+            } else { // Nenhuma categoria associada ou `todasCategorias` não disponível
+                tituloCatDisplay = "Tópicos Diversos";
+                fullCategoryTooltip = "Categorias não especificadas";
+            }
+        }
+
+        return { display: tituloCatDisplay, tooltip: fullCategoryTooltip, allCategoryIds: question.categoria_ids || [] };
+    }
+
+
     displayCurrentQuestion() {
         const question = this.quizState.getCurrentQuestion();
         if (!question) {
-            // console.warn("QuestionDisplay: Nenhuma questão atual para exibir.");
-            // QuizUI ou QuizLogic deve tratar o caso de não haver mais questões (fim do quiz ou erro)
             return;
         }
 
@@ -76,35 +179,15 @@ export default class QuestionDisplay {
         const isQuickQuizMode = this.quizState.isQuickQuizMode;
         const options = this.quizData.getOpcoesPorPerguntaId(question.id_pergunta);
 
-        // Atualiza título, texto da pergunta, referência, etc.
-        let tituloCat = "Questão";
-        if (isQuickQuizMode) {
-            tituloCat = "Quiz Rápido";
-        } else {
-            const idsCatPerg = question.categoria_ids || [];
-            if (idsCatPerg.length > 0 && Array.isArray(todasCategorias)) {
-                let idCatMostrar = idsCatPerg[0];
-                if (idsCatPerg.length > 1) { // Se tem múltiplas categorias, tenta achar a mais específica
-                    const catObjsPerg = todasCategorias.filter(c => idsCatPerg.includes(c.id_categoria));
-                    if (catObjsPerg.length > 0) {
-                        idCatMostrar = catObjsPerg.reduce((deepest, curr) =>
-                            this._getCategoriaProfundidade(curr, todasCategorias) > this._getCategoriaProfundidade(deepest, todasCategorias) ? curr : deepest,
-                            catObjsPerg[0]
-                        ).id_categoria;
-                    }
-                }
-                // Monta o caminho da categoria (breadcrumbs)
-                let caminho = []; let idAtual = idCatMostrar; let i = 0;
-                while (idAtual != null && Array.isArray(todasCategorias) && i < 5) {
-                    const catEnc = todasCategorias.find(cat => cat.id_categoria === idAtual);
-                    if (catEnc) { caminho.unshift(catEnc.nome_categoria); idAtual = catEnc.id_categoria_pai; }
-                    else { break; }
-                    i++;
-                }
-                tituloCat = caminho.length > 0 ? caminho.join(' › ') : "Tópicos Diversos";
-            }
+        const categoriaInfo = this._formatCategoriaDisplay(question, todasCategorias, isQuickQuizMode);
+
+        if (this.elements.categoriaTitulo) {
+            this.elements.categoriaTitulo.innerText = categoriaInfo.display;
+            this.elements.categoriaTitulo.setAttribute('title', categoriaInfo.tooltip);
+            // Opcional: armazenar os IDs para interações futuras (e.g., clique para ver todas)
+            this.elements.categoriaTitulo.dataset.categoriaIds = categoriaInfo.allCategoryIds.join(',');
         }
-        if (this.elements.categoriaTitulo) this.elements.categoriaTitulo.innerText = tituloCat;
+
         if (this.elements.idQuestao) this.elements.idQuestao.innerText = qNum;
         if (this.elements.perguntaTexto) this.elements.perguntaTexto.textContent = question.texto_pergunta;
         if (this.elements.referenciaQuestao) this.elements.referenciaQuestao.textContent = `Fonte: ${question.referencia_bibliografica || "Não informada"}`;
@@ -113,11 +196,9 @@ export default class QuestionDisplay {
         this.updateProgressBar(qNum, totalQ);
         this.elements.questionTitle?.focus({ preventScroll: true });
 
-        // Botão de Favorito
         if (this.elements.btnToggleFavorite) {
             if (this.quizUI.userIsAuthenticated && question.id_pergunta !== undefined) {
                 this.quizUI.showElement(this.elements.btnToggleFavorite);
-                // MODIFICADO: Chama FavoriteManager para atualizar o botão
                 if (this.quizUI.favoriteManager) {
                     this.quizUI.favoriteManager.updateFavoriteButtonState(question.is_favorited || false);
                 }
@@ -127,26 +208,21 @@ export default class QuestionDisplay {
             }
         }
         
-        // Botões de Resposta
         this.generateAnswerButtons(question.id_pergunta, options, question.respostaDadaId);
 
-        // Feedback (se já respondida)
         if (question.respostaDadaId !== undefined) {
             this.disableAnswers();
-            if (question.respostaDadaId !== null) { // Se não foi apenas pulada
+            if (question.respostaDadaId !== null) { 
                 this.applyAnswerFeedback(question.respostaDadaId, options);
             }
         }
         
-        // Botão de Explicação (esconde por padrão, será mostrado por applyAnswerFeedback se necessário)
         this.quizUI.hideElement(this.elements.btnToggleExplanation);
-        if (this.quizUI.modalManager) this.quizUI.modalManager.toggleExplanationModal(false); // Garante que modal de explicação esteja fechado
+        if (this.quizUI.modalManager) this.quizUI.modalManager.toggleExplanationModal(false); 
 
-        // Navegação e Grid
         this.updateNavigationButtons();
         this.renderQuestionGrid();
     }
-
 
     generateAnswerButtons(perguntaId, opcoes, respostaDadaId) {
         const container = this.elements.respostasContainer;
@@ -181,7 +257,7 @@ export default class QuestionDisplay {
         const baseClass = 'question-display__answer-option';
         const answeredClass = `${baseClass}--answered`;
         this.elements.respostasContainer?.querySelectorAll(`button.${baseClass}`).forEach(button => {
-            button.onclick = null; // Remove listener de clique
+            button.onclick = null; 
             button.disabled = true;
             button.classList.add(answeredClass);
             button.style.cursor = "default";
@@ -205,7 +281,7 @@ export default class QuestionDisplay {
             if (btnOpId === selectedOpId) {
                 if (optionData.eh_correta) { btn.classList.add(corrCl); userCorrect = true; }
                 else { btn.classList.add(incorrCl); }
-            } else if (optionData.eh_correta) { // Mostra a correta mesmo que não selecionada
+            } else if (optionData.eh_correta) { 
                 btn.classList.add(corrCl);
             }
         });
@@ -214,7 +290,6 @@ export default class QuestionDisplay {
             this.elements.feedbackAcessivel.textContent = userCorrect ? "Você acertou!" : "Resposta incorreta.";
         }
 
-        // Lógica para mostrar/esconder botão de explicação
         const currentQ = this.quizState?.getCurrentQuestion();
         const hasGeneralExplanation = currentQ && currentQ.explicacao_resposta && currentQ.explicacao_resposta.trim() !== '';
         const hasOptionSpecificFeedback = opcoes.some(op => op.feedback_opcao && op.feedback_opcao.trim() !== '');
@@ -261,7 +336,7 @@ export default class QuestionDisplay {
         } else {
             this.quizUI.showElement(navigationButtons);
             prevBtn.disabled = isFirst;
-            nextBtn.disabled = false; // Habilitado por padrão, QuizLogic pode desabilitar se necessário (ex: durante envio de resposta)
+            nextBtn.disabled = false; 
             
             const nextButtonLabel = nextBtn.querySelector('.button__label') || nextBtn;
             if (isLast) {
@@ -271,8 +346,6 @@ export default class QuestionDisplay {
             }
         }
     }
-
-    // REMOVIDO: updateFavoriteButton(isFavorited) {...}
 
     _createGridArrow(direction, isDisabled, callback, ariaLabel, extraClasses = []) {
         const button = document.createElement('button');

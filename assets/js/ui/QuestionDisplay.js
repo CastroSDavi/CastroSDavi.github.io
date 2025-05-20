@@ -117,8 +117,11 @@ export default class QuestionDisplay {
         if (this.elements.btnToggleFavorite) {
             if (this.quizUI.userIsAuthenticated && question.id_pergunta !== undefined) {
                 this.quizUI.showElement(this.elements.btnToggleFavorite);
-                this.updateFavoriteButton(question.is_favorited || false);
-                this.elements.btnToggleFavorite.dataset.perguntaId = question.id_pergunta.toString(); // Ainda útil para debug ou se o callback precisar
+                // MODIFICADO: Chama FavoriteManager para atualizar o botão
+                if (this.quizUI.favoriteManager) {
+                    this.quizUI.favoriteManager.updateFavoriteButtonState(question.is_favorited || false);
+                }
+                this.elements.btnToggleFavorite.dataset.perguntaId = question.id_pergunta.toString();
             } else {
                 this.quizUI.hideElement(this.elements.btnToggleFavorite);
             }
@@ -269,22 +272,7 @@ export default class QuestionDisplay {
         }
     }
 
-    updateFavoriteButton(isFavorited) {
-        const btn = this.elements.btnToggleFavorite;
-        if (!btn) return;
-        const icon = btn.querySelector('.material-symbols-outlined');
-        if (isFavorited) {
-            btn.classList.add('is-favorited');
-            if (icon) icon.textContent = 'star';
-            btn.setAttribute('aria-label', 'Remover dos Favoritos');
-            btn.title = 'Remover dos Favoritos';
-        } else {
-            btn.classList.remove('is-favorited');
-            if (icon) icon.textContent = 'star_outline';
-            btn.setAttribute('aria-label', 'Adicionar aos Favoritos');
-            btn.title = 'Adicionar aos Favoritos';
-        }
-    }
+    // REMOVIDO: updateFavoriteButton(isFavorited) {...}
 
     _createGridArrow(direction, isDisabled, callback, ariaLabel, extraClasses = []) {
         const button = document.createElement('button');

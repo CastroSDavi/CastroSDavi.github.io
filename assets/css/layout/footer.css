@@ -1,28 +1,119 @@
-/* assets/css/layout/_footer.css */
+/* assets/css/layout/footer.css - CLEANER LIGHT GRAY with THEME ACCENTS */
 
-/* Block: .site-footer (representa o <footer>) */
 .site-footer {
-    font: var(--font-weight-normal) var(--font-size-sm, 0.9rem) var(--font-family-sans);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: var(--spacing-md, 20px);
-    background-color: var(--color-gray-900);
-    color: var(--color-gray-300);
-    box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06);
-    border-top: var(--border-width) solid var(--color-gray-800);
-    height: var(--footer-height, 65px);
+    background-color: var(--color-gray-100); /* Fundo cinza claro, mesmo do body ou um tom próximo como --color-gray-200 */
+    color: var(--color-gray-700); /* Cor base para texto (copyright) */
+    padding: var(--spacing-lg, 28px) var(--spacing-md, 20px);
+    /* Borda superior sutil para separar do conteúdo */
+    border-top: 1px solid var(--color-gray-300); /* Um cinza um pouco mais escuro que o fundo */
+    font-family: var(--font-family-sans);
     flex-shrink: 0;
     position: relative;
     z-index: var(--z-index-default);
+    text-align: center;
 }
 
-/* Element: .site-footer__text */
-.site-footer__text {
+.site-footer__container {
+    max-width: var(--container-width-lg, 1100px);
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-md, 20px);
+}
+
+.site-footer__left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xxs, 5px);
+    margin-bottom: var(--spacing-sm, 10px);
+}
+
+.site-footer__logo a {
+    font-family: var(--font-family-heading);
+    font-size: 1.7rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary-dark); /* "Med" na cor primária escura (azul) */
+    text-decoration: none;
+    transition: opacity var(--transition-fast);
+}
+.site-footer__logo a:hover {
+    opacity: 0.8;
+}
+
+.site-footer__logo b {
+    color: var(--color-secondary-green); /* "Quiz" no verde secundário */
+    font-weight: var(--font-weight-extrabold);
+}
+
+.site-footer__copyright {
+    font-size: var(--font-size-xs, 0.8rem);
+    color: var(--color-gray-600); /* Copyright num tom de cinza médio */
     margin: 0;
 }
 
-/* Esconde o footer padrão em telas mobile onde a bottom-navbar aparece */
+.site-footer__right {
+    display: flex;
+    align-items: center;
+}
+
+.site-footer__nav-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-xs, 8px) var(--spacing-sm, 15px);
+}
+
+.site-footer__nav-link {
+    font-size: var(--font-size-sm, 0.875rem);
+    color: var(--color-primary-dark); /* Links na cor primária escura (azul) */
+    text-decoration: none;
+    font-weight: var(--font-weight-medium); /* Links com um pouco mais de peso */
+    transition: color var(--transition-fast);
+    padding: var(--spacing-xxs, 4px) 0;
+}
+
+.site-footer__nav-link:hover,
+.site-footer__nav-link:focus-visible {
+    color: var(--color-secondary-green); /* Links mudam para o verde secundário no hover/focus */
+    outline: none;
+}
+
+/* Foco visível para acessibilidade */
+.site-footer__nav-link:focus-visible {
+    /* Se precisar de um outline mais visível no fundo claro, pode adicionar: */
+    /* outline: 2px solid var(--focus-outline-color); */
+    /* outline-offset: 2px; */
+    /* border-radius: var(--border-radius-sm); */
+    /* Por ora, a mudança de cor para verde será o indicador de foco. */
+    /* Caso as diretrizes de acessibilidade exijam um anel, descomente acima. */
+    text-decoration: underline; /* Adiciona sublinhado para foco visível */
+    text-decoration-color: var(--color-secondary-green);
+    text-underline-offset: 2px;
+}
+
+
+/* Responsividade para alinhar corretamente em telas maiores */
+@media (min-width: 769px) {
+    .site-footer {
+        text-align: left;
+        background-color: var(--color-gray-200); /* Um tom ligeiramente diferente do body para desktop se desejar */
+    }
+    .site-footer__left {
+        align-items: flex-start;
+        margin-bottom: 0;
+    }
+    .site-footer__nav-list {
+        justify-content: flex-end;
+    }
+}
+
+/* Mantém a regra original para esconder o footer em telas mobile onde a bottom-navbar aparece */
 @media (max-width: 768px) {
     .site-footer {
         display: none;

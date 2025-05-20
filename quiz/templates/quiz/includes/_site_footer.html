@@ -1,4 +1,20 @@
 {% load static %}
 <footer id="footer" class="site-footer">
-    <p class="site-footer__text">&copy; {% now "Y" %} Desenvolvido por Davi Castro</p>
+    <div class="site-footer__container">
+        <div class="site-footer__left">
+            <div class="site-footer__logo">
+                <a href="{% url 'quiz:home' %}">Med<b>Quiz</b></a>
+            </div>
+            <p class="site-footer__copyright">&copy; {% now "Y" %} Davi Castro. Todos os direitos reservados.</p>
+        </div>
+        <div class="site-footer__right">
+            <nav class="site-footer__nav">
+                <ul class="site-footer__nav-list">
+                    <li><a href="#" class="site-footer__nav-link">Sobre Nós</a></li>
+                    <li><a href="#" class="site-footer__nav-link">Contato</a></li>  
+                    <li><a href="{% url 'quiz:questions' %}" class="site-footer__nav-link">Questões</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </footer>

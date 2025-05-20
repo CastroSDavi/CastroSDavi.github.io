@@ -6,33 +6,53 @@
 
 html {
     scroll-behavior: smooth;
-    font-size: 16px;
+    font-size: 16px; /* Define a base para unidades rem */
 }
 
 body {
     font-family: var(--font-family-sans);
-    color: var(--color-gray-900);
-    background-color: var(--color-gray-100);
-    line-height: 1.6;
+    color: var(--color-gray-900); /* Cor de texto principal */
+    background-color: var(--color-gray-100); /* Cor de fundo padrão do corpo */
+    line-height: 1.6; /* Altura de linha base para legibilidade */
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    /* Adicionado para controle de overflow específico */
-    overflow-y: auto; /* Rolagem padrão do corpo */
+    min-height: 100vh; /* Garante que o corpo ocupe pelo menos a altura total da viewport */
+    overflow-y: auto; /* Permite rolagem vertical no corpo por padrão */
+    padding-bottom: 0; /* Padding inferior padrão, será ajustado para mobile com bottom-nav */
+    transition: padding-bottom 0.25s ease-out; /* Transição suave para o padding-bottom */
 }
 
-/* NOVA CLASSE: Aplicada ao body quando a rolagem principal deve ser desabilitada */
+/* Classe aplicada via JavaScript para desabilitar a rolagem principal do body,
+   útil quando modais ou painéis laterais com rolagem própria estão ativos.
+   Especificamente usada na página da conta em mobile. */
 body.no-scroll {
     overflow-y: hidden;
 }
 
-
+/* Estilos de foco globais (resetados em reset.css, definidos aqui para visibilidade) */
 *:focus {
-    outline: none;
-    box-shadow: none;
+    outline: none; /* Remove o outline padrão do navegador */
+    box-shadow: none; /* Remove box-shadow padrão do navegador no foco, se houver */
 }
 
 *:focus-visible {
+  /* Estilo de foco visível para acessibilidade, usando variáveis CSS */
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
+}
+
+/* Ajustes de padding para a bottom navbar em telas mobile */
+@media (max-width: 768px) {
+    body {
+        /* Padding padrão para quando a bottom-nav está visível.
+           AccountPageManager.js irá sobrescrever isso com style.paddingBottom
+           quando necessário, ou esta regra será aplicada. */
+        padding-bottom: var(--bottom-nav-height, 60px);
+    }
+
+    /* Classe adicionada ao BODY via AccountPageManager.js quando o conteúdo de uma aba
+       da página "Minha Conta" está ativo e a bottom-nav está escondida. */
+    body.body-account-content-active {
+        padding-bottom: 0 !important; /* Remove o padding para a bottom-nav */
+    }
 }

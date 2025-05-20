@@ -1,16 +1,17 @@
 /* assets/css/layout/footer.css - CLEANER LIGHT GRAY with THEME ACCENTS */
 
 .site-footer {
-    background-color: var(--color-gray-100); /* Fundo cinza claro, mesmo do body ou um tom próximo como --color-gray-200 */
-    color: var(--color-gray-700); /* Cor base para texto (copyright) */
+    background-color: var(--color-gray-100);
+    color: var(--color-gray-700);
     padding: var(--spacing-lg, 28px) var(--spacing-md, 20px);
-    /* Borda superior sutil para separar do conteúdo */
-    border-top: 1px solid var(--color-gray-300); /* Um cinza um pouco mais escuro que o fundo */
+    border-top: 1px solid var(--color-gray-300);
     font-family: var(--font-family-sans);
     flex-shrink: 0;
     position: relative;
     z-index: var(--z-index-default);
     text-align: center;
+    /* O footer é visível por padrão; regras específicas abaixo o ocultarão */
+    display: block; /* Ou 'flex' se a estrutura interna do .site-footer precisar */
 }
 
 .site-footer__container {
@@ -35,7 +36,7 @@
     font-family: var(--font-family-heading);
     font-size: 1.7rem;
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary-dark); /* "Med" na cor primária escura (azul) */
+    color: var(--color-primary-dark);
     text-decoration: none;
     transition: opacity var(--transition-fast);
 }
@@ -44,13 +45,13 @@
 }
 
 .site-footer__logo b {
-    color: var(--color-secondary-green); /* "Quiz" no verde secundário */
+    color: var(--color-secondary-green);
     font-weight: var(--font-weight-extrabold);
 }
 
 .site-footer__copyright {
     font-size: var(--font-size-xs, 0.8rem);
-    color: var(--color-gray-600); /* Copyright num tom de cinza médio */
+    color: var(--color-gray-600);
     margin: 0;
 }
 
@@ -71,38 +72,46 @@
 
 .site-footer__nav-link {
     font-size: var(--font-size-sm, 0.875rem);
-    color: var(--color-primary-dark); /* Links na cor primária escura (azul) */
+    color: var(--color-primary-dark);
     text-decoration: none;
-    font-weight: var(--font-weight-medium); /* Links com um pouco mais de peso */
+    font-weight: var(--font-weight-medium);
     transition: color var(--transition-fast);
     padding: var(--spacing-xxs, 4px) 0;
 }
 
 .site-footer__nav-link:hover,
 .site-footer__nav-link:focus-visible {
-    color: var(--color-secondary-green); /* Links mudam para o verde secundário no hover/focus */
+    color: var(--color-secondary-green);
     outline: none;
 }
 
-/* Foco visível para acessibilidade */
 .site-footer__nav-link:focus-visible {
-    /* Se precisar de um outline mais visível no fundo claro, pode adicionar: */
-    /* outline: 2px solid var(--focus-outline-color); */
-    /* outline-offset: 2px; */
-    /* border-radius: var(--border-radius-sm); */
-    /* Por ora, a mudança de cor para verde será o indicador de foco. */
-    /* Caso as diretrizes de acessibilidade exijam um anel, descomente acima. */
-    text-decoration: underline; /* Adiciona sublinhado para foco visível */
+    text-decoration: underline;
     text-decoration-color: var(--color-secondary-green);
     text-underline-offset: 2px;
 }
 
+/*
+--------------------------------------------------------------------------
+  REGRAS DE VISIBILIDADE DO FOOTER
+--------------------------------------------------------------------------
+*/
 
-/* Responsividade para alinhar corretamente em telas maiores */
+/* 1. Esconde o footer em páginas específicas (Questões, Minha Conta) em DESKTOP */
+/* Esta regra se aplica quando a tela é MAIOR que 768px (mobile breakpoint) */
+@media (min-width: 769px) {
+    body[data-page-id="questions"] .site-footer,
+    body[data-page-id="account"] .site-footer {
+        display: none;
+    }
+}
+
+/* 2. Alinhamento para Desktop (quando o footer está visível) */
 @media (min-width: 769px) {
     .site-footer {
         text-align: left;
-        background-color: var(--color-gray-200); /* Um tom ligeiramente diferente do body para desktop se desejar */
+        /* Removido background-color específico para desktop, para herdar ou ser consistente
+           com a cor de fundo global definida na classe .site-footer, se houver. */
     }
     .site-footer__left {
         align-items: flex-start;
@@ -113,9 +122,10 @@
     }
 }
 
-/* Mantém a regra original para esconder o footer em telas mobile onde a bottom-navbar aparece */
+/* 3. SEMPRE esconde o footer em telas mobile (quando a bottom-navbar deve aparecer) */
+/* Esta regra tem alta prioridade para mobile. */
 @media (max-width: 768px) {
     .site-footer {
-        display: none;
+        display: none !important;
     }
 }

@@ -14,9 +14,11 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}MedQuiz{% endblock title %}</title>
 </head>
-{# ===== MODIFICAÇÃO AQUI ===== #}
-<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
+{# ===== MODIFICAÇÃO AQUI para adicionar data-page-id ===== #}
+<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" 
+      data-page-id="{% if request.resolver_match.view_name == 'quiz:home' %}home{% elif request.resolver_match.view_name == 'quiz:questions' %}questions{% elif request.resolver_match.view_name == 'quiz:account' %}account{% else %}unknown{% endif %}">
 {# ===== FIM DA MODIFICAÇÃO ===== #}
+    
     {% include "quiz/includes/_header.html" %}
     {% include "quiz/includes/_main_nav.html" %}
 

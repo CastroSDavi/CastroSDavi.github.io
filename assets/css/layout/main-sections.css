@@ -1,4 +1,4 @@
-/* assets/css/layout/_main-sections.css */
+/* assets/css/layout/main-sections.css */
 
 /*
 ==========================================================================
@@ -11,92 +11,121 @@ main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    /* Garante que <main> possa conter um filho com altura 100vh sem problemas */
-    position: relative;
-  }
+    position: relative; /* Garante que <main> possa conter um filho com altura 100vh sem problemas */
+}
   
-  /* Estilo base para todas as seções principais */
-  .main-section {
+/* Estilo base para todas as seções principais */
+.main-section {
     flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Permite que as seções filhas também usem flexbox efetivamente */
+    flex-direction: column; /* Empilha conteúdo interno verticalmente por padrão */
     width: 100%;
-  }
+}
   
-  /* --- Layout Específico para #question-section --- */
-  
-  /* Estilos para a seção de questões no Desktop (e telas maiores) */
-  #question-section.main-section {
+/* --- Layout Específico para #question-section (EXISTENTE - MANTIDO COMO REFERÊNCIA) --- */
+#question-section.main-section {
     display: flex;
     flex-direction: row; /* score-panel e main-content lado a lado */
-    /* IMPORTANTE: Define a altura explicitamente para limitar os filhos */
     height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px));
-    /* Previne overflow horizontal que poderia quebrar o sticky */
     overflow-x: hidden;
-    /* Previne overflow vertical NA SEÇÃO PAI, o scroll será no filho */
-    overflow-y: hidden;
-  }
+    overflow-y: hidden; /* Scroll será no filho .question-section__main-content */
+}
   
-  /* Estilos para a área de conteúdo principal DENTRO da #question-section */
-  .question-section__main-content {
-    flex-grow: 1;             /* Ocupa o espaço restante */
-    /* IMPORTANTE: Permite o scroll vertical DENTRO desta área */
+.question-section__main-content { /* Conteúdo principal DENTRO da #question-section */
+    flex-grow: 1;
     overflow-y: auto;
-    /* IMPORTANTE: Correção comum para overflow em flex items */
-    min-height: 0;
+    min-height: 0; /* Correção para overflow em flex items */
     padding: var(--question-section-main-padding, var(--spacing-xl, 40px));
     background-color: var(--question-section-main-bg, var(--color-gray-200));
-    /* Organiza o conteúdo interno (filtros, aviso, quiz, etc.) em coluna */
     display: flex;
     flex-direction: column;
-  }
+}
+
+/* ==========================================================================
+  NOVO: Layout Específico para #account-section-page
+==========================================================================
+*/
+#account-section-page.main-section {
+    /* Remove o padding padrão da .main-section, pois o .account-layout-container cuidará disso */
+    padding: 0; 
+    display: flex; /* Garante que .account-layout-container possa usar 100% da altura */
+    /* Define a altura explicitamente para limitar os filhos e permitir sticky/scroll interno */
+    height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px));
+    /* Previne overflow na seção pai; o scroll será no .account-content */
+    overflow: hidden; 
+}
+
+/* O .account-layout-container (definido no HTML da account_page.html)
+   e seus filhos (.account-sidebar, .account-content) terão seus estilos
+   principalmente em 'assets/css/sections/conta-section.css' (ou o novo CSS).
+   Esta seção em main-sections.css apenas garante que #account-section-page
+   se comporte corretamente como um container para esse layout de duas colunas.
+*/
+
+/* --- RESPONSIVIDADE para _main-sections.css --- */
   
-  
-  /* --- RESPONSIVIDADE para _main-sections.css --- */
-  
-  @media (max-width: 992px) { /* Tablet Landscape */
+@media (max-width: 992px) { /* Tablet Landscape */
     .question-section__main-content {
       padding: var(--question-section-main-padding-tablet, var(--spacing-lg, 35px));
     }
     #question-section.main-section {
-      height: calc(100vh - var(--header-height-tablet, 80px) - var(--main-nav-height-tablet, 50px));
-       /* Ajuste as variáveis se a altura do header/nav mudar neste breakpoint */
+      height: calc(100vh - var(--header-height-tablet, var(--header-height, 80px)) - var(--main-nav-height-tablet, var(--main-nav-height, 50px)));
     }
-  }
+
+    /* Ajuste para a altura da account-section em tablets, se necessário */
+    #account-section-page.main-section {
+        height: calc(100vh - var(--header-height-tablet, var(--header-height, 80px)) - var(--main-nav-height-tablet, var(--main-nav-height, 50px)));
+    }
+}
   
-  @media (max-width: 768px) { /* Tablet Portrait e Mobile */
-  
+@media (max-width: 768px) { /* Tablet Portrait e Mobile */
     /* Adiciona padding inferior ao body para compensar a altura da bottom-nav */
     body {
       padding-bottom: var(--bottom-nav-height, 60px);
-      /* Certifique-se que --bottom-nav-height está definida em _variables.css */
     }
   
     /* Muda o layout da #question-section para coluna */
     #question-section.main-section {
-      flex-direction: column; /* Empilha score-panel e main-content */
-      height: auto;          /* Altura volta a ser automática */
-      overflow: visible;     /* Scroll volta a ser da página inteira */
+      flex-direction: column; 
+      height: auto;          
+      overflow: visible;     
     }
   
-    /* Ajusta o conteúdo principal da seção de questões */
     .question-section__main-content {
       height: auto;
-      overflow-y: visible;   /* Scroll volta a ser da página */
+      overflow-y: visible;   
       padding: var(--question-section-main-padding-mobile, var(--spacing-md, 25px) var(--spacing-sm, 20px));
-      flex-grow: 1;          /* Mantém flex-grow para ocupar espaço */
-      min-height: initial;   /* Reseta min-height */
+      flex-grow: 1;          
+      min-height: initial;   
     }
-  }
+
+    /* Para a #account-section-page em mobile, o layout de sidebar e conteúdo
+       pode precisar mudar significativamente (ex: sidebar vira um menu dropdown no topo,
+       ou as abas são exibidas de outra forma).
+       A abordagem atual de sidebar+conteúdo pode não ser ideal para telas pequenas.
+       Se for manter o layout de sidebar lateral, a altura precisará ser auto
+       e o scroll será da página inteira.
+    */
+    #account-section-page.main-section {
+        flex-direction: column; /* Empilha sidebar e conteúdo se a sidebar não for oculta/transformada */
+        height: auto;
+        overflow: visible; /* Scroll volta a ser da página inteira */
+    }
+    /* Os estilos para .account-sidebar e .account-content em `conta-section.css`
+       precisarão de media queries correspondentes para se adaptar a esta mudança de layout
+       (ex: sidebar com width: 100%, position: static; content com width: 100%) */
+}
   
-  @media (max-width: 480px) {
-       .question-section__main-content {
-          padding: var(--question-section-main-padding-sm-mobile, var(--spacing-md, 20px) var(--spacing-sm, 15px));
-       }
-  }
+@media (max-width: 480px) {
+    .question-section__main-content {
+        padding: var(--question-section-main-padding-sm-mobile, var(--spacing-md, 20px) var(--spacing-sm, 15px));
+    }
+    /* Ajustes para account-section se necessário para mobile menor */
+}
   
-  @media (max-width: 360px) {
-      .question-section__main-content {
-          padding: var(--question-section-main-padding-xs-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
-       }
-  }
+@media (max-width: 360px) {
+    .question-section__main-content {
+        padding: var(--question-section-main-padding-xs-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
+    }
+    /* Ajustes para account-section se necessário para mobile muito pequeno */
+}

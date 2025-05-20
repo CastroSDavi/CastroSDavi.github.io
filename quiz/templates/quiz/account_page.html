@@ -1,89 +1,243 @@
-{# quiz/templates/quiz/account_page.html #}
 {% extends "quiz/base.html" %}
 {% load static %}
 
 {% block title %}{{ page_title|default:"Minha Conta" }} - MedQuiz{% endblock title %}
 
 {% block content %}
-<section id="account-section-page" class="main-section">
-     <div class="card card--conta-perfil" style="max-width: 700px; margin: 40px auto;">
-         <h2 class="card__title">Minha Conta</h2>
-         <div class="card__body">
-             <h3>Informações do Perfil</h3>
-             <table class="profile-info-table" style="width: 100%; text-align: left; margin-bottom: 25px;">
-                 <tbody>
-                     <tr>
-                         <th style="width: 30%;">Nome de Usuário:</th>
-                         <td>{{ user.username }}</td>
-                     </tr>
-                     <tr>
-                         <th>Email:</th>
-                         <td>{{ user.email }}</td>
-                     </tr>
-                     <tr>
-                         <th>Nome:</th>
-                         <td>{{ user.first_name|default:"Não informado" }}</td>
-                     </tr>
-                     <tr>
-                         <th>Sobrenome:</th>
-                         <td>{{ user.last_name|default:"Não informado" }}</td>
-                     </tr>
-                     <tr>
-                         <th>Data de Cadastro:</th>
-                         <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
-                     </tr>
-                     <tr>
-                         <th>Último Login:</th>
-                         <td>{{ user.last_login|date:"d/m/Y H:i"|default:"Nunca" }}</td>
-                     </tr>
-                 </tbody>
-             </table>
-             
-             <div class="profile-actions" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
-                <a href="{% url 'password_change' %}" class="button button--secondary" style="width: 100%;">Alterar Senha</a>
-                
-                <form method="post" action="{% url 'logout' %}" style="display: inline; margin: 0;">
-                    {% csrf_token %}
-                    <button type="submit" class="button button--outline" style="width: 100%; border-color: var(--color-accent-red); color: var(--color-accent-red); cursor: pointer;">Sair (Logout)</button>
-                </form>
-             </div>
-         </div>
-     </div>
+<section id="account-section-page" class="main-section"> {# Este ID é usado pelo AccountPageManager.js e QuizUI.js #}
+    <div class="account-layout-container">
+        {# ========================== #}
+        {# === BARRA LATERAL FIXA === #}
+        {# ========================== #}
+        <aside class="account-sidebar">
+            <nav class="account-sidebar__nav">
+                <ul>
+                    <li>
+                        <a href="#profile-info" class="account-sidebar__link is-active" data-target="profile-info-content">
+                            <span class="material-symbols-outlined">person</span>
+                            Informações do Perfil
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#favorite-questions" class="account-sidebar__link" data-target="favorite-questions-content">
+                            <span class="material-symbols-outlined">star</span>
+                            Questões Favoritas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#quiz-history" class="account-sidebar__link" data-target="quiz-history-content">
+                            <span class="material-symbols-outlined">history</span>
+                            Histórico de Quizzes
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#statistics" class="account-sidebar__link" data-target="statistics-content">
+                            <span class="material-symbols-outlined">leaderboard</span>
+                            Estatísticas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#security" class="account-sidebar__link" data-target="security-content">
+                            <span class="material-symbols-outlined">security</span>
+                            Segurança e Privacidade
+                        </a>
+                    </li>
+                   
+                    <li>
+                        <a href="#preferences" class="account-sidebar__link" data-target="preferences-content">
+                            <span class="material-symbols-outlined">tune</span>
+                            Preferências
+                        </a>
+                    </li>
+                    
+                </ul>
+            </nav>
+        </aside>
 
-     <div class="card card--conta-perfil" id="favorite-questions-section" style="max-width: 700px; margin: 30px auto 40px auto;">
-        <h3 class="card__title">Minhas Questões Favoritas</h3>
-        <div class="card__body" id="favorite-questions-container">
-            <p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>
-            {# O JavaScript irá popular esta área. 
-               As classes usadas pelo JS para popular serão:
-               - favorite-question-item
-               - favorite-question-link
-               - favorite-question-details
-               - favorite-question-categories
-               - favorite-question-date
-            #}
-        </div>
-        <div class="card__footer u-is-hidden" id="favorite-questions-empty-state" style="text-align:center; padding-top: var(--spacing-md, 20px); border-top: 1px solid var(--color-gray-200);">
-            <span class="material-symbols-outlined" style="font-size: 2.5rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">playlist_add_check</span>
-            <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Você ainda não favoritou nenhuma questão.</p>
-            <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 5px;">Use o ícone <span class="material-symbols-outlined" style="font-size: 1em; vertical-align: middle; color: var(--color-accent-yellow, gold);">star_outline</span> durante os quizzes para salvar questões aqui!</p>
-        </div>
-     </div>
+        {# =================================== #}
+        {# === ÁREA DE CONTEÚDO PRINCIPAL === #}
+        {# =================================== #}
+        <main class="account-content">
+
+            {# --- Seção: Informações do Perfil --- #}
+            <div id="profile-info-content" class="account-content__section is-visible">
+                <div class="card card--conta-perfil">
+                    <h2 class="card__title">Informações do Perfil</h2>
+                    <div class="card__body">
+                        <table class="profile-info-table">
+                            <tbody>
+                                <tr>
+                                    <th>Nome de Usuário:</th>
+                                    <td>{{ user.username }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email:</th>
+                                    <td>{{ user.email|default:"Não informado" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Nome:</th>
+                                    <td>{{ user.first_name|default:"Não informado" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Sobrenome:</th>
+                                    <td>{{ user.last_name|default:"Não informado" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Data de Cadastro:</th>
+                                    <td>{{ user.date_joined|date:"d/m/Y \à\s H:i" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Último Login:</th>
+                                    <td>{{ user.last_login|date:"d/m/Y \à\s H:i"|default:"Nunca" }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {# Futuramente, aqui poderia ter um botão para "Editar Perfil" que levaria a um formulário #}
+                    </div>
+                </div>
+            </div>
+
+            {# --- Seção: Questões Favoritas --- #}
+            <div id="favorite-questions-content" class="account-content__section">
+                <div class="card card--conta-perfil">
+                    <h2 class="card__title">Minhas Questões Favoritas</h2>
+                    <div class="card__body" id="favorite-questions-container">
+                        {# O JavaScript (FavoriteManager via AccountPageManager) irá popular esta área #}
+                        <p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>
+                    </div>
+                    <div class="card__footer u-is-hidden" id="favorite-questions-empty-state" style="text-align:center; padding-top: var(--spacing-md); border-top: 1px solid var(--color-gray-200);">
+                        <span class="material-symbols-outlined" style="font-size: 2.8rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">playlist_add_check</span>
+                        <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Você ainda não favoritou nenhuma questão.</p>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 5px;">Use o ícone <span class="material-symbols-outlined" style="font-size: 1em; vertical-align: middle; color: var(--color-accent-yellow);">star_outline</span> durante os quizzes para salvar questões aqui!</p>
+                    </div>
+                </div>
+            </div>
+
+            {# --- Seção: Histórico de Quizzes --- #}
+            <div id="quiz-history-content" class="account-content__section">
+                <div class="card card--conta-perfil">
+                    <h2 class="card__title">Histórico de Quizzes</h2>
+                    <div class="card__body">
+                        {% if user_sessions %}
+                            <p>Suas últimas {{ user_sessions|length }} sessões de quiz:</p>
+                            <ul class="simple-list">
+                                {% for session in user_sessions %}
+                                    <li>
+                                        <strong>{{ session.data_inicio|date:"d/m/Y H:i" }}</strong> - Modo: {{ session.modo_quiz }}
+                                        (Pontos: {{ session.pontuacao_final }}, Acertos: {{ session.total_acertos }}/{{ session.total_perguntas_sessao }})
+                                        <small class="text-muted">Duração: {{ session.duracao_sessao_formatada }}</small>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="placeholder-text">Você ainda não completou nenhuma sessão de quiz.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# --- Seção: Estatísticas --- #}
+            <div id="statistics-content" class="account-content__section">
+                <div class="card card--conta-perfil">
+                    <h2 class="card__title">Estatísticas de Desempenho</h2>
+                    <div class="card__body">
+                        {% if user_daily_stats_summary %}
+                            <p>Resumo das suas atividades nos últimos dias:</p>
+                             <table class="profile-info-table data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Questões Respondidas</th>
+                                        <th>Acertos</th>
+                                        <th>Precisão</th>
+                                        <th>Pontos</th>
+                                        <th>Tempo de Estudo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {% for stat in user_daily_stats_summary %}
+                                    <tr>
+                                        <td>{{ stat.data_estatistica|date:"d/m/Y" }}</td>
+                                        <td>{{ stat.perguntas_respondidas_dia }}</td>
+                                        <td>{{ stat.acertos_dia }}</td>
+                                        <td>{{ stat.precisao_dia|floatformat:0 }}%</td>
+                                        <td>{{ stat.pontos_dia }}</td>
+                                        <td>{{ stat.tempo_estudo_formatado }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        {% else %}
+                            <p class="placeholder-text">Nenhuma estatística diária registrada ainda. Comece um quiz para ver seu progresso!</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {# --- Seção: Segurança e Privacidade --- #}
+            <div id="security-content" class="account-content__section">
+                 <div class="card card--conta-perfil">
+                    <h2 class="card__title">Segurança e Privacidade</h2>
+                    <div class="card__body">
+                        <p style="margin-bottom: var(--spacing-lg);">Gerencie suas configurações de segurança e informações da conta.</p>
+                        <div class="profile-actions">
+                            <a href="{% url 'password_change' %}" class="button button--secondary">
+                                <span class="material-symbols-outlined button__icon">password</span>
+                                Alterar Senha
+                            </a>
+                            {# Adicionar link para editar email/outras informações se implementado #}
+                            <a href="#" class="button button--secondary">Editar Email</a>
+                            
+                            <hr style="margin: var(--spacing-md) 0; border-color: var(--color-gray-200);">
+                            
+                            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <button type="submit" class="button button--outline" style="border-color: var(--color-accent-red); color: var(--color-accent-red);">
+                                    <span class="material-symbols-outlined button__icon">logout</span>
+                                    Sair (Logout)
+                                </button>
+                            </form>
+                            
+                            {# Futuramente: Opção para deletar conta #}
+                             <button type="button" class="button button--danger-outline" style="margin-top: var(--spacing-md);">Deletar Minha Conta</button> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="preferences-content" class="account-content__section">
+                 <div class="card card--conta-perfil">
+                    <h2 class="card__title">Preferências</h2>
+                    <div class="card__body">
+                        <p>Ajuste as configurações da sua conta e da plataforma.</p>
+                        <form class="profile-form">
+                            <div class="form-group">
+                                <label for="pref-theme" class="form-label">Tema da Interface:</label>
+                                <select id="pref-theme" class="form-control">
+                                    <option value="light">Claro</option>
+                                    <option value="dark" disabled>Escuro (em breve)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Notificações por Email:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="pref-notify-news" checked>
+                                    <label class="form-check-label" for="pref-notify-news">
+                                        Novidades e atualizações do MedQuiz
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="pref-notify-progress">
+                                    <label class="form-check-label" for="pref-notify-progress">
+                                        Resumos semanais de progresso
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="button button--primary" style="margin-top: var(--spacing-md);">Salvar Preferências</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 </section>
-
-<style>
-    .profile-info-table th {
-        font-weight: var(--font-weight-medium);
-        color: var(--color-text-secondary);
-    }
-    .profile-info-table tr:last-child th,
-    .profile-info-table tr:last-child td {
-        border-bottom: none;
-    }
-    /* Garante que o formulário não adicione margens extras inesperadas */
-    .profile-actions form {
-        margin-bottom: 0; 
-    }/* Remove margem inferior padrão do formulário, se houver */
-</style>
-
 {% endblock content %}

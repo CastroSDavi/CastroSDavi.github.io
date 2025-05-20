@@ -1,50 +1,54 @@
 // File: assets/js/ui/QuizUI.js
 
-// Importações dos novos módulos de UI
+// Importações dos submódulos de UI
 import ModalManager from './ModalManager.js';
 import Timer from './Timer.js';
 import QuestionDisplay from './QuestionDisplay.js';
 import ScorePanel from './ScorePanel.js';
 import WarningDisplay from './WarningDisplay.js';
 import FavoriteManager from './FavoriteManager.js';
-import ResultDisplay from './ResultDisplay.js'; 
+// ResultDisplay é instanciado em App.js e injetado, não precisa ser importado aqui diretamente
+// se QuizUI apenas o recebe e armazena.
 
 export default class QuizUI {
     constructor(onSectionChangeCallback = null) {
         this.hiddenClassName = 'u-is-hidden';
         this.loadingClassName = 'is-loading';
-        this.currentSection = null;
-        this.onSectionChange = onSectionChangeCallback;
+        this.currentSection = null; // ID da seção principal ativa (ex: 'home-section')
+        this.onSectionChange = onSectionChangeCallback; // Callback para notificar App.js sobre mudança de seção
 
+        // Instâncias de dependências que serão injetadas
         this.quizState = null;
         this.quizData = null;
         this.apiService = null; 
         
+        // Instâncias de componentes de UI que QuizUI gerencia ou coordena
         this.filterPanelInstance = null; 
         this.challengeHubInstance = null; 
-        this.resultDisplay = null; 
+        this.resultDisplay = null; // Será injetado por App.js
         
-        this.userIsAuthenticated = false;
+        this.userIsAuthenticated = false; // Determinado no _checkUserAuthentication
         
-        this._cacheDOMelements(); 
-        this._checkUserAuthentication();
+        this._cacheDOMelements(); // Cacheia todos os elementos DOM relevantes
+        this._checkUserAuthentication(); // Verifica se o usuário está autenticado
 
+        // Instancia submódulos de UI que são partes integrantes de QuizUI
         this.modalManager = new ModalManager(this, this.quizState, this.quizData);
         this.timer = new Timer(this.elements.timerDisplay, this.elements.resultadoTempo);
-        this.questionDisplay = new QuestionDisplay(this, this.quizState, this.quizData);
-        this.scorePanel = new ScorePanel(this);
+        this.questionDisplay = new QuestionDisplay(this, this.quizState, this.quizData /* callbacks serão definidos via setCallbacks */);
+        this.scorePanel = new ScorePanel(this /* callback do botão encerrar será definido via setCallbacks */);
         this.warningDisplay = new WarningDisplay(this);
+        // FavoriteManager precisa do ApiService e QuizState, que são injetados depois via setters
         this.favoriteManager = new FavoriteManager(this, this.apiService, this.quizState);
-        // ResultDisplay é instanciado em App.js e injetado via setResultDisplayInstance
-        // this.resultDisplay = new ResultDisplay(this, this.timer); // Movido para App.js
     }
 
+    // Métodos para injetar dependências principais
     setQuizState(quizStateInstance) {
         this.quizState = quizStateInstance;
         if (this.modalManager) this.modalManager.quizState = quizStateInstance;
         if (this.questionDisplay) this.questionDisplay.quizState = quizStateInstance;
         if (this.favoriteManager) this.favoriteManager.quizState = quizStateInstance;
-        if (this.resultDisplay) this.resultDisplay.quizState = quizStateInstance; // Se ResultDisplay precisar
+        // if (this.resultDisplay) this.resultDisplay.quizState = quizStateInstance; // Se ResultDisplay precisar do QuizState
     }
 
     setQuizData(quizDataInstance) {
@@ -54,14 +58,16 @@ export default class QuizUI {
         if (this.favoriteManager && typeof this.favoriteManager.setQuizData === 'function') {
              this.favoriteManager.setQuizData(quizDataInstance);
         }
-        // if (this.resultDisplay) this.resultDisplay.quizData = quizDataInstance; // Se ResultDisplay precisar
+        // if (this.resultDisplay) this.resultDisplay.quizData = quizDataInstance; // Se ResultDisplay precisar do QuizData
     }
     
     setApiService(apiServiceInstance) { 
         this.apiService = apiServiceInstance;
+        // Garante que o FavoriteManager (que é parte de QuizUI) receba o ApiService
         if (this.favoriteManager) this.favoriteManager.apiService = apiServiceInstance;
     }
 
+    // Métodos para injetar instâncias de componentes de UI maiores
     setFilterPanelInstance(filterPanelInstance) {
         this.filterPanelInstance = filterPanelInstance;
     }
@@ -77,6 +83,7 @@ export default class QuizUI {
         }
     }
 
+    // Método para configurar callbacks que QuizLogic fornecerá
     setCallbacks(callbacks = {}) {
         if (this.questionDisplay) {
             this.questionDisplay.answerCallback = callbacks.answerQuestionCallback;
@@ -84,6 +91,7 @@ export default class QuizUI {
             this.questionDisplay.toggleFavoriteCallback = callbacks.toggleFavoriteCallback;
         }
         if (this.scorePanel) {
+            // O callback para o botão de encerrar sessão no ScorePanel agora é passado aqui
             this.scorePanel.endSessionCallback = callbacks.endSessionCallback;
         }
         if (this.resultDisplay) { 
@@ -94,59 +102,85 @@ export default class QuizUI {
 
     _checkUserAuthentication() {
         const bodyEl = document.body;
-        if (bodyEl && bodyEl.dataset.userAuthenticated === 'true') this.userIsAuthenticated = true;
-        else if (bodyEl && bodyEl.dataset.userAuthenticated === 'false') this.userIsAuthenticated = false;
-        else {
+        if (bodyEl && bodyEl.dataset.userAuthenticated === 'true') {
+            this.userIsAuthenticated = true;
+        } else if (bodyEl && bodyEl.dataset.userAuthenticated === 'false') {
+            this.userIsAuthenticated = false;
+        } else {
+            // Fallback se o data-attribute não estiver presente
             const accountLinkInHeader = document.querySelector('.site-header__actions a[href*="/account/"]');
             this.userIsAuthenticated = !!accountLinkInHeader;
+            // console.warn("QuizUI: Atributo data-user-authenticated não encontrado no body. Autenticação inferida pela presença do link da conta.");
         }
+        // console.log("QuizUI: User authenticated status:", this.userIsAuthenticated);
     }
 
     _cacheDOMelements() {
         this.elements = {
+            // Seções principais da página
             homeSection: document.getElementById('home-section'),
-            questionSection: document.getElementById('question-section'), 
-            accountSection: document.getElementById('account-section-page'),
-            mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'), 
+            questionSection: document.getElementById('question-section'), // O container da página de questões
+            accountSection: document.getElementById('account-section-page'), // O container da página da conta
+
+            // Elementos do ScorePanel e Timer (agora parte de QuizUI)
             scorePanel: document.querySelector('.score-panel'),
             pontuacaoDisplay: document.getElementById('pontuacao'),
             acertosNumDisplay: document.getElementById('acertos-numero'),
             errosNumDisplay: document.getElementById('erros-numero'),
             timerDisplay: document.getElementById('timer-display'), 
             btnEncerrarSessao: document.getElementById('btn-encerrar-sessao'),
+
+            // Elementos do ChallengeHub
             challengeHubContainer: document.getElementById('challenge-hub-container'),
-            hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'), 
+            hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'), // Span no hub
+            // Nota: Se existir um span com o mesmo ID na home page, ele será pego aqui se for o primeiro.
+            // App.js tem lógica para atualizar ambos se forem diferentes.
             hubQuickQuizCount: document.getElementById('hub-quick-quiz-count'),
             hubCustomizeQuizBtn: document.getElementById('hub-customize-quiz-btn'),
             hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'),
+
+            // Placeholder de filtros e Aviso
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
             closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'), 
             avisoContainer: document.getElementById('aviso-container'),
-            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'),
-            quizSectionContent: document.getElementById('quiz-section'), 
-            questionWrap: document.querySelector('#quiz-section .card--question-wrap'), 
+            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'), // Pode precisar de ajuste se houver múltiplos <p>
+
+            // Elementos da Seção de Quiz Ativo (Perguntas)
+            mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'), // Área rolável da página de questões
+            quizSectionContent: document.getElementById('quiz-section'), // Container da pergunta atual, opções, navegação etc.
+            questionWrap: document.querySelector('#quiz-section .card--question-wrap'), // Card que envolve a pergunta
             progressContainer: document.getElementById('progress-container'),
             progressBarFill: document.getElementById('progress-bar-fill'),
             progressText: document.getElementById('progress-text'),
-            questionTitle: document.getElementById('question-title'), 
-            categoriaTitulo: document.getElementById('categoria-titulo'),
-            idQuestao: document.getElementById('id-questao'),
+            questionTitle: document.getElementById('question-title'), // Título H2 da pergunta
+            categoriaTitulo: document.getElementById('categoria-titulo'), // Span para nome da categoria
+            idQuestao: document.getElementById('id-questao'), // Span para número da questão
             perguntaTexto: document.getElementById('pergunta-texto'),
             perguntaImagem: document.getElementById('pergunta-imagem'),
             respostasContainer: document.getElementById('respostas-container'),
             referenciaQuestao: document.getElementById('referencia-questao'),
-            feedbackAcessivel: document.getElementById('feedback-acessivel'), 
+            feedbackAcessivel: document.getElementById('feedback-acessivel'), // Para leitores de tela
+            
+            // Botões de Ação da Pergunta
             btnToggleExplanation: document.getElementById('btn-toggle-explanation'), 
             btnToggleFavorite: document.getElementById('btn-toggle-favorite'),     
+            
+            // Navegação do Quiz (Anterior/Próximo)
             navigationButtons: document.querySelector('#quiz-section .quiz-navigation'),
             prevBtn: document.getElementById('prev-btn'),
             nextBtn: document.getElementById('next-btn'),
+
+            // Grid de Questões
             questionGridContainer: document.getElementById('question-grid-container'),
+
+            // Modal de Confirmação de Encerramento
             confirmEncerrarOverlay: document.getElementById('confirm-encerrar-overlay'),
             confirmEncerrarModal: document.getElementById('confirm-encerrar-modal'), 
             confirmEncerrarBtn: document.getElementById('confirm-encerrar-btn'),
             cancelEncerrarBtn: document.getElementById('cancel-encerrar-btn'),
-            resultadoCard: document.querySelector('#question-section .card--quiz-result'),
+
+            // Card de Resultado do Quiz
+            resultadoCard: document.querySelector('#question-section .card--quiz-result'), // Seletor pode precisar ser mais específico se houver outros .card--quiz-result
             resultadoTitulo: document.querySelector('#question-section .card--quiz-result .quiz-results__main-title'),
             resultadoPontos: document.getElementById('resultado-pontos'),
             resultadoAcertos: document.getElementById('resultado-acertos'),
@@ -155,25 +189,40 @@ export default class QuizUI {
             resultadoMensagemMotivacional: document.getElementById('resultado-mensagem-motivacional'),
             btnRecomecar: document.getElementById('btn-recomecar'),
             btnExplorarMais: document.getElementById('btn-explorar-mais'),
+
+            // Painel de Filtros
             filterPanel: document.getElementById('filter-panel'), 
             btnFecharFiltros: document.getElementById('btn-fechar-filtros'), 
             filterPanelOverlay: document.getElementById('filter-panel-overlay'),
-            btnAplicarFiltrosPainel: document.getElementById('btn-aplicar-filtros-painel'), 
+            // Os botões "Aplicar" e "Limpar" do painel de filtros são gerenciados por FilterPanel.js
+
+            // Modal de Explicação
             explanationModalOverlay: document.getElementById('explanation-modal-overlay'),
             explanationModalDialog: document.getElementById('explanation-modal-dialog'), 
             btnCloseExplanationModal: document.getElementById('btn-close-explanation-modal'),
+            // Elementos internos do modal de explicação
+            explanationModalMetaContainer: document.getElementById('explanation-modal-meta-container'),
+            explanationModalDifficulty: document.getElementById('explanation-modal-difficulty'),
+            explanationModalCategories: document.getElementById('explanation-modal-categories'),
             explanationModalGeneralBlock: document.getElementById('explanation-modal-general-block'),
             explanationModalGeneralText: document.getElementById('explanation-modal-general-text'),
             explanationModalOptionsBlock: document.getElementById('explanation-modal-options-block'),
             explanationModalOptionsList: document.getElementById('explanation-modal-options-list'),
-            explanationModalDivider: document.querySelector('.explanation-modal__divider'),
+            explanationModalReferenceBlock: document.getElementById('explanation-modal-reference-block'),
+            explanationModalReferenceText: document.getElementById('explanation-modal-reference-text'),
+            explanationModalDividerGeneralOptions: document.getElementById('explanation-divider-general-options'),
+            explanationModalDividerOptionsReference: document.getElementById('explanation-divider-options-reference'),
             explanationModalEmptyState: document.getElementById('explanation-modal-empty-state'),
             btnGotItExplanation: document.getElementById('btn-got-it-explanation'),
+
+            // Elementos da Página da Conta (para FavoriteManager e AccountPageManager)
             favoriteQuestionsContainer: document.getElementById('favorite-questions-container'),
             favoriteQuestionsEmptyState: document.getElementById('favorite-questions-empty-state'),
         };
+        // console.log("QuizUI: Elementos DOM cacheados:", this.elements);
     }
 
+    // --- Métodos Utilitários de UI ---
     showElement(element) {
         element?.classList.remove(this.hiddenClassName);
     }
@@ -184,14 +233,18 @@ export default class QuizUI {
 
     setButtonLoading(buttonElement, isLoading, originalText = null) {
         if (!buttonElement) return;
+    
         const textDisplayElement = buttonElement.querySelector('.button__label') || buttonElement;
+        
         if (isLoading) {
             buttonElement.classList.add(this.loadingClassName);
             buttonElement.disabled = true;
-            if (!buttonElement.dataset.originalText && originalText) {
-                buttonElement.dataset.originalText = originalText;
-            } else if (!buttonElement.dataset.originalText && textDisplayElement.textContent !== 'Carregando...') {
+            // Armazena o texto original se ainda não estiver armazenado e for diferente de "Carregando..."
+            if (!buttonElement.dataset.originalText && textDisplayElement.textContent !== 'Carregando...') {
                 buttonElement.dataset.originalText = textDisplayElement.textContent;
+            } else if (originalText && !buttonElement.dataset.originalText) {
+                // Usa o originalText fornecido se não houver um no dataset e ele for passado
+                buttonElement.dataset.originalText = originalText;
             }
             textDisplayElement.textContent = 'Carregando...';
         } else {
@@ -199,97 +252,139 @@ export default class QuizUI {
             buttonElement.disabled = false;
             if (buttonElement.dataset.originalText) {
                 textDisplayElement.textContent = buttonElement.dataset.originalText;
+                // Opcional: limpar o dataset após restaurar para permitir novo texto original na próxima vez
+                // delete buttonElement.dataset.originalText; 
             } else if (originalText) {
+                // Se não havia texto no dataset, mas um originalText foi fornecido ao chamar, usa ele.
                 textDisplayElement.textContent = originalText;
             }
+            // Se nenhum texto original foi armazenado ou fornecido, o botão permanecerá com "Carregando..."
+            // Isso deve ser evitado garantindo que originalText seja passado ou o dataset seja preenchido.
         }
     }
     
+    // --- Métodos de Controle de Layout Principal ---
+    
+    /**
+     * Controla a visibilidade do layout principal do quiz (ScorePanel, QuestionDisplay).
+     * @param {boolean} showQuizLayout - True para mostrar, false para esconder.
+     */
     displayQuizLayout(showQuizLayout = true) {
-        const { placeholderFiltrosContainer, resultadoCard } = this.elements;
+        const { placeholderFiltrosContainer, quizSectionContent } = this.elements;
         
         if (showQuizLayout) {
             if (this.scorePanel) this.scorePanel.show();
-            if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
-            this.showElement(this.elements.quizSectionContent); 
-            if (this.warningDisplay) this.warningDisplay.clear(); 
-            this.hideElement(placeholderFiltrosContainer);
-            if (this.resultDisplay) this.resultDisplay.hide();
+            if (this.challengeHubInstance) this.challengeHubInstance.hideHub(); // Esconde o hub
+            this.showElement(quizSectionContent); // Mostra a área da pergunta
+            if (this.warningDisplay) this.warningDisplay.clear(); // Limpa avisos
+            this.hideElement(placeholderFiltrosContainer); // Esconde placeholder de filtros
+            if (this.resultDisplay) this.resultDisplay.hide(); // Esconde resultados anteriores
         } else {
+            // Esconde os elementos do quiz ativo
             if (this.scorePanel) this.scorePanel.hide();
-            this.hideElement(this.elements.quizSectionContent); 
+            this.hideElement(quizSectionContent);
             
-            if (this.resultDisplay && this.elements.resultadoCard && !this.elements.resultadoCard.classList.contains(this.hiddenClassName)) {
-                if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
-            } else {
-                if (this.challengeHubInstance && 
-                    (!this.elements.filterPanel || !this.elements.filterPanel.classList.contains('filter-panel--visible'))) {
-                     this.challengeHubInstance.showHub();
-                }
+            // Se os resultados não estiverem visíveis E o painel de filtro não estiver aberto, mostra o hub
+            const resultsAreVisible = this.elements.resultadoCard && !this.elements.resultadoCard.classList.contains(this.hiddenClassName);
+            const filterPanelIsOpen = this.elements.filterPanel && this.elements.filterPanel.classList.contains('filter-panel--visible');
+
+            if (!resultsAreVisible && !filterPanelIsOpen) {
+                if (this.challengeHubInstance) this.challengeHubInstance.showHub();
                 this.hideElement(placeholderFiltrosContainer);
+            } else if (filterPanelIsOpen && !resultsAreVisible) {
+                // Se o painel de filtros estiver aberto, mas os resultados não, mostra o placeholder
+                this.showElement(placeholderFiltrosContainer);
+                if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
             }
+            // Se os resultados estiverem visíveis, o ResultDisplay.show() já terá escondido o hub.
         }
     }
 
     /**
      * Esconde todos os elementos visuais de um quiz que está ativamente em progresso.
-     * Crucial para limpar a tela antes de mostrar resultados ou ao reiniciar o quiz.
+     * Importante para limpar a UI antes de mostrar resultados ou ao reiniciar.
      */
     hideActiveQuizElements() {
         // console.log("QUIZUI: hideActiveQuizElements - Escondendo elementos do quiz ativo.");
         
-        // Esconde o container principal do quiz (pergunta, opções, navegação, etc.)
-        this.hideElement(this.elements.quizSectionContent); 
-        
-        // Esconde o grid de questões explicitamente
-        // Se questionGridContainer for filho de quizSectionContent, esta chamada é redundante, mas segura.
-        this.hideElement(this.elements.questionGridContainer);
+        this.hideElement(this.elements.quizSectionContent); // Container principal do quiz (pergunta, opções, navegação)
+        this.hideElement(this.elements.questionGridContainer); // Grid de navegação de questões
 
-        // Esconde a barra de progresso através do QuestionDisplay
         if (this.questionDisplay && typeof this.questionDisplay.hideProgressBar === 'function') {
             this.questionDisplay.hideProgressBar(); 
         } else {
-            // Fallback se questionDisplay não estiver pronto ou não tiver o método
             this.hideElement(this.elements.progressContainer);
             this.hideElement(this.elements.progressText);
         }
 
-        // Fecha o modal de explicação, se estiver aberto, usando o ModalManager
         if (this.modalManager && typeof this.modalManager.toggleExplanationModal === 'function') {
-            this.modalManager.toggleExplanationModal(false); 
+            this.modalManager.toggleExplanationModal(false); // Fecha modal de explicação, se aberto
         }
         
-        // Esconde o botão de alternar explicação
         this.hideElement(this.elements.btnToggleExplanation); 
-        
-        // Esconde o botão de favorito (geralmente parte da UI da questão)
         this.hideElement(this.elements.btnToggleFavorite);
 
-        // Adicional: Esconder o painel de score, pois ele é parte de um quiz ativo
         if (this.scorePanel && typeof this.scorePanel.hide === 'function') {
-            this.scorePanel.hide();
+            this.scorePanel.hide(); // Esconde o painel de pontuação
         } else {
-            this.hideElement(this.elements.scorePanel); // Fallback
+            this.hideElement(this.elements.scorePanel); 
         }
     }
 
+    // --- Configuração de Listeners Globais da UI ---
     setupGlobalEventListeners(quizLogicInstance) {
         if (!quizLogicInstance) {
+            // console.error("QuizUI: Instância de QuizLogic não fornecida para setupGlobalEventListeners.");
             return;
         }
 
+        // ModalManager lida com os listeners de seus próprios modais (fechar, confirmar, etc.)
         if (this.modalManager) {
             this.modalManager.setupEventListeners(quizLogicInstance);
         }
 
+        // Botão "Voltar para Modos de Jogo" (dentro do placeholder de filtros)
         this.elements.closeFiltersAndShowHubBtn?.addEventListener('click', () => {
-            if (this.modalManager) this.modalManager.toggleFilterPanel(false);
-            if (this.challengeHubInstance) this.challengeHubInstance.showHub(); 
-            this.hideElement(this.elements.placeholderFiltrosContainer);
+            if (this.modalManager) this.modalManager.toggleFilterPanel(false); // Fecha o painel de filtros
+            if (this.challengeHubInstance) this.challengeHubInstance.showHub(); // Mostra o hub
+            this.hideElement(this.elements.placeholderFiltrosContainer); // Esconde o placeholder
         });
 
+        // Botão para abrir o modal de explicação (o fechamento é tratado pelo ModalManager)
         this.elements.btnToggleExplanation?.addEventListener('click', () => {
              if (this.modalManager) this.modalManager.toggleExplanationModal(true);
         });
+
+        // Adicionar outros listeners globais da UI aqui, se necessário.
+    }
+
+    // Método auxiliar para obter mensagens de erro amigáveis (pode ser expandido)
+    // Este método é um candidato a ser movido para uma classe de utilitários de UI se crescer muito.
+    _getFriendlyErrorMessage(error, defaultMessage = "Ocorreu um erro. Tente novamente.") {
+        // console.error("QuizUI: _getFriendlyErrorMessage - Erro original:", error);
+        if (error && error.response && error.response.status === 0) {
+            return "Não foi possível conectar ao servidor. Verifique sua conexão com a internet.";
+        }
+        if (error && error.data && error.data.message) {
+            return error.data.message; // Mensagem de erro estruturada da API
+        }
+        if (error && error.message && error.message.includes("Failed to fetch")) {
+            return "Falha de rede. Verifique sua conexão e tente novamente.";
+        }
+        if (error && error.message) {
+            // Para erros genéricos, pode ser útil não expor detalhes técnicos diretamente
+            // return defaultMessage + (error.message ? ` (Detalhe: ${error.message})` : '');
+            return defaultMessage;
+        }
+        return defaultMessage;
+    }
+    
+    // Método para mostrar avisos (delegado para WarningDisplay)
+    showWarning(message, type = 'warning', isTextCentered = false) {
+        if (this.warningDisplay) {
+            this.warningDisplay.show(message, type, isTextCentered);
+        } else {
+            alert(`[${type.toUpperCase()}] ${message}`); // Fallback simples
+        }
     }
 }

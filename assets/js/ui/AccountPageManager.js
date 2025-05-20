@@ -10,20 +10,25 @@ export default class AccountPageManager {
             contentSections: null,    // Será populado em init
         };
 
-        // Só executa a inicialização se estivermos na página da conta
-        // e o elemento principal dela estiver visível (não escondido por QuizUI).
-        if (
-            this.elements.accountSectionPage &&
-            this.quizUI.elements.accountSection && // Garante que QuizUI tenha cacheado o elemento
-            this.elements.accountSectionPage === this.quizUI.elements.accountSection && // Compara se são o mesmo elemento
-            !this.elements.accountSectionPage.classList.contains(this.quizUI.hiddenClassName)
-        ) {
-            this.init();
-        }
+        // A inicialização (chamada ao this.init()) foi REMOVIDA daqui.
+        // Ela será chamada pelo App.js após a seção da conta ser tornada visível.
     }
 
     init() {
         // console.log("ACCOUNTPAGEMANAGER.JS: init - Inicializando listeners e estado da página da conta.");
+        
+        // Verifica se o elemento principal da página da conta existe antes de prosseguir
+        if (!this.elements.accountSectionPage) {
+            // console.warn("AccountPageManager.init: Elemento principal 'account-section-page' não encontrado. Abortando inicialização do manager.");
+            return;
+        }
+        // Verifica se a seção da conta está realmente visível antes de prosseguir com a configuração dos listeners.
+        // Isso garante que o init só execute sua lógica principal se a página estiver de fato ativa.
+        if (this.elements.accountSectionPage.classList.contains(this.quizUI.hiddenClassName)) {
+            // console.log("AccountPageManager.init: Seção da conta está oculta. Adia a configuração de listeners e estado da aba.");
+            return;
+        }
+
         // Busca os links da barra lateral e as seções de conteúdo DENTRO da página da conta
         this.elements.sidebarLinks = this.elements.accountSectionPage.querySelectorAll('.account-sidebar__link');
         this.elements.contentSections = this.elements.accountSectionPage.querySelectorAll('.account-content__section');
@@ -61,10 +66,16 @@ export default class AccountPageManager {
     }
 
     _activateTabFromHash() {
+        // Verifica se os elementos da sidebar existem antes de prosseguir.
+        if (!this.elements.sidebarLinks || this.elements.sidebarLinks.length === 0) {
+            // console.log("AccountPageManager._activateTabFromHash: Links da sidebar não disponíveis. Ativação de aba adiada.");
+            return;
+        }
+
         const hash = window.location.hash;
         let activated = false; // Flag para verificar se uma aba foi ativada pelo hash
 
-        if (hash && this.elements.sidebarLinks) {
+        if (hash) {
             const targetLink = Array.from(this.elements.sidebarLinks).find(
                 (link) => link.getAttribute('href') === hash
             );
@@ -77,7 +88,7 @@ export default class AccountPageManager {
         }
         
         // Se nenhuma aba foi ativada pelo hash (ou não há hash), ativa a primeira aba como padrão
-        if (!activated && this.elements.sidebarLinks && this.elements.sidebarLinks.length > 0) {
+        if (!activated) {
             const firstLink = this.elements.sidebarLinks[0];
             const firstSectionId = firstLink.dataset.target;
             const firstSection = document.getElementById(firstSectionId);
@@ -85,7 +96,6 @@ export default class AccountPageManager {
             // Verifica se a primeira seção já está visível (devido à classe 'is-visible' no HTML)
             if (firstSection && firstSection.classList.contains('is-visible')) {
                 // Se já estiver visível, apenas garante que o link da sidebar correspondente esteja ativo.
-                // Isso evita que a animação 'fadeIn' seja acionada desnecessariamente no carregamento.
                 this.elements.sidebarLinks.forEach(link => link.classList.remove('is-active'));
                 firstLink.classList.add('is-active');
             } else {

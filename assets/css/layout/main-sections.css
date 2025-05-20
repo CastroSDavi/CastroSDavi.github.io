@@ -12,6 +12,7 @@ main {
     display: flex;
     flex-direction: column;
     position: relative; /* Garante que <main> possa conter um filho com altura 100vh sem problemas */
+    overflow: hidden; /* Impede que main cause sua própria rolagem quando body.no-scroll está ativo */
 }
   
 /* Estilo base para todas as seções principais */
@@ -20,9 +21,10 @@ main {
     display: flex; /* Permite que as seções filhas também usem flexbox efetivamente */
     flex-direction: column; /* Empilha conteúdo interno verticalmente por padrão */
     width: 100%;
+    /* A rolagem será controlada pelo body ou por filhos específicos da seção */
 }
   
-/* --- Layout Específico para #question-section (EXISTENTE - MANTIDO COMO REFERÊNCIA) --- */
+/* --- Layout Específico para #question-section --- */
 #question-section.main-section {
     display: flex;
     flex-direction: row; /* score-panel e main-content lado a lado */
@@ -42,25 +44,18 @@ main {
 }
 
 /* ==========================================================================
-  NOVO: Layout Específico para #account-section-page
+  Layout Específico para #account-section-page
 ==========================================================================
 */
 #account-section-page.main-section {
-    /* Remove o padding padrão da .main-section, pois o .account-layout-container cuidará disso */
     padding: 0; 
-    display: flex; /* Garante que .account-layout-container possa usar 100% da altura */
-    /* Define a altura explicitamente para limitar os filhos e permitir sticky/scroll interno */
-    height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px));
-    /* Previne overflow na seção pai; o scroll será no .account-content */
-    overflow: hidden; 
+    display: flex; 
+    /* A altura é definida em conta-section.css e via JS para mobile */
+    /* Desktop: height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px)); */
+    /* Mobile: height é dinâmico (com ou sem bottom-nav) */
+    overflow: hidden; /* Impede rolagem da própria seção, filhos (sidebar/content) rolarão */
 }
 
-/* O .account-layout-container (definido no HTML da account_page.html)
-   e seus filhos (.account-sidebar, .account-content) terão seus estilos
-   principalmente em 'assets/css/sections/conta-section.css' (ou o novo CSS).
-   Esta seção em main-sections.css apenas garante que #account-section-page
-   se comporte corretamente como um container para esse layout de duas colunas.
-*/
 
 /* --- RESPONSIVIDADE para _main-sections.css --- */
   
@@ -72,23 +67,22 @@ main {
       height: calc(100vh - var(--header-height-tablet, var(--header-height, 80px)) - var(--main-nav-height-tablet, var(--main-nav-height, 50px)));
     }
 
-    /* Ajuste para a altura da account-section em tablets, se necessário */
     #account-section-page.main-section {
+        /* No desktop/tablet, a altura é calculada para preencher o espaço abaixo do header e main-nav */
         height: calc(100vh - var(--header-height-tablet, var(--header-height, 80px)) - var(--main-nav-height-tablet, var(--main-nav-height, 50px)));
     }
 }
   
 @media (max-width: 768px) { /* Tablet Portrait e Mobile */
-    /* Adiciona padding inferior ao body para compensar a altura da bottom-nav */
     body {
       padding-bottom: var(--bottom-nav-height, 60px);
     }
   
-    /* Muda o layout da #question-section para coluna */
+    /* Muda o layout da #question-section para coluna e permite rolagem do body/main */
     #question-section.main-section {
       flex-direction: column; 
       height: auto;          
-      overflow: visible;     
+      overflow: visible; /* Permite que o body/main controle a rolagem para esta seção */
     }
   
     .question-section__main-content {
@@ -99,33 +93,21 @@ main {
       min-height: initial;   
     }
 
-    /* Para a #account-section-page em mobile, o layout de sidebar e conteúdo
-       pode precisar mudar significativamente (ex: sidebar vira um menu dropdown no topo,
-       ou as abas são exibidas de outra forma).
-       A abordagem atual de sidebar+conteúdo pode não ser ideal para telas pequenas.
-       Se for manter o layout de sidebar lateral, a altura precisará ser auto
-       e o scroll será da página inteira.
-    */
+  
     #account-section-page.main-section {
-        flex-direction: column; /* Empilha sidebar e conteúdo se a sidebar não for oculta/transformada */
-        height: auto;
-        overflow: visible; /* Scroll volta a ser da página inteira */
+        flex-direction: column; 
+        overflow: hidden; 
     }
-    /* Os estilos para .account-sidebar e .account-content em `conta-section.css`
-       precisarão de media queries correspondentes para se adaptar a esta mudança de layout
-       (ex: sidebar com width: 100%, position: static; content com width: 100%) */
 }
   
 @media (max-width: 480px) {
     .question-section__main-content {
         padding: var(--question-section-main-padding-sm-mobile, var(--spacing-md, 20px) var(--spacing-sm, 15px));
     }
-    /* Ajustes para account-section se necessário para mobile menor */
 }
   
 @media (max-width: 360px) {
     .question-section__main-content {
         padding: var(--question-section-main-padding-xs-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
     }
-    /* Ajustes para account-section se necessário para mobile muito pequeno */
 }

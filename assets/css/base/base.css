@@ -1,3 +1,4 @@
+/* assets/css/base/base.css */
 @import 'variables.css';
 @import 'reset.css';
 @import 'typography.css';
@@ -16,7 +17,15 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    /* Adicionado para controle de overflow específico */
+    overflow-y: auto; /* Rolagem padrão do corpo */
 }
+
+/* NOVA CLASSE: Aplicada ao body quando a rolagem principal deve ser desabilitada */
+body.no-scroll {
+    overflow-y: hidden;
+}
+
 
 *:focus {
     outline: none;

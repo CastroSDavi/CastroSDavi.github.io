@@ -59,7 +59,7 @@
 /* --- ESTILOS PARA O CABEÇALHO DA QUESTÃO (TÍTULO E BOTÃO FAVORITO) --- */
 .question-header-actions {
     display: flex;
-    align-items: center;
+    align-items: center; /* Alinha verticalmente o título e o botão de favorito */
     justify-content: space-between;
     gap: var(--spacing-sm, 12px);
     margin-bottom: var(--spacing-md, 20px);
@@ -70,13 +70,13 @@
     font-family: var(--font-family-heading);
     margin: 0;
     display: flex;
-    align-items: baseline;
-    gap: var(--spacing-sm, 12px);
-    flex-grow: 1;
+    align-items: baseline; /* Alinha a baseline do número e do texto da categoria */
+    gap: var(--spacing-xs, 8px); /* Reduzido o gap para dar mais espaço ao texto */
+    flex-grow: 1; /* Permite que o título ocupe o espaço disponível */
     line-height: 1.2;
     scroll-margin-top: var(--spacing-md, 20px);
     color: var(--color-gray-900);
-    min-width: 0; /* Ajuda o flex a encolher corretamente se o conteúdo for muito grande */
+    min-width: 0; /* MUITO IMPORTANTE: Permite que o flex item encolha se necessário */
 }
 
 #id-questao {
@@ -84,13 +84,13 @@
     font-weight: var(--font-weight-bold);
     color: var(--color-primary-dark);
     line-height: 1;
-    padding-right: var(--spacing-sm, 12px);
+    padding-right: var(--spacing-xs, 8px); /* Reduzido o padding para dar mais espaço */
     position: relative;
     background-color: transparent;
     border: none;
-    min-width: auto;
+    min-width: auto; /* Ou um valor fixo pequeno se preferir, e.g., 40px */
     height: auto;
-    flex-shrink: 0; /* Para não ser esmagado pelo título da categoria */
+    flex-shrink: 0; /* Impede que o número da questão seja esmagado */
 }
 
 #id-questao::after {
@@ -115,23 +115,27 @@
     background-color: transparent;
     border: none;
     padding: 0;
-    white-space: nowrap;       /* Impede a quebra de linha */
-    overflow: hidden;          /* Esconde o texto que transbordar */
-    text-overflow: ellipsis;   /* Adiciona "..." ao final do texto cortado */
-    align-self: flex-end;
+    align-self: flex-end; /* Alinha com a base do número da questão, se #question-title for baseline */
     padding-bottom: 0.15em;
-    max-width: 250px;          /* Defina uma largura máxima apropriada (ajuste conforme necessário) */
-                               /* Exemplo alternativo: max-width: calc(100% - 50px); se #id-questao tiver largura fixa */
-    display: inline-block;     /* Necessário para text-overflow funcionar com max-width em alguns contextos */
-    vertical-align: baseline;  /* Ou outro alinhamento vertical se necessário */
-    min-width: 0; /* Importante para que o flex item possa encolher adequadamente */
+
+    /* Lógica de truncamento */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    /* Flexibilidade e Limites */
+    flex-grow: 1; /* Deixa ele tentar ocupar o espaço restante no #question-title */
+    min-width: 50px;  /* Um mínimo para não desaparecer completamente */
+    /* max-width é removido para permitir que ele use o espaço flexível,
+       o truncamento ocorrerá se o conteúdo do #question-title como um todo
+       for limitado pelo .question-header-actions */
+    display: inline-block; /* Ou block, dependendo do alinhamento desejado com #id-questao */
+    vertical-align: baseline;
 }
 
 
 /* Os estilos específicos do botão de favorito foram movidos para 
    assets/css/components/favorite-button.css 
-   Apenas ajustes de posicionamento ou margens específicas para este contexto
-   deveriam permanecer aqui, se necessários. No momento, não são.
 */
 
 .quiz-navigation {
@@ -179,10 +183,11 @@
     #categoria-titulo {
       font-size: 0.75rem;
       letter-spacing: 0.06em;
-      max-width: 180px; /* Ajuste de max-width para telas menores */
+      /* Em telas menores, pode ser útil reintroduzir um max-width se o flex não for suficiente,
+         mas tente primeiro sem, deixando o flexbox gerenciar. */
+      /* max-width: 180px; */
     }
 
-    /* A responsividade do tamanho do botão de favorito está agora em favorite-button.css */
 
     .quiz-navigation {
       padding-top: var(--spacing-sm, 12px);
@@ -204,16 +209,19 @@
         padding-left: 0;
         margin-top: var(--spacing-xxs, 5px);
     }
+
+    #question-title {
+        gap: var(--spacing-xxs, 5px); /* Menor gap interno no título em telas pequenas */
+    }
     #id-questao {
       font-size: 1.4rem;
+      padding-right: var(--spacing-xxs, 5px);
     }
     #categoria-titulo {
       font-size: 0.7rem;
       letter-spacing: 0.05em;
-      max-width: 150px; /* Ajuste de max-width para telas ainda menores */
+      /* max-width: 120px;  Exemplo de max-width mais restrito se necessário */
     }
-
-    /* A responsividade do tamanho do botão de favorito está agora em favorite-button.css */
 
     .quiz-navigation {
       gap: var(--spacing-xs, 8px);

@@ -63,7 +63,7 @@ export default class QuestionDisplay {
     _formatCategoriaDisplay(question, todasCategorias, isQuickQuizMode) {
         let tituloCatDisplay = "Questão"; // Fallback inicial
         let fullCategoryTooltip = "Categorias não especificadas";
-        const MAX_DISPLAY_LENGTH = 45; // Máximo de caracteres para o título antes de truncar com (+N) ou "..."
+        const MAX_DISPLAY_LENGTH = 120; // Máximo de caracteres para o título antes de truncar
 
         if (isQuickQuizMode) {
             tituloCatDisplay = "Quiz Rápido";
@@ -73,7 +73,6 @@ export default class QuestionDisplay {
             const totalCategoriasPergunta = idsCatPerg.length;
 
             if (totalCategoriasPergunta > 0 && Array.isArray(todasCategorias) && todasCategorias.length > 0) {
-                // Mapear todos os nomes de categoria para o tooltip
                 const nomesCategoriasQuestao = idsCatPerg
                     .map(id => todasCategorias.find(cat => cat.id_categoria === id)?.nome_categoria)
                     .filter(name => name);
@@ -82,15 +81,21 @@ export default class QuestionDisplay {
                     fullCategoryTooltip = `Categorias: ${nomesCategoriasQuestao.join(', ')}`;
                 }
 
-                // Lógica para exibir a categoria mais específica ou um resumo
+                // Encontrar a categoria mais específica (mais profunda)
                 let idCatMaisEspecifica = idsCatPerg[0];
                 if (totalCategoriasPergunta > 1) {
                     const catObjsPerg = todasCategorias.filter(c => idsCatPerg.includes(c.id_categoria));
                     if (catObjsPerg.length > 0) {
-                        idCatMaisEspecifica = catObjsPerg.reduce((deepest, curr) =>
-                            this._getCategoriaProfundidade(curr, todasCategorias) > this._getCategoriaProfundidade(deepest, todasCategorias) ? curr : deepest,
-                            catObjsPerg[0]
-                        ).id_categoria;
+                        // Ordena por profundidade (maior primeiro) e depois por nome
+                        catObjsPerg.sort((a, b) => {
+                            const depthA = this._getCategoriaProfundidade(a, todasCategorias);
+                            const depthB = this._getCategoriaProfundidade(b, todasCategorias);
+                            if (depthB !== depthA) {
+                                return depthB - depthA; // Mais profundo primeiro
+                            }
+                            return a.nome_categoria.localeCompare(b.nome_categoria); // Ordem alfabética para desempate
+                        });
+                        idCatMaisEspecifica = catObjsPerg[0].id_categoria;
                     }
                 }
 
@@ -98,10 +103,13 @@ export default class QuestionDisplay {
                 let caminhoBreadcrumb = [];
                 let idAtual = idCatMaisEspecifica;
                 let iteracoes = 0;
-                while (idAtual != null && iteracoes < 5) { // Limite de profundidade do breadcrumb
+                const idsNoBreadcrumb = new Set();
+
+                while (idAtual != null && iteracoes < 5) {
                     const catEncontrada = todasCategorias.find(cat => cat.id_categoria === idAtual);
                     if (catEncontrada) {
                         caminhoBreadcrumb.unshift(catEncontrada.nome_categoria);
+                        idsNoBreadcrumb.add(catEncontrada.id_categoria);
                         idAtual = catEncontrada.id_categoria_pai;
                     } else {
                         break;
@@ -110,54 +118,43 @@ export default class QuestionDisplay {
                 }
 
                 let breadcrumbDisplay = caminhoBreadcrumb.length > 0 ? caminhoBreadcrumb.join(' › ') : "Tópicos Diversos";
-
+                
+                // Truncar o breadcrumb principal se for muito longo
                 if (breadcrumbDisplay.length > MAX_DISPLAY_LENGTH) {
-                    // Se o breadcrumb da mais específica for muito longo, truncá-lo
-                    tituloCatDisplay = `${breadcrumbDisplay.substring(0, MAX_DISPLAY_LENGTH - 3)}...`;
-                    if (totalCategoriasPergunta > caminhoBreadcrumb.length) {
-                        // Se há mais categorias do que as mostradas no breadcrumb truncado
-                        // (isso pode acontecer se a mais específica for muito aninhada e houver outras de nível superior)
-                        const outrasCategoriasCount = totalCategoriasPergunta - caminhoBreadcrumb.length; // Ou um cálculo mais preciso se necessário
-                        if (outrasCategoriasCount > 0) {
-                           tituloCatDisplay += ` (+${outrasCategoriasCount} outras)`;
-                        }
-                    }
-                } else if (totalCategoriasPergunta > 1) {
-                    // Se o breadcrumb couber mas houver outras categorias além das que formam o breadcrumb da mais específica
-                    // (e.g., a pergunta está em "Cardio > Arritmia" e também em "Emergência")
-                    // Contamos quantas categorias não estão no caminho do breadcrumb da mais específica
-                    const idsNoBreadcrumb = new Set();
-                    let tempId = idCatMaisEspecifica;
-                    let tempIter = 0;
-                     while (tempId != null && tempIter < 5) {
-                        const catEnc = todasCategorias.find(cat => cat.id_categoria === tempId);
-                        if (catEnc) { idsNoBreadcrumb.add(catEnc.id_categoria); tempId = catEnc.id_categoria_pai; }
-                        else { break; }
-                        tempIter++;
-                    }
-                    // A lógica acima está um pouco simplificada, pois o breadcrumb é o caminho para UMA categoria.
-                    // Se a pergunta tem múltiplas categorias principais (não hierárquicas entre si),
-                    // o "+N" deve refletir isso.
-                    // Uma forma mais simples: se o breadcrumb da mais específica couber,
-                    // e houver mais de uma categoria na pergunta, mostre a contagem.
-                    const outrasNaoNoBreadcrumb = idsCatPerg.filter(id => !idsNoBreadcrumb.has(id)).length;
-                    
-                    if (totalCategoriasPergunta > caminhoBreadcrumb.length || outrasNaoNoBreadcrumb > 0) {
-                         // Ajuste para mostrar o número total de categorias se for mais de uma
-                         // e o breadcrumb da mais específica for o principal.
-                         // Ex: "Cardio › Arritmias (+1)" se ela também estiver em "Terapia Intensiva"
-                         // Poderíamos simplificar para:
-                         tituloCatDisplay = `${breadcrumbDisplay} (+${totalCategoriasPergunta - 1} outras)`;
-                    } else {
-                        tituloCatDisplay = breadcrumbDisplay;
-                    }
-
-
-                } else {
-                    tituloCatDisplay = breadcrumbDisplay;
+                    breadcrumbDisplay = `${breadcrumbDisplay.substring(0, MAX_DISPLAY_LENGTH - 3)}...`;
                 }
 
-            } else { // Nenhuma categoria associada ou `todasCategorias` não disponível
+                tituloCatDisplay = breadcrumbDisplay;
+
+                // Calcular quantas categorias *não* estão representadas pelo breadcrumb principal
+                // Consideramos uma categoria como "outra" se ela não faz parte da linhagem da mais específica
+                // ou se a pergunta está em múltiplas categorias de mesmo nível.
+                let outrasCategoriasCount = 0;
+                if (totalCategoriasPergunta > 1) {
+                    // Conta categorias que não são a 'idCatMaisEspecifica' nem seus pais diretos.
+                    // Uma forma simples é ver se há mais categorias do que as que formam o breadcrumb.
+                    // Se o breadcrumb tem X itens, e a pergunta tem Y categorias, Y - (número de categorias unicas no breadcrumb)
+                    // Mas, é mais simples contar se há mais de uma categoria raiz para a pergunta,
+                    // ou se a pergunta está em ramos diferentes.
+                    // Vamos usar uma contagem mais direta: se há mais de uma categoria atribuída E o breadcrumb representa apenas uma delas.
+
+                    // Se o breadcrumb representa apenas uma linha hierárquica, e há mais categorias
+                    // associadas à pergunta, então há "outras".
+                    // A contagem de 'idsNoBreadcrumb' reflete quantas categorias ÚNICAS compõem o breadcrumb.
+                    if (totalCategoriasPergunta > idsNoBreadcrumb.size) {
+                        outrasCategoriasCount = totalCategoriasPergunta - idsNoBreadcrumb.size;
+                    } else if (totalCategoriasPergunta > 1 && idsNoBreadcrumb.size === 1) {
+                        // Caso especial: breadcrumb é de uma categoria única, mas a pergunta tem mais (ex: A, B, C e exibimos A)
+                        outrasCategoriasCount = totalCategoriasPergunta - 1;
+                    }
+                }
+
+
+                if (outrasCategoriasCount > 0) {
+                    tituloCatDisplay += ` (+${outrasCategoriasCount} outras)`;
+                }
+
+            } else {
                 tituloCatDisplay = "Tópicos Diversos";
                 fullCategoryTooltip = "Categorias não especificadas";
             }
@@ -184,7 +181,6 @@ export default class QuestionDisplay {
         if (this.elements.categoriaTitulo) {
             this.elements.categoriaTitulo.innerText = categoriaInfo.display;
             this.elements.categoriaTitulo.setAttribute('title', categoriaInfo.tooltip);
-            // Opcional: armazenar os IDs para interações futuras (e.g., clique para ver todas)
             this.elements.categoriaTitulo.dataset.categoriaIds = categoriaInfo.allCategoryIds.join(',');
         }
 

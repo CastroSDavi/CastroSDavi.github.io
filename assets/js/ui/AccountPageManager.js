@@ -2,19 +2,33 @@
 
 export default class AccountPageManager {
     constructor(quizUIInstance) {
-        this.quizUI = quizUIInstance;
+        this.quizUI = quizUIInstance; // Instância de QuizUI para interações e acesso a elementos globais
         this.elements = {
+            // Elementos principais da página da conta
             accountSectionPage: document.getElementById('account-section-page'),
             sidebar: document.querySelector('#account-section-page .account-sidebar'),
             contentArea: document.querySelector('#account-section-page .account-content'),
             backToMenuButton: document.getElementById('account-back-to-menu'),
-            sidebarLinks: null,
-            contentSections: null,
+            sidebarLinks: null, // Preenchido no init
+            contentSections: null, // Preenchido no init
+
+            // Elementos do modal de exclusão de conta
+            deleteAccountModalOverlay: document.getElementById('delete-account-modal-overlay'),
+            deleteAccountModalDialog: document.getElementById('delete-account-modal-dialog'),
+            btnOpenDeleteModal: document.getElementById('btn-open-delete-account-modal'),
+            btnCancelDelete: document.getElementById('cancel-delete-account-btn'),
+            // O botão de confirmação de exclusão está dentro do formulário e será tratado pelo submit do form.
+            deleteAccountForm: document.getElementById('deleteAccountForm'), // O formulário em si
+            passwordInputDelete: null // Preenchido no init se o form existir
         };
         this.bodyAccountContentActiveClassName = 'body-account-content-active';
         this.bodyElement = document.body;
         this.bottomNavElement = document.querySelector('.bottom-nav');
-        this.defaultMenuTargetId = null; // Será o targetId da primeira aba do menu
+        this.defaultMenuTargetId = null;
+
+        if (this.elements.deleteAccountForm) {
+            this.elements.passwordInputDelete = this.elements.deleteAccountForm.querySelector('input[name="password"]');
+        }
     }
 
     init() {
@@ -29,16 +43,24 @@ export default class AccountPageManager {
             return;
         }
 
-        // Define o targetId da primeira aba como padrão para o menu
         if (this.elements.sidebarLinks.length > 0) {
             this.defaultMenuTargetId = this.elements.sidebarLinks[0].dataset.target;
         }
 
         this._setupEventListeners();
-        // Na inicialização, determina qual aba ativar e atualiza a UI.
-        // O true para isInitialLoad previne replaceState desnecessário se a URL já estiver correta.
         this._determineAndActivateTab(window.history.state, window.location.hash, true);
         this._handleResize(); // Garante estado visual correto no carregamento
+
+        // Verificar se é para reabrir modal de deleção devido a erro
+        const activeTabOnError = this.bodyElement.dataset.activeTabOnError;
+        const showDeleteModalOnError = this.bodyElement.dataset.showDeleteModalOnError === 'true';
+
+        if (activeTabOnError === 'security-content' && showDeleteModalOnError) {
+            // Pequeno delay para garantir que a aba 'security-content' já foi ativada pelo _determineAndActivateTab
+            setTimeout(() => {
+                this._toggleDeleteAccountModal(true);
+            }, 100); // Ajuste o delay se necessário
+        }
     }
 
     _scrollToContentTop() {
@@ -60,8 +82,7 @@ export default class AccountPageManager {
                 this.setActiveTab(link, targetId);
                 this._loadDynamicContent(targetId);
                 this._scrollToContentTop();
-
-                this._updateUIVisibility(true); // true = conteúdo da aba está ativo
+                this._updateUIVisibility(true);
 
                 if (window.history.pushState) {
                     window.history.pushState({ target: targetId, isAccountSectionContent: true }, null, newHash);
@@ -72,29 +93,50 @@ export default class AccountPageManager {
         this.elements.backToMenuButton?.addEventListener('click', () => {
             if (this._isMobileView()) {
                 this._scrollToContentTop();
-                // Ao voltar, o estado do histórico deve refletir o menu com a aba padrão
                 const defaultLink = this.elements.sidebarLinks.find(l => l.dataset.target === this.defaultMenuTargetId) || this.elements.sidebarLinks[0];
                 const menuHash = defaultLink ? defaultLink.getAttribute('href') : '';
 
                 if (window.history.pushState) {
                     window.history.pushState({ isAccountSectionMenu: true, target: this.defaultMenuTargetId }, null, menuHash);
                 }
-                // Agora que o estado do histórico foi atualizado, _determineAndActivateTab irá lidar com a UI
                 this._determineAndActivateTab({ isAccountSectionMenu: true, target: this.defaultMenuTargetId }, menuHash);
-
-                if (defaultLink) {
-                    defaultLink.focus({ preventScroll: false });
-                }
+                if (defaultLink) defaultLink.focus({ preventScroll: false });
             }
         });
 
         window.addEventListener('popstate', (event) => {
             if (this.bodyElement.dataset.pageId === 'account') {
-                this._determineAndActivateTab(event.state, window.location.hash, false, true); // isPopStateCall = true
+                this._determineAndActivateTab(event.state, window.location.hash, false, true);
             }
         });
 
         window.addEventListener('resize', this._handleResize.bind(this));
+
+        // Listeners para o modal de exclusão de conta
+        this.elements.btnOpenDeleteModal?.addEventListener('click', () => {
+            this._toggleDeleteAccountModal(true);
+        });
+
+        this.elements.btnCancelDelete?.addEventListener('click', (event) => {
+            event.preventDefault();
+            this._toggleDeleteAccountModal(false);
+        });
+
+        this.elements.deleteAccountModalOverlay?.addEventListener('click', (event) => {
+            if (event.target === this.elements.deleteAccountModalOverlay) {
+                this._toggleDeleteAccountModal(false);
+            }
+        });
+
+        // Listener de Escape para o modal de deleção (se o ModalManager global não o cobrir)
+        // Se ModalManager já lida com Escape para todos os modais, este pode ser redundante
+        // ou pode ser específico se este modal não for registrado no ModalManager.
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && this.elements.deleteAccountModalOverlay &&
+                this.elements.deleteAccountModalOverlay.classList.contains('modal--visible')) {
+                this._toggleDeleteAccountModal(false);
+            }
+        });
     }
 
     _isMobileView() {
@@ -113,19 +155,18 @@ export default class AccountPageManager {
         }
     }
 
-    // Atualiza a visibilidade do botão voltar, navbar e padding do body
     _updateUIVisibility(isContentActive) {
         if (this._isMobileView()) {
             if (isContentActive) {
                 this.bodyElement.classList.add(this.bodyAccountContentActiveClassName);
                 this.quizUI.showElement(this.elements.backToMenuButton);
                 this.quizUI.hideElement(this.bottomNavElement);
-            } else { // Menu está ativo
+            } else {
                 this.bodyElement.classList.remove(this.bodyAccountContentActiveClassName);
                 this.quizUI.hideElement(this.elements.backToMenuButton);
                 this.quizUI.showElement(this.bottomNavElement);
             }
-        } else { // Desktop view
+        } else {
             this.bodyElement.classList.remove(this.bodyAccountContentActiveClassName);
             this.quizUI.hideElement(this.elements.backToMenuButton);
         }
@@ -135,22 +176,11 @@ export default class AccountPageManager {
     _handleResize() {
         const isContentActive = this.bodyElement.classList.contains(this.bodyAccountContentActiveClassName);
         this._updateUIVisibility(isContentActive);
-        // O _determineAndActivateTab não é estritamente necessário aqui se o estado da aba ativa
-        // não muda com o resize, mas garante consistência se alguma lógica futura depender disso.
-        // Vamos remover por enquanto para simplificar, já que a aba ativa não deve mudar com resize.
     }
 
-    /**
-     * Determina qual aba deve estar ativa com base no estado do histórico e no hash da URL,
-     * e então ativa essa aba e atualiza a UI.
-     * @param {object} historyState - O estado do window.history.
-     * @param {string} currentHash - O hash atual da URL (window.location.hash).
-     * @param {boolean} [isInitialLoad=false] - True se for a chamada inicial ao carregar a página.
-     * @param {boolean} [isPopStateCall=false] - True se for chamada devido a um evento popstate.
-     */
     _determineAndActivateTab(historyState, currentHash, isInitialLoad = false, isPopStateCall = false) {
         let targetIdToShow = null;
-        let isContentView = false; // true se uma aba de conteúdo deve ser mostrada, false se o menu (sidebar)
+        let isContentView = false;
 
         if (historyState) {
             if (historyState.isAccountSectionContent && historyState.target) {
@@ -162,7 +192,6 @@ export default class AccountPageManager {
             }
         }
 
-        // Se o estado não definiu, tenta o hash (prioriza conteúdo se houver hash)
         if (!targetIdToShow && currentHash) {
             const linkByHash = this.elements.sidebarLinks.find(
                 (link) => link.getAttribute('href') === currentHash
@@ -173,23 +202,35 @@ export default class AccountPageManager {
             }
         }
 
-        // Fallback final: se ainda não há targetId, mostra o menu com a aba padrão selecionada
         if (!targetIdToShow) {
             targetIdToShow = this.defaultMenuTargetId;
             isContentView = false;
         }
+        
+        // Se a view Django passou uma dica para reabrir uma aba específica (ex: após erro de formulário)
+        const activeTabOnError = this.bodyElement.dataset.activeTabOnError;
+        if (activeTabOnError && !isPopStateCall) { // Só considera na carga inicial ou navegação direta
+            const linkForErrorTab = this.elements.sidebarLinks.find(link => link.dataset.target === activeTabOnError);
+            if(linkForErrorTab) {
+                targetIdToShow = activeTabOnError;
+                isContentView = true; // Assume que erro de formulário ocorre em uma aba de conteúdo
+                 // Atualiza o hash para refletir a aba de erro
+                if (window.history.replaceState && window.location.hash !== linkForErrorTab.getAttribute('href')) {
+                    window.history.replaceState({ target: targetIdToShow, isAccountSectionContent: true }, '', linkForErrorTab.getAttribute('href'));
+                }
+            }
+        }
+
 
         const linkToActivate = this.elements.sidebarLinks.find(
             (link) => link.dataset.target === targetIdToShow
-        ) || this.elements.sidebarLinks[0]; // Fallback para o primeiro link
+        ) || this.elements.sidebarLinks[0];
 
         if (linkToActivate) {
             this.setActiveTab(linkToActivate, linkToActivate.dataset.target);
             if (isContentView) {
                 this._loadDynamicContent(linkToActivate.dataset.target);
             }
-             // Evita scroll desnecessário no popstate ou na carga inicial da página,
-             // mas permite scroll se o usuário clicou diretamente em um link (tratado no listener de clique).
             if (!isPopStateCall && !isInitialLoad) {
                 this._scrollToContentTop();
             }
@@ -197,23 +238,16 @@ export default class AccountPageManager {
 
         this._updateUIVisibility(isContentView);
 
-        // Atualiza o histórico (replaceState) apenas se não for popstate e for necessário sincronizar
-        if (!isPopStateCall && window.history.replaceState) {
+        if (!isPopStateCall && window.history.replaceState && !isInitialLoad) { // Evita replaceState na carga inicial se o hash já está correto
             const currentPath = window.location.pathname;
             const expectedHash = linkToActivate ? linkToActivate.getAttribute('href') : '';
             const newState = isContentView ?
                 { target: linkToActivate.dataset.target, isAccountSectionContent: true } :
                 { isAccountSectionMenu: true, target: linkToActivate.dataset.target };
 
-            // Se estamos mostrando conteúdo e o hash não bate, ou se estamos no menu e ainda há hash
-            if (isContentView && expectedHash && expectedHash !== currentHash) {
-                window.history.replaceState(newState, '', expectedHash);
-            } else if (!isContentView && currentHash) {
-                window.history.replaceState(newState, '', currentPath + (expectedHash || '')); // Adiciona hash do menu se houver
-            } else if (!isInitialLoad && !currentHash && !expectedHash && !isContentView) {
-                // Caso especial: voltando pro menu e não havia hash (ex: url base da conta)
-                // Isso garante que o estado do histórico reflita "menu"
-                window.history.replaceState(newState, '', currentPath);
+            if ((isContentView && expectedHash && expectedHash !== currentHash) || 
+                (!isContentView && currentHash !== (expectedHash || '')) ) {
+                window.history.replaceState(newState, '', currentPath + (expectedHash || ''));
             }
         }
     }
@@ -232,10 +266,7 @@ export default class AccountPageManager {
         const activeSectionTitle = document.querySelector(`#${targetId} .card__title`);
         if (activeSectionTitle) {
             activeSectionTitle.setAttribute('tabindex', '-1');
-            // Focar apenas se não for um popstate, para não roubar foco do botão "voltar" do navegador
-            // ou se for um clique direto em um link da sidebar.
-            // A lógica de foco pode ser refinada aqui se necessário.
-            // if (!isPopStateCall) activeSectionTitle.focus({ preventScroll: true });
+            // Foco pode ser gerenciado de forma mais inteligente, por exemplo, apenas em cliques diretos.
         }
     }
 
@@ -250,6 +281,52 @@ export default class AccountPageManager {
                     if (shouldLoad) this.quizUI.favoriteManager.loadUserFavorites();
                 }
             }
+        }
+        // Outras lógicas de carregamento dinâmico podem ser adicionadas aqui para outras abas.
+    }
+
+    // Nova função para controlar o modal de exclusão
+    _toggleDeleteAccountModal(show) {
+        const overlay = this.elements.deleteAccountModalOverlay;
+        const dialog = this.elements.deleteAccountModalDialog;
+        const passwordInput = this.elements.passwordInputDelete;
+
+        if (!overlay || !dialog) return;
+
+        if (show) {
+            overlay.classList.remove('u-is-hidden');
+            // Forçar reflow para garantir transição
+            overlay.scrollTop; 
+            dialog.scrollTop;
+
+            requestAnimationFrame(() => {
+                overlay.classList.add('modal--visible');
+                // Se o dialog também tiver classe de animação, adicionar aqui
+                // dialog.classList.add('modal--dialog-visible'); 
+                if (passwordInput) passwordInput.focus();
+            });
+            this.bodyElement.classList.add('no-scroll');
+        } else {
+            overlay.classList.remove('modal--visible');
+            // Se o dialog também tiver classe de animação, remover aqui
+            // dialog.classList.remove('modal--dialog-visible');
+
+            // Usar o tempo de transição do CSS para esconder o overlay
+            const transitionDuration = parseFloat(getComputedStyle(overlay).transitionDuration) * 1000 || 300;
+            setTimeout(() => {
+                overlay.classList.add('u-is-hidden');
+                if (passwordInput) passwordInput.value = ''; // Limpa senha
+
+                // Limpar mensagens de erro no modal, se houver
+                const errorMessagesContainer = dialog.querySelector('.form-message--error');
+                if(errorMessagesContainer) {
+                    // Em vez de remover, apenas esvazia, pois o template Django pode recriá-lo
+                    errorMessagesContainer.innerHTML = ''; 
+                    errorMessagesContainer.style.display = 'none'; // Oculta o container de erro
+                }
+
+            }, transitionDuration);
+            this.bodyElement.classList.remove('no-scroll');
         }
     }
 }

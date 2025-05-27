@@ -169,7 +169,7 @@
     .question-display__answer-option {
         padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
         font-size: 0.9rem;
-        min-height: 46px;
+        min-height: 46px; 
     }
     .question-display__reference { margin-top: var(--spacing-md, 20px); padding-top: var(--spacing-sm, 10px); }
     .question-display__actions:has(#btn-toggle-explanation:not(.u-is-hidden)) {

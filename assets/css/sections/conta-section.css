@@ -1,32 +1,40 @@
 /* assets/css/sections/conta-section.css */
 
+/* Aplica ao container principal da página "Minha Conta" */
 #account-section-page {
     padding: 0;
-    /* Altura padrão para desktop ou quando a navegação principal superior está visível */
     height: calc(100vh - var(--header-height, 70px) - var(--main-nav-height, 48px));
     overflow: hidden;
     display: flex;
+    background-color: var(--color-gray-100); /* Fundo geral da página da conta */
+    font-family: var(--font-family-sans);
 }
 
 .account-layout-container {
     display: flex;
     width: 100%;
-    height: 100%; /* Garante que o container interno ocupe toda a altura da seção */
+    height: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: var(--spacing-lg, 28px);
+    gap: var(--spacing-lg, 28px);
 }
 
-/* --- Barra Lateral (Desktop) --- */
+/* --- BARRA LATERAL (Sidebar) - ESTILO ORIGINAL (conforme imagem image_507da7.png) --- */
 .account-sidebar {
     width: 270px;
     flex-shrink: 0;
     background-color: var(--color-white);
     border-right: 1px solid var(--color-gray-200);
     padding: var(--spacing-lg, 28px) var(--spacing-sm, 16px);
-    height: 100%;
+    height: 100%; /* Ocupa a altura do .account-layout-container */
     overflow-y: auto;
-    position: sticky; /* Mantém a sidebar fixa no scroll do conteúdo principal em desktop (se aplicável) */
-    top: 0;
+    position: sticky; /* Mantém a sidebar fixa no scroll do conteúdo principal em desktop */
+    top: 0; /* Alinha ao topo do .account-layout-container */
     transition: width 0.25s ease-in-out, transform 0.3s ease-out, opacity 0.3s ease-out;
+    /* Removido box-shadow daqui para corresponder à imagem original, pode ser adicionado se desejar */
 }
+/* Scrollbar sutil para a sidebar */
 .account-sidebar::-webkit-scrollbar { width: 5px; }
 .account-sidebar::-webkit-scrollbar-track { background: transparent; margin: var(--spacing-xs, 8px) 0; }
 .account-sidebar::-webkit-scrollbar-thumb { background-color: var(--color-gray-300); border-radius: var(--border-radius-pill); }
@@ -39,27 +47,28 @@
     margin: 0;
 }
 .account-sidebar__nav li:not(:last-child) {
-    margin-bottom: var(--spacing-xxs, 6px);
+    margin-bottom: var(--spacing-xxs, 6px); /* Espaçamento original */
 }
 .account-sidebar__link {
     display: flex;
     align-items: center;
     gap: var(--spacing-sm, 12px);
     padding: var(--spacing-sm, 13px) var(--spacing-md, 18px);
+    /* Ajuste no padding-left para a barrinha vertical */
     padding-left: calc(var(--spacing-md, 18px) + 3.5px + var(--spacing-xs, 8px));
     text-decoration: none !important;
     color: var(--color-text-secondary);
     border-radius: var(--border-radius-md, 8px);
-    font-size: var(--font-size-base, 1rem);
-    font-weight: var(--font-weight-normal);
-    transition: color 0.18s ease-out, font-weight 0.18s ease-out;
+    font-size: var(--font-size-base, 1rem); /* Mantendo 1rem */
+    font-weight: var(--font-weight-normal); /* Peso normal por padrão */
+    transition: color 0.18s ease-out, font-weight 0.18s ease-out, background-color 0.18s ease-out;
     position: relative;
-    background-color: transparent !important;
+    background-color: transparent !important; /* Garante fundo transparente */
 }
-.account-sidebar__link::before {
+.account-sidebar__link::before { /* A barrinha indicadora verde */
     content: '';
     position: absolute;
-    left: var(--spacing-sm, 16px);
+    left: var(--spacing-sm, 16px); /* Posição da barrinha */
     top: 50%;
     transform: translateY(-50%) scaleY(0);
     transform-origin: center;
@@ -71,103 +80,278 @@
                 background-color 0.2s ease-out;
 }
 .account-sidebar__link .material-symbols-outlined {
-    font-size: 23px;
-    font-variation-settings: 'wght' 300;
+    font-size: 23px; /* Tamanho original do ícone */
+    font-variation-settings: 'wght' 300; /* Peso original do ícone */
     color: var(--color-gray-700);
     transition: color 0.18s ease-out, font-variation-settings 0.18s ease-out;
-    margin-right: 0;
+    margin-right: 0; /* Removido margin-right se o gap já cuida */
 }
 .account-sidebar__link:hover {
-    background-color: transparent !important;
+    background-color: var(--color-gray-100) !important; /* Fundo leve no hover, se desejar */
     color: var(--color-primary-dark);
 }
 .account-sidebar__link:hover .material-symbols-outlined {
     color: var(--color-primary-medium);
 }
+/* Efeito da barrinha no hover quando não ativo */
 .account-sidebar__link:not(.is-active):hover::before {
     transform: translateY(-50%) scaleY(0.6);
-    background-color: var(--color-gray-400);
+    background-color: var(--color-gray-400); /* Cor da barrinha no hover não ativo */
 }
 .account-sidebar__link.is-active {
-    background-color: transparent !important;
+    /* background-color: var(--color-primary-light) !important; */ /* Removido, o original não tinha fundo no ativo */
     color: var(--color-primary-dark);
     font-weight: var(--font-weight-semibold);
 }
-.account-sidebar__link.is-active::before {
+.account-sidebar__link.is-active::before { /* Barrinha visível e verde para o ativo */
     transform: translateY(-50%) scaleY(1);
     background-color: var(--color-secondary-green);
 }
 .account-sidebar__link.is-active .material-symbols-outlined {
     color: var(--color-secondary-green);
-    font-variation-settings: 'wght' 400;
+    font-variation-settings: 'wght' 400; /* Ícone um pouco mais forte no ativo */
 }
+.account-sidebar__link:focus-visible { /* Estilo de foco mantido */
+    outline: none;
+    /* box-shadow: 0 0 0 2px var(--color-primary-light) inset; */ /* Opção de foco interno */
+    border: 1px solid var(--focus-outline-color); /* Ou borda externa */
+}
+/* --- FIM DA BARRA LATERAL (ESTILO ORIGINAL MANTIDO) --- */
 
-/* --- Área de Conteúdo Principal (Desktop) --- */
+
+/* --- Área de Conteúdo Principal (Estilo Modernizado) --- */
 .account-content {
     flex-grow: 1;
-    padding: var(--spacing-lg, 28px) var(--spacing-xl, 40px);
-    overflow-y: auto; /* Permite rolagem apenas no conteúdo, não na seção inteira */
-    height: 100%; /* Ocupa a altura do .account-layout-container */
-    background-color: var(--color-gray-100);
-    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
-    position: relative;
+    padding: var(--spacing-lg, 28px);
+    overflow-y: auto;
+    height: 100%;
+    background-color: var(--color-white);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--color-gray-200);
+    box-shadow: var(--shadow-sm);
 }
+
 .account-content__section {
     display: none;
-    animation: fadeInAccountContent 0.35s ease-out forwards;
+    animation: fadeInAccountContent 0.3s ease-out forwards;
 }
 .account-content__section.is-visible {
     display: block;
 }
 @keyframes fadeInAccountContent {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
 .account-content .card--conta-perfil {
     max-width: 100%;
-    margin-top: 0;
-    margin-bottom: var(--spacing-lg, 28px);
-    background-color: var(--color-white);
-    border: 1px solid var(--color-gray-200);
-    box-shadow: var(--shadow-sm);
-}
-.account-content .card--conta-perfil:last-child {
     margin-bottom: 0;
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
 }
+
 .account-content .card__title {
-    font-size: var(--font-size-h2, 1.75rem);
+    font-size: var(--font-size-h2, 1.8rem);
     color: var(--color-primary-dark);
-    padding-bottom: var(--spacing-sm, 14px);
-    border-bottom: 1px solid var(--color-gray-200);
-    margin-bottom: var(--spacing-md, 24px);
+    padding-bottom: var(--spacing-sm, 12px);
+    margin-bottom: var(--spacing-lg, 28px);
+    border-bottom: 1px solid var(--color-gray-300);
+    font-weight: var(--font-weight-bold);
 }
-.profile-info-table { width: 100%; text-align: left; margin-bottom: var(--spacing-lg, 28px); border-collapse: collapse; }
-.profile-info-table th, .profile-info-table td { padding: var(--spacing-sm, 14px) var(--spacing-xs, 8px); border-bottom: 1px solid var(--color-gray-200); font-size: var(--font-size-base, 0.95rem); vertical-align: top; }
-.profile-info-table th { font-weight: var(--font-weight-medium); color: var(--color-text-secondary); width: 200px; white-space: nowrap; }
-.profile-info-table td { color: var(--color-text-primary); }
-.profile-info-table tr:last-child th, .profile-info-table tr:last-child td { border-bottom: none; }
 
-.data-table { width: 100%; margin-top: var(--spacing-sm, 16px); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius-md); overflow: hidden; border-collapse: separate; border-spacing: 0;}
-.data-table th, .data-table td { text-align: left; padding: var(--spacing-sm, 12px) var(--spacing-md, 16px); border-bottom: 1px solid var(--color-gray-200); font-size: var(--font-size-sm, 0.9rem); }
-.data-table thead th { background-color: var(--color-gray-50); color: var(--color-primary-dark); font-weight: var(--font-weight-semibold); white-space: nowrap; border-bottom-width: 1.5px; border-bottom-color: var(--color-gray-300); }
-.data-table tbody tr:hover { background-color: var(--color-primary-light); }
-.data-table tbody tr:last-child td { border-bottom: none; }
-.data-table td:matches(:nth-child(2), :nth-child(3), :nth-child(4), :nth-child(5)), .data-table th:matches(:nth-child(2), :nth-child(3), :nth-child(4), :nth-child(5)) { text-align: right; }
+.account-content .h4-like {
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    margin-top: var(--spacing-lg, 28px);
+    margin-bottom: var(--spacing-sm, 12px);
+    padding-bottom: var(--spacing-xs, 6px);
+    border-bottom: 1px dashed var(--color-gray-200);
+}
+.account-content .h4-like:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
 
-.profile-actions { margin-top: var(--spacing-lg, 28px); display: flex; flex-direction: column; gap: var(--spacing-md, 16px); }
-.profile-actions .button { width: 100%; }
-.profile-actions .button .button__icon { margin-right: var(--spacing-sm, 10px); }
+.profile-info-table {
+    width: 100%;
+    text-align: left;
+    margin-bottom: var(--spacing-lg, 28px);
+    border-collapse: separate;
+    border-spacing: 0 var(--spacing-xs, 8px);
+}
+.profile-info-table th,
+.profile-info-table td {
+    padding: var(--spacing-sm, 10px) 0;
+    border-bottom: 1px solid var(--color-gray-100);
+    font-size: 0.9rem;
+    vertical-align: middle;
+}
+.profile-info-table th {
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    width: 200px;
+    white-space: nowrap;
+}
+.profile-info-table td {
+    color: var(--color-text-primary);
+    font-weight: var(--font-weight-medium);
+}
+.profile-info-table tr:last-child th,
+.profile-info-table tr:last-child td {
+    border-bottom: none;
+}
 
-.placeholder-text { color: var(--color-text-muted); font-style: italic; text-align: center; padding: var(--spacing-xl, 40px) 0; }
+.data-table {
+    width: 100%;
+    margin-top: var(--spacing-sm, 16px);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    border-collapse: collapse;
+}
+.data-table th, .data-table td {
+    text-align: left;
+    padding: var(--spacing-sm, 10px) var(--spacing-md, 16px);
+    border-bottom: 1px solid var(--color-gray-200);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+.data-table thead th {
+    background-color: var(--color-gray-100);
+    color: var(--color-text-secondary);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+}
+.data-table tbody tr:hover {
+    background-color: var(--color-primary-light);
+}
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.data-table td:matches(:nth-child(2), :nth-child(3), :nth-child(4), :nth-child(5)),
+.data-table th:matches(:nth-child(2), :nth-child(3), :nth-child(4), :nth-child(5)) {
+    text-align: right;
+}
+
+.profile-actions {
+    margin-top: var(--spacing-sm);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 12px);
+}
+.profile-actions .button {
+    padding: var(--spacing-xs, 8px) var(--spacing-md, 16px);
+    font-size: 0.9rem;
+}
+.profile-actions .button .button__icon {
+    margin-right: var(--spacing-xs, 6px);
+    font-size: 1.1em;
+}
+
+.placeholder-text {
+    color: var(--color-text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: var(--spacing-xl, 30px) 0;
+    font-size: 0.9rem;
+}
 
 .simple-list { list-style: none; padding: 0; margin: var(--spacing-sm, 12px) 0 0 0; }
-.simple-list li { padding: var(--spacing-sm, 12px) var(--spacing-xxs, 4px); border-bottom: 1px dotted var(--color-gray-200); font-size: var(--font-size-sm, 0.9rem); color: var(--color-text-primary); line-height: 1.5; }
+.simple-list li {
+    padding: var(--spacing-sm, 10px) 0;
+    border-bottom: 1px dashed var(--color-gray-200);
+    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
 .simple-list li:last-child { border-bottom: none; }
-.simple-list li strong { color: var(--color-primary-dark); font-weight: var(--font-weight-medium); }
-.simple-list li .text-muted { display: block; font-size: var(--font-size-xs, 0.8rem); color: var(--color-text-muted); margin-top: var(--spacing-xxs, 4px); }
+.simple-list li strong { color: var(--color-primary-dark); font-weight: var(--font-weight-semibold); }
+.simple-list li .text-muted { display: block; font-size: 0.75rem; color: var(--color-text-muted); margin-top: 2px; }
 
-/* --- Botão Voltar ao Menu (Mobile - #account-back-to-menu) --- */
+.profile-form {
+    text-align: left;
+    margin-top: var(--spacing-sm);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md, 20px);
+}
+@media (min-width: 600px) {
+    .profile-form { max-width: 550px; }
+}
+
+.profile-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxs, 6px);
+}
+.profile-form .form-label {
+    font-weight: var(--font-weight-medium);
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+}
+.profile-form .form-control {
+    display: block;
+    width: 100%;
+    padding: var(--spacing-sm, 10px) var(--spacing-md, 14px);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+    background-color: var(--color-gray-50);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+.profile-form .form-control::placeholder {
+    color: var(--color-gray-500);
+    font-style: italic;
+    font-size: 0.9em;
+}
+.profile-form .form-control:focus {
+    border-color: var(--color-primary-medium);
+    background-color: var(--color-white);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(var(--color-primary-medium-rgb), 0.1);
+}
+.profile-form .form-text-feedback.is-invalid {
+    color: var(--color-accent-red);
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+.profile-form .form-check {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs, 8px);
+    margin-bottom: var(--spacing-xs, 8px);
+}
+.profile-form .form-check-input {
+    margin-top: 1px;
+    flex-shrink: 0;
+    accent-color: var(--color-primary-medium);
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+}
+.profile-form .form-check-label {
+    font-weight: var(--font-weight-normal);
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+.profile-form button[type="submit"] {
+    justify-self: start;
+    width: auto;
+    min-width: 180px;
+}
+
 .account-content__back-button {
+    display: none;
     position: absolute;
     top: var(--spacing-sm, 12px);
     left: var(--spacing-sm, 12px);
@@ -176,12 +360,12 @@
     color: var(--color-primary-dark);
     border: 1px solid var(--color-gray-300);
     box-shadow: var(--shadow-sm);
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     padding: 0;
 }
 .account-content__back-button .material-symbols-outlined {
-    font-size: 22px;
+    font-size: 20px;
 }
 .account-content__back-button:hover,
 .account-content__back-button:focus-visible {
@@ -192,7 +376,11 @@
 
 /* --- RESPONSIVIDADE --- */
 @media (max-width: 992px) { /* Tablets */
-    .account-sidebar {
+    .account-layout-container {
+        padding: var(--spacing-md, 20px);
+        gap: var(--spacing-md, 20px);
+    }
+    .account-sidebar { /* Estilo original da sidebar para tablet */
         width: 230px;
         padding: var(--spacing-md, 20px) var(--spacing-xs, 10px);
     }
@@ -204,167 +392,104 @@
     }
     .account-sidebar__link .material-symbols-outlined { font-size: 21px; }
     .account-sidebar__link::before { left: var(--spacing-sm, 12px); }
-    .account-content { padding: var(--spacing-md, 24px) var(--spacing-lg, 28px); }
+
+    .account-content { padding: var(--spacing-md, 24px); }
+    .account-content .card__title { font-size: 1.6rem; }
+    .profile-info-table th { width: 170px; }
 }
 
 @media (max-width: 768px) { /* Layout Mobile */
     #account-section-page {
-        /* Altura quando o MENU da conta está visível (bottom-nav presente E padding-bottom no body) */
-        height: calc(100vh - var(--header-height-mobile, 70px) - var(--bottom-nav-height, 60px));
-        /* A transição de altura é opcional, mas pode suavizar a mudança */
-        /* transition: height 0.25s ease-out; */
+        /* A altura é controlada pelo JS com base na presença da bottom-nav */
+        background-color: var(--color-white); /* Fundo branco para a área principal em mobile */
     }
-
-    /* Quando o CONTEÚDO de uma aba da conta está ativo no mobile
-       (bottom-nav escondida E SEM padding-bottom no body, controlado por JS na classe do BODY) */
-    body.body-account-content-active #account-section-page {
-        height: calc(100vh - var(--header-height-mobile, 70px));
-    }
-
     .account-layout-container {
-        flex-direction: column;
-        /* height: 100%; // Removido para permitir que o filho com overflow-y: auto funcione corretamente */
+        flex-direction: column; padding: 0; gap: 0;
     }
-
-    .account-sidebar {
-        width: 100%;
-        height: 100%; /* Ocupa a altura da #account-section-page */
-        position: static;
-        border-right: none;
-        overflow-y: auto;
-        padding: var(--spacing-md, 20px);
+    .account-sidebar { /* Sidebar original adaptada para mobile */
+        width: 100%; height: 100%; /* MODIFICADO: para ocupar toda a altura da tela quando visível */
+        position: static; border-right: none; border-radius: 0;
         box-shadow: none;
-        display: flex;
-        flex-direction: column;
-        padding-bottom: calc(var(--spacing-md, 20px) + env(safe-area-inset-bottom, 0px));
+        /* Removido border-bottom aqui, a separação virá do account-content se necessário */
+        padding: var(--spacing-sm, 12px); margin-bottom: 0; flex-shrink: 0;
+        overflow-y: visible; /* Permite que o conteúdo da sidebar expanda se necessário (menu scrollável) */
     }
-    /* A classe .is-mobile-content-active foi substituída por .body-account-content-active no body */
-    body.body-account-content-active .account-sidebar {
+    /* Quando o conteúdo da aba está ativo no mobile, a sidebar é escondida */
+    body.body-account-content-active #account-section-page .account-sidebar {
         display: none !important;
+    }
+    body:not(.body-account-content-active) #account-section-page .account-content {
+        display: none !important; /* Esconde o conteúdo quando o menu (sidebar) está visível */
     }
 
     .account-sidebar__nav ul {
         display: flex;
-        flex-direction: column;
-        overflow-x: visible;
+        flex-direction: column; /* Links empilhados no mobile, como era no original */
+        overflow-x: visible; /* Não precisa de scroll horizontal se empilhado */
         padding-bottom: 0;
         gap: var(--spacing-xs, 8px);
     }
     .account-sidebar__nav li { margin-bottom: 0; }
-    .account-sidebar__link {
+    .account-sidebar__link { /* Links da sidebar original em mobile */
         padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
-        border-bottom: none;
-        font-size: var(--font-size-base, 1rem);
-        white-space: normal;
+        font-size: var(--font-size-base, 1rem); /* Mantém o tamanho do desktop */
+        white-space: normal; /* Permite quebra de linha se o texto for longo */
     }
     .account-sidebar__link.is-active {
-        border-bottom-color: transparent;
-        background-color: var(--color-primary-light) !important;
+        /* Mantém o estilo original de ativo, sem fundo colorido forte */
+        background-color: transparent !important;
+        color: var(--color-primary-dark);
+        font-weight: var(--font-weight-semibold);
     }
-    .account-sidebar__link.is-active .material-symbols-outlined { color: var(--color-secondary-green); }
-    .account-sidebar__link .material-symbols-outlined { font-size: 21px; margin-right: var(--spacing-sm, 10px); }
+    .account-sidebar__link.is-active::before {
+        transform: translateY(-50%) scaleY(1);
+        background-color: var(--color-secondary-green);
+    }
+    .account-sidebar__link.is-active .material-symbols-outlined {
+        color: var(--color-secondary-green);
+    }
+
 
     .account-content {
-        display: none; /* Escondido por padrão, JS mostra */
-        width: 100%;
-        height: 100%; /* Ocupa a altura da #account-section-page */
+        /* display: none; (JS controla isso com body.body-account-content-active) */
+        width: 100%; height: 100%; /* Ocupa a altura da #account-section-page */
         overflow-y: auto;
         padding: var(--spacing-md, 20px);
-        background-color: var(--color-gray-50);
-        position: relative;
-        padding-top: calc(var(--spacing-sm, 12px) + 40px + var(--spacing-md, 20px));
-        padding-bottom: calc(var(--spacing-xl, 40px) + env(safe-area-inset-bottom, 0px));
-    }
-    body.body-account-content-active .account-content {
-        display: block !important;
+        background-color: var(--color-white); /* Garante fundo branco */
+        border-radius: 0; border: none; box-shadow: none;
+        /* Espaço para o botão voltar */
+        padding-top: calc(var(--spacing-sm, 12px) + 38px + var(--spacing-md, 20px));
     }
 
-    .account-content .card__title {
-        font-size: var(--font-size-h2-mobile, 1.5rem);
-        margin-bottom: var(--spacing-md, 20px);
-    }
-     .profile-info-table th,
-     .profile-info-table td {
-        font-size: var(--font-size-sm, 0.9rem);
-        padding: var(--spacing-xs, 10px) var(--spacing-xxs, 4px);
-        display: block;
-        width: 100%;
-        border-bottom: none;
-    }
-    .profile-info-table th {
-        font-weight: var(--font-weight-semibold);
-        color: var(--color-primary-dark);
-        padding-bottom: 2px;
-        white-space: normal;
-    }
-    .profile-info-table td {
-        padding-top: 0;
-        padding-left: var(--spacing-sm, 12px);
-        border-bottom: 1px dotted var(--color-gray-200);
-        margin-bottom: var(--spacing-sm, 10px);
-    }
-    .profile-info-table tr:last-child td {
-        margin-bottom: 0;
-        border-bottom: none;
-    }
+    .account-content .card__title { font-size: 1.4rem; margin-bottom: var(--spacing-md, 20px); }
+    .profile-info-table th, .profile-info-table td { font-size: 0.85rem; }
+    .profile-info-table th { width: 120px; }
+    .data-table { font-size: 0.8rem; }
+    .data-table th, .data-table td { padding: var(--spacing-xs, 8px) var(--spacing-sm, 10px); }
 
-    .data-table {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border: none;
-        border-radius: 0;
-        background-color: var(--color-white);
-    }
-    .data-table thead { display: none; }
-    .data-table tbody, .data-table tr, .data-table td { display: block; }
-    .data-table tr {
-        border: 1px solid var(--color-gray-200);
-        border-radius: var(--border-radius-md);
-        margin-bottom: var(--spacing-sm, 12px);
-        padding: var(--spacing-sm, 12px);
-    }
-    .data-table td {
-        border: none;
-        padding: var(--spacing-xxs, 5px) 0;
-        text-align: left !important;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .data-table td::before {
-        content: attr(data-label);
-        font-weight: var(--font-weight-medium);
-        color: var(--color-text-secondary);
-        padding-right: var(--spacing-sm, 10px);
-        font-size: 0.85rem;
-    }
-    .data-table td:empty::before { content: ""; }
+    .account-content .h4-like { font-size: 1.1rem; margin-top: var(--spacing-md, 24px); }
+    .profile-form { max-width: 100%; gap: var(--spacing-sm, 16px); }
+    .profile-form .form-control { padding: var(--spacing-xs, 9px) var(--spacing-sm, 12px); font-size: 0.9rem; }
+    .profile-form button[type="submit"] { width: 100%; justify-self: stretch; }
+    .profile-actions { flex-direction: column; }
+    .profile-actions .button { width: 100%; }
 }
 
-/* Ajustes finos para telas ainda menores */
 @media (max-width: 480px) {
-    #account-section-page {
-        /* A altura é controlada pela media query de 768px e pela classe no body */
-    }
-    body.body-account-content-active #account-section-page {
-        /* A altura é controlada pela media query de 768px e pela classe no body */
-    }
+    #account-section-page { padding-bottom: var(--spacing-md); }
+    .account-sidebar { padding: var(--spacing-xs, 8px); }
+    .account-sidebar__link { padding: var(--spacing-xs, 10px) var(--spacing-sm, 12px); font-size: 0.9rem; } /* Links da sidebar um pouco menores */
 
-    .account-sidebar { padding: var(--spacing-sm, 15px); }
     .account-content {
-        padding: var(--spacing-sm, 15px);
-        padding-top: calc(var(--spacing-xs, 10px) + 36px + var(--spacing-sm, 15px));
+        padding: var(--spacing-sm, 16px);
+        padding-top: calc(var(--spacing-xs, 8px) + 38px + var(--spacing-sm, 16px));
     }
-    .account-content .card__title { font-size: 1.3rem; }
+    .account-content .card__title { font-size: 1.25rem; }
+    .account-content .h4-like { font-size: 1.05rem; }
+    .profile-form .form-label { font-size: 0.8rem; }
+    .profile-form .form-control { font-size: 0.875rem; }
+    .profile-actions .button, .profile-form button[type="submit"] { font-size: 0.85rem; padding: var(--spacing-xs, 9px) var(--spacing-sm, 14px); }
 
-    .account-content__back-button {
-        top: var(--spacing-xs, 10px);
-        left: var(--spacing-xs, 10px);
-        width: 36px;
-        height: 36px;
-    }
-    .account-content__back-button .material-symbols-outlined {
-        font-size: 20px;
-    }
+    .account-content__back-button { top: var(--spacing-xs, 8px); left: var(--spacing-xs, 8px); width: 36px; height: 36px; }
+    .account-content__back-button .material-symbols-outlined { font-size: 18px; }
 }

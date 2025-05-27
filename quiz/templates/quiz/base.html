@@ -14,16 +14,19 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}MedQuiz{% endblock title %}</title>
 </head>
-{# ===== MODIFICAÇÃO AQUI para adicionar data-page-id ===== #}
-<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}" 
-      data-page-id="{% if request.resolver_match.view_name == 'quiz:home' %}home{% elif request.resolver_match.view_name == 'quiz:questions' %}questions{% elif request.resolver_match.view_name == 'quiz:account' %}account{% else %}unknown{% endif %}">
+{# ===== MODIFICAÇÃO AQUI para adicionar data-page-id e os novos data attributes ===== #}
+<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+      data-page-id="{% if request.resolver_match.view_name == 'quiz:home' %}home{% elif request.resolver_match.view_name == 'quiz:questions' %}questions{% elif request.resolver_match.view_name == 'quiz:account' %}account{% else %}unknown{% endif %}"
+      data-active-tab-on-error="{{ active_tab_on_error|default_if_none:'' }}"
+      data-show-delete-modal-on-error="{{ show_delete_account_modal_on_error|yesno:'true,false' }}"
+      >
 {# ===== FIM DA MODIFICAÇÃO ===== #}
     
     {% include "quiz/includes/_header.html" %}
     {% include "quiz/includes/_main_nav.html" %}
 
     <main>
-        {# Django messages block - Mantenha se estiver usando #}
+        {# Django messages block - Mantido como estava #}
         {% if messages %}
             <div class="messages-container" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 2000; width: auto; max-width: 90%;">
                 {% for message in messages %}

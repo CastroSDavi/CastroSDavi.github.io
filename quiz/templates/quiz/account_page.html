@@ -40,7 +40,7 @@
                             Segurança e Dados
                         </a>
                     </li>
-                   
+
                     <li>
                         <a href="#preferences" class="account-sidebar__link" data-target="preferences-content">
                             <span class="material-symbols-outlined">tune</span>
@@ -116,15 +116,30 @@
                     <div class="card__body">
                         {% if user_sessions %}
                             <p>Suas últimas {{ user_sessions|length }} sessões de quiz:</p>
-                            <ul class="simple-list">
-                                {% for session in user_sessions %}
-                                    <li>
-                                        <strong>{{ session.data_inicio|date:"d/m/Y H:i" }}</strong> - Modo: {{ session.modo_quiz }}
-                                        (Pontos: {{ session.pontuacao_final }}, Acertos: {{ session.total_acertos }}/{{ session.total_perguntas_sessao }})
-                                        <small class="text-muted">Duração: {{ session.duracao_sessao_formatada }}</small>
-                                    </li>
-                                {% endfor %}
-                            </ul>
+                            <div class="data-table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Data e Hora</th>
+                                            <th>Modo</th>
+                                            <th>Pontos</th>
+                                            <th>Acertos</th>
+                                            <th>Duração</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for session in user_sessions %}
+                                        <tr>
+                                            <td data-label="Data Início:">{{ session.data_inicio|date:"d/m/Y H:i" }}</td>
+                                            <td data-label="Modo:">{{ session.modo_quiz }}</td>
+                                            <td data-label="Pontos:">{{ session.pontuacao_final }}</td>
+                                            <td data-label="Acertos:">{{ session.total_acertos }}/{{ session.total_perguntas_sessao }}</td>
+                                            <td data-label="Duração:">{{ session.duracao_sessao_formatada }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         {% else %}
                             <p class="placeholder-text">Você ainda não completou nenhuma sessão de quiz.</p>
                         {% endif %}
@@ -139,30 +154,32 @@
                     <div class="card__body">
                         {% if user_daily_stats_summary %}
                             <p>Resumo das suas atividades nos últimos dias:</p>
-                             <table class="profile-info-table data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Data</th>
-                                        <th>Questões Respondidas</th>
-                                        <th>Acertos</th>
-                                        <th>Precisão</th>
-                                        <th>Pontos</th>
-                                        <th>Tempo de Estudo</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                {% for stat in user_daily_stats_summary %}
-                                    <tr>
-                                        <td data-label="Data">{{ stat.data_estatistica|date:"d/m/Y" }}</td>
-                                        <td data-label="Respondidas">{{ stat.perguntas_respondidas_dia }}</td>
-                                        <td data-label="Acertos">{{ stat.acertos_dia }}</td>
-                                        <td data-label="Precisão">{{ stat.precisao_dia|floatformat:0 }}%</td>
-                                        <td data-label="Pontos">{{ stat.pontos_dia }}</td>
-                                        <td data-label="Tempo Estudo">{{ stat.tempo_estudo_formatado }}</td>
-                                    </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                            <div class="data-table-wrapper">
+                                 <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Data</th>
+                                            <th>Questões Respondidas</th>
+                                            <th>Acertos</th>
+                                            <th>Precisão</th>
+                                            <th>Pontos</th>
+                                            <th>Tempo de Estudo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for stat in user_daily_stats_summary %}
+                                        <tr>
+                                            <td data-label="Data">{{ stat.data_estatistica|date:"d/m/Y" }}</td>
+                                            <td data-label="Respondidas">{{ stat.perguntas_respondidas_dia }}</td>
+                                            <td data-label="Acertos">{{ stat.acertos_dia }}</td>
+                                            <td data-label="Precisão">{{ stat.precisao_dia|floatformat:0 }}%</td>
+                                            <td data-label="Pontos">{{ stat.pontos_dia }}</td>
+                                            <td data-label="Tempo Estudo">{{ stat.tempo_estudo_formatado }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         {% else %}
                             <p class="placeholder-text">Nenhuma estatística diária registrada ainda. Comece um quiz para ver seu progresso!</p>
                         {% endif %}
@@ -176,18 +193,17 @@
                     <h2 class="card__title">Segurança e Dados Pessoais</h2>
                     <div class="card__body">
                         <p style="margin-bottom: var(--spacing-md);">Gerencie suas informações pessoais e configurações de segurança.</p>
-                        
+
                         <h3 class="h4-like" style="margin-top: var(--spacing-lg); margin-bottom: var(--spacing-sm); border-top: 1px solid var(--color-gray-100); padding-top: var(--spacing-md);">Alterar Dados Pessoais</h3>
-                        
-                        {# MODIFICAÇÃO na exibição de erros do update_form #}
+
                         {% if active_tab_on_error == 'security-content' and update_form.errors %}
                             <div class="form-message form-message--error" role="alert" style="margin-bottom: 15px; text-align: left;">
                                 <p><strong>Não foi possível atualizar. Verifique os erros abaixo:</strong></p>
-                                {% for error in update_form.non_field_errors %} {# Erros gerais do formulário #}
+                                {% for error in update_form.non_field_errors %}
                                     <p>{{ error }}</p>
                                 {% endfor %}
-                                {% for field in update_form %} {# Itera sobre os campos do formulário #}
-                                    {% for error in field.errors %} {# Itera sobre os erros de cada campo #}
+                                {% for field in update_form %}
+                                    {% for error in field.errors %}
                                         <p style="margin-left: 10px;">
                                             <strong>{{ field.label|capfirst }}:</strong> {{ error }}
                                         </p>
@@ -217,16 +233,16 @@
                         </form>
 
                         <hr style="margin: var(--spacing-xl, 30px) 0 var(--spacing-lg, 20px) 0; border-color: var(--color-gray-200);">
-                        
+
                         <h3 class="h4-like" style="margin-bottom: var(--spacing-sm);">Gerenciar Conta</h3>
-                        <div class="profile-actions" style="flex-direction: row; flex-wrap: wrap; gap: var(--spacing-sm);">
-                            <a href="{% url 'password_change' %}" class="button button--secondary">
+                        <div class="profile-actions">
+                            <a href="{% url 'password_change' %}" class="button button--secondary"> {# MODIFICADO: button--secondary #}
                                 <span class="material-symbols-outlined button__icon">password</span>
                                 Alterar Senha
                             </a>
-                            <form method="post" action="{% url 'logout' %}" style="margin: 0;">
+                            <form method="post" action="{% url 'logout' %}" style="margin: 0; display: contents;"> {# display: contents para o form não quebrar o flex/grid do .profile-actions #}
                                 {% csrf_token %}
-                                <button type="submit" class="button button--outline" style="border-color: var(--color-accent-red); color: var(--color-accent-red);">
+                                <button type="submit" class="button button--outline button--danger-outline"> {# MODIFICADO: button--danger-outline #}
                                     <span class="material-symbols-outlined button__icon">logout</span>
                                     Sair (Logout)
                                 </button>
@@ -239,7 +255,7 @@
                         <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-md);">
                             A exclusão da sua conta é uma ação permanente e não pode ser desfeita. Todos os seus dados, incluindo histórico de quizzes e progresso, serão removidos.
                         </p>
-                        <button type="button" id="btn-open-delete-account-modal" class="button button--danger-outline" style="border-color: var(--color-accent-red); color: var(--color-accent-red);">
+                        <button type="button" id="btn-open-delete-account-modal" class="button button--danger"> {# MODIFICADO: button--danger (preenchido) #}
                              <span class="material-symbols-outlined button__icon">delete_forever</span>
                             Deletar Minha Conta
                         </button>
@@ -253,7 +269,7 @@
                     <h2 class="card__title">Preferências</h2>
                     <div class="card__body">
                         <p>Ajuste as configurações da sua conta e da plataforma.</p>
-                        <form class="profile-form"> 
+                        <form class="profile-form">
                             <div class="form-group">
                                 <label for="pref-theme" class="form-label">Tema da Interface:</label>
                                 <select id="pref-theme" name="theme_preference" class="form-control">
@@ -296,17 +312,16 @@
             <div class="modal__body" style="text-align: left;">
                 <p>Esta ação <strong>não pode ser desfeita</strong>. Todo o seu progresso, histórico e dados da conta serão permanentemente removidos.</p>
                 <p>Para confirmar, por favor, digite sua senha atual:</p>
-                
-                {# MODIFICAÇÃO na exibição de erros do delete_form #}
+
                 {% if active_tab_on_error == 'security-content' and show_delete_account_modal_on_error and delete_form.errors %}
                     <div class="form-message form-message--error" role="alert" style="margin-bottom: 15px;">
-                        {% for error in delete_form.non_field_errors %} {# Erros gerais primeiro #}
+                        {% for error in delete_form.non_field_errors %}
                             <p>{{ error }}</p>
                         {% endfor %}
-                        {% for error in delete_form.password.errors %} {# Erros específicos do campo senha #}
+                        {% for error in delete_form.password.errors %}
                             <p><strong>{{ delete_form.password.label|capfirst }}:</strong> {{ error }}</p>
                         {% endfor %}
-                         {% if not delete_form.password.errors and not delete_form.non_field_errors and delete_form.errors %} {# Fallback se houver erros mas não capturados acima #}
+                         {% if not delete_form.password.errors and not delete_form.non_field_errors and delete_form.errors %}
                             <p>Não foi possível excluir sua conta. Verifique os dados e tente novamente.</p>
                         {% endif %}
                     </div>
@@ -316,12 +331,12 @@
                     <label for="{{ delete_form.password.id_for_label }}" class="form-label u-sr-only">{{ delete_form.password.label }}</label>
                     <div class="input-icon-wrapper">
                         <span class="material-symbols-outlined input-icon">password</span>
-                        {{ delete_form.password }}
+                        {{ delete_form.password }} {# Este input deve herdar .form-control da folha de estilos de forms.py #}
                     </div>
                 </div>
             </div>
             <div class="modal__footer modal__footer--stacked">
-                <button type="button" id="cancel-delete-account-btn" class="button button--secondary button--modal-action">Cancelar</button>
+                <button type="button" id="cancel-delete-account-btn" class="button button--secondary button--modal-action">Cancelar</button> {# MODIFICADO: button--secondary para consistência #}
                 <button type="submit" id="confirm-delete-account-btn" class="button button--danger button--modal-action">
                     <span class="material-symbols-outlined button__icon">delete_forever</span>
                     Sim, Excluir Minha Conta
@@ -334,5 +349,4 @@
 
 {% block scripts %}
     {{ block.super }}
-    {# O JavaScript para este modal foi movido para AccountPageManager.js #}
 {% endblock scripts %}

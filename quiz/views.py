@@ -8,14 +8,18 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
 from datetime import date, timedelta
+from django.db import models # Adicionado para isinstance
 from django.db.models import (
     Q, Sum, Avg, Count, F,
     Case, When, Value, FloatField, ExpressionWrapper
 )
-from django.db.models.functions import TruncDate, ExtractWeekDay
+# TruncDate não é mais usado nas funções problemáticas, mas pode ser usado em outros lugares.
+# ExtractWeekDay foi removido de _get_study_time_detail_data.
+from django.db.models.functions import TruncDate, ExtractWeekDay 
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
+from collections import defaultdict # Adicionado para as novas funções
 
 from .models import (
     Pergunta, Categoria, OpcaoResposta,
@@ -60,9 +64,9 @@ def get_descendant_category_ids(category_ids_str_list):
     return all_descendant_ids
 
 def get_quiz_data_dict(
-    category_ids_filter=None, 
-    difficulty_levels_filter=None,quiz_mode=None, 
-    question_count=None, num_questions_custom=None, 
+    category_ids_filter=None,
+    difficulty_levels_filter=None,quiz_mode=None,
+    question_count=None, num_questions_custom=None,
     user: User = None
     ):
     todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
@@ -146,7 +150,7 @@ def get_quiz_data_dict(
     }
 
 def get_or_create_daily_stats(user: User):
-    today = date.today()
+    today = timezone.now().date()
     stats, created = EstatisticasDiariasUsuario.objects.get_or_create(
         id_usuario=user,
         data_estatistica=today
@@ -154,19 +158,40 @@ def get_or_create_daily_stats(user: User):
     return stats
 
 def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str ="data_estatistica"):
-    today = timezone.now().date()
     if period_str == "all":
         return queryset
 
     days_map = {"7d": 7, "30d": 30, "90d": 90}
-    days = days_map.get(period_str, 30)
+    days = days_map.get(period_str, 30) 
 
-    start_date = today - timedelta(days=days - 1)
+    current_ts = timezone.now()
+    
+    try:
+        model_field = queryset.model._meta.get_field(date_field_name)
+    except models.FieldDoesNotExist:
+        print(f"Warning: Campo '{date_field_name}' não encontrado no modelo {queryset.model.__name__} em _filter_queryset_by_period.")
+        return queryset.none()
+    
+    if isinstance(model_field, models.DateTimeField):
+        end_range = current_ts.replace(hour=23, minute=59, second=59, microsecond=999999)
+        start_range_dt = current_ts - timedelta(days=days - 1)
+        start_range = start_range_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        filter_kwargs = {
+            f"{date_field_name}__gte": start_range,
+            f"{date_field_name}__lte": end_range,
+        }
+    elif isinstance(model_field, models.DateField):
+        today_date_obj = current_ts.date()
+        start_date_obj = today_date_obj - timedelta(days=days - 1)
+        filter_kwargs = {
+            f"{date_field_name}__gte": start_date_obj,
+            f"{date_field_name}__lte": today_date_obj,
+        }
+    else: 
+        print(f"Warning: _filter_queryset_by_period recebeu um tipo de campo inesperado: {type(model_field)} para o campo {date_field_name}")
+        return queryset.none()
 
-    filter_kwargs = {
-        f"{date_field_name}__gte": start_date,
-        f"{date_field_name}__lte": today,
-    }
     return queryset.filter(**filter_kwargs)
 
 #endregion
@@ -229,65 +254,86 @@ def _get_category_performance_data(user_sessions_period_qs):
     category_performance_list.sort(key=lambda x: x['accuracy'], reverse=True)
     return category_performance_list
 
+# MODIFICADO: _get_learning_progress_data para fazer agrupamento em Python
 def _get_learning_progress_data(daily_stats_period_qs):
-    data = list(
-        daily_stats_period_qs.order_by('data_estatistica')
-        .annotate(date_str_agg=TruncDate('data_estatistica'))
-        .values('date_str_agg')
-        .annotate(
-            total_acertos_agg=Sum('acertos_dia'),
-            total_respondidas_agg=Sum('perguntas_respondidas_dia')
-        )
-        .values('date_str_agg', 'total_acertos_agg', 'total_respondidas_agg')
+    raw_stats = daily_stats_period_qs.order_by('data_estatistica').values(
+        'data_estatistica', 
+        'acertos_dia', 
+        'perguntas_respondidas_dia'
     )
-
+    grouped_by_date = defaultdict(lambda: {'total_acertos_agg': 0, 'total_respondidas_agg': 0})
+    for stat in raw_stats:
+        date_key = stat['data_estatistica']
+        grouped_by_date[date_key]['total_acertos_agg'] += stat.get('acertos_dia', 0) or 0
+        grouped_by_date[date_key]['total_respondidas_agg'] += stat.get('perguntas_respondidas_dia', 0) or 0
+    
     processed_data = []
-    for item in data:
+    sorted_dates = sorted(grouped_by_date.keys())
+    for date_key in sorted_dates:
+        item = grouped_by_date[date_key]
         accuracy = 0
-        if item.get('total_respondidas_agg') and item['total_respondidas_agg'] > 0:
-            accuracy = round((item.get('total_acertos_agg', 0) / item['total_respondidas_agg']) * 100, 1)
-
+        if item['total_respondidas_agg'] > 0:
+            accuracy = round((item['total_acertos_agg'] / item['total_respondidas_agg']) * 100, 1)
+        
         processed_data.append({
-            'date_str': item['date_str_agg'].isoformat() if item.get('date_str_agg') else None,
+            'date_str': date_key.isoformat() if date_key else None,
             'daily_accuracy': accuracy
         })
     return processed_data
 
+# MODIFICADO: _get_study_heatmap_data para fazer agrupamento em Python
 def _get_study_heatmap_data(daily_stats_period_qs):
-    data = list(
-        daily_stats_period_qs.annotate(date_str_agg=TruncDate('data_estatistica'))
-        .values('date_str_agg')
-        .annotate(questions_done=Sum('perguntas_respondidas_dia'))
-        .order_by('date_str_agg')
-        .values('date_str_agg', 'questions_done')
+    raw_stats = daily_stats_period_qs.order_by('data_estatistica').values(
+        'data_estatistica', 
+        'perguntas_respondidas_dia'
     )
-    for item in data:
-        item['date_str'] = item.pop('date_str_agg').isoformat() if item.get('date_str_agg') else None
-        item['questions_done'] = item.get('questions_done') or 0
-    return data
+    grouped_by_date = defaultdict(lambda: {'questions_done': 0})
+    for stat in raw_stats:
+        date_key = stat['data_estatistica']
+        grouped_by_date[date_key]['questions_done'] += stat.get('perguntas_respondidas_dia', 0) or 0
+            
+    processed_data = []
+    sorted_dates = sorted(grouped_by_date.keys())
+    for date_key in sorted_dates:
+        item = grouped_by_date[date_key]
+        processed_data.append({
+            'date_str': date_key.isoformat() if date_key else None,
+            'questions_done': item['questions_done']
+        })
+    return processed_data
 
+# MODIFICADO _get_study_time_detail_data (versão anterior já aplicada)
 def _get_study_time_detail_data(user: User):
     seven_days_ago = timezone.now().date() - timedelta(days=6)
     today = timezone.now().date()
 
-    study_time_data_qs = EstatisticasDiariasUsuario.objects.filter(
+    daily_study_seconds = {i: 0 for i in range(7)} 
+
+    user_daily_stats = EstatisticasDiariasUsuario.objects.filter(
         id_usuario=user,
         data_estatistica__gte=seven_days_ago,
         data_estatistica__lte=today
-    ).annotate(
-        weekday=ExtractWeekDay('data_estatistica')
-    ).values('weekday').annotate(
-        total_seconds=Sum('tempo_estudo_segundos_dia')
-    ).order_by('weekday')
+    ).values('data_estatistica', 'tempo_estudo_segundos_dia')
 
-    day_names_pt_short = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
-    study_time_by_weekday = {i: 0 for i in range(1, 8)}
-    for item in study_time_data_qs:
-        study_time_by_weekday[item['weekday']] = round((item.get('total_seconds', 0) or 0) / 60)
+    for stat in user_daily_stats:
+        py_weekday = stat['data_estatistica'].weekday() 
+        daily_study_seconds[py_weekday] += stat.get('tempo_estudo_segundos_dia', 0) or 0
+
+    day_labels_pt_ordered_sun_first = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+    
+    ordered_minutes_data = [
+        round((daily_study_seconds.get(6, 0) or 0) / 60),
+        round((daily_study_seconds.get(0, 0) or 0) / 60),
+        round((daily_study_seconds.get(1, 0) or 0) / 60),
+        round((daily_study_seconds.get(2, 0) or 0) / 60),
+        round((daily_study_seconds.get(3, 0) or 0) / 60),
+        round((daily_study_seconds.get(4, 0) or 0) / 60),
+        round((daily_study_seconds.get(5, 0) or 0) / 60)
+    ]
 
     return {
-        'labels': [day_names_pt_short[i-1] for i in range(1,8)],
-        'data': [study_time_by_weekday[i] for i in range(1,8)]
+        'labels': day_labels_pt_ordered_sun_first,
+        'data': ordered_minutes_data
     }
 
 def _get_difficulty_performance_data(user_sessions_period_qs):
@@ -512,7 +558,7 @@ def start_quiz_session_view(request):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
     except Exception as e:
-        print(f"Erro em start_quiz_session_view: {e}")
+        print(f"Erro em start_quiz_session_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro interno ao iniciar sessão.'}, status=500)
 
 @login_required
@@ -571,7 +617,7 @@ def register_answer_view(request):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
     except Exception as e:
-        print(f"Erro em register_answer_view: {e}")
+        print(f"Erro em register_answer_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro interno ao registrar resposta.'}, status=500)
 
 @login_required
@@ -619,7 +665,7 @@ def end_quiz_session_view(request):
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
     except Exception as e:
-        print(f"Erro em end_quiz_session_view: {e}")
+        print(f"Erro em end_quiz_session_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro interno ao finalizar sessão.'}, status=500)
 
 @login_required

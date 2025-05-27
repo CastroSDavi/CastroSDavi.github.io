@@ -6,11 +6,7 @@ export default class StatisticsChartManager {
     constructor(quizUIInstance, apiServiceInstance) {
         this.quizUI = quizUIInstance;
         this.apiService = apiServiceInstance;
-        // console.log("StatisticsChartManager constructor: apiServiceInstance received:", this.apiService); // DEBUG
-        if (!this.apiService) {
-            console.error("CRITICAL: StatisticsChartManager constructor did NOT receive a valid apiServiceInstance! Charts will not work.");
-        }
-
+        
         this.elements = {
             overallAccuracyChartEl: document.getElementById('chart-overall-accuracy'),
             categoryPerformanceChartEl: document.getElementById('chart-category-performance'),
@@ -91,9 +87,8 @@ export default class StatisticsChartManager {
         }
         this.isLoading = true;
         this._showLoadingPlaceholders();
-        // console.log("StatisticsChartManager.loadAndRenderAllCharts: Attempting to fetch stats. this.apiService is now:", this.apiService);
 
-        if (!this.apiService || typeof this.apiService.fetchUserStatistics !== 'function') { //
+        if (!this.apiService || typeof this.apiService.fetchUserStatistics !== 'function') { 
             console.error("CRITICAL: StatisticsChartManager - this.apiService is invalid or fetchUserStatistics is not a function.", this.apiService);
             this.isLoading = false;
             this.elements.statisticsDashboardContainer?.classList.remove('is-loading');
@@ -161,7 +156,7 @@ export default class StatisticsChartManager {
             this.elements.statisticsDashboardContainer?.classList.remove('is-loading');
         }
     }
-
+    
     _updateKeyMetrics(keyMetrics) {
         const metrics = keyMetrics || {
             total_questions_answered: 0, max_streak: 0,
@@ -191,36 +186,114 @@ export default class StatisticsChartManager {
     }
 
     _getChartDefaultOptions(extraOptions = {}) {
+        const bodyStyles = getComputedStyle(document.body);
+        const fontFamily = bodyStyles.getPropertyValue('--font-family-sans').trim() || 'Roboto, sans-serif';
+        const headingFontFamily = bodyStyles.getPropertyValue('--font-family-heading').trim() || 'Montserrat, sans-serif';
+        const textColor = bodyStyles.getPropertyValue('--color-text-secondary').trim() || '#6c757d';
+        const textPrimaryColor = bodyStyles.getPropertyValue('--color-text-primary').trim() || '#343a40';
+        const gridBorderColor = bodyStyles.getPropertyValue('--color-gray-200').trim() || '#f1f3f5';
+
         return {
             chart: {
-                fontFamily: 'var(--font-family-sans)',
-                foreColor: 'var(--color-text-secondary)',
-                toolbar: { show: true, tools: { download: true, selection: false, zoom: false, zoomin: false, zoomout: false, pan: false, reset: true } },
-                animations: { enabled: true, easing: 'easeinout', speed: 600, },
+                fontFamily: fontFamily,
+                foreColor: textColor,
+                toolbar: { 
+                    show: true, 
+                    tools: { 
+                        download: true, 
+                        selection: false, zoom: false, zoomin: false, zoomout: false, pan: false, 
+                        reset: true 
+                    },
+                    autoSelected: 'zoom' 
+                },
+                animations: { 
+                    enabled: true, 
+                    easing: 'easeinout', 
+                    speed: 600, 
+                    animateGradually: { enabled: true, delay: 150 },
+                    dynamicAnimation: { enabled: true, speed: 350 }
+                },
+                dropShadow: { 
+                    enabled: false, 
+                    top: 3,
+                    left: 2,
+                    blur: 4,
+                    opacity: 0.1,
+                    color: '#000'
+                },
                 ...extraOptions.chart
             },
             grid: {
-                borderColor: 'var(--color-gray-200)',
+                borderColor: gridBorderColor,
+                strokeDashArray: 4, 
                 row: { colors: ['transparent', 'transparent'], opacity: 0.5 },
-                xaxis: { lines: { show: false } },
-                yaxis: { lines: { show: true } },
+                xaxis: { lines: { show: false } }, 
+                yaxis: { lines: { show: true } }, 
+                padding: { 
+                    left: 5,
+                    right: 10,
+                    top: 0,
+                    bottom: 0
+                }
             },
-            stroke: { width: 2, curve: 'smooth' },
-            markers: { size: 4, hover: { sizeOffset: 2 } },
+            stroke: { 
+                width: 2.5, 
+                curve: 'smooth' 
+            },
+            markers: { 
+                size: 0, 
+                hover: { size: 5, sizeOffset: 2 } 
+            },
             tooltip: {
                 theme: 'light', 
-                style: { fontSize: '12px', fontFamily: 'var(--font-family-sans)' },
-                x: { format: 'dd MMM yy' } 
+                style: { 
+                    fontSize: '12px', 
+                    fontFamily: fontFamily
+                },
+                x: { format: 'dd MMM yy' },
+                marker: { 
+                    show: true,
+                },
+                y: { 
+                    formatter: function (val) {
+                        return val !== undefined && val !== null ? val.toLocaleString('pt-BR') : "";
+                    },
+                    title: {
+                        formatter: (seriesName) => seriesName ? seriesName + ': ' : '',
+                    }
+                }
             },
             legend: {
-                position: 'bottom', horizontalAlign: 'center', fontSize: '12px',
-                fontFamily: 'var(--font-family-sans)', fontWeight: 500, offsetY: 5,
-                itemMargin: { horizontal: 10, vertical: 2 },
+                fontFamily: fontFamily,
+                fontWeight: 500, 
+                fontSize: '12px',
+                offsetY: 5,
+                itemMargin: { horizontal: 10, vertical: 3 },
+                markers: { 
+                    width: 10,
+                    height: 10,
+                    radius: 5,
+                    offsetY: 1
+                },
+                ...extraOptions.legend 
             },
             noData: { 
-                text: 'Sem dados para exibir neste gráfico.', align: 'center', verticalAlign: 'middle',
-                style: { color: 'var(--color-text-muted)', fontSize: '14px', fontFamily: 'var(--font-family-sans)'}
+                text: 'Sem dados para exibir neste gráfico.', 
+                align: 'center', verticalAlign: 'middle',
+                style: { 
+                    color: textColor, 
+                    fontSize: '14px', 
+                    fontFamily: fontFamily
+                }
             },
+            colors: [
+                bodyStyles.getPropertyValue('--color-primary-medium').trim() || '#1a5f9e',
+                bodyStyles.getPropertyValue('--color-secondary-green').trim() || '#2a9d8f',
+                bodyStyles.getPropertyValue('--color-accent-red').trim() || '#e63946',
+                bodyStyles.getPropertyValue('--color-accent-yellow').trim() || '#FCA5A5', // Usando yellow como fallback
+                '#6366F1', 
+                '#FDBA74'  
+            ],
             ...extraOptions 
         };
     }
@@ -233,25 +306,93 @@ export default class StatisticsChartManager {
         }
         this._hideLoadingPlaceholder(this.elements.overallAccuracyChartEl);
 
+        const bodyStyles = getComputedStyle(document.body);
+        const headingFontFamily = bodyStyles.getPropertyValue('--font-family-heading').trim();
+        const textPrimaryColor = bodyStyles.getPropertyValue('--color-text-primary').trim();
+        const textColorSecondary = bodyStyles.getPropertyValue('--color-text-secondary').trim();
+
         const chartOptions = this._getChartDefaultOptions({
-            chart: { type: 'donut', height: 300 },
+            chart: { type: 'donut', height: 280 },
             series: [data.correct, data.incorrect],
             labels: ['Acertos', 'Erros'],
-            colors: ['var(--color-secondary-green)', 'var(--color-accent-red)'],
-            plotOptions: { pie: { donut: { size: '65%', labels: {
-                show: true, name: { show: false },
-                value: { show: true, fontSize: '20px', fontFamily: 'var(--font-family-heading)', fontWeight: 600, color: 'var(--color-text-primary)', offsetY: 8,
-                    formatter: (val, { seriesIndex, w }) => {
-                        const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                        return total > 0 ? (w.globals.series[seriesIndex] / total * 100).toFixed(0) + '%' : '0%';
+            colors: [
+                bodyStyles.getPropertyValue('--color-secondary-green').trim(), 
+                bodyStyles.getPropertyValue('--color-accent-red').trim()
+            ],
+            plotOptions: { 
+                pie: { 
+                    donut: { 
+                        size: '70%', 
+                        labels: {
+                            show: true, 
+                            name: { 
+                                show: true, 
+                                fontSize: '13px',
+                                fontFamily: headingFontFamily,
+                                fontWeight: 500,
+                                color: textColorSecondary,
+                                offsetY: -5
+                            },
+                            value: { 
+                                show: true, 
+                                fontSize: '22px', 
+                                fontFamily: headingFontFamily, 
+                                fontWeight: 700, 
+                                color: textPrimaryColor, 
+                                offsetY: 5,
+                                formatter: (val, { seriesIndex, w }) => {
+                                    const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    return total > 0 ? (w.globals.series[seriesIndex] / total * 100).toFixed(0) + '%' : '0%';
+                                }
+                            },
+                            total: { 
+                                show: true, 
+                                showAlways: true, 
+                                label: 'Total', 
+                                fontSize: '12px', 
+                                fontFamily: bodyStyles.getPropertyValue('--font-family-sans').trim(), 
+                                fontWeight: 500, 
+                                color: textColorSecondary,
+                                formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString('pt-BR')
+                            }
+                        }
                     }
-                },
-                total: { show: true, showAlways: false, label: 'Total', fontSize: '12px', fontFamily: 'var(--font-family-sans)', fontWeight: 500, color: 'var(--color-text-secondary)',
-                    formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString('pt-BR')
                 }
-            }}}},
-            responsive: [{ breakpoint: 480, options: { chart: { height: 260 }, legend: { position: 'bottom', fontSize: '11px' } } }],
-            tooltip: { y: { formatter: (val) => val.toLocaleString('pt-BR') + " questões" } }
+            },
+            legend: { 
+                position: 'bottom',
+                fontSize: '12px',
+                offsetY: 0,
+                itemMargin: { horizontal: 8, vertical: 2 },
+                markers: { width: 9, height: 9, radius: 4, offsetY: 1}
+            },
+            dataLabels: { 
+                enabled: false,
+                formatter: function (val, opts) {
+                    return opts.w.globals.labels[opts.seriesIndex] + ":  " + val.toFixed(0) + "%"
+                },
+                style: {
+                    fontSize: '12px',
+                    colors: [textPrimaryColor]
+                },
+                dropShadow: {
+                    enabled: true, top: 1, left: 1, blur: 1, color: '#fff', opacity: 0.7
+                }
+            },
+            tooltip: { 
+                y: { 
+                    formatter: (val) => val.toLocaleString('pt-BR') + " questões",
+                    title: { formatter: (seriesName) => seriesName + ':' }
+                } 
+            },
+            responsive: [{ 
+                breakpoint: 480, 
+                options: { 
+                    chart: { height: 250 }, 
+                    plotOptions: { pie: { donut: { size: '65%' } } },
+                    legend: { fontSize: '11px', itemMargin: { horizontal: 6 } } 
+                } 
+            }],
         });
         this.charts.overallAccuracy = new ApexCharts(this.elements.overallAccuracyChartEl, chartOptions);
         this.charts.overallAccuracy.render();
@@ -265,19 +406,84 @@ export default class StatisticsChartManager {
         }
         this._hideLoadingPlaceholder(this.elements.categoryPerformanceChartEl);
 
-        const topData = data.slice(0, 7);
-        const categories = topData.map(item => item.name.length > 20 ? item.name.substring(0, 18) + '...' : item.name);
+        const bodyStyles = getComputedStyle(document.body);
+        const topData = data.slice(0, 7); 
+        const categories = topData.map(item => item.name.length > 18 ? item.name.substring(0, 16) + '...' : item.name);
         const accuracies = topData.map(item => parseFloat(item.accuracy.toFixed(1)));
 
         const chartOptions = this._getChartDefaultOptions({
-            chart: { type: 'bar', height: 350 },
+            chart: { type: 'bar', height: 330, dropShadow: { enabled: true, top: 5, left: 0, blur: 3, opacity: 0.1 } },
             series: [{ name: 'Precisão', data: accuracies }],
-            xaxis: { categories: categories, labels: { style: { fontSize: '11px', colors: 'var(--color-text-secondary)' }, rotate: -30, trim: true, maxHeight: 80, hideOverlappingLabels: true } },
-            yaxis: { min: 0, max: 100, tickAmount: 5, labels: { formatter: (val) => val + "%", style: { fontSize: '11px'} } },
-            colors: ['var(--color-primary-medium)'],
-            plotOptions: { bar: { horizontal: false, columnWidth: '60%', borderRadius: 4 } },
-            dataLabels: { enabled: true, formatter: (val) => val + "%", style: { fontSize: '10px', colors: ['#fff'] }, offsetY: -20 },
-            tooltip: { y: { formatter: (val) => val.toFixed(1) + "%" } }
+            xaxis: { 
+                categories: categories, 
+                labels: { 
+                    style: { 
+                        fontSize: '11px', 
+                        colors: bodyStyles.getPropertyValue('--color-text-secondary').trim()
+                    }, 
+                    rotate: -35, 
+                    trim: true, 
+                    maxHeight: 70, 
+                    hideOverlappingLabels: true,
+                    offsetX: -2,
+                    offsetY: 2
+                } 
+            },
+            yaxis: { 
+                min: 0, max: 100, tickAmount: 5, 
+                labels: { 
+                    formatter: (val) => val.toFixed(0) + "%", 
+                    style: { fontSize: '11px'} 
+                } 
+            },
+            colors: [bodyStyles.getPropertyValue('--color-primary-medium').trim()],
+            plotOptions: { 
+                bar: { 
+                    horizontal: false, 
+                    columnWidth: '65%', 
+                    borderRadius: 5, 
+                    dataLabels: {
+                        position: 'top', 
+                    },
+                } 
+            },
+            dataLabels: { 
+                enabled: true, 
+                formatter: (val) => val + "%", 
+                offsetY: -20, 
+                style: { 
+                    fontSize: '10px', 
+                    fontWeight: 'bold',
+                    colors: [bodyStyles.getPropertyValue('--color-text-primary').trim()]
+                },
+                background: { 
+                    enabled: true,
+                    foreColor: '#fff',
+                    padding: 3,
+                    borderRadius: 2,
+                    borderWidth: 1,
+                    borderColor: '#fff',
+                    opacity: 0.0 
+                },
+                dropShadow: { 
+                    enabled: true,
+                    top: 1,
+                    left: 1,
+                    blur: 1,
+                    color: '#FFF',
+                    opacity: 0.6
+                }
+            },
+            tooltip: { 
+                y: { 
+                    formatter: (val) => val.toFixed(1) + "%",
+                    title: { formatter: (seriesName) => seriesName + ':' }
+                }
+            },
+            grid: { 
+                xaxis: { lines: { show: false } },
+                yaxis: { lines: { show: false } },
+            }
         });
         this.charts.categoryPerformance = new ApexCharts(this.elements.categoryPerformanceChartEl, chartOptions);
         this.charts.categoryPerformance.render();
@@ -285,31 +491,88 @@ export default class StatisticsChartManager {
 
     _renderLearningProgressChart(data) {
         this._destroyChart('learningProgress');
-         if (!this.elements.learningProgressChartEl || !data || data.length < 2) {
+         if (!this.elements.learningProgressChartEl || !data || data.length < 2) { 
             this._showNoDataMessageForChart(this.elements.learningProgressChartEl, "Dados insuficientes para progresso.");
             return;
         }
         this._hideLoadingPlaceholder(this.elements.learningProgressChartEl);
 
-        const seriesData = data.map(item => ({ x: new Date(item.date_str).getTime(), y: item.daily_accuracy }));
+        const bodyStyles = getComputedStyle(document.body);
+        const seriesData = data.map(item => ({ 
+            x: new Date(item.date_str).getTime(), 
+            y: item.daily_accuracy 
+        }));
 
         const chartOptions = this._getChartDefaultOptions({
-            chart: { type: 'area', height: 350, zoom: { enabled: false } },
+            chart: { 
+                type: 'area', 
+                height: 330, 
+                zoom: { enabled: false },
+                dropShadow: { enabled: true, top: 8, left: 0, blur: 6, color: bodyStyles.getPropertyValue('--color-secondary-green').trim(), opacity: 0.2 }
+            },
             series: [{ name: 'Precisão Diária', data: seriesData }],
-            xaxis: { type: 'datetime', labels: { datetimeUTC: false, format: 'dd MMM yy', style: { fontSize: '11px'} } },
-            yaxis: { min: 0, max: 100, tickAmount: 5, labels: { formatter: (val) => val.toFixed(0) + "%", style: { fontSize: '11px'} } },
-            colors: ['var(--color-secondary-green)'],
-            fill: { type: "gradient", gradient: { shadeIntensity: 1, opacityFrom: 0.7, opacityTo: 0.1, stops: [0, 90, 100] } },
+            xaxis: { 
+                type: 'datetime', 
+                labels: { 
+                    datetimeUTC: false, 
+                    format: 'dd MMM', 
+                    style: { fontSize: '11px'} 
+                },
+                tooltip: { 
+                    enabled: true,
+                    formatter: function(val) {
+                        return new Date(val).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+                    },
+                    offsetY: 0,
+                    style: {
+                        fontSize: '11px',
+                        fontFamily: bodyStyles.getPropertyValue('--font-family-sans').trim(),
+                    },
+                },
+            },
+            yaxis: { 
+                min: 0, max: 100, tickAmount: 5, 
+                labels: { 
+                    formatter: (val) => val.toFixed(0) + "%", 
+                    style: { fontSize: '11px'} 
+                } 
+            },
+            colors: [bodyStyles.getPropertyValue('--color-secondary-green').trim()],
+            fill: { 
+                type: "gradient", 
+                gradient: { 
+                    shadeIntensity: 1, 
+                    opacityFrom: 0.6, 
+                    opacityTo: 0.05, 
+                    stops: [0, 95, 100] 
+                } 
+            },
+            stroke: { 
+                width: 2.5,
+                curve: 'smooth' 
+            },
+            markers: { 
+                size: 4,
+                colors: [bodyStyles.getPropertyValue('--color-white').trim()],
+                strokeColors: bodyStyles.getPropertyValue('--color-secondary-green').trim(),
+                strokeWidth: 2,
+                hover: {
+                    size: 6
+                }
+            },
             tooltip: { 
-                x: { format: 'dd MMM yyyy' }, // Concluindo a linha que foi cortada
-                y: { formatter: (val) => val.toFixed(1) + "%" } 
+                x: { format: 'dd MMM yy' }, 
+                y: { 
+                    formatter: (val) => val !== undefined ? val.toFixed(1) + "%" : "N/A",
+                    title: { formatter: (seriesName) => seriesName + ':' }
+                } 
             },
             dataLabels: { enabled: false }
         });
         this.charts.learningProgress = new ApexCharts(this.elements.learningProgressChartEl, chartOptions);
         this.charts.learningProgress.render();
     }
-
+    
     _renderStudyHeatmapChart(data) {
         this._destroyChart('studyHeatmap');
         if (!this.elements.studyHeatmapChartEl || !data || data.length === 0) {
@@ -317,26 +580,76 @@ export default class StatisticsChartManager {
             return;
         }
         this._hideLoadingPlaceholder(this.elements.studyHeatmapChartEl);
+        const bodyStyles = getComputedStyle(document.body);
     
-        const activityData = data.map(item => ({ x: new Date(item.date_str).getTime(), y: item.questions_done }));
-        if (activityData.length === 0) {
-            this._showNoDataMessageForChart(this.elements.studyHeatmapChartEl, "Sem dados de frequência.");
-            return;
-        }
+        const seriesData = data.map(item => ({ 
+            x: new Date(item.date_str).getTime(), 
+            y: item.questions_done 
+        }));
 
         const chartOptions = this._getChartDefaultOptions({
-            chart: { type: 'bar', height: 350, stacked: true },
-            series: [{ name: 'Questões Respondidas', data: activityData }],
+            chart: { type: 'bar', height: 280, dropShadow: { enabled: true, top: 5, left: 0, blur: 3, opacity: 0.15 } },
+            series: [{ name: 'Questões Respondidas', data: seriesData }],
+            colors: [bodyStyles.getPropertyValue('--color-primary-medium').trim()],
+            plotOptions: { 
+                bar: { 
+                    borderRadius: 4, 
+                    columnWidth: '60%', 
+                    colors: { 
+                        ranges: [{
+                            from: 0,
+                            to: 5,
+                            color: bodyStyles.getPropertyValue('--color-primary-light').trim() 
+                        }, {
+                            from: 6,
+                            to: 15,
+                            color: bodyStyles.getPropertyValue('--color-primary-medium').trim() 
+                        }, {
+                            from: 16,
+                            to: 1000, 
+                            color: bodyStyles.getPropertyValue('--color-primary-dark').trim() 
+                        }]
+                    },
+                } 
+            },
+            dataLabels: { enabled: false }, 
             xaxis: {
                 type: 'datetime',
-                labels: { datetimeUTC: false, format: 'dd MMM', style: { fontSize: '10px' } },
-                title: { text: 'Data', style: { fontSize: '11px', fontWeight: 500 } }
+                labels: { 
+                    datetimeUTC: false, 
+                    format: 'dd MMM', 
+                    style: { fontSize: '10px' },
+                    rotate: -45,
+                    trim: true,
+                    hideOverlappingLabels: true
+                },
+                title: { 
+                    text: 'Data', 
+                    style: { 
+                        fontSize: '11px', 
+                        fontWeight: 500,
+                        fontFamily: bodyStyles.getPropertyValue('--font-family-sans').trim() 
+                    } 
+                }
             },
-            yaxis: { title: { text: 'Nº de Questões', style: { fontSize: '11px', fontWeight: 500 } }, labels: {style: {fontSize: '11px'}}},
-            colors: ['var(--color-primary-medium)'],
-            plotOptions: { bar: { columnWidth: '70%', borderRadius: 4 } },
-            tooltip: { x: { format: 'dd MMM yyyy' }, y: { formatter: (val) => val.toLocaleString('pt-BR') + " questões" }},
-            dataLabels: { enabled: false }
+            yaxis: { 
+                title: { 
+                    text: 'Nº de Questões', 
+                    style: { 
+                        fontSize: '11px', 
+                        fontWeight: 500,
+                        fontFamily: bodyStyles.getPropertyValue('--font-family-sans').trim()
+                    } 
+                }, 
+                labels: {style: {fontSize: '11px'}}
+            },
+            tooltip: { 
+                x: { format: 'dd MMM yy' }, 
+                y: { 
+                    formatter: (val) => val.toLocaleString('pt-BR') + " questões",
+                    title: { formatter: (seriesName) => seriesName + ':' }
+                }
+            },
         });
         this.charts.studyHeatmap = new ApexCharts(this.elements.studyHeatmapChartEl, chartOptions);
         this.charts.studyHeatmap.render();
@@ -349,16 +662,60 @@ export default class StatisticsChartManager {
             return;
         }
         this._hideLoadingPlaceholder(this.elements.studyTimeChartEl);
+        const bodyStyles = getComputedStyle(document.body);
 
         const chartOptions = this._getChartDefaultOptions({
-            chart: { type: 'bar', height: 300 },
+            chart: { type: 'bar', height: 280, dropShadow: { enabled: true, top: 5, left: 0, blur: 3, opacity: 0.1 } },
             series: [{ name: 'Minutos de Estudo', data: data.data }],
-            xaxis: { categories: data.labels, labels: { style: { fontSize: '11px', colors: 'var(--color-text-secondary)'} } },
-            yaxis: { title: { text: 'Minutos', style: { fontSize: '11px', fontWeight: 500, color: 'var(--color-text-secondary)'} }, labels: { style: { fontSize: '11px'} } },
-            colors: ['var(--color-primary-dark)'],
-            plotOptions: { bar: { borderRadius: 4, horizontal: false, columnWidth: '45%' } },
-            dataLabels: { enabled: true, formatter: (val) => val > 0 ? val + "m" : "", style: { fontSize: '10px', colors: ["#fff"] }, offsetY: -18 },
-            tooltip: { y: { formatter: (val) => val + " min" } }
+            colors: [bodyStyles.getPropertyValue('--color-primary-dark').trim()], 
+            plotOptions: { 
+                bar: { 
+                    borderRadius: 5, 
+                    horizontal: false, 
+                    columnWidth: '50%', 
+                    distributed: false, 
+                    dataLabels: {
+                        position: 'top',
+                    },
+                } 
+            },
+            dataLabels: { 
+                enabled: true, 
+                formatter: (val) => val > 0 ? val + "m" : "", 
+                offsetY: -18,
+                style: { 
+                    fontSize: '10px', 
+                    fontWeight: 'bold',
+                    colors: [bodyStyles.getPropertyValue('--color-text-primary').trim()]
+                },
+                dropShadow: { 
+                    enabled: true, top: 1, left: 1, blur: 1, color: '#FFF', opacity: 0.65
+                }
+            },
+            xaxis: { 
+                categories: data.labels, 
+                labels: { 
+                    style: { 
+                        fontSize: '11px', 
+                        colors: bodyStyles.getPropertyValue('--color-text-secondary').trim()
+                    } 
+                },
+                axisBorder: { show: false }, 
+                axisTicks: { show: false } 
+            },
+            yaxis: { 
+                title: { text: 'Minutos', style: { fontSize: '11px', fontWeight: 500, color: bodyStyles.getPropertyValue('--color-text-secondary').trim()} }, 
+                labels: { style: { fontSize: '11px'} } 
+            },
+            tooltip: { 
+                y: { 
+                    formatter: (val) => val + " min",
+                    title: { formatter: (seriesName) => seriesName + ':' }
+                } 
+            },
+            grid: { 
+                yaxis: { lines: { show: false } }
+            }
         });
         this.charts.studyTime = new ApexCharts(this.elements.studyTimeChartEl, chartOptions);
         this.charts.studyTime.render();
@@ -371,25 +728,76 @@ export default class StatisticsChartManager {
             return;
         }
         this._hideLoadingPlaceholder(this.elements.difficultyPerformanceChartEl);
+        const bodyStyles = getComputedStyle(document.body);
 
         const difficulties = data.map(item => item.name);
         const accuracies = data.map(item => parseFloat(item.accuracy.toFixed(1)));
+        
+        const difficultyColors = [
+            bodyStyles.getPropertyValue('--color-secondary-green').trim() || '#2a9d8f', 
+            bodyStyles.getPropertyValue('--color-primary-medium').trim() || '#1a5f9e',   
+            bodyStyles.getPropertyValue('--color-accent-red').trim() || '#e63946'        
+        ];
+        const seriesColors = difficulties.map(d => {
+            if (d.toLowerCase().includes('fácil') || d.toLowerCase().includes('easy')) return difficultyColors[0];
+            if (d.toLowerCase().includes('médio') || d.toLowerCase().includes('medium')) return difficultyColors[1];
+            if (d.toLowerCase().includes('difícil') || d.toLowerCase().includes('hard')) return difficultyColors[2];
+            return bodyStyles.getPropertyValue('--color-gray-500').trim(); 
+        });
 
         const chartOptions = this._getChartDefaultOptions({
-            chart: { type: 'bar', height: 320 },
+            chart: { type: 'bar', height: 280, dropShadow: { enabled: true, top: 5, left: 0, blur: 3, opacity: 0.1 } },
             series: [{ name: 'Precisão', data: accuracies }],
-            xaxis: { categories: difficulties, labels: { style: { fontSize: '11px', colors: 'var(--color-text-secondary)'} } },
-            yaxis: { min: 0, max: 100, tickAmount: 5, labels: { formatter: (val) => val + "%", style: { fontSize: '11px'} } },
-            colors: ['var(--color-secondary-green)'],
-            plotOptions: { bar: { horizontal: true, barHeight: '60%', borderRadius: 4 } },
+            colors: seriesColors, 
+            plotOptions: { 
+                bar: { 
+                    horizontal: true, 
+                    barHeight: '60%', 
+                    borderRadius: 4,
+                    distributed: true, 
+                    dataLabels: {
+                        position: 'top' 
+                    }
+                } 
+            },
             dataLabels: { 
                 enabled: true, 
-                formatter: (val) => val > 0 ? val.toFixed(0) + "%" : "",
-                style: { fontSize: '10px', colors: ['var(--color-text-primary)'] },
-                offsetX: -22, 
-                dropShadow: { enabled: true, top: 1, left: 1, blur: 1, color: '#fff', opacity: 0.6 }
+                formatter: (val, opts) => {
+                    const totalQuestions = data[opts.dataPointIndex]?.total || 0;
+                    return val > 0 ? `${val.toFixed(0)}% (${totalQuestions})` : "";
+                },
+                style: { 
+                    fontSize: '10px', 
+                    fontWeight: 'bold',
+                    colors: [bodyStyles.getPropertyValue('--color-text-primary').trim()]
+                },
+                offsetX: 22, 
+                textAnchor: 'start', 
+                dropShadow: { enabled: true, top: 1, left: 1, blur: 1, color: '#fff', opacity: 0.7 }
             },
-            tooltip: { y: { formatter: (val) => val.toFixed(1) + "%" } }
+            xaxis: { 
+                categories: difficulties, 
+                min: 0, max: 100, tickAmount: 5,
+                labels: { 
+                    formatter: (val) => val + "%", 
+                    style: { fontSize: '11px', colors: bodyStyles.getPropertyValue('--color-text-secondary').trim()} 
+                }
+            },
+            yaxis: { 
+                 labels: { 
+                    style: { fontSize: '11px', colors: bodyStyles.getPropertyValue('--color-text-secondary').trim()}
+                }
+            },
+            tooltip: { 
+                y: { 
+                    formatter: (val, { seriesIndex, dataPointIndex, w }) => {
+                         const totalQuestions = data[dataPointIndex]?.total || 0;
+                         return `${val.toFixed(1)}% (de ${totalQuestions} questões)`;
+                    },
+                    title: { formatter: (seriesName) => seriesName + ':' }
+                } 
+            },
+            legend: { show: false } 
         });
         this.charts.difficultyPerformance = new ApexCharts(this.elements.difficultyPerformanceChartEl, chartOptions);
         this.charts.difficultyPerformance.render();

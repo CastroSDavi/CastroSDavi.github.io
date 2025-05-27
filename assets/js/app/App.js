@@ -4,7 +4,7 @@ import UserData from './data/UserData.js';
 import QuizData from './data/QuizData.js';
 import QuizState from './core/QuizState.js';
 import QuizLogic from './core/QuizLogic.js';
-import ApiService from './services/ApiService.js';
+import ApiService from './services/ApiService.js'; // Certifique-se que o caminho está correto
 
 import QuizUI from '../ui/QuizUI.js';
 import ChallengeHub from '../ui/ChallengeHub.js';
@@ -12,37 +12,39 @@ import LayoutManager from '../ui/LayoutManager.js';
 import FilterPanel from '../ui/FilterPanel.js';
 import ResultDisplay from '../ui/ResultDisplay.js';
 import AccountPageManager from '../ui/AccountPageManager.js';
+
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
 
 export default class App {
     constructor() {
         // 1. Serviços e Dados
-        this.apiService = new ApiService();
+        this.apiService = new ApiService(); // Instancia o ApiService
+        // console.log("App.js: ApiService instance in App constructor:", this.apiService);
+
         this.userData = new UserData();
         this.quizData = new QuizData(this.apiService);
         this.quizState = new QuizState();
 
         // 2. Gerenciadores de UI de Alto Nível e Componentes Principais
-        this.layoutManager = new LayoutManager(); // LayoutManager agora é mais passivo
+        this.layoutManager = new LayoutManager();
         this.quizUI = new QuizUI(
-            // Passa o activePageId para o LayoutManager, que pode usar para lógicas globais no body
             this.layoutManager.handleActiveSectionChange.bind(this.layoutManager)
         );
 
-        // 3. Injetar dependências básicas em QuizUI
+        // 3. Injeta dependências básicas em QuizUI
         this.quizUI.setQuizState(this.quizState);
         this.quizUI.setQuizData(this.quizData);
-        this.quizUI.setApiService(this.apiService);
+        this.quizUI.setApiService(this.apiService); // Passa ApiService para QuizUI
 
         // 4. Instanciar componentes de UI que QuizUI gerencia ou coordena
         if (this.quizUI.elements.filterPanel) {
             const filterPanel = new FilterPanel(
                 this.quizUI.elements.filterPanel,
-                null, // QuizLogic será injetado depois
+                null, 
                 this.quizState,
                 this.quizData,
                 this.quizUI,
-                this.apiService
+                this.apiService // Passa ApiService para FilterPanel
             );
             this.quizUI.setFilterPanelInstance(filterPanel);
         }
@@ -61,7 +63,7 @@ export default class App {
             this.quizUI,
             this.userData,
             this.quizData,
-            this.apiService
+            this.apiService // Passa ApiService para QuizLogic
         );
 
         // 6. Injeção de dependências cruzadas finais
@@ -82,43 +84,46 @@ export default class App {
             restartQuizCallback: this.quizLogic.restartQuiz.bind(this.quizLogic),
         });
 
-        // 7. Instanciar AccountPageManager
-        this.accountPageManager = new AccountPageManager(this.quizUI);
+        // 7. Instanciar AccountPageManager, passando a instância do ApiService
+        this.accountPageManager = new AccountPageManager(this.quizUI, this.apiService);
+        // console.log("App.js: AccountPageManager instance created, its ApiService:", this.accountPageManager.apiService);
     }
 
     async initialize() {
+        // console.log("App.js: initialize() - Starting application initialization...");
         try {
             const initialDataLoaded = await this.quizData.fetchInitialData();
 
             if (initialDataLoaded) {
+                // console.log("App.js: Initial quiz data loaded successfully.");
                 if (this.quizUI.challengeHubInstance) {
                     this.quizUI.challengeHubInstance.updateTotalQuestionsCount(this.quizData.getTotalPerguntasParaHub());
                     this.quizUI.challengeHubInstance.updateQuickQuizCount(QUICK_QUIZ_COUNT);
                 }
 
                 this.setupEventListeners();
-                this.determineInitialSection(); // Define a seção visível e chama handleActiveSectionChange
+                this.determineInitialSection();
 
-                // O AccountPageManager.init() agora é chamado aqui, APÓS a seção inicial
-                // e o data-page-id terem sido processados, e APÓS o _adjustBodyPaddingForBottomNav
-                // ter sido potencialmente chamado pela primeira vez via _handleResize em seu init.
-                if (this.accountPageManager && document.body.dataset.pageId === 'account') {
+                if (document.body.dataset.pageId === 'account') {
+                    // console.log("App.js: Current page is 'account'. Initializing AccountPageManager...");
                     this.accountPageManager.init();
                 }
-
+                // console.log("App.js: Application initialized successfully.");
             } else {
+                console.error("App.js: Failed to load initial quiz data.");
                 this.handleLoadError("Não foi possível carregar os dados essenciais do quiz. A aplicação pode não funcionar como esperado.");
             }
         } catch (error) {
+            console.error("App.js: Critical error during initialization:", error);
             this.handleLoadError(`Erro crítico ao inicializar o MedQuiz: ${error.message}. Por favor, tente recarregar a página.`);
         }
     }
 
     setupEventListeners() {
+        // console.log("App.js: setupEventListeners() - Setting up global event listeners...");
         if (this.quizUI) {
             this.quizUI.setupGlobalEventListeners(this.quizLogic);
         }
-
         if (this.quizUI.filterPanelInstance) {
             this.quizUI.filterPanelInstance.setupEventListeners();
         }
@@ -128,43 +133,40 @@ export default class App {
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (this.quizUI?.modalManager?.handleEscapeKey()) {
-                    // Escape foi tratado pelo ModalManager
+                let modalHandled = false;
+                if (this.quizUI?.modalManager) {
+                    modalHandled = this.quizUI.modalManager.handleEscapeKey();
+                }
+                if (!modalHandled && this.accountPageManager && document.body.dataset.pageId === 'account') {
+                    if (this.accountPageManager.elements.deleteAccountModalOverlay?.classList.contains('modal--visible')) {
+                         this.accountPageManager._toggleDeleteAccountModal(false);
+                    }
                 }
             }
         });
     }
 
     determineInitialSection() {
-        if (!this.quizUI) {
+        // console.log("App.js: determineInitialSection() - Determining initial visible section...");
+        if (!this.quizUI || !this.quizUI.elements) {
+            console.error("App.determineInitialSection: QuizUI ou seus elementos não estão definidos.");
             return;
         }
-
+    
         const { homeSection, questionSection, accountSection, quizSectionContent, scorePanel, resultadoCard, placeholderFiltrosContainer } = this.quizUI.elements;
         const bodyEl = document.body;
-        const bodyPageId = bodyEl.dataset.pageId; // Assumindo que base.html já define isso
-
-        // Esconde todas as seções principais inicialmente
-        if (homeSection) this.quizUI.hideElement(homeSection);
-        if (questionSection) this.quizUI.hideElement(questionSection);
-        if (accountSection) this.quizUI.hideElement(accountSection);
-
-        // Esconde elementos de quiz ativo/resultado
-        if (quizSectionContent) this.quizUI.hideElement(quizSectionContent);
-        if (scorePanel) this.quizUI.hideElement(scorePanel);
-        if (resultadoCard) this.quizUI.hideElement(resultadoCard);
-        if (placeholderFiltrosContainer) this.quizUI.hideElement(placeholderFiltrosContainer);
-
-        // Determina qual seção mostrar
+        const bodyPageId = bodyEl.dataset.pageId;
+    
+        [homeSection, questionSection, accountSection, quizSectionContent, scorePanel, resultadoCard, placeholderFiltrosContainer].forEach(el => {
+            if (el) this.quizUI.hideElement(el);
+        });
+    
         let activeSectionIdForLayoutManager = 'unknown';
-
+    
         if (bodyPageId === 'home' && homeSection) {
-            this.quizUI.currentSection = 'home-section'; // ID interno da QuizUI
-            activeSectionIdForLayoutManager = 'home';     // ID para LayoutManager
+            this.quizUI.currentSection = 'home-section';
+            activeSectionIdForLayoutManager = 'home';
             this.quizUI.showElement(homeSection);
-            bodyEl.classList.remove('no-scroll'); // Garante que home não tenha no-scroll
-            // Padding padrão do body para bottom-nav (se aplicável em mobile)
-            if(this.accountPageManager) this.accountPageManager._adjustBodyPaddingForBottomNav();
         } else if (bodyPageId === 'questions' && questionSection) {
             this.quizUI.currentSection = 'question-section';
             activeSectionIdForLayoutManager = 'questions';
@@ -172,42 +174,39 @@ export default class App {
             if (this.quizUI.challengeHubInstance) {
                 this.quizUI.challengeHubInstance.showHub();
             }
-            bodyEl.classList.remove('no-scroll');
-            if(this.accountPageManager) this.accountPageManager._adjustBodyPaddingForBottomNav();
         } else if (bodyPageId === 'account' && accountSection) {
             this.quizUI.currentSection = 'account-section-page';
             activeSectionIdForLayoutManager = 'account';
             this.quizUI.showElement(accountSection);
-            // A classe 'no-scroll' e o padding do body para a página da conta
-            // serão gerenciados pelo AccountPageManager.init() e seus métodos internos.
-            // O AccountPageManager.init() será chamado após esta função em App.initialize().
         } else {
-            // Fallback para a home page se nenhuma outra corresponder
-            if (homeSection) {
+            if (homeSection) { 
                 this.quizUI.currentSection = 'home-section';
                 activeSectionIdForLayoutManager = 'home';
                 this.quizUI.showElement(homeSection);
-                bodyEl.classList.remove('no-scroll');
-                if(this.accountPageManager) this.accountPageManager._adjustBodyPaddingForBottomNav();
+            } else {
+                // console.warn("App.js: No suitable initial section found.");
             }
         }
-
-        // Chama o LayoutManager com o ID da página ativa
+    
+        if (bodyPageId !== 'account') {
+            bodyEl.classList.remove('no-scroll');
+            if(this.accountPageManager) this.accountPageManager._adjustBodyPaddingForBottomNav();
+        }
+    
         if (this.layoutManager) {
             this.layoutManager.handleActiveSectionChange(activeSectionIdForLayoutManager);
         }
-
-        // Atualiza contagem de questões na home se for a página inicial e os dados já carregaram
+    
         if (activeSectionIdForLayoutManager === 'home' && this.quizData.isInitialFetchDone) {
             const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
             if (totalQuestionsSpanHome && this.quizUI.elements.hubTotalQuestionsCount !== totalQuestionsSpanHome) {
-                totalQuestionsSpanHome.textContent = this.quizData.getTotalPerguntasParaHub() || '0';
+                totalQuestionsSpanHome.textContent = this.quizData.getTotalPerguntasParaHub()?.toLocaleString('pt-BR') || '0';
             }
         }
     }
-
+    
     handleLoadError(message) {
-        // (Implementação do handleLoadError permanece a mesma)
+        console.error("App.js: handleLoadError - ", message);
         try {
             const mainContent = document.querySelector('main') || document.body;
             let errorDisplay = mainContent.querySelector('.app-critical-error-display');
@@ -215,56 +214,59 @@ export default class App {
                 errorDisplay = document.createElement('div');
                 errorDisplay.className = 'app-critical-error-display card';
                 errorDisplay.style.cssText = `
-                    padding: var(--spacing-lg, 30px);
-                    margin: var(--spacing-xl, 40px) auto;
-                    max-width: 600px;
-                    background-color: var(--color-incorrect-bg, #fff0f1);
-                    color: var(--color-incorrect-text, #c12634);
-                    border: 1px solid var(--color-incorrect-border, #f1aeb5);
-                    border-radius: var(--border-radius-lg, 12px);
-                    text-align: center;
-                    font-family: var(--font-family-sans, sans-serif);
+                    padding: var(--spacing-lg, 30px); margin: var(--spacing-xl, 40px) auto;
+                    max-width: 600px; background-color: var(--color-incorrect-bg, #fff0f1);
+                    color: var(--color-incorrect-text, #c12634); border: 1px solid var(--color-incorrect-border, #f1aeb5);
+                    border-radius: var(--border-radius-lg, 12px); text-align: center;
+                    font-family: var(--font-family-sans, sans-serif); z-index: 9999; position: relative;
                 `;
-                if (mainContent.firstChild) {
+                if (mainContent.firstChild && mainContent !== document.body) {
                     mainContent.insertBefore(errorDisplay, mainContent.firstChild);
                 } else {
-                    mainContent.appendChild(errorDisplay);
+                    document.body.insertBefore(errorDisplay, document.body.firstChild);
                 }
             }
             errorDisplay.innerHTML = `
                 <h2 class="card__title" style="color: inherit; font-size: 1.5rem; margin-bottom: 15px;">Falha ao Carregar</h2>
-                <p style="margin-bottom: 10px;">${message}</p>
+                <p style="margin-bottom: 10px; line-height: 1.6;">${message}</p>
                 <p style="font-size: 0.9em;">Por favor, tente recarregar a página. Se o problema persistir, o serviço pode estar temporariamente indisponível.</p>
             `;
             this.disableCoreFunctionality();
         } catch (uiError) {
-            document.body.innerHTML = `<div style="padding:20px;text-align:center;color:red;background:white;border:1px solid red;font-family:sans-serif;">${message}</div>`;
+            console.error("App.js: Error displaying critical load error to UI:", uiError);
+            document.body.innerHTML = `<div style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; color:red; padding:20px; text-align:center; z-index:10000; font-family:sans-serif;"><h1>Erro Crítico</h1><p>${message}</p></div>`;
         }
     }
 
     disableCoreFunctionality() {
-        // (Implementação do disableCoreFunctionality permanece a mesma)
+        // console.warn("App.js: disableCoreFunctionality() - Disabling core app features due to error.");
         if (this.quizUI && this.quizUI.elements) {
             if (this.quizUI.elements.hubCustomizeQuizBtn) this.quizUI.elements.hubCustomizeQuizBtn.disabled = true;
             if (this.quizUI.elements.hubQuickQuizBtn) this.quizUI.elements.hubQuickQuizBtn.disabled = true;
-
+    
             const goToHubLink = document.getElementById('go-to-challenges-hub-link');
             if (goToHubLink) {
                 goToHubLink.style.pointerEvents = 'none';
                 goToHubLink.style.opacity = '0.5';
                 goToHubLink.setAttribute('aria-disabled', 'true');
             }
-        }
-        if (this.quizUI.challengeHubInstance && this.quizUI.challengeHubInstance.elements.challengeHubContainer) {
-            const hubContainer = this.quizUI.challengeHubInstance.elements.challengeHubContainer;
-            const title = hubContainer.querySelector('.challenge-hub__title');
-            if (title) title.textContent = "Funcionalidade Indisponível";
-
-            const subtitle = hubContainer.querySelector('.challenge-hub__subtitle');
-            if (subtitle) subtitle.textContent = "Não foi possível carregar os dados necessários.";
-
-            if (document.getElementById('question-section') && hubContainer.classList.contains(this.quizUI.hiddenClassName) && this.quizUI) {
-                 this.quizUI.showElement(hubContainer);
+    
+            if (this.quizUI.challengeHubInstance && this.quizUI.challengeHubInstance.elements.challengeHubContainer) {
+                const hubContainer = this.quizUI.challengeHubInstance.elements.challengeHubContainer;
+                if (document.body.dataset.pageId === 'questions') {
+                    const title = hubContainer.querySelector('.challenge-hub__title');
+                    if (title) title.textContent = "Funcionalidade Indisponível";
+                    
+                    const subtitle = hubContainer.querySelector('.challenge-hub__subtitle');
+                    if (subtitle) subtitle.textContent = "Não foi possível carregar os dados necessários.";
+                    
+                    if (hubContainer.classList.contains(this.quizUI.hiddenClassName)) {
+                        this.quizUI.showElement(hubContainer);
+                        if (this.quizUI.elements.placeholderFiltrosContainer) this.quizUI.hideElement(this.quizUI.elements.placeholderFiltrosContainer);
+                        if (this.quizUI.elements.quizSectionContent) this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
+                        if (this.quizUI.elements.resultadoCard) this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
+                    }
+                }
             }
         }
     }

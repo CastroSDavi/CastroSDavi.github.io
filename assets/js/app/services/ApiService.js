@@ -15,17 +15,13 @@ import { getCookie } from '../../utils/helpers.js';
 async function _request(endpoint, method = 'GET', body = null, queryParams = null) {
     const url = new URL(endpoint, window.location.origin); // Constrói a URL completa
 
-    // Adiciona query parameters à URL, se fornecidos
     if (queryParams) {
         Object.keys(queryParams).forEach(key => {
             const paramValue = queryParams[key];
-            // Só adiciona o parâmetro se ele tiver um valor (não undefined/null)
-            // e se não for uma string vazia (para evitar ?param=)
             if (paramValue !== undefined && paramValue !== null && paramValue.toString().trim() !== '') {
                 if (Array.isArray(paramValue)) {
-                    // Se for um array, adiciona cada valor como um parâmetro separado com a mesma chave
                     paramValue.forEach(value => {
-                        if (value.toString().trim() !== '') { // Garante que valores do array não sejam vazios
+                        if (value.toString().trim() !== '') {
                             url.searchParams.append(key, value.toString());
                         }
                     });
@@ -40,7 +36,7 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
         method,
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRFToken': getCookie('csrftoken'), // Essencial para requisições POST/PUT etc. no Django
+            'X-CSRFToken': getCookie('csrftoken'),
         },
     };
 
@@ -49,57 +45,37 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
     }
 
     try {
-        console.log(`ApiService: Enviando ${method} para ${url.toString()}`, options.body ? `corpo: ${options.body}` : '');
+        // console.log(`ApiService: Enviando ${method} para ${url.toString()}`, options.body ? `corpo: ${options.body}` : '');
         const response = await fetch(url.toString(), options);
-        // Tenta parsear JSON mesmo para respostas não-ok, pois podem conter mensagens de erro úteis.
-        // Se o status for 204 (No Content), não haverá corpo para parsear.
         const responseData = response.status !== 204 ? await response.json().catch(() => null) : null;
 
         if (!response.ok) {
-            // Tenta obter a mensagem de erro do corpo da resposta, senão usa o statusText.
             const errorMessage = responseData?.message || responseData?.detail || `API Error: ${response.status} ${response.statusText}`;
-            console.error(`ApiService Error (${method} ${url.pathname}): Status ${response.status}`, responseData || response.statusText);
+            // console.error(`ApiService Error (${method} ${url.pathname}): Status ${response.status}`, responseData || response.statusText);
             const error = new Error(errorMessage);
-            error.response = response; // Anexa a resposta completa ao erro para depuração
-            error.data = responseData; // Anexa os dados parseados (se houver) ao erro
+            error.response = response;
+            error.data = responseData;
             throw error;
         }
         // console.log(`ApiService: Resposta de ${method} ${url.pathname}:`, responseData);
         return responseData;
     } catch (error) {
-        // Se o erro já tem 'response', ele foi lançado pelo bloco 'if (!response.ok)'
-        // Caso contrário, é provavelmente um erro de rede ou falha na requisição fetch.
         if (!error.response) {
-            console.error(`ApiService Network/Request Error (${method} ${url.pathname}):`, error.message, error);
+            // console.error(`ApiService Network/Request Error (${method} ${url.pathname}):`, error.message, error);
         }
-        // Relança o erro para ser tratado pelo chamador.
         throw error;
     }
 }
 
 export default class ApiService {
-    /**
-     * Busca dados do quiz (perguntas, categorias, opções) da API, com filtros opcionais.
-     * @param {Object} [filterParams={}] - Parâmetros de filtro.
-     * @param {string[]} [filterParams.category_ids] - IDs das categorias.
-     * @param {string[]} [filterParams.difficulty_levels] - Níveis de dificuldade.
-     * @param {string} [filterParams.mode] - Modo do quiz (ex: 'quick').
-     * @param {number} [filterParams.count] - Número de questões para o modo 'quick'.
-     * @param {number|null} [filterParams.num_questions] - Número de questões para modo personalizado.
-     * @param {Object|null} [filterParams.user] - Objeto usuário (se necessário para o backend, ex: ver favoritos na listagem).
-     * @returns {Promise<Object|null>} Dados do quiz.
-     */
     async fetchQuizData(filterParams = {}) {
         const queryParams = {};
-
         if (filterParams.category_ids?.length > 0) {
             queryParams.category_ids = filterParams.category_ids.join(',');
         }
-
         if (filterParams.difficulty_levels?.length > 0 && !filterParams.difficulty_levels.includes('all')) {
             queryParams.difficulty_levels = filterParams.difficulty_levels.join(',');
         }
-
         if (filterParams.mode === 'quick') {
             queryParams.mode = filterParams.mode;
             if (filterParams.count && Number.isInteger(filterParams.count) && filterParams.count > 0) {
@@ -108,63 +84,42 @@ export default class ApiService {
         } else if (filterParams.num_questions && Number.isInteger(filterParams.num_questions) && filterParams.num_questions > 0) {
             queryParams.num_questions = filterParams.num_questions;
         }
-        
-        // O backend já foi ajustado para usar request.user diretamente em api_get_quiz_data_view
-        // para determinar o status de favorito, então não precisamos passar o usuário aqui explicitamente
-        // para esse propósito específico em fetchQuizData.
-        // No entanto, se 'user' fosse usado para outros filtros no backend, poderia ser adicionado.
-
-        console.log("APISERVICE.JS: fetchQuizData - Query params a serem enviados para _request:", queryParams);
+        // console.log("APISERVICE.JS: fetchQuizData - Query params a serem enviados para _request:", queryParams);
         return _request(API_URLS.api_get_quiz_data, 'GET', null, queryParams);
     }
 
-    /**
-     * Inicia uma nova sessão de quiz no backend.
-     * @param {Object} sessionData - Dados para iniciar a sessão.
-     * @returns {Promise<Object|null>} Resposta da API.
-     */
     async startQuizSession(sessionData) {
-        // sessionData: { modo_quiz: string, categoria_ids?: string[], question_ids_in_session: number[] }
         return _request(API_URLS.start_quiz_session, 'POST', sessionData);
     }
 
-    /**
-     * Registra a resposta de um usuário a uma pergunta no backend.
-     * @param {Object} answerData - Dados da resposta.
-     * @returns {Promise<Object|null>} Resposta da API.
-     */
     async registerAnswer(answerData) {
-        // answerData: { session_id: number, pergunta_id: number, opcao_id: number | null }
         return _request(API_URLS.register_answer, 'POST', answerData);
     }
 
-    /**
-     * Finaliza uma sessão de quiz no backend.
-     * @param {Object} sessionEndData - Dados para finalizar a sessão.
-     * @returns {Promise<Object|null>} Resposta da API.
-     */
     async endQuizSession(sessionEndData) {
-        // sessionEndData: { session_id: number, tempo_total_segundos: number }
         return _request(API_URLS.end_quiz_session, 'POST', sessionEndData);
     }
 
-    /**
-     * Adiciona ou remove uma pergunta dos favoritos do usuário.
-     * @param {number} perguntaId - O ID da pergunta.
-     * @returns {Promise<Object|null>} Resposta da API indicando o novo status de favorito.
-     */
     async toggleFavoriteStatus(perguntaId) {
         const endpoint = API_URLS.toggle_favorite_status(perguntaId);
-        // O corpo da requisição POST pode ser vazio se a informação principal (perguntaId) está na URL
-        // e o usuário é identificado pela sessão/token CSRF.
         return _request(endpoint, 'POST', {});
     }
 
-    /**
-     * Busca as questões favoritas do usuário logado.
-     * @returns {Promise<Object|null>} Dados das questões favoritas.
-     */
     async getFavoriteQuestions() {
         return _request(API_URLS.get_favorite_questions, 'GET');
+    }
+
+    /**
+     * Busca as estatísticas agregadas do usuário.
+     * @param {string} [period='30d'] - O período para filtrar as estatísticas (ex: '7d', '30d', '90d', 'all').
+     * @returns {Promise<Object|null>} Dados das estatísticas do usuário.
+     */
+    async fetchUserStatistics(period = '30d') {
+        const queryParams = { period };
+        if (!API_URLS.api_get_user_statistics) {
+            console.error("ApiService: URL para api_get_user_statistics não definida em API_URLS.");
+            throw new Error("URL de estatísticas do usuário não configurada.");
+        }
+        return _request(API_URLS.api_get_user_statistics, 'GET', null, queryParams);
     }
 }

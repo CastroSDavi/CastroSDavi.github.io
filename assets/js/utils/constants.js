@@ -8,10 +8,10 @@ export const API_URLS = {
     api_get_quiz_data: '/api/quiz/alldata/',       // Endpoint para buscar todos os dados do quiz (perguntas, categorias, opções)
     start_quiz_session: '/api/quiz/start-session/', // Endpoint para iniciar uma nova sessão de quiz
     register_answer: '/api/quiz/register-answer/', // Endpoint para registrar a resposta de um usuário a uma pergunta
-    end_quiz_session: '/api/quiz/end-session/',
+    end_quiz_session: '/api/quiz/end-session/',     // Endpoint para finalizar uma sessão de quiz
     toggle_favorite_status: (perguntaId) => `/api/question/${perguntaId}/toggle_favorite/`,
-    get_favorite_questions: '/api/favorites/'     // Endpoint para finalizar uma sessão de quiz
-
+    get_favorite_questions: '/api/favorites/',      // Endpoint para buscar questões favoritas
+    api_get_user_statistics: '/api/user-statistics/' // NOVA URL para estatísticas do usuário
 };
 
 /**
@@ -38,14 +38,3 @@ export const TRANSITION_DURATION_SLOW = 400; // ms (exemplo, usado no modal.css)
  * Duração para transições mais rápidas.
  */
 export const TRANSITION_DURATION_FAST = 150; // ms (exemplo, usado no button.css)
-
-
-// Você pode adicionar outras constantes aqui, como:
-// - Limites de tempo para questões (se aplicável)
-// - Mensagens de erro/sucesso padrão
-// - Chaves para localStorage (se usado)
-// - Nomes de classes CSS frequentemente referenciadas no JS (embora seja melhor mantê-las na QuizUI)
-
-// Exemplo:
-// export const DEFAULT_TIMER_SECONDS = 600; // 10 minutos
-// export const LOCAL_STORAGE_SETTINGS_KEY = 'medquiz_user_settings';

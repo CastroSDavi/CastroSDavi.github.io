@@ -40,7 +40,6 @@
                             Segurança e Dados
                         </a>
                     </li>
-
                     <li>
                         <a href="#preferences" class="account-sidebar__link" data-target="preferences-content">
                             <span class="material-symbols-outlined">tune</span>
@@ -100,6 +99,7 @@
                     <h2 class="card__title">Minhas Questões Favoritas</h2>
                     <div class="card__body" id="favorite-questions-container">
                         <p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>
+                        {# Conteúdo será preenchido por FavoriteManager.js #}
                     </div>
                     <div class="card__footer u-is-hidden" id="favorite-questions-empty-state" style="text-align:center; padding-top: var(--spacing-md); border-top: 1px solid var(--color-gray-200);">
                         <span class="material-symbols-outlined" style="font-size: 2.8rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">playlist_add_check</span>
@@ -147,42 +147,91 @@
                 </div>
             </div>
 
-            {# --- Seção: Estatísticas --- #}
+            {# --- Seção: Estatísticas (REFORMULADA) --- #}
             <div id="statistics-content" class="account-content__section">
-                <div class="card card--conta-perfil">
+                <div class="card card--conta-perfil card--statistics-dashboard"> {# Nova classe para o card principal do dashboard #}
                     <h2 class="card__title">Estatísticas de Desempenho</h2>
                     <div class="card__body">
-                        {% if user_daily_stats_summary %}
-                            <p>Resumo das suas atividades nos últimos dias:</p>
-                            <div class="data-table-wrapper">
-                                 <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Data</th>
-                                            <th>Questões Respondidas</th>
-                                            <th>Acertos</th>
-                                            <th>Precisão</th>
-                                            <th>Pontos</th>
-                                            <th>Tempo de Estudo</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% for stat in user_daily_stats_summary %}
-                                        <tr>
-                                            <td data-label="Data">{{ stat.data_estatistica|date:"d/m/Y" }}</td>
-                                            <td data-label="Respondidas">{{ stat.perguntas_respondidas_dia }}</td>
-                                            <td data-label="Acertos">{{ stat.acertos_dia }}</td>
-                                            <td data-label="Precisão">{{ stat.precisao_dia|floatformat:0 }}%</td>
-                                            <td data-label="Pontos">{{ stat.pontos_dia }}</td>
-                                            <td data-label="Tempo Estudo">{{ stat.tempo_estudo_formatado }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
+                        <div class="statistics-dashboard">
+                            <div class="statistics-filters">
+                                <div class="form-group" style="max-width: 250px;">
+                                    <label for="stats-period-select" class="form-label">Visualizar Período:</label>
+                                    <select id="stats-period-select" class="form-control form-control--small">
+                                        <option value="7">Últimos 7 dias</option>
+                                        <option value="30" selected>Últimos 30 dias</option>
+                                        <option value="90">Últimos 90 dias</option>
+                                        <option value="all">Desde o início</option>
+                                    </select>
+                                </div>
+                                {# Futuramente: <button id="btn-refresh-stats" class="button button--outline button--small">Atualizar</button> #}
                             </div>
-                        {% else %}
-                            <p class="placeholder-text">Nenhuma estatística diária registrada ainda. Comece um quiz para ver seu progresso!</p>
-                        {% endif %}
+
+                            <div class="key-metrics-summary" id="key-metrics-summary-container">
+                                <div class="metric-card">
+                                    <span class="material-symbols-outlined metric-card__icon">functions</span>
+                                    <span class="metric-card__label">Total de Questões</span>
+                                    <span class="metric-card__value" id="metric-total-questions">--</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="material-symbols-outlined metric-card__icon">local_fire_department</span>
+                                    <span class="metric-card__label">Sequência Máx.</span>
+                                    <span class="metric-card__value" id="metric-max-streak">--</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="material-symbols-outlined metric-card__icon">military_tech</span>
+                                    <span class="metric-card__label">Pontuação Total</span>
+                                    <span class="metric-card__value" id="metric-total-score">--</span>
+                                </div>
+                                <div class="metric-card">
+                                    <span class="material-symbols-outlined metric-card__icon">timer</span>
+                                    <span class="metric-card__label">Tempo Total Estudo</span>
+                                    <span class="metric-card__value" id="metric-total-study-time">--</span>
+                                </div>
+                            </div>
+
+                            <div class="stats-grid">
+                                <div class="stats-card chart-card">
+                                    <h3 class="chart-title">Precisão Geral</h3>
+                                    <div id="chart-overall-accuracy" class="chart-container">
+                                        <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </div>
+                                </div>
+                                <div class="stats-card chart-card">
+                                    <h3 class="chart-title">Desempenho por Categoria</h3>
+                                    <div id="chart-category-performance" class="chart-container">
+                                        <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </div>
+                                </div>
+                                <div class="stats-card chart-card stats-card--full-width">
+                                    <h3 class="chart-title">Evolução da Precisão</h3>
+                                    <div id="chart-learning-progress" class="chart-container">
+                                        <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </div>
+                                </div>
+                                <div class="stats-card chart-card stats-card--full-width">
+                                    <h3 class="chart-title">Frequência de Estudos (Heatmap)</h3>
+                                    <div id="chart-study-heatmap" class="chart-container">
+                                        <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </div>
+                                </div>
+                                <div class="stats-card chart-card">
+                                    <h3 class="chart-title">Tempo de Estudo Detalhado</h3>
+                                    <div id="chart-study-time" class="chart-container">
+                                        <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </div>
+                                </div>
+                                <div class="stats-card chart-card">
+                                    <h3 class="chart-title">Acertos por Dificuldade</h3>
+                                    <div id="chart-difficulty-performance" class="chart-container">
+                                        <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="no-stats-data-message" class="u-is-hidden placeholder-text" style="margin-top: var(--spacing-lg);">
+                                <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">sentiment_dissatisfied</span>
+                                Nenhuma estatística encontrada para o período selecionado. Comece um quiz para ver seu progresso!
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -236,13 +285,13 @@
 
                         <h3 class="h4-like" style="margin-bottom: var(--spacing-sm);">Gerenciar Conta</h3>
                         <div class="profile-actions">
-                            <a href="{% url 'password_change' %}" class="button button--secondary"> {# MODIFICADO: button--secondary #}
+                            <a href="{% url 'password_change' %}" class="button button--secondary">
                                 <span class="material-symbols-outlined button__icon">password</span>
                                 Alterar Senha
                             </a>
-                            <form method="post" action="{% url 'logout' %}" style="margin: 0; display: contents;"> {# display: contents para o form não quebrar o flex/grid do .profile-actions #}
+                            <form method="post" action="{% url 'logout' %}" style="margin: 0; display: contents;">
                                 {% csrf_token %}
-                                <button type="submit" class="button button--outline button--danger-outline"> {# MODIFICADO: button--danger-outline #}
+                                <button type="submit" class="button button--outline button--danger-outline">
                                     <span class="material-symbols-outlined button__icon">logout</span>
                                     Sair (Logout)
                                 </button>
@@ -255,7 +304,7 @@
                         <p style="font-size: var(--font-size-sm); color: var(--color-text-muted); margin-bottom: var(--spacing-md);">
                             A exclusão da sua conta é uma ação permanente e não pode ser desfeita. Todos os seus dados, incluindo histórico de quizzes e progresso, serão removidos.
                         </p>
-                        <button type="button" id="btn-open-delete-account-modal" class="button button--danger"> {# MODIFICADO: button--danger (preenchido) #}
+                        <button type="button" id="btn-open-delete-account-modal" class="button button--danger">
                              <span class="material-symbols-outlined button__icon">delete_forever</span>
                             Deletar Minha Conta
                         </button>
@@ -331,12 +380,12 @@
                     <label for="{{ delete_form.password.id_for_label }}" class="form-label u-sr-only">{{ delete_form.password.label }}</label>
                     <div class="input-icon-wrapper">
                         <span class="material-symbols-outlined input-icon">password</span>
-                        {{ delete_form.password }} {# Este input deve herdar .form-control da folha de estilos de forms.py #}
+                        {{ delete_form.password }}
                     </div>
                 </div>
             </div>
             <div class="modal__footer modal__footer--stacked">
-                <button type="button" id="cancel-delete-account-btn" class="button button--secondary button--modal-action">Cancelar</button> {# MODIFICADO: button--secondary para consistência #}
+                <button type="button" id="cancel-delete-account-btn" class="button button--secondary button--modal-action">Cancelar</button>
                 <button type="submit" id="confirm-delete-account-btn" class="button button--danger button--modal-action">
                     <span class="material-symbols-outlined button__icon">delete_forever</span>
                     Sim, Excluir Minha Conta
@@ -345,8 +394,16 @@
         </form>
     </div>
 </div>
-{% endblock content %}
 
+{# Bloco de Scripts Adicionais (para carregar a biblioteca de gráficos) #}
 {% block scripts %}
     {{ block.super }}
+    {# Exemplo para ApexCharts (descomente e ajuste o caminho se for usar) #}
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+    {# Seu AccountPageManager e o novo StatisticsChartManager serão chamados em main.js #}
+    {# Certifique-se que AccountPageManager.js agora chame o StatisticsChartManager.js #}
+    {# quando a aba de estatísticas for ativada. #}
 {% endblock scripts %}
+
+{% endblock content %}

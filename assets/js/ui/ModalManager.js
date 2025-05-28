@@ -4,28 +4,19 @@ import { TRANSITION_DURATION } from '../utils/constants.js';
 
 export default class ModalManager {
     constructor(quizUIInstance, quizStateInstance, quizDataInstance) {
-        this.quizUI = quizUIInstance; // Referência à instância principal da QuizUI
+        this.quizUI = quizUIInstance; 
         this.quizState = quizStateInstance;
         this.quizData = quizDataInstance;
 
-        // Elementos DOM são acessados via this.quizUI.elements
         this.elements = this.quizUI.elements;
-        this.bodyElement = document.body; // Cache do elemento body
+        this.bodyElement = document.body; 
 
-        this.focusedElementBeforeModal = null; // Genérico para qualquer modal ativo
-        this.activeModalCount = 0; // Contador para modais ativos (para gerenciar no-scroll)
+        this.focusedElementBeforeModal = null; 
+        this.activeModalCount = 0; 
     }
 
-    /**
-     * Método genérico privado para abrir e fechar modais.
-     * @param {HTMLElement} overlayElement - O elemento do overlay do modal.
-     * @param {HTMLElement} dialogElement - O elemento do diálogo do modal.
-     * @param {boolean} show - True para mostrar, false para esconder.
-     * @param {HTMLElement} elementToFocusOnOpen - Elemento a focar quando o modal abre.
-     */
     _toggleGenericModal(overlayElement, dialogElement, show, elementToFocusOnOpen = null) {
         if (!overlayElement || !dialogElement) {
-            // console.warn("ModalManager: Tentativa de alternar modal com elementos ausentes.");
             return;
         }
 
@@ -39,16 +30,13 @@ export default class ModalManager {
             this.quizUI.showElement(overlayElement);
             if (isFilterPanel) this.quizUI.showElement(dialogElement); 
 
-            // Força reflow para garantir que a transição ocorra
             if (overlayElement) overlayElement.scrollTop;
             if (dialogElement) dialogElement.scrollTop;
 
-            // Adiciona no-scroll ao body
             this.activeModalCount++;
-            if (this.activeModalCount === 1) { // Só adiciona se for o primeiro modal
+            if (this.activeModalCount === 1) { 
                 this.bodyElement.classList.add('no-scroll');
             }
-
 
             requestAnimationFrame(() => {
                 overlayElement.classList.add(overlayVisibleClass);
@@ -62,10 +50,11 @@ export default class ModalManager {
                 const focusTarget = elementToFocusOnOpen || 
                                     (dialogElement === this.elements.explanationModalDialog && this.elements.btnCloseExplanationModal) ||
                                     (dialogElement === this.elements.confirmEncerrarModal && this.elements.cancelEncerrarBtn) ||
+                                    (dialogElement === this.elements.deleteAccountModalDialog && this.elements.passwordInputDeleteAccount) || // Focar no input de senha
                                     dialogElement; 
-                focusTarget.focus();
+                focusTarget?.focus(); // Adicionado ?. para segurança
             });
-        } else { // show === false
+        } else { 
             overlayElement.classList.remove(overlayVisibleClass);
             if (panelVisibleClass) dialogElement.classList.remove(panelVisibleClass);
 
@@ -83,7 +72,6 @@ export default class ModalManager {
                     overlayElement.setAttribute('aria-hidden', 'true');
                     dialogElement.setAttribute('aria-hidden', 'true');
 
-                    // Remove no-scroll do body se este for o último modal a ser fechado
                     this.activeModalCount = Math.max(0, this.activeModalCount - 1);
                     if (this.activeModalCount === 0) {
                         this.bodyElement.classList.remove('no-scroll');
@@ -107,7 +95,6 @@ export default class ModalManager {
                     overlayElement.setAttribute('aria-hidden', 'true');
                     dialogElement.setAttribute('aria-hidden', 'true');
                     
-                    // Fallback para remover no-scroll
                     this.activeModalCount = Math.max(0, this.activeModalCount - 1);
                     if (this.activeModalCount === 0) {
                         this.bodyElement.classList.remove('no-scroll');
@@ -153,12 +140,12 @@ export default class ModalManager {
 
         if (show) {
             if (!this.quizState || !this.quizData) {
-                console.warn("ModalManager: QuizState ou QuizData não disponíveis para o modal de explicação.");
+                // console.warn("ModalManager: QuizState ou QuizData não disponíveis para o modal de explicação.");
                 return;
             }
             const currentQuestion = this.quizState.getCurrentQuestion();
             if (!currentQuestion) {
-                console.warn("ModalManager: Nenhuma questão atual para exibir explicação.");
+                // console.warn("ModalManager: Nenhuma questão atual para exibir explicação.");
                 return;
             }
             const options = this.quizData.getOpcoesPorPerguntaId(currentQuestion.id_pergunta);
@@ -288,7 +275,7 @@ export default class ModalManager {
             }
 
             this._toggleGenericModal(overlay, dialog, true, this.elements.btnCloseExplanationModal);
-        } else { // if (show === false)
+        } else { 
             this._toggleGenericModal(overlay, dialog, false);
         }
     }
@@ -298,6 +285,20 @@ export default class ModalManager {
         const dialog = this.elements.confirmEncerrarModal;   
         this._toggleGenericModal(overlay, dialog, show, this.elements.cancelEncerrarBtn);
     }
+
+    // NOVO MÉTODO para o modal de exclusão de conta
+    toggleDeleteAccountModal(show) {
+        const overlay = this.quizUI.elements.deleteAccountModalOverlay;
+        const dialog = this.quizUI.elements.deleteAccountModalDialog;
+        // Foca no campo de senha ao abrir, ou no botão de cancelar (ou no próprio dialog) ao fechar
+        const elementToFocusOnOpen = show ? this.quizUI.elements.passwordInputDeleteAccount : null; 
+        this._toggleGenericModal(overlay, dialog, show, elementToFocusOnOpen);
+
+        if (show && this.quizUI.elements.passwordInputDeleteAccount) {
+             this.quizUI.elements.passwordInputDeleteAccount.value = ''; // Limpa a senha ao abrir
+        }
+    }
+
 
     setupEventListeners(quizLogicInstance) {
         // Filtro Panel
@@ -322,7 +323,16 @@ export default class ModalManager {
             if (e.target === this.elements.confirmEncerrarOverlay) this.toggleConfirmModal(false);
         });
 
-        // Adiciona listener para a tecla Escape globalmente
+        // Delete Account Modal (os listeners de ABRIR ficam no AccountPageManager)
+        this.quizUI.elements.btnCancelDeleteAccountModal?.addEventListener('click', (event) => {
+            event.preventDefault(); // Previne submit do formulário se o botão estiver dentro
+            this.toggleDeleteAccountModal(false);
+        });
+        this.quizUI.elements.deleteAccountModalOverlay?.addEventListener('click', (event) => {
+            if (event.target === this.quizUI.elements.deleteAccountModalOverlay) this.toggleDeleteAccountModal(false);
+        });
+        // O submit do formulário de deleção é tratado pelo Django.
+
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 this.handleEscapeKey();
@@ -340,22 +350,17 @@ export default class ModalManager {
         if (this.elements.confirmEncerrarOverlay?.classList.contains('modal--visible')) {
             return { isVisible: true, type: 'confirm', closeHandler: () => this.toggleConfirmModal(false) };
         }
+        // Adicionado para o modal de deleção
+        if (this.quizUI.elements.deleteAccountModalOverlay?.classList.contains('modal--visible')) {
+            return { isVisible: true, type: 'deleteAccount', closeHandler: () => this.toggleDeleteAccountModal(false) };
+        }
         return { isVisible: false, type: null, closeHandler: null };
     }
 
     handleEscapeKey() {
-        // Tenta fechar o modal ativo mais recentemente aberto ou o de maior z-index visível
-        // A ordem de verificação aqui pode ser importante se múltiplos modais pudessem estar abertos (o que não deve ser o caso).
-        if (this.elements.explanationModalOverlay?.classList.contains('modal--visible')) {
-            this.toggleExplanationModal(false);
-            return true;
-        }
-        if (this.elements.confirmEncerrarOverlay?.classList.contains('modal--visible')) {
-            this.toggleConfirmModal(false);
-            return true;
-        }
-        if (this.elements.filterPanel?.classList.contains('filter-panel--visible')) {
-            this.toggleFilterPanel(false);
+        const activeModal = this.getActiveModalInfo();
+        if (activeModal.isVisible && activeModal.closeHandler) {
+            activeModal.closeHandler();
             return true;
         }
         return false; 

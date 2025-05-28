@@ -6,7 +6,7 @@ import { debounce } from '../utils/helpers.js';
 export default class FilterPanel {
     constructor(filterPanelElement, quizLogicInstance, quizStateInstance, quizDataInstance, quizUIInstance, apiServiceInstance) {
         if (!filterPanelElement) {
-            console.error("FilterPanel: Elemento principal do painel de filtros não fornecido.");
+            // console.error("FilterPanel: Elemento principal do painel de filtros não fornecido.");
             return;
         }
         this.panelElement = filterPanelElement;
@@ -19,7 +19,7 @@ export default class FilterPanel {
         this.isFetchingCount = false;
         this.debouncedFetchFilteredQuestionCount = debounce(this._fetchFilteredQuestionCount.bind(this), 600);
 
-        this.lastProcessedNumQuestionsValue = undefined; // Usar undefined para estado inicial não processado
+        this.lastProcessedNumQuestionsValue = undefined; 
 
         this._cacheOwnElements();
     }
@@ -41,7 +41,6 @@ export default class FilterPanel {
 
     setupEventListeners() {
         const triggerCountFetch = () => {
-            // console.log("Triggering count fetch due to filter change.");
             this.debouncedFetchFilteredQuestionCount();
         }
 
@@ -64,11 +63,6 @@ export default class FilterPanel {
             triggerCountFetch();
         });
 
-        // _handleCategoryCheckboxChange chama triggerCountFetch internamente
-        // então não precisamos de um listener separado aqui no categoryTreeList para 'change'
-        // a menos que _handleCategoryCheckboxChange seja refatorado para não chamá-lo.
-        // Por agora, vamos assumir que _handleCategoryCheckboxChange lida com isso.
-
         this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]').forEach(input => {
             input.addEventListener('change', () => {
                 const diffInputs = Array.from(this.elements.filterGroupDifficulty.querySelectorAll('input[name="difficulty"]'));
@@ -87,31 +81,32 @@ export default class FilterPanel {
         });
 
         this.elements.numQuestionsInput?.addEventListener('input', (event) => {
-            this._validateAndProcessNumQuestionsInput(event.target, false); // false: não forçar no input, apenas se valor mudar
+            this._validateAndProcessNumQuestionsInput(event.target, false); 
         });
         this.elements.numQuestionsInput?.addEventListener('blur', (event) => {
-            // No blur, sempre revalidamos e potencialmente atualizamos o feedback se o campo estiver vazio,
-            // para garantir que "Listando todas..." seja mostrado corretamente.
-            this._validateAndProcessNumQuestionsInput(event.target, true);
+            this._validateAndProcessNumQuestionsInput(event.target, true); 
         });
 
         this.elements.btnNumDecrement?.addEventListener('click', () => {
             if (this.elements.numQuestionsInput) {
                 let currentValue = parseInt(this.elements.numQuestionsInput.value, 10);
                 const min = parseInt(this.elements.numQuestionsInput.min, 10) || 1;
-                
-                if (isNaN(currentValue)) {
-                    const maxAttr = this.elements.numQuestionsInput.getAttribute('max');
-                    currentValue = maxAttr && !isNaN(parseInt(maxAttr)) ? parseInt(maxAttr, 10) : 10; 
-                    if (isNaN(currentValue) || currentValue < min ) currentValue = min; // Garante que não seja menor que o min
-                    this.elements.numQuestionsInput.value = Math.max(min, currentValue -1).toString(); // Decrementa se possível
-                } else if (currentValue <= min) {
+                const maxStr = this.elements.numQuestionsInput.getAttribute('max');
+                const max = (maxStr && !isNaN(parseInt(maxStr)) && parseInt(maxStr) >=0) ? parseInt(maxStr) : Infinity;
+
+
+                if (max === 0) { // Se max é 0, limpar e não fazer nada
+                    this.elements.numQuestionsInput.value = "";
+                } else if (isNaN(currentValue)) { // Se não tem valor, e max > 0, começa do max ou 10
+                    currentValue = (max !== Infinity && max > 0) ? max : 10;
+                     // Decrementa, mas não abaixo de min ou "" se for para "todas"
+                    this.elements.numQuestionsInput.value = Math.max(min, currentValue -1).toString();
+                } else if (currentValue <= min) { // Se está no mínimo ou abaixo, limpa para "todas"
                      this.elements.numQuestionsInput.value = ""; 
-                } else {
+                } else { // Decrementa normalmente
                     currentValue -= (parseInt(this.elements.numQuestionsInput.step, 10) || 1);
                     this.elements.numQuestionsInput.value = Math.max(min, currentValue).toString();
                 }
-                // Dispara o evento input para que a lógica de _validateAndProcessNumQuestionsInput seja acionada
                 this.elements.numQuestionsInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
@@ -122,10 +117,9 @@ export default class FilterPanel {
                 const min = parseInt(this.elements.numQuestionsInput.min, 10) || 1;
                 const step = parseInt(this.elements.numQuestionsInput.step, 10) || 1;
                 const maxStr = this.elements.numQuestionsInput.getAttribute('max');
-                // Se maxQuestions for 0, max será 0. Não permitir incremento.
-                const max = maxStr && !isNaN(parseInt(maxStr)) ? parseInt(maxStr, 10) : Infinity;
+                const max = (maxStr && !isNaN(parseInt(maxStr)) && parseInt(maxStr) >=0) ? parseInt(maxStr) : Infinity;
 
-                if (max === 0) return; // Não incrementa se o máximo é 0
+                if (max === 0) return; // Não incrementa se o máximo disponível é 0
 
                 if (currentValue < min) { 
                     currentValue = min;
@@ -133,7 +127,7 @@ export default class FilterPanel {
                     currentValue += step;
                 }
                 
-                this.elements.numQuestionsInput.value = Math.min(max, currentValue).toString();
+                this.elements.numQuestionsInput.value = Math.min(max === Infinity ? currentValue : max, currentValue).toString();
                 this.elements.numQuestionsInput.dispatchEvent(new Event('input', { bubbles: true }));
             }
         });
@@ -143,27 +137,30 @@ export default class FilterPanel {
         if (!inputElement) return;
 
         let currentValueStr = inputElement.value.trim();
-        let processedValue = null; 
+        let processedValue = null;
+        const min = parseInt(inputElement.min, 10) || 1;
+        const maxStr = inputElement.getAttribute('max');
+        const max = (maxStr && !isNaN(parseInt(maxStr, 10)) && parseInt(maxStr, 10) >= 0) ? parseInt(maxStr, 10) : null;
 
-        if (currentValueStr !== "") {
+        if (max === 0) { // Se o máximo de questões disponíveis dinamicamente é 0
+            inputElement.value = ""; // Limpa o campo, pois nenhuma questão pode ser selecionada
+            processedValue = null;   // O valor lógico é "nenhuma selecionável" ou "todas de zero"
+        } else if (currentValueStr !== "") {
             let numValue = parseInt(currentValueStr, 10);
-            const min = parseInt(inputElement.min, 10) || 1;
-            const maxStr = inputElement.getAttribute('max');
-            // max pode ser 0 se não houver questões.
-            const max = (maxStr && !isNaN(parseInt(maxStr, 10)) && parseInt(maxStr, 10) >= 0) ? parseInt(maxStr, 10) : null;
 
-            if (isNaN(numValue) || numValue <= 0) { // Se for inválido ou 0/negativo, trata como "todas"
-                inputElement.value = ""; 
-                processedValue = null;
-            } else if (max !== null && numValue > max && max >= 0) { // Se exceder um max válido (incluindo 0)
-                numValue = max;
-                inputElement.value = max === 0 ? "" : numValue.toString(); // Se max é 0, limpa o campo
-                processedValue = max === 0 ? null : numValue;
+            if (isNaN(numValue) || numValue < min) { // Se for inválido ou menor que o mínimo (incluindo 0, se min=1)
+                inputElement.value = ""; // Limpa para indicar "todas as disponíveis"
+                processedValue = null; 
+            } else if (max !== null && numValue > max) { // Se exceder um max válido (e max não for 0)
+                inputElement.value = max.toString(); // Corrige para o valor máximo
+                processedValue = max;
             } else {
+                // Garante que o valor no input seja o número limpo (sem zeros à esquerda, etc.)
+                inputElement.value = numValue.toString(); 
                 processedValue = numValue;
             }
-        } else { 
-            processedValue = null; // Vazio significa "todas"
+        } else { // Campo está explicitamente vazio
+            processedValue = null; // Vazio significa "todas as disponíveis"
         }
 
         const oldValueInState = this.quizState?.activeFiltersForCurrentSet?.num_questions;
@@ -172,17 +169,13 @@ export default class FilterPanel {
         }
 
         // Dispara a busca da contagem se o valor lógico mudou,
-        // ou se estamos no blur de um campo que ficou vazio (para atualizar "Listando todas...").
-        if (this.lastProcessedNumQuestionsValue !== processedValue || (forceFetchOnEmptyBlur && currentValueStr === "")) {
-            // console.log(`Num questions changed from ${this.lastProcessedNumQuestionsValue} to ${processedValue}. Triggering fetch.`);
+        // OU se o campo ficou vazio no blur (para atualizar o feedback "Listando todas..."),
+        // OU se o valor no estado mudou (caso o processamento tenha alterado o valor lógico).
+        if (this.lastProcessedNumQuestionsValue !== processedValue ||
+            (forceFetchOnEmptyBlur && currentValueStr === "") ||
+            oldValueInState !== processedValue) {
             this.lastProcessedNumQuestionsValue = processedValue;
             this.debouncedFetchFilteredQuestionCount();
-        } else if (oldValueInState !== processedValue) {
-            // Se o valor lógico mudou mas o lastProcessedNumQuestionsValue era o mesmo (ex: de null para "" que ainda é null lógico)
-            // mas o estado precisa ser atualizado no feedback (ex: maxQuestions mudou).
-            // Força a atualização do feedback, mas não necessariamente uma nova busca se a lógica acima não pegar.
-            // No entanto, a _updateNumQuestionsFeedback já usa o valor do quizState.
-            // O importante é que debouncedFetchFilteredQuestionCount seja chamado se a *interpretação* do filtro mudou.
         }
     }
 
@@ -193,30 +186,27 @@ export default class FilterPanel {
         this.isFetchingCount = true;
         
         const feedbackTextEl = this.elements.numQuestionsFeedbackText;
-        const aplicarFiltrosBtn = this.elements.btnAplicarFiltrosPainel;
-
-        // APENAS MUDAR O TEXTO E ESTADO DO BOTÃO "APLICAR" SE ESTIVER REALMENTE BUSCANDO
+        
         if (feedbackTextEl) {
             feedbackTextEl.textContent = "Verificando questões...";
             feedbackTextEl.className = 'form-text-feedback form-text-feedback--filter-panel is-loading';
         }
-        // Não mexer no botão aqui ainda. Apenas no final da operação.
 
         const countFilterParams = {
             category_ids: this.quizState?.activeFiltersForCurrentSet?.category_ids || [],
             difficulty_levels: this.quizState?.activeFiltersForCurrentSet?.difficulty_levels || ['all'],
+            // Não envia num_questions para buscar a contagem total disponível para os outros filtros
         };
 
         try {
             const data = await this.apiService.fetchQuizData(countFilterParams);
             const maxQuestions = (data?.perguntas?.length) || 0;
-            this._updateNumQuestionsFeedback(maxQuestions); // Atualiza o feedback e o botão "Aplicar"
+            this._updateNumQuestionsFeedback(maxQuestions); 
         } catch (error) {
-            console.error("FilterPanel: Erro ao buscar contagem de questões:", error);
-            this._updateNumQuestionsFeedback(null); // Trata erro e atualiza botão "Aplicar"
+            // console.error("FilterPanel: Erro ao buscar contagem de questões:", error);
+            this._updateNumQuestionsFeedback(null); 
         } finally {
             this.isFetchingCount = false;
-            // A classe 'is-loading' é removida e o botão "Aplicar" é ajustado dentro de _updateNumQuestionsFeedback
         }
     }
 
@@ -227,50 +217,56 @@ export default class FilterPanel {
         
         if (!input || !feedbackTextEl) return;
 
-        feedbackTextEl.className = 'form-text-feedback form-text-feedback--filter-panel'; // Reseta classes
+        feedbackTextEl.className = 'form-text-feedback form-text-feedback--filter-panel'; 
         const defaultPlaceholder = "Qtd.";
         let currentSelectedNum = this.quizState?.activeFiltersForCurrentSet?.num_questions;
 
-        // Gerencia o botão "Aplicar Filtros"
         const enableAplicarFiltros = (enable) => {
             if (aplicarFiltrosBtn) {
                 aplicarFiltrosBtn.disabled = !enable;
             }
         };
 
-        if (maxQuestions === null) { // Erro
+        if (maxQuestions === null) { // Erro na busca
             input.removeAttribute('max');
             input.placeholder = defaultPlaceholder;
             feedbackTextEl.textContent = "Erro ao carregar contagem.";
             feedbackTextEl.classList.add('has-error');
             enableAplicarFiltros(false);
-        } else if (maxQuestions === 0) {
+        } else if (maxQuestions === 0) { // Nenhuma questão encontrada para os filtros
             input.setAttribute('max', '0');
-            input.placeholder = "0";
-            // Se maxQuestions é 0, currentSelectedNum no quizState deve ser null (ou 0 e tratado como null).
-            // E o input.value deve ser limpo por _validateAndProcessNumQuestionsInput.
-            if (input.value !== "" && parseInt(input.value, 10) !== 0) { // Garante que o input esteja vazio se max é 0
-                 // input.value = ""; // Comentado para ver se a validação resolve
+            input.placeholder = "0"; 
+            // Garante que o input seja limpo e o estado no quizState seja null (nenhuma selecionável)
+            if (input.value !== "") input.value = "";
+            if (this.quizState && this.quizState.activeFiltersForCurrentSet.num_questions !== null) {
+                 this.quizState.activeFiltersForCurrentSet.num_questions = null;
+                 this.lastProcessedNumQuestionsValue = null; 
             }
+            currentSelectedNum = null; // Atualiza a variável local para o feedback
+
             feedbackTextEl.textContent = "Nenhuma questão encontrada.";
             feedbackTextEl.classList.add('is-empty');
-            enableAplicarFiltros(false);
+            enableAplicarFiltros(false); 
         } else { // maxQuestions > 0
             input.setAttribute('max', maxQuestions.toString());
-            input.placeholder = `${maxQuestions}`;
+            // Se o input estiver vazio, o placeholder deve ser o maxQuestions. Se tiver valor, mantém.
+            input.placeholder = input.value ? input.placeholder : `${maxQuestions}`;
 
-            if (currentSelectedNum === null || currentSelectedNum === 0) {
+
+            // Se currentSelectedNum (do estado) é maior que o novo maxQuestions, é inválido.
+            // A lógica de _validateAndProcessNumQuestionsInput deveria corrigir isso, mas aqui confirmamos
+            // para o feedback e estado do botão.
+            if (currentSelectedNum !== null && currentSelectedNum > maxQuestions) {
+                feedbackTextEl.textContent = `Máx: ${maxQuestions}. (Solicitado: ${currentSelectedNum} - inválido)`;
+                feedbackTextEl.classList.add('has-error');
+                enableAplicarFiltros(false); // Desabilita se a seleção atual é inválida
+            } else if (currentSelectedNum === null || currentSelectedNum === 0) { // "Todas" selecionadas
                 feedbackTextEl.textContent = `Disponíveis: ${maxQuestions} questões.`;
-            } else if (currentSelectedNum > maxQuestions) {
-                // A validação deveria ter corrigido input.value, aqui apenas refletimos o estado.
-                feedbackTextEl.textContent = `Disponíveis: ${maxQuestions}. (Definido: ${currentSelectedNum})`;
-                 // Se quizState.num_questions ainda for > maxQuestions, pode ser um problema de timing.
-                 // A ação correta aqui seria desabilitar o botão Aplicar, pois o estado é inválido.
-                 // No entanto, _validateAndProcessNumQuestionsInput deveria ter corrigido o valor no input e no quizState.
-            } else {
-                feedbackTextEl.textContent = `Selecionadas: ${currentSelectedNum} de ${maxQuestions} questões.`;
+                enableAplicarFiltros(true);
+            } else { // Um número específico e válido de questões selecionado
+                feedbackTextEl.textContent = `Selecionadas: ${currentSelectedNum} de ${maxQuestions}.`;
+                enableAplicarFiltros(true);
             }
-            enableAplicarFiltros(true);
         }
     }
     
@@ -299,23 +295,27 @@ export default class FilterPanel {
                  this.elements.categoryTreeList.innerHTML = '<li class="category-tree__empty-state">Erro ao carregar categorias.</li>';
             }
         }
-        this._fetchFilteredQuestionCount();
+        // A contagem inicial é feita após popular categorias e dificuldades.
+        // _fetchFilteredQuestionCount será chamado ao definir os filtros acima.
+        this.debouncedFetchFilteredQuestionCount(); // Garante uma busca inicial da contagem
     }
 
     resetFiltersToDefault() {
         this.setCategoryTreeState([]);
         this.setDifficultyState(['all']);
         this.setNumberOfQuestionsState(null); 
-        this.lastProcessedNumQuestionsValue = undefined; // Reset para indefinido
+        this.lastProcessedNumQuestionsValue = undefined; 
 
         if (this.quizState) {
             this.quizState.activeFiltersForCurrentSet.category_ids = [];
             this.quizState.activeFiltersForCurrentSet.difficulty_levels = ['all'];
             this.quizState.activeFiltersForCurrentSet.num_questions = null;
         }
-        this._fetchFilteredQuestionCount();
+        this.debouncedFetchFilteredQuestionCount();
     }
 
+    // ... (métodos _updateSubmenuHeight, _updateParentSubmenuHeights, generateCategoryTree, _handleCategoryCheckboxChange, _updateParentCheckboxState, getSelectedCategories, setCategoryTreeState, getSelectedDifficulties, setDifficultyState, getSelectedNumberOfQuestions, setNumberOfQuestionsState permanecem os mesmos da sua versão)
+    // Adicionei eles abaixo para completude do arquivo, mas sem alterações da sua última versão.
     _updateSubmenuHeight(subMenuElement, isExpanding) {
         if (!subMenuElement) return;
         if (isExpanding) {
@@ -348,7 +348,7 @@ export default class FilterPanel {
 
     generateCategoryTree(categoriesHierarchical) {
         const treeContainer = this.elements.categoryTreeList;
-        if (!treeContainer) { console.error("FilterPanel: categoryTreeList não encontrado."); return; }
+        if (!treeContainer) { /* console.error("FilterPanel: categoryTreeList não encontrado."); */ return; }
         if (!categoriesHierarchical?.length) {
             treeContainer.innerHTML = '<li class="category-tree__empty-state">Nenhuma categoria para exibir.</li>';
             return;

@@ -101,16 +101,17 @@ def get_descendant_category_ids(category_ids_str_list):
 def get_quiz_data_dict(
     category_ids_filter=None,
     difficulty_levels_filter=None,
-    quiz_mode=None, 
-    question_count_str=None, 
+    quiz_mode=None,
+    question_count_str=None,
     num_questions_custom_str=None,
     user: User = None,
     quiz_definicao_id=None
     ):
-    
+
     todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
     perguntas_qs = Pergunta.objects.filter(ativa=True)
     quiz_config = get_quiz_config()
+    quiz_definition_name_to_return = None # NOVO: Para armazenar o nome do quiz definido
 
     if quiz_definicao_id:
         try:
@@ -123,9 +124,11 @@ def get_quiz_data_dict(
             else:
                 preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(perguntas_ordenadas_ids)])
                 perguntas_qs = Pergunta.objects.filter(pk__in=perguntas_ordenadas_ids, ativa=True).order_by(preserved_order)
+            quiz_definition_name_to_return = quiz_def.nome_quiz # ARMAZENA O NOME
         except QuizDefinicao.DoesNotExist:
             perguntas_qs = Pergunta.objects.none()
     else:
+        # Lógica existente para filtros de dificuldade e categoria
         if difficulty_levels_filter and 'all' not in (level.lower() for level in difficulty_levels_filter):
             normalized_difficulty_filter = [level.lower() for level in difficulty_levels_filter]
             q_difficulty_objects = Q()
@@ -151,6 +154,7 @@ def get_quiz_data_dict(
             else:
                 perguntas_qs = Pergunta.objects.none()
 
+        # Lógica existente para número de perguntas
         num_perguntas_a_selecionar = 0
         if quiz_mode == SessoesQuizUsuario.ModoQuiz.RAPIDO:
             try:
@@ -170,7 +174,10 @@ def get_quiz_data_dict(
             if len(all_matching_question_ids) > num_perguntas_a_selecionar:
                 selected_ids = random.sample(all_matching_question_ids, num_perguntas_a_selecionar)
                 perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids).order_by('?')
+            # else: # Se menos perguntas disponíveis do que o solicitado, usa todas.
+            #    perguntas_qs = perguntas_qs.order_by('?') # Já está filtrado, apenas embaralha.
 
+    # Lógica existente de prefetch e formatação de dados
     perguntas_data_qs = perguntas_qs.prefetch_related(
         Prefetch('categorias', queryset=Categoria.objects.all().only('pk', 'nome_categoria')),
         Prefetch('opcoes', queryset=OpcaoResposta.objects.all().only('pk', 'pergunta_id', 'texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao'))
@@ -223,7 +230,8 @@ def get_quiz_data_dict(
     return {
         'perguntas': perguntas_data_list,
         'categorias': categorias_data_list,
-        'opcoesResposta': [opt for opts_list in opcoes_dict_por_pergunta.values() for opt in opts_list]
+        'opcoesResposta': [opt for opts_list in opcoes_dict_por_pergunta.values() for opt in opts_list],
+        'quiz_definition_name': quiz_definition_name_to_return # ADICIONADO AO RETORNO
     }
 
 # **** FUNÇÃO ADICIONADA AQUI ****
@@ -799,7 +807,7 @@ def api_resume_quiz_session_view(request):
         sessao_ativa = SessoesQuizUsuario.objects.filter(
             id_usuario=request.user,
             status_sessao=SessoesQuizUsuario.StatusSessao.EM_ANDAMENTO
-        ).order_by('-data_inicio').first()
+        ).order_by('-data_inicio').select_related('id_quiz_definicao').first() # ADICIONADO select_related
 
         if not sessao_ativa:
             return JsonResponse({'status': 'not_found', 'message': 'Nenhuma sessão de quiz em andamento encontrada.'}, status=404)
@@ -810,7 +818,7 @@ def api_resume_quiz_session_view(request):
             return JsonResponse({'status': 'error', 'message': 'Sessão corrompida, não foi possível retomar.'}, status=500)
 
         ids_perguntas_ordenadas = sessao_ativa.ids_perguntas_json
-        
+
         preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ids_perguntas_ordenadas)])
         perguntas_qs = Pergunta.objects.filter(
             pk__in=ids_perguntas_ordenadas, ativa=True
@@ -827,7 +835,7 @@ def api_resume_quiz_session_view(request):
 
         perguntas_data_list = []
         opcoes_dict_por_pergunta = defaultdict(list)
-        
+
         opcoes_para_perguntas_da_sessao = OpcaoResposta.objects.filter(pergunta_id__in=ids_perguntas_ordenadas)
         for o in opcoes_para_perguntas_da_sessao:
             opcoes_dict_por_pergunta[o.pergunta_id].append({
@@ -846,7 +854,7 @@ def api_resume_quiz_session_view(request):
                 'is_favorited': p.pk in user_favorite_ids,
                 'opcoes': sorted(opcoes_dict_por_pergunta.get(p.pk, []), key=lambda x: x.get('ordem_exibicao', 0))
             })
-        
+
         respostas_dadas_qs = RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_ativa)
         respostas_dadas_map = {
             resp.id_pergunta_id: {
@@ -861,12 +869,18 @@ def api_resume_quiz_session_view(request):
             'id_categoria_pai': c.id_categoria_pai_id, 'descricao_categoria': c.descricao_categoria}
             for c in todas_categorias_qs
         ]
+        
+        # ADICIONADO: Obter nome da definição do quiz
+        quiz_definition_name = None
+        if sessao_ativa.id_quiz_definicao:
+            quiz_definition_name = sessao_ativa.id_quiz_definicao.nome_quiz
 
         return JsonResponse({
                 'status': 'success',
                 'session_id': sessao_ativa.pk,
                 'modo_quiz': sessao_ativa.modo_quiz,
                 'id_quiz_definicao': sessao_ativa.id_quiz_definicao_id,
+                'quiz_definition_name': quiz_definition_name, # ADICIONADO AO JSON
                 'perguntas': perguntas_data_list,
                 'categorias': categorias_data_list,
                 'respostas_dadas': respostas_dadas_map,
@@ -874,7 +888,7 @@ def api_resume_quiz_session_view(request):
                 'pontuacao_atual': sessao_ativa.pontuacao_final,
                 'total_acertos_atual': sessao_ativa.total_acertos,
                 'total_erros_atual': sessao_ativa.total_erros,
-                'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(), # <<< ADICIONAR ESTA LINHA
+                'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(),
             })
 
     except Exception as e:

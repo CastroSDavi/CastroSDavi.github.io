@@ -4,67 +4,73 @@ import { QUICK_QUIZ_COUNT } from '../../utils/constants.js';
 
 export default class QuizState {
     constructor() {
-        this.resetQuizStateForNewSession(); // Inicializa com valores padrão
+        console.log("QuizState.js: CONSTRUCTOR - Instância QuizState criada.");
+        this.resetQuizStateForNewSession(); 
 
-        // Filtros que foram usados para buscar o currentQuestionsSet para um quiz dinâmico
-        // Estes são definidos ANTES de iniciar um quiz dinâmico.
         this.activeFiltersForCurrentSet = {
             category_ids: [],
             difficulty_levels: ['all'],
             num_questions: null,
         };
 
-        // Informações da sessão atual, preenchidas ao iniciar ou retomar
         this.currentSessionId = null;
-        this.currentQuizMode = null; // Ex: 'Rápido', 'Por Categoria', 'Definido'
-        this.currentQuizDefinicaoId = null; // ID se for um quiz pré-definido
+        this.currentQuizMode = null;
+        this.currentQuizDefinicaoId = null;
+
+        this.quizDisplayContext = { displayMode: 'none', mainQuizTitle: '' };
+        console.log("QuizState.js: CONSTRUCTOR - quizDisplayContext inicializado:", JSON.stringify(this.quizDisplayContext));
+
 
         this.quickQuizDefaultCount = QUICK_QUIZ_COUNT;
-        // console.log("QUIZSTATE.JS: Estado inicial dos filtros:", JSON.parse(JSON.stringify(this.activeFiltersForCurrentSet)));
     }
 
-    /**
-     * Inicializa o estado do quiz com um novo conjunto de perguntas.
-     * @param {Array<Object>} questions - Array de objetos de pergunta do backend.
-     * @param {string} mode - O modo do quiz (ex: 'Rápido', 'Por Categoria', 'Definido').
-     * @param {number|null} [sessionId=null] - O ID da sessão do backend.
-     * @param {number|null} [quizDefId=null] - O ID da definição do quiz, se aplicável.
-     */
     initializeWithQuestions(questions, mode, sessionId = null, quizDefId = null) {
+        console.log(`QuizState.js: initializeWithQuestions - Entrou. Modo: ${mode}, SessãoID: ${sessionId}, QuizDefID: ${quizDefId}, N_Perguntas: ${questions?.length}`);
         this.currentQuestionsSet = questions.map(q => ({
-            ...q, // Dados originais da pergunta (id_pergunta, texto_pergunta, opcoes, etc.)
-            respostaDadaId: undefined,       // ID da opção que o usuário selecionou nesta sessão
-            foiCorretaNaSessao: undefined, // true, false, ou undefined se não respondida/avaliada
-            foiPulada: undefined,            // true se o usuário pulou a questão
-            // 'is_favorited' já deve vir do backend em 'q'
+            ...q,
+            respostaDadaId: undefined,
+            foiCorretaNaSessao: undefined,
+            foiPulada: undefined,
         }));
         this.currentQuestionIndex = 0;
         this.isInitialQuestionLoad = true;
         this.currentSessionId = sessionId;
         this.currentQuizMode = mode;
         this.currentQuizDefinicaoId = quizDefId;
-        // console.log(`QUIZSTATE.JS: initializeWithQuestions - Quiz inicializado. Modo: ${mode}, Sessão ID: ${sessionId}, Def ID: ${quizDefId}, Perguntas: ${questions.length}`);
+        console.log("QuizState.js: initializeWithQuestions - Estado inicializado.");
     }
 
-    /**
-     * Reconstitui o estado de um quiz existente (retomado).
-     * @param {Object} resumeData - Dados da sessão recebidos da API api_resume_quiz_session.
-     * @param {number} resumeData.session_id
-     * @param {string} resumeData.modo_quiz
-     * @param {number|null} resumeData.id_quiz_definicao
-     * @param {Array<Object>} resumeData.perguntas - Lista de perguntas da sessão.
-     * @param {Object} resumeData.respostas_dadas - Mapa de pergunta_id para { opcao_selecionada_id, foi_correta }.
-     * @param {number|null} resumeData.indice_ultima_pergunta_vista
-     */
     rehydrateFromResumedSession(resumeData) {
+        console.log("QuizState.js: rehydrateFromResumedSession - Entrou. resumeData:", resumeData ? "Recebido" : "Nulo/Indefinido");
+        if (!resumeData) {
+            console.error("QuizState.js: rehydrateFromResumedSession - resumeData é nulo ou indefinido.");
+            return;
+        }
         this.currentSessionId = resumeData.session_id;
         this.currentQuizMode = resumeData.modo_quiz;
         this.currentQuizDefinicaoId = resumeData.id_quiz_definicao;
 
+        let displayMode = 'challenge';
+        let mainQuizTitle = '';
+
+        // MODOS DE QUIZ DO BACKEND: 'Definido', 'Rápido', 'Por Categoria'
+        if (this.currentQuizMode === 'Definido' && resumeData.quiz_definition_name) {
+            displayMode = 'focused';
+            mainQuizTitle = resumeData.quiz_definition_name;
+        } else if (this.currentQuizMode === 'Rápido') {
+            displayMode = 'challenge';
+            mainQuizTitle = 'Quiz Rápido';
+        } else if (this.currentQuizMode === 'Por Categoria') {
+            displayMode = 'challenge';
+            mainQuizTitle = 'Desafio Personalizado';
+        }
+        console.log(`QuizState.js: rehydrateFromResumedSession - Antes de setQuizDisplayContext. Modo Determinado: ${displayMode}, Título: ${mainQuizTitle}`);
+        this.setQuizDisplayContext(displayMode, mainQuizTitle);
+
         this.currentQuestionsSet = resumeData.perguntas.map(q => {
-            const respostaSalva = resumeData.respostas_dadas[q.id_pergunta];
+            const respostaSalva = resumeData.respostas_dadas ? resumeData.respostas_dadas[q.id_pergunta] : null;
             return {
-                ...q, // Dados da pergunta (incluindo 'is_favorited' e 'opcoes' do backend)
+                ...q,
                 respostaDadaId: respostaSalva ? respostaSalva.opcao_selecionada_id : undefined,
                 foiCorretaNaSessao: respostaSalva ? respostaSalva.foi_correta : undefined,
                 foiPulada: respostaSalva && respostaSalva.opcao_selecionada_id === null ? true : undefined,
@@ -72,46 +78,53 @@ export default class QuizState {
         });
 
         this.currentQuestionIndex = resumeData.indice_ultima_pergunta_vista !== null ? resumeData.indice_ultima_pergunta_vista : 0;
-        this.isInitialQuestionLoad = true; // Tratar como uma carga inicial para a UI
-        // console.log(`QUIZSTATE.JS: rehydrateFromResumedSession - Estado reconstituído. Sessão ID: ${this.currentSessionId}, Índice: ${this.currentQuestionIndex}`);
+        this.isInitialQuestionLoad = true;
+        console.log("QuizState.js: rehydrateFromResumedSession - Estado rehidratado. currentQuestionIndex:", this.currentQuestionIndex);
     }
 
-
     resetQuizStateForNewSession() {
+        console.log("QuizState.js: resetQuizStateForNewSession - Entrou.");
         this.currentQuestionsSet = [];
         this.currentQuestionIndex = 0;
         this.isInitialQuestionLoad = true;
         this.currentSessionId = null;
         this.currentQuizMode = null;
         this.currentQuizDefinicaoId = null;
-        // Os activeFiltersForCurrentSet NÃO são resetados aqui,
-        // eles são redefinidos antes de buscar um novo quiz dinâmico.
-        // console.log("QUIZSTATE.JS: resetQuizStateForNewSession - Estado da sessão de quiz resetado.");
+        this.quizDisplayContext = { displayMode: 'none', mainQuizTitle: '' };
+        console.log("QuizState.js: resetQuizStateForNewSession - quizDisplayContext resetado:", JSON.stringify(this.quizDisplayContext));
     }
 
     fullReset() {
+        console.log("QuizState.js: fullReset - Entrou.");
         this.resetQuizStateForNewSession();
-        // Reseta todos os filtros para o padrão ao sair completamente do modo quiz
         this.activeFiltersForCurrentSet = {
             category_ids: [],
             difficulty_levels: ['all'],
             num_questions: null,
         };
-        // console.log("QUIZSTATE.JS: fullReset - Estado completo resetado, incluindo filtros.");
+        console.log("QuizState.js: fullReset - Filtros resetados.");
+    }
+
+    setQuizDisplayContext(displayMode, mainQuizTitle) {
+        console.log(`QuizState.js: setQuizDisplayContext - Entrou. Tentando definir displayMode='${displayMode}', mainQuizTitle='${mainQuizTitle}'`);
+        this.quizDisplayContext = { displayMode, mainQuizTitle };
+        console.log("QuizState.js: setQuizDisplayContext - quizDisplayContext AGORA é:", JSON.stringify(this.quizDisplayContext));
     }
 
     setQuizFiltersForNewDynamicQuiz(categories = [], difficulties = ['all'], numQuestions = null) {
+        console.log("QuizState.js: setQuizFiltersForNewDynamicQuiz - Entrou. Categorias:", categories, "Dificuldades:", difficulties, "NumPerguntas:", numQuestions);
         this.activeFiltersForCurrentSet = {
             category_ids: categories,
             difficulty_levels: difficulties,
             num_questions: numQuestions,
         };
-        // console.log("QUIZSTATE.JS: setQuizFiltersForNewDynamicQuiz - Filtros para novo quiz dinâmico:", JSON.parse(JSON.stringify(this.activeFiltersForCurrentSet)));
     }
 
     // --- Getters ---
     getCurrentQuestion() {
-        return this.currentQuestionsSet[this.currentQuestionIndex] ?? null;
+        const question = this.currentQuestionsSet[this.currentQuestionIndex] ?? null;
+        // console.log("QuizState.js: getCurrentQuestion - Índice:", this.currentQuestionIndex, "Pergunta:", question ? `ID ${question.id_pergunta}`: "Nula");
+        return question;
     }
 
     getCurrentQuestionNumberForDisplay() {
@@ -130,6 +143,11 @@ export default class QuizState {
         return this.currentQuizMode;
     }
 
+    getQuizDisplayContext() {
+        // console.log("QuizState.js: getQuizDisplayContext - Retornando:", JSON.stringify(this.quizDisplayContext));
+        return this.quizDisplayContext;
+    }
+
     getQuizDefinicaoId() {
         return this.currentQuizDefinicaoId;
     }
@@ -140,7 +158,6 @@ export default class QuizState {
     }
 
     isQuizComplete() {
-        // Considera completo se o índice estiver além da última pergunta E houver perguntas no set
         return this.currentQuestionsSet.length > 0 && this.currentQuestionIndex >= this.currentQuestionsSet.length;
     }
 
@@ -154,31 +171,31 @@ export default class QuizState {
 
     // --- Modificadores de Estado ---
     recordAnswer(selectedOptionId, isCorrect) {
+        // console.log(`QuizState.js: recordAnswer - Entrou. OpçãoID: ${selectedOptionId}, Correta: ${isCorrect}`);
         const currentQuestion = this.getCurrentQuestion();
         if (currentQuestion && currentQuestion.respostaDadaId === undefined) {
             currentQuestion.respostaDadaId = selectedOptionId;
             currentQuestion.foiCorretaNaSessao = isCorrect;
             currentQuestion.foiPulada = false;
-            // console.log(`QUIZSTATE.JS: recordAnswer - Pergunta ID ${currentQuestion.id_pergunta} respondida. Correta: ${isCorrect}`);
             return true;
         }
-        // console.warn(`QUIZSTATE.JS: recordAnswer - Não foi possível registrar. Pergunta atual:`, currentQuestion);
         return false;
     }
 
     markAsSkipped() {
+        // console.log("QuizState.js: markAsSkipped - Entrou.");
         const currentQuestion = this.getCurrentQuestion();
         if (currentQuestion && currentQuestion.respostaDadaId === undefined) {
             currentQuestion.foiPulada = true;
-            currentQuestion.respostaDadaId = null; // Indica que foi processada (pulada)
-            currentQuestion.foiCorretaNaSessao = undefined; // Não é nem correta nem incorreta
-            // console.log(`QUIZSTATE.JS: markAsSkipped - Pergunta ID ${currentQuestion.id_pergunta} marcada como pulada.`);
+            currentQuestion.respostaDadaId = null;
+            currentQuestion.foiCorretaNaSessao = undefined;
             return true;
         }
         return false;
     }
 
     updateFavoriteStatusForCurrentQuestion(isFavorited) {
+        // console.log("QuizState.js: updateFavoriteStatusForCurrentQuestion - Entrou. Favoritada:", isFavorited);
         const currentQuestion = this.getCurrentQuestion();
         if (currentQuestion) {
             currentQuestion.is_favorited = isFavorited;
@@ -192,6 +209,7 @@ export default class QuizState {
     }
 
     goToQuestion(index) {
+        // console.log("QuizState.js: goToQuestion - Entrou. Índice:", index);
         if (index >= 0 && index < this.currentQuestionsSet.length) {
             this.currentQuestionIndex = index;
             this.markNavigated();
@@ -201,7 +219,8 @@ export default class QuizState {
     }
 
     goToNextQuestion() {
-        if (this.currentQuestionIndex < this.currentQuestionsSet.length) { // Permite avançar até o índice len (para sinalizar fim)
+        // console.log("QuizState.js: goToNextQuestion - Entrou. Índice atual:", this.currentQuestionIndex);
+        if (this.currentQuestionIndex < this.currentQuestionsSet.length) {
             this.currentQuestionIndex++;
             this.markNavigated();
             return true;
@@ -210,6 +229,7 @@ export default class QuizState {
     }
 
     goToPreviousQuestion() {
+        // console.log("QuizState.js: goToPreviousQuestion - Entrou. Índice atual:", this.currentQuestionIndex);
         if (this.currentQuestionIndex > 0) {
             this.currentQuestionIndex--;
             this.markNavigated();
@@ -218,7 +238,7 @@ export default class QuizState {
         return false;
     }
 
-    getUserResponsesForCurrentSet() { // Para eventual uso, não diretamente para o backend neste fluxo
+    getUserResponsesForCurrentSet() {
         return this.currentQuestionsSet.map(q => ({
             id_pergunta: q.id_pergunta,
             respostaDadaId: q.respostaDadaId,

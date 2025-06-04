@@ -4,16 +4,15 @@ import { QUESTOES_POR_PAGINA_GRID, TRANSITION_DURATION } from '../utils/constant
 
 export default class QuestionDisplay {
     constructor(quizUIInstance, quizStateInstance, quizDataInstance, callbacks = {}) {
-        // console.log("QUESTIONDISPLAY.JS: Constructor - Instanciando QuestionDisplay.");
-        this.quizUI = quizUIInstance; // Para acesso a elementos e utils de UI
-        this.quizState = quizStateInstance;
+        console.log("QuestionDisplay.js: CONSTRUCTOR - Entrou. QuizState recebido:", quizStateInstance ? "Instância" : "Nulo/Indefinido");
+        this.quizUI = quizUIInstance;
+        this.quizState = quizStateInstance; 
         this.quizData = quizDataInstance;
-        this.elements = this.quizUI.elements; // Atalho para os elementos DOM cacheados em QuizUI
+        this.elements = this.quizUI.elements;
 
-        // Callbacks para interações
-        this.answerCallback = callbacks.answerCallback; // (selectedOptionId) => {}
-        this.navigationCallback = callbacks.navigationCallback; // (targetIndex | 'next' | 'prev') => {}
-        this.toggleFavoriteCallback = callbacks.toggleFavoriteCallback; // () => {}
+        this.answerCallback = callbacks.answerCallback;
+        this.navigationCallback = callbacks.navigationCallback;
+        this.toggleFavoriteCallback = callbacks.toggleFavoriteCallback;
 
         this._setupNavigationListeners();
     }
@@ -28,20 +27,6 @@ export default class QuestionDisplay {
         this.elements.btnToggleFavorite?.addEventListener('click', () => {
             if (this.toggleFavoriteCallback) this.toggleFavoriteCallback();
         });
-    }
-
-    _getCategoriaProfundidade(cat, allCats) {
-        if (!cat || !allCats || !Array.isArray(allCats)) return -1;
-        let depth = 0;
-        let parentId = cat.id_categoria_pai;
-        let iterations = 0;
-        while (parentId != null && iterations < 10) { // Limitador de iterações
-            depth++;
-            const parent = allCats.find(c => c.id_categoria === parentId);
-            parentId = parent ? parent.id_categoria_pai : null;
-            iterations++;
-        }
-        return depth;
     }
 
     _displayQuestionImage(url, qNum) {
@@ -60,137 +45,76 @@ export default class QuestionDisplay {
         }
     }
 
-    _formatCategoriaDisplay(question, todasCategorias, isQuickQuizMode) {
-        let tituloCatDisplay = "Questão"; // Fallback inicial
-        let fullCategoryTooltip = "Categorias não especificadas";
-        const MAX_DISPLAY_LENGTH = 120; // Máximo de caracteres para o título antes de truncar
-
-        if (isQuickQuizMode) {
-            tituloCatDisplay = "Quiz Rápido";
-            fullCategoryTooltip = "Modo Quiz Rápido";
-        } else {
-            const idsCatPerg = question.categoria_ids || [];
-            const totalCategoriasPergunta = idsCatPerg.length;
-
-            if (totalCategoriasPergunta > 0 && Array.isArray(todasCategorias) && todasCategorias.length > 0) {
-                const nomesCategoriasQuestao = idsCatPerg
-                    .map(id => todasCategorias.find(cat => cat.id_categoria === id)?.nome_categoria)
-                    .filter(name => name);
-                
-                if (nomesCategoriasQuestao.length > 0) {
-                    fullCategoryTooltip = `Categorias: ${nomesCategoriasQuestao.join(', ')}`;
-                }
-
-                // Encontrar a categoria mais específica (mais profunda)
-                let idCatMaisEspecifica = idsCatPerg[0];
-                if (totalCategoriasPergunta > 1) {
-                    const catObjsPerg = todasCategorias.filter(c => idsCatPerg.includes(c.id_categoria));
-                    if (catObjsPerg.length > 0) {
-                        // Ordena por profundidade (maior primeiro) e depois por nome
-                        catObjsPerg.sort((a, b) => {
-                            const depthA = this._getCategoriaProfundidade(a, todasCategorias);
-                            const depthB = this._getCategoriaProfundidade(b, todasCategorias);
-                            if (depthB !== depthA) {
-                                return depthB - depthA; // Mais profundo primeiro
-                            }
-                            return a.nome_categoria.localeCompare(b.nome_categoria); // Ordem alfabética para desempate
-                        });
-                        idCatMaisEspecifica = catObjsPerg[0].id_categoria;
-                    }
-                }
-
-                // Montar o breadcrumb para a categoria mais específica
-                let caminhoBreadcrumb = [];
-                let idAtual = idCatMaisEspecifica;
-                let iteracoes = 0;
-                const idsNoBreadcrumb = new Set();
-
-                while (idAtual != null && iteracoes < 5) {
-                    const catEncontrada = todasCategorias.find(cat => cat.id_categoria === idAtual);
-                    if (catEncontrada) {
-                        caminhoBreadcrumb.unshift(catEncontrada.nome_categoria);
-                        idsNoBreadcrumb.add(catEncontrada.id_categoria);
-                        idAtual = catEncontrada.id_categoria_pai;
-                    } else {
-                        break;
-                    }
-                    iteracoes++;
-                }
-
-                let breadcrumbDisplay = caminhoBreadcrumb.length > 0 ? caminhoBreadcrumb.join(' › ') : "Tópicos Diversos";
-                
-                // Truncar o breadcrumb principal se for muito longo
-                if (breadcrumbDisplay.length > MAX_DISPLAY_LENGTH) {
-                    breadcrumbDisplay = `${breadcrumbDisplay.substring(0, MAX_DISPLAY_LENGTH - 3)}...`;
-                }
-
-                tituloCatDisplay = breadcrumbDisplay;
-
-                // Calcular quantas categorias *não* estão representadas pelo breadcrumb principal
-                // Consideramos uma categoria como "outra" se ela não faz parte da linhagem da mais específica
-                // ou se a pergunta está em múltiplas categorias de mesmo nível.
-                let outrasCategoriasCount = 0;
-                if (totalCategoriasPergunta > 1) {
-                    // Conta categorias que não são a 'idCatMaisEspecifica' nem seus pais diretos.
-                    // Uma forma simples é ver se há mais categorias do que as que formam o breadcrumb.
-                    // Se o breadcrumb tem X itens, e a pergunta tem Y categorias, Y - (número de categorias unicas no breadcrumb)
-                    // Mas, é mais simples contar se há mais de uma categoria raiz para a pergunta,
-                    // ou se a pergunta está em ramos diferentes.
-                    // Vamos usar uma contagem mais direta: se há mais de uma categoria atribuída E o breadcrumb representa apenas uma delas.
-
-                    // Se o breadcrumb representa apenas uma linha hierárquica, e há mais categorias
-                    // associadas à pergunta, então há "outras".
-                    // A contagem de 'idsNoBreadcrumb' reflete quantas categorias ÚNICAS compõem o breadcrumb.
-                    if (totalCategoriasPergunta > idsNoBreadcrumb.size) {
-                        outrasCategoriasCount = totalCategoriasPergunta - idsNoBreadcrumb.size;
-                    } else if (totalCategoriasPergunta > 1 && idsNoBreadcrumb.size === 1) {
-                        // Caso especial: breadcrumb é de uma categoria única, mas a pergunta tem mais (ex: A, B, C e exibimos A)
-                        outrasCategoriasCount = totalCategoriasPergunta - 1;
-                    }
-                }
-
-
-                if (outrasCategoriasCount > 0) {
-                    tituloCatDisplay += ` (+${outrasCategoriasCount} outras)`;
-                }
-
-            } else {
-                tituloCatDisplay = "Tópicos Diversos";
-                fullCategoryTooltip = "Categorias não especificadas";
-            }
-        }
-
-        return { display: tituloCatDisplay, tooltip: fullCategoryTooltip, allCategoryIds: question.categoria_ids || [] };
-    }
-
-
     displayCurrentQuestion() {
+        console.log("QuestionDisplay.js: displayCurrentQuestion - Entrou.");
+        if (!this.quizState) {
+            console.error("QuestionDisplay.js: displayCurrentQuestion - ERRO CRÍTICO: this.quizState é NULO/INDEFINIDO.");
+            return;
+        }
         const question = this.quizState.getCurrentQuestion();
-        if (!question) {
+        console.log("QuestionDisplay.js: displayCurrentQuestion - Pergunta atual do estado:", question ? `ID ${question.id_pergunta}` : "Nula");
+
+        if (!question || typeof question.id_pergunta === 'undefined') {
+            console.error("QuestionDisplay.js: displayCurrentQuestion - Pergunta atual é inválida ou nula. Saindo.", question);
             return;
         }
 
         const qNum = this.quizState.getCurrentQuestionNumberForDisplay();
         const totalQ = this.quizState.getTotalFilteredQuestions();
-        const todasCategorias = this.quizData.getCategorias();
-        const isQuickQuizMode = this.quizState.isQuickQuizMode;
-        const options = this.quizData.getOpcoesPorPerguntaId(question.id_pergunta);
+        const options = question.opcoes; 
 
-        const categoriaInfo = this._formatCategoriaDisplay(question, todasCategorias, isQuickQuizMode);
+        if (!options || !Array.isArray(options)) {
+            console.warn(`QuestionDisplay.js: displayCurrentQuestion - Opções ausentes ou em formato inválido para a pergunta ID ${question.id_pergunta}.`, question);
+            // A função generateAnswerButtons lidará com a ausência de opções.
+        }
+        console.log("QuestionDisplay.js: displayCurrentQuestion - Opções para pergunta ID", question.id_pergunta, ":", options ? options.length : "Nenhuma/Inválida");
 
-        if (this.elements.categoriaTitulo) {
-            this.elements.categoriaTitulo.innerText = categoriaInfo.display;
-            this.elements.categoriaTitulo.setAttribute('title', categoriaInfo.tooltip);
-            this.elements.categoriaTitulo.dataset.categoriaIds = categoriaInfo.allCategoryIds.join(',');
+        // --- LÓGICA DO TÍTULO DA QUESTÃO ---
+        if (this.elements.idQuestao) {
+            this.elements.idQuestao.innerText = qNum;
+            console.log("QuestionDisplay.js: displayCurrentQuestion - Número da questão (#id-questao) definido:", qNum);
+        } else {
+            console.warn("QuestionDisplay.js: displayCurrentQuestion - Elemento #id-questao não encontrado.");
         }
 
-        if (this.elements.idQuestao) this.elements.idQuestao.innerText = qNum;
-        if (this.elements.perguntaTexto) this.elements.perguntaTexto.textContent = question.texto_pergunta;
-        if (this.elements.referenciaQuestao) this.elements.referenciaQuestao.textContent = `Fonte: ${question.referencia_bibliografica || "Não informada"}`;
+
+        const quizDisplayContext = this.quizState.getQuizDisplayContext();
+        console.log("QuestionDisplay.js: displayCurrentQuestion - quizDisplayContext obtido:", quizDisplayContext);
+        if (this.elements.categoriaTitulo) {
+            if (quizDisplayContext && quizDisplayContext.mainQuizTitle &&
+                (quizDisplayContext.displayMode === 'focused' || quizDisplayContext.displayMode === 'challenge')) {
+                this.elements.categoriaTitulo.innerText = quizDisplayContext.mainQuizTitle;
+                this.elements.categoriaTitulo.setAttribute('title', quizDisplayContext.mainQuizTitle);
+                this.quizUI.showElement(this.elements.categoriaTitulo);
+                console.log("QuestionDisplay.js: displayCurrentQuestion - Título do quiz (#categoria-titulo) definido:", quizDisplayContext.mainQuizTitle);
+            } else {
+                this.quizUI.hideElement(this.elements.categoriaTitulo);
+                this.elements.categoriaTitulo.innerText = '';
+                this.elements.categoriaTitulo.removeAttribute('title');
+                console.log("QuestionDisplay.js: displayCurrentQuestion - Título do quiz (#categoria-titulo) oculto/limpo.");
+            }
+        } else {
+            console.warn("QuestionDisplay.js: displayCurrentQuestion - Elemento #categoria-titulo não encontrado.");
+        }
+        // --- FIM DA LÓGICA DO TÍTULO ---
+
+        if (this.elements.perguntaTexto) {
+             this.elements.perguntaTexto.textContent = question.texto_pergunta || "Texto da pergunta indisponível.";
+             console.log("QuestionDisplay.js: displayCurrentQuestion - Texto da pergunta (#pergunta-texto) definido.");
+        } else {
+            console.warn("QuestionDisplay.js: displayCurrentQuestion - Elemento #pergunta-texto não encontrado.");
+        }
+
+        if (this.elements.referenciaQuestao) {
+            this.elements.referenciaQuestao.textContent = `Fonte: ${question.referencia_bibliografica || "Não informada"}`;
+        }
 
         this._displayQuestionImage(question.url_imagem, qNum);
         this.updateProgressBar(qNum, totalQ);
-        this.elements.questionTitle?.focus({ preventScroll: true });
+        
+        // Focar no título pode ser desorientador se a página rolar.
+        // Considerar focar no primeiro elemento interativo (como a primeira opção de resposta) se apropriado
+        // this.elements.questionTitle?.focus({ preventScroll: true }); 
 
         if (this.elements.btnToggleFavorite) {
             if (this.quizUI.userIsAuthenticated && question.id_pergunta !== undefined) {
@@ -203,33 +127,51 @@ export default class QuestionDisplay {
                 this.quizUI.hideElement(this.elements.btnToggleFavorite);
             }
         }
-        
-        this.generateAnswerButtons(question.id_pergunta, options, question.respostaDadaId);
+        console.log("QuestionDisplay.js: displayCurrentQuestion - Chamando generateAnswerButtons.");
+        this.generateAnswerButtons(question.id_pergunta, options || [], question.respostaDadaId);
 
         if (question.respostaDadaId !== undefined) {
+            console.log("QuestionDisplay.js: displayCurrentQuestion - Pergunta já respondida. ID da resposta:", question.respostaDadaId);
             this.disableAnswers();
             if (question.respostaDadaId !== null) { 
-                this.applyAnswerFeedback(question.respostaDadaId, options);
+                this.applyAnswerFeedback(question.respostaDadaId, options || []);
             }
         }
-        
-        this.quizUI.hideElement(this.elements.btnToggleExplanation);
-        if (this.quizUI.modalManager) this.quizUI.modalManager.toggleExplanationModal(false); 
 
-        this.updateNavigationButtons();
+        this.quizUI.hideElement(this.elements.btnToggleExplanation);
+        if (this.quizUI.modalManager) this.quizUI.modalManager.toggleExplanationModal(false);
+
+        console.log("QuestionDisplay.js: displayCurrentQuestion - Chamando updateNavigationButtons e renderQuestionGrid.");
+        this.updateNavigationButtons(); 
         this.renderQuestionGrid();
+        console.log("QuestionDisplay.js: displayCurrentQuestion - Finalizado.");
     }
 
     generateAnswerButtons(perguntaId, opcoes, respostaDadaId) {
+        console.log(`QuestionDisplay.js: generateAnswerButtons - Pergunta ID: ${perguntaId}, N_Opções: ${opcoes?.length}`);
         const container = this.elements.respostasContainer;
-        if (!container) return;
+        if (!container) {
+            console.error("QuestionDisplay.js: generateAnswerButtons - ERRO: Container de respostas não encontrado.");
+            return;
+        }
         container.innerHTML = '';
-        if (!opcoes || !Array.isArray(opcoes) || opcoes.length === 0) return;
+        
+        if (!opcoes || !Array.isArray(opcoes)) { 
+            console.warn(`QuestionDisplay.js: generateAnswerButtons - 'opcoes' não é um array ou é nulo para pergunta ID ${perguntaId}. Não renderizando botões.`);
+            return;
+        }
+        if (opcoes.length === 0) {
+            console.log(`QuestionDisplay.js: generateAnswerButtons - Nenhuma opção para renderizar para a pergunta ID ${perguntaId}.`);
+        }
 
         const temResposta = typeof respostaDadaId !== 'undefined' && respostaDadaId !== null;
         const baseClass = 'question-display__answer-option';
 
         opcoes.forEach(opt => {
+            if (!opt || typeof opt.id_opcao_resposta === 'undefined' || typeof opt.texto_opcao === 'undefined') {
+                console.warn("QuestionDisplay.js: generateAnswerButtons - Opção inválida encontrada e pulada:", opt);
+                return; 
+            }
             const button = document.createElement('button');
             button.className = baseClass;
             button.textContent = opt.texto_opcao;
@@ -247,13 +189,15 @@ export default class QuestionDisplay {
             }
             container.appendChild(button);
         });
+        console.log(`QuestionDisplay.js: generateAnswerButtons - Botões de resposta gerados para pergunta ID: ${perguntaId}`);
     }
 
     disableAnswers() {
+        console.log("QuestionDisplay.js: disableAnswers - Desabilitando respostas.");
         const baseClass = 'question-display__answer-option';
         const answeredClass = `${baseClass}--answered`;
         this.elements.respostasContainer?.querySelectorAll(`button.${baseClass}`).forEach(button => {
-            button.onclick = null; 
+            button.onclick = null;
             button.disabled = true;
             button.classList.add(answeredClass);
             button.style.cursor = "default";
@@ -262,22 +206,26 @@ export default class QuestionDisplay {
     }
 
     applyAnswerFeedback(selectedOpId, opcoes) {
+        console.log(`QuestionDisplay.js: applyAnswerFeedback - Aplicando feedback para opção ID: ${selectedOpId}`);
         const baseCl = "question-display__answer-option";
         const corrCl = `${baseCl}--correct`;
         const incorrCl = `${baseCl}--incorrect`;
         let userCorrect = false;
 
-        if (!Array.isArray(opcoes)) return;
+        if (!Array.isArray(opcoes)) {
+             console.warn(`QuestionDisplay.js: applyAnswerFeedback - 'opcoes' não é um array.`);
+            return;
+        }
 
         this.elements.respostasContainer?.querySelectorAll(`button.${baseCl}`).forEach(btn => {
             const btnOpId = parseInt(btn.dataset.opcaoId, 10);
-            const optionData = opcoes.find(op => op.id_opcao_resposta === btnOpId);
+            const optionData = opcoes.find(op => op && op.id_opcao_resposta === btnOpId);
             if (!optionData) return;
 
             if (btnOpId === selectedOpId) {
                 if (optionData.eh_correta) { btn.classList.add(corrCl); userCorrect = true; }
                 else { btn.classList.add(incorrCl); }
-            } else if (optionData.eh_correta) { 
+            } else if (optionData.eh_correta) {
                 btn.classList.add(corrCl);
             }
         });
@@ -288,16 +236,18 @@ export default class QuestionDisplay {
 
         const currentQ = this.quizState?.getCurrentQuestion();
         const hasGeneralExplanation = currentQ && currentQ.explicacao_resposta && currentQ.explicacao_resposta.trim() !== '';
-        const hasOptionSpecificFeedback = opcoes.some(op => op.feedback_opcao && op.feedback_opcao.trim() !== '');
+        const hasOptionSpecificFeedback = opcoes.some(op => op && op.feedback_opcao && op.feedback_opcao.trim() !== '');
 
         if ((hasGeneralExplanation || hasOptionSpecificFeedback) && this.elements.btnToggleExplanation) {
             this.quizUI.showElement(this.elements.btnToggleExplanation);
         } else {
             this.quizUI.hideElement(this.elements.btnToggleExplanation);
         }
+        console.log("QuestionDisplay.js: applyAnswerFeedback - Feedback aplicado.");
     }
-    
+
     updateProgressBar(current, total) {
+        console.log(`QuestionDisplay.js: updateProgressBar - Progresso: ${current}/${total}`);
         const { progressContainer, progressBarFill, progressText } = this.elements;
         if (progressContainer && progressBarFill && progressText) {
             if (total > 0) {
@@ -313,6 +263,7 @@ export default class QuestionDisplay {
     }
 
     hideProgressBar() {
+        console.log("QuestionDisplay.js: hideProgressBar - Ocultando barra de progresso.");
         this.quizUI.hideElement(this.elements.progressContainer);
         this.quizUI.hideElement(this.elements.progressText);
         if (this.elements.progressBarFill) this.elements.progressBarFill.style.width = "0%";
@@ -320,12 +271,24 @@ export default class QuestionDisplay {
     }
 
     updateNavigationButtons() {
+        console.log("QuestionDisplay.js: updateNavigationButtons - Entrou.");
         const { navigationButtons, prevBtn, nextBtn } = this.elements;
-        if (!navigationButtons || !prevBtn || !nextBtn) return;
+        if (!navigationButtons || !prevBtn || !nextBtn) {
+            console.warn("QuestionDisplay.js: updateNavigationButtons - Elementos de navegação não encontrados.");
+            return;
+        }
+        if (!this.quizState) { 
+            console.error("QuestionDisplay.js: updateNavigationButtons - ERRO CRÍTICO: this.quizState é NULO ou INDEFINIDO.");
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            return;
+        }
 
         const totalQuestions = this.quizState.getTotalFilteredQuestions();
         const isFirst = this.quizState.isFirstQuestion();
-        const isLast = this.quizState.isLastQuestion();
+        const isLast = this.quizState.isLastQuestion(); // CORRIGIDO: Usa this.quizState
+
+        console.log("QuestionDisplay.js: updateNavigationButtons - totalQ:", totalQuestions, "isFirst:", isFirst, "isLast:", isLast);
 
         if (totalQuestions <= 0) {
             this.quizUI.hideElement(navigationButtons);
@@ -333,7 +296,7 @@ export default class QuestionDisplay {
             this.quizUI.showElement(navigationButtons);
             prevBtn.disabled = isFirst;
             nextBtn.disabled = false; 
-            
+
             const nextButtonLabel = nextBtn.querySelector('.button__label') || nextBtn;
             if (isLast) {
                 nextButtonLabel.textContent = "Ver Resultado";
@@ -341,8 +304,9 @@ export default class QuestionDisplay {
                 nextButtonLabel.textContent = "Avançar";
             }
         }
+        console.log("QuestionDisplay.js: updateNavigationButtons - Finalizado.");
     }
-
+    
     _createGridArrow(direction, isDisabled, callback, ariaLabel, extraClasses = []) {
         const button = document.createElement('button');
         button.className = 'question-grid__arrow';
@@ -360,13 +324,25 @@ export default class QuestionDisplay {
         button.appendChild(svgIcon);
         return button;
     }
-    
+
     renderQuestionGrid() {
+        console.log("QuestionDisplay.js: renderQuestionGrid - Entrou.");
         const container = this.elements.questionGridContainer;
-        if (!container) return;
+        if (!container) {
+            console.error("QuestionDisplay.js: renderQuestionGrid - ERRO: Container do grid não encontrado.");
+            return;
+        }
+
+        if (!this.quizState) { 
+            console.error("QuestionDisplay.js: renderQuestionGrid - ERRO CRÍTICO: this.quizState é NULO ou INDEFINIDO.");
+            this.quizUI.hideElement(container);
+            return;
+        }
 
         const questions = this.quizState.currentQuestionsSet;
         const currentIndex = this.quizState.currentQuestionIndex;
+        // console.log("QuestionDisplay.js: renderQuestionGrid - N_Perguntas no set:", questions?.length, "Índice atual:", currentIndex);
+
 
         if (!questions || !Array.isArray(questions) || questions.length === 0) {
             this.quizUI.hideElement(container);
@@ -386,6 +362,10 @@ export default class QuestionDisplay {
 
         for (let i = startIndex; i < endIndex; i++) {
             const questionState = questions[i];
+             if (!questionState) {
+                // console.warn(`QuestionDisplay.js: renderQuestionGrid - Estado da questão indefinido no índice ${i}.`);
+                continue; 
+             }
             const item = document.createElement('button');
             item.className = 'question-grid__item';
             item.textContent = i + 1;
@@ -406,14 +386,16 @@ export default class QuestionDisplay {
             }
             container.appendChild(item);
         }
-        
+
         const nextArrowCallback = () => {
             if (this.navigationCallback) this.navigationCallback(endIndex);
         }
         container.appendChild(this._createGridArrow('next', endIndex >= questions.length, nextArrowCallback, 'Próxima Página de Questões', ['question-grid__arrow--right']));
+        console.log("QuestionDisplay.js: renderQuestionGrid - Finalizado.");
     }
 
     scrollToQuestionStart() {
+        console.log("QuestionDisplay.js: scrollToQuestionStart - Entrou.");
         const titleElement = this.elements.questionTitle;
         if (this.elements.questionSection && !this.elements.questionSection.classList.contains(this.quizUI.hiddenClassName) && titleElement) {
             titleElement.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -421,10 +403,12 @@ export default class QuestionDisplay {
     }
 
     focusNextButton(preventScroll = false) {
+        console.log("QuestionDisplay.js: focusNextButton - Entrou.");
         this.elements.nextBtn?.focus({ preventScroll: preventScroll });
     }
-    
+
     smoothScrollToNextButton() {
+        console.log("QuestionDisplay.js: smoothScrollToNextButton - Entrou.");
         this.elements.navigationButtons?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 }

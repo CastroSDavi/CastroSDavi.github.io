@@ -59,7 +59,7 @@
 /* --- ESTILOS PARA O CABEÇALHO DA QUESTÃO (TÍTULO E BOTÃO FAVORITO) --- */
 .question-header-actions {
     display: flex;
-    align-items: center; /* Alinha verticalmente o título e o botão de favorito */
+    align-items: center;
     justify-content: space-between;
     gap: var(--spacing-sm, 12px);
     margin-bottom: var(--spacing-md, 20px);
@@ -70,27 +70,27 @@
     font-family: var(--font-family-heading);
     margin: 0;
     display: flex;
-    align-items: baseline; /* Alinha a baseline do número e do texto da categoria */
-    gap: var(--spacing-xs, 8px); /* Reduzido o gap para dar mais espaço ao texto */
-    flex-grow: 1; /* Permite que o título ocupe o espaço disponível */
+    align-items: baseline; 
+    gap: var(--spacing-sm, 10px); /* Aumentado ligeiramente o gap entre número e título do quiz */
+    flex-grow: 1; 
     line-height: 1.2;
     scroll-margin-top: var(--spacing-md, 20px);
     color: var(--color-gray-900);
-    min-width: 0; /* MUITO IMPORTANTE: Permite que o flex item encolha se necessário */
+    min-width: 0; 
 }
 
 #id-questao {
-    font-size: 2rem;
+    font-size: 2rem; /* Mantém o tamanho do número da questão */
     font-weight: var(--font-weight-bold);
     color: var(--color-primary-dark);
     line-height: 1;
-    padding-right: var(--spacing-xs, 8px); /* Reduzido o padding para dar mais espaço */
+    padding-right: var(--spacing-sm, 10px); /* Aumentado padding para a barrinha */
     position: relative;
     background-color: transparent;
     border: none;
-    min-width: auto; /* Ou um valor fixo pequeno se preferir, e.g., 40px */
+    min-width: auto; 
     height: auto;
-    flex-shrink: 0; /* Impede que o número da questão seja esmagado */
+    flex-shrink: 0; 
 }
 
 #id-questao::after {
@@ -99,44 +99,41 @@
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 2.5px;
-    height: 65%;
+    width: 3px; /* Barrinha um pouco mais espessa */
+    height: 70%; /* Barrinha um pouco mais alta */
     background-color: var(--color-secondary-green);
     border-radius: 2px;
 }
 
+/* ESTILOS MODIFICADOS PARA #categoria-titulo (AGORA É O TÍTULO GERAL DO QUIZ) */
 #categoria-titulo {
-    font-family: var(--font-family-sans);
-    font-size: var(--font-size-xs, 0.8rem);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-family: var(--font-family-heading); /* Fonte de título */
+    font-size: var(--font-size-h3, 1.4rem); /* Tamanho adequado para título de seção/quiz */
+    font-weight: var(--font-weight-semibold); /* Peso de título */
+    color: var(--color-text-primary); /* Cor de texto principal */
+    text-transform: none; /* Sem uppercase, a menos que desejado para títulos específicos */
+    letter-spacing: normal; /* Espaçamento normal */
+    
     background-color: transparent;
     border: none;
     padding: 0;
-    align-self: flex-end; /* Alinha com a base do número da questão, se #question-title for baseline */
-    padding-bottom: 0.15em;
+    align-self: baseline; /* Alinha com a baseline do #id-questao */
+    padding-bottom: 0.1em; /* Ajuste fino para alinhamento de baseline se necessário */
 
-    /* Lógica de truncamento */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    /* Flexibilidade e Limites */
-    flex-grow: 1; /* Deixa ele tentar ocupar o espaço restante no #question-title */
-    min-width: 50px;  /* Um mínimo para não desaparecer completamente */
-    /* max-width é removido para permitir que ele use o espaço flexível,
-       o truncamento ocorrerá se o conteúdo do #question-title como um todo
-       for limitado pelo .question-header-actions */
-    display: inline-block; /* Ou block, dependendo do alinhamento desejado com #id-questao */
+    flex-grow: 1; 
+    min-width: 50px;  
+    display: inline-block; 
     vertical-align: baseline;
 }
+/* Seletor para esconder #categoria-titulo quando vazio (se o JS não o fizer com u-is-hidden) */
+#categoria-titulo:empty {
+    display: none;
+}
 
-
-/* Os estilos específicos do botão de favorito foram movidos para 
-   assets/css/components/favorite-button.css 
-*/
 
 .quiz-navigation {
     display: flex;
@@ -178,14 +175,10 @@
     }
     #id-questao::after {
         height: 60%;
-        width: 2px;
+        width: 2.5px; /* Barrinha um pouco mais fina em mobile */
     }
     #categoria-titulo {
-      font-size: 0.75rem;
-      letter-spacing: 0.06em;
-      /* Em telas menores, pode ser útil reintroduzir um max-width se o flex não for suficiente,
-         mas tente primeiro sem, deixando o flexbox gerenciar. */
-      /* max-width: 180px; */
+      font-size: 1.15rem; /* Tamanho do título do quiz em tablet */
     }
 
 
@@ -211,16 +204,14 @@
     }
 
     #question-title {
-        gap: var(--spacing-xxs, 5px); /* Menor gap interno no título em telas pequenas */
+        gap: var(--spacing-xs, 8px); 
     }
     #id-questao {
       font-size: 1.4rem;
-      padding-right: var(--spacing-xxs, 5px);
+      padding-right: var(--spacing-xs, 6px);
     }
     #categoria-titulo {
-      font-size: 0.7rem;
-      letter-spacing: 0.05em;
-      /* max-width: 120px;  Exemplo de max-width mais restrito se necessário */
+      font-size: 1rem; /* Tamanho do título do quiz em mobile menor */
     }
 
     .quiz-navigation {

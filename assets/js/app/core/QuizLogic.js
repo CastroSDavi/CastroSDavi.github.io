@@ -9,7 +9,7 @@ export default class QuizLogic {
         this.apiService = apiService;
 
         this.isFetchingQuestions = false;
-        console.log("QuizLogic.js: Construtor - Instância criada.");
+        console.log("QuizLogic.js: CONSTRUCTOR - Instância QuizLogic criada.");
 
         if (this.ui) {
             this.ui.setCallbacks({
@@ -17,58 +17,70 @@ export default class QuizLogic {
                 navigationCallback: this._handleQuestionNavigation.bind(this),
                 toggleFavoriteCallback: this.toggleFavoriteCurrentQuestion.bind(this),
                 endSessionCallback: () => {
+                    console.log("QuizLogic.js: Callback endSessionCallback chamado (para abrir modal de confirmação).");
                     if (this.ui.modalManager) this.ui.modalManager.toggleConfirmModal(true);
                 },
                 restartQuizCallback: this.restartQuiz.bind(this),
             });
+        } else {
+            console.error("QuizLogic.js: CONSTRUCTOR - ERRO: this.ui é NULO ou INDEFINIDO.");
         }
     }
 
     async initializeQuizPage() {
-        console.log("QuizLogic.js: Entrando em initializeQuizPage. this.state:", this.state);
-        if (this.state) {
-            console.log("QuizLogic.js: this.state.isQuizActive existe?", typeof this.state.isQuizActive);
-            // Para o instanceof funcionar corretamente aqui, QuizState precisaria ser importado em QuizLogic.js
-            // Como é apenas para depuração, vamos confiar no typeof por enquanto ou em outras propriedades.
-            // console.log("QuizLogic.js: this.state é uma instância de QuizState?", this.state instanceof QuizState);
-            console.log("QuizLogic.js: this.state tem currentSessionId?", 'currentSessionId' in this.state);
-        } else {
-            console.error("QuizLogic.js: CRITICAL - this.state é undefined em initializeQuizPage.");
-        }
-
-
-        if (this.ui.userIsAuthenticated && (!this.state || typeof this.state.isQuizActive !== 'function' || !this.state.isQuizActive())) {
-            if (!this.state || typeof this.state.isQuizActive !== 'function') {
-                console.error("QuizLogic.js: ERRO - this.state.isQuizActive não é uma função ou this.state é inválido. Valor de this.state:", this.state);
-                if (this.ui.challengeHubInstance) {
-                    this.ui.challengeHubInstance.showHub(); // Fallback para mostrar o hub
-                }
-                return; // Interrompe a tentativa de resumir se o estado for inválido
+        console.log("QuizLogic.js: initializeQuizPage - Entrou.");
+        if (!this.state) {
+            console.error("QuizLogic.js: initializeQuizPage - ERRO CRÍTICO: this.state é NULO ou INDEFINIDO.");
+            if (this.ui?.challengeHubInstance) {
+                console.log("QuizLogic.js: initializeQuizPage - Mostrando Challenge Hub devido a estado nulo.");
+                this.ui.challengeHubInstance.showHub();
             }
-            console.log("QuizLogic.js: initializeQuizPage - Usuário autenticado e sem quiz ativo. Tentando retomar sessão...");
+            return;
+        }
+        const isActive = this.state.isQuizActive ? this.state.isQuizActive() : "ERRO: método isQuizActive ausente";
+        console.log("QuizLogic.js: initializeQuizPage - this.state.isQuizActive:", isActive);
+
+        if (this.ui.userIsAuthenticated && !this.state.isQuizActive()) {
+            console.log("QuizLogic.js: initializeQuizPage - Usuário autenticado, sem quiz ativo. Tentando retomar sessão...");
             const resumed = await this.tryResumeSession();
             if (!resumed && this.ui.challengeHubInstance) {
                 console.log("QuizLogic.js: initializeQuizPage - Sessão não retomada. Mostrando Challenge Hub.");
                 this.ui.challengeHubInstance.showHub();
             }
         } else if (this.ui.challengeHubInstance) {
-            console.log("QuizLogic.js: initializeQuizPage - Usuário não autenticado ou quiz já ativo. Mostrando Challenge Hub.");
-            this.ui.challengeHubInstance.showHub();
+            if(this.state.isQuizActive()){
+                 console.log("QuizLogic.js: initializeQuizPage - Quiz já ativo. Não mostrando Challenge Hub. Deixando UI como está.");
+                 if (this.ui.elements.quizSectionContent?.classList.contains(this.ui.hiddenClassName)) {
+                    console.warn("QuizLogic.js: initializeQuizPage - Quiz ativo, mas quizSectionContent está escondido. Verifique a lógica de exibição da UI.");
+                 }
+            } else {
+                console.log("QuizLogic.js: initializeQuizPage - Usuário não autenticado ou nenhum quiz ativo. Mostrando Challenge Hub.");
+                this.ui.challengeHubInstance.showHub();
+            }
+        } else {
+            console.warn("QuizLogic.js: initializeQuizPage - ChallengeHubInstance não disponível.");
         }
     }
 
     async tryResumeSession() {
-        console.log("QuizLogic.js: tryResumeSession - Iniciando tentativa de retomar sessão.");
+        console.log("QuizLogic.js: tryResumeSession - Entrou.");
+        if (!this.apiService) {
+            console.error("QuizLogic.js: tryResumeSession - ERRO: apiService não está definido.");
+            return false;
+        }
         try {
             const resumeData = await this.apiService.resumeQuizSession();
-            console.log("QuizLogic.js: tryResumeSession - Dados recebidos de resumeQuizSession:", resumeData);
+            console.log("QuizLogic.js: tryResumeSession - Dados da API:", resumeData);
             if (resumeData && resumeData.status === 'success' && resumeData.perguntas?.length > 0) {
-                console.log("QuizLogic.js: tryResumeSession - Sucesso ao retomar. Rehidratando estado.");
+                console.log("QuizLogic.js: tryResumeSession - Sucesso. Rehidratando estado...");
                 this.state.rehydrateFromResumedSession(resumeData);
                 this.user.updateFromServer(resumeData.total_acertos_atual, resumeData.total_erros_atual, resumeData.pontuacao_atual);
 
+                console.log("QuizLogic.js: tryResumeSession - Chamando this.ui.displayQuizLayout(true).");
                 this.ui.displayQuizLayout(true);
-                this._displayCurrentQuestionUI(false);
+                console.log("QuizLogic.js: tryResumeSession - Chamando _displayCurrentQuestionUI.");
+                this._displayCurrentQuestionUI(false); 
+
                 if (this.ui.scorePanel) this.ui.scorePanel.updateDisplay(this.user.pontos, this.user.acertos, this.user.erros);
 
                 if (this.ui.timer) {
@@ -81,33 +93,26 @@ export default class QuizLogic {
                     }
                     this.ui.timer.start(tempoInicialParaDisplay);
                 }
-                console.log("QuizLogic.js: tryResumeSession - Sessão retomada e UI atualizada.");
+                console.log("QuizLogic.js: tryResumeSession - Sessão retomada e UI atualizada com sucesso.");
                 return true;
             }
-            console.log("QuizLogic.js: tryResumeSession - Não foi possível retomar (sem dados válidos ou sucesso na resposta).");
+            console.log("QuizLogic.js: tryResumeSession - Não foi possível retomar (resposta da API sem sucesso ou sem perguntas).");
         } catch (error) {
-            console.warn("QuizLogic.js: tryResumeSession - Erro durante a tentativa de retomar sessão:", error);
-            if (error.response && error.response.status !== 404) {
-                console.error("QuizLogic.js: tryResumeSession - Erro não-404 ao tentar retomar:", error.message || error);
-            }
+            console.warn("QuizLogic.js: tryResumeSession - ERRO durante a tentativa de retomar:", error.message, error);
         }
         return false;
     }
 
 
     async _handleQuestionNavigation(target) {
-        console.log("QuizLogic.js: _handleQuestionNavigation - Target:", target);
-        if (target === 'next') {
-            await this.nextQuestion();
-        } else if (target === 'prev') {
-            await this.previousQuestion();
-        } else if (typeof target === 'number') {
-            await this.goToQuestion(target);
-        }
+        console.log(`QuizLogic.js: _handleQuestionNavigation - Target: ${target}`);
+        if (target === 'next') await this.nextQuestion();
+        else if (target === 'prev') await this.previousQuestion();
+        else if (typeof target === 'number') await this.goToQuestion(target);
     }
 
     _getFriendlyErrorMessage(error, defaultMessage = "Ocorreu um erro inesperado. Tente novamente.") {
-        console.log("QuizLogic.js: _getFriendlyErrorMessage - Erro original:", error);
+        // console.log("QuizLogic.js: _getFriendlyErrorMessage - Erro original:", error);
         if (!error.response && error.message && error.message.toLowerCase().includes('failed to fetch')) {
             return "Falha na conexão com o servidor. Verifique sua internet e tente novamente.";
         }
@@ -121,20 +126,18 @@ export default class QuizLogic {
             if (status >= 400 && status < 500) return "Problema com sua solicitação.";
         }
         if (error.message && typeof error.message === 'string' && !error.message.toLowerCase().includes('typeerror')) {
-             // Evita mostrar mensagens de TypeError puras que não são amigáveis
             return error.message;
         }
-        console.log("QuizLogic.js: _getFriendlyErrorMessage - Usando mensagem padrão:", defaultMessage);
         return defaultMessage;
     }
 
     async _fetchAndPrepareQuestions(filterParams, quizTypeContext = { isQuickQuiz: false, isPredefinedQuiz: false }) {
         if (this.isFetchingQuestions) {
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Já buscando questões, retornando null.");
+            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Já buscando, retornando.");
             return null;
         }
         this.isFetchingQuestions = true;
-        console.log("QuizLogic.js: _fetchAndPrepareQuestions - INICIANDO com filtros:", JSON.stringify(filterParams), "Contexto:", JSON.stringify(quizTypeContext));
+        console.log("QuizLogic.js: _fetchAndPrepareQuestions - Iniciando. Filtros:", JSON.stringify(filterParams), "Contexto:", JSON.stringify(quizTypeContext));
 
         const triggerButton = quizTypeContext.isQuickQuiz
             ? this.ui.elements.hubQuickQuizBtn
@@ -155,68 +158,87 @@ export default class QuizLogic {
         if (this.ui.warningDisplay) this.ui.warningDisplay.clear();
 
         try {
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Chamando this.quizData.fetchFilteredQuestions...");
-            // `fetchFilteredQuestions` é o método apropriado em QuizData para buscar com filtros
-            const questionsArray = await this.quizData.fetchFilteredQuestions(filterParams);
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Resultado de fetchFilteredQuestions:", questionsArray);
+            const questionsArray = await this.quizData.fetchFilteredQuestions(filterParams); 
+            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Perguntas da API (após QuizData.fetchFilteredQuestions):", questionsArray ? questionsArray.length : "Nulo/Indefinido");
 
-            // ESTA É A CORREÇÃO SUGERIDA:
-            const questions = questionsArray;
-
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - 'questions' (deve ser array):", questions);
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Verificando se 'questions' é array:", Array.isArray(questions));
-
-            if (!questions || questions.length === 0) {
-                console.log("QuizLogic.js: _fetchAndPrepareQuestions - Nenhuma pergunta encontrada ou array vazio.");
+            if (!questionsArray || questionsArray.length === 0) {
+                console.log("QuizLogic.js: _fetchAndPrepareQuestions - Nenhuma pergunta encontrada.");
                 this.state.initializeWithQuestions([], filterParams.mode || 'Desconhecido');
-                if (this.ui.warningDisplay) {
+                if (this.state && typeof this.state.setQuizDisplayContext === 'function') {
+                    this.state.setQuizDisplayContext('none', ''); 
+                } else {
+                    console.error("QuizLogic.js: _fetchAndPrepareQuestions (Nenhuma pergunta) - ERRO: this.state.setQuizDisplayContext não é uma função!");
+                }
+                if (this.ui.warningDisplay) { 
                     const message = quizTypeContext.isQuickQuiz
                         ? "Nenhuma pergunta para Quiz Rápido."
                         : (quizTypeContext.isPredefinedQuiz ? "Este quiz definido não possui perguntas ou está inativo." : "Nenhuma questão para os filtros selecionados.");
                     this.ui.warningDisplay.show(message, 'info', true);
-                    console.log("QuizLogic.js: _fetchAndPrepareQuestions - Mostrou aviso INFO:", message);
                 }
             } else {
-                console.log("QuizLogic.js: _fetchAndPrepareQuestions - Perguntas encontradas:", questions.length);
-                console.log("QuizLogic.js: _fetchAndPrepareQuestions - Chamando this.state.initializeWithQuestions...");
-                this.state.initializeWithQuestions(questions, filterParams.mode, null, filterParams.quiz_definicao_id);
-                console.log("QuizLogic.js: _fetchAndPrepareQuestions - this.state.initializeWithQuestions CONCLUÍDO.");
+                console.log("QuizLogic.js: _fetchAndPrepareQuestions - Perguntas encontradas. Inicializando estado...");
+                this.state.initializeWithQuestions(questionsArray, filterParams.mode, null, filterParams.quiz_definicao_id);
+
+                let displayMode = 'challenge';
+                let mainQuizTitle = 'Desafio Personalizado';
+
+                if (quizTypeContext.isQuickQuiz) {
+                    mainQuizTitle = 'Quiz Rápido';
+                } else if (quizTypeContext.isPredefinedQuiz && filterParams.quiz_definicao_id) {
+                    const quizDefName = this.quizData.getLastFetchedQuizDefinitionName();
+                    console.log("QuizLogic.js: _fetchAndPrepareQuestions - Nome do Quiz Definido (de QuizData):", quizDefName);
+                    if (quizDefName) {
+                        displayMode = 'focused';
+                        mainQuizTitle = quizDefName;
+                    } else {
+                        mainQuizTitle = "Quiz Temático"; 
+                        displayMode = 'focused';
+                    }
+                } else if (filterParams.category_ids && filterParams.category_ids.length === 1) {
+                    const singleCategoryId = parseInt(filterParams.category_ids[0], 10);
+                    const allCategories = this.quizData.getCategorias();
+                    const category = allCategories.find(cat => cat.id_categoria === singleCategoryId);
+                    if (category) {
+                        displayMode = 'focused';
+                        mainQuizTitle = category.nome_categoria;
+                    }
+                }
+                console.log(`QuizLogic.js: _fetchAndPrepareQuestions - Definindo quizDisplayContext: Mode='${displayMode}', Title='${mainQuizTitle}'`);
+                
+                if (this.state && typeof this.state.setQuizDisplayContext === 'function') {
+                    this.state.setQuizDisplayContext(displayMode, mainQuizTitle);
+                } else {
+                    console.error("QuizLogic.js: _fetchAndPrepareQuestions (Com perguntas) - ERRO: this.state.setQuizDisplayContext não é uma função!");
+                }
             }
 
             if (!quizTypeContext.isPredefinedQuiz) {
-                console.log("QuizLogic.js: _fetchAndPrepareQuestions - Chamando this.state.setQuizFiltersForNewDynamicQuiz...");
-                this.state.setQuizFiltersForNewDynamicQuiz(
-                    filterParams.category_ids || [],
-                    filterParams.difficulty_levels || ['all'],
-                    filterParams.num_questions
-                );
-                console.log("QuizLogic.js: _fetchAndPrepareQuestions - this.state.setQuizFiltersForNewDynamicQuiz CONCLUÍDO.");
+                this.state.setQuizFiltersForNewDynamicQuiz(filterParams.category_ids || [], filterParams.difficulty_levels || ['all'], filterParams.num_questions);
             }
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - RETORNANDO questions:", questions);
-            return questions;
+            return questionsArray;
         } catch (error) {
-            console.error("QuizLogic.js: _fetchAndPrepareQuestions - ERRO NO CATCH:", error, error.stack);
+            console.error("QuizLogic.js: _fetchAndPrepareQuestions - ERRO no CATCH:", error);
             const userMessage = this._getFriendlyErrorMessage(error, "Erro ao carregar perguntas do quiz.");
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Mensagem de erro para UI:", userMessage);
             if (this.ui.warningDisplay) this.ui.warningDisplay.show(userMessage, 'error', true);
             this.state.initializeWithQuestions([], filterParams.mode || 'Erro');
+            if (this.state && typeof this.state.setQuizDisplayContext === 'function') {
+                this.state.setQuizDisplayContext('none', '');
+            } else {
+                 console.error("QuizLogic.js: _fetchAndPrepareQuestions (CATCH) - ERRO: this.state.setQuizDisplayContext não é uma função!");
+            }
             return null;
         } finally {
             this.isFetchingQuestions = false;
             if (triggerButton) this.ui.setButtonLoading(triggerButton, false, originalButtonText);
-            console.log("QuizLogic.js: _fetchAndPrepareQuestions - FINALIZANDO.");
+            console.log("QuizLogic.js: _fetchAndPrepareQuestions - Finalizado.");
 
-            // Lógica para reexibir o hub se nenhum quiz iniciou e nenhum filtro/aviso está ativo
             const quizWillStart = this.state.currentQuestionsSet && this.state.currentQuestionsSet.length > 0;
              if (this.ui.elements.placeholderFiltrosContainer) {
                 if (quizWillStart || (this.ui.elements.filterPanel && this.ui.elements.filterPanel.classList.contains('filter-panel--visible'))) {
                     this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
                 } else if (!this.ui.elements.avisoContainer || this.ui.elements.avisoContainer.classList.contains(this.ui.hiddenClassName)) {
-                    // Se nenhum quiz vai começar e não há aviso sendo mostrado
-                    // E o painel de filtros não está aberto, então reexibir o Hub
                     const filterPanelIsOpen = this.ui.elements.filterPanel && this.ui.elements.filterPanel.classList.contains('filter-panel--visible');
                     if (!filterPanelIsOpen && this.ui.challengeHubInstance) {
-                         console.log("QuizLogic.js: _fetchAndPrepareQuestions - Quiz não iniciou, sem avisos/filtros. Mostrando Challenge Hub no finally.");
                          this.ui.challengeHubInstance.showHub();
                     }
                     this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
@@ -224,19 +246,17 @@ export default class QuizLogic {
             }
         }
     }
-
     async applyFiltersAndStartQuiz() {
-        console.log("QuizLogic.js: applyFiltersAndStartQuiz - Iniciado.");
+        console.log("QuizLogic.js: applyFiltersAndStartQuiz - Entrou.");
         if (!this.ui.filterPanelInstance) {
+            console.error("QuizLogic.js: applyFiltersAndStartQuiz - ERRO: filterPanelInstance não disponível.");
             if (this.ui.warningDisplay) this.ui.warningDisplay.show("Erro: Painel de filtros indisponível.", 'error', true);
-            console.error("QuizLogic.js: applyFiltersAndStartQuiz - filterPanelInstance indisponível.");
             return;
         }
         const selectedCategoryIds = this.ui.filterPanelInstance.getSelectedCategories();
         const selectedDifficulties = this.ui.filterPanelInstance.getSelectedDifficulties();
         const selectedNumQuestions = this.ui.filterPanelInstance.getSelectedNumberOfQuestions();
-        console.log("QuizLogic.js: applyFiltersAndStartQuiz - Filtros selecionados:", {selectedCategoryIds, selectedDifficulties, selectedNumQuestions});
-
+        console.log("QuizLogic.js: applyFiltersAndStartQuiz - Filtros obtidos:", {selectedCategoryIds, selectedDifficulties, selectedNumQuestions});
 
         if (this.ui.modalManager) this.ui.modalManager.toggleFilterPanel(false);
 
@@ -246,53 +266,67 @@ export default class QuizLogic {
             num_questions: selectedNumQuestions,
             mode: 'Por Categoria'
         };
+        console.log("QuizLogic.js: applyFiltersAndStartQuiz - Chamando _fetchAndPrepareQuestions com filtros:", filterParams);
         const questions = await this._fetchAndPrepareQuestions(filterParams, { isQuickQuiz: false, isPredefinedQuiz: false });
 
         if (questions && questions.length > 0) {
-            console.log("QuizLogic.js: applyFiltersAndStartQuiz - Perguntas carregadas. Iniciando sessão...");
+            console.log("QuizLogic.js: applyFiltersAndStartQuiz - Perguntas carregadas (" + questions.length + "). Chamando _initiateQuizSession.");
             await this._initiateQuizSession(questions, filterParams);
         } else {
-            console.log("QuizLogic.js: applyFiltersAndStartQuiz - Nenhuma pergunta carregada ou erro. Sessão não iniciada.");
+            console.log("QuizLogic.js: applyFiltersAndStartQuiz - Nenhuma pergunta para iniciar ou erro ao buscar.");
+             if (this.ui.challengeHubInstance && (!this.ui.elements.avisoContainer || this.ui.elements.avisoContainer.classList.contains(this.ui.hiddenClassName))) {
+                console.log("QuizLogic.js: applyFiltersAndStartQuiz - Mostrando Challenge Hub pois não há perguntas.");
+                this.ui.challengeHubInstance.showHub(); 
+            }
         }
     }
 
     async startQuickQuiz() {
-        console.log("QuizLogic.js: startQuickQuiz - Iniciado.");
-        const filterParams = {
-            mode: 'Rápido',
-        };
+        console.log("QuizLogic.js: startQuickQuiz - Entrou.");
+        const filterParams = { mode: 'Rápido' };
+        console.log("QuizLogic.js: startQuickQuiz - Chamando _fetchAndPrepareQuestions.");
         const questions = await this._fetchAndPrepareQuestions(filterParams, { isQuickQuiz: true, isPredefinedQuiz: false });
+        
         if (questions && questions.length > 0) {
-            console.log("QuizLogic.js: startQuickQuiz - Perguntas carregadas. Iniciando sessão...");
+            console.log("QuizLogic.js: startQuickQuiz - Perguntas carregadas (" + questions.length + "). Chamando _initiateQuizSession.");
             await this._initiateQuizSession(questions, filterParams);
         } else {
-             console.log("QuizLogic.js: startQuickQuiz - Nenhuma pergunta carregada ou erro. Sessão não iniciada.");
+            console.log("QuizLogic.js: startQuickQuiz - Nenhuma pergunta para iniciar ou erro ao buscar.");
+            if (this.ui.challengeHubInstance && (!this.ui.elements.avisoContainer || this.ui.elements.avisoContainer.classList.contains(this.ui.hiddenClassName))) {
+                console.log("QuizLogic.js: startQuickQuiz - Mostrando Challenge Hub pois não há perguntas.");
+                this.ui.challengeHubInstance.showHub();
+            }
         }
     }
 
     async startPredefinedQuiz(quizDefinicaoId) {
-        console.log("QuizLogic.js: startPredefinedQuiz - Iniciado com ID:", quizDefinicaoId);
+        console.log("QuizLogic.js: startPredefinedQuiz - Entrou com ID:", quizDefinicaoId);
         if (!quizDefinicaoId) {
+            console.error("QuizLogic.js: startPredefinedQuiz - ERRO: ID do Quiz Definido não fornecido.");
             if (this.ui.warningDisplay) this.ui.warningDisplay.show("ID do Quiz Definido não fornecido.", 'error', true);
-            console.error("QuizLogic.js: startPredefinedQuiz - ID não fornecido.");
             return;
         }
         const filterParams = {
             quiz_definicao_id: quizDefinicaoId,
             mode: 'Definido'
         };
+        console.log("QuizLogic.js: startPredefinedQuiz - Chamando _fetchAndPrepareQuestions com filtros:", filterParams);
         const questions = await this._fetchAndPrepareQuestions(filterParams, { isQuickQuiz: false, isPredefinedQuiz: true });
+
         if (questions && questions.length > 0) {
-            console.log("QuizLogic.js: startPredefinedQuiz - Perguntas carregadas. Iniciando sessão...");
+            console.log("QuizLogic.js: startPredefinedQuiz - Perguntas carregadas (" + questions.length + "). Chamando _initiateQuizSession.");
             await this._initiateQuizSession(questions, filterParams);
         } else {
-            console.log("QuizLogic.js: startPredefinedQuiz - Nenhuma pergunta carregada ou erro. Sessão não iniciada.");
+            console.log("QuizLogic.js: startPredefinedQuiz - Nenhuma pergunta para iniciar ou erro ao buscar.");
+             if (this.ui.challengeHubInstance && (!this.ui.elements.avisoContainer || this.ui.elements.avisoContainer.classList.contains(this.ui.hiddenClassName))) {
+                console.log("QuizLogic.js: startPredefinedQuiz - Mostrando Challenge Hub pois não há perguntas.");
+                this.ui.challengeHubInstance.showHub();
+            }
         }
     }
 
-
     async _initiateQuizSession(questionsForSession, sessionParams) {
-        console.log("QuizLogic.js: _initiateQuizSession - Iniciando. Perguntas:", questionsForSession.length, "Params:", sessionParams);
+        console.log("QuizLogic.js: _initiateQuizSession - Entrou. N_Perguntas:", questionsForSession?.length, "Params:", JSON.stringify(sessionParams));
         this.user.reset();
         if (this.ui.scorePanel) this.ui.scorePanel.resetDisplay();
         if (this.ui.resultDisplay) this.ui.resultDisplay.hide();
@@ -302,65 +336,71 @@ export default class QuizLogic {
         if (questionsForSession && questionsForSession.length > 0) {
             const questionIdsInSession = questionsForSession.map(q => q.id_pergunta);
             const sessionPayload = {
-                modo_quiz: this.state.getQuizMode(), // Modo definido por _fetchAndPrepareQuestions no QuizState
+                modo_quiz: this.state.getQuizMode(), // Modo já definido no estado por _fetchAndPrepareQuestions
                 categoria_ids: sessionParams.category_ids || [],
                 question_ids_in_session: questionIdsInSession,
                 quiz_definicao_id: sessionParams.quiz_definicao_id,
                 dificuldades_selecionadas: sessionParams.difficulty_levels,
-                num_questoes_solicitadas: sessionParams.num_questions || sessionParams.count
+                num_questoes_solicitadas: sessionParams.num_questions || sessionParams.count // Para quiz rápido
             };
-            console.log("QuizLogic.js: _initiateQuizSession - Payload para startQuizSession:", sessionPayload);
+            console.log("QuizLogic.js: _initiateQuizSession - Payload para API startQuizSession:", JSON.stringify(sessionPayload));
 
             try {
                 const sessionDataFromBackend = await this.apiService.startQuizSession(sessionPayload);
-                console.log("QuizLogic.js: _initiateQuizSession - Resposta de startQuizSession:", sessionDataFromBackend);
+                console.log("QuizLogic.js: _initiateQuizSession - Resposta da API startQuizSession:", sessionDataFromBackend);
                 if (sessionDataFromBackend && sessionDataFromBackend.status === 'success' && sessionDataFromBackend.session_id) {
                     this.state.currentSessionId = sessionDataFromBackend.session_id;
+                    console.log("QuizLogic.js: _initiateQuizSession - Sessão ID definida no estado:", this.state.currentSessionId);
+                    
+                    console.log("QuizLogic.js: _initiateQuizSession - Chamando this.ui.displayQuizLayout(true).");
                     this.ui.displayQuizLayout(true);
-                    this._displayCurrentQuestionUI(false);
+                    console.log("QuizLogic.js: _initiateQuizSession - Chamando _displayCurrentQuestionUI.");
+                    this._displayCurrentQuestionUI(false); // quizDisplayContext é pego de this.state por QuestionDisplay
+                    
                     if (this.ui.timer) this.ui.timer.start(0);
-                    console.log("QuizLogic.js: _initiateQuizSession - Sessão iniciada com sucesso. ID:", this.state.currentSessionId);
+                    console.log("QuizLogic.js: _initiateQuizSession - Sessão iniciada com sucesso e UI deve estar pronta.");
                 } else {
                     const userMessage = this._getFriendlyErrorMessage({ data: sessionDataFromBackend }, "Não foi possível iniciar a sessão de quiz.");
+                    console.error("QuizLogic.js: _initiateQuizSession - Falha ao iniciar sessão no backend:", userMessage, sessionDataFromBackend);
                     if (this.ui.warningDisplay) this.ui.warningDisplay.show(userMessage, 'error', true);
-                    console.error("QuizLogic.js: _initiateQuizSession - Falha ao iniciar sessão no backend:", userMessage);
                     this.ui.displayQuizLayout(false);
                     if (this.ui.challengeHubInstance) this.ui.challengeHubInstance.showHub();
                 }
             } catch (error) {
-                console.error("QuizLogic.js: _initiateQuizSession - Erro ao chamar startQuizSession:", error);
+                console.error("QuizLogic.js: _initiateQuizSession - ERRO ao chamar startQuizSession API:", error);
                 const userMessage = this._getFriendlyErrorMessage(error, "Erro de conexão ao iniciar o quiz.");
                 if (this.ui.warningDisplay) this.ui.warningDisplay.show(userMessage, 'error', true);
                 this.ui.displayQuizLayout(false);
                 if (this.ui.challengeHubInstance) this.ui.challengeHubInstance.showHub();
             }
         } else {
-            console.log("QuizLogic.js: _initiateQuizSession - Nenhuma pergunta para a sessão. Exibindo hub.");
+            console.log("QuizLogic.js: _initiateQuizSession - Nenhuma pergunta para a sessão. Exibindo hub (se existir).");
             this.ui.displayQuizLayout(false);
             if (this.ui.warningDisplay) this.ui.warningDisplay.show("Nenhuma pergunta foi carregada para esta sessão.", 'info', true);
             if (this.ui.timer) this.ui.timer.stop();
             if (this.ui.challengeHubInstance) this.ui.challengeHubInstance.showHub();
         }
+         console.log("QuizLogic.js: _initiateQuizSession - Saindo.");
     }
 
     async answerQuestion(selectedOptionId) {
-        console.log("QuizLogic.js: answerQuestion - Opção selecionada ID:", selectedOptionId);
+        console.log(`QuizLogic.js: answerQuestion - Opção ID: ${selectedOptionId}`);
         const currentQuestion = this.state.getCurrentQuestion();
         if (!currentQuestion || currentQuestion.respostaDadaId !== undefined || !this.state.getSessionId()) {
-            console.warn("QuizLogic.js: answerQuestion - Retornando cedo. Condições não atendidas.", {currentQuestion, sessionId: this.state.getSessionId()});
+            console.warn("QuizLogic.js: answerQuestion - Retorno antecipado. Pergunta já respondida, nula, ou sem sessão ID.");
             return;
         }
-        const options = this.quizData.getOpcoesPorPerguntaId(currentQuestion.id_pergunta);
+        const options = currentQuestion.opcoes; 
         const selectedOption = options.find(op => op.id_opcao_resposta === selectedOptionId);
+
         if (!selectedOption) {
-            console.warn("QuizLogic.js: answerQuestion - Opção selecionada não encontrada nos dados da pergunta.");
+            console.warn("QuizLogic.js: answerQuestion - Opção selecionada não encontrada na pergunta atual.");
             return;
         }
 
         const isCorrect = selectedOption.eh_correta;
         this.state.recordAnswer(selectedOptionId, isCorrect);
         console.log(`QuizLogic.js: answerQuestion - Resposta registrada no estado. Correta: ${isCorrect}`);
-
 
         if (this.ui.questionDisplay) {
             this.ui.questionDisplay.disableAnswers();
@@ -393,7 +433,7 @@ export default class QuizLogic {
     }
 
     async _handleSkippedQuestion() {
-        console.log("QuizLogic.js: _handleSkippedQuestion - Iniciado.");
+        console.log("QuizLogic.js: _handleSkippedQuestion - Entrou.");
         const currentQuestion = this.state.getCurrentQuestion();
         if (currentQuestion && this.state.getSessionId() && currentQuestion.respostaDadaId === undefined) {
             this.state.markAsSkipped();
@@ -403,7 +443,7 @@ export default class QuizLogic {
                 const skipPayload = {
                     session_id: this.state.getSessionId(),
                     pergunta_id: currentQuestion.id_pergunta,
-                    opcao_id: null,
+                    opcao_id: null, 
                     current_question_index: this.state.currentQuestionIndex
                 };
                 console.log("QuizLogic.js: _handleSkippedQuestion - Enviando para API registerAnswer (skip):", skipPayload);
@@ -420,67 +460,95 @@ export default class QuizLogic {
     }
 
     async nextQuestion() {
-        console.log("QuizLogic.js: nextQuestion - Iniciado.");
+        console.log("QuizLogic.js: nextQuestion - Entrou.");
         const isLastBeforeAdvance = this.state.isLastQuestion();
-        if (this.state.getCurrentQuestion() && this.state.getCurrentQuestion().respostaDadaId === undefined) {
+        const currentQ = this.state.getCurrentQuestion();
+        if (currentQ && currentQ.respostaDadaId === undefined) { // Se a pergunta atual ainda não foi respondida/pulada
+            console.log("QuizLogic.js: nextQuestion - Pergunta atual não respondida. Marcando como pulada.");
             await this._handleSkippedQuestion();
         }
 
-        if (this.state.goToNextQuestion()) {
-            if (this.state.isQuizComplete()) {
-                console.log("QuizLogic.js: nextQuestion - Quiz completo. Finalizando...");
+        if (this.state.goToNextQuestion()) { // Avança o índice
+            if (this.state.isQuizComplete()) { // Checa se o novo índice está além do limite
+                console.log("QuizLogic.js: nextQuestion - Quiz completo (índice >= total). Finalizando...");
                 await this.endQuiz();
             } else {
-                console.log("QuizLogic.js: nextQuestion - Exibindo próxima questão.");
+                console.log("QuizLogic.js: nextQuestion - Exibindo próxima questão no índice:", this.state.currentQuestionIndex);
                 this._displayCurrentQuestionUI();
             }
-        } else if (isLastBeforeAdvance && !this.state.isQuizComplete()) {
-            // Caso especial: estava na última, goToNextQuestion pode não ter avançado o índice para além do limite
-            // mas a intenção é finalizar.
-            console.log("QuizLogic.js: nextQuestion - Estava na última, finalizando quiz.");
+        } else if (isLastBeforeAdvance && !this.state.isQuizComplete()) { 
+            // Estava na última, mas goToNextQuestion não avançou (o que significa que já estava no limite para ser completo)
+            console.log("QuizLogic.js: nextQuestion - Estava na última e goToNextQuestion indicou fim. Finalizando quiz.");
             await this.endQuiz();
         } else if (this.state.isQuizComplete() && (!this.ui.elements.resultadoCard || this.ui.elements.resultadoCard.classList.contains(this.ui.hiddenClassName))) {
-            // Se já está completo mas os resultados não foram mostrados
-            console.log("QuizLogic.js: nextQuestion - Quiz já completo, mostrando resultados.");
+            console.log("QuizLogic.js: nextQuestion - Quiz já marcado como completo, mas resultados não mostrados. Mostrando resultados.");
             await this.endQuiz();
+        } else {
+            console.log("QuizLogic.js: nextQuestion - Não avançou nem finalizou. Estado atual:", { isLast: isLastBeforeAdvance, isComplete: this.state.isQuizComplete(), currentIndex: this.state.currentQuestionIndex, totalQ: this.state.getTotalFilteredQuestions() });
         }
     }
 
     async previousQuestion() {
-        console.log("QuizLogic.js: previousQuestion - Iniciado.");
-        if (this.state.getCurrentQuestion() && this.state.getCurrentQuestion().respostaDadaId === undefined) {
+        console.log("QuizLogic.js: previousQuestion - Entrou.");
+        const currentQ = this.state.getCurrentQuestion();
+        if (currentQ && currentQ.respostaDadaId === undefined) { // Se a pergunta atual ainda não foi respondida/pulada
+            console.log("QuizLogic.js: previousQuestion - Pergunta atual não respondida. Marcando como pulada.");
             await this._handleSkippedQuestion();
         }
         if (this.state.goToPreviousQuestion()) {
             this._displayCurrentQuestionUI();
+        } else {
+            console.log("QuizLogic.js: previousQuestion - Não foi possível ir para a anterior (provavelmente já é a primeira).");
         }
     }
 
     async goToQuestion(index) {
-        console.log("QuizLogic.js: goToQuestion - Indo para índice:", index);
-        if (index !== this.state.currentQuestionIndex && this.state.getCurrentQuestion() && this.state.getCurrentQuestion().respostaDadaId === undefined) {
+        console.log(`QuizLogic.js: goToQuestion - Indo para índice: ${index}`);
+        const currentQ = this.state.getCurrentQuestion();
+        if (index !== this.state.currentQuestionIndex && currentQ && currentQ.respostaDadaId === undefined) {
+            console.log("QuizLogic.js: goToQuestion - Pergunta atual não respondida. Marcando como pulada antes de navegar.");
             await this._handleSkippedQuestion();
         }
 
         if (index >= this.state.getTotalFilteredQuestions() && this.state.getTotalFilteredQuestions() > 0) {
-            console.log("QuizLogic.js: goToQuestion - Índice além do limite. Finalizando quiz.");
+            // Isso significa que o usuário clicou em um "número de questão" no grid que representa o "fim"
+            console.log(`QuizLogic.js: goToQuestion - Índice ${index} é para finalizar o quiz (total: ${this.state.getTotalFilteredQuestions()}). Finalizando quiz.`);
             await this.endQuiz();
         } else if (this.state.goToQuestion(index)) {
             this._displayCurrentQuestionUI();
+        } else {
+             console.log(`QuizLogic.js: goToQuestion - Não foi possível ir para o índice ${index}. (Índice: ${index}, Total: ${this.state.getTotalFilteredQuestions()})`);
         }
     }
 
     _displayCurrentQuestionUI(shouldScroll = true) {
-        console.log("QuizLogic.js: _displayCurrentQuestionUI - Exibindo questão. Scroll:", shouldScroll);
+        console.log("QuizLogic.js: _displayCurrentQuestionUI - Entrou. Scroll:", shouldScroll);
         if (!this.ui.questionDisplay) {
-            console.error("QuizLogic.js: _displayCurrentQuestionUI - questionDisplay não está disponível na UI.");
+            console.error("QuizLogic.js: _displayCurrentQuestionUI - ERRO: this.ui.questionDisplay é NULO ou INDEFINIDO.");
             return;
         }
+        const currentQ = this.state.getCurrentQuestion();
+        if (!currentQ) {
+            console.warn("QuizLogic.js: _displayCurrentQuestionUI - Nenhuma pergunta atual no estado para exibir.");
+             if (this.state.isQuizActive() && this.state.getTotalFilteredQuestions() > 0 && !this.state.isQuizComplete()) { 
+                console.error("QuizLogic.js: _displayCurrentQuestionUI - Tentativa de exibir pergunta nula com quiz ativo e não completo. Verifique currentQuestionIndex:", this.state.currentQuestionIndex, "Total:", this.state.getTotalFilteredQuestions());
+             } else if (this.state.isQuizComplete()){
+                console.log("QuizLogic.js: _displayCurrentQuestionUI - getCurrentQuestion retornou nulo, mas o quiz está completo. Chamando endQuiz.");
+                this.endQuiz(); // Se está completo, mas por alguma razão não mostrou resultados, força.
+             } else if (!this.state.isQuizActive() && this.ui.challengeHubInstance) {
+                console.log("QuizLogic.js: _displayCurrentQuestionUI - getCurrentQuestion retornou nulo e quiz não está ativo. Mostrando Hub.");
+                this.ui.challengeHubInstance.showHub();
+             }
+            return;
+        }
+
+        console.log("QuizLogic.js: _displayCurrentQuestionUI - Chamando this.ui.questionDisplay.displayCurrentQuestion(). Pergunta ID:", currentQ.id_pergunta);
+        
         const questionWrapper = this.ui.elements.questionWrap;
         const isInitialLoad = this.state.isInitialQuestionLoad;
 
         const displayLogic = () => {
-            this.ui.questionDisplay.displayCurrentQuestion();
+            this.ui.questionDisplay.displayCurrentQuestion(); // QuestionDisplay pegará o contexto de this.state
             if (shouldScroll && !isInitialLoad) {
                 this.ui.questionDisplay.scrollToQuestionStart();
             }
@@ -507,44 +575,53 @@ export default class QuizLogic {
                 this.state.markNavigated();
             }
         }
+        console.log("QuizLogic.js: _displayCurrentQuestionUI - Finalizado para pergunta ID:", currentQ.id_pergunta);
     }
 
     async endQuiz(forceByUser = false) {
-        console.log("QuizLogic.js: endQuiz - Iniciado. Forçado pelo usuário:", forceByUser);
+        console.log(`QuizLogic.js: endQuiz - Entrou. Forçado pelo usuário: ${forceByUser}`);
         if (this.ui.timer) this.ui.timer.stop();
         if (this.ui.modalManager) this.ui.modalManager.toggleExplanationModal(false);
 
-        if (this.state.getSessionId()) {
-            console.log("QuizLogic.js: endQuiz - Sessão ID existe:", this.state.getSessionId());
+        const sessionId = this.state.getSessionId(); // Pega o ID da sessão ANTES de resetar
+        const totalQuestionsInThisSession = this.state.getTotalFilteredQuestions(); // Pega antes de resetar
+
+        if (sessionId) {
+            console.log("QuizLogic.js: endQuiz - Sessão ID:", sessionId);
             try {
                 const endSessionPayload = {
-                    session_id: this.state.getSessionId(),
+                    session_id: sessionId,
                     tempo_total_segundos: this.ui.timer ? this.ui.timer.getCurrentSeconds() : 0,
                 };
                 console.log("QuizLogic.js: endQuiz - Payload para endQuizSession:", endSessionPayload);
                 const responseData = await this.apiService.endQuizSession(endSessionPayload);
                 console.log("QuizLogic.js: endQuiz - Resposta de endQuizSession:", responseData);
+
                 if (responseData && (responseData.status === 'success' || responseData.status === 'info')) {
                     this.user.updateFromServer(responseData.total_acertos, responseData.total_erros, responseData.pontuacao_final);
+                    console.log("QuizLogic.js: endQuiz - Dados do usuário atualizados do backend.");
                 } else {
                     const userMessage = this._getFriendlyErrorMessage({ data: responseData }, "Problema ao finalizar sessão no servidor.");
+                    console.warn("QuizLogic.js: endQuiz - Problema ao finalizar sessão no backend:", userMessage, responseData);
                     if (this.ui.warningDisplay) this.ui.warningDisplay.show(userMessage, 'warning');
-                     console.warn("QuizLogic.js: endQuiz - Problema ao finalizar sessão no backend:", userMessage);
                 }
             } catch (error) {
-                console.error("QuizLogic.js: endQuiz - Erro ao chamar endQuizSession:", error);
+                console.error("QuizLogic.js: endQuiz - ERRO ao chamar endQuizSession API:", error);
                 const userMessage = this._getFriendlyErrorMessage(error, "Erro de conexão ao finalizar sessão.");
                 if (this.ui.warningDisplay) this.ui.warningDisplay.show(userMessage, 'warning');
             } finally {
-                this.state.currentSessionId = null;
+                // Não reseta o estado aqui imediatamente, apenas o ID da sessão.
+                // O fullReset ou resetQuizStateForNewSession será feito em restartQuiz.
+                this.state.currentSessionId = null; 
                 console.log("QuizLogic.js: endQuiz - SessionId limpo no estado.");
             }
         } else {
              console.log("QuizLogic.js: endQuiz - Nenhuma sessão ID para finalizar.");
         }
-
+        
         if (this.ui.resultDisplay) {
-            this.ui.resultDisplay.show(this.user, this.state.getTotalFilteredQuestions());
+            console.log("QuizLogic.js: endQuiz - Exibindo resultados. UserData:", this.user, "Total Perguntas:", totalQuestionsInThisSession);
+            this.ui.resultDisplay.show(this.user, totalQuestionsInThisSession);
         } else {
             console.warn("QuizLogic.js: endQuiz - resultDisplay não disponível na UI. Exibindo layout padrão.");
             this.ui.displayQuizLayout(false);
@@ -554,23 +631,32 @@ export default class QuizLogic {
         if (forceByUser && this.ui.modalManager) {
             this.ui.modalManager.toggleConfirmModal(false);
         }
-         console.log("QuizLogic.js: endQuiz - Finalizado.");
+        console.log("QuizLogic.js: endQuiz - Finalizado.");
     }
 
     restartQuiz() {
-        console.log("QuizLogic.js: restartQuiz - Iniciado.");
+        console.log("QuizLogic.js: restartQuiz - Entrou.");
         this.user.reset();
-        this.state.fullReset();
+        this.state.fullReset(); 
         if (this.ui.scorePanel) this.ui.scorePanel.resetDisplay();
         if (this.ui.resultDisplay) this.ui.resultDisplay.hide();
         if (this.ui.timer) this.ui.timer.reset(0);
         if (this.ui.modalManager) this.ui.modalManager.toggleExplanationModal(false);
+        
+        console.log("QuizLogic.js: restartQuiz - Chamando this.ui.displayQuizLayout(false).");
         this.ui.displayQuizLayout(false);
+        
         if (this.ui.warningDisplay) this.ui.warningDisplay.clear();
         if (this.ui.filterPanelInstance) this.ui.filterPanelInstance.resetFiltersToDefault();
-        if (this.ui.challengeHubInstance) this.ui.challengeHubInstance.showHub();
+        
+        if (this.ui.challengeHubInstance) {
+            console.log("QuizLogic.js: restartQuiz - Mostrando Challenge Hub.");
+            this.ui.challengeHubInstance.showHub();
+        } else {
+            console.warn("QuizLogic.js: restartQuiz - challengeHubInstance não definido.");
+        }
         if(this.ui.elements.placeholderFiltrosContainer) this.ui.hideElement(this.ui.elements.placeholderFiltrosContainer);
-        console.log("QuizLogic.js: restartQuiz - Finalizado. Hub deve estar visível.");
+        console.log("QuizLogic.js: restartQuiz - Finalizado.");
     }
 
     async forceEndQuizByUser() {
@@ -579,7 +665,7 @@ export default class QuizLogic {
     }
 
     async toggleFavoriteCurrentQuestion() {
-        console.log("QuizLogic.js: toggleFavoriteCurrentQuestion - Iniciado.");
+        console.log("QuizLogic.js: toggleFavoriteCurrentQuestion - Entrou.");
         if (!this.ui.userIsAuthenticated) {
             this.ui.showWarning("Faça login para favoritar questões.", 'info');
             return;
@@ -604,7 +690,6 @@ export default class QuizLogic {
             } else {
                 const msg = this._getFriendlyErrorMessage({ data: response }, "Falha ao atualizar status de favorito.");
                 this.ui.showWarning(msg, 'error');
-                console.error("QuizLogic.js: toggleFavoriteCurrentQuestion - Falha na API:", msg);
             }
         } catch (error) {
             console.error("QuizLogic.js: toggleFavoriteCurrentQuestion - Erro na API:", error);
@@ -616,7 +701,7 @@ export default class QuizLogic {
     }
 
     async loadAndDisplayFavoriteQuestionsForAccountPage() {
-        console.log("QuizLogic.js: loadAndDisplayFavoriteQuestionsForAccountPage - Chamado.");
+        console.log("QuizLogic.js: loadAndDisplayFavoriteQuestionsForAccountPage - Entrou.");
         if (this.ui.favoriteManager) {
             await this.ui.favoriteManager.loadUserFavorites();
         } else {

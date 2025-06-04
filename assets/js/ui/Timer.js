@@ -1,16 +1,13 @@
-// File: assets/js/ui/Timer.js
-
 export default class Timer {
     constructor(timerDisplayElement, resultadoTempoElement = null) {
-        // console.log("TIMER.JS: Constructor - Instanciando Timer.");
         this.timerDisplayElement = timerDisplayElement;
-        this.resultadoTempoElement = resultadoTempoElement; // Opcional, para a tela de resultados
+        this.resultadoTempoElement = resultadoTempoElement;
 
         this.intervalId = null;
         this.seconds = 0;
         this.isRunning = false;
 
-        this._updateDisplay(); // Garante que o display inicial seja "00:00"
+        this._updateDisplay();
     }
 
     _formatTime(totalSeconds) {
@@ -25,13 +22,17 @@ export default class Timer {
         }
     }
 
-    start() {
+    // MÉTODO MODIFICADO para aceitar tempo inicial
+    start(initialSeconds = 0) { // Default para 0 se nenhum tempo inicial for passado
         if (this.isRunning) {
             // console.log("TIMER.JS: start - Timer já está rodando.");
             return;
         }
+        // Define os segundos iniciais. Garante que seja um número.
+        this.seconds = parseInt(initialSeconds, 10) || 0;
         this.isRunning = true;
-        // console.log("TIMER.JS: start - Iniciando timer.");
+        this._updateDisplay(); // Atualiza o display imediatamente com o tempo inicial
+
         this.intervalId = setInterval(() => {
             this.seconds++;
             this._updateDisplay();
@@ -49,16 +50,19 @@ export default class Timer {
         // console.log("TIMER.JS: stop - Timer parado em", this.seconds, "segundos.");
     }
 
-    reset() {
-        // console.log("TIMER.JS: reset - Resetando timer.");
+    // MÉTODO MODIFICADO para permitir resetar para um valor específico ou 0
+    reset(resetToSeconds = 0) {
+        // console.log("TIMER.JS: reset - Resetando timer para", resetToSeconds, "segundos.");
         this.stop();
-        this.seconds = 0;
+        this.seconds = parseInt(resetToSeconds, 10) || 0;
         this._updateDisplay();
-        // Se o elemento de resultado estiver visível, também o reseta
-        if (this.resultadoTempoElement && 
+        // Se o elemento de resultado estiver visível, também o atualiza
+        if (this.resultadoTempoElement &&
             this.resultadoTempoElement.closest('.card--quiz-result') &&
             !this.resultadoTempoElement.closest('.card--quiz-result').classList.contains('u-is-hidden')) {
-            this.updateResultDisplay(0);
+            // this.updateResultDisplay(this.seconds); // Passa os segundos atuais para o display de resultado
+            // Correção: updateResultDisplay usa this.seconds, não precisa passar como argumento.
+            this.updateResultDisplay();
         }
     }
 
@@ -66,7 +70,7 @@ export default class Timer {
         return this.seconds;
     }
 
-    updateResultDisplay() {
+    updateResultDisplay() { // Não precisa de argumento, usa this.seconds
         if (this.resultadoTempoElement) {
             // console.log("TIMER.JS: updateResultDisplay - Atualizando display de resultado com", this.seconds, "segundos.");
             this.resultadoTempoElement.textContent = this._formatTime(this.seconds);

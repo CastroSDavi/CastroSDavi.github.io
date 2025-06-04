@@ -5,17 +5,20 @@
  * Os caminhos são relativos à raiz do site.
  */
 export const API_URLS = {
-    api_get_quiz_data: '/api/quiz/alldata/',       // Endpoint para buscar todos os dados do quiz (perguntas, categorias, opções)
-    start_quiz_session: '/api/quiz/start-session/', // Endpoint para iniciar uma nova sessão de quiz
-    register_answer: '/api/quiz/register-answer/', // Endpoint para registrar a resposta de um usuário a uma pergunta
-    end_quiz_session: '/api/quiz/end-session/',     // Endpoint para finalizar uma sessão de quiz
+    api_get_quiz_data: '/api/quiz/alldata/',
+    start_quiz_session: '/api/quiz/start-session/',
+    register_answer: '/api/quiz/register-answer/',
+    end_quiz_session: '/api/quiz/end-session/',
     toggle_favorite_status: (perguntaId) => `/api/question/${perguntaId}/toggle_favorite/`,
-    get_favorite_questions: '/api/favorites/',      // Endpoint para buscar questões favoritas
-    api_get_user_statistics: '/api/user-statistics/' // NOVA URL para estatísticas do usuário
+    get_favorite_questions: '/api/favorites/',
+    api_get_user_statistics: '/api/user-statistics/',
+    api_resume_quiz_session: '/api/quiz/resume-session/' // NOVA URL ADICIONADA
 };
 
 /**
  * Número padrão de perguntas para o modo "Quiz Rápido".
+ * Este valor pode ser usado como fallback no frontend.
+ * A configuração principal agora pode vir do backend (ConfiguracoesGeraisQuiz).
  */
 export const QUICK_QUIZ_COUNT = 10;
 

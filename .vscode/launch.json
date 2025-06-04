@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Edge for MedQuiz Django",
+            "request": "launch",
+            "type": "msedge", // ou "edge", dependendo da versão da extensão
+            "url": "http://localhost:8000/", // << IMPORTANTE: Coloque a URL do seu servidor Django aqui
+            "webRoot": "${workspaceFolder}"
+            // "userDataDir": false, // Opcional: use um perfil de usuário limpo
+            // "sourceMaps": true, // Se você estiver usando ferramentas que geram source maps para JS/CSS
+        }
+        // Você pode adicionar outras configurações aqui, como "attach"
+    ]
+}

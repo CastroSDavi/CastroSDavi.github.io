@@ -2,48 +2,31 @@
 
 .category-tag {
     display: inline-block;
-    padding: 0.3em 0.75em; /* Ajuste para um visual equilibrado */
-    margin: 0.2em; /* Espaçamento consistente ao redor da tag */
-    font-size: var(--font-size-xs, 0.8rem); /* Um pouco menor que o texto base */
-    font-weight: var(--font-weight-medium);
+    padding: 0.3em 0.75em;
+    margin: 0.2em 0.3em 0.2em 0;
+    font-size: var(--font-size-sm, 0.875rem); /* Usando variável existente */
+    font-weight: var(--font-weight-normal);
     line-height: 1.4;
-    color: var(--color-primary-dark); 
-    background-color: var(--color-gray-100); /* Fundo bem sutil */
-    border: 1px solid var(--color-gray-300); 
-    border-radius: var(--border-radius-md, 6px); /* Cantos suavemente arredondados */
-    white-space: nowrap; /* Impede que o texto da tag quebre linha */
+    color: var(--color-primary-dark); /* Cor do texto da tag */
+    background-color: var(--color-primary-light); /* Fundo sutil para a tag */
+    border: 1px solid var(--color-gray-300); /* Borda discreta, pode ser --color-primary-medium para mais destaque */
+    border-radius: var(--border-radius-md, 6px); /* Coerente com o site */
+    white-space: nowrap;
     transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
 }
 
-.category-tag:hover {
-    background-color: var(--color-gray-200); /* Leve destaque no hover */
-    border-color: var(--color-gray-400);
-    color: var(--color-primary-dark); /* Mantém a cor do texto ou escurece um pouco */
-}
-
-/* Estilo para uma tag indicando 'Não especificada', se necessário */
-.category-tag--none {
-    color: var(--color-text-muted);
-    background-color: var(--color-gray-100);
-    border-color: var(--color-gray-200);
-    font-style: italic;
-}
-
-/* Contêiner para as tags no Modal de Explicação */
+/* Dentro do modal de explicação, o container de tags */
 #explanation-modal-categories {
     display: flex;
     flex-wrap: wrap; /* Permite que as tags quebrem para a próxima linha */
-    gap: var(--spacing-xs, 6px); /* Espaçamento entre as tags */
+    gap: 0.3em; /* Espaçamento entre as tags */
     padding-top: var(--spacing-xxs, 4px); /* Pequeno espaço se houver múltiplas linhas */
-    /* O elemento <span> já é inline-block por padrão, mas flex é mais robusto para o container */
 }
 
-/* Contêiner para as tags na Lista de Favoritos (na página da conta) */
-/* Supondo que você adicione uma classe como esta no FavoriteManager.js */
-.favorite-question-details .categories-tags-container {
+/* Na lista de favoritos, se você criar um container similar */
+.favorite-question-item .categories-tags-container { /* Exemplo de seletor */
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-xs, 6px);
-    margin-top: var(--spacing-xxs, 4px); /* Espaço acima das tags, abaixo do link da pergunta */
-    margin-bottom: var(--spacing-xxs, 4px); /* Espaço abaixo das tags, antes da data */
+    gap: 0.3em;
+    margin-top: var(--spacing-xxs, 4px);
 }

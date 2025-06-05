@@ -1,391 +1,397 @@
 /* assets/css/components/card.css */
 
 .card {
-    background-color: var(--card-bg-color, var(--color-white));
-    border: var(--card-border-width, var(--border-width)) solid var(--card-border-color, var(--color-gray-400));
-    border-radius: var(--card-border-radius, var(--border-radius-md));
-    box-shadow: var(--card-box-shadow, var(--shadow-md));
-    padding: var(--card-padding, var(--spacing-lg, 30px));
-    position: relative;
-    width: 100%;
+    background-color: var(--card-bg-color, var(--color-white)); /* */
+    border: var(--card-border-width, var(--border-width)) solid var(--card-border-color, var(--color-gray-400)); /* */
+    border-radius: var(--card-border-radius, var(--border-radius-md)); /* */
+    box-shadow: var(--card-box-shadow, var(--shadow-md)); /* */
+    padding: var(--card-padding, var(--spacing-lg, 30px)); /* */
+    position: relative; /* */
+    width: 100%; /* */
 }
 
 .card__header {
-    padding-bottom: var(--card-header-padding-bottom, var(--spacing-sm, 16px));
-    margin-bottom: var(--card-header-margin-bottom, var(--spacing-sm, 16px));
-    border-bottom: var(--card-header-border-bottom-width, var(--border-width)) solid var(--card-header-border-bottom-color, var(--color-gray-300));
+    padding-bottom: var(--card-header-padding-bottom, var(--spacing-sm, 16px)); /* */
+    margin-bottom: var(--card-header-margin-bottom, var(--spacing-sm, 16px)); /* */
+    border-bottom: var(--card-header-border-bottom-width, var(--border-width)) solid var(--card-header-border-bottom-color, var(--color-gray-300)); /* */
 }
-.card__header:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+.card__header:last-child { /* */
+    border-bottom: none; /* */
+    margin-bottom: 0; /* */
+    padding-bottom: 0; /* */
 }
 
 .card__title {
-    font-family: var(--font-family-heading);
-    font-size: var(--card-title-font-size, var(--font-size-h3, 1.5rem));
-    font-weight: var(--font-weight-semibold);
-    color: var(--card-title-color, var(--color-primary-dark));
-    margin-top: 0;
-    margin-bottom: var(--card-title-margin-bottom, var(--spacing-md, 20px));
-    line-height: var(--line-height-heading);
+    font-family: var(--font-family-heading); /* */
+    font-size: var(--card-title-font-size, var(--font-size-h3, 1.5rem)); /* */
+    font-weight: var(--font-weight-semibold); /* */
+    color: var(--card-title-color, var(--color-primary-dark)); /* */
+    margin-top: 0; /* */
+    margin-bottom: var(--card-title-margin-bottom, var(--spacing-md, 20px)); /* */
+    line-height: var(--line-height-heading); /* */
 }
-.card__title:last-child {
-    margin-bottom: 0;
+.card__title:last-child { /* */
+    margin-bottom: 0; /* */
 }
 
-.card__body {}
+.card__body {} /* */
 
-.card__body--flush {
-    padding: 0 !important;
-    margin: calc(var(--card-padding, var(--spacing-lg, 30px)) * -1);
+.card__body--flush { /* */
+    padding: 0 !important; /* */
+    margin: calc(var(--card-padding, var(--spacing-lg, 30px)) * -1); /* */
 }
 
 .card__footer {
-    padding-top: var(--card-footer-padding-top, var(--spacing-sm, 16px));
-    margin-top: var(--card-footer-margin-top, var(--spacing-sm, 16px));
-    border-top: var(--card-footer-border-top-width, var(--border-width)) solid var(--card-footer-border-top-color, var(--color-gray-300));
-    font-size: var(--font-size-sm, 0.9rem);
-    color: var(--color-gray-700);
+    padding-top: var(--card-footer-padding-top, var(--spacing-sm, 16px)); /* */
+    margin-top: var(--card-footer-margin-top, var(--spacing-sm, 16px)); /* */
+    border-top: var(--card-footer-border-top-width, var(--border-width)) solid var(--card-footer-border-top-color, var(--color-gray-300)); /* */
+    font-size: var(--font-size-sm, 0.9rem); /* */
+    color: var(--color-gray-700); /* */
 }
-.card__footer:first-child {
-    border-top: none;
-    margin-top: 0;
-    padding-top: 0;
-}
-
-.card--interactive:hover {
-    box-shadow: var(--card-hover-box-shadow, var(--shadow-lg));
-    transform: translateY(-2px);
-    transition: box-shadow var(--transition-medium), transform var(--transition-medium);
+.card__footer:first-child { /* */
+    border-top: none; /* */
+    margin-top: 0; /* */
+    padding-top: 0; /* */
 }
 
-.card--no-padding { --card-padding: 0; }
-.card--centered-content { text-align: center; }
+.card--interactive:hover { /* */
+    box-shadow: var(--card-hover-box-shadow, var(--shadow-lg)); /* */
+    transform: translateY(-2px); /* */
+    transition: box-shadow var(--transition-medium), transform var(--transition-medium); /* */
+}
+
+.card--no-padding { --card-padding: 0; } /* */
+.card--centered-content { text-align: center; } /* */
 
 .card--aviso {
-    text-align: center;
-    line-height: 1.5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--color-gray-50);
-    border-color: var(--color-gray-300);
-    box-shadow: none;
+    text-align: center; /* */
+    line-height: 1.5; /* */
+    display: flex; /* */
+    justify-content: center; /* */
+    align-items: center; /* */
+    background-color: var(--color-gray-50); /* */
+    border-color: var(--color-gray-300); /* */
+    box-shadow: none; /* */
 }
-.card--aviso p { color: var(--color-text-secondary); font-size: var(--font-size-base); }
+.card--aviso p { color: var(--color-text-secondary); font-size: var(--font-size-base); } /* */
 
-.card--conta-perfil { margin-top: 0; max-width: 800px; }
+.card--conta-perfil { margin-top: 0; max-width: 800px; } /* */
 
 .card--question-wrap {
-    margin-bottom: var(--spacing-lg, 25px);
-    transition: opacity var(--transition-duration-slow, 0.4s) var(--transition-timing-function-ease, ease-in-out);
+    margin-bottom: var(--spacing-lg, 25px); /* */
+    transition: opacity var(--transition-duration-slow, 0.4s) var(--transition-timing-function-ease, ease-in-out); /* */
 }
-.card--question-wrap.is-fading-out { opacity: 0; }
-.card--question-wrap.is-transparent { opacity: 0; transition: none; }
+.card--question-wrap.is-fading-out { opacity: 0; } /* */
+.card--question-wrap.is-transparent { opacity: 0; transition: none; } /* */
 
 .card--placeholder-filtros {
-    background-color: var(--color-gray-50);
-    border: 1px dashed var(--color-gray-300);
-    text-align: center;
-    padding: var(--spacing-xl, 35px) var(--spacing-lg, 30px);
-    margin: var(--spacing-lg, 25px) auto;
-    max-width: 650px;
-    box-shadow: none;
-    border-radius: var(--border-radius-lg);
+    background-color: var(--color-gray-50); /* */
+    border: 1px dashed var(--color-gray-300); /* */
+    text-align: center; /* */
+    padding: var(--spacing-xl, 35px) var(--spacing-lg, 30px); /* */
+    margin: var(--spacing-lg, 25px) auto; /* */
+    max-width: 650px; /* */
+    box-shadow: none; /* */
+    border-radius: var(--border-radius-lg); /* */
 }
 .card--placeholder-filtros .placeholder-icon {
-    font-size: 3.8rem; color: var(--color-primary-medium); margin-bottom: var(--spacing-md, 20px);
-    display: block; opacity: 0.8; line-height: 1;
+    font-size: 3.8rem; color: var(--color-primary-medium); margin-bottom: var(--spacing-md, 20px); /* */
+    display: block; opacity: 0.8; line-height: 1; /* */
 }
 .card--placeholder-filtros h3 {
-    font-family: var(--font-family-heading); font-size: var(--font-size-h3); color: var(--color-primary-dark);
-    margin-top: 0; margin-bottom: var(--spacing-sm, 15px);
+    font-family: var(--font-family-heading); font-size: var(--font-size-h3); color: var(--color-primary-dark); /* */
+    margin-top: 0; margin-bottom: var(--spacing-sm, 15px); /* */
 }
 .card--placeholder-filtros p {
-    color: var(--color-text-secondary); line-height: 1.65; margin-bottom: var(--spacing-md, 18px);
-    font-size: var(--font-size-base, 0.95rem); max-width: 500px; margin-left: auto; margin-right: auto;
+    color: var(--color-text-secondary); line-height: 1.65; margin-bottom: var(--spacing-md, 18px); /* */
+    font-size: var(--font-size-base, 0.95rem); max-width: 500px; margin-left: auto; margin-right: auto; /* */
 }
 .card--placeholder-filtros p.placeholder-ou {
-    font-style: italic; color: var(--color-gray-600); margin: var(--spacing-md, 20px) 0;
-    font-size: var(--font-size-sm, 0.9rem);
+    font-style: italic; color: var(--color-gray-600); margin: var(--spacing-md, 20px) 0; /* */
+    font-size: var(--font-size-sm, 0.9rem); /* */
 }
-.card--placeholder-filtros .button { margin-top: var(--spacing-xs, 8px); }
+.card--placeholder-filtros .button { margin-top: var(--spacing-xs, 8px); } /* */
 
 /* ========================================================================== */
 /* == CARD DE RESULTADO DO QUIZ - ESTILO PREMIUM & COERENTE (v7 - Ajustado) == */
 /* ========================================================================== */
-
+/* */
 .card--quiz-result {
-    /* AJUSTE: Padding vertical geral do card levemente reduzido */
-    --result-card-padding-y: clamp(var(--spacing-md, 28px), 6vh, var(--spacing-lg, 38px)); /* Era 32px, 7vh, 48px */
-    --result-card-padding-x: clamp(var(--spacing-md, 24px), 5vw, var(--spacing-lg, 32px)); /* AJUSTE: Padding horizontal um pouco mais responsivo */
+    --result-card-padding-y: clamp(var(--spacing-md, 28px), 6vh, var(--spacing-lg, 38px)); /* */
+    --result-card-padding-x: clamp(var(--spacing-md, 24px), 5vw, var(--spacing-lg, 32px)); /* */
     
-    --result-card-accent: var(--color-primary-dark);
-    --result-card-accent-secondary: var(--color-secondary-green);
+    --result-card-accent: var(--color-primary-dark); /* */
+    --result-card-accent-secondary: var(--color-secondary-green); /* */
 
-    background-color: var(--color-white);
-    border-radius: var(--border-radius-xl, 20px); 
+    background-color: var(--color-white); /* */
+    border-radius: var(--border-radius-xl, 20px);  /* */
     box-shadow: 0 20px 60px -10px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
-                0 8px 20px -5px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);  
-    padding: var(--result-card-padding-y) var(--result-card-padding-x);
+                0 8px 20px -5px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);   /* */
+    padding: var(--result-card-padding-y) var(--result-card-padding-x); /* */
     
-    /* AJUSTE: Largura máxima aumentada para melhor proporção em telas maiores */
-    max-width: 620px; /* Valor original era 480px, depois 680px. Teste este valor. */
+    max-width: 620px; /* */
     
-    margin: var(--spacing-lg, 30px) auto; /* AJUSTE: Margem vertical um pouco menor */
-    text-align: center;
-    animation: fadeInScaleUpResultCardV6 0.6s cubic-bezier(0.16, 1, 0.3, 1) .1s forwards; 
-    opacity: 0;
-    transform: scale(0.92) translateY(10px); 
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    margin: var(--spacing-lg, 30px) auto; /* */
+    text-align: center; /* */
+    animation: fadeInScaleUpResultCardV6 0.6s cubic-bezier(0.16, 1, 0.3, 1) .1s forwards;  /* */
+    opacity: 0; /* */
+    transform: scale(0.92) translateY(10px);  /* */
+    display: flex; /* */
+    flex-direction: column; /* */
+    position: relative; /* */
 }
 
-.card--quiz-result .card__body {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    /* AJUSTE: Gap entre os blocos principais do card levemente reduzido */
-    gap: var(--spacing-md, 22px); /* Era --spacing-lg (28px), depois 24px */
+.card--quiz-result .card__body { /* */
+    padding: 0; /* */
+    display: flex; /* */
+    flex-direction: column; /* */
+    gap: var(--spacing-md, 22px); /* */
 }
 
-.quiz-results__main-title { 
-    font-family: var(--font-family-heading); 
-    font-size: clamp(1.6rem, 5vw, 2rem); /* AJUSTE: Título um pouco menor */
-    color: var(--color-text-primary);
-    font-weight: var(--font-weight-semibold); 
-    line-height: var(--line-height-tight);
-    margin-bottom: 0; 
+.quiz-results__main-title {  /* */
+    font-family: var(--font-family-heading);  /* */
+    font-size: clamp(1.6rem, 5vw, 2rem); /* */
+    color: var(--color-text-primary); /* */
+    font-weight: var(--font-weight-semibold);  
+    line-height: var(--line-height-tight); /* */
+    margin-bottom: 0;  /* */
 }
 
-/* Bloco da Pontuação Principal */
-.quiz-results__primary-score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    /* AJUSTE: Padding vertical do bloco de pontuação principal reduzido */
-    padding: var(--spacing-xxs, 4px) 0 var(--spacing-xs, 8px) 0; /* Era 8px e 12px */
+.quiz-results__primary-score { /* */
+    display: flex; /* */
+    flex-direction: column; /* */
+    align-items: center; /* */
+    justify-content: center; /* */
+    padding: var(--spacing-xxs, 4px) 0 var(--spacing-xs, 8px) 0; /* */
 }
 
-.quiz-results__primary-score-value { 
-    font-family: var(--font-family-heading); 
-    font-size: clamp(3rem, 10vw, 4rem); /* AJUSTE: Pontuação um pouco menor para equilibrar */
-    font-weight: var(--font-weight-bold); 
-    line-height: 1;
-    color: var(--result-card-accent); 
-    margin-bottom: var(--spacing-xxs, 2px); 
+.quiz-results__primary-score-value {  /* */
+    font-family: var(--font-family-heading);  /* */
+    font-size: clamp(3rem, 10vw, 4rem); /* */
+    font-weight: var(--font-weight-bold);  /* */
+    line-height: 1; /* */
+    color: var(--result-card-accent);  /* */
+    margin-bottom: var(--spacing-xxs, 2px);  /* */
 }
 
-.quiz-results__primary-score-label { 
-    font-family: var(--font-family-sans); 
-    font-size: var(--font-size-xs, 0.8rem); /* AJUSTE: Label "PONTOS" um pouco menor */
-    color: var(--color-text-muted);
-    font-weight: var(--font-weight-medium); 
-    text-transform: uppercase;
-    letter-spacing: 0.1em; /* AJUSTE: Espaçamento entre letras um pouco menor */
+.quiz-results__primary-score-label {  /* */
+    font-family: var(--font-family-sans);  /* */
+    font-size: var(--font-size-xs, 0.8rem); /* */
+    color: var(--color-text-muted); /* */
+    font-weight: var(--font-weight-medium);  /* */
+    text-transform: uppercase; /* */
+    letter-spacing: 0.1em; /* */
 }
 
-/* Bloco das Estatísticas Secundárias */
-.quiz-results__secondary-stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: var(--spacing-xs, 12px); /* AJUSTE: Gap entre os stats um pouco menor */
-    /* AJUSTE: Padding vertical do bloco de stats reduzido */
-    padding: var(--spacing-sm, 16px) 0; /* Era 20px */
-    border-top: 1px solid var(--color-gray-200);
-    border-bottom: 1px solid var(--color-gray-200);
+.quiz-results__secondary-stats { /* */
+    display: grid; /* */
+    grid-template-columns: repeat(3, 1fr);  /* */
+    gap: var(--spacing-xs, 12px); /* */
+    padding: var(--spacing-sm, 16px) 0; /* */
+    border-top: 1px solid var(--color-gray-200); /* */
+    border-bottom: 1px solid var(--color-gray-200); /* */
 }
 
-.stat-block {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xxs, 4px); /* AJUSTE: Gap interno do bloco de stat reduzido */
-    text-align: center;
+.stat-block { /* */
+    display: flex; /* */
+    flex-direction: column; /* */
+    align-items: center; /* */
+    justify-content: center; /* */
+    gap: var(--spacing-xxs, 4px); /* */
+    text-align: center; /* */
 }
 
-.stat-block__icon {
-    font-size: 1.5rem; /* AJUSTE: Ícone do stat um pouco menor */
-    margin-bottom: var(--spacing-xxs, 4px); /* AJUSTE: Margem abaixo do ícone */
-    color: var(--color-text-secondary);
-    line-height: 1;
-    background-color: var(--color-gray-100); 
-    width: 38px; /* AJUSTE: Círculo do ícone um pouco menor */
-    height: 38px;
-    border-radius: var(--border-radius-circle);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.stat-block__icon { /* */
+    font-size: 1.5rem; /* */
+    margin-bottom: var(--spacing-xxs, 4px); /* */
+    color: var(--color-text-secondary); /* */
+    line-height: 1; /* */
+    background-color: var(--color-gray-100);  /* */
+    width: 38px; /* */
+    height: 38px; /* */
+    border-radius: var(--border-radius-circle); /* */
+    display: flex; /* */
+    align-items: center; /* */
+    justify-content: center; /* */
 }
-.stat-block--correct .stat-block__icon {
-    color: var(--result-card-accent-secondary); 
-    background-color: rgba(var(--color-secondary-green-rgb), 0.1);
+.stat-block--correct .stat-block__icon { /* */
+    color: var(--result-card-accent-secondary);  /* */
+    background-color: rgba(var(--color-secondary-green-rgb), 0.1); /* */
 }
-.stat-block--incorrect .stat-block__icon {
-    color: var(--color-accent-red); 
-    background-color: rgba(var(--color-accent-red-rgb), 0.1);
+.stat-block--incorrect .stat-block__icon { /* */
+    color: var(--color-accent-red);  /* */
+    background-color: rgba(var(--color-accent-red-rgb), 0.1); /* */
 }
-.quiz-results__secondary-stats .stat-block:first-child .stat-block__icon { 
-    color: var(--color-primary-medium);
-    background-color: rgba(var(--color-primary-medium-rgb), 0.1);
-}
-
-.stat-block__label {
-    font-family: var(--font-family-sans);
-    font-size: var(--font-size-xs, 0.75rem); 
-    color: var(--color-text-muted);
-    font-weight: var(--font-weight-normal); 
-    line-height: 1.3;
-    text-transform: capitalize;
+.quiz-results__secondary-stats .stat-block:first-child .stat-block__icon {  /* */
+    color: var(--color-primary-medium); /* */
+    background-color: rgba(var(--color-primary-medium-rgb), 0.1); /* */
 }
 
-.stat-block__value {
-    font-family: var(--font-family-heading); 
-    font-size: 1.3rem; /* AJUSTE: Valor do stat um pouco menor */
-    font-weight: var(--font-weight-semibold); 
-    color: var(--color-text-primary);
-    line-height: 1;
-}
-.stat-block--correct .stat-block__value { color: var(--result-card-accent-secondary); }
-.stat-block--incorrect .stat-block__value { color: var(--color-accent-red); }
-
-/* Mensagem Motivacional */
-.quiz-results__message {
-    font-family: var(--font-family-sans);
-    font-size: var(--font-size-sm, 0.9rem); /* AJUSTE: Mensagem levemente menor */
-    color: var(--color-text-secondary);
-    padding: var(--spacing-xs, 12px); /* AJUSTE: Padding da mensagem reduzido */
-    background-color: var(--color-gray-50); 
-    border-radius: var(--border-radius-md);
-    margin-top: 0; /* O gap do card__body já cuida */
-    line-height: var(--line-height-base);
-    text-align: center;
-    border: 1px solid var(--color-gray-200);
+.stat-block__label { /* */
+    font-family: var(--font-family-sans); /* */
+    font-size: var(--font-size-xs, 0.75rem);  /* */
+    color: var(--color-text-muted); /* */
+    font-weight: var(--font-weight-normal);  /* */
+    line-height: 1.3; /* */
+    text-transform: capitalize; /* */
 }
 
-/* Rodapé do Card de Resultado (Ações) */
-.card--quiz-result .card__footer {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--spacing-sm, 12px);
-    padding: 0;
-    /* AJUSTE: Padding acima dos botões reduzido */
-    padding-top: var(--spacing-md, 18px); /* Era 24px */
-    border-top: none;
-    background-color: transparent;
+.stat-block__value { /* */
+    font-family: var(--font-family-heading);  /* */
+    font-size: 1.3rem; /* */
+    font-weight: var(--font-weight-semibold);  /* */
+    color: var(--color-text-primary); /* */
+    line-height: 1; /* */
+}
+.stat-block--correct .stat-block__value { color: var(--result-card-accent-secondary); } /* */
+.stat-block--incorrect .stat-block__value { color: var(--color-accent-red); } /* */
+
+.quiz-results__message { /* */
+    font-family: var(--font-family-sans); /* */
+    font-size: var(--font-size-sm, 0.9rem); /* */
+    color: var(--color-text-secondary); /* */
+    padding: var(--spacing-xs, 12px); /* */
+    background-color: var(--color-gray-50);  /* */
+    border-radius: var(--border-radius-md); /* */
+    margin-top: 0; /* */
+    line-height: var(--line-height-base); /* */
+    text-align: center; /* */
+    border: 1px solid var(--color-gray-200); /* */
 }
 
-.quiz-results__action-button {
-    width: 100%;
-    padding: var(--spacing-xs, 11px) var(--spacing-sm, 16px); /* AJUSTE: Padding dos botões */
-    font-size: var(--font-size-sm, 0.875rem); /* AJUSTE: Fonte dos botões */
-    font-weight: var(--font-weight-semibold); 
-    border-radius: var(--border-radius-lg); 
-    letter-spacing: 0.4px;
-    transition: all 0.2s ease-out;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-xs, 8px);
-}
-.quiz-results__action-button.button--primary {
-    background-color: var(--result-card-accent);
-    border-color: var(--result-card-accent);
-    color: var(--color-white);
-}
-.quiz-results__action-button.button--primary:hover {
-    background-color: var(--color-primary-medium);
-    border-color: var(--color-primary-medium);
-    transform: translateY(-2px) scale(1.01);
-    box-shadow: 0 5px 12px rgba(var(--color-primary-dark-rgb), 0.18);
-}
-.quiz-results__action-button.button--outline {
-    color: var(--result-card-accent);
-    border: 2px solid var(--result-card-accent);
-}
-.quiz-results__action-button.button--outline:hover {
-    background-color: rgba(var(--color-primary-dark-rgb), 0.04);
-    color: var(--result-card-accent);
-    transform: translateY(-2px);
-}
-.quiz-results__action-button .button__icon {
-    font-size: 1.25rem; /* AJUSTE: Ícone do botão um pouco menor */
-    font-variation-settings: 'wght' 400;
-    line-height: 1;
+.card--quiz-result .card__footer { /* */
+    display: grid; /* */
+    grid-template-columns: 1fr; /* */
+    gap: var(--spacing-sm, 12px); /* */
+    padding: 0; /* */
+    padding-top: var(--spacing-md, 18px); /* */
+    border-top: none; /* */
+    background-color: transparent; /* */
 }
 
-/* Animação de entrada */
-@keyframes fadeInScaleUpResultCardV6 {
-  0% { opacity: 0; transform: scale(0.92) translateY(15px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+.quiz-results__action-button { /* */
+    width: 100%; /* */
+    padding: var(--spacing-xs, 11px) var(--spacing-sm, 16px); /* */
+    font-size: var(--font-size-sm, 0.875rem); /* */
+    font-weight: var(--font-weight-semibold);  /* */
+    border-radius: var(--border-radius-lg);  /* */
+    letter-spacing: 0.4px; /* */
+    transition: all 0.2s ease-out; /* */
+    display: inline-flex; /* */
+    align-items: center; /* */
+    justify-content: center; /* */
+    gap: var(--spacing-xs, 8px); /* */
 }
-/* Manter a animação genérica fadeIn se usada em outros lugares */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+.quiz-results__action-button.button--primary { /* */
+    background-color: var(--result-card-accent); /* */
+    border-color: var(--result-card-accent); /* */
+    color: var(--color-white); /* */
+}
+.quiz-results__action-button.button--primary:hover { /* */
+    background-color: var(--color-primary-medium); /* */
+    border-color: var(--color-primary-medium); /* */
+    transform: translateY(-2px) scale(1.01); /* */
+    box-shadow: 0 5px 12px rgba(var(--color-primary-dark-rgb), 0.18); /* */
+}
+.quiz-results__action-button.button--outline { /* */
+    color: var(--result-card-accent); /* */
+    border: 2px solid var(--result-card-accent); /* */
+}
+.quiz-results__action-button.button--outline:hover { /* */
+    background-color: rgba(var(--color-primary-dark-rgb), 0.04); /* */
+    color: var(--result-card-accent); /* */
+    transform: translateY(-2px); /* */
+}
+.quiz-results__action-button .button__icon { /* */
+    font-size: 1.25rem; /* */
+    font-variation-settings: 'wght' 400; /* */
+    line-height: 1; /* */
 }
 
+@keyframes fadeInScaleUpResultCardV6 { /* */
+  0% { opacity: 0; transform: scale(0.92) translateY(15px); } /* */
+  100% { opacity: 1; transform: scale(1) translateY(0); } /* */
+}
+@keyframes fadeIn { /* */
+  from { opacity: 0; transform: translateY(10px); } /* */
+  to { opacity: 1; transform: translateY(0); } /* */
+}
 
-/* --- RESPONSIVIDADE --- */
-@media (min-width: 480px) { /* AJUSTE: Mudei de 450px para 480px para ser mais consistente com outros breakpoints comuns */
-    .card--quiz-result .card__footer {
-        grid-template-columns: 1fr 1fr;
-        gap: var(--spacing-md, 16px);
+@media (min-width: 480px) { /* */
+    .card--quiz-result .card__footer { /* */
+        grid-template-columns: 1fr 1fr; /* */
+        gap: var(--spacing-md, 16px); /* */
     }
-    .quiz-results__action-button {
-        width: auto;
+    .quiz-results__action-button { /* */
+        width: auto; /* */
     }
 }
 
-@media (min-width: 769px) and (max-width: 992px) { /* Para tablets */
-    .card--quiz-result {
-        /* Se max-width: 620px for muito para tablets, aqui pode ser menor, ou usar % */
-        max-width: 88%; /* Exemplo: 88% da largura do container pai */
+@media (min-width: 769px) and (max-width: 992px) { /* */
+    .card--quiz-result { /* */
+        max-width: 88%; /* */
     }
 }
 
-@media (max-width: 768px) { /* Tablet Portrait e Mobile Geral */
-    .card { --card-padding: var(--spacing-md, 20px); }
-    .card--quiz-result {
-        max-width: 92%; /* AJUSTE: Aumentar um pouco a porcentagem para mobile */
-        --result-card-padding-y: var(--spacing-md, 24px); /* AJUSTE: Menor padding vertical */
-        --result-card-padding-x: var(--spacing-sm, 16px); /* AJUSTE: Menor padding horizontal */
+@media (max-width: 768px) { /* */
+    .card { --card-padding: var(--spacing-md, 20px); } /* */
+    .card--quiz-result { /* */
+        max-width: 92%; /* */
+        --result-card-padding-y: var(--spacing-md, 24px); /* */
+        --result-card-padding-x: var(--spacing-sm, 16px); /* */
     }
-    .card--quiz-result .card__body { gap: var(--spacing-md, 20px); } /* AJUSTE: Menor gap interno */
+    .card--quiz-result .card__body { gap: var(--spacing-md, 20px); } /* */
 }
 
-@media (max-width: 480px) { /* Mobile (Mudado de 400px para consistência) */
-    .card--quiz-result {
-        --result-card-padding-y: var(--spacing-sm, 20px);
-        --result-card-padding-x: var(--spacing-xs, 12px);
+@media (max-width: 480px) { /* */
+    .card--quiz-result { /* */
+        --result-card-padding-y: var(--spacing-sm, 20px); /* */
+        --result-card-padding-x: var(--spacing-xs, 12px); /* */
     }
-    .quiz-results__main-title { font-size: clamp(1.5rem, 5.2vw, 1.8rem); }
-    .quiz-results__primary-score-value { font-size: clamp(2.8rem, 9vw, 3.6rem); }
+    .quiz-results__main-title { font-size: clamp(1.5rem, 5.2vw, 1.8rem); } /* */
+    .quiz-results__primary-score-value { font-size: clamp(2.8rem, 9vw, 3.6rem); } /* */
 
-    .quiz-results__secondary-stats {
-        grid-template-columns: 1fr; 
-        gap: var(--spacing-sm, 14px); /* AJUSTE: Menor gap quando empilhado */
-        padding-top: var(--spacing-sm, 14px);
-        padding-bottom: var(--spacing-sm, 14px);
+    .quiz-results__secondary-stats { /* */
+        grid-template-columns: 1fr;  /* */
+        gap: var(--spacing-sm, 14px); /* */
+        padding-top: var(--spacing-sm, 14px); /* */
+        padding-bottom: var(--spacing-sm, 14px); /* */
     }
-    .stat-block {
-        flex-direction: row; 
-        justify-content: flex-start; 
-        gap: var(--spacing-xs, 8px); /* AJUSTE: Menor gap entre ícone e texto */
-        padding: var(--spacing-xxs, 3px) 0;
+    .stat-block { /* */
+        flex-direction: row;  /* */
+        justify-content: flex-start;  /* */
+        gap: var(--spacing-xs, 8px); /* */
+        padding: var(--spacing-xxs, 3px) 0; /* */
     }
-    .stat-block__icon {
-        font-size: 1.3rem; 
-        width: 30px; 
-        height: 30px;
+    .stat-block__icon { /* */
+        font-size: 1.3rem;  /* */
+        width: 30px;  /* */
+        height: 30px; /* */
     }
-    .stat-block__label { order: 1; }
-    .stat-block__value { order: 2; font-size: 1.15rem; }
+    .stat-block__label { order: 1; } /* */
+    .stat-block__value { order: 2; font-size: 1.15rem; } /* */
 
-    .quiz-results__message { font-size: var(--font-size-xs, 0.825rem); } /* AJUSTE */
-    .quiz-results__action-button { font-size: var(--font-size-xs, 0.825rem); } /* AJUSTE */
+    .quiz-results__message { font-size: var(--font-size-xs, 0.825rem); } /* */
+    .quiz-results__action-button { font-size: var(--font-size-xs, 0.825rem); } /* */
+}
+
+/* ========================================================================== */
+/* == ANIMAÇÃO DE ENTRADA PARA QUESTÕES (NOVO) == */
+/* ========================================================================== */
+
+/* Nova classe para a animação de entrada da sessão/questão */
+/* Aplicada ao .card--question-wrap */
+.card--question-wrap.quiz-session-entering {
+    animation: suaveEntradaQuestao 0.55s var(--transition-timing-function-ease-out) forwards;
+}
+
+@keyframes suaveEntradaQuestao {
+    from {
+        opacity: 0.2; /* Começa um pouco visível para não ser tão abrupto quanto 0 */
+        transform: translateY(25px) scale(0.97); /* Começa um pouco abaixo e menor */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1); /* Termina na posição e tamanho normais */
+    }
 }

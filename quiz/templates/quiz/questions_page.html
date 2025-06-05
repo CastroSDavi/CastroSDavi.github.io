@@ -90,7 +90,6 @@
                 </div>
                 <span id="progress-text" class="progress-bar__text u-is-hidden">0 / 0</span>
 
-                {# ===== NOVO WRAPPER DO TÍTULO E BOTÃO DE FAVORITO ===== #}
                 <div class="question-header-actions">
                     <h2 id="question-title" tabindex="-1">
                         <span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
@@ -100,8 +99,7 @@
                         <span class="material-symbols-outlined">star_outline</span>
                     </button>
                 </div>
-                {# ===== FIM DO NOVO WRAPPER ===== #}
-
+                
                 <div class="card card--question-wrap">
                     <div class="card__body">
                         <div class="question-display__text">
@@ -133,19 +131,7 @@
                 </div>
             </section>
 
-            <div id="confirm-encerrar-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="modalConfirmTitle" aria-modal="true">
-                <div id="confirm-encerrar-modal" class="card modal__dialog">
-                    <div class="modal__header">
-                        <h3 id="modalConfirmTitle" class="modal__title card__title">Confirmar Encerramento</h3>
-                    </div>
-                    <div class="modal__body">
-                        <p>Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
-                    </div>
-                    <div class="modal__footer modal__footer--stacked">
-                        <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
-                        <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
-                    </div>
-                </div>
+            <div id="question-grid-container" class="question-grid u-is-hidden">
             </div>
 
             <div class="card card--quiz-result u-is-hidden">
@@ -181,8 +167,52 @@
                     </button>
                 </div>
             </div>
-            <div id="question-grid-container" class="question-grid u-is-hidden">
+         </div>{# Fim de .question-section__main-content #}
+
+        {# Modal de Confirmação para Encerrar Sessão (EXISTENTE) #}
+        <div id="confirm-encerrar-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="modalConfirmTitle" aria-modal="true">
+            <div id="confirm-encerrar-modal" class="card modal__dialog">
+                <div class="modal__header">
+                    <h3 id="modalConfirmTitle" class="modal__title card__title">Confirmar Encerramento</h3>
+                </div>
+                <div class="modal__body">
+                    <p>Tem certeza que deseja encerrar esta tentativa? Sua pontuação atual será exibida, mas o progresso nas questões será perdido.</p>
+                </div>
+                <div class="modal__footer modal__footer--stacked">
+                    <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
+                    <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
+                </div>
             </div>
-         </div>
-    </section>
+        </div>
+
+        {# ===== NOVO: Modal de Decisão para Retomar Sessão ===== #}
+        <div id="resume-decision-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="resumeModalTitle" aria-modal="true" tabindex="-1">
+            <div id="resume-decision-modal-dialog" class="card modal__dialog">
+                <div class="modal__header">
+                    <h3 id="resumeModalTitle" class="modal__title card__title">Quiz em Andamento</h3>
+                </div>
+                <div class="modal__body">
+                    <p>Você tem um quiz que não foi finalizado. Deseja continuar de onde parou ou prefere descartar este progresso e ver outras opções de quiz?</p>
+                </div>
+                <div class="modal__footer modal__footer--stacked">
+                    <button id="btn-discard-resume" class="button button--outline button--modal-action">Descartar e Ver Opções</button>
+                    <button id="btn-confirm-resume" class="button button--primary button--modal-action">Continuar Quiz</button>
+                </div>
+            </div>
+        </div>
+    </section> {# Fim de #question-section #}
+
+    {# ===== NOVO: Indicador de Carregamento de Sessão Global ===== #}
+    {# A classe 'modal--visible' será adicionada/removida via JS para controlar visibilidade e transição #}
+    <div id="session-loading-indicator" class="session-loading-indicator-overlay u-is-hidden">
+        <div class="session-loading-indicator-content card">
+            <span class="material-symbols-outlined session-loading-indicator-spinner">
+                hourglass_bottom
+            </span>
+            <p class="session-loading-indicator-message" id="session-loading-message">
+                Carregando...
+            </p>
+        </div>
+    </div>
+
 {% endblock content %}

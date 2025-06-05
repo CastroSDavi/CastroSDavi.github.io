@@ -25,6 +25,7 @@
 @import 'components/hero-block.css';
 @import 'components/stats-deck.css';
 @import 'components/messages.css';
+@import 'components/loading-indicator.css';
 
 /* 4. SECTIONS */
 @import 'sections/home-section.css';

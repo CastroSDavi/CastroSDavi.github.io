@@ -30,11 +30,6 @@
     max-width: var(--modal-max-width, 450px); /* Largura máxima padrão */
     width: var(--modal-width, 90%); /* Largura padrão relativa à tela */
     text-align: center; /* Conteúdo centralizado por padrão */
-
-    /* Estilos de 'card' são aplicados diretamente no HTML (ex: <div class="modal__dialog card">) */
-    /* Isso permite que o modal__dialog herde paddings, background, border-radius, shadow de .card */
-
-    /* Animação de entrada para o diálogo */
     transform: scale(0.95) translateY(10px); /* Começa um pouco menor e abaixo */
     opacity: 0; /* Começa invisível para fade-in */
     transition: transform var(--transition-duration-medium, 0.25s) var(--transition-timing-function-ease-out),
@@ -96,9 +91,7 @@
 /* Responsividade para modais genéricos */
 @media (max-width: 480px) {
     .modal__dialog {
-        width: var(--modal-width-mobile, 90%); /* Mantém, mas pode ser ajustado */
-        /* max-height: 85vh; */ /* Adicionar se os modais puderem ter conteúdo longo */
-        /* overflow-y: auto; */   /* Adicionar se os modais puderem ter conteúdo longo */
+        width: var(--modal-width-mobile, 90%); 
     }
     .modal__title {
         font-size: var(--modal-title-font-size-mobile, 1.4rem);
@@ -107,10 +100,6 @@
         font-size: var(--modal-body-font-size-mobile, 0.95rem);
         margin-bottom: var(--spacing-md, 25px); /* Reduzido para mobile */
     }
-    .modal__footer { /* Por padrão, já empilha via .modal__footer--stacked se aplicado no HTML */
-        /* Se não usar --stacked, pode forçar aqui: */
-        /* flex-direction: column-reverse; */
-        /* align-items: stretch; */
-        /* gap: var(--spacing-sm, 10px); */
+    .modal__footer { 
     }
 }

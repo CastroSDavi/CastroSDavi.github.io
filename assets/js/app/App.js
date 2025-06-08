@@ -12,6 +12,7 @@ import LayoutManager from '../ui/LayoutManager.js'; //
 import FilterPanel from '../ui/FilterPanel.js'; //
 import ResultDisplay from '../ui/ResultDisplay.js'; //
 import AccountPageManager from '../ui/AccountPageManager.js'; //
+import BottomNavManager from '../ui/BottomNavManager.js';
 
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js'; //
 
@@ -107,6 +108,9 @@ export default class App {
 
                 this.setupEventListeners(); // Configura listeners globais e de componentes da UI //
                 this.determineInitialSection(); // Determina qual seção da página exibir //
+                
+                const bottomNavManager = new BottomNavManager();
+                bottomNavManager.init();
 
                 const currentPageId = document.body.dataset.pageId; //
 

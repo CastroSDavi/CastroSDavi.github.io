@@ -41,18 +41,13 @@ body.no-scroll {
   outline-offset: var(--focus-outline-offset);
 }
 
-/* Ajustes de padding para a bottom navbar em telas mobile */
-@media (max-width: 768px) {
-    body {
-        /* Padding padrão para quando a bottom-nav está visível.
-           AccountPageManager.js irá sobrescrever isso com style.paddingBottom
-           quando necessário, ou esta regra será aplicada. */
-        padding-bottom: var(--bottom-nav-height, 60px);
-    }
-
-    /* Classe adicionada ao BODY via AccountPageManager.js quando o conteúdo de uma aba
-       da página "Minha Conta" está ativo e a bottom-nav está escondida. */
-    body.body-account-content-active {
-        padding-bottom: 0 !important; /* Remove o padding para a bottom-nav */
-    }
-}
+/*
+==========================================================================
+  BLOCO REMOVIDO
+==========================================================================
+O bloco @media (max-width: 768px) que continha as regras para
+'body' e 'body.body-account-content-active' foi completamente removido
+daqui, pois não é mais necessário para o novo layout da navbar flutuante.
+Isso resolve o problema da "barra branca" sem o uso de '!important'.
+==========================================================================
+*/

@@ -74,9 +74,7 @@ main {
 }
   
 @media (max-width: 768px) { /* Tablet Portrait e Mobile */
-    body {
-      padding-bottom: var(--bottom-nav-height, 60px);
-    }
+    /* A regra 'padding-bottom' para o body foi REMOVIDA daqui */
   
     /* Muda o layout da #question-section para coluna e permite rolagem do body/main */
     #question-section.main-section {

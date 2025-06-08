@@ -9,17 +9,21 @@ html {
     font-size: 16px; /* Define a base para unidades rem */
 }
 
+/* assets/css/base/base.css */
 body {
     font-family: var(--font-family-sans);
-    color: var(--color-gray-900); /* Cor de texto principal */
-    background-color: var(--color-gray-100); /* Cor de fundo padrão do corpo */
-    line-height: 1.6; /* Altura de linha base para legibilidade */
+    color: var(--color-gray-900);
+    /* Início da Alteração: Aplicando o material Mica */
+    background-color: var(--fluent-mica-background-color); /* Cor base do Mica */
+    background-image: var(--fluent-mica-noise-texture);   /* Textura sutil sobre a cor */
+    /* Fim da Alteração */
+    line-height: 1.6;
     display: flex;
     flex-direction: column;
-    min-height: 100vh; /* Garante que o corpo ocupe pelo menos a altura total da viewport */
-    overflow-y: auto; /* Permite rolagem vertical no corpo por padrão */
-    padding-bottom: 0; /* Padding inferior padrão, será ajustado para mobile com bottom-nav */
-    transition: padding-bottom 0.25s ease-out; /* Transição suave para o padding-bottom */
+    min-height: 100vh;
+    overflow-y: auto;
+    padding-bottom: 0;
+    transition: padding-bottom 0.25s ease-out;
 }
 
 /* Classe aplicada via JavaScript para desabilitar a rolagem principal do body,

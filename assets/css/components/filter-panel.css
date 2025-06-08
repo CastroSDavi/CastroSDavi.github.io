@@ -1,15 +1,20 @@
 /* assets/css/components/filter-panel.css */
 
 /* Estilo para o overlay do painel de filtros */
+/* assets/css/components/filter-panel.css */
 .filter-panel-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--color-primary-dark-rgb), 0.2);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    
+    /* Início da Alteração: Aplicando o material Smoke */
+    background-color: var(--fluent-smoke-background);
+    backdrop-filter: var(--fluent-smoke-backdrop-filter);
+    -webkit-backdrop-filter: var(--fluent-smoke-backdrop-filter);
+    /* Fim da Alteração */
+
     z-index: var(--z-index-filter-panel-overlay, 799);
     opacity: 0;
     visibility: hidden;
@@ -24,22 +29,34 @@
 }
 
 /* Estilo principal do painel de filtros */
+/* assets/css/components/filter-panel.css */
 .filter-panel {
     position: fixed;
     top: 0;
     right: 0;
     width: 100%;
     max-width: 390px;
-    height: 100dvh; /* Usa dvh para melhor consistência em mobile browsers com barras dinâmicas */
-    background-color: var(--color-white);
-    color: var(--color-text-primary);
-    box-shadow: -4px 0 25px rgba(var(--color-primary-dark-rgb), 0.12);
+    height: 100dvh;
+    
+    /* Início da Alteração: Fundo multicamadas para o Acrílico */
+    /* Camada superior: textura de ruído. Camada inferior: gradiente opaco sutil. */
+    background-image: var(--fluent-acrylic-noise-texture), linear-gradient(to bottom, #FCFCFC, #F7F7F7);
+    background-color: #F9F9F9; /* Fallback caso o gradiente não carregue */
+    
+    /* REMOVER o backdrop-filter daqui, pois o painel agora é opaco */
+    /* backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation)); */
+    /* -webkit-backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation)); */
+    
+    box-shadow: -5px 0 35px rgba(0, 0, 0, 0.15); /* Sombra um pouco mais forte para destacar */
+    border-left: 1px solid rgba(0, 0, 0, 0.1); /* Borda mais definida */
+    /* Fim da Alteração */
+    
     z-index: var(--z-index-filter-panel, 800);
     transform: translateX(100%);
     transition: transform 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Para que o border-radius do painel seja respeitado pelos filhos */
+    overflow: hidden;
 }
 
 .filter-panel--visible {

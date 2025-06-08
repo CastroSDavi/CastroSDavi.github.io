@@ -7,9 +7,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.6);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+
+    /* Início da Alteração: Aplicando o material Smoke */
+    background-color: var(--fluent-smoke-background);
+    backdrop-filter: var(--fluent-smoke-backdrop-filter);
+    -webkit-backdrop-filter: var(--fluent-smoke-backdrop-filter);
+    /* Fim da Alteração */
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,13 +29,24 @@
 }
 
 /* Diálogo do Modal */
+/* assets/css/components/explanation-modal.css */
 .explanation-modal__dialog {
     width: 90%;
     max-width: 700px;
-    background-color: var(--color-white);
+    
+    /* Início da Alteração: Fundo multicamadas para o Acrílico */
+    background-image: var(--fluent-acrylic-noise-texture), linear-gradient(to bottom, #FEFEFE, #F8F8F8);
+    background-color: #FAFAFA;
+    
+    /* REMOVER o backdrop-filter */
+    /* backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation)); */
+    /* -webkit-backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation)); */
+    
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* Fim da Alteração */
+
     border-radius: var(--border-radius-xl, 16px);
-    box-shadow: 0 10px 35px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
-                0 4px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);
+    box-shadow: 0 15px 40px rgba(var(--color-primary-dark-rgb), 0.2);
     display: flex;
     flex-direction: column;
     max-height: 88vh;
@@ -39,8 +54,9 @@
     opacity: 0;
     transition: transform 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s,
                 opacity 0.28s cubic-bezier(0.25, 0.1, 0.25, 1) 0.05s;
-    overflow: hidden; /* Para o border-radius aplicar aos cantos do header/footer */
+    overflow: hidden;
 }
+
 .explanation-modal__overlay.modal--visible .explanation-modal__dialog {
     transform: translateY(0) scale(1);
     opacity: 1;

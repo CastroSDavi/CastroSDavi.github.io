@@ -117,28 +117,35 @@
 /* ========================================================================== */
 /* */
 .card--quiz-result {
-    --result-card-padding-y: clamp(var(--spacing-md, 28px), 6vh, var(--spacing-lg, 38px)); /* */
-    --result-card-padding-x: clamp(var(--spacing-md, 24px), 5vw, var(--spacing-lg, 32px)); /* */
+    --result-card-padding-y: clamp(var(--spacing-md, 28px), 6vh, var(--spacing-lg, 38px));
+    --result-card-padding-x: clamp(var(--spacing-md, 24px), 5vw, var(--spacing-lg, 32px));
     
-    --result-card-accent: var(--color-primary-dark); /* */
-    --result-card-accent-secondary: var(--color-secondary-green); /* */
+    --result-card-accent: var(--color-primary-dark);
+    --result-card-accent-secondary: var(--color-secondary-green);
 
-    background-color: var(--color-white); /* */
-    border-radius: var(--border-radius-xl, 20px);  /* */
+    /* Início da Alteração: Aplicando o material Acrylic */
+    background-color: rgba(var(--fluent-acrylic-tint-color-rgb), 0.85); /* Opacidade um pouco maior para legibilidade */
+    background-image: var(--fluent-acrylic-noise-texture);
+    backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation));
+    -webkit-backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* Fim da Alteração */
+
+    border-radius: var(--border-radius-xl, 20px);
     box-shadow: 0 20px 60px -10px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
-                0 8px 20px -5px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);   /* */
-    padding: var(--result-card-padding-y) var(--result-card-padding-x); /* */
+                0 8px 20px -5px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);
+    padding: var(--result-card-padding-y) var(--result-card-padding-x);
     
-    max-width: 620px; /* */
+    max-width: 620px;
     
-    margin: var(--spacing-lg, 30px) auto; /* */
-    text-align: center; /* */
-    animation: fadeInScaleUpResultCardV6 0.6s cubic-bezier(0.16, 1, 0.3, 1) .1s forwards;  /* */
-    opacity: 0; /* */
-    transform: scale(0.92) translateY(10px);  /* */
-    display: flex; /* */
-    flex-direction: column; /* */
-    position: relative; /* */
+    margin: var(--spacing-lg, 30px) auto;
+    text-align: center;
+    animation: fadeInScaleUpResultCardV6 0.6s cubic-bezier(0.16, 1, 0.3, 1) .1s forwards;
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
 .card--quiz-result .card__body { /* */

@@ -1,21 +1,29 @@
 /* assets/css/components/modal.css */
 
 /* Overlay genérico para modais */
-.modal { /* Usado pelo modal de confirmação e como base para o overlay do explanation-modal */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--modal-backdrop-bg, rgba(0, 0, 0, 0.6)); /* Fundo translúcido padrão */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: var(--z-index-modal-backdrop, 900); /* Padrão para backdrops */
+/* assets/css/components/modal.css */
+.modal__dialog {
+    position: relative;
+    max-width: var(--modal-max-width, 450px);
+    width: var(--modal-width, 90%);
+    text-align: center;
+    
+    /* Início da Alteração: Fundo multicamadas para o Acrílico */
+    background-image: var(--fluent-acrylic-noise-texture),
+                    linear-gradient(to bottom, #FEFEFE, #F8F8F8);
+    background-color: #FAFAFA;
+    
+    /* REMOVER o backdrop-filter */
+    /* backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation)); */
+    /* -webkit-backdrop-filter: blur(var(--fluent-acrylic-blur)) saturate(var(--fluent-acrylic-saturation)); */
+    
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    /* Fim da Alteração */
+
+    transform: scale(0.95) translateY(10px);
     opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition-duration-slow, 0.3s) var(--transition-timing-function-ease, ease),
-                visibility 0s linear var(--transition-duration-slow, 0.3s);
+    transition: transform var(--transition-duration-medium, 0.25s) var(--transition-timing-function-ease-out),
+                opacity var(--transition-duration-medium, 0.25s) var(--transition-timing-function-ease-out);
 }
 
 .modal--visible { /* Classe para tornar o modal visível */

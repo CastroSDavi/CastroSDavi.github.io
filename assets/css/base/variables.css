@@ -148,4 +148,19 @@
     --main-nav-height: 48px; /* Ajustado para uma nav um pouco menor */
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
+
+    /* --- Smoke --- */
+    --fluent-smoke-background: rgba(var(--color-primary-dark-rgb), 0.45);
+    --fluent-smoke-backdrop-filter: blur(16px) saturate(80%);
+
+    /* --- Acrylic --- */
+    --fluent-acrylic-tint-color-rgb: 249, 249, 249;
+    --fluent-acrylic-tint-opacity: 0.82;
+    --fluent-acrylic-blur: 30px;
+    --fluent-acrylic-saturation: 120%;
+    --fluent-acrylic-noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.025'/%3E%3C/svg%3E");
+    
+    /* --- Mica (Simulado) --- */
+    --fluent-mica-background-color: var(--color-gray-100);
+    --fluent-mica-noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
 }

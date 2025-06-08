@@ -1,4 +1,4 @@
-/* assets/css/components/navigation.css */
+/* assets/css/components/navigation.css - V3 FINAL (MODERNIZADO) */
 
 /*
 ==========================================================================
@@ -6,7 +6,7 @@
 ==========================================================================
 */
 
-/* ===== NAVEGAÇÃO PRINCIPAL (SUPERIOR - DESKTOP) ===== */
+/* ===== NAVEGAÇÃO PRINCIPAL (SUPERIOR - DESKTOP) - Sem alterações ===== */
 .main-nav {
   flex-shrink: 0;
   background-color: var(--main-nav-bg-color, var(--color-white));
@@ -17,7 +17,6 @@
   z-index: var(--z-index-header, 110);
   overflow: hidden;
 }
-
 .main-nav__list {
   display: flex;
   align-items: stretch;
@@ -30,12 +29,7 @@
   -webkit-overflow-scrolling: touch;
   width: 100%;
 }
-
-.main-nav__item {
-  display: flex;
-  padding: 0;
-}
-
+.main-nav__item { display: flex; padding: 0; }
 .main-nav__link {
   display: flex;
   align-items: center;
@@ -51,23 +45,17 @@
   text-decoration: none;
   transition: color var(--transition-medium), border-color var(--transition-slow);
 }
-
 .main-nav__link:hover:not(.main-nav__link--active) {
   color: var(--color-primary-dark);
   text-decoration: none;
 }
-
 .main-nav__link--active {
   font-weight: var(--font-weight-semibold);
   color: var(--color-primary-dark);
   border-bottom-color: var(--color-secondary-green);
   text-decoration: none;
 }
-
-.main-nav__link--active:hover {
-    text-decoration: none;
-}
-
+.main-nav__link--active:hover { text-decoration: none; }
 .main-nav__link:focus-visible {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: -2px;
@@ -77,150 +65,143 @@
 }
 
 
-/* ===== NAVEGAÇÃO INFERIOR (MOBILE - .bottom-nav) ===== */
+/*
+==========================================================================
+  NAVEGAÇÃO INFERIOR (MOBILE) - v3: EFEITO ACRÍLICO FLUIDO
+==========================================================================
+*/
 .bottom-nav {
-  display: none; /* Mostrado via media query */
+  display: none;
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: var(--bottom-nav-height, 60px); /* Altura da barra */
-  background-color: var(--bottom-nav-bg-color, var(--color-white));
-  border-top: var(--border-width) solid var(--bottom-nav-border-top-color, var(--color-gray-300));
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+
+  /* Posicionamento flutuante e seguro para áreas de gestos do iOS/Android */
+  bottom: calc(var(--spacing-sm, 12px) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - var(--spacing-lg, 28px)); /* Largura com margens */
+  max-width: 420px; /* Largura máxima para consistência */
+  height: var(--bottom-nav-height, 68px);
   z-index: var(--z-index-bottom-nav, 100);
 }
 
 .bottom-nav__list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  /* Garante que os itens sejam espaçados igualmente pela largura da barra */
-  justify-content: space-around;
-  align-items: stretch; /* Faz os LIs esticarem para a altura da lista */
-  width: 100%;
   height: 100%;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: var(--spacing-xs, 8px);
+  display: flex;
+  position: relative;
+  
+  /* Efeito de Vidro (Glassmorphism) */
+  background: rgba(238, 242, 248, 0.6); /* Cor de fundo com alta transparência */
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  
+  /* Formato de pílula e borda sutil */
+  border-radius: var(--border-radius-pill);
+  border: 1px solid rgba(var(--color-white-rgb), 0.5);
+
+  /* Sombra para profundidade */
+  box-shadow: 0 10px 30px -5px rgba(var(--color-gray-900-rgb), 0.12);
 }
 
 .bottom-nav__item {
-  flex-grow: 1; /* Cada item LI ocupa o mesmo espaço */
-  display: flex; /* Para o link (<a>) interno poder usar flex e ocupar todo o LI */
-  min-width: 0; /* Ajuda a prevenir que conteúdo grande empurre o layout */
+  flex: 1;
+  display: flex;
 }
 
 .bottom-nav__link {
-  flex-grow: 1; /* Faz o link <a> preencher o .bottom-nav__item */
+  flex-grow: 1;
   display: flex;
-  flex-direction: column; /* Ícone acima do label */
-  justify-content: center; /* Centraliza o conteúdo (ícone + label) verticalmente DENTRO do link */
-  align-items: center; /* Centraliza o conteúdo (ícone + label) horizontalmente DENTRO do link */
-  height: 100%;
-  padding: var(--spacing-xxs, 5px) 4px; /* Padding interno do link */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
   text-decoration: none;
-  color: var(--bottom-nav-link-color, var(--color-gray-800));
-  transition: color var(--transition-fast), background-color var(--transition-fast);
-  text-align: center;
+  border-radius: var(--border-radius-pill);
   position: relative;
-  overflow: hidden;
-  line-height: 1.2; /* Ajuste para melhor espaçamento vertical do label se ele quebrar */
+  z-index: 2; /* Acima da pílula indicadora */
+  -webkit-tap-highlight-color: transparent; /* Remove flash azul no toque em mobile */
+  transition: color 0.3s ease-in-out;
+  color: var(--color-text-secondary); /* Itens inativos são mais sutis */
+}
+
+.bottom-nav__link:hover:not(.bottom-nav__link--active) {
+  color: var(--color-primary-dark);
 }
 
 .bottom-nav__icon {
-  font-size: var(--bottom-nav-icon-size, 24px); /* Tamanho do ícone */
-  line-height: 1; /* Remove espaçamento extra do ícone */
-  margin-bottom: 3px; /* Espaço entre ícone e label */
-  transition: transform var(--transition-fast);
-  flex-shrink: 0; /* Para o ícone não encolher */
+  font-size: 26px;
+  font-variation-settings: 'FILL' 0, 'wght' 300;
+  transition: transform 0.25s ease, font-variation-settings 0.25s ease;
 }
 
 .bottom-nav__label {
-  font-size: var(--bottom-nav-label-size, 0.7rem); /* Tamanho do texto do label */
-  white-space: nowrap; /* Evita quebra de linha no label */
-  overflow: hidden; /* Esconde o texto que não couber */
-  text-overflow: ellipsis; /* Adiciona "..." se o texto for muito longo */
-  max-width: 100%; /* Garante que o label não ultrapasse a largura do link */
-  /* Se você quiser permitir quebra de linha, remova white-space: nowrap e ajuste line-height */
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.2px;
 }
 
-.bottom-nav__link:hover {
-  color: var(--bottom-nav-link-hover-color, var(--color-primary-dark));
-  background-color: var(--bottom-nav-link-hover-bg, var(--color-gray-100));
+/* === ESTADO ATIVO === */
+
+.bottom-nav__item.is-active .bottom-nav__link {
+  color: var(--color-white); /* Texto e ícone brancos no item ativo */
 }
 
-.bottom-nav__link:active .bottom-nav__icon {
-  transform: scale(0.9);
+.bottom-nav__item.is-active .bottom-nav__icon {
+  font-variation-settings: 'FILL' 1, 'wght' 400; /* Ícone preenchido e mais forte */
 }
 
-.bottom-nav__link--active {
-  color: var(--bottom-nav-link-active-color, var(--color-primary-dark));
-  font-weight: var(--font-weight-semibold); /* Destaque para o ativo */
-  background-color: var(--bottom-nav-link-active-bg, var(--color-primary-light));
+/* A PÍLULA INDICADORA DESLIZANTE */
+.bottom-nav__pill-indicator {
+  content: '';
+  position: absolute;
+  top: var(--spacing-xs, 8px);
+  left: var(--spacing-xs, 8px);
+  
+  /* Adapta o tamanho para o número de itens. Para 2 itens: */
+  width: calc(50% - var(--spacing-xs, 8px));
+  /* Para 3 itens, seria: width: calc(33.33% - (var(--spacing-xs, 8px) * 2 / 3)); */
+  
+  height: calc(100% - var(--spacing-xs, 8px) * 2);
+  
+  background-image: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary-medium) 100%);
+  border-radius: var(--border-radius-pill);
+  box-shadow: 0 4px 14px -2px rgba(var(--color-primary-dark-rgb), 0.35);
+  
+  z-index: 1; /* Atrás dos links */
+  
+  /* A transição mais importante: cria o efeito elástico */
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.bottom-nav__link--active:hover {
-  background-color: #dbe9f5; /* Um pouco mais escuro no hover do ativo */
+/* Lógica de movimento da pílula (para 2 itens) */
+.bottom-nav__item:nth-child(2).is-active ~ .bottom-nav__pill-indicator {
+  transform: translateX(100%);
 }
+/* Se tivesse 3 itens, a próxima regra seria:
+.bottom-nav__item:nth-child(3).is-active ~ .bottom-nav__pill-indicator {
+  transform: translateX(200%);
+}
+*/
 
-.bottom-nav__link--active .bottom-nav__icon {
-  font-variation-settings: 'FILL' 1; /* Preenche o ícone se for Google Symbols */
-}
 
 .bottom-nav__link:focus-visible {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: -2px; /* Ajuste para dentro da barra */
-  border-radius: var(--border-radius-sm); /* Adiciona um leve arredondamento no foco */
-  background-color: var(--color-gray-200);
+  outline: none; /* Remove outline padrão */
+  background-color: rgba(var(--color-primary-light-rgb), 0.9);
 }
 
-
-/* --- RESPONSIVIDADE para navigation.css --- */
-@media (max-width: 768px) { /* Tablets e mobile */
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
   .main-nav {
     display: none;
   }
   .bottom-nav {
-    display: block; /* A .bottom-nav__list interna já é flex */
-    /* Se a variável --bottom-nav-height estiver definida em :root, ela será usada.
-       Caso contrário, o fallback (60px) definido acima.
-       Pode-se sobrescrever a altura aqui também se necessário para este breakpoint.
-       Ex: height: 58px;
-    */
+    display: block; /* ATIVA A NAVBAR MOBILE */
   }
 }
 
-@media (max-width: 480px) { /* Celulares médios */
-  .bottom-nav {
-    height: var(--bottom-nav-height-mobile, 56px);
-  }
-  .bottom-nav__icon {
-    font-size: var(--bottom-nav-icon-size-mobile, 22px);
-  }
-  .bottom-nav__label {
-    font-size: var(--bottom-nav-label-size-mobile, 0.68rem);
-  }
-  .bottom-nav__link {
-    padding-top: 4px;
-    padding-bottom: 4px;
-  }
+body.body-account-content-active {
+    padding-bottom: 0 !important;
 }
-
-@media (max-width: 375px) { /* Celulares menores (ex: iPhone SE) */
-  .bottom-nav {
-    height: var(--bottom-nav-height-small, 52px);
-  }
-  .bottom-nav__icon {
-    font-size: var(--bottom-nav-icon-size-small, 20px);
-    margin-bottom: 2px;
-  }
-  .bottom-nav__label {
-    font-size: var(--bottom-nav-label-size-small, 0.65rem);
-  }
-   .bottom-nav__link {
-    padding-top: 3px;
-    padding-bottom: 3px;
-  }
-}
-
-
-*/

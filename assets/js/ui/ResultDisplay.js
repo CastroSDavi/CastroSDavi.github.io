@@ -39,6 +39,13 @@ export default class ResultDisplay {
             return;
         }
 
+        // ===== INÍCIO DA ALTERAÇÃO (Passo 2) =====
+        // Garante que a nav inferior seja escondida na tela de resultado
+        if (this.elements.bottomNavElement) {
+            this.quizUI.hideElement(this.elements.bottomNavElement);
+        }
+        // ===== FIM DA ALTERAÇÃO =====
+
         // 1. Limpar a UI do quiz ativo e outros painéis
         if (this.quizUI && typeof this.quizUI.hideActiveQuizElements === 'function') {
             this.quizUI.hideActiveQuizElements(); 

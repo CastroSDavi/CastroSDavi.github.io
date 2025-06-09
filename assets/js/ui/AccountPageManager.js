@@ -145,8 +145,15 @@ export default class AccountPageManager {
             this.quizUI.hideElement(isContentActive ? null : this.elements.contentArea);
             
             this.bodyElement.classList.toggle(this.bodyAccountContentActiveClassName, isContentActive);
-            if(this.bottomNavElement) this.quizUI.showElement(isContentActive ? null : this.bottomNavElement);
-            if(this.bottomNavElement) this.quizUI.hideElement(isContentActive ? this.bottomNavElement : null);
+
+            // ===== INÍCIO DA CORREÇÃO =====
+            // Na página da conta em modo mobile, a navegação inferior principal deve estar sempre escondida
+            // para não competir com o menu da própria página da conta.
+            if(this.bottomNavElement) {
+                this.quizUI.hideElement(this.bottomNavElement);
+            }
+            // ===== FIM DA CORREÇÃO =====
+
         } else { // Desktop
             [this.elements.sidebar, this.elements.contentArea].forEach(el => this.quizUI.showElement(el));
             this.quizUI.hideElement(this.elements.backToMenuButton);
@@ -308,7 +315,7 @@ export default class AccountPageManager {
         } 
         // Verifica se a sidebar está visível (geralmente em mobile quando o conteúdo está oculto) e se tem scroll
         else if (this.elements.sidebar && !this.elements.sidebar.classList.contains('u-is-hidden') && this.elements.sidebar.scrollHeight > this.elements.sidebar.clientHeight && this._isMobileView()) {
-             this.elements.sidebar.scrollTop = 0;
+            this.elements.sidebar.scrollTop = 0;
         }
     }
 }

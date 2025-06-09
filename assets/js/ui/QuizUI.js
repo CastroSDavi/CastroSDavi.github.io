@@ -194,6 +194,8 @@ export default class QuizUI {
             deleteAccountForm: document.getElementById('deleteAccountForm'), //
             passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'), //
 
+            bottomNavElement: document.querySelector('.bottom-nav'),
+            
             // --- NOVOS ELEMENTOS PARA O MODAL DE DECISÃO DE RETOMADA E INDICADOR DE LOADING ---
             resumeDecisionOverlay: document.getElementById('resume-decision-overlay'),
             resumeDecisionModalDialog: document.getElementById('resume-decision-modal-dialog'),
@@ -247,22 +249,28 @@ export default class QuizUI {
     
     // --- Métodos de Controle de Layout Principal ---
     
+    // ===== INÍCIO DA ALTERAÇÃO (Passo 1.2) =====
     displayQuizLayout(showQuizLayout = true) {
-        const { placeholderFiltrosContainer, quizSectionContent } = this.elements;
+        // Adicione bottomNavElement à desestruturação
+        const { placeholderFiltrosContainer, quizSectionContent, bottomNavElement } = this.elements;
         
         if (showQuizLayout) {
             if (this.scorePanel) this.scorePanel.show();
-            if (this.challengeHubInstance) this.challengeHubInstance.hideHub(); //
+            if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
             this.showElement(quizSectionContent); 
             if (this.warningDisplay) this.warningDisplay.clear(); 
             this.hideElement(placeholderFiltrosContainer); 
-            if (this.resultDisplay) this.resultDisplay.hide(); //
+            if (this.resultDisplay) this.resultDisplay.hide();
+            
+            // Esconde a nav inferior ao entrar no quiz
+            if (bottomNavElement) this.hideElement(bottomNavElement);
+
         } else {
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
             
             const resultsAreVisible = this.elements.resultadoCard && !this.elements.resultadoCard.classList.contains(this.hiddenClassName);
-            const filterPanelIsOpen = this.elements.filterPanel && this.elements.filterPanel.classList.contains('filter-panel--visible'); //
+            const filterPanelIsOpen = this.elements.filterPanel && this.elements.filterPanel.classList.contains('filter-panel--visible');
 
             if (!resultsAreVisible && !filterPanelIsOpen) {
                 if (this.challengeHubInstance) this.challengeHubInstance.showHub();
@@ -271,8 +279,12 @@ export default class QuizUI {
                 this.showElement(placeholderFiltrosContainer);
                 if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
             }
+
+            // Mostra a nav inferior ao sair do quiz e voltar ao hub
+            if (bottomNavElement) this.showElement(bottomNavElement);
         }
     }
+    // ===== FIM DA ALTERAÇÃO =====
 
     hideActiveQuizElements() {
         this.hideElement(this.elements.quizSectionContent); 

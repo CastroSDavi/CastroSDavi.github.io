@@ -109,3 +109,12 @@ main {
         padding: var(--question-section-main-padding-xs-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
     }
 }
+
+/* ===== INÍCIO DA ALTERAÇÃO ===== */
+/* Correção para remover a faixa branca inferior na página de questões em dispositivos móveis */
+@media (max-width: 768px) {
+    body[data-page-id="questions"] {
+        padding-bottom: 0;
+    }
+}
+/* ===== FIM DA ALTERAÇÃO ===== */

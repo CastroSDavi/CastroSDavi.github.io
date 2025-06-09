@@ -1,0 +1,86 @@
+/* assets/css/components/user-pill-button.css (Design Definitivo) */
+
+.user-pill-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs, 8px);
+    padding: 5px 6px 5px var(--spacing-sm, 12px); /* Padding ajustado para harmonia */
+    border-radius: var(--border-radius-pill);
+    text-decoration: none;
+    
+    /* Fundo sólido e coeso */
+    background-color: var(--color-gray-100);
+    border: 1px solid var(--color-gray-300);
+    
+    transition: all 0.2s ease-out;
+}
+
+.user-pill-button:hover,
+.user-pill-button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-gray-400);
+    background-color: var(--color-white);
+}
+
+.user-pill-button__name-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.25;
+}
+
+.user-pill-button__firstname {
+    font-size: 0.8rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-dark);
+}
+
+.user-pill-button__lastname {
+    font-size: 0.7rem;
+    font-weight: var(--font-weight-normal);
+    color: var(--color-text-secondary);
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    
+    /* A cor de fundo é definida inline pelo Django */
+    color: var(--color-white);
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-medium);
+    font-family: var(--font-family-heading);
+    
+    user-select: none; 
+    flex-shrink: 0;
+    border: 2px solid var(--color-white); /* Borda branca para destacar o avatar */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* --- RESPONSIVIDADE: Pílula visível também no Mobile --- */
+@media (max-width: 768px) {
+    /* Não esconde mais o nome, apenas ajusta as dimensões */
+    .user-pill-button {
+        gap: var(--spacing-xxs, 6px);
+        padding: 4px 4px 4px var(--spacing-xs, 10px);
+    }
+
+    .user-pill-button__firstname {
+        font-size: 0.75rem;
+    }
+    
+    .user-pill-button__lastname {
+        font-size: 0.65rem;
+    }
+
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+}

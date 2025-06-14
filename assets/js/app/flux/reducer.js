@@ -1,4 +1,4 @@
-// assets/js/app/flux/reducer.js
+// Arquivo Completo: assets/js/app/flux/reducer.js
 
 import { ActionTypes } from './actions.js';
 import { QUICK_QUIZ_COUNT } from '../../utils/constants.js';
@@ -14,7 +14,7 @@ const initialState = {
         currentQuestionsSet: [],
         currentQuestionIndex: -1, 
         isInitialQuestionLoad: true,
-        isResumingDisplay: false,
+        resumableSession: null, 
         currentSessionId: null,
         currentQuizMode: null,
         currentQuizDefinicaoId: null,
@@ -224,6 +224,26 @@ export function quizReducer(state = initialState, action) {
             return { ...state, timer: { ...initialState.timer } };
             
         // --- AÇÕES DO QUIZ ---
+        case ActionTypes.SET_RESUMABLE_SESSION:
+            return {
+                ...state,
+                quiz: {
+                    ...state.quiz,
+                    // --- INÍCIO DA CORREÇÃO ---
+                    resumableSession: action.payload,
+                    // --- FIM DA CORREÇÃO ---
+                }
+            };
+        
+        case ActionTypes.CLEAR_RESUMABLE_SESSION:
+            return {
+                ...state,
+                quiz: {
+                    ...state.quiz,
+                    resumableSession: null,
+                }
+            };
+            
         case ActionTypes.INITIALIZE_QUIZ: {
             const { questions, mode, sessionId, quizDefId, quizDefinitionName } = action.payload;
             
@@ -245,6 +265,7 @@ export function quizReducer(state = initialState, action) {
                 currentQuizMode: mode,
                 currentQuizDefinicaoId: quizDefId,
                 quizDisplayContext: { displayMode, mainQuizTitle },
+                resumableSession: null,
             };
             return { ...state, user: { ...initialState.user }, timer: { ...initialState.timer }, quiz: newQuizState };
         }
@@ -268,19 +289,18 @@ export function quizReducer(state = initialState, action) {
                 currentQuestionsSet: resumeData.perguntas.map(q => { const r = resumeData.respostas_dadas ? resumeData.respostas_dadas[q.id_pergunta] : null; return { ...q, respostaDadaId: r ? r.opcao_selecionada_id : undefined, foiCorretaNaSessao: r ? r.foi_correta : undefined, foiPulada: r && r.opcao_selecionada_id === null ? true : undefined }; }),
                 currentQuestionIndex: resumeData.indice_ultima_pergunta_vista ?? 0,
                 isInitialQuestionLoad: false,
-                isResumingDisplay: true,
-                quizEnded: false
+                quizEnded: false,
+                resumableSession: null,
             };
             return { ...state, quiz: rehydratedQuizState };
         }
 
         case ActionTypes.RESET_QUIZ: {
-            const resetQuizState = { ...initialState.quiz };
-            return { ...state, quiz: resetQuizState, timer: { ...initialState.timer }, user: { ...initialState.user } };
+            return { ...state, quiz: { ...initialState.quiz }, timer: { ...initialState.timer }, user: { ...initialState.user } };
         }
 
         case ActionTypes.QUIZ_ENDED: {
-            return { ...state, quiz: { ...state.quiz, quizEnded: true, currentSessionId: null } };
+            return { ...state, quiz: { ...state.quiz, quizEnded: true, currentSessionId: null, resumableSession: null } };
         }
 
         case ActionTypes.ANSWER_QUESTION: {

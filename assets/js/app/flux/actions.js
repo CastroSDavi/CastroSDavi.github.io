@@ -1,4 +1,4 @@
-// assets/js/app/flux/actions.js
+// Arquivo Completo: assets/js/app/flux/actions.js
 
 /*
  * Action Types: constantes que definem os tipos de ações possíveis.
@@ -11,6 +11,8 @@ export const ActionTypes = {
     QUIZ_ENDED: 'QUIZ_ENDED',
     SET_QUIZ_CONTEXT: 'SET_QUIZ_CONTEXT',
     SET_ACTIVE_FILTERS: 'SET_ACTIVE_FILTERS',
+    SET_RESUMABLE_SESSION: 'SET_RESUMABLE_SESSION', // <-- NOVO
+    CLEAR_RESUMABLE_SESSION: 'CLEAR_RESUMABLE_SESSION', // <-- NOVO
     
     // Ações de Navegação e Resposta
     ANSWER_QUESTION: 'ANSWER_QUESTION',

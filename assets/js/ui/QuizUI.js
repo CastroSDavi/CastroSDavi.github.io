@@ -1,4 +1,4 @@
-// File: assets/js/ui/QuizUI.js
+// Arquivo Completo: assets/js/ui/QuizUI.js
 
 // Importações dos submódulos de UI
 import ModalManager from './ModalManager.js';
@@ -6,7 +6,6 @@ import Timer from './Timer.js';
 import QuestionDisplay from './QuestionDisplay.js';
 import ScorePanel from './ScorePanel.js';
 import WarningDisplay from './WarningDisplay.js';
-// A importação do FavoriteManager foi removida daqui
 import { TRANSITION_DURATION } from '../utils/constants.js';
 
 export default class QuizUI {
@@ -38,7 +37,6 @@ export default class QuizUI {
 
     setStore(store) {
         this.store = store;
-        // Garante que o estado inicial seja uma cópia profunda para evitar referências inesperadas
         this.previousState = JSON.parse(JSON.stringify(store.getState()));
 
         this.modalManager?.setStore(store);
@@ -81,26 +79,31 @@ export default class QuizUI {
         }
         
         const currentState = this.store.getState();
-    
-        // --- LÓGICA DE TRANSIÇÃO DE LAYOUT REFEITA ---
         const wasQuizActive = this.previousState.quiz?.currentSessionId !== null;
         const isQuizActive = currentState.quiz?.currentSessionId !== null;
     
         const wasQuizEnded = this.previousState.quiz?.quizEnded === true;
         const isQuizEnded = currentState.quiz?.quizEnded === true;
     
-        // Cenário 1: Começando um novo quiz
         if (!wasQuizActive && isQuizActive) {
             this.displayQuizLayout(true);
         }
     
-        // Cenário 2: Saindo de um quiz (seja por abandono, ou reset da tela de resultados)
         if ((wasQuizActive || wasQuizEnded) && !isQuizActive && !isQuizEnded) {
             this.displayQuizLayout(false);
         }
     
-        // --- LÓGICA DE RENDERIZAÇÃO DE COMPONENTES ---
-    
+        // --- INÍCIO DA ALTERAÇÃO: Lógica reativa para o banner ---
+        const hadResumableSession = !!this.previousState.quiz?.resumableSession;
+        const hasResumableSession = !!currentState.quiz.resumableSession;
+
+        if (!hadResumableSession && hasResumableSession) {
+            this.displayResumeBanner(currentState.quiz.resumableSession);
+        } else if (hadResumableSession && !hasResumableSession) {
+            this.hideResumeBanner();
+        }
+        // --- FIM DA ALTERAÇÃO ---
+
         const prevQuestionIndex = this.previousState.quiz?.currentQuestionIndex ?? -1;
         if (isQuizActive && currentState.quiz.currentQuestionIndex !== prevQuestionIndex) {
             this._handleQuestionChange(currentState);
@@ -113,7 +116,6 @@ export default class QuizUI {
             this._handleAnsweredQuestion(currentQuestionState);
         }
     
-        // Renderiza o resultado apenas na transição exata para o estado "ended"
         if (!wasQuizEnded && isQuizEnded) {
             if (this.resultDisplay) {
                 this.resultDisplay.render(currentState.user, currentState);
@@ -250,62 +252,46 @@ export default class QuizUI {
             deleteAccountForm: document.getElementById('deleteAccountForm'),
             passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'),
             bottomNavElement: document.querySelector('.bottom-nav'),
-            
-            // --- INÍCIO DA MODIFICAÇÃO: Cache dos elementos do novo banner ---
+            sessionLoadingIndicator: document.getElementById('session-loading-indicator'),
+            sessionLoadingMessage: document.getElementById('session-loading-message'),
             resumeBannerContainer: document.getElementById('resume-banner-container'),
             resumeBannerQuestionCount: document.getElementById('resume-banner-question-count'),
             btnBannerConfirmResume: document.getElementById('btn-banner-confirm-resume'),
             btnBannerDiscardResume: document.getElementById('btn-banner-discard-resume'),
-            // --- FIM DA MODIFICAÇÃO ---
-
-            // O modal antigo agora é referenciado pelo novo ID para desativá-lo
-            resumeDecisionOverlay: document.getElementById('DEPRECATED-resume-decision-overlay'), 
-            resumeDecisionModalDialog: document.querySelector('#DEPRECATED-resume-decision-overlay .modal__dialog'),
-            btnConfirmResume: document.querySelector('#DEPRECATED-resume-decision-overlay #btn-confirm-resume'),
-            btnDiscardResume: document.querySelector('#DEPRECATED-resume-decision-overlay #btn-discard-resume'),
-            
-            sessionLoadingIndicator: document.getElementById('session-loading-indicator'),
-            sessionLoadingMessage: document.getElementById('session-loading-message'),
         };
     }
     
-    // --- INÍCIO DA MODIFICAÇÃO: Novos métodos para o banner ---
-    
-    _displayResumeBanner(savedSession) {
-        if (!this.elements.resumeBannerContainer || !savedSession?.perguntas) return;
+    displayResumeBanner(resumableSession) {
+        if (!this.elements.resumeBannerContainer || !resumableSession?.perguntas) {
+            if (this.challengeHubInstance) this.challengeHubInstance.showHub();
+            return;
+        };
 
-        // Preenche os dados
-        this.elements.resumeBannerQuestionCount.textContent = savedSession.perguntas.length;
-
-        // Adiciona os listeners
-        this._setupResumeBannerListeners(savedSession);
+        this.elements.resumeBannerQuestionCount.textContent = resumableSession.perguntas.length;
+        this._setupResumeBannerListeners();
         
-        // Exibe o banner e oculta o hub
-        this.hideElement(this.elements.challengeHubContainer);
         this.showElement(this.elements.resumeBannerContainer);
     }
+
+    hideResumeBanner() {
+        if (this.elements.resumeBannerContainer) {
+            this.hideElement(this.elements.resumeBannerContainer);
+        }
+    }
     
-    _setupResumeBannerListeners(savedSession) {
-        // Remove listeners antigos para evitar duplicação se o método for chamado novamente
-        this.elements.btnBannerConfirmResume.onclick = null;
-        this.elements.btnBannerDiscardResume.onclick = null;
-    
+    _setupResumeBannerListeners() {
         this.elements.btnBannerConfirmResume.onclick = () => {
             if (this.actionOrchestrator) {
-                // Chama a lógica de retomada que já existe no orquestrador
-                this.actionOrchestrator._proceedWithResumedSession(savedSession);
+                this.actionOrchestrator._proceedWithResumedSession();
             }
         };
         
         this.elements.btnBannerDiscardResume.onclick = () => {
             if (this.actionOrchestrator) {
-                // Chama a lógica de descarte que já existe no orquestrador
-                this.actionOrchestrator._discardAndGoToHub(savedSession.session_id);
+                this.actionOrchestrator._discardAndGoToHub();
             }
         };
     }
-
-    // --- FIM DA MODIFICAÇÃO ---
 
     showElement(element) {
         element?.classList.remove(this.hiddenClassName);
@@ -356,17 +342,14 @@ export default class QuizUI {
             this.hideElement(placeholderFiltrosContainer); 
             if (this.resultDisplay) this.resultDisplay.hide();
             if (bottomNavElement) this.hideElement(bottomNavElement);
-            // --- INÍCIO DA MODIFICAÇÃO ---
-            this.hideElement(this.elements.resumeBannerContainer); // Garante que o banner de resumo seja ocultado
-            // --- FIM DA MODIFICAÇÃO ---
+            this.hideElement(this.elements.resumeBannerContainer);
         } else {
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
             if (this.resultDisplay) this.resultDisplay.hide();
-
-            // A lógica de exibição do hub/banner agora é tratada na inicialização
-            // if (this.challengeHubInstance) this.challengeHubInstance.showHub();
-            // this.hideElement(placeholderFiltrosContainer);
+            
+            if (this.challengeHubInstance) this.challengeHubInstance.showHub();
+            this.hideElement(placeholderFiltrosContainer);
             
             if (bottomNavElement) this.showElement(bottomNavElement);
         }
@@ -409,6 +392,7 @@ export default class QuizUI {
                 this.hideElement(this.elements.quizSectionContent);
                 this.hideElement(this.elements.resultadoCard);
                 this.hideElement(this.elements.placeholderFiltrosContainer);
+                this.hideElement(this.elements.resumeBannerContainer);
                 if (this.scorePanel) this.scorePanel.hide();
                 if (this.warningDisplay) this.warningDisplay.clear();
                 document.body.classList.add('no-scroll');

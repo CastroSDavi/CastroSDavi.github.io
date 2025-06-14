@@ -1,4 +1,4 @@
-// assets/js/app/flux/ActionOrchestrator.js
+// Arquivo Completo: assets/js/app/flux/ActionOrchestrator.js
 
 import { quizActions, ActionTypes } from './actions.js';
 import { getFriendlyErrorMessage, isAnswerCorrect } from './businessLogic.js';
@@ -73,67 +73,77 @@ export default class ActionOrchestrator {
         this.ui.showSessionLoadingIndicator(true, "Verificando sessão anterior...");
         try {
             const resumeData = await this.apiService.resumeQuizSession();
+            this.ui.showSessionLoadingIndicator(false); 
+
             if (resumeData && resumeData.status === 'success' && resumeData.perguntas?.length > 0) {
-                this.ui.modalManager.toggleResumeDecisionModal(true, {
-                    onContinue: () => this._proceedWithResumedSession(resumeData),
-                    onDiscard: () => this._discardAndGoToHub(resumeData.session_id)
+                this.store.dispatch({ 
+                    type: ActionTypes.SET_RESUMABLE_SESSION, 
+                    payload: resumeData 
                 });
             } else {
-                 this.ui.showSessionLoadingIndicator(false);
+                console.log("ActionOrchestrator: Nenhuma sessão para resumir, exibindo o hub de desafios.");
             }
         } catch (error) {
+            this.ui.showSessionLoadingIndicator(false);
             if (error.data && error.data.status === 'not_found') {
-                console.log("ActionOrchestrator: Nenhuma sessão para resumir, exibindo o hub de desafios.");
-                this.ui.showSessionLoadingIndicator(false);
+                console.log("ActionOrchestrator: Nenhuma sessão para resumir (erro 404).");
             } else {
                 this.ui.showWarning(getFriendlyErrorMessage(error, "Não foi possível verificar sua sessão anterior."), 'error');
-                this.ui.showSessionLoadingIndicator(false);
             }
         }
     }
 
-    _proceedWithResumedSession(resumeData) {
-        this.ui.modalManager.toggleResumeDecisionModal(false);
-        this.ui.showSessionLoadingIndicator(false);
+    _proceedWithResumedSession() {
+        const { resumableSession } = this.store.getState().quiz;
+        if (!resumableSession) return;
         
         this.store.dispatch(
             quizActions.updateUserStats(
-                resumeData.pontuacao_atual,
-                resumeData.total_acertos_atual,
-                resumeData.total_erros_atual
+                resumableSession.pontuacao_atual,
+                resumableSession.total_acertos_atual,
+                resumableSession.total_erros_atual
             )
         );
         
-        this.store.dispatch(quizActions.rehydrateSession(resumeData));
+        this.store.dispatch(quizActions.rehydrateSession(resumableSession));
         
         let elapsedSeconds = 0;
-        if (resumeData.data_inicio_sessao_iso) {
-            const startTime = new Date(resumeData.data_inicio_sessao_iso).getTime();
+        if (resumableSession.data_inicio_sessao_iso) {
+            const startTime = new Date(resumableSession.data_inicio_sessao_iso).getTime();
             const now = new Date().getTime();
             elapsedSeconds = Math.floor((now - startTime) / 1000);
         }
         this.startTimer(elapsedSeconds);
     }
 
-    async _discardAndGoToHub(sessionId) {
-        this.ui.modalManager.toggleResumeDecisionModal(false);
-        this.ui.showSessionLoadingIndicator(false);
+    async _discardAndGoToHub() {
+        const { resumableSession } = this.store.getState().quiz;
+        if (!resumableSession) return;
+
         try {
-            if (sessionId) {
-                await this.apiService.endQuizSession({ session_id: sessionId, tempo_total_segundos: 0 });
-            }
+            await this.apiService.endQuizSession({ session_id: resumableSession.session_id, tempo_total_segundos: 0 });
         } catch (error) {
             console.warn("ActionOrchestrator: Erro ao descartar sessão no backend:", error);
         }
+        this.store.dispatch({ type: ActionTypes.CLEAR_RESUMABLE_SESSION });
         this.store.dispatch(quizActions.resetQuiz());
     }
 
     async _fetchAndInitiateQuiz(filterParams) {
         if (this.isFetching) return;
         this.isFetching = true;
-        this.ui.showSessionLoadingIndicator(true, "Carregando questões...");
-
+        this.ui.showSessionLoadingIndicator(true, "Preparando novo desafio...");
+        
         try {
+            const resumableSession = this.store.getState().quiz.resumableSession;
+            if (resumableSession && resumableSession.session_id) {
+                console.log(`ActionOrchestrator: Descartando sessão pendente ${resumableSession.session_id} para iniciar um novo quiz.`);
+                await this.apiService.endQuizSession({ session_id: resumableSession.session_id, tempo_total_segundos: 0 });
+                this.store.dispatch({ type: ActionTypes.CLEAR_RESUMABLE_SESSION });
+            }
+            
+            this.ui.showSessionLoadingIndicator(true, "Carregando questões...");
+
             const data = await this.apiService.fetchQuizData(filterParams);
             const questionsArray = data?.perguntas || [];
 
@@ -191,16 +201,13 @@ export default class ActionOrchestrator {
         }
     }
 
-    // --- INÍCIO DA ALTERAÇÃO ---
     async fetchFilteredQuestionCount(filterParams) {
         this.store.dispatch(quizActions.fetchFilteredCountRequest());
         try {
-            // Alterado para chamar o novo método otimizado do ApiService
             const data = await this.apiService.fetchFilteredQuestionCount({
                 category_ids: filterParams.category_ids,
                 difficulty_levels: filterParams.difficulty_levels,
             });
-            // A resposta da nova API é um objeto simples: { count: X }
             const count = data?.count ?? 0;
             this.store.dispatch(quizActions.fetchFilteredCountSuccess(count));
         } catch (error) {
@@ -208,7 +215,6 @@ export default class ActionOrchestrator {
             this.store.dispatch(quizActions.fetchFilteredCountFailure(friendlyError));
         }
     }
-    // --- FIM DA ALTERAÇÃO ---
 
     async applyFiltersAndStartQuiz() {
         const params = {

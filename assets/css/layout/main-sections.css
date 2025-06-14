@@ -6,37 +6,37 @@
 ==========================================================================
 */
 
-/* Estilo para o container <main> */
 main {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    position: relative; /* Garante que <main> possa conter um filho com altura 100vh sem problemas */
-    overflow: hidden; /* Impede que main cause sua própria rolagem quando body.no-scroll está ativo */
+    position: relative;
+    overflow: hidden;
 }
   
-/* Estilo base para todas as seções principais */
 .main-section {
     flex-grow: 1;
-    display: flex; /* Permite que as seções filhas também usem flexbox efetivamente */
-    flex-direction: column; /* Empilha conteúdo interno verticalmente por padrão */
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    /* A rolagem será controlada pelo body ou por filhos específicos da seção */
 }
   
 /* --- Layout Específico para #question-section --- */
 #question-section.main-section {
     display: flex;
-    flex-direction: row; /* score-panel e main-content lado a lado */
-    height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px));
+    flex-direction: row;
+    /* --- INÍCIO DA CORREÇÃO --- */
+    /* A altura agora é consistente em todas as telas, preenchendo a viewport */
+    height: calc(100vh - var(--header-height, 75px));
+    /* --- FIM DA CORREÇÃO --- */
     overflow-x: hidden;
-    overflow-y: hidden; /* Scroll será no filho .question-section__main-content */
+    overflow-y: hidden;
 }
   
-.question-section__main-content { /* Conteúdo principal DENTRO da #question-section */
+.question-section__main-content {
     flex-grow: 1;
     overflow-y: auto;
-    min-height: 0; /* Correção para overflow em flex items */
+    min-height: 0;
     padding: var(--question-section-main-padding, var(--spacing-xl, 40px));
     background-color: var(--question-section-main-bg, var(--color-gray-200));
     display: flex;
@@ -50,10 +50,8 @@ main {
 #account-section-page.main-section {
     padding: 0; 
     display: flex; 
-    /* A altura é definida em conta-section.css e via JS para mobile */
-    /* Desktop: height: calc(100vh - var(--header-height, 80px) - var(--main-nav-height, 50px)); */
-    /* Mobile: height é dinâmico (com ou sem bottom-nav) */
-    overflow: hidden; /* Impede rolagem da própria seção, filhos (sidebar/content) rolarão */
+    height: calc(100vh - var(--header-height, 75px));
+    overflow: hidden;
 }
 
 
@@ -63,37 +61,33 @@ main {
     .question-section__main-content {
       padding: var(--question-section-main-padding-tablet, var(--spacing-lg, 35px));
     }
-    #question-section.main-section {
-      height: calc(100vh - var(--header-height-tablet, var(--header-height, 80px)) - var(--main-nav-height-tablet, var(--main-nav-height, 50px)));
-    }
-
+    #question-section.main-section,
     #account-section-page.main-section {
-        /* No desktop/tablet, a altura é calculada para preencher o espaço abaixo do header e main-nav */
-        height: calc(100vh - var(--header-height-tablet, var(--header-height, 80px)) - var(--main-nav-height-tablet, var(--main-nav-height, 50px)));
+      height: calc(100vh - var(--header-height-tablet, 70px));
     }
 }
   
 @media (max-width: 768px) { /* Tablet Portrait e Mobile */
-    /* A regra 'padding-bottom' para o body foi REMOVIDA daqui */
-  
-    /* Muda o layout da #question-section para coluna e permite rolagem do body/main */
+    /* --- INÍCIO DA CORREÇÃO --- */
+    /* Unifica o comportamento do layout de questões para ser consistente com o desktop */
     #question-section.main-section {
       flex-direction: column; 
-      height: auto;          
-      overflow: visible; /* Permite que o body/main controle a rolagem para esta seção */
+      /* A altura continua calculada para preencher a tela, a rolagem será interna */
+      height: calc(100vh - var(--header-height, 70px) - var(--bottom-nav-height, 60px));
     }
   
     .question-section__main-content {
-      height: auto;
-      overflow-y: visible;   
+      /* O conteúdo principal continua sendo o container de rolagem */
+      height: 100%;
+      overflow-y: auto;   
       padding: var(--question-section-main-padding-mobile, var(--spacing-md, 25px) var(--spacing-sm, 20px));
-      flex-grow: 1;          
-      min-height: initial;   
+      min-height: 0;   
     }
-
+    /* --- FIM DA CORREÇÃO --- */
   
     #account-section-page.main-section {
         flex-direction: column; 
+        height: calc(100vh - var(--header-height, 70px));
         overflow: hidden; 
     }
 }
@@ -102,19 +96,12 @@ main {
     .question-section__main-content {
         padding: var(--question-section-main-padding-sm-mobile, var(--spacing-md, 20px) var(--spacing-sm, 15px));
     }
-}
-  
-@media (max-width: 360px) {
-    .question-section__main-content {
-        padding: var(--question-section-main-padding-xs-mobile, var(--spacing-sm, 15px) var(--spacing-xs, 10px));
+    #question-section.main-section {
+        height: calc(100vh - var(--header-height, 65px) - var(--bottom-nav-height, 60px));
+    }
+    #account-section-page.main-section {
+        height: calc(100vh - var(--header-height, 65px));
     }
 }
 
-/* ===== INÍCIO DA ALTERAÇÃO ===== */
-/* Correção para remover a faixa branca inferior na página de questões em dispositivos móveis */
-@media (max-width: 768px) {
-    body[data-page-id="questions"] {
-        padding-bottom: 0;
-    }
-}
-/* ===== FIM DA ALTERAÇÃO ===== */
+/* Removida a regra que zerava o padding-bottom em `body[data-page-id="questions"]` pois não é mais necessária. */

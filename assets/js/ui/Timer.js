@@ -1,79 +1,75 @@
+// File: assets/js/ui/Timer.js
+
 export default class Timer {
     constructor(timerDisplayElement, resultadoTempoElement = null) {
         this.timerDisplayElement = timerDisplayElement;
         this.resultadoTempoElement = resultadoTempoElement;
 
-        this.intervalId = null;
-        this.seconds = 0;
-        this.isRunning = false;
-
-        this._updateDisplay();
+        // A classe não gerencia mais seu próprio estado de tempo
+        this.store = null;
+        this.previousSeconds = -1; // Usado para evitar atualizações desnecessárias do DOM
     }
 
+    /**
+     * Define a instância do store e se inscreve para atualizações.
+     * Este método será chamado pelo QuizUI.
+     * @param {object} storeInstance - A instância do store.
+     */
+    setStore(storeInstance) {
+        this.store = storeInstance;
+        if (this.store) {
+            // Renderiza o estado inicial do timer assim que se conecta ao store
+            this.handleStateUpdate(); 
+            // Inscreve-se para reagir a futuras atualizações
+            this.store.subscribe(this.handleStateUpdate.bind(this));
+        }
+    }
+
+    /**
+     * Lida com as atualizações de estado do store.
+     * Este método é o coração reativo do componente.
+     */
+    handleStateUpdate() {
+        if (!this.store) return;
+        
+        const state = this.store.getState();
+        const currentSeconds = state.timer.seconds;
+
+        // Apenas atualiza o DOM se os segundos realmente mudaram
+        if (currentSeconds !== this.previousSeconds) {
+            this._updateDisplay(currentSeconds, state.quiz.quizEnded);
+            this.previousSeconds = currentSeconds;
+        }
+    }
+
+    /**
+     * Formata o tempo de segundos para o formato MM:SS.
+     * @param {number} totalSeconds - O total de segundos a ser formatado.
+     * @returns {string} O tempo formatado.
+     */
     _formatTime(totalSeconds) {
         const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
         const secs = String(totalSeconds % 60).padStart(2, '0');
         return `${minutes}:${secs}`;
     }
 
-    _updateDisplay() {
+    /**
+     * Método privado que realmente atualiza o DOM com base nos dados recebidos.
+     * @param {number} seconds - Os segundos atuais a serem exibidos.
+     * @param {boolean} isQuizEnded - Flag que indica se o quiz terminou.
+     */
+    _updateDisplay(seconds, isQuizEnded) {
+        const formattedTime = this._formatTime(seconds);
         if (this.timerDisplayElement) {
-            this.timerDisplayElement.textContent = this._formatTime(this.seconds);
+            this.timerDisplayElement.textContent = formattedTime;
+        }
+        
+        // Atualiza o display de tempo na tela de resultado apenas se o quiz terminou
+        if (this.resultadoTempoElement && isQuizEnded) {
+            this.resultadoTempoElement.textContent = formattedTime;
         }
     }
-
-    // MÉTODO MODIFICADO para aceitar tempo inicial
-    start(initialSeconds = 0) { // Default para 0 se nenhum tempo inicial for passado
-        if (this.isRunning) {
-            // console.log("TIMER.JS: start - Timer já está rodando.");
-            return;
-        }
-        // Define os segundos iniciais. Garante que seja um número.
-        this.seconds = parseInt(initialSeconds, 10) || 0;
-        this.isRunning = true;
-        this._updateDisplay(); // Atualiza o display imediatamente com o tempo inicial
-
-        this.intervalId = setInterval(() => {
-            this.seconds++;
-            this._updateDisplay();
-        }, 1000);
-    }
-
-    stop() {
-        if (!this.isRunning) {
-            // console.log("TIMER.JS: stop - Timer já está parado.");
-            return;
-        }
-        clearInterval(this.intervalId);
-        this.intervalId = null;
-        this.isRunning = false;
-        // console.log("TIMER.JS: stop - Timer parado em", this.seconds, "segundos.");
-    }
-
-    // MÉTODO MODIFICADO para permitir resetar para um valor específico ou 0
-    reset(resetToSeconds = 0) {
-        // console.log("TIMER.JS: reset - Resetando timer para", resetToSeconds, "segundos.");
-        this.stop();
-        this.seconds = parseInt(resetToSeconds, 10) || 0;
-        this._updateDisplay();
-        // Se o elemento de resultado estiver visível, também o atualiza
-        if (this.resultadoTempoElement &&
-            this.resultadoTempoElement.closest('.card--quiz-result') &&
-            !this.resultadoTempoElement.closest('.card--quiz-result').classList.contains('u-is-hidden')) {
-            // this.updateResultDisplay(this.seconds); // Passa os segundos atuais para o display de resultado
-            // Correção: updateResultDisplay usa this.seconds, não precisa passar como argumento.
-            this.updateResultDisplay();
-        }
-    }
-
-    getCurrentSeconds() {
-        return this.seconds;
-    }
-
-    updateResultDisplay() { // Não precisa de argumento, usa this.seconds
-        if (this.resultadoTempoElement) {
-            // console.log("TIMER.JS: updateResultDisplay - Atualizando display de resultado com", this.seconds, "segundos.");
-            this.resultadoTempoElement.textContent = this._formatTime(this.seconds);
-        }
-    }
+    
+    // Os métodos start(), stop(), reset() e getCurrentSeconds() foram removidos.
+    // Essa lógica agora é gerenciada pelo ActionOrchestrator e pelo estado central no store.
 }

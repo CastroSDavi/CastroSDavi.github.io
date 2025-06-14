@@ -3,26 +3,70 @@
 export default class LayoutManager {
     constructor() {
         this.bodyElement = document.body;
+        this.store = null;
+        this.previousActiveSection = null;
+
+        this.sectionIds = {
+            home: 'home-section',
+            questions: 'question-section',
+            account: 'account-section-page',
+        };
+
+        // --- INÍCIO DA CORREÇÃO ---
+        // A referência ao bottomNavElement foi removida.
+        // --- FIM DA CORREÇÃO ---
     }
 
-    /**
-     * Lida com mudanças de layout globais baseadas na seção/página ativa.
-     * A visibilidade do footer é agora primariamente controlada por CSS.
-     * Este método pode gerenciar outras classes globais no body, se necessário.
-     *
-     * @param {string} activePageId - O valor de `data-page-id` da página ativa.
-     */
-    handleActiveSectionChange(activePageId) {
-        if (!this.bodyElement) {
-            return;
+    setStore(storeInstance) {
+        this.store = storeInstance;
+        if (this.store) {
+            this.store.subscribe(this.handleStateUpdate.bind(this));
+        }
+    }
+
+    handleStateUpdate() {
+        if (!this.store) return;
+        
+        const state = this.store.getState();
+        if (!state || !state.ui || !state.ui.uiReady) return;
+
+        const currentActiveSectionId = state.ui.activeSection;
+
+        if (currentActiveSectionId !== this.previousActiveSection) {
+            this._updateLayout(currentActiveSectionId);
+            this.previousActiveSection = currentActiveSectionId;
+        }
+    }
+    
+    _hideAllSections() {
+        Object.values(this.sectionIds).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                 el.classList.add('u-is-hidden');
+            }
+        });
+    }
+
+    _updateLayout(activeSectionId) {
+        if (!this.bodyElement) return;
+
+        this.bodyElement.dataset.pageId = activeSectionId;
+        this._hideAllSections();
+
+        const elementIdToShow = this.sectionIds[activeSectionId];
+        if (!elementIdToShow) return;
+
+        const sectionToShow = document.getElementById(elementIdToShow);
+
+        if (sectionToShow) {
+            sectionToShow.classList.remove('u-is-hidden');
+        } else {
+            console.warn(`LayoutManager: Elemento da seção com ID '${elementIdToShow}' não encontrado no DOM da página atual.`);
         }
 
-        // A lógica principal de visibilidade do footer foi movida para CSS
-        // usando seletores como `body[data-page-id="questions"] .site-footer`.
-
-        // Este método permanece para futuras lógicas de layout globais
-        // ou para gerenciar classes no body que afetem mais do que apenas o footer.
-        // Por exemplo, classes de tema ou a classe 'no-scroll' poderiam ser
-        // gerenciadas aqui de forma mais centralizada se a complexidade aumentar.
+        // --- INÍCIO DA CORREÇÃO ---
+        // Toda a lógica que manipulava as classes do BottomNav e do Body foi removida.
+        // O controle agora é 100% via CSS, baseado no data-page-id.
+        // --- FIM DA CORREÇÃO ---
     }
 }

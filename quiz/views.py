@@ -610,6 +610,48 @@ def api_get_quiz_data_view(request):
     except Exception as e:
         print(f"Erro em api_get_quiz_data_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro ao buscar dados do quiz.'}, status=500)
+    
+@require_GET
+def api_get_filtered_question_count_view(request):
+    """
+    Uma view otimizada que retorna apenas a CONTAGEM de questões 
+    com base nos filtros fornecidos, usando o padrão Django puro.
+    """
+    try:
+        perguntas_qs = Pergunta.objects.filter(ativa=True)
+
+        # Filtro por Categorias
+        category_ids_str = request.GET.get('category_ids')
+        if category_ids_str:
+            # Usando a lógica de descendentes que já existe no seu código
+            category_ids_list = [cid.strip() for cid in category_ids_str.split(',') if cid.strip()]
+            descendant_ids = get_descendant_category_ids(category_ids_list)
+            if descendant_ids:
+                perguntas_qs = perguntas_qs.filter(categorias__pk__in=descendant_ids).distinct()
+
+        # Filtro por Nível de Dificuldade
+        difficulty_levels_str = request.GET.get('difficulty_levels')
+        if difficulty_levels_str and 'all' not in difficulty_levels_str:
+            difficulty_levels = [level.strip() for level in difficulty_levels_str.split(',') if level.strip()]
+            if difficulty_levels:
+                # Normalizando para corresponder aos valores do modelo
+                q_difficulty_objects = Q()
+                valid_model_difficulties = [choice[0] for choice in Pergunta.NivelDificuldade.choices]
+                for level_from_filter in difficulty_levels:
+                    for model_level in valid_model_difficulties:
+                        if level_from_filter.lower() == model_level.lower():
+                            q_difficulty_objects |= Q(nivel_dificuldade=model_level)
+                            break
+                if q_difficulty_objects:
+                    perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
+
+        # Retorna apenas a contagem. Esta é uma operação de banco de dados muito rápida.
+        count = perguntas_qs.count()
+        return JsonResponse({'count': count})
+
+    except Exception as e:
+        print(f"Erro em api_get_filtered_question_count_view: {type(e).__name__} - {e}")
+        return JsonResponse({'status': 'error', 'message': 'Erro ao buscar contagem de questões.'}, status=500)
 
 
 @login_required

@@ -1,12 +1,61 @@
 // assets/js/ui/FavoriteManager.js
 
 export default class FavoriteManager {
-    constructor(quizUIInstance, apiServiceInstance, quizStateInstance) {
+    constructor(quizUIInstance) {
         this.quizUI = quizUIInstance;
         this.elements = this.quizUI.elements;
-        this.apiService = apiServiceInstance;
-        this.quizState = quizStateInstance;
-        this.isLoadingFavorites = false; // Flag to prevent re-entrant loading
+        
+        this.store = null;
+        this.actionOrchestrator = null;
+        
+        this.hasInitialized = false; // <-- ALTERAÇÃO: Guarda de inicialização
+        this.previousIsLoading = undefined;
+        this.previousFavorites = [];
+        this.previousError = null;
+    }
+
+    init() { // <-- ALTERAÇÃO: Novo método de inicialização
+        if (this.hasInitialized) {
+            return;
+        }
+        // No momento, não há event listeners para configurar aqui, mas a estrutura está pronta.
+        this.hasInitialized = true;
+    }
+
+    setStore(storeInstance) {
+        this.store = storeInstance;
+        if (this.store) {
+            this.handleStateUpdate();
+            this.store.subscribe(this.handleStateUpdate.bind(this));
+        }
+    }
+
+    setActionOrchestrator(orchestrator) {
+        this.actionOrchestrator = orchestrator;
+    }
+    
+    handleStateUpdate() {
+        if (!this.store) return;
+        
+        const state = this.store.getState();
+        const { currentQuestionsSet, currentQuestionIndex } = state.quiz;
+        const favoritesState = state.user.favorites;
+        
+        const currentQuestion = currentQuestionsSet[currentQuestionIndex];
+        if (currentQuestion) {
+            this.updateFavoriteButtonState(currentQuestion.is_favorited || false);
+        }
+
+        if (
+            favoritesState.isLoading !== this.previousIsLoading ||
+            JSON.stringify(favoritesState.items) !== JSON.stringify(this.previousFavorites) ||
+            favoritesState.error !== this.previousError
+        ) {
+            this.renderFavoritesList(favoritesState);
+            this.previousIsLoading = favoritesState.isLoading;
+            this.previousFavorites = favoritesState.items;
+            this.previousError = favoritesState.error;
+        }
     }
 
     updateFavoriteButtonState(isFavorited) {
@@ -27,29 +76,37 @@ export default class FavoriteManager {
         }
     }
 
-    renderFavoritesList(favoriteQuestionsData, allCategoriesData) {
+    renderFavoritesList(favoritesState) {
         const container = this.elements.favoriteQuestionsContainer;
         const emptyState = this.elements.favoriteQuestionsEmptyState;
-        const placeholder = container?.querySelector('.placeholder-text');
 
-        if (!container) {
-            // console.error("FavoriteManager: Container de questões favoritas não encontrado.");
+        if (!container) return;
+        
+        const { isLoading, items: favoriteQuestionsData, error } = favoritesState;
+        
+        if (isLoading) {
+            this.quizUI.hideElement(emptyState);
+            container.innerHTML = '<p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>';
             return;
         }
 
-        if (placeholder) this.quizUI.hideElement(placeholder);
-        container.innerHTML = ''; 
+        if (error) {
+            this.quizUI.hideElement(emptyState);
+            container.innerHTML = `<p class="placeholder-text" style="text-align:center; color: var(--color-accent-red); padding: var(--spacing-md) 0;">${error}</p>`;
+            return;
+        }
 
         if (!favoriteQuestionsData || favoriteQuestionsData.length === 0) {
-            if (emptyState) this.quizUI.showElement(emptyState);
+            this.quizUI.showElement(emptyState);
+            container.innerHTML = '';
             return;
         }
-        if (emptyState) this.quizUI.hideElement(emptyState);
 
-        const categoryMap = new Map();
-        if (allCategoriesData) {
-            allCategoriesData.forEach(cat => categoryMap.set(cat.id_categoria, cat.nome_categoria));
-        }
+        this.quizUI.hideElement(emptyState);
+        container.innerHTML = '';
+
+        const allCategories = this.store.getState().geral.allCategories || [];
+        const categoryMap = new Map(allCategories.map(cat => [cat.id_categoria, cat.nome_categoria]));
 
         favoriteQuestionsData.forEach(fav => {
             const itemDiv = document.createElement('div');
@@ -65,32 +122,30 @@ export default class FavoriteManager {
             const detailsDiv = document.createElement('div');
             detailsDiv.className = 'favorite-question-details';
 
-            // --- MODIFICAÇÃO PARA EXIBIR CATEGORIAS COMO TAGS ---
             const tagsContainer = document.createElement('div');
-            tagsContainer.className = 'categories-tags-container'; // Classe para estilização flex e gap
+            tagsContainer.className = 'categories-tags-container';
 
             if (fav.categoria_ids && fav.categoria_ids.length > 0) {
                 fav.categoria_ids.forEach(id => {
-                    const categoryName = categoryMap.get(id) || `ID ${id}`; // Fallback se o nome não for encontrado
+                    const categoryName = categoryMap.get(id) || `ID ${id}`;
                     const tag = document.createElement('span');
-                    tag.className = 'category-tag'; // Classe da tag individual
+                    tag.className = 'category-tag';
                     tag.textContent = categoryName;
                     tagsContainer.appendChild(tag);
                 });
             } else {
                 const noCatTag = document.createElement('span');
-                noCatTag.className = 'category-tag category-tag--none'; // Classe opcional para estilo específico
+                noCatTag.className = 'category-tag category-tag--none';
                 noCatTag.textContent = 'Não especificada';
                 tagsContainer.appendChild(noCatTag);
             }
-            detailsDiv.appendChild(tagsContainer); // Adiciona o container de tags
-            // --- FIM DA MODIFICAÇÃO ---
+            detailsDiv.appendChild(tagsContainer);
 
             const dataFavoritada = new Date(fav.data_favoritada).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
             const dataSmall = document.createElement('small');
             dataSmall.className = 'favorite-question-date';
             dataSmall.textContent = `Favoritada em: ${dataFavoritada}`;
-            detailsDiv.appendChild(dataSmall); // Adiciona a data após as tags
+            detailsDiv.appendChild(dataSmall);
 
             itemDiv.appendChild(questionLink);
             itemDiv.appendChild(detailsDiv);
@@ -98,86 +153,6 @@ export default class FavoriteManager {
         });
 
         const lastItem = container.querySelector('.favorite-question-item:last-child');
-        if(lastItem) lastItem.style.borderBottom = 'none';
-    }
-
-    async loadUserFavorites() {
-        if (this.isLoadingFavorites) {
-            return;
-        }
-        this.isLoadingFavorites = true;
-
-        const favContainer = this.elements.favoriteQuestionsContainer;
-
-        if (!this.quizUI.userIsAuthenticated) {
-            if (favContainer) {
-                favContainer.innerHTML = '<p style="text-align:center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Você precisa estar logado para ver suas questões favoritas.</p>';
-            }
-            if (this.elements.favoriteQuestionsEmptyState) this.quizUI.hideElement(this.elements.favoriteQuestionsEmptyState);
-            this.isLoadingFavorites = false;
-            return;
-        }
-
-        if(favContainer) {
-            if (this.elements.favoriteQuestionsEmptyState) this.quizUI.hideElement(this.elements.favoriteQuestionsEmptyState);
-            favContainer.innerHTML = '<p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>';
-        }
-
-        try {
-            const response = await this.apiService.getFavoriteQuestions();
-            if (response && response.status === 'success') {
-                this.renderFavoritesList(response.favorite_questions, response.all_categories_for_mapping);
-            } else {
-                const userMessage = this.quizUI._getFriendlyErrorMessage
-                    ? this.quizUI._getFriendlyErrorMessage({ data: response }, "Não foi possível carregar suas questões favoritas.")
-                    : "Não foi possível carregar suas questões favoritas. Tente novamente.";
-                if(favContainer) favContainer.innerHTML = `<p class="placeholder-text" style="text-align:center; color: var(--color-accent-red); padding: var(--spacing-md) 0;">${userMessage}</p>`;
-                if (this.elements.favoriteQuestionsEmptyState) this.quizUI.hideElement(this.elements.favoriteQuestionsEmptyState);
-            }
-        } catch (error) {
-            const userMessage = this.quizUI._getFriendlyErrorMessage
-                ? this.quizUI._getFriendlyErrorMessage(error, "Erro de conexão ao carregar suas questões favoritas.")
-                : "Erro de conexão ao carregar suas questões favoritas. Verifique sua internet.";
-            if(favContainer) favContainer.innerHTML = `<p class="placeholder-text" style="text-align:center; color: var(--color-accent-red); padding: var(--spacing-md) 0;">${userMessage}</p>`;
-            if (this.elements.favoriteQuestionsEmptyState) this.quizUI.hideElement(this.elements.favoriteQuestionsEmptyState);
-        } finally {
-            this.isLoadingFavorites = false;
-        }
-    }
-
-    async toggleCurrentQuestionFavoriteStatus() {
-        if (!this.quizUI.userIsAuthenticated) {
-            this.quizUI.showWarning("Apenas usuários logados podem favoritar questões. <a href='/accounts/login/' class='alert-link'>Faça login</a> ou <a href='/register/' class='alert-link'>crie uma conta</a>.", 'info');
-            return;
-        }
-
-        const currentQuestion = this.quizState.getCurrentQuestion();
-        if (!currentQuestion) {
-            return;
-        }
-
-        const perguntaId = currentQuestion.id_pergunta;
-        const btnFav = this.elements.btnToggleFavorite;
-        if(btnFav) this.quizUI.setButtonLoading(btnFav, true);
-
-        try {
-            const response = await this.apiService.toggleFavoriteStatus(perguntaId);
-            if (response && response.status === 'success') {
-                this.updateFavoriteButtonState(response.is_favorited);
-                this.state.updateFavoriteStatusForCurrentQuestion(response.is_favorited);
-            } else {
-                const userMessage = this.quizUI._getFriendlyErrorMessage
-                    ? this.quizUI._getFriendlyErrorMessage({ data: response }, "Falha ao atualizar status de favorito.")
-                    : "Falha ao atualizar status de favorito.";
-                this.quizUI.showWarning(userMessage, 'error');
-            }
-        } catch (error) {
-            const userMessage = this.quizUI._getFriendlyErrorMessage
-                ? this.quizUI._getFriendlyErrorMessage(error, "Erro de conexão ao tentar favoritar a questão.")
-                : "Erro de conexão ao tentar favoritar a questão.";
-            this.quizUI.showWarning(userMessage, 'error');
-        } finally {
-            if(btnFav) this.quizUI.setButtonLoading(btnFav, false);
-        }
+        if (lastItem) lastItem.style.borderBottom = 'none';
     }
 }

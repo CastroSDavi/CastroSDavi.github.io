@@ -1,106 +1,75 @@
 // assets/js/ui/BottomNavManager.js
 
+import { quizActions } from '../app/flux/actions.js';
+
 export default class BottomNavManager {
     constructor() {
         this.bottomNavList = document.querySelector('.bottom-nav__list');
-        // Duração da animação da pílula deslizante em milissegundos.
-        // Deve corresponder ao valor em .bottom-nav__pill-indicator (transition: transform 0.45s ...)
-        this.animationDuration = 450;
-        this.isNavigating = false; // Flag para evitar cliques duplos
+        this.links = this.bottomNavList ? Array.from(this.bottomNavList.querySelectorAll('.bottom-nav__link')) : [];
+        
+        // As dependências serão injetadas
+        this.store = null;
+        this.previousActiveSection = null;
+    }
+
+    /**
+     * Define a instância do store e se inscreve para atualizações.
+     * @param {object} storeInstance - A instância do store.
+     */
+    setStore(storeInstance) {
+        this.store = storeInstance;
+        if (this.store) {
+            // Sincroniza o estado visual assim que o store é conectado
+            this.handleStateUpdate();
+            this.store.subscribe(this.handleStateUpdate.bind(this));
+        }
     }
 
     init() {
         if (!this.bottomNavList) {
             return;
         }
-        this.syncActiveState();
-        this._setupEventListeners(); // <-- NOVA CHAMADA para configurar os cliques
+        // A configuração de listeners de clique foi removida, pois
+        // queremos o comportamento padrão dos links <a>.
+        // this._setupEventListeners();
     }
     
-    // =====================================================================
-    // ======================== LÓGICA ADICIONADA ========================
-    // =====================================================================
-
     /**
-     * Adiciona listeners de clique aos links da navbar para controlar a navegação.
-     * @private
+     * Lida com as atualizações de estado do store,
+     * mantendo o estado visual da navbar sincronizado.
      */
-    _setupEventListeners() {
-        const links = this.bottomNavList.querySelectorAll('.bottom-nav__link');
-        links.forEach(link => {
-            link.addEventListener('click', (event) => this._handleLinkClick(event));
-        });
-    }
-
-    /**
-     * Lida com o clique em um link da navbar.
-     * Previne o recarregamento imediato, executa a animação e então navega.
-     * @param {Event} event - O evento de clique.
-     * @private
-     */
-    _handleLinkClick(event) {
-        if (this.isNavigating) {
-            event.preventDefault(); // Evita navegação se já estiver em progresso
-            return;
-        }
-
-        const link = event.currentTarget;
-        const parentLi = link.parentElement;
-
-        // Se o link clicado já está ativo, não faz nada
-        if (parentLi.classList.contains('is-active')) {
-            event.preventDefault();
-            return;
-        }
+    handleStateUpdate() {
+        if (!this.store) return;
         
-        // 1. Previne o comportamento padrão do link (recarregar a página)
-        event.preventDefault();
-        this.isNavigating = true;
-
-        // 2. Move a pílula de animação
-        this.setActiveItem(parentLi);
-
-        // 3. Após a animação terminar, navega para a nova página
-        setTimeout(() => {
-            window.location.href = link.href;
-        }, this.animationDuration);
-    }
-    
-    /**
-     * Define qual item (li) está ativo, movendo a classe 'is-active'.
-     * @param {HTMLElement} targetLi - O elemento <li> que deve se tornar ativo.
-     */
-    setActiveItem(targetLi) {
-        const currentActive = this.bottomNavList.querySelector('.bottom-nav__item.is-active');
-        if (currentActive) {
-            currentActive.classList.remove('is-active');
-        }
-        if (targetLi) {
-            targetLi.classList.add('is-active');
-        }
-    }
-    
-    // =====================================================================
-    // ======================= FIM DA LÓGICA ADICIONADA =====================
-    // =====================================================================
-
-
-    /**
-     * Sincroniza o estado visual da navbar com o estado renderizado pelo servidor.
-     * Ele encontra o link com a classe '.bottom-nav__link--active' (do Django)
-     * e aplica a classe 'is-active' ao seu elemento pai <li>, que o CSS usa
-     * para posicionar a pílula indicadora.
-     */
-    syncActiveState() {
-        const activeLink = this.bottomNavList.querySelector('.bottom-nav__link--active');
+        const state = this.store.getState();
+        // Se o estado ainda não foi inicializado, não faz nada
+        if (!state || !state.ui) return;
         
-        if (activeLink && activeLink.parentElement.classList.contains('bottom-nav__item')) {
-            this.setActiveItem(activeLink.parentElement);
-        } else {
-            const firstRealItem = this.bottomNavList.querySelector('.bottom-nav__item:not(.bottom-nav__pill-indicator)');
-            if (firstRealItem) {
-                this.setActiveItem(firstRealItem);
-            }
+        const activeSection = state.ui.activeSection;
+        
+        // Apenas atualiza o DOM se a seção ativa mudou
+        if (activeSection !== this.previousActiveSection) {
+            this.syncVisualState(activeSection);
+            this.previousActiveSection = activeSection;
+        }
+    }
+
+    /**
+     * Sincroniza o estado visual da navbar (a pílula ativa) com a seção ativa no store.
+     * @param {string} activeSection - O ID da seção que deve estar ativa.
+     */
+    syncVisualState(activeSection) {
+        // Remove a classe ativa do item atual
+        const currentActiveItem = this.bottomNavList.querySelector('.bottom-nav__item.is-active');
+        if (currentActiveItem) {
+            currentActiveItem.classList.remove('is-active');
+        }
+
+        // Encontra o novo link ativo com base no estado e o ativa
+        // O dataset 'section-target-django' deve corresponder aos valores em `state.ui.activeSection` ('home', 'questions', 'account')
+        const newActiveLink = this.links.find(link => link.dataset.sectionTargetDjango === activeSection);
+        if (newActiveLink && newActiveLink.parentElement) {
+            newActiveLink.parentElement.classList.add('is-active');
         }
     }
 }

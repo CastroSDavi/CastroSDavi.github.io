@@ -21,6 +21,7 @@ urlpatterns = [
 
     # API para buscar todos os dados do quiz (já existente no seu arquivo)
     path('api/quiz/alldata/', views.api_get_quiz_data_view, name='api_get_quiz_data'),
+    path('api/quiz/filtered-count/', views.api_get_filtered_question_count_view, name='api_get_filtered_question_count'),
 
     # NOVA URL para retomar uma sessão de quiz em andamento
     path('api/quiz/resume-session/', views.api_resume_quiz_session_view, name='api_resume_quiz_session'),

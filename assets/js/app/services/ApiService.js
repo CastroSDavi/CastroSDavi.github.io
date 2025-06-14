@@ -22,7 +22,6 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
                 }
             }
         });
-        // console.log(`ApiService.js: _request - URL final com queryParams: ${url.toString()}`);
     }
 
     const options = {
@@ -35,22 +34,15 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
 
     if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
         options.body = JSON.stringify(body);
-        // console.log(`ApiService.js: _request - Corpo da requisição (${method}):`, body);
     }
 
     try {
         const response = await fetch(url.toString(), options);
         console.log(`ApiService.js: _request - Resposta recebida para ${method} ${url.pathname}${url.search}. Status: ${response.status}`);
 
-        // Tentativa de ler o corpo como texto para depuração, ANTES de tentar como JSON
-        // const responseTextForDebug = await response.clone().text().catch(() => "Não foi possível ler o corpo como texto.");
-        // console.log(`ApiService.js: _request - Corpo da resposta (texto bruto para debug):`, responseTextForDebug);
-
-
         const responseData = response.status !== 204 ? await response.json().catch((jsonError) => {
             console.error(`ApiService.js: _request - ERRO AO FAZER PARSE DO JSON para ${method} ${url.pathname}. Status: ${response.status}. Erro de parse:`, jsonError);
-            // console.log(`ApiService.js: _request - Corpo da resposta que falhou no parse (texto): ${responseTextForDebug}`);
-            return null; // Retorna null se o parse do JSON falhar
+            return null;
         }) : null;
 
         if (!response.ok) {
@@ -64,10 +56,8 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
         console.log(`ApiService.js: _request - Dados da resposta (JSON parseado) para ${method} ${url.pathname}:`, responseData);
         return responseData;
     } catch (error) {
-        if (!error.response) { // Erros de rede, CORS, etc., onde não há um objeto 'response'
+        if (!error.response) {
             console.error(`ApiService.js: _request - Erro de Rede/Requisição para ${method} ${url.pathname}:`, error.message, error.stack);
-        } else { // Erros HTTP que foram lançados (como 4xx, 5xx)
-            // Já logado acima no if(!response.ok)
         }
         throw error;
     }
@@ -89,7 +79,7 @@ export default class ApiService {
         }
         if (filterParams.quiz_definicao_id) {
             queryParams.quiz_definicao_id = filterParams.quiz_definicao_id;
-        } else if (filterParams.mode === 'Rápido') { // "Rápido" como string, conforme usado em QuizState
+        } else if (filterParams.mode === 'Rápido') {
             queryParams.mode = filterParams.mode;
             if (filterParams.count && Number.isInteger(filterParams.count) && filterParams.count > 0) {
                 queryParams.count = filterParams.count;
@@ -97,11 +87,23 @@ export default class ApiService {
         } else if (filterParams.num_questions && Number.isInteger(filterParams.num_questions) && filterParams.num_questions > 0) {
             queryParams.num_questions = filterParams.num_questions;
         }
-        // Se mode for 'Por Categoria', não precisa de parâmetro de modo explícito se category_ids ou num_questions estiverem presentes.
-        // Se todos os filtros estiverem vazios, será uma busca geral.
         console.log("ApiService.js: fetchQuizData - QueryParams finais:", queryParams);
         return _request(API_URLS.api_get_quiz_data, 'GET', null, queryParams);
     }
+
+    // --- INÍCIO DA ALTERAÇÃO ---
+    async fetchFilteredQuestionCount(filterParams = {}) {
+        console.log("ApiService.js: fetchFilteredQuestionCount - Chamado com filtros:", filterParams);
+        const queryParams = {};
+        if (filterParams.category_ids?.length > 0) {
+            queryParams.category_ids = filterParams.category_ids.join(',');
+        }
+        if (filterParams.difficulty_levels?.length > 0 && !filterParams.difficulty_levels.includes('all')) {
+            queryParams.difficulty_levels = filterParams.difficulty_levels.join(',');
+        }
+        return _request(API_URLS.api_get_filtered_question_count, 'GET', null, queryParams);
+    }
+    // --- FIM DA ALTERAÇÃO ---
 
     async startQuizSession(sessionData) {
         console.log("ApiService.js: startQuizSession - Chamado com dados:", sessionData);

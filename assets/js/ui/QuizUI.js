@@ -6,58 +6,61 @@ import Timer from './Timer.js';
 import QuestionDisplay from './QuestionDisplay.js';
 import ScorePanel from './ScorePanel.js';
 import WarningDisplay from './WarningDisplay.js';
-import FavoriteManager from './FavoriteManager.js';
-// ResultDisplay é instanciado em App.js e injetado
+// A importação do FavoriteManager foi removida daqui
+import { TRANSITION_DURATION } from '../utils/constants.js';
 
 export default class QuizUI {
-    constructor(onSectionChangeCallback = null) {
+    constructor() {
         this.hiddenClassName = 'u-is-hidden';
         this.loadingClassName = 'is-loading';
-        this.currentSection = null;
-        this.onSectionChange = onSectionChangeCallback;
-
-        this.quizState = null;
-        this.quizData = null;
-        this.apiService = null;
         
-        this.filterPanelInstance = null;
-        this.challengeHubInstance = null;
-        this.resultDisplay = null;
+        this.store = null;
+        this.actionOrchestrator = null;
         
+        this.previousState = {};
         this.userIsAuthenticated = false;
         
         this._cacheDOMelements();
         this._checkUserAuthentication();
 
-        this.modalManager = new ModalManager(this, this.quizState, this.quizData);
-        this.timer = new Timer(this.elements.timerDisplay, this.elements.resultadoTempo); //
-        this.questionDisplay = new QuestionDisplay(this, this.quizState, this.quizData); //
-        this.scorePanel = new ScorePanel(this); //
-        this.warningDisplay = new WarningDisplay(this); //
-        this.favoriteManager = new FavoriteManager(this, this.apiService, this.quizState); //
+        this.modalManager = new ModalManager(this);
+        this.timer = new Timer(this.elements.timerDisplay, this.elements.resultadoTempo);
+        this.questionDisplay = new QuestionDisplay(this);
+        this.scorePanel = new ScorePanel(this);
+        this.warningDisplay = new WarningDisplay(this);
+
+        this.filterPanelInstance = null;
+        this.challengeHubInstance = null;
+        this.resultDisplay = null;
     }
 
-    setQuizState(quizStateInstance) {
-        this.quizState = quizStateInstance;
-        if (this.modalManager) this.modalManager.quizState = quizStateInstance;
-        if (this.questionDisplay) this.questionDisplay.quizState = quizStateInstance;
-        if (this.favoriteManager) this.favoriteManager.quizState = quizStateInstance;
+    // --- MÉTODOS DE INJEÇÃO DE DEPENDÊNCIA ---
+
+    setStore(store) {
+        this.store = store;
+        // Garante que o estado inicial seja uma cópia profunda para evitar referências inesperadas
+        this.previousState = JSON.parse(JSON.stringify(store.getState()));
+
+        this.modalManager?.setStore(store);
+        this.timer?.setStore(store);
+        this.scorePanel?.setStore(store);
+        this.questionDisplay?.setStore(store);
+
+        this.unsubscribe = this.store.subscribe(this.handleStateUpdate.bind(this));
     }
 
-    setQuizData(quizDataInstance) {
-        this.quizData = quizDataInstance;
-        if (this.modalManager) this.modalManager.quizData = quizDataInstance;
-        if (this.questionDisplay) this.questionDisplay.quizData = quizDataInstance;
-        if (this.favoriteManager && typeof this.favoriteManager.setQuizData === 'function') {
-             this.favoriteManager.setQuizData(quizDataInstance);
-        }
+    setActionOrchestrator(orchestrator) {
+        this.actionOrchestrator = orchestrator;
+
+        this.modalManager?.setActionOrchestrator(orchestrator);
+        this.questionDisplay?.setActionOrchestrator(orchestrator);
+        this.scorePanel?.setActionOrchestrator(orchestrator);
+        this.resultDisplay?.setActionOrchestrator(orchestrator); 
+        this.challengeHubInstance?.setActionOrchestrator(orchestrator); 
+        
+        this.setupGlobalEventListeners();
     }
     
-    setApiService(apiServiceInstance) { 
-        this.apiService = apiServiceInstance;
-        if (this.favoriteManager) this.favoriteManager.apiService = apiServiceInstance;
-    }
-
     setFilterPanelInstance(filterPanelInstance) {
         this.filterPanelInstance = filterPanelInstance;
     }
@@ -68,135 +71,185 @@ export default class QuizUI {
 
     setResultDisplayInstance(resultDisplayInstance) {
         this.resultDisplay = resultDisplayInstance;
-         if (this.resultDisplay && this.timer) { 
-            this.resultDisplay.timer = this.timer;
+    }
+
+    // --- LÓGICA REATIVA ---
+
+    handleStateUpdate() {
+        if (!this.store) {
+            return;
+        }
+        
+        const currentState = this.store.getState();
+    
+        // --- LÓGICA DE TRANSIÇÃO DE LAYOUT REFEITA ---
+        const wasQuizActive = this.previousState.quiz?.currentSessionId !== null;
+        const isQuizActive = currentState.quiz?.currentSessionId !== null;
+    
+        const wasQuizEnded = this.previousState.quiz?.quizEnded === true;
+        const isQuizEnded = currentState.quiz?.quizEnded === true;
+    
+        // Cenário 1: Começando um novo quiz
+        if (!wasQuizActive && isQuizActive) {
+            this.displayQuizLayout(true);
+        }
+    
+        // Cenário 2: Saindo de um quiz (seja por abandono, ou reset da tela de resultados)
+        if ((wasQuizActive || wasQuizEnded) && !isQuizActive && !isQuizEnded) {
+            this.displayQuizLayout(false);
+        }
+    
+        // --- LÓGICA DE RENDERIZAÇÃO DE COMPONENTES ---
+    
+        const prevQuestionIndex = this.previousState.quiz?.currentQuestionIndex ?? -1;
+        if (isQuizActive && currentState.quiz.currentQuestionIndex !== prevQuestionIndex) {
+            this._handleQuestionChange(currentState);
+        }
+    
+        const prevQuestionState = this.previousState.quiz?.currentQuestionsSet[prevQuestionIndex];
+        const currentQuestionState = currentState.quiz.currentQuestionsSet[currentState.quiz.currentQuestionIndex];
+    
+        if (currentQuestionState && currentQuestionState.respostaDadaId !== prevQuestionState?.respostaDadaId && currentQuestionState.respostaDadaId !== undefined && currentQuestionState.respostaDadaId !== null) {
+            this._handleAnsweredQuestion(currentQuestionState);
+        }
+    
+        // Renderiza o resultado apenas na transição exata para o estado "ended"
+        if (!wasQuizEnded && isQuizEnded) {
+            if (this.resultDisplay) {
+                this.resultDisplay.render(currentState.user, currentState);
+            }
+        }
+        
+        this.previousState = JSON.parse(JSON.stringify(currentState));
+    }
+
+    _handleQuestionChange(state) {
+        const questionWrapper = this.elements.questionWrap;
+        if (!questionWrapper) {
+            this.questionDisplay.displayCurrentQuestion(state.quiz);
+            return;
+        }
+
+        const isInitialLoad = state.quiz.isInitialQuestionLoad;
+
+        const displayLogic = () => {
+            this.questionDisplay.displayCurrentQuestion(state.quiz);
+        };
+
+        if (!isInitialLoad) {
+            questionWrapper.classList.add("is-fading-out");
+            setTimeout(() => {
+                questionWrapper.classList.remove("is-fading-out");
+                questionWrapper.classList.add("is-transparent");
+                requestAnimationFrame(() => {
+                    displayLogic();
+                    requestAnimationFrame(() => questionWrapper.classList.remove("is-transparent"));
+                });
+            }, TRANSITION_DURATION);
+        } else {
+            questionWrapper.classList.remove("is-fading-out", "is-transparent");
+            displayLogic();
         }
     }
 
-    setCallbacks(callbacks = {}) {
-        if (this.questionDisplay) {
-            this.questionDisplay.answerCallback = callbacks.answerQuestionCallback;
-            this.questionDisplay.navigationCallback = callbacks.navigationCallback;
-            this.questionDisplay.toggleFavoriteCallback = callbacks.toggleFavoriteCallback;
-        }
-        if (this.scorePanel) {
-            this.scorePanel.endSessionCallback = callbacks.endSessionCallback;
-        }
-        if (this.resultDisplay) { 
-            this.resultDisplay.restartCallback = callbacks.restartQuizCallback;
-            this.resultDisplay.goHomeCallback = callbacks.goHomeCallback; //
-        }
+    _handleAnsweredQuestion(currentQuestionState) {
+        this.questionDisplay.applyAnswerFeedback(currentQuestionState.respostaDadaId, currentQuestionState.opcoes);
+        this.questionDisplay.disableAnswers();
+        this.questionDisplay.updateExplanationButtonVisibility(currentQuestionState);
+
+        setTimeout(() => {
+            this.questionDisplay.focusNextButton(true);
+            this.questionDisplay.smoothScrollToNextButton();
+        }, 100);
     }
+    
+    // --- MÉTODOS DE UI ---
 
     _checkUserAuthentication() {
-        const bodyEl = document.body;
-        if (bodyEl && bodyEl.dataset.userAuthenticated === 'true') { //
-            this.userIsAuthenticated = true;
-        } else if (bodyEl && bodyEl.dataset.userAuthenticated === 'false') { //
-            this.userIsAuthenticated = false;
-        } else {
-            const accountLinkInHeader = document.querySelector('.site-header__actions a[href*="/account/"]'); //
-            this.userIsAuthenticated = !!accountLinkInHeader;
-        }
+        this.userIsAuthenticated = document.body.dataset.userAuthenticated === 'true';
     }
 
     _cacheDOMelements() {
         this.elements = {
-            homeSection: document.getElementById('home-section'), //
-            questionSection: document.getElementById('question-section'), //
-            accountSection: document.getElementById('account-section-page'), //
-
-            scorePanel: document.querySelector('.score-panel'), //
-            pontuacaoDisplay: document.getElementById('pontuacao'), //
-            acertosNumDisplay: document.getElementById('acertos-numero'), //
-            errosNumDisplay: document.getElementById('erros-numero'), //
-            timerDisplay: document.getElementById('timer-display'),  //
-            btnEncerrarSessao: document.getElementById('btn-encerrar-sessao'), //
-
-            challengeHubContainer: document.getElementById('challenge-hub-container'), //
-            hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'), //
-            hubQuickQuizCount: document.getElementById('hub-quick-quiz-count'), //
-            hubCustomizeQuizBtn: document.getElementById('hub-customize-quiz-btn'), //
-            hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'), //
-
-            placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'), //
-            closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'),  //
-            avisoContainer: document.getElementById('aviso-container'), //
-            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'),  //
-
-            mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'),  //
-            quizSectionContent: document.getElementById('quiz-section'),  //
-            questionWrap: document.querySelector('#quiz-section .card--question-wrap'),  //
-            progressContainer: document.getElementById('progress-container'), //
-            progressBarFill: document.getElementById('progress-bar-fill'), //
-            progressText: document.getElementById('progress-text'), //
-            questionTitle: document.getElementById('question-title'),  //
-            categoriaTitulo: document.getElementById('categoria-titulo'),  //
-            idQuestao: document.getElementById('id-questao'),  //
-            perguntaTexto: document.getElementById('pergunta-texto'), //
-            perguntaImagem: document.getElementById('pergunta-imagem'), //
-            respostasContainer: document.getElementById('respostas-container'), //
-            referenciaQuestao: document.getElementById('referencia-questao'), //
-            feedbackAcessivel: document.getElementById('feedback-acessivel'),  //
-            
-            btnToggleExplanation: document.getElementById('btn-toggle-explanation'),  //
-            btnToggleFavorite: document.getElementById('btn-toggle-favorite'),      //
-            
-            navigationButtons: document.querySelector('#quiz-section .quiz-navigation'), //
-            prevBtn: document.getElementById('prev-btn'), //
-            nextBtn: document.getElementById('next-btn'), //
-
-            questionGridContainer: document.getElementById('question-grid-container'), //
-
-            confirmEncerrarOverlay: document.getElementById('confirm-encerrar-overlay'), //
-            confirmEncerrarModal: document.getElementById('confirm-encerrar-modal'),  //
-            confirmEncerrarBtn: document.getElementById('confirm-encerrar-btn'), //
-            cancelEncerrarBtn: document.getElementById('cancel-encerrar-btn'), //
-
-            resultadoCard: document.querySelector('#question-section .card--quiz-result'),  //
-            resultadoTitulo: document.querySelector('#question-section .card--quiz-result .quiz-results__main-title'), //
-            resultadoPontos: document.getElementById('resultado-pontos'), //
-            resultadoAcertos: document.getElementById('resultado-acertos'), //
-            resultadoErros: document.getElementById('resultado-erros'), //
-            resultadoTempo: document.getElementById('resultado-tempo'),  //
-            resultadoMensagemMotivacional: document.getElementById('resultado-mensagem-motivacional'), //
-            btnRecomecar: document.getElementById('btn-recomecar'), //
-            btnExplorarMais: document.getElementById('btn-explorar-mais'), //
-
-            filterPanel: document.getElementById('filter-panel'),  //
-            btnFecharFiltros: document.getElementById('btn-fechar-filtros'),  //
-            filterPanelOverlay: document.getElementById('filter-panel-overlay'), //
-            
-            explanationModalOverlay: document.getElementById('explanation-modal-overlay'), //
-            explanationModalDialog: document.getElementById('explanation-modal-dialog'),  //
-            btnCloseExplanationModal: document.getElementById('btn-close-explanation-modal'), //
-            explanationModalMetaContainer: document.getElementById('explanation-modal-meta-container'), //
-            explanationModalDifficulty: document.getElementById('explanation-modal-difficulty'), //
-            explanationModalCategories: document.getElementById('explanation-modal-categories'), //
-            explanationModalGeneralBlock: document.getElementById('explanation-modal-general-block'), //
-            explanationModalGeneralText: document.getElementById('explanation-modal-general-text'),    //
-            explanationModalOptionsBlock: document.getElementById('explanation-modal-options-block'),  //
-            explanationModalOptionsList: document.getElementById('explanation-modal-options-list'),    //
-            explanationModalReferenceBlock: document.getElementById('explanation-modal-reference-block'), //
-            explanationModalReferenceText: document.getElementById('explanation-modal-reference-text'), //
-            explanationModalDividerGeneralOptions: document.getElementById('explanation-divider-general-options'), //
-            explanationModalDividerOptionsReference: document.getElementById('explanation-divider-options-reference'), //
-            explanationModalEmptyState: document.getElementById('explanation-modal-empty-state'),  //
-            btnGotItExplanation: document.getElementById('btn-got-it-explanation'), //
-
-            favoriteQuestionsContainer: document.getElementById('favorite-questions-container'), //
-            favoriteQuestionsEmptyState: document.getElementById('favorite-questions-empty-state'), //
-            
-            deleteAccountModalOverlay: document.getElementById('delete-account-modal-overlay'), //
-            deleteAccountModalDialog: document.getElementById('delete-account-modal-dialog'), //
-            btnOpenDeleteAccountModal: document.getElementById('btn-open-delete-account-modal'), //
-            btnCancelDeleteAccountModal: document.getElementById('cancel-delete-account-btn'), //
-            deleteAccountForm: document.getElementById('deleteAccountForm'), //
-            passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'), //
-
+            homeSection: document.getElementById('home-section'),
+            questionSection: document.getElementById('question-section'),
+            accountSection: document.getElementById('account-section-page'),
+            scorePanel: document.querySelector('.score-panel'),
+            pontuacaoDisplay: document.getElementById('pontuacao'),
+            acertosNumDisplay: document.getElementById('acertos-numero'),
+            errosNumDisplay: document.getElementById('erros-numero'),
+            timerDisplay: document.getElementById('timer-display'),
+            btnEncerrarSessao: document.getElementById('btn-encerrar-sessao'),
+            challengeHubContainer: document.getElementById('challenge-hub-container'),
+            hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'),
+            hubQuickQuizCount: document.getElementById('hub-quick-quiz-count'),
+            hubCustomizeQuizBtn: document.getElementById('hub-customize-quiz-btn'),
+            hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'),
+            placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
+            closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'),
+            avisoContainer: document.getElementById('aviso-container'),
+            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'),
+            mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'),
+            quizSectionContent: document.getElementById('quiz-section'),
+            questionWrap: document.querySelector('#quiz-section .card--question-wrap'),
+            progressContainer: document.getElementById('progress-container'),
+            progressBarFill: document.getElementById('progress-bar-fill'),
+            progressText: document.getElementById('progress-text'),
+            questionTitle: document.getElementById('question-title'),
+            categoriaTitulo: document.getElementById('categoria-titulo'),
+            idQuestao: document.getElementById('id-questao'),
+            perguntaTexto: document.getElementById('pergunta-texto'),
+            perguntaImagem: document.getElementById('pergunta-imagem'),
+            respostasContainer: document.getElementById('respostas-container'),
+            referenciaQuestao: document.getElementById('referencia-questao'),
+            feedbackAcessivel: document.getElementById('feedback-acessivel'),
+            btnToggleExplanation: document.getElementById('btn-toggle-explanation'),
+            btnToggleFavorite: document.getElementById('btn-toggle-favorite'),
+            navigationButtons: document.querySelector('#quiz-section .quiz-navigation'),
+            prevBtn: document.getElementById('prev-btn'),
+            nextBtn: document.getElementById('next-btn'),
+            questionGridContainer: document.getElementById('question-grid-container'),
+            confirmEncerrarOverlay: document.getElementById('confirm-encerrar-overlay'),
+            confirmEncerrarModal: document.getElementById('confirm-encerrar-modal'),
+            confirmEncerrarBtn: document.getElementById('confirm-encerrar-btn'),
+            cancelEncerrarBtn: document.getElementById('cancel-encerrar-btn'),
+            resultadoCard: document.querySelector('#question-section .card--quiz-result'),
+            resultadoTitulo: document.querySelector('#question-section .card--quiz-result .quiz-results__main-title'),
+            resultadoPontos: document.getElementById('resultado-pontos'),
+            resultadoAcertos: document.getElementById('resultado-acertos'),
+            resultadoErros: document.getElementById('resultado-erros'),
+            resultadoTempo: document.getElementById('resultado-tempo'),
+            resultadoMensagemMotivacional: document.getElementById('resultado-mensagem-motivacional'),
+            btnRecomecar: document.getElementById('btn-recomecar'),
+            btnExplorarMais: document.getElementById('btn-explorar-mais'),
+            filterPanel: document.getElementById('filter-panel'),
+            btnFecharFiltros: document.getElementById('btn-fechar-filtros'),
+            filterPanelOverlay: document.getElementById('filter-panel-overlay'),
+            explanationModalOverlay: document.getElementById('explanation-modal-overlay'),
+            explanationModalDialog: document.getElementById('explanation-modal-dialog'),
+            btnCloseExplanationModal: document.getElementById('btn-close-explanation-modal'),
+            explanationModalMetaContainer: document.getElementById('explanation-modal-meta-container'),
+            explanationModalDifficulty: document.getElementById('explanation-modal-difficulty'),
+            explanationModalCategories: document.getElementById('explanation-modal-categories'),
+            explanationModalGeneralBlock: document.getElementById('explanation-modal-general-block'),
+            explanationModalGeneralText: document.getElementById('explanation-modal-general-text'),
+            explanationModalOptionsBlock: document.getElementById('explanation-modal-options-block'),
+            explanationModalOptionsList: document.getElementById('explanation-modal-options-list'),
+            explanationModalReferenceBlock: document.getElementById('explanation-modal-reference-block'),
+            explanationModalReferenceText: document.getElementById('explanation-modal-reference-text'),
+            explanationModalDividerGeneralOptions: document.getElementById('explanation-divider-general-options'),
+            explanationModalDividerOptionsReference: document.getElementById('explanation-divider-options-reference'),
+            explanationModalEmptyState: document.getElementById('explanation-modal-empty-state'),
+            btnGotItExplanation: document.getElementById('btn-got-it-explanation'),
+            favoriteQuestionsContainer: document.getElementById('favorite-questions-container'),
+            favoriteQuestionsEmptyState: document.getElementById('favorite-questions-empty-state'),
+            deleteAccountModalOverlay: document.getElementById('delete-account-modal-overlay'),
+            deleteAccountModalDialog: document.getElementById('delete-account-modal-dialog'),
+            btnOpenDeleteAccountModal: document.getElementById('btn-open-delete-account-modal'),
+            btnCancelDeleteAccountModal: document.getElementById('cancel-delete-account-btn'),
+            deleteAccountForm: document.getElementById('deleteAccountForm'),
+            passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'),
             bottomNavElement: document.querySelector('.bottom-nav'),
-            
-            // --- NOVOS ELEMENTOS PARA O MODAL DE DECISÃO DE RETOMADA E INDICADOR DE LOADING ---
             resumeDecisionOverlay: document.getElementById('resume-decision-overlay'),
             resumeDecisionModalDialog: document.getElementById('resume-decision-modal-dialog'),
             btnConfirmResume: document.getElementById('btn-confirm-resume'),
@@ -206,7 +259,6 @@ export default class QuizUI {
         };
     }
 
-    // --- Métodos Utilitários de UI ---
     showElement(element) {
         element?.classList.remove(this.hiddenClassName);
     }
@@ -228,8 +280,7 @@ export default class QuizUI {
             } else if (originalText && !buttonElement.dataset.originalText) {
                 buttonElement.dataset.originalText = originalText;
             }
-            // Adiciona spinner se houver um elemento para ele
-            const spinner = buttonElement.querySelector('.button__spinner'); // Assumindo que você pode adicionar <span class="button__spinner"></span>
+            const spinner = buttonElement.querySelector('.button__spinner');
             if(spinner) this.showElement(spinner);
             if (textDisplayElement) textDisplayElement.textContent = 'Carregando...';
 
@@ -240,18 +291,13 @@ export default class QuizUI {
             if(spinner) this.hideElement(spinner);
             if (buttonElement.dataset.originalText) {
                 if (textDisplayElement) textDisplayElement.textContent = buttonElement.dataset.originalText;
-                // delete buttonElement.dataset.originalText; // Limpa para próxima vez
             } else if (originalText) {
                 if (textDisplayElement) textDisplayElement.textContent = originalText;
             }
         }
     }
     
-    // --- Métodos de Controle de Layout Principal ---
-    
-    // ===== INÍCIO DA ALTERAÇÃO (Passo 1.2) =====
     displayQuizLayout(showQuizLayout = true) {
-        // Adicione bottomNavElement à desestruturação
         const { placeholderFiltrosContainer, quizSectionContent, bottomNavElement } = this.elements;
         
         if (showQuizLayout) {
@@ -261,30 +307,18 @@ export default class QuizUI {
             if (this.warningDisplay) this.warningDisplay.clear(); 
             this.hideElement(placeholderFiltrosContainer); 
             if (this.resultDisplay) this.resultDisplay.hide();
-            
-            // Esconde a nav inferior ao entrar no quiz
             if (bottomNavElement) this.hideElement(bottomNavElement);
-
         } else {
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
+            if (this.resultDisplay) this.resultDisplay.hide();
+
+            if (this.challengeHubInstance) this.challengeHubInstance.showHub();
+            this.hideElement(placeholderFiltrosContainer);
             
-            const resultsAreVisible = this.elements.resultadoCard && !this.elements.resultadoCard.classList.contains(this.hiddenClassName);
-            const filterPanelIsOpen = this.elements.filterPanel && this.elements.filterPanel.classList.contains('filter-panel--visible');
-
-            if (!resultsAreVisible && !filterPanelIsOpen) {
-                if (this.challengeHubInstance) this.challengeHubInstance.showHub();
-                this.hideElement(placeholderFiltrosContainer);
-            } else if (filterPanelIsOpen && !resultsAreVisible) {
-                this.showElement(placeholderFiltrosContainer);
-                if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
-            }
-
-            // Mostra a nav inferior ao sair do quiz e voltar ao hub
             if (bottomNavElement) this.showElement(bottomNavElement);
         }
     }
-    // ===== FIM DA ALTERAÇÃO =====
 
     hideActiveQuizElements() {
         this.hideElement(this.elements.quizSectionContent); 
@@ -297,7 +331,7 @@ export default class QuizUI {
             this.hideElement(this.elements.progressText);
         }
 
-        if (this.modalManager && typeof this.modalManager.toggleExplanationModal === 'function') { //
+        if (this.modalManager && typeof this.modalManager.toggleExplanationModal === 'function') {
             this.modalManager.toggleExplanationModal(false); 
         }
         
@@ -311,36 +345,28 @@ export default class QuizUI {
         }
     }
 
-    // --- NOVO MÉTODO para Indicador de Carregamento da Sessão ---
     showSessionLoadingIndicator(show, message = "Carregando...") {
         if (this.elements.sessionLoadingIndicator) {
             if (show) {
                 if (this.elements.sessionLoadingMessage) {
                     this.elements.sessionLoadingMessage.textContent = message;
                 }
-                // Usa a classe 'modal--visible' para consistência com a transição de opacidade/visibilidade
                 this.elements.sessionLoadingIndicator.classList.add('modal--visible');
                 this.elements.sessionLoadingIndicator.classList.remove(this.hiddenClassName);
-
-                // Esconde outros painéis principais para focar no indicador
                 this.hideElement(this.elements.challengeHubContainer);
                 this.hideElement(this.elements.quizSectionContent);
                 this.hideElement(this.elements.resultadoCard);
                 this.hideElement(this.elements.placeholderFiltrosContainer);
                 if (this.scorePanel) this.scorePanel.hide();
                 if (this.warningDisplay) this.warningDisplay.clear();
-
-                document.body.classList.add('no-scroll'); // Impede scroll do body
+                document.body.classList.add('no-scroll');
             } else {
                 this.elements.sessionLoadingIndicator.classList.remove('modal--visible');
-                // Adiciona u-is-hidden após a transição de opacidade
                 setTimeout(() => {
                      if (!this.elements.sessionLoadingIndicator.classList.contains('modal--visible')) {
                         this.hideElement(this.elements.sessionLoadingIndicator);
                      }
-                }, 300); // Deve corresponder à duração da transição no CSS
-
-                // Só remove no-scroll se nenhum outro modal estiver ativo
+                }, 300);
                 if (this.modalManager && this.modalManager.activeModalCount === 0) {
                      document.body.classList.remove('no-scroll');
                 }
@@ -348,16 +374,7 @@ export default class QuizUI {
         }
     }
 
-
-    setupGlobalEventListeners(quizLogicInstance) {
-        if (!quizLogicInstance) {
-            return;
-        }
-
-        if (this.modalManager) {
-            this.modalManager.setupEventListeners(quizLogicInstance);
-        }
-
+    setupGlobalEventListeners() {
         this.elements.closeFiltersAndShowHubBtn?.addEventListener('click', () => {
             if (this.modalManager) this.modalManager.toggleFilterPanel(false); 
             if (this.challengeHubInstance) this.challengeHubInstance.showHub(); 
@@ -367,23 +384,6 @@ export default class QuizUI {
         this.elements.btnToggleExplanation?.addEventListener('click', () => {
              if (this.modalManager) this.modalManager.toggleExplanationModal(true);
         });
-    }
-
-    _getFriendlyErrorMessage(error, defaultMessage = "Ocorreu um erro. Tente novamente.") {
-        if (error && error.response && error.response.status === 0) {
-            return "Não foi possível conectar ao servidor. Verifique sua conexão com a internet.";
-        }
-        if (error && error.data && error.data.message) {
-            return error.data.message; 
-        }
-        if (error && error.message && error.message.includes("Failed to fetch")) {
-            return "Falha de rede. Verifique sua conexão e tente novamente.";
-        }
-        if (error && error.message) {
-            // Não retornar error.message diretamente se for um erro técnico não amigável
-            return defaultMessage; 
-        }
-        return defaultMessage;
     }
     
     showWarning(message, type = 'warning', isTextCentered = false) {

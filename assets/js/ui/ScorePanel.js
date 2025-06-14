@@ -1,26 +1,79 @@
 // File: assets/js/ui/ScorePanel.js
 
 export default class ScorePanel {
-    constructor(quizUIInstance, endSessionCallback = null) {
-        // console.log("SCOREPANEL.JS: Constructor - Instanciando ScorePanel.");
+    constructor(quizUIInstance) {
         this.quizUI = quizUIInstance;
-        this.elements = this.quizUI.elements; // Atalho para os elementos DOM
-        this.endSessionCallback = endSessionCallback;
-
+        this.elements = this.quizUI.elements;
+        
+        // As dependências serão injetadas via setters pelo QuizUI
+        this.store = null;
+        this.actionOrchestrator = null;
+        this.previousUserState = null; // Para comparar mudanças específicas
+        
         this._setupEventListeners();
+    }
+
+    /**
+     * Define a instância do store e se inscreve para atualizações.
+     * @param {object} storeInstance - A instância do store.
+     */
+    setStore(storeInstance) {
+        this.store = storeInstance;
+        if (this.store) {
+            // Armazena o estado inicial do usuário para comparação
+            this.previousUserState = { ...this.store.getState().user };
+            
+            // Inscreve-se para futuras atualizações
+            this.store.subscribe(this.handleStateUpdate.bind(this));
+        }
+    }
+    
+    /**
+     * Define a instância do ActionOrchestrator.
+     * @param {ActionOrchestrator} orchestrator - A instância do orquestrador.
+     */
+    setActionOrchestrator(orchestrator) {
+        this.actionOrchestrator = orchestrator;
+    }
+
+    /**
+     * Lida com as atualizações de estado do store.
+     * Este método é o coração reativo do componente.
+     */
+    handleStateUpdate() {
+        if (!this.store) return;
+        
+        const currentState = this.store.getState();
+        const currentUserState = currentState.user; // Supondo que os dados do usuário estejam em `state.user`
+        
+        // Verifica se houve mudança nos dados do usuário para evitar re-renderizações desnecessárias
+        if (
+            currentUserState.pontos !== this.previousUserState.pontos ||
+            currentUserState.acertos !== this.previousUserState.acertos ||
+            currentUserState.erros !== this.previousUserState.erros
+        ) {
+            this._render(currentUserState.pontos, currentUserState.acertos, currentUserState.erros);
+        }
+        
+        // Atualiza o estado anterior
+        this.previousUserState = { ...currentUserState };
     }
 
     _setupEventListeners() {
         this.elements.btnEncerrarSessao?.addEventListener('click', () => {
-            // console.log("SCOREPANEL.JS: Botão Encerrar Sessão clicado.");
-            if (this.endSessionCallback && typeof this.endSessionCallback === 'function') {
-                this.endSessionCallback(); // Chama o callback para que QuizLogic/QuizUI trate o modal de confirmação
+            // Em vez de um callback, chama o orquestrador diretamente
+            // para lidar com a lógica de abrir o modal.
+            if (this.quizUI.modalManager) {
+                this.quizUI.modalManager.toggleConfirmModal(true);
             }
         });
     }
 
-    updateDisplay(pontos, acertos, erros) {
-        // console.log(`SCOREPANEL.JS: updateDisplay - Pontos: ${pontos}, Acertos: ${acertos}, Erros: ${erros}`);
+    /**
+     * Método privado que realmente atualiza o DOM.
+     * Substitui o antigo `updateDisplay`.
+     */
+    _render(pontos, acertos, erros) {
         if (this.elements.pontuacaoDisplay) {
             this.elements.pontuacaoDisplay.textContent = pontos;
         }
@@ -32,32 +85,24 @@ export default class ScorePanel {
         }
     }
 
+    // O método `resetDisplay` não é mais necessário, pois o reset
+    // acontecerá reativamente quando o estado do usuário for resetado no store.
+
     show() {
-        // console.log("SCOREPANEL.JS: show - Mostrando painel de pontuação.");
         if (this.elements.scorePanel) {
             this.quizUI.showElement(this.elements.scorePanel);
         }
         if (this.elements.btnEncerrarSessao) {
-             // O botão de encerrar só deve ser mostrado se houver uma sessão em andamento.
-             // QuizLogic ou QuizState precisariam informar isso.
-             // Por enquanto, vamos assumir que se o ScorePanel é mostrado, o botão também é.
             this.quizUI.showElement(this.elements.btnEncerrarSessao);
         }
     }
 
     hide() {
-        // console.log("SCOREPANEL.JS: hide - Escondendo painel de pontuação.");
         if (this.elements.scorePanel) {
             this.quizUI.hideElement(this.elements.scorePanel);
         }
         if (this.elements.btnEncerrarSessao) {
             this.quizUI.hideElement(this.elements.btnEncerrarSessao);
         }
-    }
-
-    // Opcional: um método para resetar os displays para 0, caso necessário
-    resetDisplay() {
-        // console.log("SCOREPANEL.JS: resetDisplay - Resetando display para 0.");
-        this.updateDisplay(0, 0, 0);
     }
 }

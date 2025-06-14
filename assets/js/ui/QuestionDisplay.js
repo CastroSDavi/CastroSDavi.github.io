@@ -1,5 +1,4 @@
 // File: assets/js/ui/QuestionDisplay.js
-
 import { QUESTOES_POR_PAGINA_GRID } from '../utils/constants.js';
 
 export default class QuestionDisplay {
@@ -49,24 +48,53 @@ export default class QuestionDisplay {
         this._displayQuestionImage(question.url_imagem, qNum);
         this.updateProgressBar(qNum, totalQ);
         
-        if (this.elements.btnToggleFavorite) {
-            const isFavorited = question.is_favorited || false;
-        }
+        // --- INÍCIO DA MODIFICAÇÃO ---
+        this._updateFavoriteButton(question);
+        // --- FIM DA MODIFICAÇÃO ---
 
         this.generateAnswerButtons(question.id_pergunta, options, question.respostaDadaId);
 
-        // --- INÍCIO DA CORREÇÃO 2 ---
-        // A condição aqui foi corrigida para prevenir a chamada de `disableAnswers` em questões puladas.
         if (question.respostaDadaId !== undefined && question.respostaDadaId !== null) {
             this.disableAnswers();
             this.applyAnswerFeedback(question.respostaDadaId, options);
         }
-        // --- FIM DA CORREÇÃO 2 ---
 
         this.updateExplanationButtonVisibility(question);
         this.updateNavigationButtons(question, qNum - 1, totalQ);
         this.renderQuestionGrid();
     }
+    
+    // --- NOVO MÉTODO ---
+    _updateFavoriteButton(question) {
+        const btn = this.elements.btnToggleFavorite;
+        if (!btn) return;
+        
+        const isUserAuthenticated = this.quizUI.userIsAuthenticated;
+        
+        if (!isUserAuthenticated) {
+            this.quizUI.hideElement(btn);
+            return;
+        }
+
+        this.quizUI.showElement(btn);
+        
+        const isFavorited = question.is_favorited || false;
+        const icon = btn.querySelector('.material-symbols-outlined');
+
+        if (isFavorited) {
+            btn.classList.add('is-favorited');
+            if (icon) icon.textContent = 'star';
+            btn.setAttribute('aria-label', 'Remover dos Favoritos');
+            btn.title = 'Remover dos Favoritos';
+        } else {
+            btn.classList.remove('is-favorited');
+            if (icon) icon.textContent = 'star_outline';
+            btn.setAttribute('aria-label', 'Adicionar aos Favoritos');
+            btn.title = 'Adicionar aos Favoritos';
+        }
+    }
+    // --- FIM DO NOVO MÉTODO ---
+
 
     updateExplanationButtonVisibility(question) {
         if (!question) return;
@@ -104,11 +132,7 @@ export default class QuestionDisplay {
         
         if (!Array.isArray(opcoes)) return;
 
-        // --- INÍCIO DA CORREÇÃO 1 ---
-        // A lógica de `temResposta` foi refinada para tratar `null` (questão pulada)
-        // como um estado não respondido, mantendo as alternativas habilitadas.
         const temResposta = respostaDadaId !== undefined && respostaDadaId !== null;
-        // --- FIM DA CORREÇÃO 1 ---
         
         const baseClass = 'question-display__answer-option';
 

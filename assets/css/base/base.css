@@ -41,13 +41,21 @@ body.no-scroll {
   outline-offset: var(--focus-outline-offset);
 }
 
-/*
-==========================================================================
-  BLOCO REMOVIDO
-==========================================================================
-O bloco @media (max-width: 768px) que continha as regras para
-'body' e 'body.body-account-content-active' foi completamente removido
-daqui, pois não é mais necessário para o novo layout da navbar flutuante.
-Isso resolve o problema da "barra branca" sem o uso de '!important'.
-==========================================================================
-*/
+/* --- INÍCIO DA MODIFICAÇÃO --- */
+/* Regra para renderizar corretamente os ícones do Google Fonts */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Pode ser sobrescrito por outras classes */
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+/* --- FIM DA MODIFICAÇÃO --- */

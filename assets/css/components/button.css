@@ -321,8 +321,9 @@
     transform: scale(1.05);
 }
 
-/* --- BOTÃO DE FAVORITO (ESPECÍFICO) --- */
+/* --- BOTÃO DE FAVORITO (REFATORADO) --- */
 .favorite-star-action {
+    font-family: 'Material Symbols Outlined';
     background: none;
     border: none;
     padding: var(--spacing-xxs, 5px);
@@ -342,18 +343,21 @@
     outline-offset: 2px;
 }
 .favorite-star-action .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
     font-size: 22px;
     font-variation-settings: 'FILL' 0, 'wght' 300;
     color: inherit;
     transition: font-variation-settings 0.2s ease-out, transform 0.15s ease-out;
     display: block;
 }
+
+/* --- INÍCIO DA MODIFICAÇÃO --- */
 .favorite-star-action:not(.is-favorited):hover {
     background-color: var(--color-gray-100);
-    color: var(--color-accent-yellow, gold);
+    color: var(--color-primary-dark); /* Alterado de amarelo para a cor primária */
     transform: scale(1.1);
 }
+/* --- FIM DA MODIFICAÇÃO --- */
+
 .favorite-star-action.is-favorited {
     color: var(--color-accent-yellow, gold);
     transform: scale(1.05);
@@ -468,7 +472,6 @@
         padding: var(--spacing-xxs, 3px);
     }
     .favorite-star-action .material-symbols-outlined {
-        font-family: 'Material Symbols Outlined';
         font-size: 18px;
     }
 }

@@ -1,4 +1,3 @@
-{# Arquivo: templates/quiz/questions_page.html #}
 {% extends "quiz/base.html" %}
 {% load static %}
 
@@ -94,10 +93,12 @@
                     <h2 id="question-title" tabindex="-1">
                         <span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
                     </h2>
+                    {# --- INÍCIO DA MODIFICAÇÃO --- #}
                     <button class="favorite-star-action u-is-hidden" id="btn-toggle-favorite"
                             aria-label="Adicionar aos Favoritos" title="Adicionar aos Favoritos">
                         <span class="material-symbols-outlined">star_outline</span>
                     </button>
+                    {# --- FIM DA MODIFICAÇÃO --- #}
                 </div>
                 
                 <div class="card card--question-wrap">

@@ -27,6 +27,7 @@
 @import 'components/stats-deck.css';
 @import 'components/messages.css';
 @import 'components/loading-indicator.css';
+@import 'components/resume-banner.css'; 
 
 /* 4. SECTIONS */
 @import 'sections/home-section.css';

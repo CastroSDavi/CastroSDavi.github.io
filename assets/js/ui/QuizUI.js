@@ -250,14 +250,62 @@ export default class QuizUI {
             deleteAccountForm: document.getElementById('deleteAccountForm'),
             passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'),
             bottomNavElement: document.querySelector('.bottom-nav'),
-            resumeDecisionOverlay: document.getElementById('resume-decision-overlay'),
-            resumeDecisionModalDialog: document.getElementById('resume-decision-modal-dialog'),
-            btnConfirmResume: document.getElementById('btn-confirm-resume'),
-            btnDiscardResume: document.getElementById('btn-discard-resume'),
+            
+            // --- INÍCIO DA MODIFICAÇÃO: Cache dos elementos do novo banner ---
+            resumeBannerContainer: document.getElementById('resume-banner-container'),
+            resumeBannerQuestionCount: document.getElementById('resume-banner-question-count'),
+            btnBannerConfirmResume: document.getElementById('btn-banner-confirm-resume'),
+            btnBannerDiscardResume: document.getElementById('btn-banner-discard-resume'),
+            // --- FIM DA MODIFICAÇÃO ---
+
+            // O modal antigo agora é referenciado pelo novo ID para desativá-lo
+            resumeDecisionOverlay: document.getElementById('DEPRECATED-resume-decision-overlay'), 
+            resumeDecisionModalDialog: document.querySelector('#DEPRECATED-resume-decision-overlay .modal__dialog'),
+            btnConfirmResume: document.querySelector('#DEPRECATED-resume-decision-overlay #btn-confirm-resume'),
+            btnDiscardResume: document.querySelector('#DEPRECATED-resume-decision-overlay #btn-discard-resume'),
+            
             sessionLoadingIndicator: document.getElementById('session-loading-indicator'),
             sessionLoadingMessage: document.getElementById('session-loading-message'),
         };
     }
+    
+    // --- INÍCIO DA MODIFICAÇÃO: Novos métodos para o banner ---
+    
+    _displayResumeBanner(savedSession) {
+        if (!this.elements.resumeBannerContainer || !savedSession?.perguntas) return;
+
+        // Preenche os dados
+        this.elements.resumeBannerQuestionCount.textContent = savedSession.perguntas.length;
+
+        // Adiciona os listeners
+        this._setupResumeBannerListeners(savedSession);
+        
+        // Exibe o banner e oculta o hub
+        this.hideElement(this.elements.challengeHubContainer);
+        this.showElement(this.elements.resumeBannerContainer);
+    }
+    
+    _setupResumeBannerListeners(savedSession) {
+        // Remove listeners antigos para evitar duplicação se o método for chamado novamente
+        this.elements.btnBannerConfirmResume.onclick = null;
+        this.elements.btnBannerDiscardResume.onclick = null;
+    
+        this.elements.btnBannerConfirmResume.onclick = () => {
+            if (this.actionOrchestrator) {
+                // Chama a lógica de retomada que já existe no orquestrador
+                this.actionOrchestrator._proceedWithResumedSession(savedSession);
+            }
+        };
+        
+        this.elements.btnBannerDiscardResume.onclick = () => {
+            if (this.actionOrchestrator) {
+                // Chama a lógica de descarte que já existe no orquestrador
+                this.actionOrchestrator._discardAndGoToHub(savedSession.session_id);
+            }
+        };
+    }
+
+    // --- FIM DA MODIFICAÇÃO ---
 
     showElement(element) {
         element?.classList.remove(this.hiddenClassName);
@@ -308,13 +356,17 @@ export default class QuizUI {
             this.hideElement(placeholderFiltrosContainer); 
             if (this.resultDisplay) this.resultDisplay.hide();
             if (bottomNavElement) this.hideElement(bottomNavElement);
+            // --- INÍCIO DA MODIFICAÇÃO ---
+            this.hideElement(this.elements.resumeBannerContainer); // Garante que o banner de resumo seja ocultado
+            // --- FIM DA MODIFICAÇÃO ---
         } else {
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
             if (this.resultDisplay) this.resultDisplay.hide();
 
-            if (this.challengeHubInstance) this.challengeHubInstance.showHub();
-            this.hideElement(placeholderFiltrosContainer);
+            // A lógica de exibição do hub/banner agora é tratada na inicialização
+            // if (this.challengeHubInstance) this.challengeHubInstance.showHub();
+            // this.hideElement(placeholderFiltrosContainer);
             
             if (bottomNavElement) this.showElement(bottomNavElement);
         }

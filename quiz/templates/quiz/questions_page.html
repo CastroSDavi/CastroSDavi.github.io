@@ -37,6 +37,27 @@
         </aside>
 
         <div class="question-section__main-content">
+            
+            <div id="resume-banner-container" class="resume-banner-container u-is-hidden">
+                <div class="card">
+                    <div class="resume-banner__content">
+                        <div class="resume-banner__icon-wrapper">
+                            <span class="material-symbols-outlined resume-banner__icon">rebase_edit</span>
+                        </div>
+                        <div class="resume-banner__text">
+                            <h3 class="resume-banner__title">Continue de onde você parou</h3>
+                            <p class="resume-banner__description">
+                                Você tem uma sessão em andamento de <strong id="resume-banner-question-count">0</strong> questões.
+                            </p>
+                        </div>
+                        <div class="resume-banner__actions">
+                            <button id="btn-banner-discard-resume" class="button button--danger-outline button--small">Descartar</button>
+                            <button id="btn-banner-confirm-resume" class="button button--primary">Continuar Quiz</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__header">
                     <h2 class="challenge-hub__title">Escolha seu Desafio</h2>
@@ -93,12 +114,10 @@
                     <h2 id="question-title" tabindex="-1">
                         <span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
                     </h2>
-                    {# --- INÍCIO DA MODIFICAÇÃO --- #}
                     <button class="favorite-star-action u-is-hidden" id="btn-toggle-favorite"
                             aria-label="Adicionar aos Favoritos" title="Adicionar aos Favoritos">
                         <span class="material-symbols-outlined">star_outline</span>
                     </button>
-                    {# --- FIM DA MODIFICAÇÃO --- #}
                 </div>
                 
                 <div class="card card--question-wrap">
@@ -186,8 +205,7 @@
             </div>
         </div>
 
-        {# ===== NOVO: Modal de Decisão para Retomar Sessão ===== #}
-        <div id="resume-decision-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="resumeModalTitle" aria-modal="true" tabindex="-1">
+        <div id="DEPRECATED-resume-decision-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="resumeModalTitle" aria-modal="true" tabindex="-1">
             <div id="resume-decision-modal-dialog" class="card modal__dialog">
                 <div class="modal__header">
                     <h3 id="resumeModalTitle" class="modal__title card__title">Quiz em Andamento</h3>
@@ -203,8 +221,6 @@
         </div>
     </section> {# Fim de #question-section #}
 
-    {# ===== NOVO: Indicador de Carregamento de Sessão Global ===== #}
-    {# A classe 'modal--visible' será adicionada/removida via JS para controlar visibilidade e transição #}
     <div id="session-loading-indicator" class="session-loading-indicator-overlay u-is-hidden">
         <div class="session-loading-indicator-content card">
             <span class="material-symbols-outlined session-loading-indicator-spinner">

@@ -1,0 +1,80 @@
+/* Arquivo: assets/css/components/resume-banner.css */
+
+.resume-banner-container {
+    margin-bottom: var(--spacing-lg, 25px);
+    animation: fadeInScaleUpResultCardV6 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.resume-banner-container .card {
+    /* Usando cores primárias para dar destaque */
+    background-color: var(--color-primary-light);
+    border-color: var(--color-primary-medium);
+    padding: var(--spacing-md, 20px) var(--spacing-lg, 25px);
+}
+
+.resume-banner__content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg, 25px);
+    flex-wrap: wrap; /* Para telas menores */
+}
+
+.resume-banner__icon-wrapper {
+    display: none; /* Oculto em telas pequenas */
+    flex-shrink: 0;
+}
+
+.resume-banner__icon {
+    font-size: 3rem;
+    color: var(--color-primary-dark);
+    line-height: 1;
+}
+
+.resume-banner__text {
+    flex-grow: 1;
+}
+
+.resume-banner__title {
+    font-family: var(--font-family-heading);
+    font-size: var(--font-size-h4);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-dark);
+    margin: 0 0 var(--spacing-xxs, 6px) 0;
+}
+
+.resume-banner__description {
+    font-family: var(--font-family-sans);
+    font-size: var(--font-size-base);
+    color: var(--color-text-secondary);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.resume-banner__description strong {
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-semibold);
+}
+
+.resume-banner__actions {
+    display: flex;
+    gap: var(--spacing-sm, 12px);
+    flex-shrink: 0;
+    align-items: center;
+}
+
+/* Responsividade */
+@media (min-width: 576px) {
+    .resume-banner__icon-wrapper {
+        display: block; /* Mostra o ícone em telas maiores */
+    }
+}
+
+@media (max-width: 768px) {
+    .resume-banner__content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md, 20px);
+    }
+}

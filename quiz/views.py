@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
-from datetime import timedelta # Mantido, pode ser útil
-from django.db import models # Para isinstance em _filter_queryset_by_period
+from datetime import timedelta  # Mantido, pode ser útil
+from django.db import models  # Para isinstance em _filter_queryset_by_period
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch
 )
@@ -24,9 +24,9 @@ from .models import (
     Pergunta, Categoria, OpcaoResposta,
     SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
     QuestaoFavorita,
-    QuizDefinicao, # NOVO MODELO
-    QuizDefinicaoPergunta, # NOVO MODELO
-    ConfiguracoesGeraisQuiz # NOVO MODELO
+    QuizDefinicao,  # NOVO MODELO
+    QuizDefinicaoPergunta,  # NOVO MODELO
+    ConfiguracoesGeraisQuiz  # NOVO MODELO
 )
 from .forms import (
     CustomUserCreationForm,
@@ -35,10 +35,11 @@ from .forms import (
     CustomPasswordChangeForm
 )
 
-#region Lógica de Negócio e Utilitários de Dados
+# region Lógica de Negócio e Utilitários de Dados
 
 # Cache simples em memória para configurações gerais
 _quiz_config_cache = None
+
 
 def get_quiz_config():
     """
@@ -49,16 +50,17 @@ def get_quiz_config():
     global _quiz_config_cache
     if _quiz_config_cache is None:
         config, created = ConfiguracoesGeraisQuiz.objects.get_or_create(
-            pk=1, # Garante que sempre tentamos obter/criar a mesma linha.
+            pk=1,  # Garante que sempre tentamos obter/criar a mesma linha.
             defaults={
-                'numero_perguntas_quiz_rapido': 10, # Valor padrão
+                'numero_perguntas_quiz_rapido': 10,  # Valor padrão
                 'pontuacao_por_acerto': 15,       # Valor padrão
                 'penalidade_por_erro': 5          # Valor padrão
             }
         )
         if created:
             # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
-            print(f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
+            print(
+                f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
         _quiz_config_cache = config
     return _quiz_config_cache
 
@@ -72,7 +74,8 @@ def get_descendant_category_ids(category_ids_str_list):
         return set()
     try:
         # Garante que apenas IDs numéricos válidos sejam processados
-        initial_ids = set(int(cat_id) for cat_id in category_ids_str_list if str(cat_id).strip().isdigit())
+        initial_ids = set(int(cat_id) for cat_id in category_ids_str_list if str(
+            cat_id).strip().isdigit())
     except ValueError:
         # Se houver algum valor não numérico que não foi filtrado, retorna conjunto vazio
         return set()
@@ -81,7 +84,8 @@ def get_descendant_category_ids(category_ids_str_list):
         return set()
 
     all_descendant_ids = set()
-    queue = list(initial_ids) # Fila para processamento BFS (Breadth-First Search)
+    # Fila para processamento BFS (Breadth-First Search)
+    queue = list(initial_ids)
     processed_ids = set()     # Para evitar reprocessar e ciclos infinitos
 
     while queue:
@@ -91,7 +95,8 @@ def get_descendant_category_ids(category_ids_str_list):
         processed_ids.add(current_id)
         all_descendant_ids.add(current_id)
 
-        subcategorias = Categoria.objects.filter(id_categoria_pai_id=current_id).values_list('pk', flat=True)
+        subcategorias = Categoria.objects.filter(
+            id_categoria_pai_id=current_id).values_list('pk', flat=True)
         for sub_cat_id in subcategorias:
             if sub_cat_id not in processed_ids:
                 queue.append(sub_cat_id)
@@ -106,37 +111,45 @@ def get_quiz_data_dict(
     num_questions_custom_str=None,
     user: User = None,
     quiz_definicao_id=None
-    ):
+):
 
     todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
     perguntas_qs = Pergunta.objects.filter(ativa=True)
     quiz_config = get_quiz_config()
-    quiz_definition_name_to_return = None # NOVO: Para armazenar o nome do quiz definido
+    # NOVO: Para armazenar o nome do quiz definido
+    quiz_definition_name_to_return = None
 
     if quiz_definicao_id:
         try:
-            quiz_def = QuizDefinicao.objects.get(pk=quiz_definicao_id, ativo=True)
+            quiz_def = QuizDefinicao.objects.get(
+                pk=quiz_definicao_id, ativo=True)
             perguntas_ordenadas_ids = list(
-                quiz_def.quizdefinicaopergunta_set.order_by('ordem').values_list('pergunta_id', flat=True)
+                quiz_def.quizdefinicaopergunta_set.order_by(
+                    'ordem').values_list('pergunta_id', flat=True)
             )
             if not perguntas_ordenadas_ids:
                 perguntas_qs = Pergunta.objects.none()
             else:
-                preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(perguntas_ordenadas_ids)])
-                perguntas_qs = Pergunta.objects.filter(pk__in=perguntas_ordenadas_ids, ativa=True).order_by(preserved_order)
-            quiz_definition_name_to_return = quiz_def.nome_quiz # ARMAZENA O NOME
+                preserved_order = Case(
+                    *[When(pk=pk, then=pos) for pos, pk in enumerate(perguntas_ordenadas_ids)])
+                perguntas_qs = Pergunta.objects.filter(
+                    pk__in=perguntas_ordenadas_ids, ativa=True).order_by(preserved_order)
+            quiz_definition_name_to_return = quiz_def.nome_quiz  # ARMAZENA O NOME
         except QuizDefinicao.DoesNotExist:
             perguntas_qs = Pergunta.objects.none()
     else:
         # Lógica existente para filtros de dificuldade e categoria
         if difficulty_levels_filter and 'all' not in (level.lower() for level in difficulty_levels_filter):
-            normalized_difficulty_filter = [level.lower() for level in difficulty_levels_filter]
+            normalized_difficulty_filter = [
+                level.lower() for level in difficulty_levels_filter]
             q_difficulty_objects = Q()
-            valid_model_difficulties = [choice[0] for choice in Pergunta.NivelDificuldade.choices]
+            valid_model_difficulties = [choice[0]
+                                        for choice in Pergunta.NivelDificuldade.choices]
             for level_from_filter in normalized_difficulty_filter:
                 for model_level in valid_model_difficulties:
                     if level_from_filter == model_level.lower():
-                        q_difficulty_objects |= Q(nivel_dificuldade=model_level)
+                        q_difficulty_objects |= Q(
+                            nivel_dificuldade=model_level)
                         break
             if q_difficulty_objects:
                 perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
@@ -144,11 +157,14 @@ def get_quiz_data_dict(
                 perguntas_qs = Pergunta.objects.none()
 
         if category_ids_filter:
-            valid_category_ids_str_list = [cid for cid in category_ids_filter if str(cid).strip().isdigit()]
+            valid_category_ids_str_list = [
+                cid for cid in category_ids_filter if str(cid).strip().isdigit()]
             if valid_category_ids_str_list:
-                descendant_ids = get_descendant_category_ids(valid_category_ids_str_list)
+                descendant_ids = get_descendant_category_ids(
+                    valid_category_ids_str_list)
                 if descendant_ids:
-                    perguntas_qs = perguntas_qs.filter(categorias__pk__in=descendant_ids).distinct()
+                    perguntas_qs = perguntas_qs.filter(
+                        categorias__pk__in=descendant_ids).distinct()
                 else:
                     perguntas_qs = Pergunta.objects.none()
             else:
@@ -158,7 +174,8 @@ def get_quiz_data_dict(
         num_perguntas_a_selecionar = 0
         if quiz_mode == SessoesQuizUsuario.ModoQuiz.RAPIDO:
             try:
-                num_perguntas_a_selecionar = int(question_count_str) if question_count_str and question_count_str.isdigit() and int(question_count_str) > 0 else quiz_config.numero_perguntas_quiz_rapido
+                num_perguntas_a_selecionar = int(question_count_str) if question_count_str and question_count_str.isdigit(
+                ) and int(question_count_str) > 0 else quiz_config.numero_perguntas_quiz_rapido
             except (ValueError, TypeError):
                 num_perguntas_a_selecionar = quiz_config.numero_perguntas_quiz_rapido
         elif num_questions_custom_str:
@@ -170,17 +187,22 @@ def get_quiz_data_dict(
                 num_perguntas_a_selecionar = 0
 
         if num_perguntas_a_selecionar > 0:
-            all_matching_question_ids = list(perguntas_qs.values_list('pk', flat=True))
+            all_matching_question_ids = list(
+                perguntas_qs.values_list('pk', flat=True))
             if len(all_matching_question_ids) > num_perguntas_a_selecionar:
-                selected_ids = random.sample(all_matching_question_ids, num_perguntas_a_selecionar)
-                perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids).order_by('?')
+                selected_ids = random.sample(
+                    all_matching_question_ids, num_perguntas_a_selecionar)
+                perguntas_qs = Pergunta.objects.filter(
+                    pk__in=selected_ids).order_by('?')
             # else: # Se menos perguntas disponíveis do que o solicitado, usa todas.
             #    perguntas_qs = perguntas_qs.order_by('?') # Já está filtrado, apenas embaralha.
 
     # Lógica existente de prefetch e formatação de dados
     perguntas_data_qs = perguntas_qs.prefetch_related(
-        Prefetch('categorias', queryset=Categoria.objects.all().only('pk', 'nome_categoria')),
-        Prefetch('opcoes', queryset=OpcaoResposta.objects.all().only('pk', 'pergunta_id', 'texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao'))
+        Prefetch('categorias', queryset=Categoria.objects.all().only(
+            'pk', 'nome_categoria')),
+        Prefetch('opcoes', queryset=OpcaoResposta.objects.all().only(
+            'pk', 'pergunta_id', 'texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao'))
     ).distinct()
 
     filtered_pergunta_ids = [p.pk for p in perguntas_data_qs]
@@ -203,7 +225,8 @@ def get_quiz_data_dict(
     perguntas_data_list = []
     opcoes_dict_por_pergunta = defaultdict(list)
 
-    opcoes_para_perguntas_selecionadas = OpcaoResposta.objects.filter(pergunta_id__in=filtered_pergunta_ids)
+    opcoes_para_perguntas_selecionadas = OpcaoResposta.objects.filter(
+        pergunta_id__in=filtered_pergunta_ids)
     for o in opcoes_para_perguntas_selecionadas:
         opcoes_dict_por_pergunta[o.pergunta_id].append({
             'id_opcao_resposta': o.pk,
@@ -231,10 +254,12 @@ def get_quiz_data_dict(
         'perguntas': perguntas_data_list,
         'categorias': categorias_data_list,
         'opcoesResposta': [opt for opts_list in opcoes_dict_por_pergunta.values() for opt in opts_list],
-        'quiz_definition_name': quiz_definition_name_to_return # ADICIONADO AO RETORNO
+        'quiz_definition_name': quiz_definition_name_to_return  # ADICIONADO AO RETORNO
     }
 
 # **** FUNÇÃO ADICIONADA AQUI ****
+
+
 def get_or_create_daily_stats(user: User):
     """
     Obtém ou cria as estatísticas diárias para um dado usuário.
@@ -255,26 +280,29 @@ def get_or_create_daily_stats(user: User):
     return stats
 
 
-def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str ="data_estatistica"):
+def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str = "data_estatistica"):
     if period_str == "all":
         return queryset
 
     days_map = {"7d": 7, "30d": 30, "90d": 90}
-    days = days_map.get(str(period_str).lower(), 30) 
+    days = days_map.get(str(period_str).lower(), 30)
 
     current_ts = timezone.now()
-    
+
     try:
         model_field = queryset.model._meta.get_field(date_field_name)
     except models.FieldDoesNotExist:
-        print(f"Warning: Campo '{date_field_name}' não encontrado no modelo {queryset.model.__name__} em _filter_queryset_by_period.")
+        print(
+            f"Warning: Campo '{date_field_name}' não encontrado no modelo {queryset.model.__name__} em _filter_queryset_by_period.")
         return queryset.none()
-    
+
     if isinstance(model_field, models.DateTimeField):
-        end_range = current_ts.replace(hour=23, minute=59, second=59, microsecond=999999)
+        end_range = current_ts.replace(
+            hour=23, minute=59, second=59, microsecond=999999)
         start_range_dt = current_ts - timedelta(days=days - 1)
-        start_range = start_range_dt.replace(hour=0, minute=0, second=0, microsecond=0)
-        
+        start_range = start_range_dt.replace(
+            hour=0, minute=0, second=0, microsecond=0)
+
         filter_kwargs = {
             f"{date_field_name}__gte": start_range,
             f"{date_field_name}__lte": end_range,
@@ -286,20 +314,26 @@ def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str =
             f"{date_field_name}__gte": start_date_obj,
             f"{date_field_name}__lte": today_date_obj,
         }
-    else: 
-        print(f"Warning: _filter_queryset_by_period recebeu um tipo de campo inesperado: {type(model_field)} para o campo {date_field_name}")
+    else:
+        print(
+            f"Warning: _filter_queryset_by_period recebeu um tipo de campo inesperado: {type(model_field)} para o campo {date_field_name}")
         return queryset.none()
 
     return queryset.filter(**filter_kwargs)
 
-#endregion
+# endregion
 
-#region Funções Auxiliares para Estatísticas do Usuário
+# region Funções Auxiliares para Estatísticas do Usuário
+
+
 def _get_key_metrics(user: User, daily_stats_period_qs):
-    total_questions_answered_period = daily_stats_period_qs.aggregate(total=Sum('perguntas_respondidas_dia'))['total'] or 0
-    total_study_time_seconds_period = daily_stats_period_qs.aggregate(total=Sum('tempo_estudo_segundos_dia'))['total'] or 0
+    total_questions_answered_period = daily_stats_period_qs.aggregate(
+        total=Sum('perguntas_respondidas_dia'))['total'] or 0
+    total_study_time_seconds_period = daily_stats_period_qs.aggregate(
+        total=Sum('tempo_estudo_segundos_dia'))['total'] or 0
 
-    latest_daily_stat = EstatisticasDiariasUsuario.objects.filter(id_usuario=user).order_by('-data_estatistica').first()
+    latest_daily_stat = EstatisticasDiariasUsuario.objects.filter(
+        id_usuario=user).order_by('-data_estatistica').first()
     max_streak = latest_daily_stat.sequencia_dias_quiz if latest_daily_stat else 0
 
     total_score_all_time = SessoesQuizUsuario.objects.filter(
@@ -313,24 +347,30 @@ def _get_key_metrics(user: User, daily_stats_period_qs):
         'total_study_time_seconds': total_study_time_seconds_period,
     }
 
+
 def _get_overall_accuracy_data(daily_stats_period_qs):
-    total_questions_answered = daily_stats_period_qs.aggregate(total=Sum('perguntas_respondidas_dia'))['total'] or 0
-    total_correct_answers = daily_stats_period_qs.aggregate(total=Sum('acertos_dia'))['total'] or 0
+    total_questions_answered = daily_stats_period_qs.aggregate(
+        total=Sum('perguntas_respondidas_dia'))['total'] or 0
+    total_correct_answers = daily_stats_period_qs.aggregate(
+        total=Sum('acertos_dia'))['total'] or 0
     return {
         'correct': total_correct_answers,
         'incorrect': total_questions_answered - total_correct_answers,
     }
 
+
 def _get_category_performance_data(user_sessions_period_qs):
     category_performance = {}
-    main_categories = Categoria.objects.filter(id_categoria_pai__isnull=True).prefetch_related('subcategorias')
+    main_categories = Categoria.objects.filter(
+        id_categoria_pai__isnull=True).prefetch_related('subcategorias')
 
     responses_in_period = RespostasUsuarioPorSessao.objects.filter(
         id_sessao_quiz__in=user_sessions_period_qs,
         id_opcao_resposta_selecionada__isnull=False
     ).select_related('id_pergunta').prefetch_related('id_pergunta__categorias')
 
-    all_descendant_map = {cat.pk: get_descendant_category_ids([str(cat.pk)]) for cat in main_categories}
+    all_descendant_map = {cat.pk: get_descendant_category_ids(
+        [str(cat.pk)]) for cat in main_categories}
 
     for resp in responses_in_period:
         pergunta_obj = resp.id_pergunta
@@ -338,58 +378,67 @@ def _get_category_performance_data(user_sessions_period_qs):
             if any(cat.pk in all_descendant_map[main_cat_obj.pk] for cat in pergunta_obj.categorias.all()):
                 cat_name = main_cat_obj.nome_categoria
                 if cat_name not in category_performance:
-                    category_performance[cat_name] = {'correct': 0, 'total': 0, 'id': main_cat_obj.pk}
+                    category_performance[cat_name] = {
+                        'correct': 0, 'total': 0, 'id': main_cat_obj.pk}
 
                 category_performance[cat_name]['total'] += 1
                 if resp.foi_correta:
                     category_performance[cat_name]['correct'] += 1
-    
+
     category_performance_list = []
     if category_performance:
         category_performance_list = [
-            {'name': name, **data, 'accuracy': (data['correct'] / data['total'] * 100) if data['total'] > 0 else 0}
+            {'name': name, **data,
+                'accuracy': (data['correct'] / data['total'] * 100) if data['total'] > 0 else 0}
             for name, data in category_performance.items() if data['total'] > 0
         ]
-        category_performance_list.sort(key=lambda x: x['accuracy'], reverse=True)
+        category_performance_list.sort(
+            key=lambda x: x['accuracy'], reverse=True)
     return category_performance_list
 
 
 def _get_learning_progress_data(daily_stats_period_qs):
     raw_stats = daily_stats_period_qs.order_by('data_estatistica').values(
-        'data_estatistica', 
-        'acertos_dia', 
+        'data_estatistica',
+        'acertos_dia',
         'perguntas_respondidas_dia'
     )
-    grouped_by_date = defaultdict(lambda: {'total_acertos_agg': 0, 'total_respondidas_agg': 0})
+    grouped_by_date = defaultdict(
+        lambda: {'total_acertos_agg': 0, 'total_respondidas_agg': 0})
     for stat in raw_stats:
         date_key = stat['data_estatistica']
-        grouped_by_date[date_key]['total_acertos_agg'] += stat.get('acertos_dia', 0) or 0
-        grouped_by_date[date_key]['total_respondidas_agg'] += stat.get('perguntas_respondidas_dia', 0) or 0
-    
+        grouped_by_date[date_key]['total_acertos_agg'] += stat.get(
+            'acertos_dia', 0) or 0
+        grouped_by_date[date_key]['total_respondidas_agg'] += stat.get(
+            'perguntas_respondidas_dia', 0) or 0
+
     processed_data = []
     sorted_dates = sorted(grouped_by_date.keys())
     for date_key in sorted_dates:
         item = grouped_by_date[date_key]
         accuracy = 0
         if item['total_respondidas_agg'] > 0:
-            accuracy = round((item['total_acertos_agg'] / item['total_respondidas_agg']) * 100, 1)
-        
+            accuracy = round(
+                (item['total_acertos_agg'] / item['total_respondidas_agg']) * 100, 1)
+
         processed_data.append({
             'date_str': date_key.isoformat() if date_key else None,
             'daily_accuracy': accuracy
         })
     return processed_data
 
+
 def _get_study_heatmap_data(daily_stats_period_qs):
     raw_stats = daily_stats_period_qs.order_by('data_estatistica').values(
-        'data_estatistica', 
+        'data_estatistica',
         'perguntas_respondidas_dia'
     )
     grouped_by_date = defaultdict(lambda: {'questions_done': 0})
     for stat in raw_stats:
         date_key = stat['data_estatistica']
-        grouped_by_date[date_key]['questions_done'] += stat.get('perguntas_respondidas_dia', 0) or 0
-            
+        grouped_by_date[date_key]['questions_done'] += stat.get(
+            'perguntas_respondidas_dia', 0) or 0
+
     processed_data = []
     sorted_dates = sorted(grouped_by_date.keys())
     for date_key in sorted_dates:
@@ -400,10 +449,11 @@ def _get_study_heatmap_data(daily_stats_period_qs):
         })
     return processed_data
 
+
 def _get_study_time_detail_data(user: User):
     seven_days_ago = timezone.now().date() - timedelta(days=6)
     today = timezone.now().date()
-    daily_study_seconds = {i: 0 for i in range(7)} 
+    daily_study_seconds = {i: 0 for i in range(7)}
 
     user_daily_stats = EstatisticasDiariasUsuario.objects.filter(
         id_usuario=user,
@@ -412,27 +462,31 @@ def _get_study_time_detail_data(user: User):
     ).values('data_estatistica', 'tempo_estudo_segundos_dia')
 
     for stat in user_daily_stats:
-        py_weekday = stat['data_estatistica'].weekday() 
-        daily_study_seconds[py_weekday] += stat.get('tempo_estudo_segundos_dia', 0) or 0
+        py_weekday = stat['data_estatistica'].weekday()
+        daily_study_seconds[py_weekday] += stat.get(
+            'tempo_estudo_segundos_dia', 0) or 0
 
-    day_labels_pt_ordered_sun_first = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
-    
+    day_labels_pt_ordered_sun_first = [
+        "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+
     ordered_minutes_data = [
-        round((daily_study_seconds.get(6, 0) or 0) / 60), 
-        round((daily_study_seconds.get(0, 0) or 0) / 60), 
-        round((daily_study_seconds.get(1, 0) or 0) / 60), 
-        round((daily_study_seconds.get(2, 0) or 0) / 60), 
-        round((daily_study_seconds.get(3, 0) or 0) / 60), 
-        round((daily_study_seconds.get(4, 0) or 0) / 60), 
-        round((daily_study_seconds.get(5, 0) or 0) / 60)  
+        round((daily_study_seconds.get(6, 0) or 0) / 60),
+        round((daily_study_seconds.get(0, 0) or 0) / 60),
+        round((daily_study_seconds.get(1, 0) or 0) / 60),
+        round((daily_study_seconds.get(2, 0) or 0) / 60),
+        round((daily_study_seconds.get(3, 0) or 0) / 60),
+        round((daily_study_seconds.get(4, 0) or 0) / 60),
+        round((daily_study_seconds.get(5, 0) or 0) / 60)
     ]
     return {
         'labels': day_labels_pt_ordered_sun_first,
         'data': ordered_minutes_data
     }
 
+
 def _get_difficulty_performance_data(user_sessions_period_qs):
-    difficulty_performance = {choice[0]: {'correct': 0, 'total': 0} for choice in Pergunta.NivelDificuldade.choices}
+    difficulty_performance = {choice[0]: {
+        'correct': 0, 'total': 0} for choice in Pergunta.NivelDificuldade.choices}
 
     responses_in_period = RespostasUsuarioPorSessao.objects.filter(
         id_sessao_quiz__in=user_sessions_period_qs,
@@ -448,12 +502,14 @@ def _get_difficulty_performance_data(user_sessions_period_qs):
                 difficulty_performance[diff_level]['correct'] += 1
 
     return [
-        {'name': name, **data, 'accuracy': (data['correct'] / data['total'] * 100) if data['total'] > 0 else 0}
+        {'name': name, **data,
+            'accuracy': (data['correct'] / data['total'] * 100) if data['total'] > 0 else 0}
         for name, data in difficulty_performance.items() if data['total'] > 0
     ]
-#endregion
+# endregion
 
-#region Views Principais (Páginas HTML)
+# region Views Principais (Páginas HTML)
+
 
 @login_required
 def home_view(request):
@@ -463,7 +519,8 @@ def home_view(request):
         # **** CHAMADA CORRIGIDA ****
         daily_stats = get_or_create_daily_stats(request.user)
         if daily_stats and daily_stats.perguntas_respondidas_dia > 0:
-            accuracy = (daily_stats.acertos_dia / daily_stats.perguntas_respondidas_dia) * 100
+            accuracy = (daily_stats.acertos_dia /
+                        daily_stats.perguntas_respondidas_dia) * 100
             accuracy_percentage_str = f"{accuracy:.0f}%"
         elif daily_stats:
             accuracy_percentage_str = "0%"
@@ -475,12 +532,14 @@ def home_view(request):
     }
     return render(request, 'quiz/home.html', context)
 
+
 @login_required
 def questions_view(request):
     context = {
         'page_title': 'MedQuiz - Questões',
     }
     return render(request, 'quiz/questions_page.html', context)
+
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -490,23 +549,28 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, 'Cadastro realizado com sucesso! Bem-vindo(a).')
+            messages.success(
+                request, 'Cadastro realizado com sucesso! Bem-vindo(a).')
             return redirect('quiz:home')
         else:
             for field, errors in form.errors.items():
                 field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
                 for error in errors:
-                    messages.error(request, f"{field_label if field_label else 'Erro Geral'}: {error}".strip(': '))
-            if not form.errors: 
-                messages.error(request, 'Por favor, corrija os erros abaixo para prosseguir.')
+                    messages.error(
+                        request, f"{field_label if field_label else 'Erro Geral'}: {error}".strip(': '))
+            if not form.errors:
+                messages.error(
+                    request, 'Por favor, corrija os erros abaixo para prosseguir.')
     else:
         form = CustomUserCreationForm()
     context = {'form': form, 'page_title': 'Cadastro - MedQuiz'}
     return render(request, 'quiz/register.html', context)
 
+
 @login_required
 def account_view(request):
-    user_sessions = SessoesQuizUsuario.objects.filter(id_usuario=request.user).order_by('-data_inicio')[:10]
+    user_sessions = SessoesQuizUsuario.objects.filter(
+        id_usuario=request.user).order_by('-data_inicio')[:10]
     update_form = UserUpdateForm(instance=request.user)
     delete_form = AccountDeleteForm(user=request.user)
     context = {
@@ -517,6 +581,7 @@ def account_view(request):
     }
     return render(request, 'quiz/account_page.html', context)
 
+
 @login_required
 def update_profile_view(request):
     if request.method == 'POST':
@@ -526,14 +591,17 @@ def update_profile_view(request):
             messages.success(request, 'Seu perfil foi atualizado com sucesso!')
             return redirect('quiz:account')
         else:
-            user_sessions = SessoesQuizUsuario.objects.filter(id_usuario=request.user).order_by('-data_inicio')[:10]
+            user_sessions = SessoesQuizUsuario.objects.filter(
+                id_usuario=request.user).order_by('-data_inicio')[:10]
             delete_form = AccountDeleteForm(user=request.user)
             for field, errors_list in form.errors.items():
                 field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
                 for error in errors_list:
-                    messages.error(request, f"{field_label if field_label else 'Formulário'}: {error}".strip(': '))
+                    messages.error(
+                        request, f"{field_label if field_label else 'Formulário'}: {error}".strip(': '))
             if not form.errors:
-                messages.error(request, 'Não foi possível atualizar seu perfil. Verifique os dados.')
+                messages.error(
+                    request, 'Não foi possível atualizar seu perfil. Verifique os dados.')
             context = {
                 'page_title': 'MedQuiz - Minha Conta', 'user_sessions': user_sessions,
                 'update_form': form, 'delete_form': delete_form,
@@ -542,53 +610,60 @@ def update_profile_view(request):
             return render(request, 'quiz/account_page.html', context)
     return redirect('quiz:account')
 
+
 @login_required
 @require_POST
 def delete_account_view(request):
     form = AccountDeleteForm(request.user, request.POST)
     if form.is_valid():
         user_to_delete = request.user
-        logout(request) 
+        logout(request)
         user_to_delete.delete()
         messages.success(request, 'Sua conta foi excluída com sucesso.')
-        return redirect(reverse_lazy('quiz:home')) 
+        return redirect(reverse_lazy('quiz:home'))
     else:
-        user_sessions = SessoesQuizUsuario.objects.filter(id_usuario=request.user).order_by('-data_inicio')[:10]
-        update_form = UserUpdateForm(instance=request.user) 
-        for field, errors_list in form.errors.items(): 
+        user_sessions = SessoesQuizUsuario.objects.filter(
+            id_usuario=request.user).order_by('-data_inicio')[:10]
+        update_form = UserUpdateForm(instance=request.user)
+        for field, errors_list in form.errors.items():
             field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
             for error in errors_list:
-                messages.error(request, f"{field_label if field_label else 'Formulário de Deleção'}: {error}".strip(': '))
+                messages.error(
+                    request, f"{field_label if field_label else 'Formulário de Deleção'}: {error}".strip(': '))
         if not form.errors:
-            messages.error(request, 'Não foi possível excluir sua conta. Verifique sua senha.')
+            messages.error(
+                request, 'Não foi possível excluir sua conta. Verifique sua senha.')
 
         context = {
             'page_title': 'MedQuiz - Minha Conta',
             'user_sessions': user_sessions,
             'update_form': update_form,
-            'delete_form': form, 
+            'delete_form': form,
             'active_tab_on_error': 'security-content',
-            'show_delete_account_modal_on_error': True 
+            'show_delete_account_modal_on_error': True
         }
         return render(request, 'quiz/account_page.html', context)
     return redirect('quiz:account')
 
-#endregion
+# endregion
 
-#region API Views para Quiz e Dados do Usuário
+# region API Views para Quiz e Dados do Usuário
+
 
 @require_GET
 def api_get_quiz_data_view(request):
     category_ids_str = request.GET.get('category_ids')
     difficulty_levels_str = request.GET.get('difficulty_levels')
-    quiz_mode_str = request.GET.get('mode') 
+    quiz_mode_str = request.GET.get('mode')
     question_count_str = request.GET.get('count')
     num_questions_custom_str = request.GET.get('num_questions')
     quiz_definicao_id_str = request.GET.get('quiz_definicao_id')
 
-    category_ids_filter = [cid.strip() for cid in category_ids_str.split(',') if cid.strip()] if category_ids_str else None
-    difficulty_levels_filter = [diff.strip() for diff in difficulty_levels_str.split(',') if diff.strip()] if difficulty_levels_str else None
-    
+    category_ids_filter = [cid.strip() for cid in category_ids_str.split(
+        ',') if cid.strip()] if category_ids_str else None
+    difficulty_levels_filter = [diff.strip() for diff in difficulty_levels_str.split(
+        ',') if diff.strip()] if difficulty_levels_str else None
+
     quiz_definicao_id = None
     if quiz_definicao_id_str and quiz_definicao_id_str.isdigit():
         quiz_definicao_id = int(quiz_definicao_id_str)
@@ -610,7 +685,8 @@ def api_get_quiz_data_view(request):
     except Exception as e:
         print(f"Erro em api_get_quiz_data_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro ao buscar dados do quiz.'}, status=500)
-    
+
+
 @require_GET
 def api_get_filtered_question_count_view(request):
     """
@@ -624,23 +700,28 @@ def api_get_filtered_question_count_view(request):
         category_ids_str = request.GET.get('category_ids')
         if category_ids_str:
             # Usando a lógica de descendentes que já existe no seu código
-            category_ids_list = [cid.strip() for cid in category_ids_str.split(',') if cid.strip()]
+            category_ids_list = [
+                cid.strip() for cid in category_ids_str.split(',') if cid.strip()]
             descendant_ids = get_descendant_category_ids(category_ids_list)
             if descendant_ids:
-                perguntas_qs = perguntas_qs.filter(categorias__pk__in=descendant_ids).distinct()
+                perguntas_qs = perguntas_qs.filter(
+                    categorias__pk__in=descendant_ids).distinct()
 
         # Filtro por Nível de Dificuldade
         difficulty_levels_str = request.GET.get('difficulty_levels')
         if difficulty_levels_str and 'all' not in difficulty_levels_str:
-            difficulty_levels = [level.strip() for level in difficulty_levels_str.split(',') if level.strip()]
+            difficulty_levels = [
+                level.strip() for level in difficulty_levels_str.split(',') if level.strip()]
             if difficulty_levels:
                 # Normalizando para corresponder aos valores do modelo
                 q_difficulty_objects = Q()
-                valid_model_difficulties = [choice[0] for choice in Pergunta.NivelDificuldade.choices]
+                valid_model_difficulties = [
+                    choice[0] for choice in Pergunta.NivelDificuldade.choices]
                 for level_from_filter in difficulty_levels:
                     for model_level in valid_model_difficulties:
                         if level_from_filter.lower() == model_level.lower():
-                            q_difficulty_objects |= Q(nivel_dificuldade=model_level)
+                            q_difficulty_objects |= Q(
+                                nivel_dificuldade=model_level)
                             break
                 if q_difficulty_objects:
                     perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
@@ -650,7 +731,8 @@ def api_get_filtered_question_count_view(request):
         return JsonResponse({'count': count})
 
     except Exception as e:
-        print(f"Erro em api_get_filtered_question_count_view: {type(e).__name__} - {e}")
+        print(
+            f"Erro em api_get_filtered_question_count_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro ao buscar contagem de questões.'}, status=500)
 
 
@@ -659,8 +741,8 @@ def api_get_filtered_question_count_view(request):
 def start_quiz_session_view(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
-        modo_quiz_frontend = data.get('modo_quiz') 
-        categoria_ids_str_list = data.get('categoria_ids', []) 
+        modo_quiz_frontend = data.get('modo_quiz')
+        categoria_ids_str_list = data.get('categoria_ids', [])
         question_ids_in_session = data.get('question_ids_in_session', [])
         quiz_definicao_id = data.get('quiz_definicao_id')
 
@@ -668,18 +750,19 @@ def start_quiz_session_view(request):
             return JsonResponse({'status': 'error', 'message': 'IDs de perguntas da sessão inválidos.'}, status=400)
 
         total_perguntas_sessao = len(question_ids_in_session)
-        if not modo_quiz_frontend or total_perguntas_sessao <= 0: 
+        if not modo_quiz_frontend or total_perguntas_sessao <= 0:
             return JsonResponse({'status': 'error', 'message': 'Dados inválidos para iniciar sessão (modo ou nº de perguntas).'}, status=400)
 
         if modo_quiz_frontend not in SessoesQuizUsuario.ModoQuiz.values:
             return JsonResponse({'status': 'error', 'message': f"Modo de quiz '{modo_quiz_frontend}' inválido."}, status=400)
-        
+
         quiz_definicao_obj = None
         if modo_quiz_frontend == SessoesQuizUsuario.ModoQuiz.DEFINIDO:
             if not quiz_definicao_id:
                 return JsonResponse({'status': 'error', 'message': 'ID da definição do quiz ausente para modo "Definido".'}, status=400)
             try:
-                quiz_definicao_obj = QuizDefinicao.objects.get(pk=int(quiz_definicao_id), ativo=True)
+                quiz_definicao_obj = QuizDefinicao.objects.get(
+                    pk=int(quiz_definicao_id), ativo=True)
             except (QuizDefinicao.DoesNotExist, ValueError):
                 return JsonResponse({'status': 'error', 'message': 'Definição de quiz inválida ou inativa.'}, status=400)
 
@@ -690,61 +773,67 @@ def start_quiz_session_view(request):
             total_perguntas_sessao=total_perguntas_sessao,
             status_sessao=SessoesQuizUsuario.StatusSessao.EM_ANDAMENTO,
             data_inicio=timezone.now(),
-            ids_perguntas_json=question_ids_in_session, 
+            ids_perguntas_json=question_ids_in_session,
             indice_ultima_pergunta_vista=0 if total_perguntas_sessao > 0 else None,
-            dificuldades_selecionadas_json=data.get('dificuldades_selecionadas'), 
-            num_questoes_solicitadas=data.get('num_questoes_solicitadas') 
+            dificuldades_selecionadas_json=data.get(
+                'dificuldades_selecionadas'),
+            num_questoes_solicitadas=data.get('num_questoes_solicitadas')
         )
 
         if modo_quiz_frontend == SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA and categoria_ids_str_list:
             try:
-                categoria_ids_int = [int(cat_id) for cat_id in categoria_ids_str_list if str(cat_id).strip().isdigit()]
+                categoria_ids_int = [int(cat_id) for cat_id in categoria_ids_str_list if str(
+                    cat_id).strip().isdigit()]
                 if categoria_ids_int:
-                    categorias_objs = Categoria.objects.filter(pk__in=categoria_ids_int)
+                    categorias_objs = Categoria.objects.filter(
+                        pk__in=categoria_ids_int)
                     nova_sessao.categorias_selecionadas.set(categorias_objs)
             except ValueError:
-                print(f"Warning: Erro ao converter IDs de categoria para inteiros na sessão {nova_sessao.pk}.")
-                pass 
+                print(
+                    f"Warning: Erro ao converter IDs de categoria para inteiros na sessão {nova_sessao.pk}.")
+                pass
 
         return JsonResponse({'status': 'success', 'session_id': nova_sessao.pk})
 
     except json.JSONDecodeError:
         return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
     except Exception as e:
-        print(f"Erro em start_quiz_session_view: {type(e).__name__} - {e}") 
+        print(f"Erro em start_quiz_session_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro interno ao iniciar sessão de quiz.'}, status=500)
 
 
 @login_required
 @require_POST
 def register_answer_view(request):
-    quiz_config = get_quiz_config() 
+    quiz_config = get_quiz_config()
 
     try:
         data = json.loads(request.body.decode('utf-8'))
         session_id = data.get('session_id')
         pergunta_id = data.get('pergunta_id')
-        opcao_id_str = data.get('opcao_id') 
-        current_question_index = data.get('current_question_index') 
+        opcao_id_str = data.get('opcao_id')
+        current_question_index = data.get('current_question_index')
 
-        if not all([session_id, pergunta_id]): 
+        if not all([session_id, pergunta_id]):
             return JsonResponse({'status': 'error', 'message': 'Dados incompletos (session_id, pergunta_id).'}, status=400)
 
-        sessao_quiz = get_object_or_404(SessoesQuizUsuario, pk=session_id, id_usuario=request.user)
+        sessao_quiz = get_object_or_404(
+            SessoesQuizUsuario, pk=session_id, id_usuario=request.user)
         if sessao_quiz.status_sessao != SessoesQuizUsuario.StatusSessao.EM_ANDAMENTO:
             return JsonResponse({'status': 'error', 'message': 'Sessão de quiz não está em andamento.'}, status=400)
 
         pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
         opcao_selecionada = None
-        foi_correta_calculada = None 
+        foi_correta_calculada = None
 
-        if opcao_id_str is not None: 
+        if opcao_id_str is not None:
             try:
-                opcao_selecionada = get_object_or_404(OpcaoResposta, pk=int(opcao_id_str), pergunta=pergunta)
+                opcao_selecionada = get_object_or_404(
+                    OpcaoResposta, pk=int(opcao_id_str), pergunta=pergunta)
                 foi_correta_calculada = opcao_selecionada.eh_correta
             except (ValueError, OpcaoResposta.DoesNotExist):
                 return JsonResponse({'status': 'error', 'message': 'Opção de resposta inválida.'}, status=400)
-        
+
         RespostasUsuarioPorSessao.objects.update_or_create(
             id_sessao_quiz=sessao_quiz,
             id_pergunta=pergunta,
@@ -755,11 +844,14 @@ def register_answer_view(request):
             }
         )
 
-        respostas_da_sessao = RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_quiz)
-        sessao_quiz.total_acertos = respostas_da_sessao.filter(foi_correta=True).count()
-        sessao_quiz.total_erros = respostas_da_sessao.filter(foi_correta=False, id_opcao_resposta_selecionada__isnull=False).count()
-        
-        sessao_quiz.pontuacao_final = max(0, (sessao_quiz.total_acertos * quiz_config.pontuacao_por_acerto) - \
+        respostas_da_sessao = RespostasUsuarioPorSessao.objects.filter(
+            id_sessao_quiz=sessao_quiz)
+        sessao_quiz.total_acertos = respostas_da_sessao.filter(
+            foi_correta=True).count()
+        sessao_quiz.total_erros = respostas_da_sessao.filter(
+            foi_correta=False, id_opcao_resposta_selecionada__isnull=False).count()
+
+        sessao_quiz.pontuacao_final = max(0, (sessao_quiz.total_acertos * quiz_config.pontuacao_por_acerto) -
                                              (sessao_quiz.total_erros * quiz_config.penalidade_por_erro))
 
         if current_question_index is not None:
@@ -768,15 +860,17 @@ def register_answer_view(request):
                 if sessao_quiz.ids_perguntas_json and 0 <= idx < len(sessao_quiz.ids_perguntas_json):
                     sessao_quiz.indice_ultima_pergunta_vista = idx
                 else:
-                    print(f"Warning: Índice de pergunta inválido ({idx}) recebido para sessão {sessao_quiz.pk}.")
+                    print(
+                        f"Warning: Índice de pergunta inválido ({idx}) recebido para sessão {sessao_quiz.pk}.")
             except ValueError:
-                print(f"Warning: Valor de current_question_index não numérico ({current_question_index}) para sessão {sessao_quiz.pk}.")
-        
+                print(
+                    f"Warning: Valor de current_question_index não numérico ({current_question_index}) para sessão {sessao_quiz.pk}.")
+
         sessao_quiz.save()
 
         return JsonResponse({
             'status': 'success', 'message': 'Resposta registrada.',
-            'foi_correta': foi_correta_calculada, 
+            'foi_correta': foi_correta_calculada,
             'pontuacao_sessao': sessao_quiz.pontuacao_final,
             'total_acertos_sessao': sessao_quiz.total_acertos,
             'total_erros_sessao': sessao_quiz.total_erros
@@ -792,6 +886,7 @@ def register_answer_view(request):
         print(f"Erro em register_answer_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro interno ao registrar resposta.'}, status=500)
 
+
 @login_required
 @require_POST
 def end_quiz_session_view(request):
@@ -799,9 +894,11 @@ def end_quiz_session_view(request):
     try:
         data = json.loads(request.body.decode('utf-8'))
         session_id = data.get('session_id')
-        tempo_total_segundos_frontend = int(data.get('tempo_total_segundos', 0))
+        tempo_total_segundos_frontend = int(
+            data.get('tempo_total_segundos', 0))
 
-        sessao_quiz = get_object_or_404(SessoesQuizUsuario, pk=session_id, id_usuario=request.user)
+        sessao_quiz = get_object_or_404(
+            SessoesQuizUsuario, pk=session_id, id_usuario=request.user)
 
         if sessao_quiz.status_sessao == SessoesQuizUsuario.StatusSessao.COMPLETA:
             return JsonResponse({
@@ -823,7 +920,7 @@ def end_quiz_session_view(request):
 
         stats.perguntas_respondidas_dia += perguntas_respondidas_na_sessao
         stats.acertos_dia += sessao_quiz.total_acertos
-        stats.pontos_dia += sessao_quiz.pontuacao_final 
+        stats.pontos_dia += sessao_quiz.pontuacao_final
         stats.tempo_estudo_segundos_dia += tempo_total_segundos_frontend
         stats.save()
 
@@ -849,7 +946,7 @@ def api_resume_quiz_session_view(request):
         sessao_ativa = SessoesQuizUsuario.objects.filter(
             id_usuario=request.user,
             status_sessao=SessoesQuizUsuario.StatusSessao.EM_ANDAMENTO
-        ).order_by('-data_inicio').select_related('id_quiz_definicao').first() # ADICIONADO select_related
+        ).order_by('-data_inicio').select_related('id_quiz_definicao').first()  # ADICIONADO select_related
 
         if not sessao_ativa:
             return JsonResponse({'status': 'not_found', 'message': 'Nenhuma sessão de quiz em andamento encontrada.'}, status=404)
@@ -861,7 +958,8 @@ def api_resume_quiz_session_view(request):
 
         ids_perguntas_ordenadas = sessao_ativa.ids_perguntas_json
 
-        preserved_order = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(ids_perguntas_ordenadas)])
+        preserved_order = Case(*[When(pk=pk, then=pos)
+                               for pos, pk in enumerate(ids_perguntas_ordenadas)])
         perguntas_qs = Pergunta.objects.filter(
             pk__in=ids_perguntas_ordenadas, ativa=True
         ).order_by(preserved_order).prefetch_related('categorias', 'opcoes')
@@ -878,7 +976,8 @@ def api_resume_quiz_session_view(request):
         perguntas_data_list = []
         opcoes_dict_por_pergunta = defaultdict(list)
 
-        opcoes_para_perguntas_da_sessao = OpcaoResposta.objects.filter(pergunta_id__in=ids_perguntas_ordenadas)
+        opcoes_para_perguntas_da_sessao = OpcaoResposta.objects.filter(
+            pergunta_id__in=ids_perguntas_ordenadas)
         for o in opcoes_para_perguntas_da_sessao:
             opcoes_dict_por_pergunta[o.pergunta_id].append({
                 'id_opcao_resposta': o.pk, 'id_pergunta': o.pergunta_id,
@@ -897,7 +996,8 @@ def api_resume_quiz_session_view(request):
                 'opcoes': sorted(opcoes_dict_por_pergunta.get(p.pk, []), key=lambda x: x.get('ordem_exibicao', 0))
             })
 
-        respostas_dadas_qs = RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_ativa)
+        respostas_dadas_qs = RespostasUsuarioPorSessao.objects.filter(
+            id_sessao_quiz=sessao_ativa)
         respostas_dadas_map = {
             resp.id_pergunta_id: {
                 'opcao_selecionada_id': resp.id_opcao_resposta_selecionada_id,
@@ -908,33 +1008,34 @@ def api_resume_quiz_session_view(request):
         todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
         categorias_data_list = [
             {'id_categoria': c.pk, 'nome_categoria': c.nome_categoria,
-            'id_categoria_pai': c.id_categoria_pai_id, 'descricao_categoria': c.descricao_categoria}
+             'id_categoria_pai': c.id_categoria_pai_id, 'descricao_categoria': c.descricao_categoria}
             for c in todas_categorias_qs
         ]
-        
+
         # ADICIONADO: Obter nome da definição do quiz
         quiz_definition_name = None
         if sessao_ativa.id_quiz_definicao:
             quiz_definition_name = sessao_ativa.id_quiz_definicao.nome_quiz
 
         return JsonResponse({
-                'status': 'success',
-                'session_id': sessao_ativa.pk,
-                'modo_quiz': sessao_ativa.modo_quiz,
-                'id_quiz_definicao': sessao_ativa.id_quiz_definicao_id,
-                'quiz_definition_name': quiz_definition_name, # ADICIONADO AO JSON
-                'perguntas': perguntas_data_list,
-                'categorias': categorias_data_list,
-                'respostas_dadas': respostas_dadas_map,
-                'indice_ultima_pergunta_vista': sessao_ativa.indice_ultima_pergunta_vista,
-                'pontuacao_atual': sessao_ativa.pontuacao_final,
-                'total_acertos_atual': sessao_ativa.total_acertos,
-                'total_erros_atual': sessao_ativa.total_erros,
-                'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(),
-            })
+            'status': 'success',
+            'session_id': sessao_ativa.pk,
+            'modo_quiz': sessao_ativa.modo_quiz,
+            'id_quiz_definicao': sessao_ativa.id_quiz_definicao_id,
+            'quiz_definition_name': quiz_definition_name,  # ADICIONADO AO JSON
+            'perguntas': perguntas_data_list,
+            'categorias': categorias_data_list,
+            'respostas_dadas': respostas_dadas_map,
+            'indice_ultima_pergunta_vista': sessao_ativa.indice_ultima_pergunta_vista,
+            'pontuacao_atual': sessao_ativa.pontuacao_final,
+            'total_acertos_atual': sessao_ativa.total_acertos,
+            'total_erros_atual': sessao_ativa.total_erros,
+            'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(),
+        })
 
     except Exception as e:
-        print(f"Erro em api_resume_quiz_session_view: {type(e).__name__} - {e}")
+        print(
+            f"Erro em api_resume_quiz_session_view: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Erro interno ao tentar retomar sessão.'}, status=500)
 
 
@@ -942,13 +1043,14 @@ def api_resume_quiz_session_view(request):
 @require_POST
 def toggle_favorite_status_view(request, pergunta_id):
     pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
-    favorito, created = QuestaoFavorita.objects.get_or_create(usuario=request.user, pergunta=pergunta)
+    favorito, created = QuestaoFavorita.objects.get_or_create(
+        usuario=request.user, pergunta=pergunta)
 
-    if not created: 
+    if not created:
         favorito.delete()
         is_favorited_now = False
         message = "Questão removida dos favoritos."
-    else: 
+    else:
         is_favorited_now = True
         message = "Questão adicionada aos favoritos."
     return JsonResponse({'status': 'success', 'is_favorited': is_favorited_now, 'message': message})
@@ -960,9 +1062,11 @@ def get_favorite_questions_view(request):
     favoritos_qs = QuestaoFavorita.objects.filter(usuario=request.user) \
         .select_related('pergunta') \
         .prefetch_related(
-            Prefetch('pergunta__categorias', queryset=Categoria.objects.all().only('pk', 'nome_categoria')),
-            Prefetch('pergunta__opcoes', queryset=OpcaoResposta.objects.all().order_by('ordem_exibicao'))
-        ) \
+            Prefetch('pergunta__categorias', queryset=Categoria.objects.all().only(
+                'pk', 'nome_categoria')),
+            Prefetch('pergunta__opcoes', queryset=OpcaoResposta.objects.all().order_by(
+                'ordem_exibicao'))
+    ) \
         .order_by('-data_favoritada')
 
     perguntas_favoritas_data = []
@@ -1023,22 +1127,27 @@ def api_get_user_statistics_view(request):
         )
 
         user_sessions_period_qs = _filter_queryset_by_period(
-            SessoesQuizUsuario.objects.filter(id_usuario=user, status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA),
+            SessoesQuizUsuario.objects.filter(
+                id_usuario=user, status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA),
             period,
             "data_inicio"
         )
 
         key_metrics = _get_key_metrics(user, daily_stats_period_qs)
-        overall_accuracy_data = _get_overall_accuracy_data(daily_stats_period_qs)
-        category_performance_list = _get_category_performance_data(user_sessions_period_qs)
-        learning_progress_data = _get_learning_progress_data(daily_stats_period_qs)
+        overall_accuracy_data = _get_overall_accuracy_data(
+            daily_stats_period_qs)
+        category_performance_list = _get_category_performance_data(
+            user_sessions_period_qs)
+        learning_progress_data = _get_learning_progress_data(
+            daily_stats_period_qs)
         study_heatmap_data = _get_study_heatmap_data(daily_stats_period_qs)
         study_time_chart_data = _get_study_time_detail_data(user)
-        difficulty_performance_list = _get_difficulty_performance_data(user_sessions_period_qs)
+        difficulty_performance_list = _get_difficulty_performance_data(
+            user_sessions_period_qs)
 
         return JsonResponse({
             'status': 'success',
-            'period_applied': period, 
+            'period_applied': period,
             'key_metrics': key_metrics,
             'overall_accuracy': overall_accuracy_data,
             'category_performance': category_performance_list,
@@ -1048,7 +1157,8 @@ def api_get_user_statistics_view(request):
             'difficulty_performance': difficulty_performance_list,
         })
     except Exception as e:
-        print(f"Erro em api_get_user_statistics_view para user {user.id} com período {period}: {type(e).__name__} - {e}")
+        print(
+            f"Erro em api_get_user_statistics_view para user {user.id} com período {period}: {type(e).__name__} - {e}")
         return JsonResponse({'status': 'error', 'message': 'Ocorreu um erro ao processar suas estatísticas.'}, status=500)
 
-#endregion
+# endregion

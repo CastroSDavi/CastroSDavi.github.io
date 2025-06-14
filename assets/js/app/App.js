@@ -1,8 +1,6 @@
 // File: assets/js/app/App.js
 
 import ApiService from './services/ApiService.js';
-
-// ... (imports)
 import { createStore } from './flux/store.js';
 import { quizReducer } from './flux/reducer.js';
 import ActionOrchestrator from './flux/ActionOrchestrator.js';
@@ -52,6 +50,7 @@ export default class App {
 
             const currentPageId = document.body.dataset.pageId;
             if (currentPageId === 'questions') {
+                // A chamada para tryResumeSession agora é gerenciada pelo initializeQuizPage
                 await this.actionOrchestrator.initializeQuizPage();
             }
             if (currentPageId === 'account') {
@@ -98,7 +97,7 @@ export default class App {
 
         const resultDisplay = new ResultDisplay(this.quizUI, this.quizUI.timer);
         resultDisplay.setActionOrchestrator(this.actionOrchestrator);
-        resultDisplay.init(); // <-- ALTERAÇÃO: Esta linha corrige o bug.
+        resultDisplay.init();
         this.quizUI.setResultDisplayInstance(resultDisplay);
         
         if (document.getElementById('account-section-page')) {

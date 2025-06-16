@@ -1,271 +1,119 @@
 /* assets/css/components/statistics-dashboard.css */
 
-/* Remove o padding padrão do card__body para o dashboard ter controle total do layout interno */
-.card--statistics-dashboard .card__body {
-    padding: 0;
-}
-
 .statistics-dashboard {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg, 28px); /* Espaço entre os blocos principais: filtros, resumo, grid */
+    gap: var(--spacing-lg, 28px);
 }
 
-/* --- Filtros do Dashboard --- */
+.statistics-dashboard.is-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
 .statistics-filters {
     display: flex;
-    flex-wrap: wrap; /* Permite quebra de linha em telas menores */
-    align-items: flex-end;
-    gap: var(--spacing-md, 16px);
-    padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
-    background-color: var(--color-gray-100); /* Fundo sutil para destacar a área de filtros */
-    border-radius: var(--border-radius-lg); /* Consistente com outros cards */
-    border: 1px solid var(--color-gray-200);
+    align-items: center;
+    gap: var(--spacing-md, 20px);
+    flex-wrap: wrap;
+    padding-bottom: var(--spacing-sm, 12px);
+    border-bottom: 1px solid var(--color-gray-200);
 }
 
-.statistics-filters .form-group {
-    margin-bottom: 0; /* Remove margem padrão, o gap do flex container cuida disso */
-    flex-grow: 1;
-    min-width: 180px; /* Para evitar que o select fique muito espremido */
-}
-
-.statistics-filters .form-label {
-    font-size: var(--font-size-sm, 0.875rem);
-    color: var(--color-text-secondary);
-    margin-bottom: var(--spacing-xxs, 6px);
-    font-weight: var(--font-weight-medium);
-    padding-left: 2px;
-}
-
-.statistics-filters .form-control--small {
-    font-size: var(--font-size-sm, 0.9rem);
-    font-family: var(--font-family-sans);
-    padding: var(--spacing-xs, 9px) var(--spacing-sm, 12px); /* Ajuste de padding para altura */
-    height: auto;
-    min-height: 40px; /* Altura consistente com botões */
-    background-color: var(--color-white);
-    border: 1px solid var(--color-gray-300);
-    border-radius: var(--border-radius-md);
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-}
-.statistics-filters .form-control--small:focus {
-    border-color: var(--color-primary-medium);
-    box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.15);
-}
-
-/* --- Resumo de Métricas Chave --- */
+/* === Métricas Chave === */
 .key-metrics-summary {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Responsivo e flexível */
-    gap: var(--spacing-md, 18px); /* Espaçamento consistente */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--spacing-md, 20px);
 }
 
 .metric-card {
     background-color: var(--color-white);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md, 18px);
-    text-align: center;
+    padding: var(--spacing-sm, 14px);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Alinha ao topo para ícones não empurrarem para baixo */
-    gap: var(--spacing-xs, 8px);
-    box-shadow: var(--shadow-sm);
-    transition: transform 0.25s ease-out, box-shadow 0.25s ease-out;
-    min-height: 130px; /* Altura mínima para consistência visual */
-}
-
-.metric-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    text-align: center;
+    gap: var(--spacing-xxs, 5px);
+    box-shadow: var(--shadow-xs);
 }
 
 .metric-card__icon {
-    font-size: 1.75rem; /* Ícones um pouco maiores */
+    font-size: 1.8rem;
     color: var(--color-primary-medium);
-    background-color: var(--color-primary-light);
-    width: 48px; /* Círculo do ícone um pouco maior */
-    height: 48px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--spacing-xxs, 4px);
-    flex-shrink: 0;
 }
-
 .metric-card__label {
-    font-size: var(--font-size-xs, 0.78rem); /* Label um pouco menor para caber bem */
+    font-size: var(--font-size-xs, 0.8rem);
     color: var(--color-text-secondary);
     font-weight: var(--font-weight-medium);
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    line-height: 1.3;
-    margin-bottom: auto; /* Empurra o valor para baixo se houver espaço extra */
 }
-
 .metric-card__value {
-    font-family: var(--font-family-heading);
-    font-size: var(--font-size-display-2, 2.0rem); /* Valor bem destacado */
+    font-size: 1.6rem;
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary-dark);
-    line-height: 1;
-    margin-top: var(--spacing-xxs, 4px); /* Pequeno espaço acima do valor */
+    color: var(--color-text-primary);
+    line-height: 1.2;
 }
 
-
-/* --- Grid de Gráficos --- */
+/* === Grade dos Gráficos === */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ajuste minmax conforme necessário */
-    gap: var(--spacing-lg, 24px); /* Espaço entre os cards de gráfico */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg, 28px);
 }
 
-.stats-card.chart-card {
+.stats-card {
     background-color: var(--color-white);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md, 24px);
+    padding: var(--spacing-md, 20px);
     box-shadow: var(--shadow-sm);
     display: flex;
     flex-direction: column;
-    min-height: 350px; /* Altura mínima para os gráficos terem espaço */
 }
 
 .stats-card--full-width {
-    grid-column: 1 / -1; /* Ocupa todas as colunas disponíveis */
+    grid-column: 1 / -1;
 }
 
 .chart-title {
     font-family: var(--font-family-heading);
-    font-size: var(--font-size-h3, 1.15rem); /* Título do gráfico um pouco menor */
+    font-size: 1.1rem;
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-dark);
-    margin: 0 0 var(--spacing-md, 18px) 0; /* Espaço abaixo do título */
-    padding-bottom: var(--spacing-xs, 10px);
-    border-bottom: 1px solid var(--color-gray-200);
-    text-align: left;
+    color: var(--color-text-primary);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md, 20px);
 }
 
 .chart-container {
-    flex-grow: 1; /* Faz o container do gráfico ocupar o espaço restante no card */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 250px; /* Garante espaço mínimo para o gráfico em si */
-    width: 100%; /* Garante que o container ocupe a largura do card */
+    flex-grow: 1;
+    min-height: 250px;
 }
 
 .chart-placeholder {
-    font-size: var(--font-size-sm, 0.9rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
     color: var(--color-text-muted);
+    font-size: 0.9rem;
     text-align: center;
-    padding: var(--spacing-lg);
 }
 
-/* Mensagem de "Sem Dados" */
-#no-stats-data-message { /* Estilizado em messages.css ou aqui se precisar de algo específico */
-    /* A classe u-is-hidden controlará a visibilidade via JS */
-    /* O estilo do placeholder-text já está em conta-section.css, mas pode ser reforçado */
-    background-color: var(--color-gray-50);
-    border: 1px dashed var(--color-gray-300);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-xl);
-    margin-top: var(--spacing-lg);
-}
-#no-stats-data-message .material-symbols-outlined {
-    color: var(--color-text-muted); /* Herda de conta-section.css */
-}
-
-
-/* --- Responsividade para o Dashboard de Estatísticas --- */
+/* --- INÍCIO DA MODIFICAÇÃO: Responsividade para Mobile --- */
 @media (max-width: 768px) {
-    .statistics-dashboard {
-        gap: var(--spacing-md, 20px);
-    }
-
-    .key-metrics-summary {
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: var(--spacing-sm, 14px);
-    }
-
-    .metric-card {
-        padding: var(--spacing-sm, 16px);
-        min-height: 120px;
-    }
-    .metric-card__icon {
-        font-size: 1.6rem;
-        width: 40px;
-        height: 40px;
-    }
-    .metric-card__value {
-        font-size: var(--font-size-h2, 1.75rem);
-    }
-
     .stats-grid {
-        gap: var(--spacing-md, 20px);
-        /* Em telas menores, os cards de gráfico podem ficar com 1 coluna por padrão
-           devido ao auto-fit, ou pode forçar 1 coluna aqui se preferir. */
-    }
-    .stats-card.chart-card {
-        padding: var(--spacing-md, 20px);
-        min-height: 300px; /* Altura mínima ajustada */
-    }
-    .chart-title {
-        font-size: 1.1rem;
-        margin-bottom: var(--spacing-sm, 16px);
-    }
-    .chart-container {
-        min-height: 220px;
+        /* Força a grade de gráficos a ter uma única coluna em telas menores,
+           evitando que o minmax(300px) quebre o layout. */
+        grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 480px) {
-    .statistics-filters {
-        flex-direction: column; /* Empilha os filtros */
-        align-items: stretch; /* Faz o select ocupar a largura total */
-        padding: var(--spacing-sm, 12px);
-    }
-    .statistics-filters .form-group {
-        max-width: none; /* Remove a largura máxima do form-group do select */
-    }
-
     .key-metrics-summary {
-        grid-template-columns: repeat(2, 1fr); /* Garante duas colunas para métricas */
-        gap: var(--spacing-sm, 12px);
-    }
-    .metric-card {
-        padding: var(--spacing-sm, 12px);
-        gap: var(--spacing-xxs, 6px);
-        min-height: 110px;
-    }
-    .metric-card__icon {
-        font-size: 1.5rem;
-        width: 36px;
-        height: 36px;
-    }
-    .metric-card__label {
-        font-size: 0.7rem;
-    }
-    .metric-card__value {
-        font-size: 1.6rem;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr; /* Força uma coluna para os gráficos */
-        gap: var(--spacing-md, 16px);
-    }
-    .stats-card.chart-card {
-        padding: var(--spacing-sm, 16px);
-        min-height: 280px;
-    }
-    .chart-title {
-        font-size: 1rem;
-        margin-bottom: var(--spacing-sm, 12px);
-        padding-bottom: var(--spacing-xs, 8px);
-    }
-    .chart-container {
-        min-height: 200px;
+        /* Garante que as métricas principais tenham no máximo 2 colunas em telas muito pequenas */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
+/* --- FIM DA MODIFICAÇÃO --- */

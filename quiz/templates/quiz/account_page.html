@@ -8,6 +8,11 @@
     <div class="account-layout-container">
         {# === BARRA LATERAL (MENU) === #}
         <aside class="account-sidebar">
+            <div class="account-sidebar__header">
+                <a href="{% url 'quiz:home' %}" class="button button--icon-only account-sidebar__back-button" aria-label="Voltar para o Início">
+                    <span class="material-symbols-outlined">arrow_back_ios_new</span>
+                </a>
+            </div>
             <nav class="account-sidebar__nav">
                 <ul>
                     <li>

@@ -40,6 +40,47 @@
 .account-sidebar::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
 .account-sidebar { scrollbar-width: thin; scrollbar-color: var(--color-gray-300) transparent; }
 
+/* --- INÍCIO DA MODIFICAÇÃO FINAL: Cabeçalho da Sidebar e Botão Voltar --- */
+.account-sidebar__header {
+    display: none; /* Escondido por padrão (desktop) */
+    padding-bottom: var(--spacing-sm, 12px);
+    margin-bottom: var(--spacing-sm, 12px);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.account-sidebar__back-button {
+    /* Herda de .button e .button--icon-only */
+    padding: 0;
+    color: var(--color-primary-dark);
+    text-decoration: none !important; /* CORREÇÃO: Remove sublinhado */
+
+    /* CORREÇÃO: Aplica o "círculo ao redor" para consistência */
+    background-color: var(--color-white);
+    border: 1px solid var(--color-gray-300);
+    
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.account-sidebar__back-button:hover {
+    background-color: var(--color-gray-100);
+    border-color: var(--color-gray-400);
+    transform: scale(1.05);
+}
+
+.account-sidebar__back-button:focus-visible {
+    background-color: var(--color-gray-100);
+    border-color: var(--color-gray-400);
+    transform: scale(1.05);
+    outline: none; /* CORREÇÃO: Remove o "efeito azul" de outline */
+    box-shadow: var(--shadow-sm); /* CORREÇÃO: Garante que a sombra não seja alterada pelo foco global */
+}
+
+.account-sidebar__back-button .material-symbols-outlined {
+    font-size: 22px;
+}
+/* --- FIM DA MODIFICAÇÃO FINAL --- */
+
+
 .account-sidebar__nav ul {
     list-style: none;
     padding: 0;
@@ -407,6 +448,12 @@
       /* border-bottom: 1px solid var(--color-gray-200); */
     }
 
+    /* --- INÍCIO DA MODIFICAÇÃO FINAL: Exibir o cabeçalho no mobile --- */
+    .account-sidebar__header {
+        display: block; /* Mostra o cabeçalho com a seta apenas em mobile */
+    }
+    /* --- FIM DA MODIFICAÇÃO FINAL --- */
+
     .account-sidebar__nav ul { gap: var(--spacing-sm, 12px); }
     .account-sidebar__link {
         padding: var(--spacing-md, 16px);
@@ -421,85 +468,7 @@
         padding: var(--spacing-md, 20px);
         padding-top: calc(var(--spacing-md, 20px) + 40px + var(--spacing-md, 20px)); /* Mais espaço para botão voltar */
         padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px) + var(--spacing-lg, 28px)); /* Ainda mais padding inferior */
-        background-color: var(--color-white);
-        border-radius: 0; border: none; box-shadow: none;
+            background-color: var(--color-white);
+            border-radius: 0; border: none; box-shadow: none;
+        }
     }
-
-    .account-content .card__title { font-size: 1.3rem; margin-bottom: var(--spacing-md, 20px); }
-    .profile-info-table { display: block; overflow-x: auto; margin-bottom: var(--spacing-md, 20px); }
-    .profile-info-table th, .profile-info-table td { font-size: 0.875rem; white-space: nowrap; }
-    .profile-info-table th { min-width: 110px; }
-
-    /* Tabelas de dados empilhadas em mobile */
-    .data-table-wrapper { margin-bottom: var(--spacing-md, 20px); border-radius: var(--border-radius-lg); } /* Wrapper com borda */
-    .data-table { min-width: 0; border: none; }
-    .data-table thead { display: none; }
-    .data-table tbody, .data-table tr, .data-table td { display: block; width: 100%; }
-    .data-table tr {
-        margin-bottom: var(--spacing-sm, 12px); border: none;
-        border-radius: var(--border-radius-md); padding: var(--spacing-sm, 12px);
-        background-color: var(--color-gray-50);
-        box-shadow: var(--shadow-xs);
-    }
-    .data-table tr:last-child { margin-bottom: 0; }
-    .data-table td {
-        text-align: right !important; padding-left: 40% !important;
-        position: relative; border-bottom: 1px dashed var(--color-gray-200);
-        padding-top: var(--spacing-xs, 10px); padding-bottom: var(--spacing-xs, 10px);
-        font-size: 0.9rem; white-space: normal; /* Permite quebra de linha */
-    }
-    .data-table td:last-child { border-bottom: none; }
-    .data-table td::before {
-        content: attr(data-label); position: absolute;
-        left: var(--spacing-sm, 12px); width: calc(40% - var(--spacing-md, 18px));
-        padding-right: var(--spacing-xs, 8px); font-weight: var(--font-weight-semibold);
-        text-align: left !important; color: var(--color-text-secondary);
-        white-space: normal; font-size: 0.8rem;
-    }
-
-    .account-content .h4-like { font-size: 1.1rem; margin-top: var(--spacing-lg, 28px); }
-    .profile-form { max-width: 100%; gap: var(--spacing-md, 18px); }
-    .profile-form .form-label { font-size: 0.9rem; }
-    .profile-form .form-control { padding: var(--spacing-sm, 14px); font-size: 1rem; }
-    .profile-actions { flex-direction: column; gap: var(--spacing-md, 16px); }
-    .profile-actions .button,
-    #btn-open-delete-account-modal,
-    .profile-form button[type="submit"] {
-        width: 100%; font-size: 1rem;
-        padding: var(--spacing-md, 14px) !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .account-sidebar { padding: var(--spacing-sm, 12px); }
-    .account-sidebar__link {
-        padding: var(--spacing-sm, 12px);
-        padding-left: calc(var(--spacing-sm, 12px) + 3.5px + var(--spacing-sm, 12px));
-        font-size: 0.95rem;
-    }
-    .account-sidebar__link .material-symbols-outlined { font-size: 22px; }
-
-    .account-content {
-        padding: var(--spacing-sm, 16px);
-        padding-top: calc(var(--spacing-sm, 16px) + 40px + var(--spacing-sm, 16px));
-        padding-bottom: calc(var(--spacing-lg, 30px) + var(--spacing-lg, 30px) + var(--spacing-sm, 16px));
-    }
-    .account-content .card__title { font-size: 1.25rem; }
-    .account-content .h4-like { font-size: 1.05rem; }
-    .profile-form .form-label { font-size: 0.85rem; }
-    .profile-form .form-control { font-size: 0.95rem; padding: var(--spacing-sm, 12px); }
-    .profile-actions .button,
-    #btn-open-delete-account-modal,
-    .profile-form button[type="submit"] {
-        font-size: 0.95rem;
-        padding: var(--spacing-sm, 13px) !important;
-    }
-
-    .account-content__back-button {
-        top: var(--spacing-sm, 16px);
-        left: var(--spacing-sm, 16px);
-    }
-
-    .data-table td { font-size: 0.85rem; padding-left: 35% !important; }
-    .data-table td::before { width: calc(35% - var(--spacing-sm, 12px)); font-size: 0.75rem;}
-}

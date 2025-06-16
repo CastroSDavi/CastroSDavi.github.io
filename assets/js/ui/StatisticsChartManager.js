@@ -1,5 +1,39 @@
 // assets/js/ui/StatisticsChartManager.js
 
+/**
+ * Realiza uma mesclagem profunda (deep merge) de dois objetos, preservando propriedades aninhadas.
+ * @param {object} target - O objeto de destino.
+ * @param {object} source - O objeto de origem, cujas propriedades irão sobrescrever as do destino.
+ * @returns {object} Um novo objeto com as propriedades mescladas.
+ */
+function deepMerge(target, source) {
+    const output = { ...target };
+    if (isObject(target) && isObject(source)) {
+        Object.keys(source).forEach(key => {
+            if (isObject(source[key])) {
+                if (!(key in target)) {
+                    Object.assign(output, { [key]: source[key] });
+                } else {
+                    output[key] = deepMerge(target[key], source[key]);
+                }
+            } else {
+                Object.assign(output, { [key]: source[key] });
+            }
+        });
+    }
+    return output;
+}
+
+/**
+ * Verifica se um item é um objeto (e não um array ou null).
+ * @param {*} item - O item a ser verificado.
+ * @returns {boolean}
+ */
+function isObject(item) {
+    return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+
 export default class StatisticsChartManager {
 	constructor(quizUIInstance) {
 		this.quizUI = quizUIInstance;
@@ -150,10 +184,6 @@ export default class StatisticsChartManager {
 		}
 	}
     
-    // =========================================================================
-    // == HEATMAP - VERSÃO FINAL E ROBUSTA =====================================
-    // =========================================================================
-    
     _renderStudyHeatmapChart(data) {
         this._destroyChart('studyHeatmap');
         const container = this.elements.studyHeatmapChartEl;
@@ -204,9 +234,8 @@ export default class StatisticsChartManager {
         });
 
         let currentDate = new Date(startDate);
-        const firstDayOfWeek = startDate.getUTCDay(); // 0=Dom, 1=Seg, ...
+        const firstDayOfWeek = startDate.getUTCDay();
 
-        // Adiciona dias vazios no início para alinhar a primeira semana
         for (let i = 0; i < firstDayOfWeek; i++) {
             const dayEl = document.createElement('div');
             dayEl.className = 'heatmap-day';
@@ -219,7 +248,6 @@ export default class StatisticsChartManager {
         let lastMonth = -1;
         let weekCount = 1;
 
-        // Itera por todos os dias do ano
         while (currentDate <= endDate) {
             const dateStr = currentDate.toISOString().split('T')[0];
             const count = dataMap.get(dateStr) || 0;
@@ -239,7 +267,7 @@ export default class StatisticsChartManager {
                 lastMonth = currentMonth;
             }
 
-            if (currentDate.getUTCDay() === 6) { // Fim da semana (Sábado)
+            if (currentDate.getUTCDay() === 6) { 
                 weekCount++;
             }
             
@@ -256,8 +284,6 @@ export default class StatisticsChartManager {
 
         return { graph, months: monthsContainer, daysOfWeek: daysContainer };
     }
-
-    // O resto das funções (getContributionLevel, Tooltip, Legend) permanece o mesmo da versão anterior.
 
     _getContributionLevel(count) {
         if (count >= 20) return 4;
@@ -334,10 +360,6 @@ export default class StatisticsChartManager {
             });
         });
     }
-
-    // =========================================================================
-    // == FIM DA REFAFORAÇÃO DO HEATMAP ========================================
-    // =========================================================================
 
 	_showLoadingPlaceholders() {
 		this.elements.statisticsDashboardContainer?.classList.add("is-loading");
@@ -434,12 +456,14 @@ export default class StatisticsChartManager {
 		this.charts[chartKey] = null;
 	}
 
+	// --- INÍCIO DA MODIFICAÇÃO ---
 	_getChartDefaultOptions(extraOptions = {}) {
 		const bodyStyles = getComputedStyle(document.body);
 		const fontFamily =
 			bodyStyles.getPropertyValue("--font-family-sans").trim() ||
 			"Roboto, sans-serif";
-		return {
+			
+		const defaultOptions = {
 			chart: {
 				fontFamily: fontFamily,
 				foreColor: bodyStyles.getPropertyValue("--color-text-secondary").trim(),
@@ -491,11 +515,12 @@ export default class StatisticsChartManager {
 				bodyStyles.getPropertyValue("--color-accent-red").trim(),
 				bodyStyles.getPropertyValue("--color-accent-yellow").trim(),
 			],
-			...extraOptions,
 		};
+
+		// Retorna as opções padrão mescladas com as opções extras de forma profunda
+		return deepMerge(defaultOptions, extraOptions);
 	}
 
-    // O resto das funções de renderização de gráficos (overall, category, etc.) continuam inalteradas...
 	_renderOverallAccuracyChart(data) {
 		this._destroyChart("overallAccuracy");
 		if (
@@ -520,50 +545,38 @@ export default class StatisticsChartManager {
 						size: "70%",
 						labels: {
 							show: true,
-							name: {
-								show: true,
-							},
+							name: { show: true },
 							value: {
 								show: true,
 								formatter: (val, { seriesIndex, w }) => {
-									const total = w.globals.seriesTotals.reduce(
-										(a, b) => a + b,
-										0
-									);
-									return total > 0
-										? (
-												(w.globals.series[seriesIndex] /
-													total) *
-												100
-										  ).toFixed(0) + "%"
-										: "0%";
+									const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+									return total > 0 ? ((w.globals.series[seriesIndex] / total) * 100).toFixed(0) + "%" : "0%";
 								},
 							},
 							total: {
 								show: true,
 								showAlways: true,
 								label: "Total",
-								formatter: (w) =>
-									w.globals.seriesTotals
-										.reduce((a, b) => a + b, 0)
-										.toLocaleString("pt-BR"),
+								formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString("pt-BR"),
 							},
 						},
 					},
 				},
 			},
-			legend: {
-				position: "bottom",
-			},
-			dataLabels: {
-				enabled: false,
-			},
+			legend: { position: "bottom" },
+			dataLabels: { enabled: false },
 			tooltip: {
 				y: {
-					formatter: (val) =>
-						val.toLocaleString("pt-BR") + " questões",
+					formatter: (val) => val.toLocaleString("pt-BR") + " questões",
 				},
 			},
+			responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: { height: 240 },
+                    legend: { position: 'bottom' }
+                }
+            }]
 		});
 		this.charts.overallAccuracy = new ApexCharts(
 			this.elements.overallAccuracyChartEl,
@@ -574,47 +587,25 @@ export default class StatisticsChartManager {
 
 	_renderCategoryPerformanceChart(data) {
 		this._destroyChart("categoryPerformance");
-		if (
-			!this.elements.categoryPerformanceChartEl ||
-			!data ||
-			data.length === 0
-		) {
-			this._showNoDataMessageForChart(
-				this.elements.categoryPerformanceChartEl,
-				"Sem dados de categoria."
-			);
+		if (!this.elements.categoryPerformanceChartEl || !data || data.length === 0) {
+			this._showNoDataMessageForChart(this.elements.categoryPerformanceChartEl, "Sem dados de categoria.");
 			return;
 		}
 		this._hideLoadingPlaceholder(this.elements.categoryPerformanceChartEl);
 		const topData = data.slice(0, 7);
-		const categories = topData.map((item) =>
-			item.name.length > 18
-				? item.name.substring(0, 16) + "..."
-				: item.name
-		);
-		const accuracies = topData.map((item) =>
-			parseFloat(item.accuracy.toFixed(1))
-		);
+		const categories = topData.map((item) => item.name.length > 18 ? item.name.substring(0, 16) + "..." : item.name);
+		const accuracies = topData.map((item) => parseFloat(item.accuracy.toFixed(1)));
 		const chartOptions = this._getChartDefaultOptions({
-			chart: {
-				type: "bar",
-				height: 330,
-			},
+			chart: { type: "bar", height: 330 },
 			series: [{ name: "Precisão", data: accuracies }],
 			xaxis: {
 				categories: categories,
-				labels: {
-					rotate: -35,
-					trim: true,
-					maxHeight: 70,
-				},
+				labels: { rotate: -35, trim: true, maxHeight: 70 },
 			},
 			yaxis: {
 				min: 0,
 				max: 100,
-				labels: {
-					formatter: (val) => val.toFixed(0) + "%",
-				},
+				labels: { formatter: (val) => val.toFixed(0) + "%" },
 			},
 			plotOptions: {
 				bar: {
@@ -633,10 +624,16 @@ export default class StatisticsChartManager {
 				},
 			},
 			tooltip: {
-				y: {
-					formatter: (val) => val.toFixed(1) + "%",
-				},
+				y: { formatter: (val) => val.toFixed(1) + "%" },
 			},
+			responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: { height: 300 },
+                    xaxis: { labels: { rotate: -45, style: { fontSize: '10px' } } },
+					dataLabels: { style: { fontSize: '9px' } }
+                }
+            }]
 		});
 		this.charts.categoryPerformance = new ApexCharts(
 			this.elements.categoryPerformanceChartEl,
@@ -647,15 +644,8 @@ export default class StatisticsChartManager {
 
 	_renderLearningProgressChart(data) {
 		this._destroyChart("learningProgress");
-		if (
-			!this.elements.learningProgressChartEl ||
-			!data ||
-			data.length < 2
-		) {
-			this._showNoDataMessageForChart(
-				this.elements.learningProgressChartEl,
-				"Dados insuficientes para progresso."
-			);
+		if (!this.elements.learningProgressChartEl || !data || data.length < 2) {
+			this._showNoDataMessageForChart(this.elements.learningProgressChartEl, "Dados insuficientes para progresso.");
 			return;
 		}
 		this._hideLoadingPlaceholder(this.elements.learningProgressChartEl);
@@ -672,17 +662,12 @@ export default class StatisticsChartManager {
 			series: [{ name: "Precisão Diária", data: seriesData }],
 			xaxis: {
 				type: "datetime",
-				labels: {
-					datetimeUTC: false,
-					format: "dd MMM",
-				},
+				labels: { datetimeUTC: false, format: "dd MMM" },
 			},
 			yaxis: {
 				min: 0,
 				max: 100,
-				labels: {
-					formatter: (val) => val.toFixed(0) + "%",
-				},
+				labels: { formatter: (val) => val.toFixed(0) + "%" },
 			},
 			fill: {
 				type: "gradient",
@@ -701,12 +686,16 @@ export default class StatisticsChartManager {
 				hover: { size: 6 },
 			},
 			tooltip: {
-				y: {
-					formatter: (val) =>
-						val !== undefined ? val.toFixed(1) + "%" : "N/A",
-				},
+				y: { formatter: (val) => val !== undefined ? val.toFixed(1) + "%" : "N/A" },
 			},
 			dataLabels: { enabled: false },
+			responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: { height: 260 },
+                    markers: { size: 3 }
+                }
+            }]
 		});
 		this.charts.learningProgress = new ApexCharts(
 			this.elements.learningProgressChartEl,
@@ -717,23 +706,13 @@ export default class StatisticsChartManager {
 
 	_renderStudyTimeChart(data) {
 		this._destroyChart("studyTime");
-		if (
-			!this.elements.studyTimeChartEl ||
-			!data ||
-			data.data.every((d) => d === 0)
-		) {
-			this._showNoDataMessageForChart(
-				this.elements.studyTimeChartEl,
-				"Sem dados de tempo de estudo."
-			);
+		if (!this.elements.studyTimeChartEl || !data || data.data.every((d) => d === 0)) {
+			this._showNoDataMessageForChart(this.elements.studyTimeChartEl, "Sem dados de tempo de estudo.");
 			return;
 		}
 		this._hideLoadingPlaceholder(this.elements.studyTimeChartEl);
 		const chartOptions = this._getChartDefaultOptions({
-			chart: {
-				type: "bar",
-				height: 280,
-			},
+			chart: { type: "bar", height: 280 },
 			series: [{ name: "Minutos de Estudo", data: data.data }],
 			plotOptions: {
 				bar: {
@@ -751,19 +730,18 @@ export default class StatisticsChartManager {
 					colors: [ getComputedStyle(document.body).getPropertyValue("--color-text-primary").trim() ],
 				},
 			},
-			xaxis: {
-				categories: data.labels,
-			},
-			yaxis: {
-				title: {
-					text: "Minutos",
-				},
-			},
+			xaxis: { categories: data.labels },
+			yaxis: { title: { text: "Minutos" } },
 			tooltip: {
-				y: {
-					formatter: (val) => val + " min",
-				},
+				y: { formatter: (val) => val + " min" },
 			},
+			responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: { height: 260 },
+                    dataLabels: { enabled: false },
+                }
+            }]
 		});
 		this.charts.studyTime = new ApexCharts(
 			this.elements.studyTimeChartEl,
@@ -774,26 +752,14 @@ export default class StatisticsChartManager {
 
 	_renderDifficultyPerformanceChart(data) {
 		this._destroyChart("difficultyPerformance");
-		if (
-			!this.elements.difficultyPerformanceChartEl ||
-			!data ||
-			data.length === 0 ||
-			data.every((d) => d.total === 0)
-		) {
-			this._showNoDataMessageForChart(
-				this.elements.difficultyPerformanceChartEl,
-				"Sem dados de dificuldade."
-			);
+		if (!this.elements.difficultyPerformanceChartEl || !data || data.length === 0 || data.every((d) => d.total === 0)) {
+			this._showNoDataMessageForChart(this.elements.difficultyPerformanceChartEl, "Sem dados de dificuldade.");
 			return;
 		}
-		this._hideLoadingPlaceholder(
-			this.elements.difficultyPerformanceChartEl
-		);
+		this._hideLoadingPlaceholder(this.elements.difficultyPerformanceChartEl);
 		const bodyStyles = getComputedStyle(document.body);
 		const difficulties = data.map((item) => item.name);
-		const accuracies = data.map((item) =>
-			parseFloat(item.accuracy.toFixed(1))
-		);
+		const accuracies = data.map((item) => parseFloat(item.accuracy.toFixed(1)));
 		const difficultyColors = [
 			bodyStyles.getPropertyValue("--color-secondary-green").trim(),
 			bodyStyles.getPropertyValue("--color-primary-medium").trim(),
@@ -806,10 +772,7 @@ export default class StatisticsChartManager {
 			return bodyStyles.getPropertyValue("--color-gray-500").trim();
 		});
 		const chartOptions = this._getChartDefaultOptions({
-			chart: {
-				type: "bar",
-				height: 280,
-			},
+			chart: { type: "bar", height: 280 },
 			series: [{ name: "Precisão", data: accuracies }],
 			colors: seriesColors,
 			plotOptions: {
@@ -824,11 +787,8 @@ export default class StatisticsChartManager {
 			dataLabels: {
 				enabled: true,
 				formatter: (val, opts) => {
-					const totalQuestions =
-						data[opts.dataPointIndex]?.total || 0;
-					return val > 0
-						? `${val.toFixed(0)}% (${totalQuestions})`
-						: "";
+					const totalQuestions = data[opts.dataPointIndex]?.total || 0;
+					return val > 0 ? `${val.toFixed(0)}% (${totalQuestions})` : "";
 				},
 				offsetX: 22,
 				textAnchor: "start",
@@ -837,21 +797,27 @@ export default class StatisticsChartManager {
 				categories: difficulties,
 				min: 0,
 				max: 100,
-				labels: {
-					formatter: (val) => val + "%",
-				},
+				labels: { formatter: (val) => val + "%" },
 			},
 			tooltip: {
 				y: {
 					formatter: (val, { dataPointIndex }) => {
 						const totalQuestions = data[dataPointIndex]?.total || 0;
-						return `${val.toFixed(
-							1
-						)}% (de ${totalQuestions} questões)`;
+						return `${val.toFixed(1)}% (de ${totalQuestions} questões)`;
 					},
 				},
 			},
 			legend: { show: false },
+			responsive: [{
+                breakpoint: 768,
+                options: {
+                    chart: { height: 240 },
+					dataLabels: {
+						style: { fontSize: '10px' },
+						offsetX: 15
+					}
+                }
+            }]
 		});
 		this.charts.difficultyPerformance = new ApexCharts(
 			this.elements.difficultyPerformanceChartEl,

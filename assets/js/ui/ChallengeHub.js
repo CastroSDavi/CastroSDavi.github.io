@@ -8,6 +8,10 @@ export default class ChallengeHub {
         this.actionOrchestrator = null;
 
         // Atalho para os elementos DOM relevantes gerenciados por QuizUI
+        this._cacheElements();
+    }
+    
+    _cacheElements() {
         this.elements = {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
             hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
@@ -16,6 +20,13 @@ export default class ChallengeHub {
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
+            
+            // --- INÍCIO DA CORREÇÃO: Mapeando para os novos IDs e estrutura ---
+            resumeCard: document.getElementById('hub-resume-quiz-card'),
+            resumeCardDescription: document.getElementById('hub-resume-card-description'),
+            confirmResumeBtn: document.getElementById('hub-confirm-resume-btn'),
+            discardResumeBtn: document.getElementById('hub-discard-resume-btn'),
+            // --- FIM DA CORREÇÃO ---
         };
     }
 
@@ -35,7 +46,6 @@ export default class ChallengeHub {
             this.quizUI.showElement(this.elements.challengeHubContainer);
         }
         
-        // Garante que outros elementos da UI do quiz estejam escondidos
         this.quizUI.hideElement(this.elements.placeholderFiltrosContainer);
         this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
         this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
@@ -86,6 +96,28 @@ export default class ChallengeHub {
     }
 
     /**
+     * Exibe e configura o card de "Continuar Desafio".
+     * @param {object} resumableSession - Os dados da sessão a ser resumida.
+     */
+    showResumeOption(resumableSession) {
+        if (!this.elements.resumeCard || !resumableSession) return;
+
+        const questionCount = resumableSession.perguntas?.length || 0;
+        this.elements.resumeCardDescription.innerHTML = `Você tem uma sessão em andamento de <strong>${questionCount}</strong> questões.`;
+
+        this.quizUI.showElement(this.elements.resumeCard);
+    }
+
+    /**
+     * Esconde o card de "Continuar Desafio".
+     */
+    hideResumeOption() {
+        if (this.elements.resumeCard) {
+            this.quizUI.hideElement(this.elements.resumeCard);
+        }
+    }
+
+    /**
      * Configura os event listeners para os botões dentro do hub de desafios.
      */
     setupEventListeners() {
@@ -109,5 +141,19 @@ export default class ChallengeHub {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
+        
+        // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
+        this.elements.confirmResumeBtn?.addEventListener('click', () => {
+             if (this.actionOrchestrator) {
+                this.actionOrchestrator._proceedWithResumedSession();
+            }
+        });
+
+        this.elements.discardResumeBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.actionOrchestrator._discardAndGoToHub();
+            }
+        });
+        // --- FIM DA CORREÇÃO ---
     }
 }

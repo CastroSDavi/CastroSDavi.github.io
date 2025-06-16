@@ -1,0 +1,135 @@
+/* assets/css/components/stats-heatmap.css (v6 - Alinhamento Perfeito dos Dias) */
+
+.heatmap-container {
+    --heatmap-gap: 3px;
+    --heatmap-day-size: 11px;
+    --heatmap-level-0: var(--color-gray-200);
+    --heatmap-level-1: #9be9a8;
+    --heatmap-level-2: #40c463;
+    --heatmap-level-3: #30a14e;
+    --heatmap-level-4: #216e39;
+    font-family: var(--font-family-sans);
+    color: var(--color-text-secondary);
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 5px 10px 10px;
+}
+
+.heatmap-grid {
+    display: inline-grid;
+    grid-template-areas:
+        "empty months"
+        "days  graph";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 8px 12px;
+}
+
+/* ========================================================================== */
+/* == AJUSTE FINAL: Alinhamento vertical dos dias da semana == */
+/* ========================================================================== */
+.heatmap-days-of-week {
+    grid-area: days;
+    display: grid; /* Alterado para grid */
+    grid-template-rows: repeat(7, var(--heatmap-day-size)); /* 7 linhas do tamanho dos quadrados */
+    gap: var(--heatmap-gap); /* O mesmo gap dos quadrados para alinhamento perfeito */
+    align-items: center; 
+    font-size: 10px;
+    padding-right: 5px;
+    text-align: right;
+    padding-top: 0; 
+}
+
+.heatmap-days-of-week > div {
+    display: flex;
+    align-items: center;      /* Centraliza o texto verticalmente dentro de sua célula */
+    justify-content: flex-end;/* Alinha o texto à direita */
+    height: 100%;
+}
+
+.heatmap-days-of-week > div:nth-child(even) {
+    visibility: hidden;
+}
+/* =================== FIM DO AJUSTE FINAL =================== */
+
+.heatmap-months {
+    grid-area: months;
+    display: grid;
+    grid-template-columns: repeat(53, calc(var(--heatmap-day-size) + var(--heatmap-gap)));
+    font-size: 11px;
+    align-items: end;
+    padding-bottom: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.heatmap-month-label {
+    grid-column-start: var(--start-col);
+    text-align: left;
+}
+
+.heatmap-graph {
+    grid-area: graph;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(7, var(--heatmap-day-size));
+    gap: var(--heatmap-gap);
+}
+
+.heatmap-day {
+    width: var(--heatmap-day-size);
+    height: var(--heatmap-day-size);
+    background-color: var(--heatmap-level-0);
+    border-radius: 2px;
+}
+
+.heatmap-day[data-level="1"] { background-color: var(--heatmap-level-1); }
+.heatmap-day[data-level="2"] { background-color: var(--heatmap-level-2); }
+.heatmap-day[data-level="3"] { background-color: var(--heatmap-level-3); }
+.heatmap-day[data-level="4"] { background-color: var(--heatmap-level-4); }
+
+.heatmap-legend {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    margin-top: 15px;
+    padding-right: 5px;
+}
+
+.heatmap-legend ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 4px;
+}
+
+.heatmap-legend li {
+    width: var(--heatmap-day-size);
+    height: var(--heatmap-day-size);
+    border-radius: 2px;
+    cursor: help;
+}
+
+.heatmap-tooltip {
+    position: fixed;
+    z-index: 1100;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--color-white);
+    background-color: rgba(30, 30, 30, 0.9);
+    border-radius: var(--border-radius-md);
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, -100%) translateY(-10px);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    box-shadow: var(--shadow-lg);
+}
+
+.heatmap-tooltip.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -100%) translateY(-5px);
+}

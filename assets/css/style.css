@@ -27,8 +27,7 @@
 @import 'components/stats-deck.css';
 @import 'components/messages.css';
 @import 'components/loading-indicator.css';
-@import 'components/resume-banner.css'; 
-
+@import 'components/stats-heatmap.css';
 /* 4. SECTIONS */
 @import 'sections/home-section.css';
 @import 'sections/question-section.css';

@@ -93,14 +93,16 @@ export default class QuizUI {
             this.displayQuizLayout(false);
         }
     
-        // --- INÍCIO DA ALTERAÇÃO: Lógica reativa para o banner ---
+        // --- INÍCIO DA ALTERAÇÃO: Lógica reativa agora delega ao ChallengeHub ---
         const hadResumableSession = !!this.previousState.quiz?.resumableSession;
         const hasResumableSession = !!currentState.quiz.resumableSession;
 
-        if (!hadResumableSession && hasResumableSession) {
-            this.displayResumeBanner(currentState.quiz.resumableSession);
-        } else if (hadResumableSession && !hasResumableSession) {
-            this.hideResumeBanner();
+        if (this.challengeHubInstance) {
+            if (!hadResumableSession && hasResumableSession) {
+                this.challengeHubInstance.showResumeOption(currentState.quiz.resumableSession);
+            } else if (hadResumableSession && !hasResumableSession) {
+                this.challengeHubInstance.hideResumeOption();
+            }
         }
         // --- FIM DA ALTERAÇÃO ---
 
@@ -254,44 +256,21 @@ export default class QuizUI {
             bottomNavElement: document.querySelector('.bottom-nav'),
             sessionLoadingIndicator: document.getElementById('session-loading-indicator'),
             sessionLoadingMessage: document.getElementById('session-loading-message'),
-            resumeBannerContainer: document.getElementById('resume-banner-container'),
-            resumeBannerQuestionCount: document.getElementById('resume-banner-question-count'),
-            btnBannerConfirmResume: document.getElementById('btn-banner-confirm-resume'),
-            btnBannerDiscardResume: document.getElementById('btn-banner-discard-resume'),
+            
+            // --- INÍCIO DA ALTERAÇÃO: Remoção dos elementos do banner antigo ---
+            // resumeBannerContainer: document.getElementById('resume-banner-container'),
+            // resumeBannerQuestionCount: document.getElementById('resume-banner-question-count'),
+            // btnBannerConfirmResume: document.getElementById('btn-banner-confirm-resume'),
+            // btnBannerDiscardResume: document.getElementById('btn-banner-discard-resume'),
+            // --- FIM DA ALTERAÇÃO ---
         };
     }
     
-    displayResumeBanner(resumableSession) {
-        if (!this.elements.resumeBannerContainer || !resumableSession?.perguntas) {
-            if (this.challengeHubInstance) this.challengeHubInstance.showHub();
-            return;
-        };
-
-        this.elements.resumeBannerQuestionCount.textContent = resumableSession.perguntas.length;
-        this._setupResumeBannerListeners();
-        
-        this.showElement(this.elements.resumeBannerContainer);
-    }
-
-    hideResumeBanner() {
-        if (this.elements.resumeBannerContainer) {
-            this.hideElement(this.elements.resumeBannerContainer);
-        }
-    }
-    
-    _setupResumeBannerListeners() {
-        this.elements.btnBannerConfirmResume.onclick = () => {
-            if (this.actionOrchestrator) {
-                this.actionOrchestrator._proceedWithResumedSession();
-            }
-        };
-        
-        this.elements.btnBannerDiscardResume.onclick = () => {
-            if (this.actionOrchestrator) {
-                this.actionOrchestrator._discardAndGoToHub();
-            }
-        };
-    }
+    // --- INÍCIO DA ALTERAÇÃO: Métodos do banner antigo removidos ---
+    // displayResumeBanner(resumableSession) { ... }
+    // hideResumeBanner() { ... }
+    // _setupResumeBannerListeners() { ... }
+    // --- FIM DA ALTERAÇÃO ---
 
     showElement(element) {
         element?.classList.remove(this.hiddenClassName);
@@ -342,7 +321,9 @@ export default class QuizUI {
             this.hideElement(placeholderFiltrosContainer); 
             if (this.resultDisplay) this.resultDisplay.hide();
             if (bottomNavElement) this.hideElement(bottomNavElement);
-            this.hideElement(this.elements.resumeBannerContainer);
+            // --- INÍCIO DA ALTERAÇÃO: Remoção da chamada ao banner antigo ---
+            // this.hideElement(this.elements.resumeBannerContainer);
+            // --- FIM DA ALTERAÇÃO ---
         } else {
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
@@ -392,7 +373,11 @@ export default class QuizUI {
                 this.hideElement(this.elements.quizSectionContent);
                 this.hideElement(this.elements.resultadoCard);
                 this.hideElement(this.elements.placeholderFiltrosContainer);
-                this.hideElement(this.elements.resumeBannerContainer);
+                
+                // --- INÍCIO DA ALTERAÇÃO: Remoção da chamada ao banner antigo ---
+                // this.hideElement(this.elements.resumeBannerContainer);
+                // --- FIM DA ALTERAÇÃO ---
+
                 if (this.scorePanel) this.scorePanel.hide();
                 if (this.warningDisplay) this.warningDisplay.clear();
                 document.body.classList.add('no-scroll');

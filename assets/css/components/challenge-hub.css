@@ -1,29 +1,27 @@
-/* assets/css/components/challenge-hub.css */
+/* assets/css/components/challenge-hub.css (Refatoração Completa v3) */
 
+/* Container Principal do Hub */
 .challenge-hub {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: var(--spacing-xl, 30px) var(--spacing-md, 20px);
-    gap: var(--spacing-lg, 25px); /* Espaço entre o header do hub e a grade de opções */
+    gap: var(--spacing-lg, 25px);
     width: 100%;
-    max-width: 800px; /* Largura máxima do hub */
-    margin: var(--spacing-xl, 30px) auto; /* Margem vertical e centralização horizontal */
-    background-color: var(--color-gray-100); /* Fundo suave para o hub */
+    max-width: 820px;
+    margin: var(--spacing-xl, 30px) auto;
+    padding: clamp(40px, 7vh, 55px) var(--spacing-lg, 30px);
+    background-color: var(--color-gray-100);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
-    min-height: 400px; /* Altura mínima para melhor visualização */
 }
 
 .challenge-hub__header {
+    text-align: center;
     margin-bottom: var(--spacing-md, 20px);
 }
 
 .challenge-hub__title {
     font-family: var(--font-family-heading);
-    font-size: clamp(1.8rem, 4.5vw, 2.2rem); /* Tamanho de fonte responsivo */
+    font-size: clamp(1.8rem, 4.5vw, 2.2rem);
     color: var(--color-primary-dark);
     font-weight: var(--font-weight-bold);
     margin-top: 0;
@@ -38,61 +36,74 @@
     font-weight: var(--font-weight-normal);
 }
 
+/* Grade de Opções */
 .challenge-hub__options-grid {
     display: grid;
-    grid-template-columns: 1fr; /* Uma coluna por padrão (mobile) */
+    grid-template-columns: 1fr;
     gap: var(--spacing-lg, 25px);
     width: 100%;
-    max-width: 700px; /* Largura máxima para a grade de opções */
 }
 
+@media (min-width: 768px) {
+    .challenge-hub__options-grid {
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    }
+}
+
+/* ========================================================================== */
+/* == REGRAS DE CARD (BASE E VARIANTES) - REFAFORADO COM FLEXBOX ANINHADO == */
+/* ========================================================================== */
+
+/* Base para todos os cards de desafio */
 .challenge-card {
     background-color: var(--color-white);
     border: var(--border-width) solid var(--color-gray-300);
-    border-radius: var(--border-radius-md); /* Consistente com .card */
+    border-radius: var(--border-radius-md);
     box-shadow: var(--shadow-sm);
     padding: var(--spacing-lg, 25px);
     text-align: left;
-    display: flex; /* Para alinhar ícone e conteúdo */
-    align-items: flex-start; /* Alinha itens no topo */
-    gap: var(--spacing-md, 20px);
-    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
     transition: transform var(--transition-fast), box-shadow var(--transition-fast);
-    text-decoration: none; /* Para caso use <a> no futuro */
-    color: inherit; /* Para caso use <a> no futuro */
+
+    /* --- Layout Base (para cards simples como "Personalizar" e "Quiz Rápido") --- */
+    display: flex;
+    align-items: center; /* Centraliza verticalmente ícone e conteúdo */
+    gap: var(--spacing-md, 20px);
 }
 
-.challenge-card:hover,
-.challenge-card:focus-visible {
+/* Efeito de hover para cards clicáveis */
+.challenge-card:not(.challenge-card--resume):hover,
+.challenge-card:not(.challenge-card--resume):focus-visible {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-lg); /* Sombra mais pronunciada no hover/focus */
-    border-color: var(--color-primary-medium); /* Destaque na borda */
+    box-shadow: var(--shadow-lg);
+    border-color: var(--color-primary-medium);
 }
-
 .challenge-card:focus-visible {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: var(--focus-outline-offset);
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
 }
 
-
+/* Ícone */
 .challenge-card__icon-wrapper {
-    flex-shrink: 0; /* Para o wrapper do ícone não encolher */
-    background-color: var(--color-primary-light); /* Fundo suave para o ícone */
-    border-radius: var(--border-radius-circle);
-    padding: var(--spacing-sm, 12px);
-    display: inline-flex; /* Para centralizar o ícone dentro */
+    flex-shrink: 0; /* Impede que o ícone seja esmagado */
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-primary-dark); /* Cor do ícone */
+    background-color: var(--color-primary-light);
+    border-radius: var(--border-radius-circle);
+    padding: var(--spacing-sm, 12px);
+    color: var(--color-primary-dark);
 }
 
 .challenge-card__icon {
-    font-size: 2rem; /* Tamanho do ícone */
-    display: block; /* Para garantir o tamanho correto */
+    font-size: 2rem;
+    display: block;
 }
 
+/* Conteúdo (Título e Descrição) */
 .challenge-card__content {
-    flex-grow: 1;
+    flex-grow: 1; /* Permite que a área de conteúdo cresça */
 }
 
 .challenge-card__title {
@@ -101,7 +112,7 @@
     color: var(--color-text-primary);
     font-weight: var(--font-weight-semibold);
     margin-top: 0;
-    margin-bottom: var(--spacing-xs, 8px);
+    margin-bottom: var(--spacing-xxs, 4px);
 }
 
 .challenge-card__description {
@@ -110,14 +121,41 @@
     color: var(--color-text-secondary);
     line-height: var(--line-height-base);
     margin: 0;
+    overflow-wrap: break-word;
 }
 
+/* --- Variante de Card de Resumo (layout mais complexo) --- */
+.challenge-card--resume {
+    cursor: default;
+    background-color: var(--color-primary-xlight);
+    border-color: var(--color-primary-medium);
+    grid-column: 1 / -1; /* Ocupa a largura toda da grade */
+}
+
+/* Novo container principal que agrupa conteúdo e ações */
+.challenge-card__main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Garante que as ações fiquem no fundo */
+    min-height: 90px; /* Altura mínima para garantir alinhamento em textos curtos */
+}
+
+/* Ações (botões) */
+.challenge-card__actions {
+    display: flex;
+    justify-content: flex-end; /* Alinha botões à direita */
+    align-items: center;
+    gap: var(--spacing-sm, 12px);
+    margin-top: var(--spacing-md, 20px); /* Espaço entre a descrição e os botões */
+}
+
+/* --- Outras Variantes --- */
 .challenge-card--disabled {
     background-color: var(--color-gray-200);
     cursor: not-allowed;
     opacity: 0.7;
 }
-
 .challenge-card--disabled:hover,
 .challenge-card--disabled:focus-visible {
     transform: none;
@@ -125,26 +163,14 @@
     border-color: var(--color-gray-300);
 }
 
-
-/* Responsividade para o grid de opções */
-@media (min-width: 768px) {
-    .challenge-hub__options-grid {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Duas colunas se couber */
-        /* Se quiser sempre duas colunas em telas maiores: */
-        /* grid-template-columns: 1fr 1fr; */
-    }
-     .challenge-hub {
-        padding: var(--spacing-xl, 40px) var(--spacing-lg, 30px);
-    }
-}
-
+/* Responsividade */
 @media (max-width: 480px) {
-    .challenge-card {
+    .challenge-card, .challenge-card--resume {
         padding: var(--spacing-md, 20px);
         gap: var(--spacing-sm, 15px);
     }
     .challenge-card__title {
-        font-size: 1.15rem; /* Ajuste para telas menores */
+        font-size: 1.15rem;
     }
     .challenge-card__icon-wrapper {
         padding: var(--spacing-xs, 10px);
@@ -152,8 +178,17 @@
     .challenge-card__icon {
         font-size: 1.8rem;
     }
-     .challenge-hub {
+    .challenge-hub {
         padding: var(--spacing-lg, 25px) var(--spacing-sm, 15px);
-        min-height: auto; /* Altura mínima menor em mobile */
+    }
+    .challenge-card__main {
+        min-height: auto;
+    }
+    .challenge-card__actions {
+        flex-direction: column;
+        align-items: stretch; /* Faz botões ocuparem 100% da largura */
+    }
+    .challenge-card__actions .button {
+        width: 100%;
     }
 }

@@ -38,32 +38,35 @@
 
         <div class="question-section__main-content">
             
-            <div id="resume-banner-container" class="resume-banner-container u-is-hidden">
-                <div class="card">
-                    <div class="resume-banner__content">
-                        <div class="resume-banner__icon-wrapper">
-                            <span class="material-symbols-outlined resume-banner__icon">rebase_edit</span>
-                        </div>
-                        <div class="resume-banner__text">
-                            <h3 class="resume-banner__title">Continue de onde você parou</h3>
-                            <p class="resume-banner__description">
-                                Você tem uma sessão em andamento de <strong id="resume-banner-question-count">0</strong> questões.
-                            </p>
-                        </div>
-                        <div class="resume-banner__actions">
-                            <button id="btn-banner-discard-resume" class="button button--danger-outline button--small">Descartar</button>
-                            <button id="btn-banner-confirm-resume" class="button button--primary">Continuar Quiz</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__header">
                     <h2 class="challenge-hub__title">Escolha seu Desafio</h2>
                     <p class="challenge-hub__subtitle">Explore nosso banco de <span id="hub-total-questions-count">0</span> questões.</p>
                 </div>
                 <div class="challenge-hub__options-grid">
+                    
+                    {# ========================================================================== #}
+                    {# ============ CARD DE RESUMO REFAFORADO (COM HTML MELHORADO) ============ #}
+                    {# ========================================================================== #}
+                    <div id="hub-resume-quiz-card" class="challenge-card challenge-card--resume u-is-hidden">
+                        <div class="challenge-card__icon-wrapper">
+                            <span class="material-symbols-outlined challenge-card__icon">play_arrow</span>
+                        </div>
+                        <div class="challenge-card__main">
+                            <div class="challenge-card__content">
+                                <h3 class="challenge-card__title">Continuar Desafio</h3>
+                                <p class="challenge-card__description" id="hub-resume-card-description">
+                                    Você tem uma sessão em andamento.
+                                </p>
+                            </div>
+                            <div class="challenge-card__actions">
+                                <button id="hub-discard-resume-btn" class="button button--text button--compact">Descartar</button>
+                                <button id="hub-confirm-resume-btn" class="button button--primary button--small">Continuar</button>
+                            </div>
+                        </div>
+                    </div>
+                    {# ======================= FIM DA REFAFORAÇÃO DO CARD ====================== #}
+
                     <button id="hub-customize-quiz-btn" class="challenge-card">
                         <div class="challenge-card__icon-wrapper">
                             <span class="material-symbols-outlined challenge-card__icon">tune</span>
@@ -201,21 +204,6 @@
                 <div class="modal__footer modal__footer--stacked">
                     <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
                     <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="DEPRECATED-resume-decision-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="resumeModalTitle" aria-modal="true" tabindex="-1">
-            <div id="resume-decision-modal-dialog" class="card modal__dialog">
-                <div class="modal__header">
-                    <h3 id="resumeModalTitle" class="modal__title card__title">Quiz em Andamento</h3>
-                </div>
-                <div class="modal__body">
-                    <p>Você tem um quiz que não foi finalizado. Deseja continuar de onde parou ou prefere descartar este progresso e ver outras opções de quiz?</p>
-                </div>
-                <div class="modal__footer modal__footer--stacked">
-                    <button id="btn-discard-resume" class="button button--outline button--modal-action">Descartar e Ver Opções</button>
-                    <button id="btn-confirm-resume" class="button button--primary button--modal-action">Continuar Quiz</button>
                 </div>
             </div>
         </div>

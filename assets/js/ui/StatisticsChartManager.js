@@ -456,7 +456,6 @@ export default class StatisticsChartManager {
 		this.charts[chartKey] = null;
 	}
 
-	// --- INÍCIO DA MODIFICAÇÃO ---
 	_getChartDefaultOptions(extraOptions = {}) {
 		const bodyStyles = getComputedStyle(document.body);
 		const fontFamily =
@@ -517,7 +516,6 @@ export default class StatisticsChartManager {
 			],
 		};
 
-		// Retorna as opções padrão mescladas com as opções extras de forma profunda
 		return deepMerge(defaultOptions, extraOptions);
 	}
 
@@ -535,10 +533,16 @@ export default class StatisticsChartManager {
 			return;
 		}
 		this._hideLoadingPlaceholder(this.elements.overallAccuracyChartEl);
+        
+        const bodyStyles = getComputedStyle(document.body);
 		const chartOptions = this._getChartDefaultOptions({
 			chart: { type: "donut", height: 280 },
 			series: [data.correct, data.incorrect],
 			labels: ["Acertos", "Erros"],
+            colors: [
+                bodyStyles.getPropertyValue("--color-secondary-green").trim(),
+                bodyStyles.getPropertyValue("--color-accent-red").trim()
+            ],
 			plotOptions: {
 				pie: {
 					donut: {
@@ -556,7 +560,9 @@ export default class StatisticsChartManager {
 							total: {
 								show: true,
 								showAlways: true,
-								label: "Total",
+								label: "Total Questões",
+                                fontSize: '14px',
+                                fontWeight: 'normal',
 								formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString("pt-BR"),
 							},
 						},
@@ -585,62 +591,79 @@ export default class StatisticsChartManager {
 		this.charts.overallAccuracy.render();
 	}
 
+    // --- INÍCIO DA ESTRATÉGIA DISRUPTIVA: Reconstrução com HTML/CSS ---
 	_renderCategoryPerformanceChart(data) {
-		this._destroyChart("categoryPerformance");
-		if (!this.elements.categoryPerformanceChartEl || !data || data.length === 0) {
-			this._showNoDataMessageForChart(this.elements.categoryPerformanceChartEl, "Sem dados de categoria.");
+		this._destroyChart("categoryPerformance"); 
+        const container = this.elements.categoryPerformanceChartEl;
+		if (!container) return;
+
+		if (!data || data.length === 0) {
+			this._showNoDataMessageForChart(container, "Sem dados de categoria.");
 			return;
 		}
-		this._hideLoadingPlaceholder(this.elements.categoryPerformanceChartEl);
-		const topData = data.slice(0, 7);
-		const categories = topData.map((item) => item.name.length > 18 ? item.name.substring(0, 16) + "..." : item.name);
-		const accuracies = topData.map((item) => parseFloat(item.accuracy.toFixed(1)));
-		const chartOptions = this._getChartDefaultOptions({
-			chart: { type: "bar", height: 330 },
-			series: [{ name: "Precisão", data: accuracies }],
-			xaxis: {
-				categories: categories,
-				labels: { rotate: -35, trim: true, maxHeight: 70 },
-			},
-			yaxis: {
-				min: 0,
-				max: 100,
-				labels: { formatter: (val) => val.toFixed(0) + "%" },
-			},
-			plotOptions: {
-				bar: {
-                    borderRadius: 5,
-					dataLabels: { position: "top" },
-				},
-			},
-			dataLabels: {
-				enabled: true,
-				formatter: (val) => val + "%",
-				offsetY: -20,
-				style: {
-					fontSize: "10px",
-					fontWeight: "bold",
-					colors: [ getComputedStyle(document.body).getPropertyValue("--color-text-primary").trim() ],
-				},
-			},
-			tooltip: {
-				y: { formatter: (val) => val.toFixed(1) + "%" },
-			},
-			responsive: [{
-                breakpoint: 768,
-                options: {
-                    chart: { height: 300 },
-                    xaxis: { labels: { rotate: -45, style: { fontSize: '10px' } } },
-					dataLabels: { style: { fontSize: '9px' } }
-                }
-            }]
+
+		this._hideLoadingPlaceholder(container);
+		container.innerHTML = ''; // Limpa o contêiner de qualquer conteúdo anterior
+
+		const topData = data.slice(0, 10);
+
+		const list = document.createElement('ul');
+		list.className = 'category-performance-list';
+
+		topData.forEach(item => {
+			const accuracy = parseFloat(item.accuracy.toFixed(1));
+
+			const listItem = document.createElement('li');
+			listItem.className = 'category-performance-item';
+
+			const label = document.createElement('span');
+			label.className = 'category-performance-item__label';
+			label.textContent = item.name;
+			label.title = item.name; // Adiciona um tooltip nativo com o nome completo
+
+			const value = document.createElement('span');
+			value.className = 'category-performance-item__value';
+			value.textContent = `${accuracy.toFixed(0)}%`;
+
+			const barContainer = document.createElement('div');
+			barContainer.className = 'category-performance-item__bar-container';
+
+			const bar = document.createElement('div');
+			bar.className = 'category-performance-item__bar';
+
+			// Adiciona a barra ao contêiner antes de animar para garantir que a transição CSS funcione
+			barContainer.appendChild(bar);
+
+            listItem.appendChild(label);
+            listItem.appendChild(value);
+            listItem.appendChild(barContainer);
+
+			list.appendChild(listItem);
+            
+            // Usa um pequeno timeout para permitir que o elemento entre no DOM antes de animar a largura
+            setTimeout(() => {
+                bar.style.width = `${accuracy}%`;
+            }, 50);
 		});
-		this.charts.categoryPerformance = new ApexCharts(
-			this.elements.categoryPerformanceChartEl,
-			chartOptions
-		);
-		this.charts.categoryPerformance.render();
+
+		container.appendChild(list);
 	}
+    // --- FIM DA ESTRATÉGIA DISRUPTIVA ---
+    
+    _calculateMovingAverage(data, windowSize) {
+        if (!data || data.length < windowSize) return [];
+        
+        const smoothedData = [];
+        for (let i = 0; i <= data.length - windowSize; i++) {
+            const windowSlice = data.slice(i, i + windowSize);
+            const sum = windowSlice.reduce((acc, point) => acc + point.y, 0);
+            const average = sum / windowSize;
+            
+            const pointInTime = windowSlice[windowSize - 1].x;
+            smoothedData.push({ x: pointInTime, y: parseFloat(average.toFixed(1)) });
+        }
+        return smoothedData;
+    }
 
 	_renderLearningProgressChart(data) {
 		this._destroyChart("learningProgress");
@@ -649,17 +672,51 @@ export default class StatisticsChartManager {
 			return;
 		}
 		this._hideLoadingPlaceholder(this.elements.learningProgressChartEl);
-		const seriesData = data.map((item) => ({
+
+		const dailyData = data.map((item) => ({
 			x: new Date(item.date_str).getTime(),
 			y: item.daily_accuracy,
 		}));
+
+        const movingAverageData = this._calculateMovingAverage(dailyData, 7);
+        const bodyStyles = getComputedStyle(document.body);
+
 		const chartOptions = this._getChartDefaultOptions({
 			chart: {
-				type: "area",
+				type: "line",
 				height: 330,
-				zoom: { enabled: false },
+                zoom: {
+                    enabled: false
+                },
 			},
-			series: [{ name: "Precisão Diária", data: seriesData }],
+			series: [
+                {
+                    name: "Precisão Diária",
+                    type: 'bar',
+                    data: dailyData
+                },
+                {
+                    name: 'Média Móvel (7 dias)',
+                    type: 'line',
+                    data: movingAverageData
+                }
+            ],
+            colors: [
+                bodyStyles.getPropertyValue("--color-primary-light").trim(),
+                bodyStyles.getPropertyValue("--color-secondary-green").trim(),
+            ],
+			stroke: {
+				width: [0, 3], 
+				curve: 'smooth'
+			},
+            plotOptions: {
+                bar: {
+                    columnWidth: '60%'
+                }
+            },
+            fill: {
+                opacity: [0.8, 1],
+            },
 			xaxis: {
 				type: "datetime",
 				labels: { datetimeUTC: false, format: "dd MMM" },
@@ -667,35 +724,19 @@ export default class StatisticsChartManager {
 			yaxis: {
 				min: 0,
 				max: 100,
+				title: { text: "Precisão" },
 				labels: { formatter: (val) => val.toFixed(0) + "%" },
 			},
-			fill: {
-				type: "gradient",
-				gradient: {
-					shadeIntensity: 1,
-					opacityFrom: 0.6,
-					opacityTo: 0.05,
-					stops: [0, 95, 100],
-				},
-			},
-			markers: {
-				size: 4,
-                colors: [ getComputedStyle(document.body).getPropertyValue("--color-white").trim() ],
-				strokeColors: getComputedStyle(document.body).getPropertyValue("--color-secondary-green").trim(),
-				strokeWidth: 2,
-				hover: { size: 6 },
-			},
 			tooltip: {
+                shared: true,
+                intersect: false,
 				y: { formatter: (val) => val !== undefined ? val.toFixed(1) + "%" : "N/A" },
 			},
 			dataLabels: { enabled: false },
-			responsive: [{
-                breakpoint: 768,
-                options: {
-                    chart: { height: 260 },
-                    markers: { size: 3 }
-                }
-            }]
+            legend: {
+                position: 'top',
+                horizontalAlign: 'left'
+            }
 		});
 		this.charts.learningProgress = new ApexCharts(
 			this.elements.learningProgressChartEl,
@@ -717,6 +758,7 @@ export default class StatisticsChartManager {
 			plotOptions: {
 				bar: {
 					borderRadius: 5,
+                    columnWidth: '60%',
 					dataLabels: { position: "top" },
 				},
 			},
@@ -792,6 +834,9 @@ export default class StatisticsChartManager {
 				},
 				offsetX: 22,
 				textAnchor: "start",
+                style: {
+                    colors: ['#333']
+                }
 			},
 			xaxis: {
 				categories: difficulties,

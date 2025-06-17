@@ -40,45 +40,33 @@
 .account-sidebar::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
 .account-sidebar { scrollbar-width: thin; scrollbar-color: var(--color-gray-300) transparent; }
 
-/* --- INÍCIO DA MODIFICAÇÃO FINAL: Cabeçalho da Sidebar e Botão Voltar --- */
+
+/* --- INÍCIO DA MODIFICAÇÃO: Correção do botão de voltar --- */
 .account-sidebar__header {
-    display: none; /* Escondido por padrão (desktop) */
+    margin-bottom: var(--spacing-md, 20px);
     padding-bottom: var(--spacing-sm, 12px);
-    margin-bottom: var(--spacing-sm, 12px);
     border-bottom: 1px solid var(--color-gray-200);
 }
 
-.account-sidebar__back-button {
-    /* Herda de .button e .button--icon-only */
+/* Garante dimensões fixas para evitar o 'flash' de tamanho */
+.account-sidebar__back-button.button--icon-only {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
     padding: 0;
-    color: var(--color-primary-dark);
-    text-decoration: none !important; /* CORREÇÃO: Remove sublinhado */
-
-    /* CORREÇÃO: Aplica o "círculo ao redor" para consistência */
-    background-color: var(--color-white);
-    border: 1px solid var(--color-gray-300);
-    
-    transition: background-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast), border-color var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.account-sidebar__back-button:hover {
-    background-color: var(--color-gray-100);
-    border-color: var(--color-gray-400);
-    transform: scale(1.05);
+/* Garante que o ícone seja renderizado corretamente dentro do botão */
+.account-sidebar__back-button.button--icon-only .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined'; /* Garante a aplicação da fonte do ícone */
+    font-size: 24px; /* Tamanho absoluto para evitar problemas com 'em' */
+    line-height: 1;  /* Garante alinhamento vertical */
+    margin: 0;       /* Remove qualquer margem herdada */
 }
-
-.account-sidebar__back-button:focus-visible {
-    background-color: var(--color-gray-100);
-    border-color: var(--color-gray-400);
-    transform: scale(1.05);
-    outline: none; /* CORREÇÃO: Remove o "efeito azul" de outline */
-    box-shadow: var(--shadow-sm); /* CORREÇÃO: Garante que a sombra não seja alterada pelo foco global */
-}
-
-.account-sidebar__back-button .material-symbols-outlined {
-    font-size: 22px;
-}
-/* --- FIM DA MODIFICAÇÃO FINAL --- */
+/* --- FIM DA MODIFICAÇÃO --- */
 
 
 .account-sidebar__nav ul {
@@ -92,9 +80,8 @@
 .account-sidebar__link {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md, 14px); /* Aumentado para mais espaço */
+    gap: var(--spacing-md, 14px);
     padding: var(--spacing-sm, 12px) var(--spacing-sm, 14px);
-    /* Ajuste no padding-left para a barrinha e ícone */
     padding-left: calc(var(--spacing-sm, 10px) + 3.5px + var(--spacing-md, 14px));
     text-decoration: none !important;
     color: var(--color-text-secondary);
@@ -105,10 +92,10 @@
     position: relative;
     background-color: transparent !important;
 }
-.account-sidebar__link::before { /* A barrinha indicadora verde */
+.account-sidebar__link::before { 
     content: '';
     position: absolute;
-    left: var(--spacing-sm, 10px); /* Alinhado com o padding inicial */
+    left: var(--spacing-sm, 10px);
     top: 50%;
     transform: translateY(-50%) scaleY(0);
     transform-origin: center;
@@ -124,7 +111,7 @@
     font-variation-settings: 'wght' 300;
     color: var(--color-gray-700);
     transition: color 0.18s ease-out, font-variation-settings 0.18s ease-out;
-    margin-right: 0; /* Gap cuida disso */
+    margin-right: 0; 
     flex-shrink: 0;
 }
 .account-sidebar__link:hover {
@@ -159,14 +146,14 @@
 .account-content {
     flex-grow: 1;
     padding: var(--spacing-lg, 28px);
-    overflow-y: auto; /* Permite scroll no conteúdo se ele for maior que a área */
-    height: 100%; /* Ocupa a altura do .account-layout-container */
+    overflow-y: auto; 
+    height: 100%; 
     background-color: var(--color-white);
     border-radius: var(--border-radius-lg);
     border: 1px solid var(--color-gray-200);
     box-shadow: var(--shadow-sm);
-    position: relative; /* Para o botão de voltar */
-    padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px)); /* Espaço extra no final */
+    position: relative; 
+    padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px));
 }
 .account-content__section {
     display: none;
@@ -182,7 +169,7 @@
 
 .account-content .card--conta-perfil {
     max-width: 100%;
-    margin-bottom: 0; /* Removido, o padding inferior do .account-content cuidará disso */
+    margin-bottom: 0; 
     background-color: transparent;
     border: none;
     box-shadow: none;
@@ -224,41 +211,41 @@
     padding: var(--spacing-sm, 10px) 0;
     border-bottom: 1px solid var(--color-gray-100);
     font-size: 0.9rem;
-    vertical-align: top; /* Alinha ao topo para textos longos */
+    vertical-align: top; 
 }
 .profile-info-table th {
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
-    width: auto; /* Deixa o navegador decidir ou defina um min-width */
+    width: auto; 
     min-width: 150px;
-    padding-right: var(--spacing-md, 16px); /* Espaço entre th e td */
+    padding-right: var(--spacing-md, 16px); 
     white-space: nowrap;
 }
 .profile-info-table td {
     color: var(--color-text-primary);
     font-weight: var(--font-weight-medium);
-    word-break: break-word; /* Quebra palavras longas como emails */
+    word-break: break-word; 
 }
 .profile-info-table tr:last-child th,
 .profile-info-table tr:last-child td {
     border-bottom: none;
 }
 
-/* Wrapper para tabelas de dados (Histórico, Estatísticas) para permitir scroll horizontal */
+/* Wrapper para tabelas de dados */
 .data-table-wrapper {
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch; /* Scroll suave em iOS */
+    -webkit-overflow-scrolling: touch; 
     margin-bottom: var(--spacing-lg, 28px);
     border: 1px solid var(--color-gray-200);
     border-radius: var(--border-radius-md);
 }
 .data-table {
     width: 100%;
-    margin-top: 0; /* Removido pois o wrapper já tem margem */
+    margin-top: 0; 
     border: none;
-    border-radius: 0; /* Raio no wrapper */
+    border-radius: 0;
     border-collapse: collapse;
-    min-width: 550px; /* Força scroll horizontal se a tabela for muito larga */
+    min-width: 550px; 
 }
 .data-table th, .data-table td {
     text-align: left;
@@ -266,7 +253,7 @@
     border-bottom: 1px solid var(--color-gray-200);
     font-size: 0.85rem;
     line-height: 1.5;
-    white-space: nowrap; /* Impede quebra de linha, força scroll horizontal */
+    white-space: nowrap; 
 }
 .data-table thead th {
     background-color: var(--color-gray-100);
@@ -275,7 +262,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     font-size: 0.75rem;
-    position: sticky; top: 0; /* Cabeçalho fixo no scroll da tabela */
+    position: sticky; top: 0; 
     z-index: 1;
 }
 .data-table tbody tr:hover {
@@ -284,12 +271,11 @@
 .data-table tbody tr:last-child td {
     border-bottom: none;
 }
-/* Alinhamento específico para colunas numéricas */
-.data-table td:matches(:nth-child(3), :nth-child(4), :nth-child(5)), /* Ajustar índices conforme suas colunas */
+.data-table td:matches(:nth-child(3), :nth-child(4), :nth-child(5)),
 .data-table th:matches(:nth-child(3), :nth-child(4), :nth-child(5)) {
     text-align: right;
 }
-/* Exemplo para centralizar algumas colunas (ajuste os seletores conforme necessário) */
+
 #quiz-history-content .data-table td[data-label="Pontos"],
 #quiz-history-content .data-table td[data-label="Acertos"],
 #statistics-content .data-table td[data-label="Pontos"],
@@ -298,35 +284,33 @@
 {
     text-align: center;
 }
-#quiz-history-content .data-table th:nth-child(3), /* Coluna Pontos */
-#quiz-history-content .data-table th:nth-child(4), /* Coluna Acertos */
-#statistics-content .data-table th:nth-child(3), /* Coluna Acertos */
-#statistics-content .data-table th:nth-child(4), /* Coluna Precisão */
-#statistics-content .data-table th:nth-child(5)  /* Coluna Pontos */
+#quiz-history-content .data-table th:nth-child(3), 
+#quiz-history-content .data-table th:nth-child(4), 
+#statistics-content .data-table th:nth-child(3), 
+#statistics-content .data-table th:nth-child(4),
+#statistics-content .data-table th:nth-child(5)
 {
     text-align: center;
 }
 
-
 /* Botões de Ação na Seção de Segurança */
 .profile-actions {
-    margin-top: var(--spacing-lg, 28px); /* Mais espaço acima */
+    margin-top: var(--spacing-lg, 28px);
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-md, 16px); /* Espaço entre botões */
+    gap: var(--spacing-md, 16px); 
     align-items: center;
 }
 .profile-actions .button,
-#btn-open-delete-account-modal { /* Aplicando a todos os botões da lista */
-    padding: var(--spacing-sm, 11px) var(--spacing-lg, 22px) !important; /* Padding consistente e maior */
-    font-size: 0.9rem !important; /* Tamanho de fonte consistente */
-    flex-grow: 1; /* Ocupa espaço disponível igualmente */
-    flex-basis: 0; /* Base flex para distribuição igual */
-    min-width: 180px; /* Um bom mínimo para botões */
+#btn-open-delete-account-modal { 
+    padding: var(--spacing-sm, 11px) var(--spacing-lg, 22px) !important; 
+    font-size: 0.9rem !important; 
+    flex-grow: 1; 
+    flex-basis: 0; 
+    min-width: 180px; 
     text-align: center;
     box-sizing: border-box;
 }
-/* Para o formulário de logout se comportar como um item flex */
 .profile-actions form {
     display: flex;
     flex-grow: 1;
@@ -334,16 +318,15 @@
     min-width: 180px;
 }
 .profile-actions form button {
-    width: 100%; /* Botão de logout ocupa todo o form */
+    width: 100%; 
 }
-
 
 .placeholder-text {
     color: var(--color-text-muted); font-style: italic; text-align: center;
     padding: var(--spacing-xl, 30px) 0; font-size: 0.9rem;
 }
 
-/* Lista Simples (Histórico de Quizzes se não usar tabela) */
+/* Lista Simples */
 .simple-list { list-style: none; padding: 0; margin: var(--spacing-sm, 12px) 0 var(--spacing-lg, 28px) 0; }
 .simple-list li {
     padding: var(--spacing-sm, 10px) var(--spacing-xs, 8px);
@@ -365,10 +348,10 @@
 @media (min-width: 600px) { .profile-form { max-width: 550px; } }
 
 .profile-form .form-group { display: flex; flex-direction: column; gap: var(--spacing-xs, 6px); }
-.profile-form .form-label { font-weight: var(--font-weight-medium); font-size: 0.9rem; color: var(--color-text-secondary); } /* Fonte maior */
+.profile-form .form-label { font-weight: var(--font-weight-medium); font-size: 0.9rem; color: var(--color-text-secondary); } 
 .profile-form .form-control {
-    display: block; width: 100%; padding: var(--spacing-sm, 12px) var(--spacing-md, 16px); /* Padding maior */
-    font-size: 1rem; line-height: 1.5; color: var(--color-text-primary); /* Fonte maior */
+    display: block; width: 100%; padding: var(--spacing-sm, 12px) var(--spacing-md, 16px); 
+    font-size: 1rem; line-height: 1.5; color: var(--color-text-primary); 
     background-color: var(--color-gray-50); border: 1px solid var(--color-gray-300);
     border-radius: var(--border-radius-md);
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
@@ -382,26 +365,25 @@
 .profile-form .form-check { display: flex; align-items: center; gap: var(--spacing-xs, 8px); margin-bottom: var(--spacing-xs, 8px); }
 .profile-form .form-check-input {
     margin-top: 1px; flex-shrink: 0; accent-color: var(--color-primary-medium);
-    width: 17px; height: 17px; border-radius: 3px; /* Checkbox maior */
+    width: 17px; height: 17px; border-radius: 3px; 
 }
-.profile-form .form-check-label { font-weight: var(--font-weight-normal); font-size: 0.95rem; color: var(--color-text-secondary); cursor: pointer; } /* Label maior */
+.profile-form .form-check-label { font-weight: var(--font-weight-normal); font-size: 0.95rem; color: var(--color-text-secondary); cursor: pointer; } 
 .profile-form button[type="submit"] {
-    justify-self: start; width: auto; min-width: 200px; /* Botão de salvar maior */
-    padding: var(--spacing-sm, 12px) var(--spacing-lg, 24px); /* Padding maior */
-    font-size: 0.95rem; /* Fonte maior */
+    justify-self: start; width: auto; min-width: 200px; 
+    padding: var(--spacing-sm, 12px) var(--spacing-lg, 24px); 
+    font-size: 0.95rem; 
 }
 
 /* Botão Voltar (Mobile) */
 .account-content__back-button {
-    /* display: none; (JS controla via u-is-hidden) */
-    position: absolute; top: var(--spacing-md, 20px); left: var(--spacing-md, 20px); /* Mais espaçado */
+    position: absolute; top: var(--spacing-md, 20px); left: var(--spacing-md, 20px); 
     z-index: 10; background-color: var(--color-white); color: var(--color-primary-dark);
     border: 1px solid var(--color-gray-300); box-shadow: var(--shadow-sm);
-    width: 40px; height: 40px; padding: 0; display: inline-flex; /* Tamanho maior */
+    width: 40px; height: 40px; padding: 0; display: inline-flex; 
     align-items: center; justify-content: center;
     border-radius: 50%;
 }
-.account-content__back-button .material-symbols-outlined { font-size: 22px; } /* Ícone maior */
+.account-content__back-button .material-symbols-outlined { font-size: 22px; } 
 .account-content__back-button:hover,
 .account-content__back-button:focus-visible {
     background-color: var(--color-gray-100); border-color: var(--color-gray-400);
@@ -409,7 +391,7 @@
 }
 
 /* --- RESPONSIVIDADE ESPECÍFICA PARA CONTA-SECTION (MOBILE) --- */
-@media (max-width: 992px) { /* Tablets */
+@media (max-width: 992px) { 
     .account-layout-container { padding: var(--spacing-md, 20px); gap: var(--spacing-md, 20px); }
     .account-sidebar { width: 230px; padding: var(--spacing-md, 20px); }
     .account-sidebar__link {
@@ -422,12 +404,45 @@
     .account-content { padding: var(--spacing-md, 24px); padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px)); }
     .account-content .card__title { font-size: 1.6rem; }
     .profile-info-table th { min-width: 140px; }
+
+    #account-section-page .data-table-wrapper {
+        overflow-x: hidden; 
+        border: none;
+        border-radius: 0;
+    }
+    #account-section-page .data-table { min-width: 0; border: none; }
+    #account-section-page .data-table thead { display: none; }
+    #account-section-page .data-table tbody, 
+    #account-section-page .data-table tr, 
+    #account-section-page .data-table td { display: block; width: 100%; box-sizing: border-box; }
+    #account-section-page .data-table tr {
+        margin-bottom: var(--spacing-sm, 12px); border: none;
+        border-radius: var(--border-radius-md); padding: var(--spacing-sm, 12px);
+        background-color: var(--color-gray-50);
+        box-shadow: var(--shadow-xs);
+        border: 1px solid var(--color-gray-200);
+    }
+    #account-section-page .data-table tr:last-child { margin-bottom: 0; }
+    #account-section-page .data-table td {
+        text-align: right !important; padding-left: 45% !important;
+        position: relative; border-bottom: 1px dashed var(--color-gray-200);
+        padding-top: var(--spacing-xs, 10px); padding-bottom: var(--spacing-xs, 10px);
+        font-size: 0.9rem; white-space: normal; 
+    }
+    #account-section-page .data-table td:last-child { border-bottom: none; }
+    #account-section-page .data-table td::before {
+        content: attr(data-label); position: absolute;
+        left: var(--spacing-sm, 12px); width: calc(45% - var(--spacing-md, 18px));
+        padding-right: var(--spacing-xs, 8px); font-weight: var(--font-weight-semibold);
+        text-align: left !important; color: var(--color-text-secondary);
+        white-space: normal; font-size: 0.8rem;
+    }
 }
 
-@media (max-width: 768px) { /* Layout Mobile */
+@media (max-width: 768px) { 
     #account-section-page {
         background-color: var(--color-white);
-        height: 100%; /* Para ocupar espaço e permitir scroll interno dos filhos */
+        height: 100%; 
         display: flex;
     }
     .account-layout-container {
@@ -435,24 +450,13 @@
     }
     .account-sidebar {
         width: 100%;
-        height: 100%; /* Se a sidebar estiver visível, ocupa toda a altura */
+        height: 100%; 
         position: static; border-right: none; border-radius: 0;
         box-shadow: none;
-        padding: var(--spacing-md, 20px); /* Padding generoso */
+        padding: var(--spacing-md, 20px); 
         margin-bottom: 0; flex-shrink: 0;
-        overflow-y: auto; /* Permite scroll do menu da sidebar */
-        /* A borda inferior é removida pelo JS se o conteúdo estiver visível */
+        overflow-y: auto;
     }
-    body:not(.body-account-content-active) #account-section-page .account-sidebar {
-      /* Se a sidebar é a única coisa visível, ela deve ter uma borda inferior se houver conteúdo abaixo dela (o que não é o caso aqui, pois o JS a esconde) */
-      /* border-bottom: 1px solid var(--color-gray-200); */
-    }
-
-    /* --- INÍCIO DA MODIFICAÇÃO FINAL: Exibir o cabeçalho no mobile --- */
-    .account-sidebar__header {
-        display: block; /* Mostra o cabeçalho com a seta apenas em mobile */
-    }
-    /* --- FIM DA MODIFICAÇÃO FINAL --- */
 
     .account-sidebar__nav ul { gap: var(--spacing-sm, 12px); }
     .account-sidebar__link {
@@ -463,12 +467,63 @@
     .account-sidebar__link .material-symbols-outlined { font-size: 24px; }
 
     .account-content {
-        width: 100%; height: 100%; /* Se o conteúdo estiver visível, ocupa toda a altura */
+        width: 100%; height: 100%; 
         overflow-y: auto;
         padding: var(--spacing-md, 20px);
-        padding-top: calc(var(--spacing-md, 20px) + 40px + var(--spacing-md, 20px)); /* Mais espaço para botão voltar */
-        padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px) + var(--spacing-lg, 28px)); /* Ainda mais padding inferior */
-            background-color: var(--color-white);
-            border-radius: 0; border: none; box-shadow: none;
-        }
+        padding-top: calc(var(--spacing-md, 20px) + 40px + var(--spacing-md, 20px)); 
+        padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px) + var(--spacing-lg, 28px)); 
+        background-color: var(--color-white);
+        border-radius: 0; border: none; box-shadow: none;
     }
+
+    .account-content .card__title { font-size: 1.3rem; margin-bottom: var(--spacing-md, 20px); }
+    .profile-info-table { display: block; overflow-x: auto; margin-bottom: var(--spacing-md, 20px); }
+    .profile-info-table th, .profile-info-table td { font-size: 0.875rem; white-space: nowrap; }
+    .profile-info-table th { min-width: 110px; }
+
+    .account-content .h4-like { font-size: 1.1rem; margin-top: var(--spacing-lg, 28px); }
+    .profile-form { max-width: 100%; gap: var(--spacing-md, 18px); }
+    .profile-form .form-label { font-size: 0.9rem; }
+    .profile-form .form-control { padding: var(--spacing-sm, 14px); font-size: 1rem; }
+    .profile-actions { flex-direction: column; gap: var(--spacing-md, 16px); }
+    .profile-actions .button,
+    #btn-open-delete-account-modal,
+    .profile-form button[type="submit"] {
+        width: 100%; font-size: 1rem;
+        padding: var(--spacing-md, 14px) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .account-sidebar { padding: var(--spacing-sm, 12px); }
+    .account-sidebar__link {
+        padding: var(--spacing-sm, 12px);
+        padding-left: calc(var(--spacing-sm, 12px) + 3.5px + var(--spacing-sm, 12px));
+        font-size: 0.95rem;
+    }
+    .account-sidebar__link .material-symbols-outlined { font-size: 22px; }
+
+    .account-content {
+        padding: var(--spacing-sm, 16px);
+        padding-top: calc(var(--spacing-sm, 16px) + 40px + var(--spacing-sm, 16px));
+        padding-bottom: calc(var(--spacing-lg, 30px) + var(--spacing-lg, 30px) + var(--spacing-sm, 16px));
+    }
+    .account-content .card__title { font-size: 1.25rem; }
+    .account-content .h4-like { font-size: 1.05rem; }
+    .profile-form .form-label { font-size: 0.85rem; }
+    .profile-form .form-control { font-size: 0.95rem; padding: var(--spacing-sm, 12px); }
+    .profile-actions .button,
+    #btn-open-delete-account-modal,
+    .profile-form button[type="submit"] {
+        font-size: 0.95rem;
+        padding: var(--spacing-sm, 13px) !important;
+    }
+
+    .account-content__back-button {
+        top: var(--spacing-sm, 16px);
+        left: var(--spacing-sm, 16px);
+    }
+
+    #account-section-page .data-table td { font-size: 0.85rem; padding-left: 35% !important; }
+    #account-section-page .data-table td::before { width: calc(35% - var(--spacing-sm, 12px)); font-size: 0.75rem;}
+}

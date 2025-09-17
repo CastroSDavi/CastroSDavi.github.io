@@ -2,13 +2,13 @@
 import json
 import random
 import re
-from django.shortcuts import render, redirect, get_object_or_404
+from collections import defaultdict
+from datetime import timedelta  # Mantido, pode ser útil
+
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST, require_GET
-from django.utils import timezone
-from datetime import timedelta  # Mantido, pode ser útil
+from django.contrib.auth.models import User
 from django.db import models  # Para isinstance em _filter_queryset_by_period
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch
@@ -16,60 +16,30 @@ from django.db.models import (
 # TruncDate e ExtractWeekDay não são usados diretamente nas funções modificadas,
 # mas podem ser úteis em outras partes ou nas funções de estatísticas não alteradas.
 from django.db.models.functions import TruncDate
-from django.contrib import messages
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from collections import defaultdict
+from django.utils import timezone
+from django.views.decorators.http import require_GET, require_POST
 
-from .models import (
-    Pergunta, Categoria, OpcaoResposta,
-    SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
-    QuestaoFavorita,
-    QuizDefinicao,  # NOVO MODELO
-    QuizDefinicaoPergunta,  # NOVO MODELO
-    ConfiguracoesGeraisQuiz  # NOVO MODELO
-)
+from .config_cache import get_quiz_config, invalidate_quiz_config_cache
 from .forms import (
     CustomUserCreationForm,
     UserUpdateForm,
     AccountDeleteForm,
     CustomPasswordChangeForm
 )
-
-# region Lógica de Negócio e Utilitários de Dados
-
-# Cache simples em memória para configurações gerais
-_quiz_config_cache = None
-
-
-def invalidate_quiz_config_cache():
-    """Limpa o cache em memória da configuração geral do quiz."""
-    global _quiz_config_cache
-    _quiz_config_cache = None
-
-
-def get_quiz_config():
-    """
-    Retorna a instância (singleton) de ConfiguracoesGeraisQuiz.
-    Cria uma instância com valores padrão se não existir, pressupondo que o ID/PK 1 é usado para o singleton.
-    Cacheia a instância em memória para evitar queries repetidas durante o mesmo request/processo.
-    """
-    global _quiz_config_cache
-    if _quiz_config_cache is None:
-        config, created = ConfiguracoesGeraisQuiz.objects.get_or_create(
-            pk=1,  # Garante que sempre tentamos obter/criar a mesma linha.
-            defaults={
-                'numero_perguntas_quiz_rapido': 10,  # Valor padrão
-                'pontuacao_por_acerto': 15,       # Valor padrão
-                'penalidade_por_erro': 5          # Valor padrão
-            }
-        )
-        if created:
-            # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
-            print(
-                f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
-        _quiz_config_cache = config
-    return _quiz_config_cache
+from .models import (
+    Categoria,
+    EstatisticasDiariasUsuario,
+    OpcaoResposta,
+    Pergunta,
+    QuestaoFavorita,
+    QuizDefinicao,  # NOVO MODELO
+    QuizDefinicaoPergunta,  # NOVO MODELO
+    RespostasUsuarioPorSessao,
+    SessoesQuizUsuario,
+)
 
 
 def get_descendant_category_ids(category_ids_str_list):

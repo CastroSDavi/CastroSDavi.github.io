@@ -65,10 +65,10 @@ main {
   }
   
   @media (max-width: 768px) { /* Tablet Portrait e Mobile */
-  
+
     /* Adiciona padding inferior ao body para compensar a altura da bottom-nav */
     body {
-      padding-bottom: var(--bottom-nav-height, 60px);
+      padding-bottom: calc(var(--bottom-nav-height, 60px) + env(safe-area-inset-bottom, 0));
       /* Certifique-se que --bottom-nav-height está definida em _variables.css */
     }
   

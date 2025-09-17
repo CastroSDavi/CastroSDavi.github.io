@@ -85,6 +85,7 @@
   left: 0;
   width: 100%;
   height: var(--bottom-nav-height, 60px); /* Altura da barra */
+  padding-bottom: env(safe-area-inset-bottom, 0);
   background-color: var(--bottom-nav-bg-color, var(--color-white));
   border-top: var(--border-width) solid var(--bottom-nav-border-top-color, var(--color-gray-300));
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);

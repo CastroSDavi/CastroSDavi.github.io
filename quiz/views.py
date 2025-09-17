@@ -13,6 +13,7 @@ from django.db import models  # Para isinstance em _filter_queryset_by_period
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch
 )
+from django.core.cache import cache
 # TruncDate e ExtractWeekDay não são usados diretamente nas funções modificadas,
 # mas podem ser úteis em outras partes ou nas funções de estatísticas não alteradas.
 from django.db.models.functions import TruncDate
@@ -40,35 +41,92 @@ from .forms import (
 
 # Cache simples em memória para configurações gerais
 _quiz_config_cache = None
+_quiz_config_cache_version = None
+
+_QUIZ_CONFIG_CACHE_KEY = "quiz_config_singleton"
+_QUIZ_CONFIG_CACHE_VERSION_KEY = "quiz_config_singleton_version"
 
 
-def invalidate_quiz_config_cache():
-    """Limpa o cache em memória da configuração geral do quiz."""
-    global _quiz_config_cache
-    _quiz_config_cache = None
+def invalidate_quiz_config_cache(updated_instance=None):
+    """Limpa o cache da configuração geral do quiz.
+
+    Quando ``updated_instance`` é fornecido, o cache local e o compartilhado são
+    preenchidos imediatamente com a instância atualizada. Caso contrário, todo o
+    cache é simplesmente invalidado.
+    """
+    global _quiz_config_cache, _quiz_config_cache_version
+
+    if updated_instance is None:
+        _quiz_config_cache = None
+        _quiz_config_cache_version = None
+        cache.delete(_QUIZ_CONFIG_CACHE_KEY)
+        cache.delete(_QUIZ_CONFIG_CACHE_VERSION_KEY)
+        return
+
+    if updated_instance.pk is not None:
+        try:
+            refreshed_instance = ConfiguracoesGeraisQuiz.objects.get(pk=updated_instance.pk)
+        except ConfiguracoesGeraisQuiz.DoesNotExist:
+            _quiz_config_cache = None
+            _quiz_config_cache_version = None
+            cache.delete(_QUIZ_CONFIG_CACHE_KEY)
+            cache.delete(_QUIZ_CONFIG_CACHE_VERSION_KEY)
+            return
+    else:
+        refreshed_instance = updated_instance
+
+    version = refreshed_instance.data_modificacao.isoformat()
+    _quiz_config_cache = refreshed_instance
+    _quiz_config_cache_version = version
+    cache.set(_QUIZ_CONFIG_CACHE_KEY, refreshed_instance, None)
+    cache.set(_QUIZ_CONFIG_CACHE_VERSION_KEY, version, None)
 
 
 def get_quiz_config():
     """
     Retorna a instância (singleton) de ConfiguracoesGeraisQuiz.
     Cria uma instância com valores padrão se não existir, pressupondo que o ID/PK 1 é usado para o singleton.
-    Cacheia a instância em memória para evitar queries repetidas durante o mesmo request/processo.
+    Cacheia a instância em memória para evitar queries repetidas durante o mesmo request/processo
+    e utiliza um marcador de versão compartilhado em cache para detectar alterações feitas em
+    outros workers/processos.
     """
-    global _quiz_config_cache
-    if _quiz_config_cache is None:
-        config, created = ConfiguracoesGeraisQuiz.objects.get_or_create(
-            pk=1,  # Garante que sempre tentamos obter/criar a mesma linha.
-            defaults={
-                'numero_perguntas_quiz_rapido': 10,  # Valor padrão
-                'pontuacao_por_acerto': 15,       # Valor padrão
-                'penalidade_por_erro': 5          # Valor padrão
-            }
+    global _quiz_config_cache, _quiz_config_cache_version
+
+    cache_version = cache.get(_QUIZ_CONFIG_CACHE_VERSION_KEY)
+
+    if (
+        _quiz_config_cache is not None
+        and (
+            cache_version is None
+            or cache_version != _quiz_config_cache_version
         )
-        if created:
-            # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
-            print(
-                f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
-        _quiz_config_cache = config
+    ):
+        _quiz_config_cache = None
+        _quiz_config_cache_version = None
+
+    if _quiz_config_cache is None:
+        cached_instance = cache.get(_QUIZ_CONFIG_CACHE_KEY) if cache_version else None
+        if cached_instance is not None and cache_version is not None:
+            _quiz_config_cache = cached_instance
+            _quiz_config_cache_version = cache_version
+        else:
+            config, created = ConfiguracoesGeraisQuiz.objects.get_or_create(
+                pk=1,  # Garante que sempre tentamos obter/criar a mesma linha.
+                defaults={
+                    'numero_perguntas_quiz_rapido': 10,  # Valor padrão
+                    'pontuacao_por_acerto': 15,       # Valor padrão
+                    'penalidade_por_erro': 5          # Valor padrão
+                }
+            )
+            if created:
+                # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
+                print(
+                    f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
+            version = config.data_modificacao.isoformat()
+            _quiz_config_cache = config
+            _quiz_config_cache_version = version
+            cache.set(_QUIZ_CONFIG_CACHE_KEY, config, None)
+            cache.set(_QUIZ_CONFIG_CACHE_VERSION_KEY, version, None)
     return _quiz_config_cache
 
 

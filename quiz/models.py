@@ -1,5 +1,5 @@
 # quiz/models.py
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -554,7 +554,9 @@ class ConfiguracoesGeraisQuiz(models.Model):
         result = super().save(*args, **kwargs)
         try:
             from .views import invalidate_quiz_config_cache
-            invalidate_quiz_config_cache()
+            transaction.on_commit(
+                lambda config=self: invalidate_quiz_config_cache(config)
+            )
         except ImportError:
             # Durante alguns fluxos de import (como migrações) as views podem não estar disponíveis.
             pass

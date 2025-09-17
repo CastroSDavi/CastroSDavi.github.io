@@ -551,7 +551,14 @@ class ConfiguracoesGeraisQuiz(models.Model):
             raise ValidationError('Só pode haver uma instância de ConfiguracoesGeraisQuiz. Edite a existente.')
         if self.penalidade_por_erro < 0:
             raise ValidationError({'penalidade_por_erro': 'A penalidade por erro não pode ser negativa.'})
-        return super().save(*args, **kwargs)
+        result = super().save(*args, **kwargs)
+        try:
+            from .views import invalidate_quiz_config_cache
+            invalidate_quiz_config_cache()
+        except ImportError:
+            # Durante alguns fluxos de import (como migrações) as views podem não estar disponíveis.
+            pass
+        return result
 
     class Meta:
         verbose_name = "Configuração Geral do Quiz"

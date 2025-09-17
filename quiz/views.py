@@ -42,6 +42,12 @@ from .forms import (
 _quiz_config_cache = None
 
 
+def invalidate_quiz_config_cache():
+    """Limpa o cache em memória da configuração geral do quiz."""
+    global _quiz_config_cache
+    _quiz_config_cache = None
+
+
 def get_quiz_config():
     """
     Retorna a instância (singleton) de ConfiguracoesGeraisQuiz.

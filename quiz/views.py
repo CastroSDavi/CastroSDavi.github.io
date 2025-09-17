@@ -40,12 +40,14 @@ from .forms import (
 
 # Cache simples em memória para configurações gerais
 _quiz_config_cache = None
+_quiz_config_cache_last_modified = None
 
 
 def invalidate_quiz_config_cache():
     """Limpa o cache em memória da configuração geral do quiz."""
-    global _quiz_config_cache
+    global _quiz_config_cache, _quiz_config_cache_last_modified
     _quiz_config_cache = None
+    _quiz_config_cache_last_modified = None
 
 
 def get_quiz_config():
@@ -53,8 +55,32 @@ def get_quiz_config():
     Retorna a instância (singleton) de ConfiguracoesGeraisQuiz.
     Cria uma instância com valores padrão se não existir, pressupondo que o ID/PK 1 é usado para o singleton.
     Cacheia a instância em memória para evitar queries repetidas durante o mesmo request/processo.
+
+    Também garante que o cache seja invalidado automaticamente caso a linha correspondente seja
+    alterada diretamente no banco (por exemplo, por exclusões em massa ou updates que atualizem
+    o campo `data_modificacao`), comparando o timestamp salvo em cache com o valor persistido.
     """
-    global _quiz_config_cache
+    global _quiz_config_cache, _quiz_config_cache_last_modified
+
+    if _quiz_config_cache is not None:
+        latest_modification = ConfiguracoesGeraisQuiz.objects.filter(
+            pk=_quiz_config_cache.pk
+        ).values_list('data_modificacao', flat=True).first()
+
+        if latest_modification is None:
+            # A linha foi removida do banco manualmente. Forçamos a recarga com valores padrão.
+            _quiz_config_cache = None
+            _quiz_config_cache_last_modified = None
+        elif (
+            _quiz_config_cache_last_modified is not None
+            and latest_modification == _quiz_config_cache_last_modified
+        ):
+            return _quiz_config_cache
+        else:
+            # A instância foi modificada diretamente no banco; recarregamos para refletir os novos valores.
+            _quiz_config_cache = None
+            _quiz_config_cache_last_modified = None
+
     if _quiz_config_cache is None:
         config, created = ConfiguracoesGeraisQuiz.objects.get_or_create(
             pk=1,  # Garante que sempre tentamos obter/criar a mesma linha.
@@ -68,7 +94,13 @@ def get_quiz_config():
             # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
             print(
                 f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
+
+        if config.data_modificacao is None:
+            config.refresh_from_db(fields=['data_modificacao'])
+
         _quiz_config_cache = config
+        _quiz_config_cache_last_modified = config.data_modificacao
+
     return _quiz_config_cache
 
 

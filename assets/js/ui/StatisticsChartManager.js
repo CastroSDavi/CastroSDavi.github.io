@@ -71,19 +71,58 @@ export default class StatisticsChartManager {
 				".statistics-dashboard"
 			),
 		};
-		this.charts = {};
-        this.heatmapTooltip = null; 
-		this.currentPeriod = this.elements.periodSelectEl
-			? this.elements.periodSelectEl.value
-			: "30d";
-		this.previousStatsState = {};
-	}
+                this.charts = {};
+                this.heatmapTooltip = null;
 
-	setStore(storeInstance) {
-		this.store = storeInstance;
-		if (this.store) {
-			this.previousStatsState = this.store.getState().statistics;
-			this.store.subscribe(this.handleStateUpdate.bind(this));
+                const initialPeriodValue = this.elements.periodSelectEl
+                        ? this.elements.periodSelectEl.value
+                        : null;
+                this.currentPeriod = this._normalizePeriodValue(initialPeriodValue);
+
+                if (
+                        this.elements.periodSelectEl &&
+                        this.elements.periodSelectEl.value !== this.currentPeriod
+                ) {
+                        const matchingOption = this.elements.periodSelectEl.querySelector(
+                                `option[value="${this.currentPeriod}"]`
+                        );
+                        if (matchingOption) {
+                                this.elements.periodSelectEl.value = this.currentPeriod;
+                        }
+                }
+
+                this.previousStatsState = {};
+        }
+
+        _normalizePeriodValue(rawValue) {
+                const DEFAULT_PERIOD = "30d";
+
+                if (rawValue === undefined || rawValue === null) {
+                        return DEFAULT_PERIOD;
+                }
+
+                const normalizedValue = String(rawValue).trim().toLowerCase();
+
+                if (normalizedValue === "all") {
+                        return "all";
+                }
+
+                const match = normalizedValue.match(/^(\d+)(d)?$/);
+                if (match) {
+                        const days = parseInt(match[1], 10);
+                        if (!Number.isNaN(days) && days > 0) {
+                                return `${days}d`;
+                        }
+                }
+
+                return DEFAULT_PERIOD;
+        }
+
+        setStore(storeInstance) {
+                this.store = storeInstance;
+                if (this.store) {
+                        this.previousStatsState = this.store.getState().statistics;
+                        this.store.subscribe(this.handleStateUpdate.bind(this));
 		}
 	}
 
@@ -98,10 +137,24 @@ export default class StatisticsChartManager {
 
 		if (!this.elements.periodSelectEl) return;
 
-		this.elements.periodSelectEl.addEventListener("change", (event) => {
-			this.currentPeriod = event.target.value;
-			this._triggerFetchStatistics();
-		});
+                this.elements.periodSelectEl.addEventListener("change", (event) => {
+                        const selectEl = event.target;
+                        const normalizedPeriod = this._normalizePeriodValue(
+                                selectEl.value
+                        );
+
+                        if (selectEl.value !== normalizedPeriod) {
+                                const matchingOption = selectEl.querySelector(
+                                        `option[value="${normalizedPeriod}"]`
+                                );
+                                if (matchingOption) {
+                                        selectEl.value = normalizedPeriod;
+                                }
+                        }
+
+                        this.currentPeriod = normalizedPeriod;
+                        this._triggerFetchStatistics();
+                });
 
 		const currentStats = this.store.getState().statistics;
 		if (!currentStats.data && !currentStats.isLoading) {

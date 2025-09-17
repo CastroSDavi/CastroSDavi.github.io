@@ -1,6 +1,7 @@
 # quiz/views.py
 import json
 import random
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -281,11 +282,27 @@ def get_or_create_daily_stats(user: User):
 
 
 def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str = "data_estatistica"):
-    if period_str == "all":
+    normalized_period = (
+        str(period_str).strip().lower() if period_str is not None else "30d"
+    )
+
+    if normalized_period == "all":
         return queryset
 
-    days_map = {"7d": 7, "30d": 30, "90d": 90}
-    days = days_map.get(str(period_str).lower(), 30)
+    days = None
+
+    if isinstance(period_str, (int, float)):
+        try:
+            days = int(period_str)
+        except (TypeError, ValueError):
+            days = None
+    else:
+        match = re.match(r"^(\d+)(d)?$", normalized_period)
+        if match:
+            days = int(match.group(1))
+
+    if not days or days <= 0:
+        days = 30
 
     current_ts = timezone.now()
 

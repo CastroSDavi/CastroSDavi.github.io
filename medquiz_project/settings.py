@@ -100,6 +100,73 @@ DATABASES = {
     }
 }
 
+DATABASE_CONN_MAX_AGE = int(os.getenv('DB_CONN_MAX_AGE', '60'))
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    from urllib.parse import urlparse
+    parsed_url = urlparse(DATABASE_URL)
+    scheme = (parsed_url.scheme or '').lower()
+
+    if scheme in ('postgres', 'postgresql', 'psql'):
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': (parsed_url.path or '').lstrip('/') or os.getenv('DB_NAME', ''),
+            'USER': parsed_url.username or os.getenv('DB_USER', ''),
+            'PASSWORD': parsed_url.password or os.getenv('DB_PASSWORD', ''),
+            'HOST': parsed_url.hostname or os.getenv('DB_HOST', ''),
+            'PORT': parsed_url.port or os.getenv('DB_PORT', ''),
+        }
+    elif scheme in ('mysql', 'mariadb'):
+        DATABASES['default'] = {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': (parsed_url.path or '').lstrip('/') or os.getenv('DB_NAME', ''),
+            'USER': parsed_url.username or os.getenv('DB_USER', ''),
+            'PASSWORD': parsed_url.password or os.getenv('DB_PASSWORD', ''),
+            'HOST': parsed_url.hostname or os.getenv('DB_HOST', ''),
+            'PORT': parsed_url.port or os.getenv('DB_PORT', ''),
+            'OPTIONS': {
+                'init_command': os.getenv('DB_INIT_COMMAND', ''),
+            }
+        }
+    else:
+        import warnings
+        warnings.warn(f"DATABASE_URL scheme '{scheme}' not supported. Falling back to SQLite.")
+
+else:
+    engine_override = os.getenv('DB_ENGINE')
+    if engine_override:
+        engine_override = engine_override.lower()
+        name = os.getenv('DB_NAME', '')
+        user = os.getenv('DB_USER', '')
+        password = os.getenv('DB_PASSWORD', '')
+        host = os.getenv('DB_HOST', '')
+        port = os.getenv('DB_PORT', '')
+
+        if engine_override in ('postgres', 'postgresql', 'psql'):
+            DATABASES['default'] = {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': name,
+                'USER': user,
+                'PASSWORD': password,
+                'HOST': host,
+                'PORT': port,
+            }
+        elif engine_override in ('mysql', 'mariadb'):
+            DATABASES['default'] = {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': name,
+                'USER': user,
+                'PASSWORD': password,
+                'HOST': host,
+                'PORT': port,
+                'OPTIONS': {
+                    'init_command': os.getenv('DB_INIT_COMMAND', ''),
+                }
+            }
+
+DATABASES['default']['CONN_MAX_AGE'] = DATABASE_CONN_MAX_AGE
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

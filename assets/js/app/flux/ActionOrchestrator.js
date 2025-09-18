@@ -62,22 +62,41 @@ export default class ActionOrchestrator {
         const state = this.store.getState();
         if (state.geral.isInitialDataLoaded) return true;
 
+        if (state.geral.isHomeSummaryLoaded) {
+            this.store.dispatch({
+                type: ActionTypes.SET_INITIAL_DATA,
+                payload: {
+                    categorias: state.geral.allCategories,
+                    totalQuestions: state.geral.totalQuestionsAvailable,
+                    quizDefinitionName: null,
+                }
+            });
+            return true;
+        }
+
         try {
-            const data = await this.apiService.fetchQuizData({});
-            if (data && data.perguntas && data.categorias) {
+            const summary = await this.apiService.fetchAppSummary();
+            if (summary && summary.status === 'success') {
+                this.store.dispatch(quizActions.setGeneralSummary({
+                    totalQuestions: summary.total_questions,
+                    categories: summary.categories,
+                    totalCategories: summary.total_categories,
+                    quickQuizDefaultCount: summary.quick_quiz_default_count,
+                }));
+
                 this.store.dispatch({
                     type: ActionTypes.SET_INITIAL_DATA,
                     payload: {
-                        perguntas: data.perguntas,
-                        categorias: data.categorias,
-                        quizDefinitionName: data.quiz_definition_name,
+                        categorias: summary.categories,
+                        totalQuestions: summary.total_questions,
+                        quizDefinitionName: null,
                     }
                 });
                 return true;
             }
-            throw new Error("Dados iniciais recebidos em formato inválido.");
+            throw new Error('Resumo inicial em formato invalido.');
         } catch (error) {
-            console.error("ActionOrchestrator: Erro crítico ao buscar dados iniciais.", error);
+            console.error("ActionOrchestrator: Erro critico ao carregar resumo inicial.", error);
             throw error;
         }
     }
@@ -163,50 +182,48 @@ export default class ActionOrchestrator {
                 this.store.dispatch({ type: ActionTypes.CLEAR_RESUMABLE_SESSION });
             }
             
-            this.ui.showSessionLoadingIndicator(true, "Carregando questões...");
-
-            const data = await this.apiService.fetchQuizData(filterParams);
-            const questionsArray = data?.perguntas || [];
-
-            if (questionsArray.length === 0) {
-                this.ui.showWarning("Nenhuma questão encontrada para os filtros selecionados.", 'info', true);
-                this.store.dispatch(quizActions.resetQuiz());
-                return;
-            }
-
-            const sessionPayload = {
+            const sessionConfig = {
                 modo_quiz: filterParams.mode,
-                question_ids_in_session: questionsArray.map(q => q.id_pergunta),
+                categoria_ids: filterParams.category_ids || [],
+                difficulty_levels: filterParams.difficulty_levels || [],
+                num_questions: filterParams.num_questions,
                 quiz_definicao_id: filterParams.quiz_definicao_id,
-                categoria_ids: filterParams.category_ids,
-                dificuldades_selecionadas: filterParams.difficulty_levels,
-                num_questoes_solicitadas: filterParams.num_questions,
             };
 
-            const session = await this.apiService.startQuizSession(sessionPayload);
-            if (session && session.status === 'success') {
+            this.ui.showSessionLoadingIndicator(true, "Carregando questoes...");
+
+            const sessionResponse = await this.apiService.startQuizSession(sessionConfig);
+            if (sessionResponse && sessionResponse.status === 'success') {
+                const questionsArray = sessionResponse.perguntas || [];
+                if (questionsArray.length === 0) {
+                    this.ui.showWarning("Nenhuma questao encontrada para os filtros selecionados.", 'info', true);
+                    this.store.dispatch(quizActions.resetQuiz());
+                    return;
+                }
+
                 this.store.dispatch(
                     quizActions.initializeQuiz(
                         questionsArray,
-                        filterParams.mode,
-                        session.session_id,
-                        filterParams.quiz_definicao_id,
-                        data.quiz_definition_name
+                        sessionResponse.modo_quiz || filterParams.mode,
+                        sessionResponse.session_id,
+                        sessionResponse.quiz_definicao_id || filterParams.quiz_definicao_id,
+                        sessionResponse.quiz_definition_name
                     )
                 );
                 this.startTimer();
             } else {
-                 this.ui.showWarning(session.message || "Não foi possível iniciar uma nova sessão de quiz.", 'error', true);
+                const message = sessionResponse?.message || "Nao foi possivel iniciar uma nova sessao de quiz.";
+                this.ui.showWarning(message, 'error', true);
             }
 
         } catch (error) {
-            this.ui.showWarning(getFriendlyErrorMessage(error, "Erro ao carregar perguntas."), 'error', true);
+            this.ui.showWarning(getFriendlyErrorMessage(error, "Erro ao iniciar sessao."), 'error', true);
         } finally {
             this.isFetching = false;
             this.ui.showSessionLoadingIndicator(false);
         }
     }
-    
+
     async fetchStatistics(period) {
         this.store.dispatch(quizActions.fetchStatsRequest());
         try {

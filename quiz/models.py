@@ -1,4 +1,4 @@
-# quiz/models.py
+﻿# quiz/models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -235,32 +235,32 @@ class QuizDefinicaoPergunta(models.Model):
 
 class SessoesQuizUsuario(models.Model):
     """
-    Registra cada sessão de quiz iniciada por um usuário.
+    Registra cada sessao de quiz iniciada por um usuario.
     """
     id_usuario = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         related_name="sessoes_quiz",
-        verbose_name="Usuário"
+        verbose_name="Usuario"
     )
     id_quiz_definicao = models.ForeignKey(
         QuizDefinicao,
         on_delete=models.SET_NULL,
         null=True, blank=True,
         related_name="sessoes_realizadas",
-        verbose_name="Quiz Pré-definido (se aplicável)",
-        help_text="Se esta sessão foi baseada em um quiz pré-definido."
+        verbose_name="Quiz Pre-definido (se aplicavel)",
+        help_text="Se esta sessao foi baseada em um quiz pre-definido."
     )
-    data_inicio = models.DateTimeField(default=timezone.now, verbose_name="Data de Início")
+    data_inicio = models.DateTimeField(default=timezone.now, verbose_name="Data de Inicio")
     data_fim = models.DateTimeField(null=True, blank=True, verbose_name="Data de Fim")
     tempo_total_segundos = models.IntegerField(
         null=True, blank=True, verbose_name="Tempo Total (s)",
         validators=[MinValueValidator(0)]
     )
-    pontuacao_final = models.IntegerField(default=0, verbose_name="Pontuação Final")
+    pontuacao_final = models.IntegerField(default=0, verbose_name="Pontuacao Final")
     total_perguntas_sessao = models.IntegerField(
         default=0,
-        verbose_name="Total de Perguntas na Sessão",
+        verbose_name="Total de Perguntas na Sessao",
         validators=[MinValueValidator(0)]
     )
     total_acertos = models.IntegerField(default=0, verbose_name="Total de Acertos", validators=[MinValueValidator(0)])
@@ -268,8 +268,8 @@ class SessoesQuizUsuario(models.Model):
 
     class ModoQuiz(models.TextChoices):
         POR_CATEGORIA = 'Por Categoria', 'Por Categoria'
-        RAPIDO = 'Rápido', 'Rápido'
-        DEFINIDO = 'Definido', 'Pré-Definido' # Quiz baseado em QuizDefinicao
+        RAPIDO = 'Rapido', 'Rapido'
+        DEFINIDO = 'Definido', 'Pre-Definido'
 
     modo_quiz = models.CharField(
         max_length=50,
@@ -286,10 +286,9 @@ class SessoesQuizUsuario(models.Model):
         max_length=50,
         choices=StatusSessao.choices,
         default=StatusSessao.EM_ANDAMENTO,
-        verbose_name="Status da Sessão"
+        verbose_name="Status da Sessao"
     )
 
-    # Filtros usados para gerar o quiz (se não for modo 'Definido')
     categorias_selecionadas = models.ManyToManyField(
         Categoria,
         blank=True,
@@ -298,55 +297,43 @@ class SessoesQuizUsuario(models.Model):
     )
     dificuldades_selecionadas_json = models.JSONField(
         blank=True, null=True,
-        help_text="Lista de níveis de dificuldade selecionados, ex: ['Fácil', 'Médio'] ou ['all']",
-        verbose_name='Níveis de Dificuldade Selecionados (JSON)'
+        help_text="Lista de niveis de dificuldade selecionados, ex: ['Facil', 'Medio'] ou ['all']",
+        verbose_name='Niveis de Dificuldade Selecionados (JSON)'
     )
     num_questoes_solicitadas = models.PositiveIntegerField(
         blank=True, null=True,
-        help_text='Número de questões que o usuário pediu (para modo personalizado ou rápido)',
-        verbose_name='Número de Questões Solicitadas'
+        help_text='Numero de questoes que o usuario pediu (para modo personalizado ou rapido)',
+        verbose_name='Numero de Questoes Solicitadas'
     )
 
-    # Para "Continuar de Onde Parou" e log detalhado da sessão
-    ids_perguntas_json = models.JSONField(
-        null=True, blank=True,
-        verbose_name="IDs Ordenados das Perguntas da Sessão",
-        help_text="Lista dos IDs das perguntas que compõem esta sessão, na ordem em que foram apresentadas."
-    )
     indice_ultima_pergunta_vista = models.PositiveIntegerField(
         null=True, blank=True,
-        verbose_name="Índice da Última Pergunta Vista",
-        help_text="Índice (base 0) na lista 'IDs Ordenados das Perguntas da Sessão' que o usuário visualizou por último.",
+        verbose_name="Indice da Ultima Pergunta Vista",
+        help_text="Indice (base 0) na lista ordenada de perguntas da sessao que o usuario visualizou por ultimo.",
         validators=[MinValueValidator(0)]
     )
 
     def clean(self):
         super().clean()
         if self.data_fim and self.data_inicio and self.data_fim < self.data_inicio:
-            raise ValidationError({'data_fim': 'A data de fim não pode ser anterior à data de início.'})
+            raise ValidationError({'data_fim': 'A data de fim nao pode ser anterior a data de inicio.'})
         if self.total_acertos > self.total_perguntas_sessao:
-            raise ValidationError({'total_acertos': 'O número de acertos não pode ser maior que o total de perguntas.'})
+            raise ValidationError({'total_acertos': 'O numero de acertos nao pode ser maior que o total de perguntas.'})
         if self.total_erros > self.total_perguntas_sessao:
-            raise ValidationError({'total_erros': 'O número de erros não pode ser maior que o total de perguntas.'})
-        
-        # Validação de modo_quiz e id_quiz_definicao
-        if self.modo_quiz == self.ModoQuiz.DEFINIDO and not self.id_quiz_definicao:
-            raise ValidationError({'id_quiz_definicao': 'Um Quiz Pré-Definido deve ser selecionado para o modo "Definido".'})
-        if self.modo_quiz != self.ModoQuiz.DEFINIDO and self.id_quiz_definicao:
-            self.id_quiz_definicao = None # Garante que não haja quiz_definicao se não for modo 'Definido'
-            # Ou raise ValidationError ... dependendo da sua preferência de UX no admin.
-            # raise ValidationError({'id_quiz_definicao': 'Quiz Pré-Definido só deve ser associado a sessões do modo "Definido".'})
+            raise ValidationError({'total_erros': 'O numero de erros nao pode ser maior que o total de perguntas.'})
 
-        # Validação do índice da última pergunta
-        if self.ids_perguntas_json and self.indice_ultima_pergunta_vista is not None:
-            if not isinstance(self.ids_perguntas_json, list):
-                 raise ValidationError({'ids_perguntas_json': 'Deve ser uma lista de IDs de perguntas.'})
-            if self.indice_ultima_pergunta_vista >= len(self.ids_perguntas_json):
-                raise ValidationError({'indice_ultima_pergunta_vista': 'Índice fora do intervalo da lista de perguntas da sessão.'})
+        if self.modo_quiz == self.ModoQuiz.DEFINIDO and not self.id_quiz_definicao:
+            raise ValidationError({'id_quiz_definicao': 'Um Quiz Pre-Definido deve ser selecionado para o modo "Definido".'})
+        if self.modo_quiz != self.ModoQuiz.DEFINIDO and self.id_quiz_definicao:
+            self.id_quiz_definicao = None
+
+        if self.pk and self.indice_ultima_pergunta_vista is not None:
+            total = self.perguntas_da_sessao.count()
+            if total and self.indice_ultima_pergunta_vista >= total:
+                raise ValidationError({'indice_ultima_pergunta_vista': 'Indice fora do intervalo de perguntas da sessao.'})
 
     @property
     def duracao_sessao_formatada(self):
-        # ... (implementação existente) ...
         if self.tempo_total_segundos is not None and self.tempo_total_segundos >= 0:
             total_seconds = self.tempo_total_segundos
         elif self.data_fim and self.data_inicio:
@@ -355,20 +342,20 @@ class SessoesQuizUsuario(models.Model):
         else:
             return "Em andamento"
 
-        if total_seconds < 0: return "Inválida"
+        if total_seconds < 0:
+            return "Invalida"
 
         hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)
         if hours > 0:
             return f"{hours}h {minutes:02d}m {seconds:02d}s"
-        elif minutes > 0:
+        if minutes > 0:
             return f"{minutes}m {seconds:02d}s"
         return f"{seconds}s"
-    duracao_sessao_formatada.fget.short_description = "Duração"
+    duracao_sessao_formatada.fget.short_description = "Duracao"
 
     @property
     def percentual_acertos(self):
-        # ... (implementação existente) ...
         if self.total_perguntas_sessao > 0:
             return round((self.total_acertos / self.total_perguntas_sessao) * 100, 1)
         return 0.0
@@ -376,24 +363,55 @@ class SessoesQuizUsuario(models.Model):
 
     def __str__(self):
         username = self.id_usuario.get_username()
-        quiz_info = self.id_quiz_definicao.nome_quiz if self.modo_quiz == self.ModoQuiz.DEFINIDO and self.id_quiz_definicao else self.modo_quiz
-        return f"Sessão {self.pk} - {username} ({self.data_inicio.strftime('%d/%m/%y %H:%M')}) - {quiz_info}"
+        if self.modo_quiz == self.ModoQuiz.DEFINIDO and self.id_quiz_definicao:
+            quiz_info = self.id_quiz_definicao.nome_quiz
+        else:
+            quiz_info = self.modo_quiz
+        return f"Sessao {self.pk} - {username} ({self.data_inicio.strftime('%d/%m/%y %H:%M')}) - {quiz_info}"
 
     class Meta:
-        verbose_name = "Sessão de Quiz do Usuário"
-        verbose_name_plural = "Sessões de Quiz dos Usuários"
+        verbose_name = "Sessao de Quiz do Usuario"
+        verbose_name_plural = "Sessoes de Quiz dos Usuarios"
         ordering = ['-data_inicio']
+
+
+class SessaoQuizPergunta(models.Model):
+    sessao = models.ForeignKey(
+        SessoesQuizUsuario,
+        on_delete=models.CASCADE,
+        related_name='perguntas_da_sessao',
+        verbose_name='Sessao'
+    )
+    pergunta = models.ForeignKey(
+        Pergunta,
+        on_delete=models.CASCADE,
+        related_name='instancias_em_sessoes',
+        verbose_name='Pergunta'
+    )
+    ordem = models.PositiveIntegerField(
+        validators=[MinValueValidator(0)],
+        verbose_name='Ordem na Sessao'
+    )
+
+    class Meta:
+        verbose_name = 'Pergunta da Sessao'
+        verbose_name_plural = 'Perguntas da Sessao'
+        ordering = ['sessao', 'ordem']
+        unique_together = (('sessao', 'pergunta'), ('sessao', 'ordem'))
+
+    def __str__(self):
+        return f"Sessao {self.sessao_id} - Pergunta {self.pergunta_id} (ordem {self.ordem})"
 
 
 class RespostasUsuarioPorSessao(models.Model):
     """
-    Registra a resposta específica de um usuário a uma pergunta dentro de uma sessão.
+    Registra a resposta especifica de um usuario a uma pergunta dentro de uma sessao.
     """
     id_sessao_quiz = models.ForeignKey(
         SessoesQuizUsuario,
         on_delete=models.CASCADE,
         related_name="respostas_dadas",
-        verbose_name="Sessão do Quiz"
+        verbose_name="Sessao do Quiz"
     )
     id_pergunta = models.ForeignKey(
         Pergunta,
@@ -401,36 +419,45 @@ class RespostasUsuarioPorSessao(models.Model):
         related_name="respostas_dadas_em_sessoes",
         verbose_name="Pergunta"
     )
+    sessao_pergunta = models.OneToOneField(
+        'SessaoQuizPergunta',
+        on_delete=models.CASCADE,
+        related_name='resposta',
+        null=True,
+        blank=True,
+        verbose_name='Registro da Pergunta na Sessao'
+    )
     id_opcao_resposta_selecionada = models.ForeignKey(
         OpcaoResposta,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="vezes_selecionada_em_respostas", # Alterado para mais clareza
-        verbose_name="Opção Selecionada"
+        related_name="vezes_selecionada_em_respostas",
+        verbose_name="Opcao Selecionada"
     )
     foi_correta = models.BooleanField(
         null=True,
         blank=True,
         verbose_name="Foi Correta?",
-        help_text="True se correta, False se incorreta, Nulo se pulada/não respondida."
+        help_text="True se correta, False se incorreta, Nulo se pulada/nao respondida."
     )
     data_resposta = models.DateTimeField(auto_now_add=True, verbose_name="Data da Resposta")
 
     def __str__(self):
-        status_resposta = "Pulada/Não Avaliada"
+        status_resposta = "Pulada/Nao Avaliada"
         if self.id_opcao_resposta_selecionada:
             if self.foi_correta is True:
                 status_resposta = "Correta"
             elif self.foi_correta is False:
                 status_resposta = "Incorreta"
-        return f"Resposta à P{self.id_pergunta.pk} na Sessão {self.id_sessao_quiz.pk}: {status_resposta}"
+        return f"Resposta a P{self.id_pergunta.pk} na Sessao {self.id_sessao_quiz.pk}: {status_resposta}"
 
     class Meta:
-        verbose_name = "Resposta do Usuário por Sessão"
-        verbose_name_plural = "Respostas dos Usuários por Sessão"
+        verbose_name = "Resposta do Usuario por Sessao"
+        verbose_name_plural = "Respostas dos Usuarios por Sessao"
         unique_together = ('id_sessao_quiz', 'id_pergunta')
         ordering = ['id_sessao_quiz', 'data_resposta']
+
 
 
 class EstatisticasDiariasUsuario(models.Model):
@@ -563,3 +590,4 @@ class ConfiguracoesGeraisQuiz(models.Model):
     class Meta:
         verbose_name = "Configuração Geral do Quiz"
         verbose_name_plural = "Configurações Gerais do Quiz" # Embora seja singleton, o admin usa isso.
+

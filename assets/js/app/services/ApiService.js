@@ -64,27 +64,6 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
 }
 
 export default class ApiService {
-    async fetchQuizData(filterParams = {}) {
-        const queryParams = {};
-        if (filterParams.category_ids?.length > 0) {
-            queryParams.category_ids = filterParams.category_ids.join(',');
-        }
-        if (filterParams.difficulty_levels?.length > 0 && !filterParams.difficulty_levels.includes('all')) {
-            queryParams.difficulty_levels = filterParams.difficulty_levels.join(',');
-        }
-        if (filterParams.quiz_definicao_id) {
-            queryParams.quiz_definicao_id = filterParams.quiz_definicao_id;
-        } else if (filterParams.mode === 'Rápido') {
-            queryParams.mode = filterParams.mode;
-            if (filterParams.count && Number.isInteger(filterParams.count) && filterParams.count > 0) {
-                queryParams.count = filterParams.count;
-            }
-        } else if (filterParams.num_questions && Number.isInteger(filterParams.num_questions) && filterParams.num_questions > 0) {
-            queryParams.num_questions = filterParams.num_questions;
-        }
-        return _request(API_URLS.api_get_quiz_data, 'GET', null, queryParams);
-    }
-
     async fetchAppSummary() {
         return _request(API_URLS.api_get_quiz_summary, 'GET');
     }
@@ -100,8 +79,18 @@ export default class ApiService {
         return _request(API_URLS.api_get_filtered_question_count, 'GET', null, queryParams);
     }
 
-    async startQuizSession(sessionData) {
-        return _request(API_URLS.start_quiz_session, 'POST', sessionData);
+    async startQuizSession(sessionConfig = {}) {
+        const payload = {
+            modo_quiz: sessionConfig.modo_quiz || sessionConfig.mode,
+            categoria_ids: sessionConfig.categoria_ids || sessionConfig.category_ids || [],
+            difficulty_levels: sessionConfig.difficulty_levels || [],
+            num_questions: sessionConfig.num_questions,
+            quiz_definicao_id: sessionConfig.quiz_definicao_id,
+        };
+        if (Array.isArray(payload.difficulty_levels) && payload.difficulty_levels.includes('all')) {
+            payload.difficulty_levels = ['all'];
+        }
+        return _request(API_URLS.start_quiz_session, 'POST', payload);
     }
 
     async registerAnswer(answerData) {

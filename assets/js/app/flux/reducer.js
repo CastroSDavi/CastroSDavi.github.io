@@ -204,24 +204,30 @@ export function quizReducer(state = initialState, action) {
         }
 
         case ActionTypes.SET_INITIAL_DATA: {
-            const { perguntas, categorias, quizDefinitionName } = action.payload;
+            const { perguntas, categorias, totalQuestions, quizDefinitionName } = action.payload;
+            const categoriesArray = Array.isArray(categorias) ? categorias : state.geral.allCategories;
+            const derivedTotalQuestions = typeof totalQuestions === 'number' && totalQuestions >= 0
+                ? totalQuestions
+                : (Array.isArray(perguntas) ? perguntas.length : state.geral.totalQuestionsAvailable);
+
             return {
                 ...state,
                 geral: {
                     ...state.geral,
-                    allCategories: categorias || [],
-                    totalQuestionsAvailable: perguntas?.length || 0,
+                    allCategories: categoriesArray,
+                    totalQuestionsAvailable: derivedTotalQuestions,
                     isInitialDataLoaded: true,
                     lastFetchedQuizDefinitionName: quizDefinitionName || null,
                     homeSummary: {
                         ...state.geral.homeSummary,
-                        totalCategories: categorias?.length || state.geral.homeSummary.totalCategories,
+                        totalCategories: categoriesArray.length,
                     },
-                    isHomeSummaryLoaded: true,
+                    isHomeSummaryLoaded: categoriesArray.length > 0 || state.geral.isHomeSummaryLoaded,
                 }
             };
         }
-            
+
+        // --- AÇÕES DO USUÁRIO ---
         // --- AÇÕES DO USUÁRIO ---
         case ActionTypes.UPDATE_USER_STATS:
             return {

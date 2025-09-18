@@ -1,4 +1,4 @@
-# quiz/admin.py
+﻿# quiz/admin.py
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from .models import (
     Categoria, Pergunta, OpcaoResposta,
-    SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
+    SessoesQuizUsuario, SessaoQuizPergunta, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
     QuestaoFavorita, # Adicionado se não estiver lá
     QuizDefinicao, QuizDefinicaoPergunta, ConfiguracoesGeraisQuiz # Novos modelos
 )
@@ -124,6 +124,15 @@ class OpcaoRespostaAdmin(admin.ModelAdmin):
         return obj.data_criacao.strftime("%d/%m/%Y %H:%M") if obj.data_criacao else "-"
 
 
+class SessaoQuizPerguntaInline(admin.TabularInline):
+    model = SessaoQuizPergunta
+    extra = 0
+    fields = ('ordem', 'pergunta')
+    readonly_fields = ('ordem', 'pergunta')
+    ordering = ('ordem',)
+    can_delete = False
+
+
 class RespostasUsuarioPorSessaoInline(admin.TabularInline):
     model = RespostasUsuarioPorSessao
     extra = 0
@@ -168,11 +177,11 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
         'data_inicio', 'data_fim', 'tempo_total_segundos', 'pontuacao_final',
         'total_acertos', 'total_erros', 'total_perguntas_sessao',
         'duracao_sessao_formatada', 'percentual_acertos',
-        'ids_perguntas_json', 'indice_ultima_pergunta_vista' # Novos campos como readonly
+        'indice_ultima_pergunta_vista'
     )
     autocomplete_fields = ['id_usuario', 'id_quiz_definicao']
     filter_horizontal = ('categorias_selecionadas',) # Se ainda for relevante para algum modo
-    inlines = [RespostasUsuarioPorSessaoInline]
+    inlines = [SessaoQuizPerguntaInline, RespostasUsuarioPorSessaoInline]
     list_select_related = ('id_usuario', 'id_quiz_definicao')
     date_hierarchy = 'data_inicio'
 
@@ -182,7 +191,7 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
                        'dificuldades_selecionadas_json', 'num_questoes_solicitadas')
         }),
         ('Progresso e Estado da Sessão', {
-            'fields': ('ids_perguntas_json', 'indice_ultima_pergunta_vista'),
+            'fields': ('indice_ultima_pergunta_vista',),
             'classes': ('collapse',),
         }),
         ('Datas e Tempo (Automático)', {
@@ -378,3 +387,4 @@ class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
 # @admin.register(User)
 # class CustomUserAdmin(BaseUserAdmin):
 #     pass
+

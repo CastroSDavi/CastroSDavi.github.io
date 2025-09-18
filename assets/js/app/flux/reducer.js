@@ -9,6 +9,11 @@ const initialState = {
         totalQuestionsAvailable: 0,
         isInitialDataLoaded: false,
         lastFetchedQuizDefinitionName: null,
+        homeSummary: {
+            totalCategories: 0,
+            quickQuizDefaultCount: QUICK_QUIZ_COUNT,
+        },
+        isHomeSummaryLoaded: false,
     },
     quiz: {
         currentQuestionsSet: [],
@@ -164,6 +169,40 @@ export function quizReducer(state = initialState, action) {
             };
 
         // --- AÇÕES GERAIS ---
+        case ActionTypes.SET_GENERAL_SUMMARY: {
+            const {
+                totalQuestions,
+                categories,
+                totalCategories,
+                quickQuizDefaultCount,
+            } = action.payload;
+
+            const sanitizedCategories = Array.isArray(categories) ? categories : state.geral.allCategories;
+            const sanitizedTotalQuestions = typeof totalQuestions === 'number' && totalQuestions >= 0
+                ? totalQuestions
+                : state.geral.totalQuestionsAvailable;
+            const sanitizedTotalCategories = typeof totalCategories === 'number' && totalCategories >= 0
+                ? totalCategories
+                : sanitizedCategories.length;
+            const sanitizedQuickQuiz = typeof quickQuizDefaultCount === 'number' && quickQuizDefaultCount > 0
+                ? quickQuizDefaultCount
+                : state.geral.homeSummary.quickQuizDefaultCount;
+
+            return {
+                ...state,
+                geral: {
+                    ...state.geral,
+                    totalQuestionsAvailable: sanitizedTotalQuestions,
+                    allCategories: sanitizedCategories,
+                    homeSummary: {
+                        totalCategories: sanitizedTotalCategories,
+                        quickQuizDefaultCount: sanitizedQuickQuiz,
+                    },
+                    isHomeSummaryLoaded: true,
+                }
+            };
+        }
+
         case ActionTypes.SET_INITIAL_DATA: {
             const { perguntas, categorias, quizDefinitionName } = action.payload;
             return {
@@ -174,6 +213,11 @@ export function quizReducer(state = initialState, action) {
                     totalQuestionsAvailable: perguntas?.length || 0,
                     isInitialDataLoaded: true,
                     lastFetchedQuizDefinitionName: quizDefinitionName || null,
+                    homeSummary: {
+                        ...state.geral.homeSummary,
+                        totalCategories: categorias?.length || state.geral.homeSummary.totalCategories,
+                    },
+                    isHomeSummaryLoaded: true,
                 }
             };
         }

@@ -3,8 +3,6 @@
 /* Estilos Base (Desktop e Tablet) */
 #account-section-page {
     padding: 0;
-    height: calc(100vh - var(--header-height, 70px) - var(--main-nav-height, 48px));
-    overflow: hidden; /* Conteúdo interno (sidebar/contentArea) terá seu próprio scroll */
     display: flex;
     background-color: var(--color-gray-100);
     font-family: var(--font-family-sans);
@@ -13,7 +11,7 @@
 .account-layout-container {
     display: flex;
     width: 100%;
-    height: 100%; /* Para que os filhos (sidebar/contentArea) possam usar height: 100% */
+    min-height: inherit;
     max-width: 1300px;
     margin: 0 auto;
     padding: var(--spacing-lg, 28px);
@@ -27,7 +25,6 @@
     background-color: var(--color-white);
     border-right: 1px solid var(--color-gray-200);
     padding: var(--spacing-md, 20px);
-    height: 100%;
     overflow-y: auto;
     position: sticky; /* Mantém a sidebar fixa no scroll do conteúdo principal em desktop */
     top: 0;
@@ -146,13 +143,13 @@
 .account-content {
     flex-grow: 1;
     padding: var(--spacing-lg, 28px);
-    overflow-y: auto; 
-    height: 100%; 
+    overflow-y: auto;
+    min-height: 0;
     background-color: var(--color-white);
     border-radius: var(--border-radius-lg);
     border: 1px solid var(--color-gray-200);
     box-shadow: var(--shadow-sm);
-    position: relative; 
+    position: relative;
     padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px));
 }
 .account-content__section {
@@ -439,10 +436,9 @@
     }
 }
 
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
     #account-section-page {
         background-color: var(--color-white);
-        height: 100%; 
         display: flex;
     }
     .account-layout-container {
@@ -450,10 +446,9 @@
     }
     .account-sidebar {
         width: 100%;
-        height: 100%; 
         position: static; border-right: none; border-radius: 0;
         box-shadow: none;
-        padding: var(--spacing-md, 20px); 
+        padding: var(--spacing-md, 20px);
         margin-bottom: 0; flex-shrink: 0;
         overflow-y: auto;
     }
@@ -467,11 +462,13 @@
     .account-sidebar__link .material-symbols-outlined { font-size: 24px; }
 
     .account-content {
-        width: 100%; height: 100%; 
+        width: 100%;
+        flex-grow: 1;
+        min-height: 0;
         overflow-y: auto;
         padding: var(--spacing-md, 20px);
-        padding-top: calc(var(--spacing-md, 20px) + 40px + var(--spacing-md, 20px)); 
-        padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px) + var(--spacing-lg, 28px)); 
+        padding-top: calc(var(--spacing-md, 20px) + 40px + var(--spacing-md, 20px));
+        padding-bottom: calc(var(--spacing-xl, 40px) + var(--spacing-lg, 28px) + var(--spacing-lg, 28px));
         background-color: var(--color-white);
         border-radius: 0; border: none; box-shadow: none;
     }

@@ -25,7 +25,6 @@ export default class AccountPageManager {
             deleteAccountForm: this.quizUI.elements.deleteAccountForm,
             passwordInputDelete: this.quizUI.elements.passwordInputDeleteAccount,
         };
-        this.bodyAccountContentActiveClassName = 'body-account-content-active';
         this.bodyElement = document.body;
         // --- INÍCIO DA CORREÇÃO ---
         // A referência ao bottomNavElement foi removida daqui.
@@ -189,12 +188,9 @@ export default class AccountPageManager {
             this.quizUI.hideElement(isContentActive ? this.elements.sidebar : this.elements.backToMenuButton);
             this.quizUI.showElement(isContentActive ? this.elements.contentArea : null);
             this.quizUI.hideElement(isContentActive ? null : this.elements.contentArea);
-            
-            this.bodyElement.classList.toggle(this.bodyAccountContentActiveClassName, isContentActive);
         } else { // Desktop
             [this.elements.sidebar, this.elements.contentArea].forEach(el => this.quizUI.showElement(el));
             this.quizUI.hideElement(this.elements.backToMenuButton);
-            this.bodyElement.classList.remove(this.bodyAccountContentActiveClassName);
         }
         // A chamada ao _adjustBodyPaddingForBottomNav também foi removida daqui.
     }

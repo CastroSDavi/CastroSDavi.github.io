@@ -33,13 +33,17 @@ export default class App {
     }
 
     async initialize() {
-        console.log("App.js: initialize - Iniciando aplicação.");
         this._connectManagersToFlux();
 
+        const currentPageId = document.body.dataset.pageId || 'home';
+
         try {
-            await this.actionOrchestrator.initializeAppData();
-            console.log("App.js: initialize - Dados iniciais carregados com sucesso.");
-            
+            if (currentPageId === 'questions') {
+                await this.actionOrchestrator.initializeAppData();
+            } else if (currentPageId === 'home') {
+                await this.actionOrchestrator.loadInitialSummary();
+            }
+
             this._setupUIComponents();
             this._determineInitialSection();
 
@@ -48,19 +52,15 @@ export default class App {
             const isQuizActive = this.store.getState().quiz.currentSessionId !== null;
             this.quizUI.displayQuizLayout(isQuizActive);
 
-            const currentPageId = document.body.dataset.pageId;
             if (currentPageId === 'questions') {
-                // A chamada para tryResumeSession agora é gerenciada pelo initializeQuizPage
                 await this.actionOrchestrator.initializeQuizPage();
-            }
-            if (currentPageId === 'account') {
+            } else if (currentPageId === 'account') {
                 this.accountPageManager.init();
             }
         } catch (error) {
             console.error("App.js: initialize - Erro crítico durante a inicialização:", error);
             this.handleLoadError(`Erro crítico ao inicializar: ${error.message}. Verifique o console para mais detalhes.`);
         }
-        console.log("App.js: initialize - Finalizado.");
     }
     
     _connectManagersToFlux() {
@@ -90,8 +90,12 @@ export default class App {
             const challengeHub = new ChallengeHub(this.quizUI);
             challengeHub.setActionOrchestrator(this.actionOrchestrator);
             this.quizUI.setChallengeHubInstance(challengeHub);
-            challengeHub.updateTotalQuestionsCount(state.geral.totalQuestionsAvailable);
-            challengeHub.updateQuickQuizCount(QUICK_QUIZ_COUNT);
+            const totalQuestions = typeof state.geral.totalQuestionsAvailable === 'number'
+                ? state.geral.totalQuestionsAvailable.toLocaleString('pt-BR')
+                : state.geral.totalQuestionsAvailable;
+            challengeHub.updateTotalQuestionsCount(totalQuestions);
+            const quickQuizCount = state.geral.homeSummary?.quickQuizDefaultCount ?? QUICK_QUIZ_COUNT;
+            challengeHub.updateQuickQuizCount(quickQuizCount);
             challengeHub.setupEventListeners();
         }
 
@@ -113,8 +117,6 @@ export default class App {
     }
     
     _determineInitialSection() {
-        console.log("App.js: determineInitialSection - Determinando seção inicial.");
-        
         const bodyPageId = document.body.dataset.pageId || 'home';
         let initialSectionId = 'home';
 
@@ -129,10 +131,13 @@ export default class App {
             const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
             if (totalQuestionsSpanHome) {
                 const state = this.store.getState();
-                totalQuestionsSpanHome.textContent = state.geral.totalQuestionsAvailable?.toLocaleString('pt-BR') || '0';
+                const totalQuestions = state.geral.totalQuestionsAvailable;
+                const formattedTotal = typeof totalQuestions === 'number'
+                    ? totalQuestions.toLocaleString('pt-BR')
+                    : (totalQuestions || '0');
+                totalQuestionsSpanHome.textContent = formattedTotal;
             }
         }
-        console.log("App.js: determineInitialSection - Seção inicial definida no store:", initialSectionId);
     }
     handleLoadError(message) {
         console.error("App.js: handleLoadError - ", message);

@@ -11,7 +11,6 @@ export default class ActionOrchestrator {
         this.isFetching = false;
         
         this.timerIntervalId = null;
-        console.log("ActionOrchestrator.js: CONSTRUCTOR - Instância criada.");
     }
 
     // --- MÉTODOS DE CONTROLE DO TIMER ---
@@ -36,10 +35,33 @@ export default class ActionOrchestrator {
     }
 
     // --- MÉTODOS DE INICIALIZAÇÃO E FLUXO ---
+    async loadInitialSummary() {
+        const state = this.store.getState();
+        if (state.geral.isHomeSummaryLoaded) {
+            return true;
+        }
+
+        try {
+            const summary = await this.apiService.fetchAppSummary();
+            if (summary && summary.status === 'success') {
+                this.store.dispatch(quizActions.setGeneralSummary({
+                    totalQuestions: summary.total_questions,
+                    categories: summary.categories,
+                    totalCategories: summary.total_categories,
+                    quickQuizDefaultCount: summary.quick_quiz_default_count,
+                }));
+                return true;
+            }
+        } catch (error) {
+            console.error('ActionOrchestrator: erro ao carregar resumo inicial.', error);
+        }
+        return false;
+    }
+
     async initializeAppData() {
         const state = this.store.getState();
         if (state.geral.isInitialDataLoaded) return true;
-        
+
         try {
             const data = await this.apiService.fetchQuizData({});
             if (data && data.perguntas && data.categorias) {
@@ -76,17 +98,17 @@ export default class ActionOrchestrator {
             this.ui.showSessionLoadingIndicator(false); 
 
             if (resumeData && resumeData.status === 'success' && resumeData.perguntas?.length > 0) {
-                this.store.dispatch({ 
-                    type: ActionTypes.SET_RESUMABLE_SESSION, 
-                    payload: resumeData 
+                this.store.dispatch({
+                    type: ActionTypes.SET_RESUMABLE_SESSION,
+                    payload: resumeData
                 });
             } else {
-                console.log("ActionOrchestrator: Nenhuma sessão para resumir, exibindo o hub de desafios.");
+                this.ui.challengeHubInstance?.showHub();
             }
         } catch (error) {
             this.ui.showSessionLoadingIndicator(false);
             if (error.data && error.data.status === 'not_found') {
-                console.log("ActionOrchestrator: Nenhuma sessão para resumir (erro 404).");
+                this.ui.challengeHubInstance?.showHub();
             } else {
                 this.ui.showWarning(getFriendlyErrorMessage(error, "Não foi possível verificar sua sessão anterior."), 'error');
             }
@@ -137,7 +159,6 @@ export default class ActionOrchestrator {
         try {
             const resumableSession = this.store.getState().quiz.resumableSession;
             if (resumableSession && resumableSession.session_id) {
-                console.log(`ActionOrchestrator: Descartando sessão pendente ${resumableSession.session_id} para iniciar um novo quiz.`);
                 await this.apiService.endQuizSession({ session_id: resumableSession.session_id, tempo_total_segundos: 0 });
                 this.store.dispatch({ type: ActionTypes.CLEAR_RESUMABLE_SESSION });
             }

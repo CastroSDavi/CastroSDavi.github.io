@@ -674,6 +674,49 @@ def delete_account_view(request):
 
 
 @require_GET
+def api_get_quiz_summary_view(request):
+    """Retorna estatísticas agregadas leves para inicialização da interface."""
+    try:
+        perguntas_ativas = Pergunta.objects.filter(ativa=True)
+        total_questions = perguntas_ativas.count()
+
+        categorias_qs = Categoria.objects.annotate(
+            total_perguntas=Count(
+                'perguntas_associadas',
+                filter=Q(perguntas_associadas__ativa=True)
+            )
+        ).order_by('nome_categoria')
+
+        quiz_config = get_quiz_config()
+        quick_quiz_default = None
+        if quiz_config:
+            quick_quiz_default = getattr(quiz_config, 'numero_perguntas_quiz_rapido', None)
+
+        categorias_data = [
+            {
+                'id_categoria': categoria.pk,
+                'nome_categoria': categoria.nome_categoria,
+                'id_categoria_pai': categoria.id_categoria_pai_id,
+                'total_perguntas': categoria.total_perguntas or 0,
+            }
+            for categoria in categorias_qs
+        ]
+
+        return JsonResponse({
+            'status': 'success',
+            'total_questions': total_questions,
+            'total_categories': len(categorias_data),
+            'quick_quiz_default_count': quick_quiz_default,
+            'categories': categorias_data,
+        })
+    except Exception:
+        return JsonResponse(
+            {'status': 'error', 'message': 'Erro ao buscar resumo inicial.'},
+            status=500
+        )
+
+
+@require_GET
 def api_get_quiz_data_view(request):
     category_ids_str = request.GET.get('category_ids')
     difficulty_levels_str = request.GET.get('difficulty_levels')

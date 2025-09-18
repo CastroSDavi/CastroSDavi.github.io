@@ -6,6 +6,7 @@
  */
 export const API_URLS = {
     api_get_quiz_data: '/api/quiz/alldata/',
+    api_get_quiz_summary: '/api/quiz/summary/',
     api_get_filtered_question_count: '/api/quiz/filtered-count/', // <- Nova linha com a vírgula no final
     start_quiz_session: '/api/quiz/start-session/',
     register_answer: '/api/quiz/register-answer/',

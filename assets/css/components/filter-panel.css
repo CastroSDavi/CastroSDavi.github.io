@@ -183,7 +183,7 @@
 /* Checkbox customizado */
 .category-tree__label::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; border: 1.5px solid var(--color-gray-500); border-radius: 3px; background-color: var(--color-white); transition: all 0.15s ease-out; }
 .category-tree__label::after { content: "check_small"; font-family: 'Material Symbols Outlined'; font-variation-settings: 'FILL' 1, 'wght' 700; font-size: 14px; line-height: 1; position: absolute; left: 1px; /* Ajuste fino para o ícone dentro do box */ top: 50%; transform: translateY(-50%) scale(0); color: var(--color-white); opacity: 0; transition: transform 0.1s ease-out, opacity 0.1s ease-out; }
-.category-tree__input:focus-visible + .category-tree__label::before { border-color: var(--focus-outline-color); box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3); }
+.category-tree__input:focus-visible + .category-tree__label::before { border-color: var(--focus-outline-color); box-shadow: 0 0 0 2px rgba(var(--focus-outline-color-rgb), 0.3); }
 .category-tree__input:checked + .category-tree__label::before { background-color: var(--color-secondary-green); border-color: var(--color-secondary-green); }
 .category-tree__input:checked + .category-tree__label::after { transform: translateY(-50%) scale(1); opacity: 1; }
 .category-tree__input.is-indeterminate + .category-tree__label::before { background-color: var(--color-secondary-green); border-color: var(--color-secondary-green); }
@@ -205,7 +205,7 @@
 .chip-group { display: flex; flex-wrap: wrap; gap: var(--spacing-sm, 10px); margin-top: var(--spacing-xs, 8px); /* Espaço acima dos chips */ }
 .chip-group__chip { padding: var(--spacing-xs, 8px) var(--spacing-md, 18px); font-size: var(--font-size-sm, 0.875rem); font-weight: var(--font-weight-medium, 500); color: var(--color-gray-700); background-color: var(--color-gray-100); border: 1px solid var(--color-gray-300); border-radius: var(--border-radius-pill); cursor: pointer; transition: all 0.2s ease-out; }
 .chip-group__input:hover + .chip-group__chip, .chip-group__input:focus-visible + .chip-group__chip { border-color: var(--color-gray-400); color: var(--color-text-primary); background-color: var(--color-gray-200); transform: translateY(-1px); }
-.chip-group__input:focus-visible + .chip-group__chip { box-shadow: 0 0 0 2px rgba(from var(--focus-outline-color) r g b / 0.3); }
+.chip-group__input:focus-visible + .chip-group__chip { box-shadow: 0 0 0 2px rgba(var(--focus-outline-color-rgb), 0.3); }
 .chip-group__input:checked + .chip-group__chip { color: var(--color-white); border-color: var(--color-secondary-green); background-color: var(--color-secondary-green); font-weight: var(--font-weight-semibold, 600); box-shadow: 0 3px 8px rgba(var(--color-secondary-green-rgb), 0.25); transform: translateY(0px) scale(1.01); /* Efeito sutil de 'pressionado' */ }
 
 

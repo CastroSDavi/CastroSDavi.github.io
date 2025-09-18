@@ -74,7 +74,7 @@
     min-width: 0; 
 }
 
-.stats-card:has(#chart-overall-accuracy) {
+.stats-card--with-overall-accuracy {
     align-self: start;
 }
 

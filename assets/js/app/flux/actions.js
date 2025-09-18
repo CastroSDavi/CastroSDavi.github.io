@@ -26,9 +26,10 @@ export const ActionTypes = {
     LOAD_FAVORITES_REQUEST: 'LOAD_FAVORITES_REQUEST',
     LOAD_FAVORITES_SUCCESS: 'LOAD_FAVORITES_SUCCESS',
     LOAD_FAVORITES_FAILURE: 'LOAD_FAVORITES_FAILURE',
-    
+
     // Ações de Dados Gerais
     SET_INITIAL_DATA: 'SET_INITIAL_DATA',
+    SET_GENERAL_SUMMARY: 'SET_GENERAL_SUMMARY',
 
     // Ações do Usuário
     UPDATE_USER_STATS: 'UPDATE_USER_STATS',
@@ -141,5 +142,15 @@ export const quizActions = {
     fetchStatsFailure: (error) => ({
         type: ActionTypes.FETCH_STATS_FAILURE,
         payload: { error }
+    }),
+
+    setGeneralSummary: ({ totalQuestions, categories, totalCategories, quickQuizDefaultCount }) => ({
+        type: ActionTypes.SET_GENERAL_SUMMARY,
+        payload: {
+            totalQuestions,
+            categories,
+            totalCategories,
+            quickQuizDefaultCount,
+        }
     }),
 };

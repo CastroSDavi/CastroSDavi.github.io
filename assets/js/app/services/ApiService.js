@@ -5,7 +5,6 @@ import { getCookie } from '../../utils/helpers.js';
 
 async function _request(endpoint, method = 'GET', body = null, queryParams = null) {
     const url = new URL(endpoint, window.location.origin);
-    console.log(`ApiService.js: _request - Iniciando ${method} para ${url.pathname}${url.search}`);
 
     if (queryParams) {
         Object.keys(queryParams).forEach(key => {
@@ -38,38 +37,34 @@ async function _request(endpoint, method = 'GET', body = null, queryParams = nul
 
     try {
         const response = await fetch(url.toString(), options);
-        console.log(`ApiService.js: _request - Resposta recebida para ${method} ${url.pathname}${url.search}. Status: ${response.status}`);
 
-        const responseData = response.status !== 204 ? await response.json().catch((jsonError) => {
-            console.error(`ApiService.js: _request - ERRO AO FAZER PARSE DO JSON para ${method} ${url.pathname}. Status: ${response.status}. Erro de parse:`, jsonError);
-            return null;
-        }) : null;
+        let responseData = null;
+        if (response.status !== 204) {
+            try {
+                responseData = await response.json();
+            } catch (jsonError) {
+                console.error(`ApiService: falha ao interpretar resposta JSON de ${url.pathname}`, jsonError);
+            }
+        }
 
         if (!response.ok) {
             const errorMessage = responseData?.message || responseData?.detail || `API Error: ${response.status} ${response.statusText}`;
-            console.warn(`ApiService.js: _request - Resposta não OK (${response.status}) para ${method} ${url.pathname}. Mensagem: ${errorMessage}. Dados:`, responseData);
             const error = new Error(errorMessage);
             error.response = response;
             error.data = responseData;
             throw error;
         }
-        console.log(`ApiService.js: _request - Dados da resposta (JSON parseado) para ${method} ${url.pathname}:`, responseData);
         return responseData;
     } catch (error) {
         if (!error.response) {
-            console.error(`ApiService.js: _request - Erro de Rede/Requisição para ${method} ${url.pathname}:`, error.message, error.stack);
+            console.error(`ApiService: erro de rede ao acessar ${url.pathname}`, error);
         }
         throw error;
     }
 }
 
 export default class ApiService {
-    constructor() {
-        console.log("ApiService.js: Construtor - Instância criada.");
-    }
-
     async fetchQuizData(filterParams = {}) {
-        console.log("ApiService.js: fetchQuizData - Chamado com filtros:", filterParams);
         const queryParams = {};
         if (filterParams.category_ids?.length > 0) {
             queryParams.category_ids = filterParams.category_ids.join(',');
@@ -87,13 +82,14 @@ export default class ApiService {
         } else if (filterParams.num_questions && Number.isInteger(filterParams.num_questions) && filterParams.num_questions > 0) {
             queryParams.num_questions = filterParams.num_questions;
         }
-        console.log("ApiService.js: fetchQuizData - QueryParams finais:", queryParams);
         return _request(API_URLS.api_get_quiz_data, 'GET', null, queryParams);
     }
 
-    // --- INÍCIO DA ALTERAÇÃO ---
+    async fetchAppSummary() {
+        return _request(API_URLS.api_get_quiz_summary, 'GET');
+    }
+
     async fetchFilteredQuestionCount(filterParams = {}) {
-        console.log("ApiService.js: fetchFilteredQuestionCount - Chamado com filtros:", filterParams);
         const queryParams = {};
         if (filterParams.category_ids?.length > 0) {
             queryParams.category_ids = filterParams.category_ids.join(',');
@@ -103,37 +99,30 @@ export default class ApiService {
         }
         return _request(API_URLS.api_get_filtered_question_count, 'GET', null, queryParams);
     }
-    // --- FIM DA ALTERAÇÃO ---
 
     async startQuizSession(sessionData) {
-        console.log("ApiService.js: startQuizSession - Chamado com dados:", sessionData);
         return _request(API_URLS.start_quiz_session, 'POST', sessionData);
     }
 
     async registerAnswer(answerData) {
-        console.log("ApiService.js: registerAnswer - Chamado com dados:", answerData);
         return _request(API_URLS.register_answer, 'POST', answerData);
     }
 
     async endQuizSession(sessionEndData) {
-        console.log("ApiService.js: endQuizSession - Chamado com dados:", sessionEndData);
         return _request(API_URLS.end_quiz_session, 'POST', sessionEndData);
     }
 
     async toggleFavoriteStatus(perguntaId) {
         const endpoint = API_URLS.toggle_favorite_status(perguntaId);
-        console.log("ApiService.js: toggleFavoriteStatus - Chamado para pergunta ID:", perguntaId, "Endpoint:", endpoint);
         return _request(endpoint, 'POST', {});
     }
 
     async getFavoriteQuestions() {
-        console.log("ApiService.js: getFavoriteQuestions - Chamado.");
         return _request(API_URLS.get_favorite_questions, 'GET');
     }
 
     async fetchUserStatistics(period = '30d') {
         const queryParams = { period };
-        console.log("ApiService.js: fetchUserStatistics - Chamado para período:", period);
         if (!API_URLS.api_get_user_statistics) {
             console.error("ApiService.js: URL para api_get_user_statistics não definida em API_URLS.");
             throw new Error("URL de estatísticas do usuário não configurada.");
@@ -142,7 +131,6 @@ export default class ApiService {
     }
 
     async resumeQuizSession() {
-        console.log("ApiService.js: resumeQuizSession - Chamado.");
         if (!API_URLS.api_resume_quiz_session) {
             console.error("ApiService.js: URL para api_resume_quiz_session não definida em API_URLS.");
             throw new Error("URL para retomar sessão de quiz não configurada.");

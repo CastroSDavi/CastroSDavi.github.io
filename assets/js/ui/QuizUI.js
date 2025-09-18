@@ -196,6 +196,7 @@ export default class QuizUI {
             mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'),
             quizSectionContent: document.getElementById('quiz-section'),
             questionWrap: document.querySelector('#quiz-section .card--question-wrap'),
+            questionActions: document.querySelector('.question-display__actions'),
             progressContainer: document.getElementById('progress-container'),
             progressBarFill: document.getElementById('progress-bar-fill'),
             progressText: document.getElementById('progress-text'),

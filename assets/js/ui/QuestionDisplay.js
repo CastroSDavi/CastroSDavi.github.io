@@ -102,10 +102,13 @@ export default class QuestionDisplay {
         const options = question.opcoes || [];
         const hasExplanation = (question.explicacao_resposta && question.explicacao_resposta.trim() !== '') || options.some(op => op && op.feedback_opcao && op.feedback_opcao.trim() !== '');
         
+        const actionsContainer = this.elements.questionActions;
         if (hasExplanation && question.respostaDadaId !== undefined && question.respostaDadaId !== null) {
             this.quizUI.showElement(this.elements.btnToggleExplanation);
+            actionsContainer?.classList.add('question-display__actions--visible');
         } else {
             this.quizUI.hideElement(this.elements.btnToggleExplanation);
+            actionsContainer?.classList.remove('question-display__actions--visible');
         }
     }
     

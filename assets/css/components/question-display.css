@@ -83,7 +83,7 @@
 .question-display__answer-option:focus-visible {
     outline: var(--focus-outline-width) solid var(--focus-outline-color);
     outline-offset: var(--focus-outline-offset);
-    box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset)) rgba(from var(--focus-outline-color) r g b / 0.2);
+    box-shadow: 0 0 0 calc(var(--focus-outline-width) + var(--focus-outline-offset)) rgba(var(--focus-outline-color-rgb), 0.2);
 }
 
 .question-display__answer-option--answered {
@@ -152,7 +152,7 @@
     min-height: 0;
 }
 /* Adiciona espaço e borda SOMENTE se o botão de explicação estiver visível */
-.question-display__actions:has(#btn-toggle-explanation:not(.u-is-hidden)) {
+.question-display__actions.question-display__actions--visible {
     margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-md, 18px);
     border-top-color: var(--color-gray-300); /* Linha pontilhada visível */
@@ -172,7 +172,7 @@
         min-height: 46px; 
     }
     .question-display__reference { margin-top: var(--spacing-md, 20px); padding-top: var(--spacing-sm, 10px); }
-    .question-display__actions:has(#btn-toggle-explanation:not(.u-is-hidden)) {
+    .question-display__actions.question-display__actions--visible {
         margin-top: var(--spacing-md, 20px);
         padding-top: var(--spacing-sm, 15px);
     }

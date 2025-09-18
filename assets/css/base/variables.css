@@ -38,6 +38,7 @@
     --color-gray-900: #343a40;
     --color-gray-800: #495057;
     --color-gray-700: #6c757d;
+    --color-gray-700-rgb: 108, 117, 125;
     --color-gray-600: #adb5bd;
     --color-gray-500: #ced4da;
     --color-gray-400: #dee2e6;
@@ -147,10 +148,14 @@
     --focus-outline-color: var(--color-primary-medium);
     --focus-outline-width: 2px;
     --focus-outline-offset: 2px;
+    --focus-outline-color-rgb: var(--color-primary-medium-rgb);
 
     /* Layout */
-    --header-height: 70px; /* Ajustado para um header um pouco menor */
-    --main-nav-height: 48px; /* Ajustado para uma nav um pouco menor */
+    --header-height: 75px; /* Altura base do header em desktop */
+    --header-height-tablet: 70px;
+    --header-height-mobile: 65px;
+    --main-nav-height: 50px; /* Altura base da navegação principal */
+    --bottom-nav-height: 68px;
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
 }

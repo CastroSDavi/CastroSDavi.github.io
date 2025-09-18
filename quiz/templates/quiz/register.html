@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.bundle.css' %}">
     <title>{{ page_title|default:"Criar Conta" }} - MedQuiz</title>
 </head>
 <body class="cadastro-page"> {# Aplicando a classe do seu CSS #}
@@ -149,6 +149,34 @@
                 // yearSpan.textContent = new Date().getFullYear();
             }
 
+            const wrapperUpdaters = new Map();
+            document.querySelectorAll('.form-control-wrapper').forEach(wrapper => {
+                const control = wrapper.querySelector('.form-control');
+                if (!control) {
+                    return;
+                }
+
+                const updateWrapperState = () => {
+                    const isValid = control.classList.contains('is-valid');
+                    const isInvalid = control.classList.contains('is-invalid');
+                    wrapper.classList.toggle('form-control-wrapper--valid', isValid);
+                    wrapper.classList.toggle('form-control-wrapper--invalid', isInvalid);
+                };
+
+                wrapperUpdaters.set(control, updateWrapperState);
+                control.addEventListener('input', updateWrapperState);
+                control.addEventListener('change', updateWrapperState);
+                control.addEventListener('blur', updateWrapperState);
+                updateWrapperState();
+            });
+
+            const syncWrapperState = (input) => {
+                const updater = wrapperUpdaters.get(input);
+                if (updater) {
+                    updater();
+                }
+            };
+
             // Validação de confirmação de senha (exemplo básico, pode ser mais robusto)
             const passwordField = document.getElementById('{{ form.password1.id_for_label }}'); // Usa o ID do Django
             const confirmPasswordField = document.getElementById('{{ form.password2.id_for_label }}'); // Usa o ID do Django
@@ -160,6 +188,7 @@
                 if (passwordField.value === "" && confirmPasswordField.value === "") {
                     feedbackElement.classList.add('u-is-hidden');
                     confirmPasswordField.classList.remove('is-valid', 'is-invalid');
+                    syncWrapperState(confirmPasswordField);
                     return;
                 }
 
@@ -169,21 +198,26 @@
                     feedbackElement.classList.add('is-valid');
                     confirmPasswordField.classList.remove('is-invalid');
                     confirmPasswordField.classList.add('is-valid');
+                    syncWrapperState(confirmPasswordField);
                 } else if (confirmPasswordField.value.length > 0) {
                     feedbackElement.textContent = 'As senhas não coincidem.';
                     feedbackElement.classList.remove('u-is-hidden', 'is-valid');
                     feedbackElement.classList.add('is-invalid');
                     confirmPasswordField.classList.remove('is-valid');
                     confirmPasswordField.classList.add('is-invalid');
+                    syncWrapperState(confirmPasswordField);
                 } else {
                      feedbackElement.classList.add('u-is-hidden');
                      confirmPasswordField.classList.remove('is-valid', 'is-invalid');
+                     syncWrapperState(confirmPasswordField);
                 }
             }
 
             if (passwordField && confirmPasswordField) {
                 passwordField.addEventListener('input', validatePasswords);
                 confirmPasswordField.addEventListener('input', validatePasswords);
+                syncWrapperState(passwordField);
+                syncWrapperState(confirmPasswordField);
             }
         });
     </script>

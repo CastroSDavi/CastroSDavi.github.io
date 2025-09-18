@@ -20,6 +20,7 @@ urlpatterns = [
     path('api/quiz/end-session/', views.end_quiz_session_view, name='end_quiz_session'),
 
     # API para buscar todos os dados do quiz (já existente no seu arquivo)
+    path('api/quiz/summary/', views.api_get_quiz_summary_view, name='api_get_quiz_summary'),
     path('api/quiz/alldata/', views.api_get_quiz_data_view, name='api_get_quiz_data'),
     path('api/quiz/filtered-count/', views.api_get_filtered_question_count_view, name='api_get_filtered_question_count'),
 

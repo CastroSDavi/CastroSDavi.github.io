@@ -4,7 +4,7 @@ export default class ChallengeHub {
     constructor(quizUIInstance) {
         this.quizUI = quizUIInstance; 
         
-        // A dependÃªncia do actionOrchestrator serÃ¡ injetada via setter
+        // A dependência do actionOrchestrator será injetada via setter
         this.actionOrchestrator = null;
         this.store = null;
         this.unsubscribeStore = null;
@@ -33,18 +33,18 @@ export default class ChallengeHub {
             predefinedQuizzesCount: this.quizUI.elements.predefinedQuizzesCount,
             predefinedQuestionsTotal: this.quizUI.elements.predefinedQuestionsTotal,
             
-            // --- INÃCIO DA CORREÃ‡ÃƒO: Mapeando para os novos IDs e estrutura ---
+            // --- INÍCIO DA CORREÇÃO: Mapeando para os novos IDs e estrutura ---
             resumeCard: document.getElementById('hub-resume-quiz-card'),
             resumeCardDescription: document.getElementById('hub-resume-card-description'),
             confirmResumeBtn: document.getElementById('hub-confirm-resume-btn'),
             discardResumeBtn: document.getElementById('hub-discard-resume-btn'),
-            // --- FIM DA CORREÃ‡ÃƒO ---
+            // --- FIM DA CORREÇÃO ---
         };
     }
 
     /**
-     * Define a instÃ¢ncia do ActionOrchestrator.
-     * @param {ActionOrchestrator} orchestrator - A instÃ¢ncia do orquestrador.
+     * Define a instância do ActionOrchestrator.
+     * @param {ActionOrchestrator} orchestrator - A instância do orquestrador.
      */
     setActionOrchestrator(orchestrator) {
         this.actionOrchestrator = orchestrator;
@@ -185,7 +185,7 @@ export default class ChallengeHub {
     }
 
     /**
-     * Mostra o hub de desafios e garante que outros painÃ©is conflitantes estejam escondidos.
+     * Mostra o hub de desafios e garante que outros painéis conflitantes estejam escondidos.
      */
     showHub() {
         if (this.elements.challengeHubContainer) {
@@ -217,8 +217,8 @@ export default class ChallengeHub {
     }
 
     /**
-     * Atualiza a contagem total de questÃµes exibida no hub.
-     * @param {number|string} count - O nÃºmero de questÃµes.
+     * Atualiza a contagem total de questões exibida no hub.
+     * @param {number|string} count - O número de questões.
      */
     updateTotalQuestionsCount(count) {
         if (this.elements.hubTotalQuestionsCount) {
@@ -232,8 +232,8 @@ export default class ChallengeHub {
     }
 
     /**
-     * Atualiza a contagem de questÃµes para o modo "Quiz RÃ¡pido".
-     * @param {number|string} count - O nÃºmero de questÃµes para o quiz rÃ¡pido.
+     * Atualiza a contagem de questões para o modo "Quiz Rápido".
+     * @param {number|string} count - O número de questões para o quiz rápido.
      */
     updateQuickQuizCount(count) {
         if (this.elements.hubQuickQuizCount) {
@@ -243,13 +243,13 @@ export default class ChallengeHub {
 
     /**
      * Exibe e configura o card de "Continuar Desafio".
-     * @param {object} resumableSession - Os dados da sessÃ£o a ser resumida.
+     * @param {object} resumableSession - Os dados da sessão a ser resumida.
      */
     showResumeOption(resumableSession) {
         if (!this.elements.resumeCard || !resumableSession) return;
 
         const questionCount = resumableSession.perguntas?.length || 0;
-        this.elements.resumeCardDescription.innerHTML = `VocÃª tem uma sessÃ£o em andamento de <strong>${questionCount}</strong> questÃµes.`;
+        this.elements.resumeCardDescription.innerHTML = `Você tem uma sessão em andamento de <strong>${questionCount}</strong> questões.`;
 
         this.quizUI.showElement(this.elements.resumeCard);
     }
@@ -264,12 +264,12 @@ export default class ChallengeHub {
     }
 
     /**
-     * Configura os event listeners para os botÃµes dentro do hub de desafios.
+     * Configura os event listeners para os botões dentro do hub de desafios.
      */
     setupEventListeners() {
         this.elements.hubCustomizeQuizBtn?.addEventListener('click', () => {
             if (!this.quizUI.modalManager) { 
-                console.error("ChallengeHub: modalManager nÃ£o encontrado para abrir painel de filtros.");
+                console.error("ChallengeHub: modalManager não encontrado para abrir painel de filtros.");
                 return;
             }
             this.hideHub();
@@ -284,11 +284,11 @@ export default class ChallengeHub {
                 this.hideHub();
                 this.actionOrchestrator.startQuickQuiz();
             } else {
-                console.error("ChallengeHub: actionOrchestrator indisponÃ­vel ao clicar em Quiz RÃ¡pido.");
+                console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
         
-        // --- INÃCIO DA CORREÃ‡ÃƒO: Listeners agora nos botÃµes corretos e separados ---
+        // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
         this.elements.confirmResumeBtn?.addEventListener('click', () => {
              if (this.actionOrchestrator) {
                 this.actionOrchestrator._proceedWithResumedSession();
@@ -300,7 +300,7 @@ export default class ChallengeHub {
                 this.actionOrchestrator._discardAndGoToHub();
             }
         });
-        // --- FIM DA CORREÃ‡ÃƒO ---
+        // --- FIM DA CORREÇÃO ---
     }
 
     _createPredefinedQuizCard(quiz) {
@@ -314,7 +314,7 @@ export default class ChallengeHub {
         const label = (quiz?.nome || 'Lista curada').toString();
         const questionCountRaw = Number(quiz?.question_count);
         const questionCount = Number.isNaN(questionCountRaw) ? 0 : questionCountRaw;
-        const questionLabel = questionCount === 1 ? 'questao' : 'questoes';
+        const questionLabel = questionCount === 1 ? 'questão' : 'questões';
         const topCategories = Array.isArray(quiz?.top_categories)
             ? quiz.top_categories.map((item) => (item ?? '').toString().trim()).filter(Boolean)
             : [];
@@ -464,8 +464,8 @@ export default class ChallengeHub {
             return 'Temas em destaque: ' + prefix + '.';
         }
         if (questionCount) {
-            const label = questionCount === 1 ? 'questao' : 'questoes';
-            return 'Colecao com ' + questionCount + ' ' + label + ' selecionadas.';
+            const label = questionCount === 1 ? 'questão' : 'questões';
+            return 'Coleção com ' + questionCount + ' ' + label + ' selecionadas.';
         }
         if (totalCategories) {
             const label = totalCategories === 1 ? 'tema' : 'temas';
@@ -495,12 +495,12 @@ export default class ChallengeHub {
         const week = 7 * day;
         const month = 30 * day;
 
-        const formatter = (value, singular, plural) => `${isFuture ? 'Disponivel em' : 'Atualizado ha'} ${value} ${value === 1 ? singular : plural}`;
+        const formatter = (value, singular, plural) => `${isFuture ? 'Disponível em' : 'Atualizado há'} ${value} ${value === 1 ? singular : plural}`;
 
         if (diffMs < hour) {
             const minutes = Math.max(1, Math.round(diffMs / minute));
             if (minutes <= 1) {
-                return isFuture ? 'Disponivel em instantes' : 'Atualizado agora';
+                return isFuture ? 'Disponível em instantes' : 'Atualizado agora';
             }
             return formatter(minutes, 'minuto', 'minutos');
         }
@@ -522,10 +522,10 @@ export default class ChallengeHub {
 
         const months = Math.round(diffMs / month);
         if (months < 12) {
-            return formatter(months, 'mes', 'meses');
+            return formatter(months, 'mês', 'meses');
         }
 
-        return `${isFuture ? 'Disponivel em' : 'Atualizado em'} ${parsed.toLocaleDateString('pt-BR')}`;
+        return `${isFuture ? 'Disponível em' : 'Atualizado em'} ${parsed.toLocaleDateString('pt-BR')}`;
     }
 
 }

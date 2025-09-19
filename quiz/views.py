@@ -50,7 +50,7 @@ def invalidate_quiz_config_cache():
 
 def get_quiz_config():
     """
-    Retorna a instância (singleton) de ConfiguracoesGeraisQuiz.
+    Retorna a instância (singleton) de Configuracoes GeraisQuiz.
     Cria uma instância com valores padrão se não existir, pressupondo que o ID/PK 1 é usado para o singleton.
     Cacheia a instância em memória para evitar queries repetidas durante o mesmo request/processo.
     """

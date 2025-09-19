@@ -329,23 +329,46 @@ export default class ChallengeHub {
             totalCategories,
         });
         const updatedLabel = this._formatRelativeDate(quiz?.updated_at);
+        const estimatedMinutes = this._estimateQuizDurationMinutes(quiz, questionCount);
+        const MAX_VISIBLE_TAGS = 3;
 
-        card.title = label + ' - ' + questionCount + ' ' + questionLabel;
+        const tooltipMeta = [];
+        if (questionCount) {
+            tooltipMeta.push(questionCount + ' ' + questionLabel);
+        }
+        if (estimatedMinutes) {
+            tooltipMeta.push(estimatedMinutes + ' min');
+        }
+        const tooltipParts = [label];
+        if (tooltipMeta.length) {
+            tooltipParts.push(tooltipMeta.join(' · '));
+        }
+        card.title = tooltipParts.join(' — ');
 
         const ariaParts = ['Iniciar ' + label];
         if (questionCount) {
             ariaParts.push(questionCount + ' ' + questionLabel);
         }
+        if (estimatedMinutes) {
+            ariaParts.push('Tempo estimado de ' + estimatedMinutes + ' ' + (estimatedMinutes === 1 ? 'minuto' : 'minutos'));
+        }
         if (topCategories.length) {
-            ariaParts.push('Temas: ' + topCategories.slice(0, 2).join(', '));
+            ariaParts.push('Temas: ' + topCategories.slice(0, MAX_VISIBLE_TAGS).join(', '));
         }
         card.setAttribute('aria-label', ariaParts.join('. ') + '.');
 
         const content = document.createElement('div');
         content.className = 'challenge-card__content challenge-card__content--predefined';
 
+        if (updatedLabel) {
+            const badge = document.createElement('span');
+            badge.className = 'challenge-card__badge';
+            badge.textContent = updatedLabel;
+            card.appendChild(badge);
+        }
+
         const header = document.createElement('div');
-        header.className = 'challenge-card__header';
+        header.className = 'challenge-card__header challenge-card__header--predefined';
 
         const iconWrapper = document.createElement('div');
         iconWrapper.className = 'challenge-card__icon-wrapper challenge-card__icon-wrapper--predefined';
@@ -355,21 +378,11 @@ export default class ChallengeHub {
         iconWrapper.appendChild(icon);
         header.appendChild(iconWrapper);
 
-        const headerText = document.createElement('div');
-        headerText.className = 'challenge-card__header-text';
         const title = document.createElement('h3');
-        title.className = 'challenge-card__title';
+        title.className = 'challenge-card__title challenge-card__title--predefined';
         title.textContent = label;
-        headerText.appendChild(title);
+        header.appendChild(title);
 
-        if (updatedLabel) {
-            const updatedBadge = document.createElement('span');
-            updatedBadge.className = 'challenge-card__meta-note';
-            updatedBadge.textContent = updatedLabel;
-            headerText.appendChild(updatedBadge);
-        }
-
-        header.appendChild(headerText);
         content.appendChild(header);
 
         if (description) {
@@ -379,22 +392,21 @@ export default class ChallengeHub {
             content.appendChild(descriptionEl);
         }
 
-        const metaItems = [];
+        const metaParts = [];
         if (questionCount) {
-            metaItems.push(this._createMetaItem('quiz', questionCount + ' ' + questionLabel));
+            metaParts.push(questionCount + ' ' + questionLabel);
         }
-        if (totalCategories > 0) {
-            const categoryLabel = totalCategories === 1 ? 'tema' : 'temas';
-            metaItems.push(this._createMetaItem('category', totalCategories + ' ' + categoryLabel));
+        if (estimatedMinutes) {
+            metaParts.push(estimatedMinutes + ' min');
         }
-        if (metaItems.length) {
-            const meta = document.createElement('div');
-            meta.className = 'challenge-card__meta';
-            metaItems.forEach((item) => meta.appendChild(item));
-            content.appendChild(meta);
+        if (metaParts.length) {
+            const metaLine = document.createElement('p');
+            metaLine.className = 'challenge-card__meta-line';
+            metaLine.textContent = metaParts.join(' · ');
+            content.appendChild(metaLine);
         }
 
-        const displayedCategories = topCategories.slice(0, 2);
+        const displayedCategories = topCategories.slice(0, MAX_VISIBLE_TAGS);
         const referenceTotal = totalCategories || topCategories.length;
         if (displayedCategories.length) {
             const tagsWrapper = document.createElement('div');
@@ -408,9 +420,8 @@ export default class ChallengeHub {
             const remaining = Math.max(referenceTotal - displayedCategories.length, 0);
             if (remaining > 0) {
                 const tag = document.createElement('span');
-                tag.className = 'challenge-card__tag challenge-card__tag--more';
-                const remainingLabel = '+' + remaining + ' ' + (remaining === 1 ? 'tema' : 'temas');
-                tag.textContent = remainingLabel;
+                tag.className = 'challenge-card__tag challenge-card__tag--overflow';
+                tag.textContent = '+' + remaining;
                 tagsWrapper.appendChild(tag);
             }
             content.appendChild(tagsWrapper);
@@ -426,23 +437,28 @@ export default class ChallengeHub {
 
         return card;
     }
+    _estimateQuizDurationMinutes(quiz, questionCount) {
+        const candidateValues = [
+            quiz?.estimated_minutes,
+            quiz?.tempo_estimado_minutos,
+            quiz?.tempo_medio_minutos,
+            quiz?.tempo_estimado,
+            quiz?.tempo_medio,
+        ];
 
+        for (const value of candidateValues) {
+            const parsed = Number(value);
+            if (Number.isFinite(parsed) && parsed > 0) {
+                return Math.max(1, Math.round(parsed));
+            }
+        }
 
-    _createMetaItem(iconName, text) {
-        const wrapper = document.createElement('span');
-        wrapper.className = 'challenge-card__meta-item';
+        if (!questionCount) {
+            return null;
+        }
 
-        const icon = document.createElement('span');
-        icon.className = 'material-symbols-outlined';
-        icon.setAttribute('aria-hidden', 'true');
-        icon.textContent = iconName;
-        wrapper.appendChild(icon);
-
-        const label = document.createElement('span');
-        label.textContent = text;
-        wrapper.appendChild(label);
-
-        return wrapper;
+        // Fallback heurístico: ~40 segundos por questão ≈ 0,67 minuto.
+        return Math.max(1, Math.round(questionCount * 0.67));
     }
 
     _resolvePredefinedDescription({ quiz, topCategories, questionCount, totalCategories }) {

@@ -17,8 +17,8 @@ body {
     --layout-header-offset: var(--header-height, 75px);
     --layout-nav-offset: var(--main-nav-height, 50px);
     --layout-bottom-offset: 0px;
-    --score-panel-sticky-top: calc(var(--layout-header-offset) + var(--layout-nav-offset));
-    --account-sidebar-sticky-top: var(--score-panel-sticky-top);
+    --score-panel-sticky-top: 0px;
+    --account-sidebar-sticky-top: 0px;
 }
 
 .main-section {
@@ -60,8 +60,8 @@ body {
 @media (max-width: 992px) { /* Tablet Landscape */
     body {
         --layout-header-offset: var(--header-height-tablet, var(--header-height));
-        --score-panel-sticky-top: calc(var(--layout-header-offset) + var(--layout-nav-offset));
-        --account-sidebar-sticky-top: var(--score-panel-sticky-top);
+        --score-panel-sticky-top: 0px;
+        --account-sidebar-sticky-top: 0px;
     }
     .question-section__main-content {
       padding: var(--question-section-main-padding-tablet, var(--spacing-lg, 35px));
@@ -73,8 +73,8 @@ body {
         --layout-header-offset: var(--header-height-tablet, var(--header-height));
         --layout-nav-offset: 0px;
         --layout-bottom-offset: 0px;
-        --score-panel-sticky-top: var(--layout-header-offset);
-        --account-sidebar-sticky-top: var(--score-panel-sticky-top);
+        --score-panel-sticky-top: 0px;
+        --account-sidebar-sticky-top: 0px;
     }
 
     body[data-page-id="home"],
@@ -100,8 +100,8 @@ body {
 @media (max-width: 480px) {
     body {
         --layout-header-offset: var(--header-height-mobile, var(--header-height));
-        --score-panel-sticky-top: var(--layout-header-offset);
-        --account-sidebar-sticky-top: var(--score-panel-sticky-top);
+        --score-panel-sticky-top: 0px;
+        --account-sidebar-sticky-top: 0px;
     }
 
     .question-section__main-content {

@@ -1,5 +1,5 @@
 # quiz/models.py
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ValidationError
@@ -44,11 +44,144 @@ class Categoria(models.Model):
             return f"{self.id_categoria_pai.nome_categoria} -> {self.nome_categoria}"
         return self.nome_categoria
 
+    def save(self, *args, **kwargs):
+        is_new = self.pk is None
+        old_parent_id = None
+        descendant_ids = None
+        if not is_new and self.pk:
+            old_parent_id = Categoria.objects.filter(pk=self.pk).values_list(
+                'id_categoria_pai_id', flat=True
+            ).first()
+            descendant_ids = list(
+                CategoriaHierarquia.objects.filter(ancestor_id=self.pk)
+                .values_list('descendant_id', flat=True)
+            )
+
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+
+            # Se a categoria é nova ou seu pai mudou, precisamos recalcular a hierarquia
+            parent_changed = old_parent_id != self.id_categoria_pai_id
+            if is_new or parent_changed:
+                ids_to_rebuild = descendant_ids if descendant_ids else []
+                if is_new:
+                    ids_to_rebuild.append(self.pk)
+                CategoriaHierarquia.rebuild_for_descendants(ids_to_rebuild or [self.pk])
+            else:
+                # Garante que pelo menos o elo reflexivo exista
+                if not CategoriaHierarquia.objects.filter(
+                    ancestor_id=self.pk, descendant_id=self.pk
+                ).exists():
+                    CategoriaHierarquia.rebuild_for_descendants([self.pk])
+
+    def delete(self, *args, **kwargs):
+        descendant_ids = list(
+            CategoriaHierarquia.objects.filter(ancestor_id=self.pk)
+            .values_list('descendant_id', flat=True)
+        )
+
+        with transaction.atomic():
+            super().delete(*args, **kwargs)
+
+            remaining_descendants = [
+                pk for pk in descendant_ids if pk and pk != self.pk
+            ]
+            if remaining_descendants:
+                CategoriaHierarquia.rebuild_for_descendants(remaining_descendants)
+
     class Meta:
         verbose_name = "Categoria de Pergunta"
         verbose_name_plural = "Categorias de Perguntas"
         unique_together = ('nome_categoria', 'id_categoria_pai')
         ordering = ['nome_categoria']
+
+
+class CategoriaHierarquia(models.Model):
+    ancestor = models.ForeignKey(
+        'Categoria',
+        related_name='hierarquia_descendentes',
+        on_delete=models.CASCADE,
+    )
+    descendant = models.ForeignKey(
+        'Categoria',
+        related_name='hierarquia_ancestrais',
+        on_delete=models.CASCADE,
+    )
+    depth = models.PositiveIntegerField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['ancestor', 'descendant'],
+                name='unique_categoriahierarquia_ancestor_descendant'
+            )
+        ]
+        indexes = [
+            models.Index(fields=['ancestor', 'descendant']),
+            models.Index(fields=['descendant', 'ancestor']),
+        ]
+
+    def __str__(self):
+        return f"{self.ancestor_id} -> {self.descendant_id} (depth={self.depth})"
+
+    @classmethod
+    def rebuild_for_descendants(cls, descendant_ids, batch_size=1000):
+        if not descendant_ids:
+            return
+
+        ids = {int(pk) for pk in descendant_ids if pk is not None}
+        if not ids:
+            return
+
+        cls.objects.filter(descendant_id__in=ids).delete()
+
+        parent_map = dict(
+            Categoria.objects.all().values_list('pk', 'id_categoria_pai_id')
+        )
+        to_create = []
+        for descendant_id in ids:
+            if descendant_id not in parent_map:
+                continue
+            depth = 0
+            current_id = descendant_id
+            visited = set()
+            while current_id is not None and current_id not in visited:
+                visited.add(current_id)
+                to_create.append(cls(
+                    ancestor_id=current_id,
+                    descendant_id=descendant_id,
+                    depth=depth,
+                ))
+                depth += 1
+                current_id = parent_map.get(current_id)
+
+        if to_create:
+            cls.objects.bulk_create(to_create, batch_size=batch_size)
+
+    @classmethod
+    def rebuild_tree(cls, batch_size=1000):
+        parent_map = dict(
+            Categoria.objects.all().values_list('pk', 'id_categoria_pai_id')
+        )
+        cls.objects.all().delete()
+
+        to_create = []
+        for descendant_id in parent_map.keys():
+            depth = 0
+            current_id = descendant_id
+            visited = set()
+            while current_id is not None and current_id not in visited:
+                visited.add(current_id)
+                to_create.append(cls(
+                    ancestor_id=current_id,
+                    descendant_id=descendant_id,
+                    depth=depth,
+                ))
+                depth += 1
+                current_id = parent_map.get(current_id)
+
+        if to_create:
+            cls.objects.bulk_create(to_create, batch_size=batch_size)
 
 
 class Pergunta(models.Model):

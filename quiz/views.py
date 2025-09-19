@@ -1,7 +1,5 @@
 # quiz/views.py
 import json
-import random
-import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
@@ -9,13 +7,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
 from datetime import timedelta  # Mantido, pode ser útil
-from django.db import models  # Para isinstance em _filter_queryset_by_period
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch
 )
-# TruncDate e ExtractWeekDay não são usados diretamente nas funções modificadas,
-# mas podem ser úteis em outras partes ou nas funções de estatísticas não alteradas.
-from django.db.models.functions import TruncDate
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -35,6 +29,9 @@ from .forms import (
     AccountDeleteForm,
     CustomPasswordChangeForm
 )
+
+from .services.quiz_service import QuizDataService
+from .services.statistics_service import StatisticsService
 
 # region Lógica de Negócio e Utilitários de Dados
 
@@ -73,31 +70,8 @@ def get_quiz_config():
 
 
 def get_descendant_category_ids(category_ids_str_list):
-    """
-    Obtém todos os IDs de categorias descendentes a partir de uma lista inicial de IDs de categoria.
-    Isso inclui os IDs iniciais na lista retornada.
-    """
-    if not category_ids_str_list:
-        return set()
-    try:
-        initial_ids = {
-            int(cat_id)
-            for cat_id in category_ids_str_list
-            if str(cat_id).strip().isdigit()
-        }
-    except ValueError:
-        return set()
-
-    if not initial_ids:
-        return set()
-
-    descendant_ids = set(
-        CategoriaHierarquia.objects.filter(ancestor_id__in=initial_ids)
-        .values_list('descendant_id', flat=True)
-    )
-    # Garante que as categorias originais estejam presentes, mesmo que ainda não haja registros
-    descendant_ids.update(initial_ids)
-    return descendant_ids
+    """Wrapper que delega a lógica para o serviço de dados do quiz."""
+    return QuizDataService.get_descendant_category_ids(category_ids_str_list)
 
 
 def get_quiz_data_dict(
@@ -109,150 +83,15 @@ def get_quiz_data_dict(
     user: User = None,
     quiz_definicao_id=None
 ):
-
-    todas_categorias_qs = Categoria.objects.all().order_by('nome_categoria')
-    perguntas_qs = Pergunta.objects.filter(ativa=True)
-    quiz_config = get_quiz_config()
-    # NOVO: Para armazenar o nome do quiz definido
-    quiz_definition_name_to_return = None
-
-    if quiz_definicao_id:
-        try:
-            quiz_def = QuizDefinicao.objects.get(
-                pk=quiz_definicao_id, ativo=True)
-            perguntas_ordenadas_ids = list(
-                quiz_def.quizdefinicaopergunta_set.order_by(
-                    'ordem').values_list('pergunta_id', flat=True)
-            )
-            if not perguntas_ordenadas_ids:
-                perguntas_qs = Pergunta.objects.none()
-            else:
-                preserved_order = Case(
-                    *[When(pk=pk, then=pos) for pos, pk in enumerate(perguntas_ordenadas_ids)])
-                perguntas_qs = Pergunta.objects.filter(
-                    pk__in=perguntas_ordenadas_ids, ativa=True).order_by(preserved_order)
-            quiz_definition_name_to_return = quiz_def.nome_quiz  # ARMAZENA O NOME
-        except QuizDefinicao.DoesNotExist:
-            perguntas_qs = Pergunta.objects.none()
-    else:
-        # Lógica existente para filtros de dificuldade e categoria
-        if difficulty_levels_filter and 'all' not in (level.lower() for level in difficulty_levels_filter):
-            normalized_difficulty_filter = [
-                level.lower() for level in difficulty_levels_filter]
-            q_difficulty_objects = Q()
-            valid_model_difficulties = [choice[0]
-                                        for choice in Pergunta.NivelDificuldade.choices]
-            for level_from_filter in normalized_difficulty_filter:
-                for model_level in valid_model_difficulties:
-                    if level_from_filter == model_level.lower():
-                        q_difficulty_objects |= Q(
-                            nivel_dificuldade=model_level)
-                        break
-            if q_difficulty_objects:
-                perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
-            else:
-                perguntas_qs = Pergunta.objects.none()
-
-        if category_ids_filter:
-            valid_category_ids_str_list = [
-                cid for cid in category_ids_filter if str(cid).strip().isdigit()]
-            if valid_category_ids_str_list:
-                descendant_ids = get_descendant_category_ids(
-                    valid_category_ids_str_list)
-                if descendant_ids:
-                    perguntas_qs = perguntas_qs.filter(
-                        categorias__pk__in=descendant_ids).distinct()
-                else:
-                    perguntas_qs = Pergunta.objects.none()
-            else:
-                perguntas_qs = Pergunta.objects.none()
-
-        # Lógica existente para número de perguntas
-        num_perguntas_a_selecionar = 0
-        if quiz_mode == SessoesQuizUsuario.ModoQuiz.RAPIDO:
-            try:
-                num_perguntas_a_selecionar = int(question_count_str) if question_count_str and question_count_str.isdigit(
-                ) and int(question_count_str) > 0 else quiz_config.numero_perguntas_quiz_rapido
-            except (ValueError, TypeError):
-                num_perguntas_a_selecionar = quiz_config.numero_perguntas_quiz_rapido
-        elif num_questions_custom_str:
-            try:
-                num_val = int(num_questions_custom_str)
-                if num_val > 0:
-                    num_perguntas_a_selecionar = num_val
-            except (ValueError, TypeError):
-                num_perguntas_a_selecionar = 0
-
-        if num_perguntas_a_selecionar > 0:
-            all_matching_question_ids = list(
-                perguntas_qs.values_list('pk', flat=True))
-            if len(all_matching_question_ids) > num_perguntas_a_selecionar:
-                selected_ids = random.sample(
-                    all_matching_question_ids, num_perguntas_a_selecionar)
-                perguntas_qs = Pergunta.objects.filter(
-                    pk__in=selected_ids).order_by('?')
-            # else: # Se menos perguntas disponíveis do que o solicitado, usa todas.
-            #    perguntas_qs = perguntas_qs.order_by('?') # Já está filtrado, apenas embaralha.
-
-    # Lógica existente de prefetch e formatação de dados
-    perguntas_data_qs = perguntas_qs.prefetch_related(
-        Prefetch('categorias', queryset=Categoria.objects.all().only(
-            'pk', 'nome_categoria')),
-        Prefetch('opcoes', queryset=OpcaoResposta.objects.all().only(
-            'pk', 'pergunta_id', 'texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao'))
-    ).distinct()
-
-    filtered_pergunta_ids = [p.pk for p in perguntas_data_qs]
-
-    user_favorite_ids = set()
-    if user and user.is_authenticated:
-        user_favorite_ids = set(QuestaoFavorita.objects.filter(
-            usuario=user,
-            pergunta_id__in=filtered_pergunta_ids
-        ).values_list('pergunta_id', flat=True))
-
-    categorias_data_list = [
-        {
-            'id_categoria': c.pk, 'nome_categoria': c.nome_categoria,
-            'id_categoria_pai': c.id_categoria_pai_id,
-            'descricao_categoria': c.descricao_categoria
-        } for c in todas_categorias_qs
-    ]
-
-    perguntas_data_list = []
-    opcoes_dict_por_pergunta = defaultdict(list)
-
-    opcoes_para_perguntas_selecionadas = OpcaoResposta.objects.filter(
-        pergunta_id__in=filtered_pergunta_ids)
-    for o in opcoes_para_perguntas_selecionadas:
-        opcoes_dict_por_pergunta[o.pergunta_id].append({
-            'id_opcao_resposta': o.pk,
-            'id_pergunta': o.pergunta_id,
-            'texto_opcao': o.texto_opcao,
-            'eh_correta': o.eh_correta,
-            'ordem_exibicao': o.ordem_exibicao,
-            'feedback_opcao': o.feedback_opcao
-        })
-
-    for p in perguntas_data_qs:
-        perguntas_data_list.append({
-            'id_pergunta': p.pk,
-            'texto_pergunta': p.texto_pergunta,
-            'url_imagem': p.url_imagem,
-            'referencia_bibliografica': p.referencia_bibliografica,
-            'categoria_ids': [cat.pk for cat in p.categorias.all()],
-            'nivel_dificuldade': p.nivel_dificuldade,
-            'explicacao_resposta': p.explicacao_resposta,
-            'is_favorited': p.pk in user_favorite_ids if user and user.is_authenticated else False,
-            'opcoes': sorted(opcoes_dict_por_pergunta.get(p.pk, []), key=lambda x: x.get('ordem_exibicao', 0))
-        })
-
-    return {
-        'perguntas': perguntas_data_list,
-        'categorias': categorias_data_list,
-        'opcoesResposta': [opt for opts_list in opcoes_dict_por_pergunta.values() for opt in opts_list],
-        'quiz_definition_name': quiz_definition_name_to_return  # ADICIONADO AO RETORNO
-    }
+    service = QuizDataService(quiz_config=get_quiz_config(), user=user)
+    return service.get_quiz_data_dict(
+        category_ids_filter=category_ids_filter,
+        difficulty_levels_filter=difficulty_levels_filter,
+        quiz_mode=quiz_mode,
+        question_count_str=question_count_str,
+        num_questions_custom_str=num_questions_custom_str,
+        quiz_definicao_id=quiz_definicao_id,
+    )
 
 # **** FUNÇÃO ADICIONADA AQUI ****
 
@@ -278,61 +117,7 @@ def get_or_create_daily_stats(user: User):
 
 
 def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str = "data_estatistica"):
-    normalized_period = (
-        str(period_str).strip().lower() if period_str is not None else "30d"
-    )
-
-    if normalized_period == "all":
-        return queryset
-
-    days = None
-
-    if isinstance(period_str, (int, float)):
-        try:
-            days = int(period_str)
-        except (TypeError, ValueError):
-            days = None
-    else:
-        match = re.match(r"^(\d+)(d)?$", normalized_period)
-        if match:
-            days = int(match.group(1))
-
-    if not days or days <= 0:
-        days = 30
-
-    current_ts = timezone.now()
-
-    try:
-        model_field = queryset.model._meta.get_field(date_field_name)
-    except models.FieldDoesNotExist:
-        print(
-            f"Warning: Campo '{date_field_name}' não encontrado no modelo {queryset.model.__name__} em _filter_queryset_by_period.")
-        return queryset.none()
-
-    if isinstance(model_field, models.DateTimeField):
-        end_range = current_ts.replace(
-            hour=23, minute=59, second=59, microsecond=999999)
-        start_range_dt = current_ts - timedelta(days=days - 1)
-        start_range = start_range_dt.replace(
-            hour=0, minute=0, second=0, microsecond=0)
-
-        filter_kwargs = {
-            f"{date_field_name}__gte": start_range,
-            f"{date_field_name}__lte": end_range,
-        }
-    elif isinstance(model_field, models.DateField):
-        today_date_obj = current_ts.date()
-        start_date_obj = today_date_obj - timedelta(days=days - 1)
-        filter_kwargs = {
-            f"{date_field_name}__gte": start_date_obj,
-            f"{date_field_name}__lte": today_date_obj,
-        }
-    else:
-        print(
-            f"Warning: _filter_queryset_by_period recebeu um tipo de campo inesperado: {type(model_field)} para o campo {date_field_name}")
-        return queryset.none()
-
-    return queryset.filter(**filter_kwargs)
+    return StatisticsService.filter_queryset_by_period(queryset, period_str, date_field_name)
 
 # endregion
 
@@ -340,25 +125,7 @@ def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str =
 
 
 def _get_key_metrics(user: User, daily_stats_period_qs):
-    total_questions_answered_period = daily_stats_period_qs.aggregate(
-        total=Sum('perguntas_respondidas_dia'))['total'] or 0
-    total_study_time_seconds_period = daily_stats_period_qs.aggregate(
-        total=Sum('tempo_estudo_segundos_dia'))['total'] or 0
-
-    latest_daily_stat = EstatisticasDiariasUsuario.objects.filter(
-        id_usuario=user).order_by('-data_estatistica').first()
-    max_streak = latest_daily_stat.sequencia_dias_quiz if latest_daily_stat else 0
-
-    total_score_all_time = SessoesQuizUsuario.objects.filter(
-        id_usuario=user, status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA
-    ).aggregate(total_score=Sum('pontuacao_final'))['total_score'] or 0
-
-    return {
-        'total_questions_answered': total_questions_answered_period,
-        'max_streak': max_streak,
-        'total_score_all_time': total_score_all_time,
-        'total_study_time_seconds': total_study_time_seconds_period,
-    }
+    return StatisticsService.get_key_metrics(user, daily_stats_period_qs)
 
 
 def _get_overall_accuracy_data(daily_stats_period_qs):

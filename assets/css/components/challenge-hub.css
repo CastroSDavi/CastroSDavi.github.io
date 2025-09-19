@@ -274,9 +274,20 @@
 .challenge-hub__info-text--error::before {
     background: var(--color-accent-red, #d62828);
 }
+.challenge-hub__predefined-section {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(18px, 3vw, 24px);
+    padding: clamp(22px, 3vw, 26px);
+    background-color: var(--color-white);
+    border: var(--border-width, 1px) solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xs);
+    grid-column: 1 / -1;
+}
 .challenge-hub__predefined-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
     gap: clamp(16px, 3vw, 22px);
     align-items: stretch;
 }
@@ -423,7 +434,8 @@
 
 @media (max-width: 640px) {
     .challenge-hub__predefined-section {
-        padding: clamp(20px, 7vw, 26px);
+        gap: clamp(16px, 6vw, 22px);
+        padding: clamp(20px, 7vw, 24px);
     }
 
     .challenge-hub__section-header {

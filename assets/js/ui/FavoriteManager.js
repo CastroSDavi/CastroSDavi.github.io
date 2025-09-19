@@ -108,22 +108,74 @@ export default class FavoriteManager {
         const allCategories = this.store.getState().geral.allCategories || [];
         const categoryMap = new Map(allCategories.map(cat => [cat.id_categoria, cat.nome_categoria]));
 
+        container.classList.add('favorite-questions-list');
+
         favoriteQuestionsData.forEach(fav => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'favorite-question-item';
+            const questionCard = document.createElement('article');
+            questionCard.className = 'favorite-question-card';
+            questionCard.dataset.perguntaId = fav.id_pergunta;
 
-            const questionLink = document.createElement('a');
-            questionLink.href = `#q${fav.id_pergunta}`;
-            questionLink.className = 'favorite-question-link';
-            questionLink.textContent = `P${fav.id_pergunta}: ${fav.texto_pergunta.substring(0, 120)}${fav.texto_pergunta.length > 120 ? '...' : ''}`;
-            questionLink.title = `Revisar questão P${fav.id_pergunta}`;
-            questionLink.dataset.perguntaId = fav.id_pergunta;
+            const header = document.createElement('header');
+            header.className = 'favorite-question-card__header';
 
-            const detailsDiv = document.createElement('div');
-            detailsDiv.className = 'favorite-question-details';
+            const headingWrapper = document.createElement('div');
+            headingWrapper.className = 'favorite-question-card__heading';
+
+            const idBadge = document.createElement('span');
+            idBadge.className = 'favorite-question-card__badge';
+            idBadge.textContent = `P${fav.id_pergunta}`;
+            headingWrapper.appendChild(idBadge);
+
+            const title = document.createElement('h3');
+            title.className = 'favorite-question-card__title';
+            title.textContent = fav.texto_pergunta;
+            headingWrapper.appendChild(title);
+
+            header.appendChild(headingWrapper);
+
+            const metaContainer = document.createElement('div');
+            metaContainer.className = 'favorite-question-card__meta';
+
+            if (fav.nivel_dificuldade) {
+                const difficultySpan = document.createElement('span');
+                const difficultyModifier = this._getDifficultyModifier(fav.nivel_dificuldade);
+                difficultySpan.className = `favorite-question-card__difficulty favorite-question-card__difficulty--${difficultyModifier}`;
+                difficultySpan.textContent = fav.nivel_dificuldade;
+                metaContainer.appendChild(difficultySpan);
+            }
+
+            const formattedDate = this._formatFavoriteDate(fav.data_favoritada);
+            if (formattedDate) {
+                const dateSpan = document.createElement('span');
+                dateSpan.className = 'favorite-question-card__date favorite-question-date';
+                dateSpan.textContent = `Favoritada em ${formattedDate}`;
+                metaContainer.appendChild(dateSpan);
+            }
+
+            if (metaContainer.childElementCount > 0) {
+                header.appendChild(metaContainer);
+            }
+
+            questionCard.appendChild(header);
+
+            const body = document.createElement('div');
+            body.className = 'favorite-question-card__body';
+
+            if (fav.url_imagem) {
+                const imageWrapper = document.createElement('figure');
+                imageWrapper.className = 'favorite-question-card__image-wrapper';
+
+                const imageElement = document.createElement('img');
+                imageElement.className = 'favorite-question-card__image';
+                imageElement.src = fav.url_imagem;
+                imageElement.alt = `Imagem ilustrativa da questão P${fav.id_pergunta}`;
+                imageWrapper.appendChild(imageElement);
+
+                body.appendChild(imageWrapper);
+            }
 
             const tagsContainer = document.createElement('div');
-            tagsContainer.className = 'categories-tags-container';
+            tagsContainer.className = 'favorite-question-card__tags categories-tags-container';
 
             if (fav.categoria_ids && fav.categoria_ids.length > 0) {
                 fav.categoria_ids.forEach(id => {
@@ -136,23 +188,156 @@ export default class FavoriteManager {
             } else {
                 const noCatTag = document.createElement('span');
                 noCatTag.className = 'category-tag category-tag--none';
-                noCatTag.textContent = 'Não especificada';
+                noCatTag.textContent = 'Categoria não informada';
                 tagsContainer.appendChild(noCatTag);
             }
-            detailsDiv.appendChild(tagsContainer);
 
-            const dataFavoritada = new Date(fav.data_favoritada).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-            const dataSmall = document.createElement('small');
-            dataSmall.className = 'favorite-question-date';
-            dataSmall.textContent = `Favoritada em: ${dataFavoritada}`;
-            detailsDiv.appendChild(dataSmall);
+            body.appendChild(tagsContainer);
 
-            itemDiv.appendChild(questionLink);
-            itemDiv.appendChild(detailsDiv);
-            container.appendChild(itemDiv);
+            const options = Array.isArray(fav.opcoes) ? [...fav.opcoes] : [];
+            if (options.length > 0) {
+                options.sort((a, b) => {
+                    const orderA = typeof a.ordem_exibicao === 'number' ? a.ordem_exibicao : Number.MAX_SAFE_INTEGER;
+                    const orderB = typeof b.ordem_exibicao === 'number' ? b.ordem_exibicao : Number.MAX_SAFE_INTEGER;
+                    if (orderA === orderB) {
+                        return (a.id_opcao_resposta || 0) - (b.id_opcao_resposta || 0);
+                    }
+                    return orderA - orderB;
+                });
+
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'favorite-question-card__options';
+
+                options.forEach((option, index) => {
+                    const optionItem = document.createElement('li');
+                    optionItem.className = 'favorite-question-card__option';
+                    if (option.eh_correta) {
+                        optionItem.classList.add('is-correct');
+                    }
+
+                    const letterSpan = document.createElement('span');
+                    letterSpan.className = 'favorite-question-card__option-letter';
+                    letterSpan.textContent = this._getOptionLetter(index);
+                    optionItem.appendChild(letterSpan);
+
+                    const optionText = document.createElement('span');
+                    optionText.className = 'favorite-question-card__option-text';
+                    optionText.textContent = option.texto_opcao;
+                    optionItem.appendChild(optionText);
+
+                    optionsList.appendChild(optionItem);
+                });
+
+                body.appendChild(optionsList);
+            }
+
+            let explanationContainer = null;
+            const explanationId = `favorite-question-explanation-${fav.id_pergunta}`;
+            if (fav.explicacao_resposta) {
+                explanationContainer = document.createElement('div');
+                explanationContainer.className = 'favorite-question-card__explanation';
+                explanationContainer.id = explanationId;
+                explanationContainer.hidden = true;
+
+                const explanationTitle = document.createElement('h4');
+                explanationTitle.className = 'favorite-question-card__explanation-title';
+                explanationTitle.textContent = 'Explicação da resposta';
+                explanationContainer.appendChild(explanationTitle);
+
+                const explanationText = document.createElement('p');
+                explanationText.className = 'favorite-question-card__explanation-text';
+                explanationText.textContent = fav.explicacao_resposta;
+                explanationContainer.appendChild(explanationText);
+
+                body.appendChild(explanationContainer);
+            }
+
+            questionCard.appendChild(body);
+
+            const footer = document.createElement('footer');
+            footer.className = 'favorite-question-card__footer';
+
+            if (fav.referencia_bibliografica) {
+                const referenceParagraph = document.createElement('p');
+                referenceParagraph.className = 'favorite-question-card__reference';
+                referenceParagraph.textContent = fav.referencia_bibliografica;
+                footer.appendChild(referenceParagraph);
+            }
+
+            const actionsContainer = document.createElement('div');
+            actionsContainer.className = 'favorite-question-card__actions';
+
+            const reviewLink = document.createElement('a');
+            reviewLink.href = `#q${fav.id_pergunta}`;
+            reviewLink.className = 'button button--outline button--small favorite-question-card__action favorite-question-link';
+            reviewLink.dataset.perguntaId = fav.id_pergunta;
+            reviewLink.title = `Revisar a questão P${fav.id_pergunta} no quiz`;
+
+            const reviewLabel = document.createElement('span');
+            reviewLabel.className = 'button__label';
+            reviewLabel.textContent = 'Ir para a questão';
+            reviewLink.appendChild(reviewLabel);
+            actionsContainer.appendChild(reviewLink);
+
+            if (explanationContainer) {
+                const explanationButton = document.createElement('button');
+                explanationButton.type = 'button';
+                explanationButton.className = 'button button--text favorite-question-card__action';
+                explanationButton.setAttribute('aria-expanded', 'false');
+                explanationButton.setAttribute('aria-controls', explanationId);
+
+                const explanationButtonLabel = document.createElement('span');
+                explanationButtonLabel.className = 'button__label';
+                explanationButtonLabel.textContent = 'Ver explicação';
+                explanationButton.appendChild(explanationButtonLabel);
+
+                explanationButton.addEventListener('click', () => {
+                    const isExpanded = explanationButton.getAttribute('aria-expanded') === 'true';
+                    explanationContainer.hidden = isExpanded;
+                    explanationButton.setAttribute('aria-expanded', String(!isExpanded));
+                    explanationButtonLabel.textContent = isExpanded ? 'Ver explicação' : 'Ocultar explicação';
+                });
+
+                actionsContainer.appendChild(explanationButton);
+            }
+
+            footer.appendChild(actionsContainer);
+            questionCard.appendChild(footer);
+
+            container.appendChild(questionCard);
         });
+    }
 
-        const lastItem = container.querySelector('.favorite-question-item:last-child');
-        if (lastItem) lastItem.style.borderBottom = 'none';
+    _formatFavoriteDate(isoDateString) {
+        if (!isoDateString) return null;
+        const parsedDate = new Date(isoDateString);
+        if (Number.isNaN(parsedDate.getTime())) return null;
+        return parsedDate.toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+        });
+    }
+
+    _getDifficultyModifier(difficultyLabel) {
+        if (!difficultyLabel) return 'padrao';
+        const normalized = difficultyLabel
+            .toString()
+            .normalize('NFD')
+            .replace(/\p{Diacritic}/gu, '')
+            .toLowerCase();
+
+        if (normalized.includes('fac')) return 'facil';
+        if (normalized.includes('med')) return 'medio';
+        if (normalized.includes('dific')) return 'dificil';
+        return 'padrao';
+    }
+
+    _getOptionLetter(index) {
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        if (index < alphabet.length) {
+            return alphabet[index];
+        }
+        return String(index + 1);
     }
 }

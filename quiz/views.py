@@ -22,7 +22,7 @@ from django.contrib.auth.models import User
 from collections import defaultdict
 
 from .models import (
-    Pergunta, Categoria, OpcaoResposta,
+    Pergunta, Categoria, CategoriaHierarquia, OpcaoResposta,
     SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
     QuestaoFavorita,
     QuizDefinicao,  # NOVO MODELO
@@ -80,34 +80,24 @@ def get_descendant_category_ids(category_ids_str_list):
     if not category_ids_str_list:
         return set()
     try:
-        # Garante que apenas IDs numéricos válidos sejam processados
-        initial_ids = set(int(cat_id) for cat_id in category_ids_str_list if str(
-            cat_id).strip().isdigit())
+        initial_ids = {
+            int(cat_id)
+            for cat_id in category_ids_str_list
+            if str(cat_id).strip().isdigit()
+        }
     except ValueError:
-        # Se houver algum valor não numérico que não foi filtrado, retorna conjunto vazio
         return set()
 
     if not initial_ids:
         return set()
 
-    all_descendant_ids = set()
-    # Fila para processamento BFS (Breadth-First Search)
-    queue = list(initial_ids)
-    processed_ids = set()     # Para evitar reprocessar e ciclos infinitos
-
-    while queue:
-        current_id = queue.pop(0)
-        if current_id in processed_ids:
-            continue
-        processed_ids.add(current_id)
-        all_descendant_ids.add(current_id)
-
-        subcategorias = Categoria.objects.filter(
-            id_categoria_pai_id=current_id).values_list('pk', flat=True)
-        for sub_cat_id in subcategorias:
-            if sub_cat_id not in processed_ids:
-                queue.append(sub_cat_id)
-    return all_descendant_ids
+    descendant_ids = set(
+        CategoriaHierarquia.objects.filter(ancestor_id__in=initial_ids)
+        .values_list('descendant_id', flat=True)
+    )
+    # Garante que as categorias originais estejam presentes, mesmo que ainda não haja registros
+    descendant_ids.update(initial_ids)
+    return descendant_ids
 
 
 def get_quiz_data_dict(
@@ -384,21 +374,28 @@ def _get_overall_accuracy_data(daily_stats_period_qs):
 
 def _get_category_performance_data(user_sessions_period_qs):
     category_performance = {}
-    main_categories = Categoria.objects.filter(
-        id_categoria_pai__isnull=True).prefetch_related('subcategorias')
+    main_categories = list(
+        Categoria.objects.filter(id_categoria_pai__isnull=True)
+    )
 
     responses_in_period = RespostasUsuarioPorSessao.objects.filter(
         id_sessao_quiz__in=user_sessions_period_qs,
         id_opcao_resposta_selecionada__isnull=False
     ).select_related('id_pergunta').prefetch_related('id_pergunta__categorias')
 
-    all_descendant_map = {cat.pk: get_descendant_category_ids(
-        [str(cat.pk)]) for cat in main_categories}
+    descendant_map = defaultdict(set)
+    if main_categories:
+        main_category_ids = [cat.pk for cat in main_categories]
+        for ancestor_id, descendant_id in CategoriaHierarquia.objects.filter(
+            ancestor_id__in=main_category_ids
+        ).values_list('ancestor_id', 'descendant_id'):
+            descendant_map[ancestor_id].add(descendant_id)
 
     for resp in responses_in_period:
         pergunta_obj = resp.id_pergunta
         for main_cat_obj in main_categories:
-            if any(cat.pk in all_descendant_map[main_cat_obj.pk] for cat in pergunta_obj.categorias.all()):
+            descendants = descendant_map.get(main_cat_obj.pk, {main_cat_obj.pk})
+            if any(cat.pk in descendants for cat in pergunta_obj.categorias.all()):
                 cat_name = main_cat_obj.nome_categoria
                 if cat_name not in category_performance:
                     category_performance[cat_name] = {

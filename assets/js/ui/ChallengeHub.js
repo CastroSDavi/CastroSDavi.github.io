@@ -249,7 +249,8 @@ export default class ChallengeHub {
         if (!this.elements.resumeCard || !resumableSession) return;
 
         const questionCount = resumableSession.perguntas?.length || 0;
-        this.elements.resumeCardDescription.innerHTML = `Você tem uma sessão em andamento de <strong>${questionCount}</strong> questões.`;
+        const questionLabel = questionCount === 1 ? 'questão' : 'questões';
+        this.elements.resumeCardDescription.innerHTML = `Você tem uma sessão em andamento com <strong>${questionCount}</strong> ${questionLabel}.`;
 
         this.quizUI.showElement(this.elements.resumeCard);
     }

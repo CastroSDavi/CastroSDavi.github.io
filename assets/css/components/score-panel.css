@@ -21,9 +21,20 @@
   flex-shrink: 0;
 
   position: sticky;
-  top: 0;
+  top: var(--score-panel-sticky-top, 0);
   align-self: flex-start;
-  height: calc(100vh - var(--header-height, 70px) - var(--main-nav-height, 50px));
+  height: calc(
+    100vh
+    - var(--header-height, 70px)
+    - var(--main-nav-height, 50px)
+    - var(--layout-bottom-offset, 0px)
+  );
+  max-height: calc(
+    100vh
+    - var(--header-height, 70px)
+    - var(--main-nav-height, 50px)
+    - var(--layout-bottom-offset, 0px)
+  );
   overflow-y: auto;
   z-index: var(--z-index-sticky, 10);
 }
@@ -177,7 +188,18 @@
         width: var(--score-panel-width-tablet, 240px);
         min-width: var(--score-panel-width-tablet, 240px);
         --score-panel-padding-x: var(--spacing-sm, 20px);
-        height: calc(100vh - var(--header-height-tablet, var(--header-height)) - var(--main-nav-height-tablet, var(--main-nav-height)));
+        height: calc(
+            100vh
+            - var(--header-height-tablet, var(--header-height))
+            - var(--main-nav-height-tablet, var(--main-nav-height))
+            - var(--layout-bottom-offset, 0px)
+        );
+        max-height: calc(
+            100vh
+            - var(--header-height-tablet, var(--header-height))
+            - var(--main-nav-height-tablet, var(--main-nav-height))
+            - var(--layout-bottom-offset, 0px)
+        );
     }
     .score-panel__timer-value { font-size: 2.3rem; }
     .score-panel__stat-icon { font-size: 1.375rem; width: 22px; height: 22px; }
@@ -186,15 +208,24 @@
 
 @media (max-width: 768px) {
     .score-panel {
-        position: static; height: auto; overflow-y: visible; width: 100%;
+        position: sticky;
+        top: var(--score-panel-sticky-top, 0);
+        width: 100%;
         min-width: 100%;
+        height: auto;
+        max-height: none;
+        overflow-y: visible;
         background-color: var(--score-panel-bg-color-mobile, var(--color-white));
         box-shadow: 0 2px 8px rgba(var(--color-primary-dark-rgb), 0.05);
-        border-right: none; border-bottom: 1px solid var(--color-gray-200);
-        flex-direction: row; justify-content: space-between;
-        align-items: center; padding: var(--spacing-sm, 10px) var(--spacing-md, 16px);
+        border-right: none;
+        border-bottom: 1px solid var(--color-gray-200);
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--spacing-sm, 10px) var(--spacing-md, 16px);
         gap: var(--spacing-sm, 10px);
         flex-wrap: nowrap;
+        z-index: var(--z-index-sticky, 10);
     }
 
     .score-panel__timer {

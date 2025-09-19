@@ -27,7 +27,9 @@
     padding: var(--spacing-md, 20px);
     overflow-y: auto;
     position: sticky; /* Mantém a sidebar fixa no scroll do conteúdo principal em desktop */
-    top: 0;
+    top: var(--account-sidebar-sticky-top, 0);
+    max-height: calc(100vh - var(--account-sidebar-sticky-top, 0px) - var(--layout-bottom-offset, 0px));
+    z-index: var(--z-index-sticky, 10);
     transition: width 0.25s ease-in-out, transform 0.3s ease-out, opacity 0.3s ease-out;
 }
 /* Scrollbar sutil para a sidebar */
@@ -715,11 +717,16 @@
     }
     .account-sidebar {
         width: 100%;
-        position: static; border-right: none; border-radius: 0;
+        position: sticky;
+        top: var(--account-sidebar-sticky-top, 0);
+        border-right: none;
+        border-radius: 0;
         box-shadow: none;
         padding: var(--spacing-md, 20px);
-        margin-bottom: 0; flex-shrink: 0;
+        margin-bottom: 0;
+        flex-shrink: 0;
         overflow-y: auto;
+        max-height: calc(100vh - var(--account-sidebar-sticky-top, 0px) - var(--layout-bottom-offset, 0px));
     }
 
     .account-sidebar__nav ul { gap: var(--spacing-sm, 12px); }

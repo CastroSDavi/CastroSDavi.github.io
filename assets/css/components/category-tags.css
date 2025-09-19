@@ -23,10 +23,23 @@
     padding-top: var(--spacing-xxs, 4px); /* Pequeno espaço se houver múltiplas linhas */
 }
 
-/* Na lista de favoritos, se você criar um container similar */
-.favorite-question-item .categories-tags-container { /* Exemplo de seletor */
+/* Lista de favoritos (conta) */
+.favorite-question-card__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.3em;
-    margin-top: var(--spacing-xxs, 4px);
+    gap: 0.35rem;
+}
+
+.favorite-question-card__tags .category-tag {
+    margin: 0;
+    background-color: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.95);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.25);
+    color: var(--color-primary-dark);
+    font-weight: var(--font-weight-medium, 500);
+}
+
+.favorite-question-card__tags .category-tag:hover,
+.favorite-question-card__tags .category-tag:focus-visible {
+    background-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.5);
 }

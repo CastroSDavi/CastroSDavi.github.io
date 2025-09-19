@@ -117,8 +117,14 @@ class CategoriaHierarquia(models.Model):
             )
         ]
         indexes = [
-            models.Index(fields=['ancestor', 'descendant']),
-            models.Index(fields=['descendant', 'ancestor']),
+            models.Index(
+                fields=['ancestor', 'descendant'],
+                name='categoriahierarquia_ancestor_descendant_idx',
+            ),
+            models.Index(
+                fields=['descendant', 'ancestor'],
+                name='categoriahierarquia_descendant_ancestor_idx',
+            ),
         ]
 
     def __str__(self):

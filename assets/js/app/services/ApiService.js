@@ -72,6 +72,9 @@ export default class ApiService {
         if (filterParams.difficulty_levels?.length > 0 && !filterParams.difficulty_levels.includes('all')) {
             queryParams.difficulty_levels = filterParams.difficulty_levels.join(',');
         }
+        if (filterParams.search_query && filterParams.search_query.toString().trim() !== '') {
+            queryParams.search_query = filterParams.search_query.toString().trim();
+        }
         if (filterParams.quiz_definicao_id) {
             queryParams.quiz_definicao_id = filterParams.quiz_definicao_id;
         } else if (filterParams.mode === 'Rápido') {
@@ -96,6 +99,9 @@ export default class ApiService {
         }
         if (filterParams.difficulty_levels?.length > 0 && !filterParams.difficulty_levels.includes('all')) {
             queryParams.difficulty_levels = filterParams.difficulty_levels.join(',');
+        }
+        if (filterParams.search_query && filterParams.search_query.toString().trim() !== '') {
+            queryParams.search_query = filterParams.search_query.toString().trim();
         }
         return _request(API_URLS.api_get_filtered_question_count, 'GET', null, queryParams);
     }

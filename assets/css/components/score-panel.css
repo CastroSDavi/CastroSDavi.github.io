@@ -25,14 +25,14 @@
   align-self: flex-start;
   height: calc(
     100vh
-    - var(--header-height, 70px)
-    - var(--main-nav-height, 50px)
+    - var(--layout-header-offset, var(--header-height, 75px))
+    - var(--layout-nav-offset, var(--main-nav-height, 50px))
     - var(--layout-bottom-offset, 0px)
   );
   max-height: calc(
     100vh
-    - var(--header-height, 70px)
-    - var(--main-nav-height, 50px)
+    - var(--layout-header-offset, var(--header-height, 75px))
+    - var(--layout-nav-offset, var(--main-nav-height, 50px))
     - var(--layout-bottom-offset, 0px)
   );
   overflow-y: auto;
@@ -190,14 +190,14 @@
         --score-panel-padding-x: var(--spacing-sm, 20px);
         height: calc(
             100vh
-            - var(--header-height-tablet, var(--header-height))
-            - var(--main-nav-height-tablet, var(--main-nav-height))
+            - var(--layout-header-offset, var(--header-height, 75px))
+            - var(--layout-nav-offset, var(--main-nav-height, 50px))
             - var(--layout-bottom-offset, 0px)
         );
         max-height: calc(
             100vh
-            - var(--header-height-tablet, var(--header-height))
-            - var(--main-nav-height-tablet, var(--main-nav-height))
+            - var(--layout-header-offset, var(--header-height, 75px))
+            - var(--layout-nav-offset, var(--main-nav-height, 50px))
             - var(--layout-bottom-offset, 0px)
         );
     }

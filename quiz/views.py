@@ -1,4 +1,4 @@
-# quiz/views.py
+﻿# quiz/views.py
 import json
 import math
 import re
@@ -8,18 +8,18 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
-from datetime import timedelta  # Mantido, pode ser útil
+from datetime import timedelta  # Mantido, pode ser Ãºtil
 from django.db import models, transaction  # Para isinstance em _filter_queryset_by_period
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch
 )
-# TruncDate e ExtractWeekDay não são usados diretamente nas funções modificadas,
-# mas podem ser úteis em outras partes ou nas funções de estatísticas não alteradas.
+# TruncDate e ExtractWeekDay nÃ£o sÃ£o usados diretamente nas funÃ§Ãµes modificadas,
+# mas podem ser Ãºteis em outras partes ou nas funÃ§Ãµes de estatÃ­sticas nÃ£o alteradas.
 from django.db.models.functions import TruncDate, Random
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
-from collections import defaultdict
+from collections import Counter, defaultdict
 
 from .models import (
     Pergunta, Categoria, OpcaoResposta,
@@ -36,55 +36,55 @@ from .forms import (
     CustomPasswordChangeForm
 )
 
-# region Lógica de Negócio e Utilitários de Dados
+# region LÃ³gica de NegÃ³cio e UtilitÃ¡rios de Dados
 
-# Cache simples em memória para configurações gerais
+# Cache simples em memÃ³ria para configuraÃ§Ãµes gerais
 _quiz_config_cache = None
 
 
 def invalidate_quiz_config_cache():
-    """Limpa o cache em memória da configuração geral do quiz."""
+    """Limpa o cache em memÃ³ria da configuraÃ§Ã£o geral do quiz."""
     global _quiz_config_cache
     _quiz_config_cache = None
 
 
 def get_quiz_config():
     """
-    Retorna a instância (singleton) de ConfiguracoesGeraisQuiz.
-    Cria uma instância com valores padrão se não existir, pressupondo que o ID/PK 1 é usado para o singleton.
-    Cacheia a instância em memória para evitar queries repetidas durante o mesmo request/processo.
+    Retorna a instÃ¢ncia (singleton) de ConfiguracoesGeraisQuiz.
+    Cria uma instÃ¢ncia com valores padrÃ£o se nÃ£o existir, pressupondo que o ID/PK 1 Ã© usado para o singleton.
+    Cacheia a instÃ¢ncia em memÃ³ria para evitar queries repetidas durante o mesmo request/processo.
     """
     global _quiz_config_cache
     if _quiz_config_cache is None:
         config, created = ConfiguracoesGeraisQuiz.objects.get_or_create(
             pk=1,  # Garante que sempre tentamos obter/criar a mesma linha.
             defaults={
-                'numero_perguntas_quiz_rapido': 10,  # Valor padrão
-                'pontuacao_por_acerto': 15,       # Valor padrão
-                'penalidade_por_erro': 5          # Valor padrão
+                'numero_perguntas_quiz_rapido': 10,  # Valor padrÃ£o
+                'pontuacao_por_acerto': 15,       # Valor padrÃ£o
+                'penalidade_por_erro': 5          # Valor padrÃ£o
             }
         )
         if created:
             # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
             print(
-                f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
+                f"INFO: InstÃ¢ncia de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrÃ£o.")
         _quiz_config_cache = config
     return _quiz_config_cache
 
 
 def get_descendant_category_ids(category_ids_str_list):
     """
-    Obtém todos os IDs de categorias descendentes a partir de uma lista inicial de IDs de categoria.
+    ObtÃ©m todos os IDs de categorias descendentes a partir de uma lista inicial de IDs de categoria.
     Isso inclui os IDs iniciais na lista retornada.
     """
     if not category_ids_str_list:
         return set()
     try:
-        # Garante que apenas IDs numéricos válidos sejam processados
+        # Garante que apenas IDs numÃ©ricos vÃ¡lidos sejam processados
         initial_ids = set(int(cat_id) for cat_id in category_ids_str_list if str(
             cat_id).strip().isdigit())
     except ValueError:
-        # Se houver algum valor não numérico que não foi filtrado, retorna conjunto vazio
+        # Se houver algum valor nÃ£o numÃ©rico que nÃ£o foi filtrado, retorna conjunto vazio
         return set()
 
     if not initial_ids:
@@ -307,20 +307,20 @@ def get_quiz_data_dict(
 
 def get_or_create_daily_stats(user: User):
     """
-    Obtém ou cria as estatísticas diárias para um dado usuário.
+    ObtÃ©m ou cria as estatÃ­sticas diÃ¡rias para um dado usuÃ¡rio.
     """
     today = timezone.now().date()
     stats, created = EstatisticasDiariasUsuario.objects.get_or_create(
         id_usuario=user,
         data_estatistica=today,
-        # Se o modelo EstatisticasDiariasUsuario tiver outros campos obrigatórios
-        # que não têm um default no modelo, eles precisariam ser fornecidos aqui
-        # no dicionário 'defaults'. Ex:
+        # Se o modelo EstatisticasDiariasUsuario tiver outros campos obrigatÃ³rios
+        # que nÃ£o tÃªm um default no modelo, eles precisariam ser fornecidos aqui
+        # no dicionÃ¡rio 'defaults'. Ex:
         # defaults={'algum_campo_obrigatorio': 0}
     )
-    # Se precisar fazer algo específico quando um novo registro de stats é criado:
+    # Se precisar fazer algo especÃ­fico quando um novo registro de stats Ã© criado:
     # if created:
-    #     # Lógica para quando um novo dia de estatísticas começa para o usuário
+    #     # LÃ³gica para quando um novo dia de estatÃ­sticas comeÃ§a para o usuÃ¡rio
     #     pass
     return stats
 
@@ -354,7 +354,7 @@ def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str =
         model_field = queryset.model._meta.get_field(date_field_name)
     except models.FieldDoesNotExist:
         print(
-            f"Warning: Campo '{date_field_name}' não encontrado no modelo {queryset.model.__name__} em _filter_queryset_by_period.")
+            f"Warning: Campo '{date_field_name}' nÃ£o encontrado no modelo {queryset.model.__name__} em _filter_queryset_by_period.")
         return queryset.none()
 
     if isinstance(model_field, models.DateTimeField):
@@ -384,7 +384,7 @@ def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str =
 
 # endregion
 
-# region Funções Auxiliares para Estatísticas do Usuário
+# region FunÃ§Ãµes Auxiliares para EstatÃ­sticas do UsuÃ¡rio
 
 
 def _get_key_metrics(user: User, daily_stats_period_qs):
@@ -528,7 +528,7 @@ def _get_study_time_detail_data(user: User):
             'tempo_estudo_segundos_dia', 0) or 0
 
     day_labels_pt_ordered_sun_first = [
-        "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"]
+        "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "SÃ¡b"]
 
     ordered_minutes_data = [
         round((daily_study_seconds.get(6, 0) or 0) / 60),
@@ -569,7 +569,7 @@ def _get_difficulty_performance_data(user_sessions_period_qs):
     ]
 # endregion
 
-# region Views Principais (Páginas HTML)
+# region Views Principais (PÃ¡ginas HTML)
 
 
 @login_required
@@ -587,7 +587,7 @@ def home_view(request):
             accuracy_percentage_str = "0%"
 
     context = {
-        'page_title': 'MedQuiz - Início',
+        'page_title': 'MedQuiz - InÃ­cio',
         'daily_stats': daily_stats,
         'accuracy_percentage': accuracy_percentage_str,
     }
@@ -597,7 +597,7 @@ def home_view(request):
 @login_required
 def questions_view(request):
     context = {
-        'page_title': 'MedQuiz - Questões',
+        'page_title': 'MedQuiz - QuestÃµes',
     }
     return render(request, 'quiz/questions_page.html', context)
 
@@ -659,10 +659,10 @@ def update_profile_view(request):
                 field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
                 for error in errors_list:
                     messages.error(
-                        request, f"{field_label if field_label else 'Formulário'}: {error}".strip(': '))
+                        request, f"{field_label if field_label else 'FormulÃ¡rio'}: {error}".strip(': '))
             if not form.errors:
                 messages.error(
-                    request, 'Não foi possível atualizar seu perfil. Verifique os dados.')
+                    request, 'NÃ£o foi possÃ­vel atualizar seu perfil. Verifique os dados.')
             context = {
                 'page_title': 'MedQuiz - Minha Conta', 'user_sessions': user_sessions,
                 'update_form': form, 'delete_form': delete_form,
@@ -680,7 +680,7 @@ def delete_account_view(request):
         user_to_delete = request.user
         logout(request)
         user_to_delete.delete()
-        messages.success(request, 'Sua conta foi excluída com sucesso.')
+        messages.success(request, 'Sua conta foi excluÃ­da com sucesso.')
         return redirect(reverse_lazy('quiz:home'))
     else:
         user_sessions = SessoesQuizUsuario.objects.filter(
@@ -690,10 +690,10 @@ def delete_account_view(request):
             field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
             for error in errors_list:
                 messages.error(
-                    request, f"{field_label if field_label else 'Formulário de Deleção'}: {error}".strip(': '))
+                    request, f"{field_label if field_label else 'FormulÃ¡rio de DeleÃ§Ã£o'}: {error}".strip(': '))
         if not form.errors:
             messages.error(
-                request, 'Não foi possível excluir sua conta. Verifique sua senha.')
+                request, 'NÃ£o foi possÃ­vel excluir sua conta. Verifique sua senha.')
 
         context = {
             'page_title': 'MedQuiz - Minha Conta',
@@ -708,12 +708,12 @@ def delete_account_view(request):
 
 # endregion
 
-# region API Views para Quiz e Dados do Usuário
+# region API Views para Quiz e Dados do UsuÃ¡rio
 
 
 @require_GET
 def api_get_quiz_summary_view(request):
-    """Retorna estatísticas agregadas leves para inicialização da interface."""
+    """Retorna estatÃ­sticas agregadas leves para inicializaÃ§Ã£o da interface."""
     try:
         perguntas_ativas = Pergunta.objects.filter(ativa=True)
         total_questions = perguntas_ativas.count()
@@ -753,6 +753,62 @@ def api_get_quiz_summary_view(request):
             status=500
         )
 
+
+
+
+@require_GET
+def api_get_predefined_quizzes_view(request):
+    try:
+        limit_param = request.GET.get('limit')
+        limit = None
+        if limit_param and str(limit_param).isdigit():
+            limit = max(1, min(int(limit_param), 20))
+
+        quizzes_qs = (
+            QuizDefinicao.objects.filter(ativo=True)
+            .order_by('-data_atualizacao')
+            .prefetch_related(
+                Prefetch(
+                    'quizdefinicaopergunta_set',
+                    queryset=QuizDefinicaoPergunta.objects.select_related('pergunta')
+                    .prefetch_related('pergunta__categorias')
+                    .order_by('ordem')
+                )
+            )
+        )
+        if limit:
+            quizzes_qs = quizzes_qs[:limit]
+
+        quizzes_payload = []
+        for quiz in quizzes_qs:
+            relacoes = list(quiz.quizdefinicaopergunta_set.all())
+            question_count = len(relacoes)
+
+            category_counter = Counter()
+            for relacao in relacoes:
+                for categoria in relacao.pergunta.categorias.all():
+                    nome = (categoria.nome_categoria or '').strip()
+                    if not nome:
+                        continue
+                    category_counter[nome] += 1
+
+            top_categories = [name for name, _ in category_counter.most_common(3)]
+            total_categories = len(category_counter)
+
+            quizzes_payload.append({
+                'id': quiz.pk,
+                'nome': quiz.nome_quiz,
+                'descricao': (quiz.descricao or '').strip(),
+                'question_count': question_count,
+                'top_categories': top_categories,
+                'total_categories': total_categories,
+                'updated_at': quiz.data_atualizacao.isoformat() if quiz.data_atualizacao else None,
+            })
+
+        return JsonResponse({'status': 'success', 'quizzes': quizzes_payload})
+    except Exception as exc:
+        print(f"Erro em api_get_predefined_quizzes_view: {type(exc).__name__} - {exc}")
+        return JsonResponse({'status': 'error', 'message': 'Erro ao buscar quizzes definidos.'}, status=500)
 
 @require_GET
 def api_get_quiz_data_view(request):
@@ -1047,7 +1103,7 @@ def end_quiz_session_view(request):
 
         if sessao_quiz.status_sessao == SessoesQuizUsuario.StatusSessao.COMPLETA:
             return JsonResponse({
-                'status': 'info', 'message': 'Sessão já finalizada.',
+                'status': 'info', 'message': 'SessÃ£o jÃ¡ finalizada.',
                 'pontuacao_final': sessao_quiz.pontuacao_final,
                 'total_acertos': sessao_quiz.total_acertos,
                 'total_erros': sessao_quiz.total_erros
@@ -1070,22 +1126,85 @@ def end_quiz_session_view(request):
         stats.save()
 
         return JsonResponse({
-            'status': 'success', 'message': 'Sessão finalizada com sucesso.',
+            'status': 'success', 'message': 'SessÃ£o finalizada com sucesso.',
             'pontuacao_final': sessao_quiz.pontuacao_final,
             'total_acertos': sessao_quiz.total_acertos,
             'total_erros': sessao_quiz.total_erros
         })
     except SessoesQuizUsuario.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Sessão de quiz inválida ou não pertence ao usuário.'}, status=403)
+        return JsonResponse({'status': 'error', 'message': 'SessÃ£o de quiz invÃ¡lida ou nÃ£o pertence ao usuÃ¡rio.'}, status=403)
     except json.JSONDecodeError:
-        return JsonResponse({'status': 'error', 'message': 'Corpo da requisição JSON inválido.'}, status=400)
+        return JsonResponse({'status': 'error', 'message': 'Corpo da requisiÃ§Ã£o JSON invÃ¡lido.'}, status=400)
     except Exception as e:
         print(f"Erro em end_quiz_session_view: {type(e).__name__} - {e}")
-        return JsonResponse({'status': 'error', 'message': 'Erro interno ao finalizar sessão.'}, status=500)
+        return JsonResponse({'status': 'error', 'message': 'Erro interno ao finalizar sessÃ£o.'}, status=500)
+
+
+
+@login_required
+@require_POST
+def toggle_favorite_status_view(request, pergunta_id):
+    pergunta = Pergunta.objects.filter(pk=pergunta_id, ativa=True).first()
+    if not pergunta:
+        return JsonResponse({'status': 'error', 'message': 'Pergunta nao encontrada ou inativa.'}, status=404)
+
+    try:
+        with transaction.atomic():
+            favorite, created = QuestaoFavorita.objects.get_or_create(
+                usuario=request.user,
+                pergunta=pergunta
+            )
+            if created:
+                is_favorited = True
+            else:
+                favorite.delete()
+                is_favorited = False
+    except Exception as exc:
+        print(f"Erro em toggle_favorite_status_view: {type(exc).__name__} - {exc}")
+        return JsonResponse({'status': 'error', 'message': 'Erro ao atualizar favorito.'}, status=500)
+
+    return JsonResponse({'status': 'success', 'is_favorited': is_favorited})
 
 
 @login_required
 @require_GET
+def get_favorite_questions_view(request):
+    favorites_qs = (
+        QuestaoFavorita.objects
+        .filter(usuario=request.user)
+        .select_related('pergunta')
+        .prefetch_related('pergunta__categorias')
+        .order_by('-data_favoritada')
+    )
+
+    perguntas = [
+        fav.pergunta
+        for fav in favorites_qs
+        if fav.pergunta and fav.pergunta.ativa
+    ]
+
+    if not perguntas:
+        return JsonResponse({'status': 'success', 'favorite_questions': []})
+
+    serialized_questions = serialize_questions(perguntas, user=request.user)
+    question_map = {item['id_pergunta']: item for item in serialized_questions}
+
+    favorite_payload = []
+    for fav in favorites_qs:
+        pergunta = fav.pergunta
+        if not pergunta or not pergunta.ativa:
+            continue
+        question_data = question_map.get(pergunta.pk)
+        if not question_data:
+            continue
+        favorite_payload.append({
+            **question_data,
+            'data_favoritada': fav.data_favoritada.isoformat()
+        })
+
+    return JsonResponse({'status': 'success', 'favorite_questions': favorite_payload})
+
+
 @login_required
 @require_GET
 def api_resume_quiz_session_view(request):
@@ -1190,7 +1309,8 @@ def api_get_user_statistics_view(request):
         })
     except Exception as e:
         print(
-            f"Erro em api_get_user_statistics_view para user {user.id} com período {period}: {type(e).__name__} - {e}")
-        return JsonResponse({'status': 'error', 'message': 'Ocorreu um erro ao processar suas estatísticas.'}, status=500)
+            f"Erro em api_get_user_statistics_view para user {user.id} com perÃ­odo {period}: {type(e).__name__} - {e}")
+        return JsonResponse({'status': 'error', 'message': 'Ocorreu um erro ao processar suas estatÃ­sticas.'}, status=500)
 
 # endregion
+

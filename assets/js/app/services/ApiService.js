@@ -126,4 +126,16 @@ export default class ApiService {
         }
         return _request(API_URLS.api_resume_quiz_session, 'GET');
     }
+
+
+    async fetchPredefinedQuizzes(limit = null) {
+        const queryParams = {};
+        if (Number.isInteger(limit) && limit > 0) {
+            queryParams.limit = limit;
+        }
+        return _request(API_URLS.api_get_predefined_quizzes, 'GET', null, queryParams);
+    }
 }
+
+
+

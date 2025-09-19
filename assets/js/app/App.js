@@ -45,6 +45,10 @@ export default class App {
             }
 
             this._setupUIComponents();
+
+            if (currentPageId === 'questions') {
+                await this.actionOrchestrator.loadPredefinedQuizzes();
+            }
             this._determineInitialSection();
 
             this.store.dispatch({ type: 'UI_READY' });
@@ -89,6 +93,7 @@ export default class App {
         if (this.quizUI.elements.challengeHubContainer) {
             const challengeHub = new ChallengeHub(this.quizUI);
             challengeHub.setActionOrchestrator(this.actionOrchestrator);
+            challengeHub.setStore(this.store);
             this.quizUI.setChallengeHubInstance(challengeHub);
             const totalQuestions = typeof state.geral.totalQuestionsAvailable === 'number'
                 ? state.geral.totalQuestionsAvailable.toLocaleString('pt-BR')

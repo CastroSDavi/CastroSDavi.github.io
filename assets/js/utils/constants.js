@@ -14,7 +14,8 @@ export const API_URLS = {
     toggle_favorite_status: (perguntaId) => `/api/question/${perguntaId}/toggle_favorite/`,
     get_favorite_questions: '/api/favorites/',
     api_get_user_statistics: '/api/user-statistics/',
-    api_resume_quiz_session: '/api/quiz/resume-session/'
+    api_resume_quiz_session: '/api/quiz/resume-session/',
+    api_get_predefined_quizzes: '/api/quiz/predefined/'
 };
 
 /**

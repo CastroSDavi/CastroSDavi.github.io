@@ -9,6 +9,9 @@ const initialState = {
         totalQuestionsAvailable: 0,
         isInitialDataLoaded: false,
         lastFetchedQuizDefinitionName: null,
+        predefinedQuizzes: [],
+        isLoadingPredefinedQuizzes: false,
+        predefinedQuizzesError: null,
         homeSummary: {
             totalCategories: 0,
             quickQuizDefaultCount: QUICK_QUIZ_COUNT,
@@ -167,6 +170,39 @@ export function quizReducer(state = initialState, action) {
                     error: action.payload.error
                 }
             };
+        case ActionTypes.FETCH_PREDEFINED_QUIZZES_REQUEST:
+            return {
+                ...state,
+                geral: {
+                    ...state.geral,
+                    isLoadingPredefinedQuizzes: true,
+                    predefinedQuizzesError: null,
+                }
+            };
+
+        case ActionTypes.FETCH_PREDEFINED_QUIZZES_SUCCESS: {
+            const quizzes = Array.isArray(action.payload.quizzes) ? action.payload.quizzes : [];
+            return {
+                ...state,
+                geral: {
+                    ...state.geral,
+                    predefinedQuizzes: quizzes,
+                    isLoadingPredefinedQuizzes: false,
+                    predefinedQuizzesError: null,
+                }
+            };
+        }
+
+        case ActionTypes.FETCH_PREDEFINED_QUIZZES_FAILURE:
+            return {
+                ...state,
+                geral: {
+                    ...state.geral,
+                    isLoadingPredefinedQuizzes: false,
+                    predefinedQuizzesError: action.payload.error || 'Nao foi possivel carregar as listas definidas.',
+                }
+            };
+
 
         // --- AÇÕES GERAIS ---
         case ActionTypes.SET_GENERAL_SUMMARY: {
@@ -302,7 +338,7 @@ export function quizReducer(state = initialState, action) {
             if (mode === 'Definido' && quizDefinitionName) {
                 displayMode = 'focused';
                 mainQuizTitle = quizDefinitionName;
-            } else if (mode === 'Rápido') {
+            } else if (mode === 'Rapido') {
                 mainQuizTitle = 'Quiz Rápido';
             }
 
@@ -327,7 +363,7 @@ export function quizReducer(state = initialState, action) {
             if (resumeData.modo_quiz === 'Definido' && resumeData.quiz_definition_name) {
                 displayMode = 'focused';
                 mainQuizTitle = resumeData.quiz_definition_name;
-            } else if (resumeData.modo_quiz === 'Rápido') {
+            } else if (resumeData.modo_quiz === 'Rapido') {
                 mainQuizTitle = 'Quiz Rápido';
             }
             const rehydratedQuizState = {

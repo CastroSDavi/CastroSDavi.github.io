@@ -224,6 +224,36 @@ export default class ActionOrchestrator {
         }
     }
 
+
+    async loadPredefinedQuizzes(force = false) {
+        const geralState = this.store.getState().geral;
+        if (!force) {
+            if (geralState.isLoadingPredefinedQuizzes) {
+                return;
+            }
+            if (Array.isArray(geralState.predefinedQuizzes) && geralState.predefinedQuizzes.length > 0) {
+                return;
+            }
+        }
+
+        this.store.dispatch(quizActions.fetchPredefinedQuizzesRequest());
+        try {
+            const response = await this.apiService.fetchPredefinedQuizzes(6);
+            if (response && response.status === 'success') {
+                const quizzes = Array.isArray(response.quizzes) ? response.quizzes : [];
+                this.store.dispatch(quizActions.fetchPredefinedQuizzesSuccess(quizzes));
+            } else {
+                const message = response?.message || 'Nao foi possivel carregar as listas definidas.';
+                throw new Error(message);
+            }
+        } catch (error) {
+            const friendlyError = getFriendlyErrorMessage(error, 'Nao foi possivel carregar as listas definidas.');
+            this.store.dispatch(quizActions.fetchPredefinedQuizzesFailure(friendlyError));
+        }
+    }
+
+
+
     async fetchStatistics(period) {
         this.store.dispatch(quizActions.fetchStatsRequest());
         try {
@@ -266,7 +296,7 @@ export default class ActionOrchestrator {
     }
 
     async startQuickQuiz() {
-        await this._fetchAndInitiateQuiz({ mode: 'Rápido' });
+        await this._fetchAndInitiateQuiz({ mode: 'Rapido' });
     }
 
     async startPredefinedQuiz(quizDefinicaoId) {
@@ -430,3 +460,6 @@ export default class ActionOrchestrator {
         }
     }
 }
+
+
+

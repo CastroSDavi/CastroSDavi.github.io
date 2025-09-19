@@ -1,10 +1,12 @@
-﻿# quiz/models.py
-from django.db import models
+# quiz/models.py
 from django.contrib.auth.models import User
-from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
+from django.db import models
+from django.utils import timezone
 from datetime import timedelta
+
+from .config_cache import invalidate_quiz_config_cache
 
 # --- Modelos de Conteúdo do Quiz ---
 
@@ -579,12 +581,7 @@ class ConfiguracoesGeraisQuiz(models.Model):
         if self.penalidade_por_erro < 0:
             raise ValidationError({'penalidade_por_erro': 'A penalidade por erro não pode ser negativa.'})
         result = super().save(*args, **kwargs)
-        try:
-            from .views import invalidate_quiz_config_cache
-            invalidate_quiz_config_cache()
-        except ImportError:
-            # Durante alguns fluxos de import (como migrações) as views podem não estar disponíveis.
-            pass
+        invalidate_quiz_config_cache()
         return result
 
     class Meta:

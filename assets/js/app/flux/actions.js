@@ -55,6 +55,9 @@ export const ActionTypes = {
     FETCH_STATS_REQUEST: 'FETCH_STATS_REQUEST',
     FETCH_STATS_SUCCESS: 'FETCH_STATS_SUCCESS',
     FETCH_STATS_FAILURE: 'FETCH_STATS_FAILURE',
+    FETCH_PREDEFINED_QUIZZES_REQUEST: 'FETCH_PREDEFINED_QUIZZES_REQUEST',
+    FETCH_PREDEFINED_QUIZZES_SUCCESS: 'FETCH_PREDEFINED_QUIZZES_SUCCESS',
+    FETCH_PREDEFINED_QUIZZES_FAILURE: 'FETCH_PREDEFINED_QUIZZES_FAILURE',
 };
 
 
@@ -144,6 +147,20 @@ export const quizActions = {
         payload: { error }
     }),
 
+    fetchPredefinedQuizzesRequest: () => ({
+        type: ActionTypes.FETCH_PREDEFINED_QUIZZES_REQUEST
+    }),
+
+    fetchPredefinedQuizzesSuccess: (quizzes) => ({
+        type: ActionTypes.FETCH_PREDEFINED_QUIZZES_SUCCESS,
+        payload: { quizzes }
+    }),
+
+    fetchPredefinedQuizzesFailure: (error) => ({
+        type: ActionTypes.FETCH_PREDEFINED_QUIZZES_FAILURE,
+        payload: { error }
+    }),
+
     setGeneralSummary: ({ totalQuestions, categories, totalCategories, quickQuizDefaultCount }) => ({
         type: ActionTypes.SET_GENERAL_SUMMARY,
         payload: {
@@ -154,3 +171,5 @@ export const quizActions = {
         }
     }),
 };
+
+

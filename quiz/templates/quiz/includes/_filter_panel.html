@@ -14,14 +14,19 @@
             <div class="filter-group__header">
                 <h3 class="filter-group__title" id="filter-group-categories-title">Categorias</h3>
             </div>
-            <div class="filter-group__controls filter-group__controls--standalone">
-                <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
-                <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
-            </div>
-            <div class="form-group form-group--filter-panel filter-group__search">
-                <label for="category-search-input" class="form-label u-sr-only">Buscar categorias ou termos</label>
-                <input type="search" id="category-search-input" class="form-control--filter-panel"
-                    placeholder="Buscar categorias ou termos" autocomplete="off">
+            <div class="filter-group__toolbar">
+                <div class="filter-group__controls filter-group__controls--standalone">
+                    <button class="button button--text button--small" id="btn-cat-select-all">Selecionar Todas</button>
+                    <button class="button button--text button--small" id="btn-cat-clear-all">Limpar Todas</button>
+                </div>
+                <div class="form-group form-group--filter-panel filter-group__search">
+                    <label for="category-search-input" class="form-label u-sr-only">Buscar categorias ou termos</label>
+                    <div class="filter-search" role="search">
+                        <span class="material-symbols-outlined filter-search__icon" aria-hidden="true">search</span>
+                        <input type="search" id="category-search-input" class="filter-search__input"
+                            placeholder="Buscar categorias ou termos" autocomplete="off">
+                    </div>
+                </div>
             </div>
             <ul class="category-tree" id="category-tree-list" role="tree"
                 aria-labelledby="filter-group-categories-title">

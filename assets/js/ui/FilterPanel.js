@@ -394,7 +394,7 @@ export default class FilterPanel {
 
         let categoriesToRender = hierarchicalCategories;
         if (normalizedSearch) {
-            categoriesToRender = this._filterCategoriesBySearch(hierarchicalCategories, normalizedSearch);
+            categoriesToRender = this._filterCategoriesBySearch(hierarchicalCategories, normalizedSearch, []);
             if (!categoriesToRender.length) {
                 treeContainer.innerHTML = '<li class="category-tree__empty-state">Nenhuma categoria encontrada.</li>';
                 return;
@@ -422,8 +422,27 @@ export default class FilterPanel {
                 const label = document.createElement('label');
                 label.htmlFor = inputCheckbox.id;
                 label.className = 'category-tree__label';
-                label.textContent = catNode.nome_categoria;
                 label.tabIndex = 0;
+
+                const labelMainText = document.createElement('span');
+                labelMainText.className = 'category-tree__label-text';
+                labelMainText.textContent = catNode.nome_categoria;
+                label.appendChild(labelMainText);
+
+                const searchAncestors = Array.isArray(catNode.__searchMeta?.ancestors)
+                    ? catNode.__searchMeta.ancestors.filter(Boolean)
+                    : [];
+                if (searchAncestors.length) {
+                    const contextText = searchAncestors.join(' › ');
+                    const labelContext = document.createElement('span');
+                    labelContext.className = 'category-tree__label-context';
+                    labelContext.textContent = contextText;
+                    label.appendChild(labelContext);
+                    label.title = `${catNode.nome_categoria} • ${contextText}`;
+                } else {
+                    label.title = catNode.nome_categoria;
+                }
+
                 label.addEventListener('keydown', (e) => {
                     if (e.key === ' ' || e.key === 'Enter') {
                         e.preventDefault();
@@ -500,7 +519,7 @@ export default class FilterPanel {
         return hierarchicalCategories;
     }
 
-    _filterCategoriesBySearch(nodes, normalizedTerm) {
+    _filterCategoriesBySearch(nodes, normalizedTerm, ancestors = []) {
         if (!Array.isArray(nodes) || !normalizedTerm) {
             return nodes || [];
         }
@@ -511,20 +530,30 @@ export default class FilterPanel {
             const nodeName = typeof node.nome_categoria === 'string' ? node.nome_categoria : '';
             const nodeMatches = nodeName.toLowerCase().includes(normalizedTerm);
             const childNodes = Array.isArray(node.subcategorias) ? node.subcategorias : [];
+            const nextAncestors = [...ancestors, node];
+            const filteredChildren = this._filterCategoriesBySearch(childNodes, normalizedTerm, nextAncestors);
 
             if (nodeMatches) {
                 const clonedNode = this._cloneCategoryNode(node);
                 if (clonedNode) {
+                    clonedNode.__searchMeta = {
+                        ancestors: ancestors
+                            .map(ancestor => ancestor?.nome_categoria)
+                            .filter(name => typeof name === 'string' && name.trim() !== ''),
+                    };
+                    if (filteredChildren.length) {
+                        clonedNode.subcategorias = filteredChildren;
+                    }
                     filtered.push(clonedNode);
                 }
                 return;
             }
 
-            const filteredChildren = this._filterCategoriesBySearch(childNodes, normalizedTerm);
-            if (filteredChildren.length > 0) {
-                filtered.push({
-                    ...node,
-                    subcategorias: filteredChildren,
+            if (filteredChildren.length) {
+                filteredChildren.forEach(childNode => {
+                    if (childNode) {
+                        filtered.push(childNode);
+                    }
                 });
             }
         });
@@ -537,7 +566,8 @@ export default class FilterPanel {
         const clonedChildren = Array.isArray(node.subcategorias)
             ? node.subcategorias.map(child => this._cloneCategoryNode(child)).filter(Boolean)
             : [];
-        return { ...node, subcategorias: clonedChildren };
+        const { __searchMeta: _ignoredMeta, ...nodeWithoutMeta } = node;
+        return { ...nodeWithoutMeta, subcategorias: clonedChildren };
     }
 
     _restoreCategorySelectionOnRender() {

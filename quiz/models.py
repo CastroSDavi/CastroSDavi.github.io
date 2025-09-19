@@ -113,17 +113,17 @@ class CategoriaHierarquia(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['ancestor', 'descendant'],
-                name='unique_categoriahierarquia_ancestor_descendant'
+                name='uq_cat_hier_anc_desc'
             )
         ]
         indexes = [
             models.Index(
                 fields=['ancestor', 'descendant'],
-                name='categoriahierarquia_ancestor_descendant_idx',
+                name='cat_hier_anc_desc_idx',
             ),
             models.Index(
                 fields=['descendant', 'ancestor'],
-                name='categoriahierarquia_descendant_ancestor_idx',
+                name='cat_hier_desc_anc_idx',
             ),
         ]
 

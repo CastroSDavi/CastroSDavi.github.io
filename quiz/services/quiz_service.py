@@ -46,6 +46,7 @@ class QuizDataService:
         question_count_str: Optional[str] = None,
         num_questions_custom_str: Optional[str] = None,
         quiz_definicao_id: Optional[int] = None,
+        search_query: Optional[str] = None,
     ):
         perguntas_qs = Pergunta.objects.filter(ativa=True)
 
@@ -66,6 +67,14 @@ class QuizDataService:
             )
             perguntas_qs = Pergunta.objects.filter(pk__in=perguntas_ordenadas_ids, ativa=True).order_by(preserved_order)
             return perguntas_qs, quiz_def.nome_quiz
+
+        if search_query and str(search_query).strip():
+            term = str(search_query).strip()
+            perguntas_qs = perguntas_qs.filter(
+                Q(texto_pergunta__icontains=term)
+                | Q(referencia_bibliografica__icontains=term)
+                | Q(categorias__nome_categoria__icontains=term)
+            ).distinct()
 
         if difficulty_levels_filter and "all" not in (level.lower() for level in difficulty_levels_filter):
             normalized_difficulty_filter = [level.lower() for level in difficulty_levels_filter]
@@ -126,6 +135,7 @@ class QuizDataService:
         question_count_str: Optional[str] = None,
         num_questions_custom_str: Optional[str] = None,
         quiz_definicao_id: Optional[int] = None,
+        search_query: Optional[str] = None,
     ):
         perguntas_qs, quiz_definition_name = self._build_perguntas_queryset(
             category_ids_filter=category_ids_filter,
@@ -134,6 +144,7 @@ class QuizDataService:
             question_count_str=question_count_str,
             num_questions_custom_str=num_questions_custom_str,
             quiz_definicao_id=quiz_definicao_id,
+            search_query=search_query,
         )
 
         todas_categorias_qs = Categoria.objects.all().order_by("nome_categoria")

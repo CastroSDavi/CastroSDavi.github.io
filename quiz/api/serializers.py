@@ -12,11 +12,13 @@ class QuizDataQuerySerializer(serializers.Serializer):
     count = forms.CharField(required=False)
     num_questions = forms.CharField(required=False)
     quiz_definicao_id = forms.IntegerField(required=False)
+    search_query = forms.CharField(required=False)
 
 
 class FilteredQuestionCountSerializer(serializers.Serializer):
     category_ids = forms.CharField(required=False)
     difficulty_levels = forms.CharField(required=False)
+    search_query = forms.CharField(required=False)
 
 
 class StartQuizSessionSerializer(serializers.Serializer):

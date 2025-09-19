@@ -15,6 +15,11 @@ export default class FilterPanel {
         this.store = null;
 
         this.previousFilterPanelState = {};
+
+        this.allCategories = [];
+        this.categoryIdSet = new Set();
+        this.persistedCategorySelection = new Set();
+        this.searchQuery = '';
         
         this.debouncedTriggerCountFetch = debounce(this._triggerCountFetch.bind(this), 400);
 
@@ -36,6 +41,7 @@ export default class FilterPanel {
     _cacheOwnElements() {
         this.elements = {
             categoryTreeList: this.panelElement.querySelector('#category-tree-list'),
+            categorySearchInput: this.panelElement.querySelector('#category-search-input'),
             btnCatSelectAll: this.panelElement.querySelector('#btn-cat-select-all'),
             btnCatClearAll: this.panelElement.querySelector('#btn-cat-clear-all'),
             filterGroupDifficulty: this.panelElement.querySelector('#filter-group-difficulty'),
@@ -52,10 +58,16 @@ export default class FilterPanel {
         this.elements.btnAplicarFiltrosPainel?.addEventListener('click', () => {
             this.actionOrchestrator?.applyFiltersAndStartQuiz();
         });
-        
+
         this.elements.btnLimparFiltrosPainel?.addEventListener('click', () => this.resetFiltersToDefault());
         this.elements.btnCatSelectAll?.addEventListener('click', () => this._handleSelectAllCategories());
         this.elements.btnCatClearAll?.addEventListener('click', () => this._handleClearAllCategories());
+
+        this.elements.categorySearchInput?.addEventListener('input', (event) => {
+            const { target } = event || {};
+            const value = typeof target?.value === 'string' ? target.value : '';
+            this._handleCategorySearchInput(value);
+        });
 
         this.elements.categoryTreeList?.addEventListener('change', (event) => {
             if (event.target.matches('.category-tree__input')) {
@@ -92,7 +104,17 @@ export default class FilterPanel {
         if (!anySpecificChecked && allCheckbox) {
             allCheckbox.checked = true;
         }
-        
+
+        this.debouncedTriggerCountFetch();
+    }
+
+    _handleCategorySearchInput(rawValue) {
+        const value = typeof rawValue === 'string' ? rawValue : '';
+        if (this.searchQuery === value) {
+            return;
+        }
+        this.setSearchQuery(value);
+        this.generateCategoryTree(this.allCategories || []);
         this.debouncedTriggerCountFetch();
     }
     
@@ -114,17 +136,23 @@ export default class FilterPanel {
     }
 
     resetFiltersToDefault() {
+        const hadSearch = this.getSearchQuery().length > 0;
+        this.setSearchQuery('');
+        if (hadSearch) {
+            this.generateCategoryTree(this.allCategories || []);
+        }
         this.setCategoryTreeState([]);
         this.setDifficultyState(['all']);
-        this.setNumberOfQuestionsState(null); 
+        this.setNumberOfQuestionsState(null);
         this.debouncedTriggerCountFetch();
     }
-    
+
     _triggerCountFetch() {
         if (!this.actionOrchestrator) return;
         const filters = {
             category_ids: this.getSelectedCategories(),
-            difficulty_levels: this.getSelectedDifficulties()
+            difficulty_levels: this.getSelectedDifficulties(),
+            search_query: this.getSearchQuery()
         };
         this.actionOrchestrator.fetchFilteredQuestionCount(filters);
     }
@@ -254,21 +282,16 @@ export default class FilterPanel {
         }
     }
     
-    // --- INÍCIO DA OTIMIZAÇÃO ---
     getSelectedCategories() {
-        const allCheckboxes = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__input') || []);
-        const checkedButNotIndeterminate = allCheckboxes.filter(cb => cb.checked && !cb.classList.contains('is-indeterminate'));
+        const totalCategories = this.categoryIdSet.size;
+        const selectedIds = Array.from(this.persistedCategorySelection);
 
-        // Se TODOS os checkboxes estão marcados, envie um array vazio para o backend.
-        // Isso é muito mais eficiente do que enviar centenas de IDs.
-        if (allCheckboxes.length > 0 && checkedButNotIndeterminate.length === allCheckboxes.length) {
-            return []; // Array vazio significa "sem filtro de categoria" = TODAS.
+        if (totalCategories > 0 && selectedIds.length === totalCategories) {
+            return [];
         }
 
-        // Caso contrário, envie apenas os IDs selecionados.
-        return checkedButNotIndeterminate.map(cb => cb.value);
+        return selectedIds;
     }
-    // --- FIM DA OTIMIZAÇÃO ---
     
     getSelectedDifficulties() {
         const selected = Array.from(this.elements.filterGroupDifficulty?.querySelectorAll('input[name="difficulty"]:checked') || [])
@@ -277,10 +300,14 @@ export default class FilterPanel {
         return selected.length > 0 ? selected : ['all'];
     }
 
+    getSearchQuery() {
+        return this.searchQuery.trim();
+    }
+
     getSelectedNumberOfQuestions() {
         if (this.elements.numQuestionsInput) {
             const valueStr = this.elements.numQuestionsInput.value.trim();
-            if (valueStr === '') return null; 
+            if (valueStr === '') return null;
             const value = parseInt(valueStr, 10);
             return !isNaN(value) && value > 0 ? value : null; 
         }
@@ -288,12 +315,20 @@ export default class FilterPanel {
     }
     
     setCategoryTreeState(selectedIds = []) {
+        const normalizedIds = Array.isArray(selectedIds)
+            ? selectedIds
+                .filter(id => id !== null && id !== undefined)
+                .map(id => id.toString())
+            : [];
+        this.persistedCategorySelection = new Set(normalizedIds);
+        const selectedIdsSet = new Set(normalizedIds);
+
         const allCheckboxes = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__input') || []);
         allCheckboxes.forEach(cb => {
-            cb.checked = selectedIds.includes(cb.value);
+            cb.checked = selectedIdsSet.has(cb.value);
             cb.classList.remove('is-indeterminate');
         });
-        
+
         const parentItems = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__item--has-children') || []);
         for (let i = parentItems.length - 1; i >= 0; i--) {
             this._updateParentCheckboxState(parentItems[i]);
@@ -321,33 +356,60 @@ export default class FilterPanel {
         }
     }
 
+    setSearchQuery(query = '') {
+        const normalizedQuery = typeof query === 'string' ? query : '';
+        this.searchQuery = normalizedQuery;
+        if (this.elements.categorySearchInput && this.elements.categorySearchInput.value !== normalizedQuery) {
+            this.elements.categorySearchInput.value = normalizedQuery;
+        }
+    }
+
     generateCategoryTree(categories) {
         const treeContainer = this.elements.categoryTreeList;
         if (!treeContainer) return;
-        
-        const categoryMap = new Map();
-        categories.forEach(cat => categoryMap.set(cat.id_categoria, { ...cat, subcategorias: [] }));
-        const hierarchicalCategories = [];
-        categories.forEach(cat => {
-            if (cat.id_categoria_pai && categoryMap.has(cat.id_categoria_pai)) {
-                categoryMap.get(cat.id_categoria_pai).subcategorias.push(categoryMap.get(cat.id_categoria));
-            } else {
-                hierarchicalCategories.push(categoryMap.get(cat.id_categoria));
-            }
-        });
-        
+
+        this.allCategories = Array.isArray(categories) ? categories : [];
+        this.categoryIdSet = new Set(
+            this.allCategories
+                .map(cat => (cat?.id_categoria !== undefined ? cat.id_categoria.toString() : null))
+                .filter(Boolean)
+        );
+        this.persistedCategorySelection = new Set(
+            Array.from(this.persistedCategorySelection).filter(id => this.categoryIdSet.has(id))
+        );
+
+        if (this.elements.categorySearchInput && this.elements.categorySearchInput.value !== this.searchQuery) {
+            this.elements.categorySearchInput.value = this.searchQuery;
+        }
+
+        const hierarchicalCategories = this._buildHierarchicalCategories(this.allCategories);
+
         if (!hierarchicalCategories.length) {
             treeContainer.innerHTML = '<li class="category-tree__empty-state">Nenhuma categoria para exibir.</li>';
             return;
         }
-        treeContainer.innerHTML = ''; 
+
+        const searchTerm = this.getSearchQuery();
+        const normalizedSearch = searchTerm.toLowerCase();
+
+        let categoriesToRender = hierarchicalCategories;
+        if (normalizedSearch) {
+            categoriesToRender = this._filterCategoriesBySearch(hierarchicalCategories, normalizedSearch);
+            if (!categoriesToRender.length) {
+                treeContainer.innerHTML = '<li class="category-tree__empty-state">Nenhuma categoria encontrada.</li>';
+                return;
+            }
+        }
+
+        treeContainer.innerHTML = '';
+        const shouldExpandOnRender = Boolean(normalizedSearch);
 
         const createTreeNodes = (nodes, parentElement) => {
             nodes.forEach(catNode => {
                 const listItem = document.createElement('li');
                 listItem.className = 'category-tree__item';
                 listItem.setAttribute('role', 'treeitem');
-                
+
                 const labelWrapper = document.createElement('div');
                 labelWrapper.className = 'category-tree__label-wrapper';
 
@@ -372,14 +434,13 @@ export default class FilterPanel {
 
                 if (catNode.subcategorias && catNode.subcategorias.length > 0) {
                     listItem.classList.add('category-tree__item--has-children');
-                    listItem.setAttribute('aria-expanded', 'false');
 
                     const toggleButton = document.createElement('button');
                     toggleButton.type = 'button';
                     toggleButton.className = 'category-tree__toggle';
                     toggleButton.innerHTML = `<span class="material-symbols-outlined">chevron_right</span>`;
                     toggleButton.setAttribute('aria-label', `Expandir ${catNode.nome_categoria}`);
-                    
+
                     toggleButton.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const isExpanded = listItem.getAttribute('aria-expanded') === 'true';
@@ -387,19 +448,29 @@ export default class FilterPanel {
                         toggleButton.querySelector('.material-symbols-outlined').textContent = !isExpanded ? 'expand_more' : 'chevron_right';
                         this._updateSubmenuHeight(subMenu, !isExpanded);
                     });
-                    
+
+                    const shouldExpand = shouldExpandOnRender;
+                    listItem.setAttribute('aria-expanded', String(shouldExpand));
+                    toggleButton.querySelector('.material-symbols-outlined').textContent = shouldExpand ? 'expand_more' : 'chevron_right';
+
                     labelWrapper.appendChild(toggleButton);
                     labelWrapper.appendChild(inputCheckbox);
                     labelWrapper.appendChild(label);
-                    
+
                     const subMenu = document.createElement('ul');
                     subMenu.className = 'category-tree__submenu';
                     subMenu.setAttribute('role', 'group');
                     createTreeNodes(catNode.subcategorias, subMenu);
-                    
+
                     listItem.appendChild(labelWrapper);
                     listItem.appendChild(subMenu);
+                    if (shouldExpand) {
+                        this._updateSubmenuHeight(subMenu, true);
+                    } else {
+                        subMenu.style.maxHeight = '0';
+                    }
                 } else {
+                    listItem.setAttribute('aria-expanded', 'false');
                     labelWrapper.appendChild(inputCheckbox);
                     labelWrapper.appendChild(label);
                     listItem.appendChild(labelWrapper);
@@ -407,7 +478,74 @@ export default class FilterPanel {
                 parentElement.appendChild(listItem);
             });
         };
-        createTreeNodes(hierarchicalCategories, treeContainer);
+        createTreeNodes(categoriesToRender, treeContainer);
+        this._restoreCategorySelectionOnRender();
+    }
+
+    _buildHierarchicalCategories(categories) {
+        const categoryMap = new Map();
+        (categories || []).forEach(cat => {
+            if (!cat || cat.id_categoria === undefined) return;
+            categoryMap.set(cat.id_categoria, { ...cat, subcategorias: [] });
+        });
+
+        const hierarchicalCategories = [];
+        categoryMap.forEach(catNode => {
+            if (catNode.id_categoria_pai && categoryMap.has(catNode.id_categoria_pai)) {
+                categoryMap.get(catNode.id_categoria_pai).subcategorias.push(catNode);
+            } else {
+                hierarchicalCategories.push(catNode);
+            }
+        });
+        return hierarchicalCategories;
+    }
+
+    _filterCategoriesBySearch(nodes, normalizedTerm) {
+        if (!Array.isArray(nodes) || !normalizedTerm) {
+            return nodes || [];
+        }
+
+        const filtered = [];
+        nodes.forEach(node => {
+            if (!node) return;
+            const nodeName = typeof node.nome_categoria === 'string' ? node.nome_categoria : '';
+            const nodeMatches = nodeName.toLowerCase().includes(normalizedTerm);
+            const childNodes = Array.isArray(node.subcategorias) ? node.subcategorias : [];
+
+            if (nodeMatches) {
+                const clonedNode = this._cloneCategoryNode(node);
+                if (clonedNode) {
+                    filtered.push(clonedNode);
+                }
+                return;
+            }
+
+            const filteredChildren = this._filterCategoriesBySearch(childNodes, normalizedTerm);
+            if (filteredChildren.length > 0) {
+                filtered.push({
+                    ...node,
+                    subcategorias: filteredChildren,
+                });
+            }
+        });
+
+        return filtered;
+    }
+
+    _cloneCategoryNode(node) {
+        if (!node) return null;
+        const clonedChildren = Array.isArray(node.subcategorias)
+            ? node.subcategorias.map(child => this._cloneCategoryNode(child)).filter(Boolean)
+            : [];
+        return { ...node, subcategorias: clonedChildren };
+    }
+
+    _restoreCategorySelectionOnRender() {
+        const selectedIds = Array.from(this.persistedCategorySelection);
+        if (!selectedIds.length) {
+            return;
+        }
+        this.setCategoryTreeState(selectedIds);
     }
     
     _handleCategoryCheckboxChange(checkboxElement) {
@@ -426,6 +564,7 @@ export default class FilterPanel {
         });
 
         this._updateParentCheckboxState(listItem.parentElement?.closest('.category-tree__item'));
+        this._syncPersistedSelectionWithDOM();
         this.debouncedTriggerCountFetch();
     }
     
@@ -454,8 +593,19 @@ export default class FilterPanel {
         
         this._updateParentCheckboxState(parentListItem.parentElement?.closest('.category-tree__item'));
     }
-    
-        _updateSubmenuHeight(subMenuElement, isExpanding) {
+
+    _syncPersistedSelectionWithDOM() {
+        const allCheckboxes = Array.from(this.elements.categoryTreeList?.querySelectorAll('.category-tree__input') || []);
+        const visibleIds = new Set(allCheckboxes.map(cb => cb.value));
+        const selectedVisibleIds = allCheckboxes
+            .filter(cb => cb.checked && !cb.classList.contains('is-indeterminate'))
+            .map(cb => cb.value);
+
+        const preservedHiddenIds = Array.from(this.persistedCategorySelection).filter(id => !visibleIds.has(id));
+        this.persistedCategorySelection = new Set([...preservedHiddenIds, ...selectedVisibleIds]);
+    }
+
+    _updateSubmenuHeight(subMenuElement, isExpanding) {
         if (!subMenuElement) return;
 
         // A altura que o submenu vai adicionar ou remover.
@@ -473,8 +623,11 @@ export default class FilterPanel {
             const heightChange = isExpanding ? targetHeight : -targetHeight;
             // Lê a altura atual do pai, ou assume 0 se não estiver definida.
             const currentParentHeight = parseInt(parent.style.maxHeight, 10) || 0;
-            parent.style.maxHeight = (currentParentHeight + heightChange) + 'px';
-            
+            const newHeight = isExpanding
+                ? currentParentHeight + targetHeight
+                : Math.max(0, currentParentHeight + heightChange);
+            parent.style.maxHeight = newHeight + 'px';
+
             // Sobe na árvore para o próximo pai.
             parent = parent.parentElement.closest('.category-tree__submenu');
         }

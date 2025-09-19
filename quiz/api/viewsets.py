@@ -113,6 +113,7 @@ class QuizViewSet(viewsets.ViewSet):
         question_count_str = data.get('count')
         num_questions_custom_str = data.get('num_questions')
         quiz_definicao_id = data.get('quiz_definicao_id')
+        search_query = data.get('search_query')
 
         if quiz_definicao_id:
             quiz_mode = SessoesQuizUsuario.ModoQuiz.DEFINIDO
@@ -128,6 +129,7 @@ class QuizViewSet(viewsets.ViewSet):
                 question_count_str=question_count_str,
                 num_questions_custom_str=num_questions_custom_str,
                 quiz_definicao_id=quiz_definicao_id,
+                search_query=search_query,
             )
             return Response(quiz_data)
         except Exception:
@@ -167,6 +169,15 @@ class QuizViewSet(viewsets.ViewSet):
                                 break
                     if q_difficulty_objects:
                         perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
+
+            search_query = serializer.validated_data.get('search_query')
+            if search_query and search_query.strip():
+                search_term = search_query.strip()
+                perguntas_qs = perguntas_qs.filter(
+                    Q(texto_pergunta__icontains=search_term) |
+                    Q(referencia_bibliografica__icontains=search_term) |
+                    Q(categorias__nome_categoria__icontains=search_term)
+                ).distinct()
 
             return Response({'count': perguntas_qs.count()})
         except Exception:

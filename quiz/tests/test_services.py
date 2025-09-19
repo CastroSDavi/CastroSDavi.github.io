@@ -67,6 +67,29 @@ class QuizDataServiceTests(TestCase):
         data = service.get_quiz_data_dict(category_ids_filter=[str(self.category.pk)])
         self.assertEqual(len(data['perguntas']), 1)
 
+    def test_search_query_filters_questions(self):
+        other_category = Categoria.objects.create(nome_categoria='Neurologia')
+        other_question = Pergunta.objects.create(
+            texto_pergunta='Qual estrutura transmite impulsos nervosos?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.MEDIO,
+            referencia_bibliografica='Manual de Neurociência',
+        )
+        other_question.categorias.add(other_category)
+
+        service = QuizDataService(quiz_config=self.quiz_config, user=self.user)
+
+        data_by_text = service.get_quiz_data_dict(search_query='bombear')
+        self.assertEqual(len(data_by_text['perguntas']), 1)
+        self.assertEqual(data_by_text['perguntas'][0]['id_pergunta'], self.question.pk)
+
+        data_by_category = service.get_quiz_data_dict(search_query='Cardio')
+        self.assertEqual(len(data_by_category['perguntas']), 1)
+        self.assertEqual(data_by_category['perguntas'][0]['id_pergunta'], self.question.pk)
+
+        data_by_reference = service.get_quiz_data_dict(search_query='NEURO')
+        self.assertEqual(len(data_by_reference['perguntas']), 1)
+        self.assertEqual(data_by_reference['perguntas'][0]['id_pergunta'], other_question.pk)
+
 
 class StatisticsServiceTests(TestCase):
     def setUp(self):

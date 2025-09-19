@@ -228,6 +228,7 @@ export default class ActionOrchestrator {
             const data = await this.apiService.fetchFilteredQuestionCount({
                 category_ids: filterParams.category_ids,
                 difficulty_levels: filterParams.difficulty_levels,
+                search_query: filterParams.search_query,
             });
             const count = data?.count ?? 0;
             this.store.dispatch(quizActions.fetchFilteredCountSuccess(count));
@@ -242,6 +243,7 @@ export default class ActionOrchestrator {
             category_ids: this.ui.filterPanelInstance.getSelectedCategories(),
             difficulty_levels: this.ui.filterPanelInstance.getSelectedDifficulties(),
             num_questions: this.ui.filterPanelInstance.getSelectedNumberOfQuestions(),
+            search_query: this.ui.filterPanelInstance.getSearchQuery(),
             mode: 'Por Categoria'
         };
         this.ui.modalManager.toggleFilterPanel(false);

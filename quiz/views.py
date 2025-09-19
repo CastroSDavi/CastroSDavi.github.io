@@ -81,7 +81,8 @@ def get_quiz_data_dict(
     question_count_str=None,
     num_questions_custom_str=None,
     user: User = None,
-    quiz_definicao_id=None
+    quiz_definicao_id=None,
+    search_query=None,
 ):
     service = QuizDataService(quiz_config=get_quiz_config(), user=user)
     return service.get_quiz_data_dict(
@@ -91,6 +92,7 @@ def get_quiz_data_dict(
         question_count_str=question_count_str,
         num_questions_custom_str=num_questions_custom_str,
         quiz_definicao_id=quiz_definicao_id,
+        search_query=search_query,
     )
 
 # **** FUNÇÃO ADICIONADA AQUI ****
@@ -488,6 +490,7 @@ def api_get_quiz_data_view(request):
     question_count_str = request.GET.get('count')
     num_questions_custom_str = request.GET.get('num_questions')
     quiz_definicao_id_str = request.GET.get('quiz_definicao_id')
+    search_query = request.GET.get('search_query')
 
     category_ids_filter = [cid.strip() for cid in category_ids_str.split(
         ',') if cid.strip()] if category_ids_str else None
@@ -509,7 +512,8 @@ def api_get_quiz_data_view(request):
             question_count_str=question_count_str,
             num_questions_custom_str=num_questions_custom_str,
             user=user_for_favorites,
-            quiz_definicao_id=quiz_definicao_id
+            quiz_definicao_id=quiz_definicao_id,
+            search_query=search_query,
         )
         return JsonResponse(quiz_data)
     except Exception as e:

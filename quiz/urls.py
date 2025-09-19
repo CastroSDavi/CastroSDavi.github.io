@@ -1,8 +1,23 @@
 # quiz/urls.py
-from django.urls import path
+from django.urls import include, path
+
+from rest_framework.routers import DefaultRouter
+
 from . import views
+from .api.viewsets import (
+    FavoriteQuestionViewSet,
+    QuestionViewSet,
+    QuizViewSet,
+    UserStatisticsViewSet,
+)
 
 app_name = 'quiz'
+
+router = DefaultRouter()
+router.register('api/quiz', QuizViewSet, basename='quiz')
+router.register('api/favorites', FavoriteQuestionViewSet, basename='favorites')
+router.register('api/question', QuestionViewSet, basename='question')
+router.register('api/user-statistics', UserStatisticsViewSet, basename='user-statistics')
 
 urlpatterns = [
     path('', views.home_view, name='home'),
@@ -14,21 +29,5 @@ urlpatterns = [
     path('account/update-profile/', views.update_profile_view, name='update_profile'),
     path('account/delete-account/', views.delete_account_view, name='delete_account'),
 
-    # URLs existentes para a lógica do quiz (já existentes no seu arquivo)
-    path('api/quiz/start-session/', views.start_quiz_session_view, name='start_quiz_session'),
-    path('api/quiz/register-answer/', views.register_answer_view, name='register_answer'),
-    path('api/quiz/end-session/', views.end_quiz_session_view, name='end_quiz_session'),
-
-    # API para buscar todos os dados do quiz (já existente no seu arquivo)
-    path('api/quiz/summary/', views.api_get_quiz_summary_view, name='api_get_quiz_summary'),
-    path('api/quiz/alldata/', views.api_get_quiz_data_view, name='api_get_quiz_data'),
-    path('api/quiz/filtered-count/', views.api_get_filtered_question_count_view, name='api_get_filtered_question_count'),
-
-    # NOVA URL para retomar uma sessão de quiz em andamento
-    path('api/quiz/resume-session/', views.api_resume_quiz_session_view, name='api_resume_quiz_session'),
-
-    # URLs existentes para favoritos e estatísticas (já existentes no seu arquivo)
-    path('api/question/<int:pergunta_id>/toggle_favorite/', views.toggle_favorite_status_view, name='toggle_favorite_status'),
-    path('api/favorites/', views.get_favorite_questions_view, name='get_favorite_questions'),
-    path('api/user-statistics/', views.api_get_user_statistics_view, name='api_get_user_statistics'),
+    path('', include(router.urls)),
 ]

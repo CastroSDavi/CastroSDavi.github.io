@@ -51,6 +51,7 @@ export default class AccountPageManager {
         // A referência ao bottomNavElement foi removida daqui.
         // --- FIM DA CORREÇÃO ---
         this.defaultMenuTargetId = 'profile-info-content';
+        this.securityCopyFeedbackTimeout = null;
         this.historyState = {
             initialized: false,
             isLoading: false,
@@ -139,6 +140,13 @@ export default class AccountPageManager {
         });
 
         this.elements.accountSectionPage?.addEventListener('click', (event) => {
+            const securityActionTrigger = event.target.closest('[data-security-action]');
+            if (securityActionTrigger) {
+                event.preventDefault();
+                this._handleSecurityAction(securityActionTrigger);
+                return;
+            }
+
             const trigger = event.target.closest('[data-open-account-tab]');
             if (!trigger) {
                 return;
@@ -159,6 +167,137 @@ export default class AccountPageManager {
                 this._updateUIVisibility(true);
             }
         });
+    }
+
+    _handleSecurityAction(trigger) {
+        if (!trigger) {
+            return;
+        }
+
+        const action = trigger.dataset.securityAction;
+        if (!action) {
+            return;
+        }
+
+        switch (action) {
+            case 'copy-summary':
+                this._copySecuritySummary();
+                break;
+            default:
+                break;
+        }
+    }
+
+    async _copySecuritySummary() {
+        const securitySection = document.getElementById('security-content');
+        if (!securitySection) {
+            return;
+        }
+
+        const summaryNodes = Array.from(securitySection.querySelectorAll('[data-security-summary-item]'));
+        if (summaryNodes.length === 0) {
+            this._showSecurityCopyFeedback('Não há dados disponíveis para copiar.', true);
+            return;
+        }
+
+        const lines = summaryNodes.map((node) => {
+            const label = (node.dataset.label || '').trim();
+            let value = node.dataset.summaryValue || '';
+
+            if (typeof value === 'string') {
+                value = value.trim();
+            }
+
+            if (!value) {
+                const valueElement = node.querySelector('.security-summary-card__value') || node.querySelector('dd') || node.querySelector('.security-summary-card__hint');
+                value = valueElement ? valueElement.textContent.trim() : '';
+            }
+
+            if (value) {
+                value = value.replace(/\s+/g, ' ');
+            }
+
+            if (label && value) {
+                return `${label}: ${value}`;
+            }
+
+            if (label) {
+                return label;
+            }
+
+            return value;
+        }).filter(Boolean);
+
+        if (!lines.length) {
+            this._showSecurityCopyFeedback('Não há dados disponíveis para copiar.', true);
+            return;
+        }
+
+        const textToCopy = lines.join('\n');
+
+        const attemptFallbackCopy = () => {
+            const textarea = document.createElement('textarea');
+            textarea.value = textToCopy;
+            textarea.setAttribute('readonly', '');
+            textarea.style.position = 'absolute';
+            textarea.style.left = '-9999px';
+            textarea.style.top = '0';
+            document.body.appendChild(textarea);
+
+            let copied = false;
+            try {
+                textarea.select();
+                textarea.setSelectionRange(0, textarea.value.length);
+                copied = document.execCommand('copy');
+            } catch (error) {
+                copied = false;
+                console.warn('AccountPageManager: fallback de cópia falhou.', error);
+            } finally {
+                document.body.removeChild(textarea);
+            }
+
+            return copied;
+        };
+
+        try {
+            if (navigator.clipboard?.writeText) {
+                await navigator.clipboard.writeText(textToCopy);
+                this._showSecurityCopyFeedback('Resumo copiado para a área de transferência.');
+                return;
+            }
+        } catch (error) {
+            console.warn('AccountPageManager: falha ao copiar com Clipboard API.', error);
+        }
+
+        const fallbackSucceeded = attemptFallbackCopy();
+        if (fallbackSucceeded) {
+            this._showSecurityCopyFeedback('Resumo copiado para a área de transferência.');
+        } else {
+            this._showSecurityCopyFeedback('Não foi possível copiar o resumo.', true);
+        }
+    }
+
+    _showSecurityCopyFeedback(message, isError = false) {
+        const feedbackElement = document.getElementById('security-copy-feedback');
+        if (!feedbackElement) {
+            return;
+        }
+
+        if (this.securityCopyFeedbackTimeout) {
+            clearTimeout(this.securityCopyFeedbackTimeout);
+            this.securityCopyFeedbackTimeout = null;
+        }
+
+        feedbackElement.textContent = message;
+        feedbackElement.classList.toggle('is-error', Boolean(isError));
+        feedbackElement.classList.add('is-visible');
+
+        this.securityCopyFeedbackTimeout = setTimeout(() => {
+            feedbackElement.classList.remove('is-visible');
+            feedbackElement.classList.remove('is-error');
+            feedbackElement.textContent = '';
+            this.securityCopyFeedbackTimeout = null;
+        }, 4000);
     }
 
     handleStateUpdate() {

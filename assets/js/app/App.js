@@ -13,7 +13,7 @@ import ResultDisplay from '../ui/ResultDisplay.js';
 import AccountPageManager from '../ui/AccountPageManager.js';
 import BottomNavManager from '../ui/BottomNavManager.js';
 import StatisticsChartManager from '../ui/StatisticsChartManager.js';
-import FavoriteManager from '../ui/FavoriteManager.js';
+import FavoriteManager, { FAVORITE_REVIEW_QUERY_PARAM } from '../ui/FavoriteManager.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
 
 export default class App {
@@ -146,7 +146,9 @@ export default class App {
             return;
         }
 
-        const pendingReview = this.favoriteManager.consumePendingReviewRequest();
+        const pendingReviewFromUrl = this._consumeFavoriteReviewFromUrl();
+        const pendingReview = pendingReviewFromUrl || this.favoriteManager.consumePendingReviewRequest();
+
         if (!pendingReview || !pendingReview.questionId) {
             return;
         }
@@ -156,6 +158,48 @@ export default class App {
             pendingReview.questionData || null,
             { forceUseCache: pendingReview.forceUseCache === true }
         );
+    }
+
+    _consumeFavoriteReviewFromUrl() {
+        if (typeof window === 'undefined' || !window.location) {
+            return null;
+        }
+
+        const { search, pathname, hash } = window.location;
+        if (!search || (typeof search === 'string' && !search.includes(`${FAVORITE_REVIEW_QUERY_PARAM}=`))) {
+            return null;
+        }
+
+        try {
+            const searchParams = new URLSearchParams(search);
+            const questionIdValue = searchParams.get(FAVORITE_REVIEW_QUERY_PARAM);
+
+            if (questionIdValue === null) {
+                return null;
+            }
+
+            searchParams.delete(FAVORITE_REVIEW_QUERY_PARAM);
+
+            if (typeof window.history !== 'undefined' && typeof window.history.replaceState === 'function') {
+                const newSearch = searchParams.toString();
+                const newUrl = `${pathname}${newSearch ? `?${newSearch}` : ''}${hash || ''}`;
+                try {
+                    window.history.replaceState(window.history.state, document.title, newUrl);
+                } catch (historyError) {
+                    console.warn('App: falha ao atualizar a URL após processar favorito pendente.', historyError);
+                }
+            }
+
+            const questionId = Number.parseInt(questionIdValue, 10);
+            if (!Number.isInteger(questionId) || questionId <= 0) {
+                return null;
+            }
+
+            return { questionId };
+        } catch (urlError) {
+            console.warn('App: não foi possível ler o parâmetro de revisão de favorito da URL.', urlError);
+            return null;
+        }
     }
 
     handleLoadError(message) {

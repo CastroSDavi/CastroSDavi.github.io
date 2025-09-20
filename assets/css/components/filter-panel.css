@@ -179,6 +179,7 @@
                 box-shadow var(--transition-medium),
                 background var(--transition-fast),
                 transform var(--transition-medium);
+    cursor: text;
 }
 
 .filter-search:hover {
@@ -219,13 +220,55 @@
     transition: background var(--transition-fast),
                 color var(--transition-fast),
                 box-shadow var(--transition-fast);
+    pointer-events: none;
 }
 
 .filter-search:hover .filter-search__icon,
-.filter-search:focus-within .filter-search__icon {
+.filter-search:focus-within .filter-search__icon,
+.filter-search.has-value .filter-search__icon {
     background: rgba(var(--color-primary-medium-rgb), 0.18);
     color: var(--color-primary-dark);
     box-shadow: inset 0 0 0 1px rgba(var(--color-primary-medium-rgb), 0.25);
+}
+
+.filter-search__clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-pill);
+    border: none;
+    background: rgba(var(--color-primary-light-rgb), 0.35);
+    color: rgba(var(--color-primary-medium-rgb), 0.75);
+    padding: 0;
+    cursor: pointer;
+    transition: background var(--transition-fast),
+                color var(--transition-fast),
+                transform var(--transition-fast),
+                opacity var(--transition-fast);
+    opacity: 0;
+    transform: scale(0.85);
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.filter-search__clear .material-symbols-outlined {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.filter-search.has-value .filter-search__clear {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+    visibility: visible;
+}
+
+.filter-search__clear:hover,
+.filter-search__clear:focus-visible {
+    background: rgba(var(--color-primary-medium-rgb), 0.18);
+    color: var(--color-primary-dark);
 }
 
 .filter-search__input {
@@ -268,6 +311,11 @@
         width: 30px;
         height: 30px;
         font-size: 1.1rem;
+    }
+
+    .filter-search__clear {
+        width: 28px;
+        height: 28px;
     }
 
     .filter-search__input {

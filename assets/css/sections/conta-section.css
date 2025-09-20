@@ -393,6 +393,7 @@
     gap: var(--spacing-xs, 8px);
     flex: 1;
     min-width: 0;
+    width: 100%;
 }
 
 .favorite-question-card__badge {

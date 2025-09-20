@@ -9,6 +9,7 @@ from .api.viewsets import (
     QuestionViewSet,
     QuizViewSet,
     UserStatisticsViewSet,
+    UserQuestionHistoryViewSet,
 )
 
 app_name = 'quiz'
@@ -18,6 +19,7 @@ router.register('api/quiz', QuizViewSet, basename='quiz')
 router.register('api/favorites', FavoriteQuestionViewSet, basename='favorites')
 router.register('api/question', QuestionViewSet, basename='question')
 router.register('api/user-statistics', UserStatisticsViewSet, basename='user-statistics')
+router.register('api/question-history', UserQuestionHistoryViewSet, basename='user-question-history')
 
 urlpatterns = [
     path('', views.home_view, name='home'),

@@ -119,35 +119,59 @@
                 <div class="card card--conta-perfil">
                     <h2 class="card__title">Histórico de Quizzes</h2>
                     <div class="card__body">
-                        {% if user_sessions %}
-                            <p>Suas últimas {{ user_sessions|length }} sessões de quiz:</p>
-                            <div class="data-table-wrapper">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Data e Hora</th>
-                                            <th>Modo</th>
-                                            <th>Pontos</th>
-                                            <th>Acertos</th>
-                                            <th>Duração</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                        <div class="quiz-history__controls">
+                            <div class="form-group quiz-history__form-group">
+                                <label for="quiz-history-session-filter" class="form-label">Filtrar por sessão</label>
+                                <select id="quiz-history-session-filter" class="form-control form-control--small">
+                                    <option value="">Todas as sessões</option>
                                     {% for session in user_sessions %}
-                                        <tr>
-                                            <td data-label="Data Início:">{{ session.data_inicio|date:"d/m/Y H:i" }}</td>
-                                            <td data-label="Modo:">{{ session.modo_quiz }}</td>
-                                            <td data-label="Pontos:">{{ session.pontuacao_final }}</td>
-                                            <td data-label="Acertos:">{{ session.total_acertos }}/{{ session.total_perguntas_sessao }}</td>
-                                            <td data-label="Duração:">{{ session.duracao_sessao_formatada }}</td>
-                                        </tr>
+                                        <option value="{{ session.pk }}">
+                                            Sessão {{ session.pk }} • {{ session.data_inicio|date:"d/m/Y H:i" }} • {{ session.modo_quiz }}{% if session.id_quiz_definicao %} • {{ session.id_quiz_definicao.nome_quiz }}{% endif %}
+                                        </option>
                                     {% endfor %}
-                                    </tbody>
-                                </table>
+                                </select>
+                                {% if not user_sessions %}
+                                    <p class="form-help-text">As sessões mais recentes aparecerão aqui quando disponíveis.</p>
+                                {% endif %}
                             </div>
-                        {% else %}
-                            <p class="placeholder-text">Você ainda não completou nenhuma sessão de quiz.</p>
-                        {% endif %}
+                            <div class="form-group quiz-history__date-filter">
+                                <label for="quiz-history-start-date" class="form-label">Data inicial</label>
+                                <input type="date" id="quiz-history-start-date" class="form-control form-control--small" />
+                            </div>
+                            <div class="form-group quiz-history__date-filter">
+                                <label for="quiz-history-end-date" class="form-label">Data final</label>
+                                <input type="date" id="quiz-history-end-date" class="form-control form-control--small" />
+                            </div>
+                            <div class="quiz-history__actions">
+                                <button id="quiz-history-filter-apply" class="button button--outline button--small" type="button">Aplicar filtros</button>
+                                <button id="quiz-history-filter-reset" class="button button--text button--small" type="button">Limpar</button>
+                            </div>
+                        </div>
+
+                        <p id="quiz-history-loading" class="placeholder-text" aria-live="polite">Carregando histórico...</p>
+                        <p id="quiz-history-error" class="placeholder-text u-is-hidden" role="alert"></p>
+                        <p id="quiz-history-empty" class="placeholder-text u-is-hidden">Nenhuma resposta encontrada.</p>
+
+                        <div id="quiz-history-table-wrapper" class="data-table-wrapper u-is-hidden">
+                            <table class="data-table quiz-history__table">
+                                <thead>
+                                    <tr>
+                                        <th>Respondida em</th>
+                                        <th>Sessão</th>
+                                        <th>Pergunta</th>
+                                        <th>Sua Resposta</th>
+                                        <th>Explicação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quiz-history-table-body"></tbody>
+                            </table>
+                        </div>
+
+                        <div id="quiz-history-pagination" class="quiz-history__pagination u-is-hidden">
+                            <button id="quiz-history-prev" class="button button--outline button--small" type="button">Anterior</button>
+                            <span id="quiz-history-page-indicator" class="quiz-history__pagination-indicator">Página 1</span>
+                            <button id="quiz-history-next" class="button button--outline button--small" type="button">Próxima</button>
+                        </div>
                     </div>
                 </div>
             </div>

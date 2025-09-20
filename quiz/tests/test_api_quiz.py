@@ -13,6 +13,7 @@ from quiz.models import (
     OpcaoResposta,
     Pergunta,
     QuestaoFavorita,
+    RespostasUsuarioPorSessao,
     SessoesQuizUsuario,
 )
 from quiz.views import get_quiz_config, invalidate_quiz_config_cache
@@ -46,6 +47,60 @@ class QuizApiTests(TestCase):
 
     def _auth_client(self):
         self.client.login(username='apiuser', password='testpass')
+
+    def _create_session_with_responses(self, total_responses=3, days_offset=0):
+        base_datetime = timezone.now() - timedelta(days=days_offset)
+        session = SessoesQuizUsuario.objects.create(
+            id_usuario=self.user,
+            modo_quiz=SessoesQuizUsuario.ModoQuiz.RAPIDO,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            total_perguntas_sessao=total_responses,
+            total_acertos=0,
+            total_erros=0,
+            pontuacao_final=total_responses * 10,
+            data_inicio=base_datetime - timedelta(minutes=total_responses),
+            data_fim=base_datetime,
+            tempo_total_segundos=total_responses * 60,
+        )
+
+        correct_answers = 0
+        for index in range(total_responses):
+            question = Pergunta.objects.create(
+                texto_pergunta=f'Pergunta {session.pk}-{index}',
+                nivel_dificuldade=Pergunta.NivelDificuldade.MEDIO,
+            )
+            question.categorias.add(self.category)
+
+            correct_option = OpcaoResposta.objects.create(
+                pergunta=question,
+                texto_opcao=f'Correta {index}',
+                eh_correta=True,
+                ordem_exibicao=1,
+            )
+            wrong_option = OpcaoResposta.objects.create(
+                pergunta=question,
+                texto_opcao=f'Errada {index}',
+                eh_correta=False,
+                ordem_exibicao=2,
+            )
+
+            selected_option = correct_option if index % 2 == 0 else wrong_option
+            RespostasUsuarioPorSessao.objects.create(
+                id_sessao_quiz=session,
+                id_pergunta=question,
+                id_opcao_resposta_selecionada=selected_option,
+                foi_correta=selected_option.eh_correta,
+                data_resposta=session.data_inicio + timedelta(minutes=index + 1),
+            )
+
+            if selected_option.eh_correta:
+                correct_answers += 1
+
+        session.total_acertos = correct_answers
+        session.total_erros = total_responses - correct_answers
+        session.save(update_fields=['total_acertos', 'total_erros'])
+
+        return session
 
     def test_quiz_summary_endpoint_returns_counts(self):
         url = reverse('quiz:quiz-summary')
@@ -188,3 +243,54 @@ class QuizApiTests(TestCase):
         payload = response.json()
         self.assertEqual(payload['status'], 'success')
         self.assertEqual(payload['key_metrics']['total_questions_answered'], 10)
+
+    def test_question_history_requires_authentication(self):
+        url = reverse('quiz:user-question-history-list')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+    def test_question_history_paginates_results(self):
+        self._auth_client()
+        self._create_session_with_responses(total_responses=12)
+
+        url = reverse('quiz:user-question-history-list')
+        response = self.client.get(url, {'page_size': 5})
+        self.assertEqual(response.status_code, 200)
+
+        payload = response.json()
+        self.assertEqual(payload['status'], 'success')
+        self.assertEqual(payload['count'], 12)
+        self.assertEqual(len(payload['results']), 5)
+        self.assertIsNotNone(payload['next'])
+
+        first_result = payload['results'][0]
+        self.assertIn('question', first_result)
+        self.assertIn('session', first_result)
+        self.assertIn('selected_option_id', first_result)
+
+    def test_question_history_filters_by_session_and_date(self):
+        self._auth_client()
+        recent_session = self._create_session_with_responses(total_responses=3, days_offset=0)
+        old_session = self._create_session_with_responses(total_responses=2, days_offset=10)
+
+        url = reverse('quiz:user-question-history-list')
+
+        response = self.client.get(url, {'session_id': recent_session.pk})
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload['count'], 3)
+        self.assertTrue(all(item['session']['id_sessao'] == recent_session.pk for item in payload['results']))
+
+        start_date = (timezone.now().date() - timedelta(days=1)).isoformat()
+        response = self.client.get(url, {'start_date': start_date})
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload['count'], 3)
+        self.assertTrue(all(item['session']['id_sessao'] == recent_session.pk for item in payload['results']))
+
+        end_date = (timezone.now().date() - timedelta(days=5)).isoformat()
+        response = self.client.get(url, {'end_date': end_date})
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload['count'], 2)
+        self.assertTrue(all(item['session']['id_sessao'] == old_session.pk for item in payload['results']))

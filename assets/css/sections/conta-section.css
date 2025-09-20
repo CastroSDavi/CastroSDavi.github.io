@@ -1402,7 +1402,7 @@
 .security-dashboard__grid {
     display: grid;
     gap: var(--spacing-lg, 24px);
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .security-card__header {
@@ -1447,7 +1447,13 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-sm, 12px);
-    align-items: center;
+    align-items: stretch;
+}
+
+.security-form__actions .button,
+.security-actions .button {
+    flex: 1 1 240px;
+    min-width: min(100%, 240px);
 }
 
 .security-actions {
@@ -1458,7 +1464,42 @@
 }
 
 .security-actions .button {
-    flex: 1 1 220px;
+    flex: 1 1 240px;
+}
+
+.security-card__link {
+    border-radius: var(--border-radius-lg, 12px);
+    padding: var(--spacing-xs, 8px) var(--spacing-md, 16px);
+    justify-content: center;
+    transition: background-color var(--transition-fast),
+                color var(--transition-fast),
+                box-shadow var(--transition-fast),
+                transform var(--transition-fast);
+}
+
+.security-card__link .button__icon {
+    margin-right: var(--spacing-xs, 8px);
+}
+
+.security-card__link:not(:disabled):hover,
+.security-card__link:not(:disabled):focus-visible {
+    background-color: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.85);
+    color: var(--color-primary-dark, #1d4ed8);
+    box-shadow: 0 6px 16px rgba(var(--color-primary-dark-rgb, 29, 78, 216), 0.18);
+    transform: translateY(-1px);
+}
+
+@media (hover: hover) {
+    .security-actions .button:not(:disabled):hover,
+    .security-form__actions .button:not(:disabled):hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    .security-summary-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
 }
 
 .security-actions__logout {
@@ -1571,6 +1612,11 @@
     }
 
     .security-actions .button {
+        width: 100%;
+    }
+
+    .security-form__actions .button,
+    .security-card__link {
         width: 100%;
     }
 }

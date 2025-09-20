@@ -112,6 +112,9 @@ class QuizApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         favorites_payload = response.json()
         self.assertEqual(len(favorites_payload['favorite_questions']), 1)
+        favorite_question = favorites_payload['favorite_questions'][0]
+        self.assertIn('esta_ativa', favorite_question)
+        self.assertTrue(favorite_question['esta_ativa'])
 
     def test_question_detail_requires_authentication(self):
         url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
@@ -130,6 +133,27 @@ class QuizApiTests(TestCase):
         self.assertEqual(payload['status'], 'success')
         self.assertEqual(payload['question']['id_pergunta'], self.question.pk)
         self.assertTrue(payload['question']['is_favorited'])
+
+    def test_question_detail_returns_warning_for_inactive_favorite(self):
+        self._auth_client()
+        self.question.ativa = False
+        self.question.save(update_fields=['ativa'])
+
+        QuestaoFavorita.objects.create(usuario=self.user, pergunta=self.question)
+
+        url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload['status'], 'success')
+        self.assertEqual(payload['question']['id_pergunta'], self.question.pk)
+        self.assertFalse(payload['question']['esta_ativa'])
+        self.assertEqual(
+            payload['message'],
+            'Esta questão não está mais disponível no banco atual. Exibindo a versão salva na sua lista de favoritos.'
+        )
+        self.assertEqual(payload['message_type'], 'warning')
 
     def test_user_statistics_endpoint(self):
         self._auth_client()

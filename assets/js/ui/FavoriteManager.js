@@ -118,6 +118,10 @@ export default class FavoriteManager {
             questionCard.className = 'favorite-question-card';
             questionCard.dataset.perguntaId = fav.id_pergunta;
 
+            if (fav.esta_ativa === false) {
+                questionCard.classList.add('favorite-question-card--inactive');
+            }
+
             const header = document.createElement('header');
             header.className = 'favorite-question-card__header';
 
@@ -133,6 +137,13 @@ export default class FavoriteManager {
             title.className = 'favorite-question-card__title';
             title.textContent = fav.texto_pergunta;
             headingWrapper.appendChild(title);
+
+            if (fav.esta_ativa === false) {
+                const statusBadge = document.createElement('span');
+                statusBadge.className = 'favorite-question-card__status-badge favorite-question-card__status-badge--inactive';
+                statusBadge.textContent = 'Questão inativa';
+                headingWrapper.appendChild(statusBadge);
+            }
 
             header.appendChild(headingWrapper);
 
@@ -333,7 +344,8 @@ export default class FavoriteManager {
                 ? parsedValue.questionData
                 : null;
 
-            return { questionId, questionData };
+            const forceUseCache = parsedValue?.forceUseCache === true;
+            return { questionId, questionData, forceUseCache };
         } catch (error) {
             console.warn('FavoriteManager: dados inválidos encontrados para revisão de favorito.', error);
             return null;
@@ -356,6 +368,10 @@ export default class FavoriteManager {
                     questionId: favoriteQuestion.id_pergunta,
                     timestamp: Date.now(),
                 };
+
+                if (favoriteQuestion.esta_ativa === false) {
+                    payloadToStore.forceUseCache = true;
+                }
 
                 if (sanitizedQuestionData) {
                     payloadToStore.questionData = sanitizedQuestionData;
@@ -392,6 +408,7 @@ export default class FavoriteManager {
             nivel_dificuldade: favoriteQuestion.nivel_dificuldade || null,
             explicacao_resposta: favoriteQuestion.explicacao_resposta || null,
             is_favorited: true,
+            esta_ativa: favoriteQuestion.esta_ativa === false ? false : true,
         };
 
         if (Array.isArray(favoriteQuestion.opcoes)) {

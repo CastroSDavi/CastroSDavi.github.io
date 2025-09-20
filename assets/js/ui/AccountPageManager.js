@@ -328,11 +328,21 @@ export default class AccountPageManager {
         if (!errorState) return;
 
         if (message) {
-            errorState.textContent = message;
+            this._setMessageContent(errorState, message, '[data-role="error-message"]');
             this.quizUI.showElement(errorState);
         } else {
-            errorState.textContent = '';
+            this._setMessageContent(errorState, '', '[data-role="error-message"]');
             this.quizUI.hideElement(errorState);
+        }
+    }
+
+    _setMessageContent(container, message, selector) {
+        if (!container) return;
+        const target = selector ? container.querySelector(selector) : null;
+        if (target) {
+            target.textContent = message || '';
+        } else {
+            container.textContent = message || '';
         }
     }
 
@@ -350,14 +360,14 @@ export default class AccountPageManager {
         }
 
         if (errorState) {
+            this._setMessageContent(errorState, '', '[data-role="error-message"]');
             this.quizUI.hideElement(errorState);
-            errorState.textContent = '';
         }
 
         if (!this.historyState.items.length) {
             if (tableWrapper) this.quizUI.hideElement(tableWrapper);
             if (emptyState) {
-                emptyState.textContent = 'Nenhuma resposta encontrada para os filtros selecionados.';
+                this._setMessageContent(emptyState, 'Nenhuma resposta encontrada para os filtros selecionados.', '[data-role="empty-message"]');
                 this.quizUI.showElement(emptyState);
             }
             if (pagination?.container) this.quizUI.hideElement(pagination.container);
@@ -407,66 +417,116 @@ export default class AccountPageManager {
     }
 
     _createHistoryRow(item) {
-        const row = document.createElement('tr');
+        const card = document.createElement('article');
+        card.classList.add('quiz-history-card');
+        card.setAttribute('role', 'listitem');
 
-        const dateCell = document.createElement('td');
-        dateCell.dataset.label = 'Respondida em:';
-        dateCell.textContent = this._formatDateTime(item?.data_resposta);
-        row.appendChild(dateCell);
+        const header = document.createElement('header');
+        header.classList.add('quiz-history-card__header');
 
-        const sessionCell = document.createElement('td');
-        sessionCell.dataset.label = 'Sessão:';
-        sessionCell.textContent = this._formatSessionLabel(item?.session);
-        row.appendChild(sessionCell);
+        const metaGroup = document.createElement('div');
+        metaGroup.classList.add('quiz-history-card__meta-group');
+        const dateMeta = this._buildMetaItem('schedule', 'Respondida em', this._formatDateTime(item?.data_resposta));
+        const sessionMeta = this._buildMetaItem('play_circle', 'Sessão', this._formatSessionLabel(item?.session));
+        if (dateMeta) metaGroup.appendChild(dateMeta);
+        if (sessionMeta) metaGroup.appendChild(sessionMeta);
+        header.appendChild(metaGroup);
 
-        const questionCell = document.createElement('td');
-        questionCell.dataset.label = 'Pergunta:';
-        questionCell.appendChild(this._buildQuestionCellContent(item));
-        row.appendChild(questionCell);
+        card.appendChild(header);
+        card.appendChild(this._buildQuestionCellContent(item));
+        card.appendChild(this._buildAnswerCellContent(item));
+        card.appendChild(this._buildExplanationCellContent(item));
 
-        const answerCell = document.createElement('td');
-        answerCell.dataset.label = 'Sua Resposta:';
-        answerCell.appendChild(this._buildAnswerCellContent(item));
-        row.appendChild(answerCell);
-
-        const explanationCell = document.createElement('td');
-        explanationCell.dataset.label = 'Explicação:';
-        explanationCell.appendChild(this._buildExplanationCellContent(item));
-        row.appendChild(explanationCell);
-
-        return row;
+        return card;
     }
 
     _buildQuestionCellContent(item) {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('quiz-history__question');
+        const section = document.createElement('section');
+        section.classList.add('quiz-history-card__section', 'quiz-history-card__question');
+        section.appendChild(this._createSectionHeader('Pergunta', 'quiz'));
 
         const questionText = document.createElement('p');
-        questionText.classList.add('quiz-history__question-text');
+        questionText.classList.add('quiz-history__question-text', 'quiz-history-card__question-title');
         questionText.textContent = item?.question?.texto_pergunta || '—';
-        wrapper.appendChild(questionText);
+        section.appendChild(questionText);
 
         if (item?.question?.categorias?.length) {
             const categories = document.createElement('p');
-            categories.classList.add('quiz-history__question-meta');
+            categories.classList.add('quiz-history__question-meta', 'quiz-history-card__question-meta');
             categories.textContent = item.question.categorias.map(cat => cat.nome_categoria).join(', ');
-            wrapper.appendChild(categories);
+            section.appendChild(categories);
         }
 
         if (item?.question?.nivel_dificuldade) {
             const difficulty = document.createElement('span');
-            difficulty.classList.add('quiz-history__question-tag');
+            difficulty.classList.add('quiz-history__question-tag', 'quiz-history-card__question-tag');
             difficulty.textContent = item.question.nivel_dificuldade;
-            wrapper.appendChild(difficulty);
+            section.appendChild(difficulty);
         }
 
-        return wrapper;
+        return section;
     }
 
     _buildAnswerCellContent(item) {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('quiz-history__answer');
+        const section = document.createElement('section');
+        section.classList.add('quiz-history-card__section', 'quiz-history-card__answer');
 
+        const resultBadge = this._buildResultBadge(item);
+        resultBadge.classList.add('quiz-history-card__status');
+        section.appendChild(this._createSectionHeader('Sua resposta', 'task_alt', resultBadge));
+
+        const answerText = document.createElement('p');
+        answerText.classList.add('quiz-history__answer-text');
+        if (item?.selected_option?.texto_opcao) {
+            answerText.textContent = item.selected_option.texto_opcao;
+        } else if (!item?.foi_respondida) {
+            answerText.textContent = 'Questão pulada ou não respondida.';
+        } else {
+            answerText.textContent = 'Resposta registrada indisponível.';
+        }
+        section.appendChild(answerText);
+
+        if (Array.isArray(item?.correct_option_ids) && item.correct_option_ids.length > 0) {
+            const correctOptions = (item?.question?.opcoes || []).filter(opcao => item.correct_option_ids.includes(opcao.id_opcao_resposta));
+            if (correctOptions.length > 0) {
+                const correctAnswer = document.createElement('p');
+                correctAnswer.classList.add('quiz-history__correct-answer');
+                correctAnswer.textContent = `Resposta correta: ${correctOptions.map(opcao => opcao.texto_opcao).join(', ')}`;
+                section.appendChild(correctAnswer);
+            }
+        }
+
+        return section;
+    }
+
+    _buildExplanationCellContent(item) {
+        const section = document.createElement('section');
+        section.classList.add('quiz-history-card__section', 'quiz-history-card__explanation');
+        section.appendChild(this._createSectionHeader('Explicação e referências', 'menu_book'));
+
+        const explanationText = item?.question?.explicacao_resposta || item?.selected_option?.feedback_opcao;
+        if (explanationText) {
+            const paragraph = document.createElement('p');
+            paragraph.textContent = explanationText;
+            section.appendChild(paragraph);
+        } else {
+            const placeholder = document.createElement('span');
+            placeholder.classList.add('quiz-history__explanation-empty');
+            placeholder.textContent = 'Nenhuma explicação cadastrada para esta questão.';
+            section.appendChild(placeholder);
+        }
+
+        if (item?.question?.referencia_bibliografica) {
+            const reference = document.createElement('p');
+            reference.classList.add('quiz-history__reference');
+            reference.textContent = `Referência: ${item.question.referencia_bibliografica}`;
+            section.appendChild(reference);
+        }
+
+        return section;
+    }
+
+    _buildResultBadge(item) {
         const resultBadge = document.createElement('span');
         resultBadge.classList.add('quiz-history__result-badge');
 
@@ -481,56 +541,65 @@ export default class AccountPageManager {
             resultBadge.classList.add('quiz-history__result-badge--incorrect');
         }
 
-        wrapper.appendChild(resultBadge);
-
-        const answerText = document.createElement('p');
-        answerText.classList.add('quiz-history__answer-text');
-        if (item?.selected_option?.texto_opcao) {
-            answerText.textContent = item.selected_option.texto_opcao;
-        } else if (!item?.foi_respondida) {
-            answerText.textContent = 'Questão pulada ou não respondida.';
-        } else {
-            answerText.textContent = 'Resposta registrada indisponível.';
-        }
-        wrapper.appendChild(answerText);
-
-        if (Array.isArray(item?.correct_option_ids) && item.correct_option_ids.length > 0) {
-            const correctOptions = (item?.question?.opcoes || []).filter(opcao => item.correct_option_ids.includes(opcao.id_opcao_resposta));
-            if (correctOptions.length > 0) {
-                const correctAnswer = document.createElement('p');
-                correctAnswer.classList.add('quiz-history__correct-answer');
-                correctAnswer.textContent = `Resposta correta: ${correctOptions.map(opcao => opcao.texto_opcao).join(', ')}`;
-                wrapper.appendChild(correctAnswer);
-            }
-        }
-
-        return wrapper;
+        return resultBadge;
     }
 
-    _buildExplanationCellContent(item) {
-        const wrapper = document.createElement('div');
-        wrapper.classList.add('quiz-history__explanation');
+    _createSectionHeader(label, iconName, trailingElement = null) {
+        const header = document.createElement('div');
+        header.classList.add('quiz-history-card__section-header');
 
-        const explanationText = item?.question?.explicacao_resposta || item?.selected_option?.feedback_opcao;
-        if (explanationText) {
-            const paragraph = document.createElement('p');
-            paragraph.textContent = explanationText;
-            wrapper.appendChild(paragraph);
-        } else {
-            const placeholder = document.createElement('span');
-            placeholder.classList.add('quiz-history__explanation-empty');
-            placeholder.textContent = 'Nenhuma explicação cadastrada para esta questão.';
-            wrapper.appendChild(placeholder);
+        if (iconName) {
+            const icon = document.createElement('span');
+            icon.classList.add('material-symbols-outlined', 'quiz-history-card__section-icon');
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = iconName;
+            header.appendChild(icon);
         }
 
-        if (item?.question?.referencia_bibliografica) {
-            const reference = document.createElement('p');
-            reference.classList.add('quiz-history__reference');
-            reference.textContent = `Referência: ${item.question.referencia_bibliografica}`;
-            wrapper.appendChild(reference);
+        const title = document.createElement('span');
+        title.classList.add('quiz-history-card__section-title');
+        title.textContent = label;
+        header.appendChild(title);
+
+        if (trailingElement) {
+            header.appendChild(trailingElement);
         }
 
-        return wrapper;
+        return header;
+    }
+
+    _buildMetaItem(iconName, label, value) {
+        const meta = document.createElement('div');
+        meta.classList.add('quiz-history-card__meta-item');
+
+        const icon = document.createElement('span');
+        icon.classList.add('material-symbols-outlined', 'quiz-history-card__meta-icon');
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = iconName;
+        meta.appendChild(icon);
+
+        const content = document.createElement('div');
+        content.classList.add('quiz-history-card__meta-content');
+
+        const labelElement = document.createElement('span');
+        labelElement.classList.add('quiz-history-card__meta-label');
+        labelElement.textContent = label;
+        content.appendChild(labelElement);
+
+        const valueElement = document.createElement('span');
+        valueElement.classList.add('quiz-history-card__meta-value');
+        let safeValue = value;
+        if (typeof safeValue === 'string') {
+            safeValue = safeValue.trim();
+        }
+        if (!safeValue) {
+            safeValue = '—';
+        }
+        valueElement.textContent = safeValue;
+        content.appendChild(valueElement);
+
+        meta.appendChild(content);
+        return meta;
     }
 
     _formatDateTime(isoString) {

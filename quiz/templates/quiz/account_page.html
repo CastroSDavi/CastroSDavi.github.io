@@ -119,6 +119,10 @@
                 <div class="card card--conta-perfil">
                     <h2 class="card__title">Histórico de Quizzes</h2>
                     <div class="card__body">
+                        <p class="quiz-history__description">
+                            Revise suas respostas anteriores, acompanhe o desempenho de cada questão e retorne rapidamente às explicações detalhadas.
+                        </p>
+
                         <div class="quiz-history__controls">
                             <div class="form-group quiz-history__form-group">
                                 <label for="quiz-history-session-filter" class="form-label">Filtrar por sessão</label>
@@ -148,23 +152,20 @@
                             </div>
                         </div>
 
-                        <p id="quiz-history-loading" class="placeholder-text" aria-live="polite">Carregando histórico...</p>
-                        <p id="quiz-history-error" class="placeholder-text u-is-hidden" role="alert"></p>
-                        <p id="quiz-history-empty" class="placeholder-text u-is-hidden">Nenhuma resposta encontrada.</p>
+                        <p id="quiz-history-loading" class="quiz-history__loading placeholder-text" aria-live="polite">Carregando histórico...</p>
 
-                        <div id="quiz-history-table-wrapper" class="data-table-wrapper u-is-hidden">
-                            <table class="data-table quiz-history__table">
-                                <thead>
-                                    <tr>
-                                        <th>Respondida em</th>
-                                        <th>Sessão</th>
-                                        <th>Pergunta</th>
-                                        <th>Sua Resposta</th>
-                                        <th>Explicação</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="quiz-history-table-body"></tbody>
-                            </table>
+                        <div id="quiz-history-error" class="quiz-history__error u-is-hidden" role="alert">
+                            <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+                            <p data-role="error-message"></p>
+                        </div>
+
+                        <div id="quiz-history-empty" class="quiz-history__empty-state u-is-hidden" role="status">
+                            <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+                            <p data-role="empty-message">Nenhuma resposta encontrada.</p>
+                        </div>
+
+                        <div id="quiz-history-table-wrapper" class="quiz-history__results u-is-hidden" aria-live="polite">
+                            <div id="quiz-history-table-body" class="quiz-history__list" role="list"></div>
                         </div>
 
                         <div id="quiz-history-pagination" class="quiz-history__pagination u-is-hidden">

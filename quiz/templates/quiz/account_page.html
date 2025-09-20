@@ -384,7 +384,7 @@
             <div id="statistics-content" class="account-content__section">
                 <div class="card card--conta-perfil card--statistics-dashboard">
                     <div class="statistics-dashboard">
-                        <header class="statistics-header">
+                        <header class="statistics-header statistics-card">
                             <div class="statistics-header__intro">
                                 <h2 class="statistics-header__title">Painel de Estatísticas</h2>
                                 <p class="statistics-header__subtitle">Visualize o impacto dos seus estudos e acompanhe tendências que ajudam a manter o ritmo.</p>
@@ -401,49 +401,48 @@
                             </div>
                         </header>
 
-                        <section class="statistics-summary">
-                            <h3 class="statistics-summary__title">Destaques rápidos</h3>
-                            <div class="statistics-summary__grid">
-                                <div class="summary-card">
-                                    <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">functions</span>
-                                    <div class="summary-card__content">
-                                        <p class="summary-card__label">Questões respondidas</p>
-                                        <p class="summary-card__value" id="metric-total-questions">--</p>
-                                        <p class="summary-card__detail" id="summary-total-questions-detail">Quantidade total no período selecionado.</p>
-                                    </div>
+                        <div class="statistics-dashboard__sections">
+                            <section class="statistics-section statistics-section--overview">
+                                <div class="statistics-section__header">
+                                    <h3 class="statistics-section__title">Destaques do período</h3>
+                                    <p class="statistics-section__description">Resumo rápido das métricas e insights selecionados.</p>
                                 </div>
-                                <div class="summary-card">
-                                    <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">local_fire_department</span>
-                                    <div class="summary-card__content">
-                                        <p class="summary-card__label">Sequência máxima</p>
-                                        <p class="summary-card__value" id="metric-max-streak">--</p>
-                                        <p class="summary-card__detail" id="summary-max-streak-detail">Dias seguidos com participação nas atividades.</p>
-                                    </div>
-                                </div>
-                                <div class="summary-card">
-                                    <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">military_tech</span>
-                                    <div class="summary-card__content">
-                                        <p class="summary-card__label">Pontuação acumulada</p>
-                                        <p class="summary-card__value" id="metric-total-score">--</p>
-                                        <p class="summary-card__detail" id="summary-total-score-detail">Soma dos pontos de quizzes concluídos.</p>
-                                    </div>
-                                </div>
-                                <div class="summary-card">
-                                    <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">timer</span>
-                                    <div class="summary-card__content">
-                                        <p class="summary-card__label">Tempo de estudo</p>
-                                        <p class="summary-card__value" id="metric-total-study-time">--</p>
-                                        <p class="summary-card__detail" id="summary-total-study-time-detail">Tempo somado em atividades dentro do período.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
 
-                        <section class="statistics-digest">
-                            <div class="statistics-digest__insights">
-                                <h3 class="statistics-digest__title">Insights principais</h3>
-                                <div class="statistics-digest__grid" aria-live="polite">
-                                    <article class="digest-card" data-insight="top-category">
+                                <div class="statistics-section__grid statistics-section__grid--overview" aria-live="polite">
+                                    <article class="statistics-card summary-card">
+                                        <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">functions</span>
+                                        <div class="summary-card__content">
+                                            <p class="summary-card__label">Questões respondidas</p>
+                                            <p class="summary-card__value" id="metric-total-questions">--</p>
+                                            <p class="summary-card__detail" id="summary-total-questions-detail">Quantidade total no período selecionado.</p>
+                                        </div>
+                                    </article>
+                                    <article class="statistics-card summary-card">
+                                        <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">local_fire_department</span>
+                                        <div class="summary-card__content">
+                                            <p class="summary-card__label">Sequência máxima</p>
+                                            <p class="summary-card__value" id="metric-max-streak">--</p>
+                                            <p class="summary-card__detail" id="summary-max-streak-detail">Dias seguidos com participação nas atividades.</p>
+                                        </div>
+                                    </article>
+                                    <article class="statistics-card summary-card">
+                                        <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">military_tech</span>
+                                        <div class="summary-card__content">
+                                            <p class="summary-card__label">Pontuação acumulada</p>
+                                            <p class="summary-card__value" id="metric-total-score">--</p>
+                                            <p class="summary-card__detail" id="summary-total-score-detail">Soma dos pontos de quizzes concluídos.</p>
+                                        </div>
+                                    </article>
+                                    <article class="statistics-card summary-card">
+                                        <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">timer</span>
+                                        <div class="summary-card__content">
+                                            <p class="summary-card__label">Tempo de estudo</p>
+                                            <p class="summary-card__value" id="metric-total-study-time">--</p>
+                                            <p class="summary-card__detail" id="summary-total-study-time-detail">Tempo somado em atividades dentro do período.</p>
+                                        </div>
+                                    </article>
+
+                                    <article class="statistics-card digest-card" data-insight="top-category">
                                         <span class="material-symbols-outlined digest-card__icon" aria-hidden="true">military_tech</span>
                                         <div class="digest-card__content">
                                             <p class="digest-card__label">Categoria em destaque</p>
@@ -451,7 +450,7 @@
                                             <p class="digest-card__detail" id="insight-best-category-detail">Responda quizzes para descobrir onde você tem maior domínio.</p>
                                         </div>
                                     </article>
-                                    <article class="digest-card" data-insight="best-difficulty">
+                                    <article class="statistics-card digest-card" data-insight="best-difficulty">
                                         <span class="material-symbols-outlined digest-card__icon" aria-hidden="true">stacked_line_chart</span>
                                         <div class="digest-card__content">
                                             <p class="digest-card__label">Dificuldade em que vai melhor</p>
@@ -459,7 +458,7 @@
                                             <p class="digest-card__detail" id="insight-best-difficulty-detail">Avance pelos níveis para comparar acertos entre fácil, médio e difícil.</p>
                                         </div>
                                     </article>
-                                    <article class="digest-card" data-insight="productive-day">
+                                    <article class="statistics-card digest-card" data-insight="productive-day">
                                         <span class="material-symbols-outlined digest-card__icon" aria-hidden="true">calendar_month</span>
                                         <div class="digest-card__content">
                                             <p class="digest-card__label">Dia mais produtivo</p>
@@ -467,7 +466,7 @@
                                             <p class="digest-card__detail" id="insight-productive-day-detail">Assim que houver atividades recentes indicaremos o melhor dia para estudar.</p>
                                         </div>
                                     </article>
-                                    <article class="digest-card" data-insight="accuracy">
+                                    <article class="statistics-card digest-card" data-insight="accuracy">
                                         <span class="material-symbols-outlined digest-card__icon" aria-hidden="true">monitoring</span>
                                         <div class="digest-card__content">
                                             <p class="digest-card__label">Precisão geral</p>
@@ -475,125 +474,139 @@
                                             <p class="digest-card__detail" id="insight-accuracy-detail">Mantenha sua sequência de estudos ativa para acompanhar a taxa de acertos.</p>
                                         </div>
                                     </article>
-                                </div>
-                            </div>
 
-                            <aside class="statistics-digest__summary">
-                                <div class="trend-card statistics-trend-card statistics-trend-card--empty" id="accuracy-trend-card" aria-live="polite">
-                                    <header class="trend-card__header">
-                                        <span class="material-symbols-outlined trend-card__icon" id="trend-accuracy-icon" aria-hidden="true">trending_flat</span>
-                                        <div class="trend-card__meta">
-                                            <p class="trend-card__label">Variação da precisão</p>
-                                            <span class="trend-card__badge" id="trend-accuracy-badge">Sem dados</span>
+                                    <article class="statistics-card trend-card statistics-trend-card statistics-trend-card--empty" id="accuracy-trend-card" aria-live="polite">
+                                        <header class="trend-card__header">
+                                            <span class="material-symbols-outlined trend-card__icon" id="trend-accuracy-icon" aria-hidden="true">trending_flat</span>
+                                            <div class="trend-card__meta">
+                                                <p class="trend-card__label">Variação da precisão</p>
+                                                <span class="trend-card__badge" id="trend-accuracy-badge">Sem dados</span>
+                                            </div>
+                                        </header>
+                                        <div class="trend-card__body">
+                                            <p class="trend-card__value" id="trend-accuracy-value">--</p>
+                                            <p class="trend-card__detail" id="trend-accuracy-detail">Complete quizzes para acompanhar a evolução do seu desempenho.</p>
                                         </div>
-                                    </header>
-                                    <div class="trend-card__body">
-                                        <p class="trend-card__value" id="trend-accuracy-value">--</p>
-                                        <p class="trend-card__detail" id="trend-accuracy-detail">Complete quizzes para acompanhar a evolução do seu desempenho.</p>
-                                    </div>
+                                    </article>
+
+                                    <article class="statistics-card statistics-card--highlights" aria-live="polite">
+                                        <h4 class="statistics-card__title">Resumo rápido do período</h4>
+                                        <ul class="statistics-highlights" id="statistics-period-highlights" aria-live="polite">
+                                            <li class="statistics-highlights__item">
+                                                <span class="material-symbols-outlined statistics-highlights__icon" aria-hidden="true">calendar_today</span>
+                                                <div class="statistics-highlights__content">
+                                                    <p class="statistics-highlights__label">Dias ativos</p>
+                                                    <p class="statistics-highlights__value" id="summary-active-days">--</p>
+                                                    <p class="statistics-highlights__detail" id="summary-active-days-detail">Crie uma rotina consistente para manter a constância dos estudos.</p>
+                                                </div>
+                                            </li>
+                                            <li class="statistics-highlights__item">
+                                                <span class="material-symbols-outlined statistics-highlights__icon" aria-hidden="true">task_alt</span>
+                                                <div class="statistics-highlights__content">
+                                                    <p class="statistics-highlights__label">Questões por dia</p>
+                                                    <p class="statistics-highlights__value" id="summary-average-questions">--</p>
+                                                    <p class="statistics-highlights__detail" id="summary-average-questions-detail">Resolva perguntas com frequência para ver a média crescer.</p>
+                                                </div>
+                                            </li>
+                                            <li class="statistics-highlights__item">
+                                                <span class="material-symbols-outlined statistics-highlights__icon" aria-hidden="true">schedule</span>
+                                                <div class="statistics-highlights__content">
+                                                    <p class="statistics-highlights__label">Tempo médio de estudo</p>
+                                                    <p class="statistics-highlights__value" id="summary-average-study-time">--</p>
+                                                    <p class="statistics-highlights__detail" id="summary-average-study-time-detail">Finalize sessões para calcular o tempo médio diário.</p>
+                                                </div>
+                                            </li>
+                                            <li class="statistics-highlights__item">
+                                                <span class="material-symbols-outlined statistics-highlights__icon" aria-hidden="true">workspace_premium</span>
+                                                <div class="statistics-highlights__content">
+                                                    <p class="statistics-highlights__label">Sessões concluídas</p>
+                                                    <p class="statistics-highlights__value" id="summary-sessions-completed">--</p>
+                                                    <p class="statistics-highlights__detail" id="summary-sessions-completed-detail">Inicie um quiz para acompanhar o ritmo de conclusão semanal.</p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </article>
+                                </div>
+                            </section>
+
+                            <section class="statistics-section statistics-section--charts">
+                                <div class="statistics-section__header">
+                                    <h3 class="statistics-section__title">Gráficos detalhados</h3>
+                                    <p class="statistics-section__description">Acompanhe evolução, frequência e desempenho por categoria.</p>
                                 </div>
 
-                                <div class="summary-card summary-card--list" aria-live="polite">
-                                    <h4 class="summary-card__title">Resumo rápido do período</h4>
-                                    <ul class="summary-card__list" id="statistics-period-highlights">
-                                        <li class="summary-card__item">
-                                            <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">calendar_today</span>
-                                            <div class="summary-card__content">
-                                                <p class="summary-card__label">Dias ativos</p>
-                                                <p class="summary-card__value" id="summary-active-days">--</p>
-                                                <p class="summary-card__detail" id="summary-active-days-detail">Crie uma rotina consistente para manter a constância dos estudos.</p>
+                                <div class="statistics-section__grid statistics-section__grid--charts">
+                                    <article class="statistics-card statistics-panel statistics-card--chart statistics-card--chart-wide">
+                                        <header class="statistics-panel__header">
+                                            <h3 class="statistics-panel__title">Precisão geral</h3>
+                                            <button type="button" class="statistics-panel__action" aria-label="Mais opções do gráfico de precisão geral">
+                                                <span class="material-symbols-outlined" aria-hidden="true">more_horiz</span>
+                                            </button>
+                                        </header>
+                                        <div class="statistics-panel__body statistics-panel__body--chart">
+                                            <div id="chart-overall-accuracy" class="statistics-panel__chart">
+                                                <p class="statistics-panel__placeholder">Carregando gráfico...</p>
                                             </div>
-                                        </li>
-                                        <li class="summary-card__item">
-                                            <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">task_alt</span>
-                                            <div class="summary-card__content">
-                                                <p class="summary-card__label">Questões por dia</p>
-                                                <p class="summary-card__value" id="summary-average-questions">--</p>
-                                                <p class="summary-card__detail" id="summary-average-questions-detail">Resolva perguntas com frequência para ver a média crescer.</p>
-                                            </div>
-                                        </li>
-                                        <li class="summary-card__item">
-                                            <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">schedule</span>
-                                            <div class="summary-card__content">
-                                                <p class="summary-card__label">Tempo médio de estudo</p>
-                                                <p class="summary-card__value" id="summary-average-study-time">--</p>
-                                                <p class="summary-card__detail" id="summary-average-study-time-detail">Finalize sessões para calcular o tempo médio diário.</p>
-                                            </div>
-                                        </li>
-                                        <li class="summary-card__item">
-                                            <span class="material-symbols-outlined summary-card__icon" aria-hidden="true">workspace_premium</span>
-                                            <div class="summary-card__content">
-                                                <p class="summary-card__label">Sessões concluídas</p>
-                                                <p class="summary-card__value" id="summary-sessions-completed">--</p>
-                                                <p class="summary-card__detail" id="summary-sessions-completed-detail">Inicie um quiz para acompanhar o ritmo de conclusão semanal.</p>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </aside>
-                        </section>
+                                        </div>
+                                    </article>
 
-                        <section class="statistics-grid">
-                            <div class="statistics-grid__row">
-                                <article class="statistics-panel statistics-panel--large">
-                                    <header class="statistics-panel__header">
-                                        <h3 class="statistics-panel__title">Precisão geral</h3>
-                                        <button type="button" class="statistics-panel__action" aria-label="Mais opções do gráfico de precisão geral">
-                                            <span class="material-symbols-outlined" aria-hidden="true">more_horiz</span>
-                                        </button>
-                                    </header>
-                                    <div id="chart-overall-accuracy" class="statistics-panel__chart">
-                                        <p class="statistics-panel__placeholder">Carregando gráfico...</p>
-                                    </div>
-                                </article>
-                                <article class="statistics-panel statistics-panel--large">
-                                    <header class="statistics-panel__header">
-                                        <h3 class="statistics-panel__title">Desempenho por categoria</h3>
-                                    </header>
-                                    <div id="chart-category-performance" class="statistics-panel__chart">
-                                        <p class="statistics-panel__placeholder">Carregando gráfico...</p>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="statistics-grid__row">
-                                <article class="statistics-panel statistics-panel--full">
-                                    <header class="statistics-panel__header">
-                                        <h3 class="statistics-panel__title">Evolução da precisão</h3>
-                                    </header>
-                                    <div id="chart-learning-progress" class="statistics-panel__chart">
-                                        <p class="statistics-panel__placeholder">Carregando gráfico...</p>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="statistics-grid__row">
-                                <article class="statistics-panel statistics-panel--full">
-                                    <header class="statistics-panel__header">
-                                        <h3 class="statistics-panel__title">Frequência de estudos (heatmap)</h3>
-                                    </header>
-                                    <div id="chart-study-heatmap" class="statistics-panel__chart">
-                                        <p class="statistics-panel__placeholder">Carregando gráfico...</p>
-                                    </div>
-                                </article>
-                            </div>
-                            <div class="statistics-grid__row">
-                                <article class="statistics-panel">
-                                    <header class="statistics-panel__header">
-                                        <h3 class="statistics-panel__title">Tempo de estudo detalhado</h3>
-                                    </header>
-                                    <div id="chart-study-time" class="statistics-panel__chart">
-                                        <p class="statistics-panel__placeholder">Carregando gráfico...</p>
-                                    </div>
-                                </article>
-                                <article class="statistics-panel">
-                                    <header class="statistics-panel__header">
-                                        <h3 class="statistics-panel__title">Acertos por dificuldade</h3>
-                                    </header>
-                                    <div id="chart-difficulty-performance" class="statistics-panel__chart">
-                                        <p class="statistics-panel__placeholder">Carregando gráfico...</p>
-                                    </div>
-                                </article>
-                            </div>
-                        </section>
+                                    <article class="statistics-card statistics-panel statistics-card--chart statistics-card--chart-wide">
+                                        <header class="statistics-panel__header">
+                                            <h3 class="statistics-panel__title">Desempenho por categoria</h3>
+                                        </header>
+                                        <div class="statistics-panel__body statistics-panel__body--chart">
+                                            <div id="chart-category-performance" class="statistics-panel__chart">
+                                                <p class="statistics-panel__placeholder">Carregando gráfico...</p>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                    <article class="statistics-card statistics-panel statistics-card--chart statistics-card--chart-full">
+                                        <header class="statistics-panel__header">
+                                            <h3 class="statistics-panel__title">Evolução da precisão</h3>
+                                        </header>
+                                        <div class="statistics-panel__body statistics-panel__body--chart">
+                                            <div id="chart-learning-progress" class="statistics-panel__chart">
+                                                <p class="statistics-panel__placeholder">Carregando gráfico...</p>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                    <article class="statistics-card statistics-panel statistics-card--chart statistics-card--chart-full">
+                                        <header class="statistics-panel__header">
+                                            <h3 class="statistics-panel__title">Frequência de estudos (heatmap)</h3>
+                                        </header>
+                                        <div class="statistics-panel__body statistics-panel__body--chart">
+                                            <div id="chart-study-heatmap" class="statistics-panel__chart">
+                                                <p class="statistics-panel__placeholder">Carregando gráfico...</p>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                    <article class="statistics-card statistics-panel statistics-card--chart">
+                                        <header class="statistics-panel__header">
+                                            <h3 class="statistics-panel__title">Tempo de estudo detalhado</h3>
+                                        </header>
+                                        <div class="statistics-panel__body statistics-panel__body--chart">
+                                            <div id="chart-study-time" class="statistics-panel__chart">
+                                                <p class="statistics-panel__placeholder">Carregando gráfico...</p>
+                                            </div>
+                                        </div>
+                                    </article>
+
+                                    <article class="statistics-card statistics-panel statistics-card--chart">
+                                        <header class="statistics-panel__header">
+                                            <h3 class="statistics-panel__title">Acertos por dificuldade</h3>
+                                        </header>
+                                        <div class="statistics-panel__body statistics-panel__body--chart">
+                                            <div id="chart-difficulty-performance" class="statistics-panel__chart">
+                                                <p class="statistics-panel__placeholder">Carregando gráfico...</p>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
+                            </section>
+                        </div>
 
                         <div id="no-stats-data-message" class="statistics-empty-state u-is-hidden" role="status" aria-live="polite">
                             <span class="material-symbols-outlined statistics-empty-state__icon" aria-hidden="true">sentiment_neutral</span>

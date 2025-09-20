@@ -1,6 +1,7 @@
 // assets/js/ui/FavoriteManager.js
 
 export const FAVORITE_REVIEW_STORAGE_KEY = 'medquiz.favoriteReviewTarget';
+export const FAVORITE_REVIEW_QUERY_PARAM = 'favorite_question';
 
 export default class FavoriteManager {
     constructor(quizUIInstance) {
@@ -282,7 +283,8 @@ export default class FavoriteManager {
             actionsContainer.className = 'favorite-question-card__actions';
 
             const reviewLink = document.createElement('a');
-            reviewLink.href = questionsPageUrl;
+            const reviewUrl = this._buildQuestionReviewLink(questionsPageUrl, fav.id_pergunta);
+            reviewLink.href = reviewUrl || questionsPageUrl;
             reviewLink.className = 'button button--outline button--small favorite-question-card__action favorite-question-link';
             reviewLink.dataset.perguntaId = fav.id_pergunta;
             reviewLink.title = `Revisar a questão P${fav.id_pergunta} no quiz`;
@@ -353,13 +355,31 @@ export default class FavoriteManager {
     }
 
     _handleReviewLinkClick(event, favoriteQuestion) {
+        if (!favoriteQuestion || typeof favoriteQuestion.id_pergunta === 'undefined') {
+            return;
+        }
+
+        const isModifiedClick = Boolean(
+            event && (
+                event.defaultPrevented ||
+                (typeof event.button === 'number' && event.button !== 0) ||
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey ||
+                event.altKey
+            )
+        );
+
+        if (isModifiedClick) {
+            return;
+        }
+
         if (event) {
             event.preventDefault();
         }
 
-        if (!favoriteQuestion || typeof favoriteQuestion.id_pergunta === 'undefined') {
-            return;
-        }
+        const baseUrl = this._getQuestionsPageUrl();
+        const destinationUrl = this._buildQuestionReviewLink(baseUrl, favoriteQuestion.id_pergunta) || baseUrl;
 
         if (typeof window !== 'undefined' && window.sessionStorage) {
             try {
@@ -386,9 +406,43 @@ export default class FavoriteManager {
             }
         }
 
-        const destinationUrl = this._getQuestionsPageUrl();
         if (typeof window !== 'undefined' && destinationUrl) {
             window.location.href = destinationUrl;
+        }
+    }
+
+    _buildQuestionReviewLink(baseUrl, questionId) {
+        if (!baseUrl) {
+            return null;
+        }
+
+        const parsedId = Number.parseInt(questionId, 10);
+        if (!Number.isInteger(parsedId) || parsedId <= 0) {
+            return baseUrl;
+        }
+
+        const questionIdString = String(parsedId);
+
+        try {
+            const hashIndex = baseUrl.indexOf('#');
+            const pathAndQuery = hashIndex >= 0 ? baseUrl.slice(0, hashIndex) : baseUrl;
+            const hashFragment = hashIndex >= 0 ? baseUrl.slice(hashIndex) : '';
+
+            const queryIndex = pathAndQuery.indexOf('?');
+            const pathOnly = queryIndex >= 0 ? pathAndQuery.slice(0, queryIndex) : pathAndQuery;
+            const queryString = queryIndex >= 0 ? pathAndQuery.slice(queryIndex + 1) : '';
+
+            const searchParams = new URLSearchParams(queryString);
+            searchParams.set(FAVORITE_REVIEW_QUERY_PARAM, questionIdString);
+
+            const newQuery = searchParams.toString();
+            const newPathAndQuery = newQuery ? `${pathOnly}?${newQuery}` : pathOnly;
+
+            return `${newPathAndQuery}${hashFragment}`;
+        } catch (urlError) {
+            console.warn('FavoriteManager: não foi possível construir URL para revisão da questão favorita.', urlError);
+            const separator = baseUrl.includes('?') ? '&' : '?';
+            return `${baseUrl}${separator}${encodeURIComponent(FAVORITE_REVIEW_QUERY_PARAM)}=${encodeURIComponent(questionIdString)}`;
         }
     }
 

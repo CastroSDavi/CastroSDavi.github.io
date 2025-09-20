@@ -659,7 +659,27 @@ class QuestionViewSet(viewsets.ViewSet):
                 status=status.HTTP_401_UNAUTHORIZED,
             )
 
-        pergunta = get_object_or_404(Pergunta.objects.filter(ativa=True), pk=pergunta_id)
+        pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+
+        is_favorited = QuestaoFavorita.objects.filter(usuario=request.user, pergunta=pergunta).exists()
+
+        if not pergunta.ativa and not is_favorited:
+            return Response(
+                {
+                    'status': 'error',
+                    'message': 'Esta questão não está mais disponível no banco de questões.',
+                },
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        warning_message = None
+        warning_type = 'info'
+        if not pergunta.ativa and is_favorited:
+            warning_message = (
+                'Esta questão não está mais disponível no banco atual. Exibindo a versão salva '
+                'na sua lista de favoritos.'
+            )
+            warning_type = 'warning'
 
         opcoes_data = [
             {
@@ -682,10 +702,16 @@ class QuestionViewSet(viewsets.ViewSet):
             'nivel_dificuldade': pergunta.nivel_dificuldade,
             'explicacao_resposta': pergunta.explicacao_resposta,
             'opcoes': opcoes_data,
-            'is_favorited': QuestaoFavorita.objects.filter(usuario=request.user, pergunta=pergunta).exists(),
+            'is_favorited': is_favorited,
+            'esta_ativa': pergunta.ativa,
         }
 
-        return Response({'status': 'success', 'question': question_payload})
+        response_payload = {'status': 'success', 'question': question_payload}
+        if warning_message:
+            response_payload['message'] = warning_message
+            response_payload['message_type'] = warning_type
+
+        return Response(response_payload)
 
     @action(detail=True, methods=['post'], url_path='toggle_favorite')
     def toggle_favorite(self, request, pergunta_id=None):

@@ -653,13 +653,30 @@
 }
 
 @media (max-width: 680px) {
+    .profile-overview__header {
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-overview__headline {
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-overview__badges {
+        justify-content: center;
+    }
+
     .profile-overview__actions {
         flex-direction: column;
         align-items: stretch;
+        margin-left: 0;
+        width: 100%;
     }
 
     .profile-overview__action {
         width: 100%;
+        justify-content: center;
     }
 
     .profile-stats-grid {
@@ -678,11 +695,28 @@
 @media (max-width: 520px) {
     .profile-overview__header {
         padding: var(--spacing-md, 20px);
+        gap: var(--spacing-md, 20px);
     }
 
     .profile-overview__avatar {
         width: 64px;
         height: 64px;
+    }
+
+    .profile-overview__badges {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-xxs, 8px);
+    }
+
+    .profile-badge {
+        justify-content: center;
+        width: 100%;
+        text-align: center;
+    }
+
+    .profile-overview__actions {
+        gap: var(--spacing-xxs, 8px);
     }
 
     .profile-stat-card {

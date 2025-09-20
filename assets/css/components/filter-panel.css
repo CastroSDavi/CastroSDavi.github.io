@@ -330,15 +330,22 @@
     .filter-group__toolbar {
         flex-direction: row;
         align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
     .filter-group__controls--standalone {
         margin-bottom: 0;
         padding-left: 0;
+        justify-content: center;
     }
 
     .filter-group__search.form-group--filter-panel {
-        flex: 1;
+        flex: 0 1 100%;
+        max-width: 520px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 

@@ -115,6 +115,11 @@ class QuizApiTests(TestCase):
         favorite_question = favorites_payload['favorite_questions'][0]
         self.assertIn('esta_ativa', favorite_question)
         self.assertTrue(favorite_question['esta_ativa'])
+        self.assertIn('categorias', favorite_question)
+        self.assertIsInstance(favorite_question['categorias'], list)
+        self.assertTrue(
+            any(cat.get('nome_categoria') == self.category.nome_categoria for cat in favorite_question['categorias'])
+        )
 
     def test_question_detail_requires_authentication(self):
         url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})

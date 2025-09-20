@@ -388,9 +388,9 @@
 
 .favorite-question-card__heading {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: var(--spacing-sm, 12px);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-xs, 8px);
     flex: 1;
     min-width: 0;
 }
@@ -407,6 +407,7 @@
     font-size: 0.78rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
+    align-self: flex-start;
 }
 
 .favorite-question-card__title {

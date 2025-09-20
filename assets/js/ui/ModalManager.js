@@ -173,8 +173,12 @@ export default class ModalManager {
         this.quizUI.hideElement(explanationModalEmptyState);
     
         if (explanationModalDifficulty) explanationModalDifficulty.textContent = question.nivel_dificuldade || 'Não informada';
-        const categoryNames = question.categoria_ids?.map(id => allCategories.find(c => c.id_categoria === id)?.nome_categoria).filter(Boolean).join(', ') || 'Não informadas';
-        if (explanationModalCategories) explanationModalCategories.textContent = categoryNames;
+        const categoryLabels = this._getCategoryLabelsForModal(question, allCategories);
+        if (explanationModalCategories) {
+            explanationModalCategories.textContent = categoryLabels.length > 0
+                ? categoryLabels.join(', ')
+                : 'Não informadas';
+        }
         this.quizUI.showElement(explanationModalMetaContainer);
     
         if (hasGeneralExplanation && explanationModalGeneralText) {
@@ -337,5 +341,88 @@ export default class ModalManager {
             return true;
         }
         return false;
+    }
+
+    _getCategoryLabelsForModal(question, allCategories = []) {
+        if (!question) {
+            return [];
+        }
+
+        const labelsSet = new Set();
+
+        if (Array.isArray(question.categorias)) {
+            question.categorias.forEach(category => {
+                if (typeof category === 'string') {
+                    const trimmed = category.trim();
+                    if (trimmed) {
+                        labelsSet.add(trimmed);
+                    }
+                } else if (category && typeof category === 'object') {
+                    const name = category.nome_categoria || category.nome || category.label || category.title || category.text || category.name;
+                    if (typeof name === 'string' && name.trim()) {
+                        labelsSet.add(name.trim());
+                    }
+                }
+            });
+        }
+
+        if (labelsSet.size === 0 && Array.isArray(question.categoria_nomes)) {
+            question.categoria_nomes.forEach(name => {
+                if (typeof name === 'string') {
+                    const trimmed = name.trim();
+                    if (trimmed) {
+                        labelsSet.add(trimmed);
+                    }
+                }
+            });
+        }
+
+        if (labelsSet.size === 0 && Array.isArray(question.categoria_ids) && allCategories) {
+            const categoryMap = new Map();
+            allCategories.forEach(cat => {
+                if (cat && typeof cat.id_categoria !== 'undefined') {
+                    const label = typeof cat.nome_categoria === 'string' ? cat.nome_categoria.trim() : '';
+                    categoryMap.set(cat.id_categoria, label);
+                    categoryMap.set(String(cat.id_categoria), label);
+                }
+            });
+
+            question.categoria_ids.forEach(id => {
+                if (categoryMap.has(id)) {
+                    const label = categoryMap.get(id);
+                    if (label) {
+                        labelsSet.add(label);
+                    }
+                    return;
+                }
+
+                const normalizedId = this._normalizeCategoryId(id);
+                if (normalizedId !== null) {
+                    const label = categoryMap.get(normalizedId) || categoryMap.get(String(normalizedId));
+                    if (label) {
+                        labelsSet.add(label);
+                    }
+                }
+            });
+        }
+
+        return Array.from(labelsSet);
+    }
+
+    _normalizeCategoryId(rawId) {
+        if (typeof rawId === 'number' && Number.isFinite(rawId)) {
+            return rawId;
+        }
+        if (typeof rawId === 'string') {
+            const trimmed = rawId.trim();
+            if (!trimmed) {
+                return null;
+            }
+            const parsed = Number.parseInt(trimmed, 10);
+            if (!Number.isNaN(parsed)) {
+                return parsed;
+            }
+        }
+        return null;
     }
 }

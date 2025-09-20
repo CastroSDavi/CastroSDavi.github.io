@@ -109,7 +109,14 @@ export default class FavoriteManager {
         container.innerHTML = '';
 
         const allCategories = this.store.getState().geral.allCategories || [];
-        const categoryMap = new Map(allCategories.map(cat => [cat.id_categoria, cat.nome_categoria]));
+        const categoryMap = new Map();
+        allCategories.forEach(cat => {
+            if (cat && typeof cat.id_categoria !== 'undefined') {
+                const name = typeof cat.nome_categoria === 'string' ? cat.nome_categoria.trim() : '';
+                categoryMap.set(cat.id_categoria, name);
+                categoryMap.set(String(cat.id_categoria), name);
+            }
+        });
 
         container.classList.add('favorite-questions-list');
 
@@ -235,12 +242,12 @@ export default class FavoriteManager {
             const tagsContainer = document.createElement('div');
             tagsContainer.className = 'favorite-question-card__tags categories-tags-container';
 
-            if (fav.categoria_ids && fav.categoria_ids.length > 0) {
-                fav.categoria_ids.forEach(id => {
-                    const categoryName = categoryMap.get(id) || `ID ${id}`;
+            const categoryLabels = this._getCategoryLabels(fav, categoryMap);
+            if (categoryLabels.length > 0) {
+                categoryLabels.forEach(label => {
                     const tag = document.createElement('span');
                     tag.className = 'category-tag';
-                    tag.textContent = categoryName;
+                    tag.textContent = label;
                     tagsContainer.appendChild(tag);
                 });
             } else {
@@ -546,6 +553,12 @@ export default class FavoriteManager {
             esta_ativa: favoriteQuestion.esta_ativa === false ? false : true,
         };
 
+        const normalizedCategories = this._normalizeFavoriteCategories(favoriteQuestion);
+        sanitizedQuestion.categorias = normalizedCategories;
+        sanitizedQuestion.categoria_nomes = normalizedCategories
+            .map(category => category.nome_categoria)
+            .filter(name => typeof name === 'string' && name.trim() !== '');
+
         if (Array.isArray(favoriteQuestion.opcoes)) {
             sanitizedQuestion.opcoes = favoriteQuestion.opcoes
                 .map(option => ({
@@ -573,6 +586,127 @@ export default class FavoriteManager {
         }
 
         return sanitizedQuestion;
+    }
+
+    _getCategoryLabels(favoriteQuestion, categoryMap) {
+        if (!favoriteQuestion) {
+            return [];
+        }
+
+        const normalizedCategories = this._normalizeFavoriteCategories(favoriteQuestion);
+        const labelsSet = new Set();
+
+        normalizedCategories.forEach(category => {
+            if (category.nome_categoria) {
+                labelsSet.add(category.nome_categoria);
+            } else if (category.id_categoria !== null) {
+                const resolvedName = this._resolveCategoryNameById(category.id_categoria, categoryMap);
+                if (resolvedName) {
+                    labelsSet.add(resolvedName);
+                }
+            }
+        });
+
+        if (labelsSet.size === 0 && Array.isArray(favoriteQuestion.categoria_ids)) {
+            favoriteQuestion.categoria_ids.forEach(id => {
+                const resolvedName = this._resolveCategoryNameById(id, categoryMap);
+                if (resolvedName) {
+                    labelsSet.add(resolvedName);
+                }
+            });
+        }
+
+        return Array.from(labelsSet);
+    }
+
+    _normalizeFavoriteCategories(favoriteQuestion) {
+        if (!favoriteQuestion) {
+            return [];
+        }
+
+        const normalized = [];
+        const seenKeys = new Set();
+
+        const addCategory = (idValue, nameValue) => {
+            const normalizedName = typeof nameValue === 'string' ? nameValue.trim() : '';
+            const normalizedId = this._normalizeCategoryId(idValue);
+            if (!normalizedName && normalizedId === null) {
+                return;
+            }
+
+            const keyNamePart = normalizedName ? normalizedName.toLowerCase() : '';
+            const keyIdPart = normalizedId !== null ? `id:${normalizedId}` : '';
+            const dedupeKey = `${keyNamePart}|${keyIdPart}`;
+            if (seenKeys.has(dedupeKey)) {
+                return;
+            }
+            seenKeys.add(dedupeKey);
+
+            normalized.push({
+                id_categoria: normalizedId,
+                nome_categoria: normalizedName || null,
+            });
+        };
+
+        if (Array.isArray(favoriteQuestion.categorias)) {
+            favoriteQuestion.categorias.forEach(category => {
+                if (typeof category === 'string') {
+                    addCategory(null, category);
+                } else if (category && typeof category === 'object') {
+                    addCategory(
+                        category.id_categoria ?? category.id ?? category.pk ?? category.value ?? category.idCategoria ?? null,
+                        category.nome_categoria ?? category.nome ?? category.label ?? category.title ?? category.text ?? category.name ?? null,
+                    );
+                }
+            });
+        }
+
+        if (Array.isArray(favoriteQuestion.categoria_nomes)) {
+            favoriteQuestion.categoria_nomes.forEach(name => addCategory(null, name));
+        }
+
+        return normalized;
+    }
+
+    _normalizeCategoryId(rawId) {
+        if (typeof rawId === 'number' && Number.isFinite(rawId)) {
+            return rawId;
+        }
+        if (typeof rawId === 'string') {
+            const trimmed = rawId.trim();
+            if (!trimmed) {
+                return null;
+            }
+            const parsed = Number.parseInt(trimmed, 10);
+            if (!Number.isNaN(parsed)) {
+                return parsed;
+            }
+        }
+        return null;
+    }
+
+    _resolveCategoryNameById(categoryId, categoryMap) {
+        if (!categoryMap || typeof categoryMap.has !== 'function' || typeof categoryMap.get !== 'function') {
+            return null;
+        }
+
+        if (categoryMap.has(categoryId)) {
+            return categoryMap.get(categoryId);
+        }
+
+        const normalizedId = this._normalizeCategoryId(categoryId);
+        if (normalizedId !== null && categoryMap.has(normalizedId)) {
+            return categoryMap.get(normalizedId);
+        }
+
+        if (typeof categoryId === 'string') {
+            const trimmed = categoryId.trim();
+            if (trimmed && categoryMap.has(trimmed)) {
+                return categoryMap.get(trimmed);
+            }
+        }
+
+        return null;
     }
 
     _getQuestionsPageUrl() {

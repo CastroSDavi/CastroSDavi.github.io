@@ -480,29 +480,8 @@
                                     <div class="security-overview__avatar" aria-hidden="true">{{ profile_summary.initials }}</div>
                                     <div class="security-overview__headline">
                                         <h3 class="security-overview__title">Central de Segurança e Dados</h3>
-                                        <p class="security-overview__description">Gerencie como seus dados são utilizados e acompanhe o status de segurança da sua conta, {{ profile_summary.display_name }}.</p>
-                                        <div class="security-overview__tags">
-                                            <span class="security-chip security-chip--success">
-                                                <span class="material-symbols-outlined" aria-hidden="true">verified_user</span>
-                                                Perfil {{ profile_summary.completion.percentage }}% completo
-                                            </span>
-                                            <span class="security-chip">
-                                                <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
-                                                {% if profile_summary.last_login %}
-                                                    Último acesso {{ profile_summary.last_login|date:"d/m/Y \à\s H:i" }}
-                                                {% else %}
-                                                    Ainda sem acessos registrados
-                                                {% endif %}
-                                            </span>
-                                        </div>
+                                        <p class="security-overview__description">Aqui você encontra um resumo do que guardamos sobre sua conta e pode atualizar rapidamente as informações essenciais. Conta criada em {{ profile_summary.date_joined|date:"d/m/Y" }}.</p>
                                     </div>
-                                </div>
-                                <div class="security-overview__cta">
-                                    <button type="button" class="button button--secondary button--small security-overview__copy" data-security-action="copy-summary">
-                                        <span class="material-symbols-outlined button__icon" aria-hidden="true">content_copy</span>
-                                        Copiar resumo de dados
-                                    </button>
-                                    <span class="security-overview__feedback" id="security-copy-feedback" role="status" aria-live="polite"></span>
                                 </div>
                             </div>
 
@@ -512,38 +491,29 @@
                                     <div class="security-summary-card__content">
                                         <span class="security-summary-card__label">Email principal</span>
                                         <span class="security-summary-card__value security-summary-card__value--ellipsis">{{ profile_summary.email|default:"Não informado" }}</span>
-                                        <span class="security-summary-card__hint">Utilizamos este contato para recuperar acesso e enviar alertas importantes.</span>
+                                        <span class="security-summary-card__hint">Mantenha este contato atualizado para recuperar a conta com segurança.</span>
                                     </div>
                                 </article>
-                                <article class="security-summary-card security-summary-card--progress" data-security-summary-item data-label="Compleção do perfil" data-summary-value="{{ profile_summary.completion.percentage }}%{% if profile_summary.completion.missing_fields %} - faltando {{ profile_summary.completion.missing_fields|join:', '|lower }}{% endif %}">
-                                    <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">shield_person</span>
+                                <article class="security-summary-card" data-security-summary-item data-label="Último acesso" data-summary-value="{% if profile_summary.last_login %}{{ profile_summary.last_login|date:'d/m/Y \à\s H:i' }}{% else %}Ainda sem acessos registrados{% endif %}">
+                                    <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">schedule</span>
                                     <div class="security-summary-card__content">
-                                        <span class="security-summary-card__label">Compleção do perfil</span>
-                                        <span class="security-summary-card__value">{{ profile_summary.completion.percentage }}%</span>
-                                        <div class="security-summary-card__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ profile_summary.completion.percentage }}">
-                                            <span style="width: {{ profile_summary.completion.percentage }}%;"></span>
-                                        </div>
-                                        {% if profile_summary.completion.missing_fields %}
-                                            <span class="security-summary-card__hint">Complete {{ profile_summary.completion.missing_fields|join:", "|lower }} para atingir 100%.</span>
-                                        {% else %}
-                                            <span class="security-summary-card__hint security-summary-card__hint--success">Seu perfil está completo!</span>
-                                        {% endif %}
+                                        <span class="security-summary-card__label">Último acesso</span>
+                                        <span class="security-summary-card__value">
+                                            {% if profile_summary.last_login %}
+                                                {{ profile_summary.last_login|date:"d/m/Y \à\s H:i" }}
+                                            {% else %}
+                                                Ainda sem acessos registrados
+                                            {% endif %}
+                                        </span>
+                                        <span class="security-summary-card__hint">Verifique esta data se notar algum acesso suspeito.</span>
                                     </div>
                                 </article>
-                                <article class="security-summary-card" data-security-summary-item data-label="Membro desde" data-summary-value="{{ profile_summary.date_joined|date:'d/m/Y' }}">
-                                    <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">calendar_month</span>
-                                    <div class="security-summary-card__content">
-                                        <span class="security-summary-card__label">Membro desde</span>
-                                        <span class="security-summary-card__value">{{ profile_summary.date_joined|date:"d/m/Y" }}</span>
-                                        <span class="security-summary-card__hint">Data usada para contextualizar seu histórico e progresso.</span>
-                                    </div>
-                                </article>
-                                <article class="security-summary-card" data-security-summary-item data-label="Dados armazenados" data-summary-value="{{ profile_summary.metrics.total_questions_answered }} respostas e {{ profile_summary.metrics.favorite_questions_count }} favoritos">
+                                <article class="security-summary-card" data-security-summary-item data-label="Histórico de estudos" data-summary-value="{{ profile_summary.metrics.total_sessions }} quizzes e {{ profile_summary.metrics.total_questions_answered }} respostas">
                                     <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">database</span>
                                     <div class="security-summary-card__content">
-                                        <span class="security-summary-card__label">Dados armazenados</span>
-                                        <span class="security-summary-card__value">{{ profile_summary.metrics.total_questions_answered }} respostas • {{ profile_summary.metrics.favorite_questions_count }} favoritos</span>
-                                        <span class="security-summary-card__hint">Essas informações alimentam recomendações e estatísticas personalizadas.</span>
+                                        <span class="security-summary-card__label">Histórico de estudos</span>
+                                        <span class="security-summary-card__value">{{ profile_summary.metrics.total_sessions }} quizzes • {{ profile_summary.metrics.total_questions_answered }} respostas</span>
+                                        <span class="security-summary-card__hint">Utilizamos apenas esses números para personalizar recomendações.</span>
                                     </div>
                                 </article>
                             </div>
@@ -555,7 +525,7 @@
                             <div class="card__body">
                                 <div class="security-card__header">
                                     <h3 class="security-card__title">Dados pessoais</h3>
-                                    <p class="security-card__description">Mantenha suas informações atualizadas para receber notificações e recuperar o acesso à conta.</p>
+                                    <p class="security-card__description">Atualize seu nome e email para manter a conta protegida e receber alertas importantes.</p>
                                 </div>
 
                                 {% if active_tab_on_error == 'security-content' and update_form.errors %}
@@ -611,7 +581,7 @@
                             <div class="card__body">
                                 <div class="security-card__header">
                                     <h3 class="security-card__title">Credenciais e acesso</h3>
-                                    <p class="security-card__description">Controle como você entra no MedQuiz e saiba quais informações usamos para proteger sua jornada de estudos.</p>
+                                    <p class="security-card__description">Gerencie como você entra no MedQuiz e mantenha a segurança da sua conta em dia.</p>
                                 </div>
 
                                 <dl class="security-detail-list">
@@ -626,20 +596,6 @@
                                                 {{ profile_summary.last_login|date:"d/m/Y \à\s H:i" }}
                                             {% else %}
                                                 Ainda sem acessos registrados
-                                            {% endif %}
-                                        </dd>
-                                    </div>
-                                    <div class="security-detail-list__item" data-security-summary-item data-label="Modo preferido" data-summary-value="{{ profile_summary.metrics.favorite_mode_display }}">
-                                        <dt>Modo preferido</dt>
-                                        <dd>{{ profile_summary.metrics.favorite_mode_display }}</dd>
-                                    </div>
-                                    <div class="security-detail-list__item" data-security-summary-item data-label="Sequência atual" data-summary-value="{% if profile_summary.metrics.current_streak %}{{ profile_summary.metrics.current_streak }} dia{% if profile_summary.metrics.current_streak|pluralize:'s' %}s{% endif %}{% else %}Nenhuma sequência ativa{% endif %}">
-                                        <dt>Sequência atual</dt>
-                                        <dd>
-                                            {% if profile_summary.metrics.current_streak %}
-                                                {{ profile_summary.metrics.current_streak }} dia{{ profile_summary.metrics.current_streak|pluralize:"s" }}
-                                            {% else %}
-                                                Nenhuma sequência ativa
                                             {% endif %}
                                         </dd>
                                     </div>
@@ -661,7 +617,7 @@
 
                                 <div class="security-note">
                                     <span class="material-symbols-outlined" aria-hidden="true">info</span>
-                                    <p>Ao sair, você desconecta o acesso deste dispositivo. Recomendamos redefinir a senha regularmente e manter o email atualizado para recuperar a conta com segurança.</p>
+                                    <p>Ao sair, você desconecta o acesso deste dispositivo. Redefina a senha periodicamente e use um email confiável para manter a conta protegida.</p>
                                 </div>
                             </div>
                         </section>
@@ -671,27 +627,21 @@
                         <div class="card__body">
                             <div class="security-card__header">
                                 <h3 class="security-card__title">Boas práticas e privacidade</h3>
-                                <p class="security-card__description">Nossa plataforma utiliza seus resultados para sugerir quizzes e acompanhar seu progresso. Você está no controle dessas informações.</p>
+                                <p class="security-card__description">Usamos apenas dados necessários para personalizar seus estudos. Você decide o que manter atualizado.</p>
                             </div>
                             <ul class="security-tips-list">
                                 <li>
                                     <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
-                                    Revise seus dados pessoais sempre que fizer alterações em seu email ou nome.
-                                </li>
-                                <li>
-                                    <span class="material-symbols-outlined" aria-hidden="true">history</span>
-                                    Acompanhe o histórico de estudos para entender quais registros estão armazenados sobre você.
+                                    Revise seus dados pessoais sempre que atualizar email ou nome.
                                 </li>
                                 <li>
                                     <span class="material-symbols-outlined" aria-hidden="true">notifications_active</span>
-                                    Ative notificações nas preferências para ser avisado sobre mudanças importantes na conta.
+                                    Ajuste as notificações nas preferências para ser avisado sobre alterações importantes.
                                 </li>
-                                {% if profile_summary.completion.missing_fields %}
-                                    <li>
-                                        <span class="material-symbols-outlined" aria-hidden="true">person_edit</span>
-                                        Complete seu {{ profile_summary.completion.missing_fields|join:", "|lower }} para garantir uma recuperação de conta mais rápida.
-                                    </li>
-                                {% endif %}
+                                <li>
+                                    <span class="material-symbols-outlined" aria-hidden="true">history</span>
+                                    Consulte o histórico de quizzes para acompanhar o que está armazenado sobre sua jornada.
+                                </li>
                             </ul>
                         </div>
                     </section>

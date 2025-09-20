@@ -475,16 +475,6 @@
                     <section class="card card--conta-perfil security-card security-card--overview">
                         <h2 class="card__title">Segurança e Dados</h2>
                         <div class="card__body">
-                            <div class="security-overview">
-                                <div class="security-overview__profile">
-                                    <div class="security-overview__avatar" aria-hidden="true">{{ profile_summary.initials }}</div>
-                                    <div class="security-overview__headline">
-                                        <h3 class="security-overview__title">Central de Segurança e Dados</h3>
-                                        <p class="security-overview__description">Aqui você encontra um resumo do que guardamos sobre sua conta e pode atualizar rapidamente as informações essenciais. Conta criada em {{ profile_summary.date_joined|date:"d/m/Y" }}.</p>
-                                    </div>
-                                </div>
-                            </div>
-
                             <div class="security-summary-grid" id="security-summary-data">
                                 <article class="security-summary-card" data-security-summary-item data-label="Email principal" data-summary-value="{{ profile_summary.email|default:'Não informado' }}">
                                     <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">mail</span>
@@ -622,30 +612,6 @@
                             </div>
                         </section>
                     </div>
-
-                    <section class="card card--conta-perfil security-card security-card--tips">
-                        <div class="card__body">
-                            <div class="security-card__header">
-                                <h3 class="security-card__title">Boas práticas e privacidade</h3>
-                                <p class="security-card__description">Usamos apenas dados necessários para personalizar seus estudos. Você decide o que manter atualizado.</p>
-                            </div>
-                            <ul class="security-tips-list">
-                                <li>
-                                    <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
-                                    Revise seus dados pessoais sempre que atualizar email ou nome.
-                                </li>
-                                <li>
-                                    <span class="material-symbols-outlined" aria-hidden="true">notifications_active</span>
-                                    Ajuste as notificações nas preferências para ser avisado sobre alterações importantes.
-                                </li>
-                                <li>
-                                    <span class="material-symbols-outlined" aria-hidden="true">history</span>
-                                    Consulte o histórico de quizzes para acompanhar o que está armazenado sobre sua jornada.
-                                </li>
-                            </ul>
-                        </div>
-                    </section>
-
                     <section class="card card--conta-perfil security-card security-card--danger">
                         <div class="card__body">
                             <div class="security-card__header">

@@ -161,149 +161,71 @@
 }
 
 .filter-search {
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-    --filter-search-border: linear-gradient(
-        135deg,
-        rgba(var(--color-primary-medium-rgb), 0.35),
-        rgba(var(--color-secondary-green-rgb), 0.35)
-    );
-=======
->>>>>>> theirs
     position: relative;
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
     display: flex;
     align-items: center;
     gap: var(--spacing-sm, 12px);
     width: 100%;
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-    padding: calc(var(--spacing-xs, 8px) + 4px) var(--spacing-md, 20px);
-    border-radius: var(--border-radius-xl, 20px);
-    border: 1.5px solid transparent;
-    background-image: linear-gradient(var(--color-white), var(--color-white)), var(--filter-search-border);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    box-shadow: 0 12px 28px -18px rgba(var(--color-primary-dark-rgb), 0.35);
-    transition: transform var(--transition-medium),
+    padding: calc(var(--spacing-xs, 8px) + 2px) var(--spacing-md, 20px);
+    border-radius: var(--border-radius-lg, 12px);
+    border: 1px solid rgba(var(--color-primary-medium-rgb), 0.18);
+    background: linear-gradient(
+        135deg,
+        rgba(var(--color-white-rgb), 0.96),
+        rgba(var(--color-primary-light-rgb), 0.72)
+    );
+    box-shadow: 0 12px 30px -22px rgba(var(--color-primary-dark-rgb), 0.45);
+    transition: border-color var(--transition-fast),
                 box-shadow var(--transition-medium),
-                background-image var(--transition-fast),
-                gap var(--transition-fast);
+                background var(--transition-fast),
+                transform var(--transition-medium);
 }
 
 .filter-search:hover {
-    --filter-search-border: linear-gradient(
+    border-color: rgba(var(--color-primary-medium-rgb), 0.35);
+    background: linear-gradient(
         135deg,
-        rgba(var(--color-primary-medium-rgb), 0.45),
-        rgba(var(--color-secondary-green-rgb), 0.45)
+        rgba(var(--color-white-rgb), 0.98),
+        rgba(var(--color-primary-light-rgb), 0.85)
     );
+    box-shadow: 0 18px 36px -20px rgba(var(--color-primary-dark-rgb), 0.38);
     transform: translateY(-1px);
-    box-shadow: 0 16px 32px -16px rgba(var(--color-primary-dark-rgb), 0.28);
-=======
-    padding: var(--spacing-xs, 8px) var(--spacing-md, 20px);
-=======
-    padding: var(--spacing-xs, 10px) var(--spacing-sm, 14px);
->>>>>>> theirs
-=======
-    padding: var(--spacing-xs, 10px) var(--spacing-sm, 14px);
->>>>>>> theirs
-    border-radius: var(--border-radius-lg, 10px);
-    border: 1.5px solid var(--color-gray-200);
-    background-color: var(--color-gray-50);
-    transition: border-color var(--transition-fast),
-                box-shadow var(--transition-fast),
-                background-color var(--transition-fast);
-<<<<<<< ours
->>>>>>> theirs
 }
 
 .filter-search:focus-within {
-<<<<<<< ours
-<<<<<<< ours
-    --filter-search-border: linear-gradient(
+    border-color: var(--color-primary-medium);
+    background: linear-gradient(
         135deg,
-        rgba(var(--color-primary-medium-rgb), 0.7),
-        rgba(var(--color-secondary-green-rgb), 0.7)
+        rgba(var(--color-white-rgb), 1),
+        rgba(var(--color-primary-light-rgb), 0.92)
     );
-    box-shadow: 0 20px 40px -18px rgba(var(--color-primary-dark-rgb), 0.3);
-=======
-    border-color: rgba(var(--color-primary-medium-rgb), 0.6);
-    background-color: var(--color-white);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-medium-rgb), 0.12);
->>>>>>> theirs
-=======
-    border-color: var(--color-primary-medium);
-    background-color: var(--color-white);
-    box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.12);
->>>>>>> theirs
-=======
-}
-
-.filter-search:focus-within {
-    border-color: var(--color-primary-medium);
-    background-color: var(--color-white);
-    box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.12);
->>>>>>> theirs
+    box-shadow:
+        0 20px 42px -18px rgba(var(--color-primary-dark-rgb), 0.42),
+        0 0 0 1px rgba(var(--color-primary-medium-rgb), 0.18);
 }
 
 .filter-search__icon {
-    font-size: 1.2rem;
-    color: var(--color-gray-500);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-<<<<<<< ours
-<<<<<<< ours
-<<<<<<< ours
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     border-radius: var(--border-radius-pill);
-    font-size: 1.35rem;
+    font-size: 1.2rem;
     color: var(--color-primary-medium);
-    background: linear-gradient(
-        135deg,
-        rgba(var(--color-primary-light-rgb), 0.9),
-        rgba(var(--color-secondary-green-rgb), 0.25)
-    );
-    box-shadow: 0 6px 14px rgba(var(--color-primary-dark-rgb), 0.12);
+    background: rgba(var(--color-primary-light-rgb), 0.75);
+    box-shadow: inset 0 0 0 1px rgba(var(--color-primary-medium-rgb), 0.12);
     flex-shrink: 0;
     transition: background var(--transition-fast),
                 color var(--transition-fast),
                 box-shadow var(--transition-fast);
 }
 
-.filter-search:focus-within .filter-search__icon {
-    background: linear-gradient(
-        135deg,
-        rgba(var(--color-secondary-green-rgb), 0.2),
-        rgba(var(--color-primary-medium-rgb), 0.35)
-    );
-    color: var(--color-primary-dark);
-    box-shadow: 0 8px 18px rgba(var(--color-primary-dark-rgb), 0.18);
-=======
-    width: 28px;
-    height: 28px;
-    font-size: 1.25rem;
-    color: var(--color-gray-700);
-    flex-shrink: 0;
-    transition: color var(--transition-fast);
-}
-
 .filter-search:hover .filter-search__icon,
 .filter-search:focus-within .filter-search__icon {
-    color: var(--color-primary-medium);
->>>>>>> theirs
-=======
-    flex-shrink: 0;
->>>>>>> theirs
-=======
-    flex-shrink: 0;
->>>>>>> theirs
+    background: rgba(var(--color-primary-medium-rgb), 0.18);
+    color: var(--color-primary-dark);
+    box-shadow: inset 0 0 0 1px rgba(var(--color-primary-medium-rgb), 0.25);
 }
 
 .filter-search__input {
@@ -311,35 +233,22 @@
     background: transparent;
     width: 100%;
     outline: none;
-    font-size: var(--font-size-sm, 0.9rem);
-    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm, 0.95rem);
+    font-weight: var(--font-weight-medium, 500);
+    color: var(--color-text-primary);
     padding: 0;
     min-width: 0;
 }
 
 .filter-search__input::placeholder {
-<<<<<<< ours
     color: rgba(var(--color-primary-medium-rgb), 0.5);
-=======
-    color: var(--color-text-muted);
-<<<<<<< ours
-<<<<<<< ours
->>>>>>> theirs
     font-weight: var(--font-weight-normal, 400);
-=======
-    opacity: 0.85;
->>>>>>> theirs
-=======
-    opacity: 0.85;
->>>>>>> theirs
 }
 
 .filter-search__input:focus-visible {
     outline: none;
 }
 
-<<<<<<< ours
-<<<<<<< ours
 .filter-search__input::-webkit-search-decoration,
 .filter-search__input::-webkit-search-cancel-button,
 .filter-search__input::-webkit-search-results-button,
@@ -349,38 +258,23 @@
 
 @media (max-width: 480px) {
     .filter-search {
-<<<<<<< ours
-        padding: var(--spacing-xs, 8px) var(--spacing-sm, 14px);
-        border-radius: var(--border-radius-lg, 10px);
+        padding: var(--spacing-xs, 8px) var(--spacing-sm, 16px);
+        border-radius: var(--border-radius-md, 8px);
         gap: var(--spacing-xs, 8px);
-        box-shadow: 0 10px 24px -16px rgba(var(--color-primary-dark-rgb), 0.32);
+        box-shadow: 0 14px 28px -20px rgba(var(--color-primary-dark-rgb), 0.4);
     }
 
     .filter-search__icon {
-        width: 32px;
-        height: 32px;
-        font-size: 1.2rem;
-=======
-        padding: var(--spacing-xxs, 4px) var(--spacing-sm, 14px);
-        border-radius: var(--border-radius-md, 6px);
-    }
-
-    .filter-search__icon {
-        width: 24px;
-        height: 24px;
+        width: 30px;
+        height: 30px;
         font-size: 1.1rem;
->>>>>>> theirs
     }
 
     .filter-search__input {
-        font-size: var(--font-size-sm, 0.95rem);
+        font-size: var(--font-size-sm, 0.9rem);
     }
 }
 
-=======
->>>>>>> theirs
-=======
->>>>>>> theirs
 @media (min-width: 720px) {
     .filter-group__toolbar {
         flex-direction: row;

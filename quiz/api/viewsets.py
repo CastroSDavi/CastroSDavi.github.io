@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from collections import defaultdict
+from datetime import datetime, time
 
 from django.db.models import Case, Count, Q, When
 from django.shortcuts import get_object_or_404
@@ -11,6 +12,7 @@ from django.utils import timezone
 
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from quiz.models import (
@@ -43,6 +45,7 @@ from .serializers import (
     RegisterAnswerSerializer,
     StartQuizSessionSerializer,
     StatisticsQuerySerializer,
+    UserQuestionHistoryQuerySerializer,
 )
 
 
@@ -582,6 +585,167 @@ class QuizViewSet(viewsets.ViewSet):
                 {'status': 'error', 'message': 'Erro interno ao tentar retomar sessão.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+
+class UserQuestionHistoryPagination(PageNumberPagination):
+    """Default pagination for the question history endpoint."""
+
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 50
+
+
+class UserQuestionHistoryViewSet(viewsets.ViewSet):
+    """Provides paginated access to the authenticated user's answered questions."""
+
+    pagination_class = UserQuestionHistoryPagination
+
+    def list(self, request):
+        if not request.user.is_authenticated:
+            return Response(
+                {'status': 'error', 'message': 'Autenticação necessária.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        serializer = UserQuestionHistoryQuerySerializer(data=request.GET)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError as exc:
+            return Response(
+                {'status': 'error', 'errors': exc.detail},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        filters = serializer.validated_data
+
+        respostas_qs = (
+            RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz__id_usuario=request.user)
+            .select_related(
+                'id_sessao_quiz',
+                'id_sessao_quiz__id_quiz_definicao',
+                'id_pergunta',
+                'id_opcao_resposta_selecionada',
+            )
+            .prefetch_related('id_pergunta__opcoes', 'id_pergunta__categorias')
+            .order_by('-data_resposta', '-pk')
+        )
+
+        session_id = filters.get('session_id')
+        if session_id:
+            respostas_qs = respostas_qs.filter(id_sessao_quiz_id=session_id)
+
+        start_date = filters.get('start_date')
+        if start_date:
+            start_dt = datetime.combine(start_date, time.min)
+            if timezone.is_naive(start_dt):
+                start_dt = timezone.make_aware(start_dt, timezone.get_current_timezone())
+            respostas_qs = respostas_qs.filter(data_resposta__gte=start_dt)
+
+        end_date = filters.get('end_date')
+        if end_date:
+            end_dt = datetime.combine(end_date, time.max)
+            if timezone.is_naive(end_dt):
+                end_dt = timezone.make_aware(end_dt, timezone.get_current_timezone())
+            respostas_qs = respostas_qs.filter(data_resposta__lte=end_dt)
+
+        paginator = self.pagination_class()
+        page = paginator.paginate_queryset(respostas_qs, request)
+
+        results = []
+        for resposta in page:
+            sessao = resposta.id_sessao_quiz
+            pergunta = resposta.id_pergunta
+            opcao_selecionada = resposta.id_opcao_resposta_selecionada
+            quiz_def = sessao.id_quiz_definicao
+
+            categorias_relacionadas = list(pergunta.categorias.all())
+            opcoes_relacionadas = list(pergunta.opcoes.all())
+
+            opcoes_payload = [
+                {
+                    'id_opcao_resposta': opcao.pk,
+                    'id_pergunta': opcao.pergunta_id,
+                    'texto_opcao': opcao.texto_opcao,
+                    'eh_correta': opcao.eh_correta,
+                    'ordem_exibicao': opcao.ordem_exibicao,
+                    'feedback_opcao': opcao.feedback_opcao,
+                }
+                for opcao in opcoes_relacionadas
+            ]
+
+            selected_option_payload = None
+            if opcao_selecionada is not None:
+                selected_option_payload = {
+                    'id_opcao_resposta': opcao_selecionada.pk,
+                    'id_pergunta': opcao_selecionada.pergunta_id,
+                    'texto_opcao': opcao_selecionada.texto_opcao,
+                    'eh_correta': opcao_selecionada.eh_correta,
+                    'ordem_exibicao': opcao_selecionada.ordem_exibicao,
+                    'feedback_opcao': opcao_selecionada.feedback_opcao,
+                }
+
+            session_payload = {
+                'id_sessao': sessao.pk,
+                'modo_quiz': sessao.modo_quiz,
+                'status_sessao': sessao.status_sessao,
+                'pontuacao_final': sessao.pontuacao_final,
+                'total_perguntas': sessao.total_perguntas_sessao,
+                'total_acertos': sessao.total_acertos,
+                'total_erros': sessao.total_erros,
+                'tempo_total_segundos': sessao.tempo_total_segundos,
+                'data_inicio': sessao.data_inicio.isoformat() if sessao.data_inicio else None,
+                'data_fim': sessao.data_fim.isoformat() if sessao.data_fim else None,
+                'quiz_definicao': None,
+            }
+
+            if quiz_def:
+                session_payload['quiz_definicao'] = {
+                    'id_quiz_definicao': quiz_def.pk,
+                    'nome_quiz': quiz_def.nome_quiz,
+                }
+
+            question_payload = {
+                'id_pergunta': pergunta.pk,
+                'texto_pergunta': pergunta.texto_pergunta,
+                'nivel_dificuldade': pergunta.nivel_dificuldade,
+                'explicacao_resposta': pergunta.explicacao_resposta,
+                'referencia_bibliografica': pergunta.referencia_bibliografica,
+                'url_imagem': pergunta.url_imagem,
+                'categoria_ids': [cat.pk for cat in categorias_relacionadas],
+                'categorias': [
+                    {
+                        'id_categoria': cat.pk,
+                        'nome_categoria': cat.nome_categoria,
+                    }
+                    for cat in categorias_relacionadas
+                ],
+                'opcoes': opcoes_payload,
+            }
+
+            results.append(
+                {
+                    'id_resposta': resposta.pk,
+                    'data_resposta': resposta.data_resposta.isoformat() if resposta.data_resposta else None,
+                    'foi_correta': resposta.foi_correta,
+                    'foi_respondida': opcao_selecionada is not None,
+                    'selected_option': selected_option_payload,
+                    'selected_option_id': opcao_selecionada.pk if opcao_selecionada else None,
+                    'correct_option_ids': [
+                        opcao.pk for opcao in opcoes_relacionadas if opcao.eh_correta
+                    ],
+                    'session': session_payload,
+                    'question': question_payload,
+                }
+            )
+
+        paginated_response = paginator.get_paginated_response(results)
+        paginated_response.data['status'] = 'success'
+        paginated_response.data['applied_filters'] = {
+            'session_id': session_id,
+            'start_date': start_date.isoformat() if start_date else None,
+            'end_date': end_date.isoformat() if end_date else None,
+        }
+        return paginated_response
 
 
 class FavoriteQuestionViewSet(viewsets.ViewSet):

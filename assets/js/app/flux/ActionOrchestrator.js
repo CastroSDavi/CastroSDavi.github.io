@@ -221,6 +221,10 @@ export default class ActionOrchestrator {
         }
     }
 
+    async fetchUserQuestionHistory(params = {}, absoluteUrl = null) {
+        return this.apiService.fetchUserQuestionHistory(params, absoluteUrl);
+    }
+
     async fetchFilteredQuestionCount(filterParams) {
         this.store.dispatch(quizActions.fetchFilteredCountRequest());
         try {

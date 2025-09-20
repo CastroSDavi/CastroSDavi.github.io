@@ -141,6 +141,36 @@ export default class ApiService {
         return _request(API_URLS.api_get_user_statistics, 'GET', null, queryParams);
     }
 
+    async fetchUserQuestionHistory(params = {}, absoluteUrl = null) {
+        if (!API_URLS.api_get_user_question_history && !absoluteUrl) {
+            console.error("ApiService.js: URL para api_get_user_question_history não definida em API_URLS.");
+            throw new Error("URL de histórico de questões do usuário não configurada.");
+        }
+
+        if (absoluteUrl) {
+            return _request(absoluteUrl, 'GET');
+        }
+
+        const queryParams = {};
+        if (params.sessionId) {
+            queryParams.session_id = params.sessionId;
+        }
+        if (params.startDate) {
+            queryParams.start_date = params.startDate;
+        }
+        if (params.endDate) {
+            queryParams.end_date = params.endDate;
+        }
+        if (params.page) {
+            queryParams.page = params.page;
+        }
+        if (params.pageSize) {
+            queryParams.page_size = params.pageSize;
+        }
+
+        return _request(API_URLS.api_get_user_question_history, 'GET', null, queryParams);
+    }
+
     async resumeQuizSession() {
         if (!API_URLS.api_resume_quiz_session) {
             console.error("ApiService.js: URL para api_resume_quiz_session não definida em API_URLS.");

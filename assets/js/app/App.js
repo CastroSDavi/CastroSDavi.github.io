@@ -147,16 +147,27 @@ export default class App {
         }
 
         const pendingReviewFromUrl = this._consumeFavoriteReviewFromUrl();
-        const pendingReview = pendingReviewFromUrl || this.favoriteManager.consumePendingReviewRequest();
+        const pendingReviewFromStorage = this.favoriteManager.consumePendingReviewRequest();
 
-        if (!pendingReview || !pendingReview.questionId) {
+        const effectiveQuestionId = pendingReviewFromUrl?.questionId
+            ?? pendingReviewFromStorage?.questionId;
+
+        if (!effectiveQuestionId) {
             return;
         }
 
+        let questionData = null;
+        let forceUseCache = false;
+
+        if (pendingReviewFromStorage && pendingReviewFromStorage.questionId === effectiveQuestionId) {
+            questionData = pendingReviewFromStorage.questionData || null;
+            forceUseCache = pendingReviewFromStorage.forceUseCache === true;
+        }
+
         await this.actionOrchestrator.reviewFavoriteQuestion(
-            pendingReview.questionId,
-            pendingReview.questionData || null,
-            { forceUseCache: pendingReview.forceUseCache === true }
+            effectiveQuestionId,
+            questionData,
+            { forceUseCache }
         );
     }
 

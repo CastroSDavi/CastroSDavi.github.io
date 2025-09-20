@@ -42,10 +42,10 @@ export default class StatisticsChartManager {
 		this.actionOrchestrator = null;
 		this.hasInitialized = false;
 
-		this.elements = {
-			overallAccuracyChartEl: document.getElementById(
-				"chart-overall-accuracy"
-			),
+                this.elements = {
+                        overallAccuracyChartEl: document.getElementById(
+                                "chart-overall-accuracy"
+                        ),
 			categoryPerformanceChartEl: document.getElementById(
 				"chart-category-performance"
 			),
@@ -67,17 +67,70 @@ export default class StatisticsChartManager {
 			noStatsDataMessageEl: document.getElementById(
 				"no-stats-data-message"
 			),
-			statisticsDashboardContainer: document.querySelector(
-				".statistics-dashboard"
-			),
-		};
+                        statisticsDashboardContainer: document.querySelector(
+                                ".statistics-dashboard"
+                        ),
+                        statisticsPeriodSummaryEl: document.getElementById(
+                                "statistics-period-summary"
+                        ),
+                        noStatsDataTitleEl: document.querySelector(
+                                "#no-stats-data-message [data-role=\"title\"]"
+                        ),
+                        noStatsDataDescriptionEl: document.querySelector(
+                                "#no-stats-data-message [data-role=\"description\"]"
+                        ),
+                };
                 this.charts = {};
                 this.heatmapTooltip = null;
+
+                this.insightElements = {
+                        bestCategory: {
+                                valueEl: document.getElementById(
+                                        "insight-best-category"
+                                ),
+                                detailEl: document.getElementById(
+                                        "insight-best-category-detail"
+                                ),
+                        },
+                        bestDifficulty: {
+                                valueEl: document.getElementById(
+                                        "insight-best-difficulty"
+                                ),
+                                detailEl: document.getElementById(
+                                        "insight-best-difficulty-detail"
+                                ),
+                        },
+                        productiveDay: {
+                                valueEl: document.getElementById(
+                                        "insight-productive-day"
+                                ),
+                                detailEl: document.getElementById(
+                                        "insight-productive-day-detail"
+                                ),
+                        },
+                        accuracy: {
+                                valueEl: document.getElementById("insight-accuracy"),
+                                detailEl: document.getElementById(
+                                        "insight-accuracy-detail"
+                                ),
+                        },
+                };
+                this.defaultInsightMessages = {
+                        bestCategory:
+                                "Complete quizzes para desbloquear esta informação.",
+                        bestDifficulty:
+                                "Resolva questões para descobrir em qual nível você mais acerta.",
+                        productiveDay:
+                                "Assim que houver atividades recentes, destacaremos o melhor dia.",
+                        accuracy:
+                                "Suas taxas de acerto aparecerão aqui quando você responder questões.",
+                };
 
                 const initialPeriodValue = this.elements.periodSelectEl
                         ? this.elements.periodSelectEl.value
                         : null;
                 this.currentPeriod = this._normalizePeriodValue(initialPeriodValue);
+                this._updatePeriodSummaryLabel();
 
                 if (
                         this.elements.periodSelectEl &&
@@ -118,6 +171,33 @@ export default class StatisticsChartManager {
                 return DEFAULT_PERIOD;
         }
 
+        _getCurrentPeriodLabel() {
+                if (!this.elements.periodSelectEl) {
+                        return null;
+                }
+
+                const selectEl = this.elements.periodSelectEl;
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                if (!selectedOption) {
+                        return null;
+                }
+
+                const label =
+                        selectedOption.dataset.label || selectedOption.textContent;
+                return label ? label.trim() : null;
+        }
+
+        _updatePeriodSummaryLabel() {
+                if (!this.elements.statisticsPeriodSummaryEl) {
+                        return;
+                }
+                const label = this._getCurrentPeriodLabel();
+                const text = label
+                        ? `Exibindo desempenho dos ${label}.`
+                        : "Exibindo desempenho recente.";
+                this.elements.statisticsPeriodSummaryEl.textContent = text;
+        }
+
         setStore(storeInstance) {
                 this.store = storeInstance;
                 if (this.store) {
@@ -153,22 +233,24 @@ export default class StatisticsChartManager {
                         }
 
                         this.currentPeriod = normalizedPeriod;
+                        this._updatePeriodSummaryLabel();
                         this._triggerFetchStatistics();
                 });
 
-		const currentStats = this.store.getState().statistics;
-		if (!currentStats.data && !currentStats.isLoading) {
+                const currentStats = this.store.getState().statistics;
+                if (!currentStats.data && !currentStats.isLoading) {
 			this._triggerFetchStatistics();
 		}
 
 		this.hasInitialized = true;
 	}
 
-	_triggerFetchStatistics() {
-		if (this.actionOrchestrator) {
-			this.actionOrchestrator.fetchStatistics(this.currentPeriod);
-		}
-	}
+        _triggerFetchStatistics() {
+                if (this.actionOrchestrator) {
+                        this._updatePeriodSummaryLabel();
+                        this.actionOrchestrator.fetchStatistics(this.currentPeriod);
+                }
+        }
 
 	handleStateUpdate() {
 		if (!this.store) return;
@@ -200,41 +282,67 @@ export default class StatisticsChartManager {
 			return;
 		}
 
-		if (statsData && statsData.status === "success") {
-			this._updateKeyMetrics(statsData.key_metrics);
-			const hasAnyData =
-				statsData.key_metrics?.total_questions_answered > 0;
+                if (statsData && statsData.status === "success") {
+                        this._updateKeyMetrics(statsData.key_metrics);
+                        const hasAnyData =
+                                statsData.key_metrics?.total_questions_answered > 0;
 
-			if (!hasAnyData) {
-				if (this.elements.noStatsDataMessageEl)
-					this.quizUI.showElement(this.elements.noStatsDataMessageEl);
-				document
-					.querySelectorAll(".chart-container .chart-placeholder")
-					.forEach((p) => {
-						this._showNoDataMessageForChart(
-							p.parentElement,
-							"Sem dados para o período."
-						);
-					});
-			} else {
-				if (this.elements.noStatsDataMessageEl)
-					this.quizUI.hideElement(this.elements.noStatsDataMessageEl);
-				this._renderOverallAccuracyChart(statsData.overall_accuracy);
-				this._renderCategoryPerformanceChart(
-					statsData.category_performance
-				);
-				this._renderLearningProgressChart(statsData.learning_progress);
-				this._renderStudyHeatmapChart(statsData.study_heatmap);
-				this._renderStudyTimeChart(statsData.study_time_detail);
-				this._renderDifficultyPerformanceChart(
-					statsData.difficulty_performance
-				);
-			}
-		} else {
-			this._showErrorState(
-				statsData?.message || "Falha ao processar estatísticas."
-			);
-		}
+                        if (!hasAnyData) {
+                                this._showNoDataInsights();
+                                const currentLabel = this._getCurrentPeriodLabel();
+                                if (this.elements.noStatsDataTitleEl) {
+                                        this.elements.noStatsDataTitleEl.textContent =
+                                                "Sem estatísticas por aqui";
+                                        this.elements.noStatsDataTitleEl.style.color = "";
+                                }
+                                if (this.elements.noStatsDataDescriptionEl) {
+                                        const description = currentLabel
+                                                ? `Não encontramos atividade registrada nos ${currentLabel}. Complete um quiz para ver seus números aparecerem por aqui.`
+                                                : "Não encontramos atividade registrada neste período. Complete um quiz para ver seus números aparecerem por aqui.";
+                                        this.elements.noStatsDataDescriptionEl.textContent =
+                                                description;
+                                        this.elements.noStatsDataDescriptionEl.style.color = "";
+                                }
+                                if (this.elements.noStatsDataMessageEl) {
+                                        this.quizUI.showElement(
+                                                this.elements.noStatsDataMessageEl
+                                        );
+                                }
+                                document
+                                        .querySelectorAll(".chart-container .chart-placeholder")
+                                        .forEach((p) => {
+                                                this._showNoDataMessageForChart(
+                                                        p.parentElement,
+                                                        "Sem dados para o período."
+                                                );
+                                        });
+                        } else {
+                                if (this.elements.noStatsDataMessageEl) {
+                                        this.quizUI.hideElement(
+                                                this.elements.noStatsDataMessageEl
+                                        );
+                                }
+                                this._updateInsights(statsData);
+                                this._renderOverallAccuracyChart(
+                                        statsData.overall_accuracy
+                                );
+                                this._renderCategoryPerformanceChart(
+                                        statsData.category_performance
+                                );
+                                this._renderLearningProgressChart(
+                                        statsData.learning_progress
+                                );
+                                this._renderStudyHeatmapChart(statsData.study_heatmap);
+                                this._renderStudyTimeChart(statsData.study_time_detail);
+                                this._renderDifficultyPerformanceChart(
+                                        statsData.difficulty_performance
+                                );
+                        }
+                } else {
+                        this._showErrorState(
+                                statsData?.message || "Falha ao processar estatísticas."
+                        );
+                }
 	}
     
     _renderStudyHeatmapChart(data) {
@@ -423,33 +531,45 @@ export default class StatisticsChartManager {
 				p.style.color = "var(--color-text-muted)";
 				this.quizUI.showElement(p);
 			});
-		Object.keys(this.charts).forEach((chartKey) =>
-			this._destroyChart(chartKey)
-		);
+                Object.keys(this.charts).forEach((chartKey) =>
+                        this._destroyChart(chartKey)
+                );
         if (this.elements.studyHeatmapChartEl) this.elements.studyHeatmapChartEl.innerHTML = '<p class="chart-placeholder" style="display:block; text-align:center;">Carregando gráfico...</p>';
 
-		if (this.elements.noStatsDataMessageEl) {
-			this.quizUI.hideElement(this.elements.noStatsDataMessageEl);
-		}
-	}
+                this._showLoadingInsights();
 
-	_showErrorState(errorMessage) {
-		this._updateKeyMetrics(null);
-		document.querySelectorAll(".chart-container").forEach((container) => {
-			const placeholder = container.querySelector(".chart-placeholder");
-			if (placeholder) {
-				placeholder.textContent = errorMessage;
-				placeholder.style.color = "var(--color-accent-red)";
-				this.quizUI.showElement(placeholder);
-			}
-		});
-		if (this.elements.noStatsDataMessageEl) {
-			this.elements.noStatsDataMessageEl.textContent = errorMessage;
-			this.elements.noStatsDataMessageEl.style.color =
-				"var(--color-accent-red)";
-			this.quizUI.showElement(this.elements.noStatsDataMessageEl);
-		}
-	}
+                if (this.elements.noStatsDataMessageEl) {
+                        this.quizUI.hideElement(this.elements.noStatsDataMessageEl);
+                }
+        }
+
+        _showErrorState(errorMessage) {
+                this._updateKeyMetrics(null);
+                document.querySelectorAll(".chart-container").forEach((container) => {
+                        const placeholder = container.querySelector(".chart-placeholder");
+                        if (placeholder) {
+                                placeholder.textContent = errorMessage;
+                                placeholder.style.color = "var(--color-accent-red)";
+                                this.quizUI.showElement(placeholder);
+                        }
+                });
+                this._showErrorInsights(errorMessage);
+                if (this.elements.noStatsDataTitleEl) {
+                        this.elements.noStatsDataTitleEl.textContent =
+                                "Erro ao carregar estatísticas";
+                        this.elements.noStatsDataTitleEl.style.color =
+                                "var(--color-accent-red)";
+                }
+                if (this.elements.noStatsDataDescriptionEl) {
+                        this.elements.noStatsDataDescriptionEl.textContent =
+                                errorMessage;
+                        this.elements.noStatsDataDescriptionEl.style.color =
+                                "var(--color-accent-red)";
+                }
+                if (this.elements.noStatsDataMessageEl) {
+                        this.quizUI.showElement(this.elements.noStatsDataMessageEl);
+                }
+        }
 
 	_hideLoadingPlaceholder(chartEl) {
 		const placeholder = chartEl?.querySelector(".chart-placeholder");
@@ -471,31 +591,266 @@ export default class StatisticsChartManager {
 		this.quizUI.showElement(placeholder);
 	}
 
-	_updateKeyMetrics(keyMetrics) {
-		const metrics = keyMetrics || {
-			total_questions_answered: 0,
-			max_streak: 0,
-			total_score_all_time: 0,
-			total_study_time_seconds: 0,
-		};
-		if (this.elements.totalQuestionsEl)
-			this.elements.totalQuestionsEl.textContent =
-				metrics.total_questions_answered.toLocaleString("pt-BR");
-		if (this.elements.maxStreakEl)
-			this.elements.maxStreakEl.textContent =
-				metrics.max_streak.toLocaleString("pt-BR");
-		if (this.elements.totalScoreEl)
-			this.elements.totalScoreEl.textContent =
-				metrics.total_score_all_time.toLocaleString("pt-BR");
-		if (this.elements.totalStudyTimeEl) {
-			const totalSeconds = metrics.total_study_time_seconds || 0;
-			const minutes = Math.floor(totalSeconds / 60);
-			const hours = Math.floor(minutes / 60);
-			const remainingMinutes = minutes % 60;
-			this.elements.totalStudyTimeEl.textContent =
-				hours > 0 ? `${hours}h ${remainingMinutes}m` : `${minutes}m`;
-		}
-	}
+        _updateKeyMetrics(keyMetrics) {
+                const metrics = keyMetrics || {
+                        total_questions_answered: 0,
+                        max_streak: 0,
+                        total_score_all_time: 0,
+                        total_study_time_seconds: 0,
+                };
+                if (this.elements.totalQuestionsEl)
+                        this.elements.totalQuestionsEl.textContent =
+                                metrics.total_questions_answered.toLocaleString("pt-BR");
+                if (this.elements.maxStreakEl)
+                        this.elements.maxStreakEl.textContent =
+                                metrics.max_streak.toLocaleString("pt-BR");
+                if (this.elements.totalScoreEl)
+                        this.elements.totalScoreEl.textContent =
+                                metrics.total_score_all_time.toLocaleString("pt-BR");
+                if (this.elements.totalStudyTimeEl) {
+                        const totalSeconds = metrics.total_study_time_seconds || 0;
+                        const minutes = Math.floor(totalSeconds / 60);
+                        const hours = Math.floor(minutes / 60);
+                        const remainingMinutes = minutes % 60;
+                        this.elements.totalStudyTimeEl.textContent =
+                                hours > 0 ? `${hours}h ${remainingMinutes}m` : `${minutes}m`;
+                }
+        }
+
+        _setInsight(insightKey, valueText, detailText) {
+                const entry = this.insightElements
+                        ? this.insightElements[insightKey]
+                        : null;
+                if (!entry) {
+                        return;
+                }
+
+                if (entry.valueEl) {
+                        entry.valueEl.textContent = valueText;
+                }
+                if (entry.detailEl) {
+                        entry.detailEl.textContent = detailText;
+                }
+        }
+
+        _showLoadingInsights() {
+                Object.keys(this.insightElements || {}).forEach((key) => {
+                        this._setInsight(key, "--", "Carregando dados...");
+                });
+        }
+
+        _showNoDataInsights() {
+                const label = this._getCurrentPeriodLabel();
+                let context = "neste período";
+                if (label) {
+                        context = label.toLowerCase().startsWith("últimos")
+                                ? `nos ${label}`
+                                : `em ${label}`;
+                }
+                this._setInsight(
+                        "bestCategory",
+                        "--",
+                        `Complete quizzes ${context} para descobrir sua categoria destaque.`
+                );
+                this._setInsight(
+                        "bestDifficulty",
+                        "--",
+                        `Resolva questões ${context} para ver a dificuldade em que você se destaca.`
+                );
+                this._setInsight(
+                        "productiveDay",
+                        "--",
+                        `Assim que houver atividades registradas ${context}, destacaremos o dia mais focado.`
+                );
+                this._setInsight(
+                        "accuracy",
+                        "--",
+                        `Ainda não há respostas registradas ${context}. Complete um quiz para ver a precisão geral.`
+                );
+        }
+
+        _showErrorInsights(message) {
+                const fallbackMessage = message || "Não foi possível carregar os insights.";
+                Object.keys(this.insightElements || {}).forEach((key) => {
+                        this._setInsight(key, "--", fallbackMessage);
+                });
+        }
+
+        _updateInsights(statsData) {
+                if (!statsData) {
+                        this._showNoDataInsights();
+                        return;
+                }
+
+                const categoryPerformance = Array.isArray(
+                        statsData.category_performance
+                )
+                        ? statsData.category_performance
+                        : [];
+                const topCategory = categoryPerformance.reduce((best, current) => {
+                        if (!current) return best;
+                        if (!best) return current;
+                        const currentAccuracy = Number(current.accuracy) || 0;
+                        const bestAccuracy = Number(best.accuracy) || 0;
+                        return currentAccuracy > bestAccuracy ? current : best;
+                }, null);
+                if (topCategory && topCategory.name) {
+                        const accuracyValue = Number(topCategory.accuracy) || 0;
+                        const totalCount = Number(topCategory.total) || 0;
+                        const detailParts = [];
+                        detailParts.push(`Precisão de ${Math.round(accuracyValue)}%`);
+                        if (totalCount > 0) {
+                                detailParts.push(
+                                        `em ${this._formatQuestionCount(totalCount)}`
+                                );
+                        }
+                        this._setInsight(
+                                "bestCategory",
+                                topCategory.name,
+                                `${detailParts.join(" ")}.`
+                        );
+                } else {
+                        this._setInsight(
+                                "bestCategory",
+                                "--",
+                                this.defaultInsightMessages.bestCategory
+                        );
+                }
+
+                const difficultyPerformance = Array.isArray(
+                        statsData.difficulty_performance
+                )
+                        ? statsData.difficulty_performance
+                        : [];
+                const topDifficulty = difficultyPerformance.reduce((best, current) => {
+                        if (!current) return best;
+                        if (!best) return current;
+                        const currentAccuracy = Number(current.accuracy) || 0;
+                        const bestAccuracy = Number(best.accuracy) || 0;
+                        return currentAccuracy > bestAccuracy ? current : best;
+                }, null);
+                if (topDifficulty && topDifficulty.name) {
+                        const accuracyValue = Number(topDifficulty.accuracy) || 0;
+                        const totalCount = Number(topDifficulty.total) || 0;
+                        const accuracyText = `${Math.round(accuracyValue)}% de acerto`;
+                        const volumeText =
+                                totalCount > 0
+                                        ? `em ${this._formatQuestionCount(totalCount)}`
+                                        : "";
+                        this._setInsight(
+                                "bestDifficulty",
+                                topDifficulty.name,
+                                volumeText
+                                        ? `${accuracyText} ${volumeText}.`
+                                        : `${accuracyText}.`
+                        );
+                } else {
+                        this._setInsight(
+                                "bestDifficulty",
+                                "--",
+                                this.defaultInsightMessages.bestDifficulty
+                        );
+                }
+
+                const heatmapData = Array.isArray(statsData.study_heatmap)
+                        ? statsData.study_heatmap.filter(
+                                (item) =>
+                                        item &&
+                                        item.date_str &&
+                                        Number(item.questions_done) > 0
+                        )
+                        : [];
+                const productiveDay = heatmapData.reduce((best, current) => {
+                        if (!current) return best;
+                        if (!best) return current;
+                        const currentCount = Number(current.questions_done) || 0;
+                        const bestCount = Number(best.questions_done) || 0;
+                        if (currentCount > bestCount) {
+                                return current;
+                        }
+                        if (currentCount === bestCount && current.date_str > best.date_str) {
+                                return current;
+                        }
+                        return best;
+                }, null);
+                if (productiveDay) {
+                        const formattedDate = this._formatDate(productiveDay.date_str, {
+                                day: "numeric",
+                                month: "short",
+                        });
+                        const questionText = this._formatQuestionCount(
+                                productiveDay.questions_done
+                        );
+                        this._setInsight(
+                                "productiveDay",
+                                formattedDate,
+                                `${questionText} respondidas.`
+                        );
+                } else {
+                        this._setInsight(
+                                "productiveDay",
+                                "--",
+                                this.defaultInsightMessages.productiveDay
+                        );
+                }
+
+                const accuracyData = statsData.overall_accuracy || {};
+                const correctAnswers = Number(accuracyData.correct) || 0;
+                const incorrectAnswers = Number(accuracyData.incorrect) || 0;
+                const totalAnswers = correctAnswers + incorrectAnswers;
+                if (totalAnswers > 0) {
+                        const accuracyPercentage =
+                                (correctAnswers / totalAnswers) * 100;
+                        const detail = `Você acertou ${this._formatQuestionCount(
+                                correctAnswers
+                        )} de ${this._formatNumber(totalAnswers)} questões.`;
+                        this._setInsight(
+                                "accuracy",
+                                `${Math.round(accuracyPercentage)}%`,
+                                detail
+                        );
+                } else {
+                        this._setInsight(
+                                "accuracy",
+                                "--",
+                                this.defaultInsightMessages.accuracy
+                        );
+                }
+        }
+
+        _formatNumber(value) {
+                const numericValue = Number(value);
+                if (Number.isNaN(numericValue) || value === null || value === undefined) {
+                        return "0";
+                }
+                return numericValue.toLocaleString("pt-BR");
+        }
+
+        _formatQuestionCount(count) {
+                const numericCount = Number(count) || 0;
+                const label = numericCount === 1 ? "questão" : "questões";
+                return `${this._formatNumber(numericCount)} ${label}`;
+        }
+
+        _formatDate(dateStr, options = { day: "numeric", month: "long" }) {
+                if (!dateStr) {
+                        return "--";
+                }
+
+                const date = new Date(`${dateStr}T00:00:00Z`);
+                if (Number.isNaN(date.getTime())) {
+                        return dateStr;
+                }
+
+                try {
+                        return date.toLocaleDateString("pt-BR", {
+                                timeZone: "UTC",
+                                ...options,
+                        });
+                } catch (error) {
+                        return dateStr;
+                }
+        }
 
 	_destroyChart(chartKey) {
 		if (

@@ -382,43 +382,85 @@
 
             {# --- Seção: Estatísticas (REFORMULADA) --- #}
             <div id="statistics-content" class="account-content__section">
-                <div class="card card--conta-perfil card--statistics-dashboard"> {# Nova classe para o card principal do dashboard #}
+                <div class="card card--conta-perfil card--statistics-dashboard">
                     <h2 class="card__title">Estatísticas de Desempenho</h2>
                     <div class="card__body">
                         <div class="statistics-dashboard">
-                            <div class="statistics-filters">
-                                <div class="form-group" style="max-width: 250px;">
-                                    <label for="stats-period-select" class="form-label">Visualizar Período:</label>
-                                    <select id="stats-period-select" class="form-control form-control--small">
-                                        <option value="7d">Últimos 7 dias</option>
-                                        <option value="30d" selected>Últimos 30 dias</option>
-                                        <option value="90d">Últimos 90 dias</option>
-                                        <option value="all">Desde o início</option>
-                                    </select>
+                            <header class="statistics-dashboard__header">
+                                <div class="statistics-dashboard__intro">
+                                    <p class="statistics-subtitle">Acompanhe seus avanços, identifique padrões de estudo e descubra onde concentrar seus esforços.</p>
+                                    <p class="statistics-period-info" id="statistics-period-summary">Exibindo desempenho dos últimos 30 dias.</p>
                                 </div>
-                                {# Futuramente: <button id="btn-refresh-stats" class="button button--outline button--small">Atualizar</button> #}
-                            </div>
+                                <div class="statistics-filters">
+                                    <div class="form-group statistics-filters__group">
+                                        <label for="stats-period-select" class="form-label">Visualizar período</label>
+                                        <select id="stats-period-select" class="form-control form-control--small">
+                                            <option value="7d" data-label="últimos 7 dias">Últimos 7 dias</option>
+                                            <option value="30d" data-label="últimos 30 dias" selected>Últimos 30 dias</option>
+                                            <option value="90d" data-label="últimos 90 dias">Últimos 90 dias</option>
+                                            <option value="all" data-label="todo o período">Desde o início</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </header>
 
-                            <div class="key-metrics-summary" id="key-metrics-summary-container">
-                                <div class="metric-card">
-                                    <span class="material-symbols-outlined metric-card__icon">functions</span>
-                                    <span class="metric-card__label">Total de Questões</span>
-                                    <span class="metric-card__value" id="metric-total-questions">--</span>
+                            <div class="statistics-overview">
+                                <div class="key-metrics-summary" id="key-metrics-summary-container">
+                                    <div class="metric-card">
+                                        <span class="material-symbols-outlined metric-card__icon" aria-hidden="true">functions</span>
+                                        <span class="metric-card__label">Total de questões</span>
+                                        <span class="metric-card__value" id="metric-total-questions">--</span>
+                                    </div>
+                                    <div class="metric-card">
+                                        <span class="material-symbols-outlined metric-card__icon" aria-hidden="true">local_fire_department</span>
+                                        <span class="metric-card__label">Sequência máx.</span>
+                                        <span class="metric-card__value" id="metric-max-streak">--</span>
+                                    </div>
+                                    <div class="metric-card">
+                                        <span class="material-symbols-outlined metric-card__icon" aria-hidden="true">military_tech</span>
+                                        <span class="metric-card__label">Pontuação total</span>
+                                        <span class="metric-card__value" id="metric-total-score">--</span>
+                                    </div>
+                                    <div class="metric-card">
+                                        <span class="material-symbols-outlined metric-card__icon" aria-hidden="true">timer</span>
+                                        <span class="metric-card__label">Tempo de estudo</span>
+                                        <span class="metric-card__value" id="metric-total-study-time">--</span>
+                                    </div>
                                 </div>
-                                <div class="metric-card">
-                                    <span class="material-symbols-outlined metric-card__icon">local_fire_department</span>
-                                    <span class="metric-card__label">Sequência Máx.</span>
-                                    <span class="metric-card__value" id="metric-max-streak">--</span>
-                                </div>
-                                <div class="metric-card">
-                                    <span class="material-symbols-outlined metric-card__icon">military_tech</span>
-                                    <span class="metric-card__label">Pontuação Total</span>
-                                    <span class="metric-card__value" id="metric-total-score">--</span>
-                                </div>
-                                <div class="metric-card">
-                                    <span class="material-symbols-outlined metric-card__icon">timer</span>
-                                    <span class="metric-card__label">Tempo Total Estudo</span>
-                                    <span class="metric-card__value" id="metric-total-study-time">--</span>
+
+                                <div class="statistics-insights" aria-live="polite">
+                                    <article class="insight-card" data-insight="top-category">
+                                        <span class="material-symbols-outlined insight-card__icon" aria-hidden="true">military_tech</span>
+                                        <div class="insight-card__content">
+                                            <p class="insight-card__label">Categoria destaque</p>
+                                            <p class="insight-card__value" id="insight-best-category">--</p>
+                                            <p class="insight-card__description" id="insight-best-category-detail">Complete quizzes para desbloquear esta informação.</p>
+                                        </div>
+                                    </article>
+                                    <article class="insight-card" data-insight="difficulty">
+                                        <span class="material-symbols-outlined insight-card__icon" aria-hidden="true">target</span>
+                                        <div class="insight-card__content">
+                                            <p class="insight-card__label">Dificuldade em alta</p>
+                                            <p class="insight-card__value" id="insight-best-difficulty">--</p>
+                                            <p class="insight-card__description" id="insight-best-difficulty-detail">Resolva questões para descobrir em qual nível você mais acerta.</p>
+                                        </div>
+                                    </article>
+                                    <article class="insight-card" data-insight="productive-day">
+                                        <span class="material-symbols-outlined insight-card__icon" aria-hidden="true">calendar_month</span>
+                                        <div class="insight-card__content">
+                                            <p class="insight-card__label">Dia mais focado</p>
+                                            <p class="insight-card__value" id="insight-productive-day">--</p>
+                                            <p class="insight-card__description" id="insight-productive-day-detail">Assim que houver atividades recentes, destacaremos o melhor dia.</p>
+                                        </div>
+                                    </article>
+                                    <article class="insight-card" data-insight="accuracy">
+                                        <span class="material-symbols-outlined insight-card__icon" aria-hidden="true">monitoring</span>
+                                        <div class="insight-card__content">
+                                            <p class="insight-card__label">Precisão geral</p>
+                                            <p class="insight-card__value" id="insight-accuracy">--</p>
+                                            <p class="insight-card__description" id="insight-accuracy-detail">Suas taxas de acerto aparecerão aqui quando você responder questões.</p>
+                                        </div>
+                                    </article>
                                 </div>
                             </div>
 
@@ -460,15 +502,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="no-stats-data-message" class="u-is-hidden placeholder-text" style="margin-top: var(--spacing-lg);">
-                                <span class="material-symbols-outlined" style="font-size: 3rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">sentiment_dissatisfied</span>
-                                Nenhuma estatística encontrada para o período selecionado. Comece um quiz para ver seu progresso!
+
+                            <div id="no-stats-data-message" class="statistics-empty-state u-is-hidden" role="status" aria-live="polite">
+                                <span class="material-symbols-outlined statistics-empty-state__icon" aria-hidden="true">sentiment_neutral</span>
+                                <div class="statistics-empty-state__content">
+                                    <h3 class="statistics-empty-state__title" data-role="title">Nenhuma estatística encontrada</h3>
+                                    <p class="statistics-empty-state__description" data-role="description">Complete um quiz para ver seus números aparecerem por aqui.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             {# --- Seção: Segurança e Dados --- #}
             <div id="security-content" class="account-content__section">
                  <div class="card card--conta-perfil">

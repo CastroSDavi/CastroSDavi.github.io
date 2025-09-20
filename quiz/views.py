@@ -8,7 +8,8 @@ from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
 from datetime import timedelta  # Mantido, pode ser útil
 from django.db.models import (
-    Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch
+    Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch,
+    Max,
 )
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -184,6 +185,172 @@ def _get_category_performance_data(user_sessions_period_qs):
         category_performance_list.sort(
             key=lambda x: x['accuracy'], reverse=True)
     return category_performance_list
+
+
+def _format_duration_compact(total_seconds):
+    """Gera uma representação resumida para uma duração em segundos."""
+    if total_seconds is None:
+        return None
+
+    try:
+        total_seconds_int = int(total_seconds)
+    except (TypeError, ValueError):
+        return None
+
+    total_seconds_int = max(total_seconds_int, 0)
+
+    if total_seconds_int == 0:
+        return "0 min"
+
+    hours, remainder = divmod(total_seconds_int, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    parts = []
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes:
+        parts.append(f"{minutes}min")
+    if not parts and seconds:
+        parts.append(f"{seconds}s")
+
+    return ' '.join(parts) if parts else "0 min"
+
+
+def _build_account_profile_summary(user: User):
+    """Monta dados ricos para o bloco de informações do usuário na conta."""
+    full_name = (user.get_full_name() or '').strip()
+    display_name = full_name if full_name else user.username
+
+    initials_source = []
+    for value in (user.first_name, user.last_name):
+        cleaned = (value or '').strip()
+        if cleaned:
+            initials_source.append(cleaned[0])
+
+    username_clean = (user.username or '').strip()
+    if not initials_source and username_clean:
+        initials_source.append(username_clean[0])
+        if len(username_clean) > 1:
+            initials_source.append(username_clean[1])
+
+    initials = ''.join(initials_source[:2]).upper() or (username_clean[:2].upper() if username_clean else 'U')
+
+    completed_sessions_qs = SessoesQuizUsuario.objects.filter(
+        id_usuario=user,
+        status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+    )
+
+    aggregate_totals = completed_sessions_qs.aggregate(
+        total_questions=Sum('total_perguntas_sessao'),
+        total_correct=Sum('total_acertos'),
+        total_score=Sum('pontuacao_final'),
+        best_score=Max('pontuacao_final'),
+    )
+
+    total_sessions_completed = completed_sessions_qs.count()
+    total_questions_answered = aggregate_totals.get('total_questions') or 0
+    total_correct_answers = aggregate_totals.get('total_correct') or 0
+    total_score_all_time = aggregate_totals.get('total_score') or 0
+    best_score = aggregate_totals.get('best_score') or 0
+
+    accuracy = None
+    if total_questions_answered:
+        accuracy = round((total_correct_answers / total_questions_answered) * 100, 1)
+
+    favorite_mode = None
+    if total_sessions_completed:
+        mode_counts = (
+            completed_sessions_qs.values('modo_quiz')
+            .annotate(total=Count('id'))
+            .order_by('-total', 'modo_quiz')
+        )
+        if mode_counts:
+            favorite_mode = mode_counts[0]['modo_quiz']
+
+    daily_stats_qs = EstatisticasDiariasUsuario.objects.filter(id_usuario=user)
+    last_thirty_days_stats = _filter_queryset_by_period(daily_stats_qs, '30d', 'data_estatistica')
+
+    study_time_last_30_seconds = last_thirty_days_stats.aggregate(
+        total=Sum('tempo_estudo_segundos_dia')
+    ).get('total') or 0
+    questions_last_30_days = last_thirty_days_stats.aggregate(
+        total=Sum('perguntas_respondidas_dia')
+    ).get('total') or 0
+
+    current_streak = daily_stats_qs.order_by('-data_estatistica').values_list(
+        'sequencia_dias_quiz', flat=True
+    ).first() or 0
+
+    favorite_questions_count = user.questoes_favoritas.count()
+
+    last_session = completed_sessions_qs.select_related('id_quiz_definicao').order_by('-data_inicio').first()
+    last_session_info = None
+    if last_session:
+        session_accuracy = None
+        if last_session.total_perguntas_sessao:
+            session_accuracy = round(
+                (last_session.total_acertos / last_session.total_perguntas_sessao) * 100,
+                1,
+            )
+
+        duration_seconds = last_session.tempo_total_segundos
+        if duration_seconds is None and last_session.data_fim:
+            duration_seconds = int(
+                max((last_session.data_fim - last_session.data_inicio).total_seconds(), 0)
+            )
+
+        last_session_info = {
+            'id': last_session.pk,
+            'mode': last_session.modo_quiz,
+            'quiz_name': last_session.id_quiz_definicao.nome_quiz if last_session.id_quiz_definicao else None,
+            'date': last_session.data_inicio,
+            'score': last_session.pontuacao_final,
+            'question_count': last_session.total_perguntas_sessao,
+            'accuracy': session_accuracy,
+            'duration_seconds': duration_seconds,
+            'duration_display': _format_duration_compact(duration_seconds),
+        }
+
+    profile_fields_status = {
+        'Nome': bool((user.first_name or '').strip()),
+        'Sobrenome': bool((user.last_name or '').strip()),
+        'Email': bool((user.email or '').strip()),
+    }
+
+    total_profile_fields = len(profile_fields_status)
+    completed_fields = sum(1 for value in profile_fields_status.values() if value)
+    completion_percentage = round((completed_fields / total_profile_fields) * 100) if total_profile_fields else 100
+    missing_fields = [label for label, filled in profile_fields_status.items() if not filled]
+
+    return {
+        'display_name': display_name,
+        'initials': initials,
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'date_joined': user.date_joined,
+        'last_login': user.last_login,
+        'metrics': {
+            'total_sessions': total_sessions_completed,
+            'total_questions_answered': total_questions_answered,
+            'accuracy': accuracy,
+            'favorite_questions_count': favorite_questions_count,
+            'total_score': total_score_all_time,
+            'best_score': best_score,
+            'favorite_mode': favorite_mode,
+            'favorite_mode_display': favorite_mode or 'Ainda não definido',
+            'study_time_last_30_seconds': study_time_last_30_seconds,
+            'study_time_last_30_display': _format_duration_compact(study_time_last_30_seconds) or '0 min',
+            'questions_last_30_days': questions_last_30_days,
+            'current_streak': current_streak,
+        },
+        'completion': {
+            'percentage': completion_percentage,
+            'missing_fields': missing_fields,
+        },
+        'last_session': last_session_info,
+    }
 
 
 def _get_learning_progress_data(daily_stats_period_qs):
@@ -367,6 +534,7 @@ def account_view(request):
         'user_sessions': user_sessions,
         'update_form': update_form,
         'delete_form': delete_form,
+        'profile_summary': _build_account_profile_summary(request.user),
     }
     return render(request, 'quiz/account_page.html', context)
 
@@ -396,6 +564,7 @@ def update_profile_view(request):
                 'update_form': form, 'delete_form': delete_form,
                 'active_tab_on_error': 'security-content'
             }
+            context['profile_summary'] = _build_account_profile_summary(request.user)
             return render(request, 'quiz/account_page.html', context)
     return redirect('quiz:account')
 
@@ -431,6 +600,7 @@ def delete_account_view(request):
             'active_tab_on_error': 'security-content',
             'show_delete_account_modal_on_error': True
         }
+        context['profile_summary'] = _build_account_profile_summary(request.user)
         return render(request, 'quiz/account_page.html', context)
     return redirect('quiz:account')
 

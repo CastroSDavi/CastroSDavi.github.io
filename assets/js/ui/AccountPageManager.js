@@ -126,7 +126,7 @@ export default class AccountPageManager {
 
         this.elements.backToMenuButton?.addEventListener('click', () => {
             if (this._isMobileView()) {
-                this._updateUIVisibility(false); 
+                this._updateUIVisibility(false);
             }
         });
 
@@ -135,6 +135,28 @@ export default class AccountPageManager {
         this.elements.btnOpenDeleteModal?.addEventListener('click', () => {
             if (this.quizUI.modalManager) {
                 this.quizUI.modalManager.toggleDeleteAccountModal(true);
+            }
+        });
+
+        this.elements.accountSectionPage?.addEventListener('click', (event) => {
+            const trigger = event.target.closest('[data-open-account-tab]');
+            if (!trigger) {
+                return;
+            }
+
+            const targetId = trigger.dataset.openAccountTab;
+            if (!targetId) {
+                return;
+            }
+
+            event.preventDefault();
+
+            if (this.store) {
+                this.store.dispatch(quizActions.setAccountPageTab(targetId));
+            }
+
+            if (this._isMobileView()) {
+                this._updateUIVisibility(true);
             }
         });
     }

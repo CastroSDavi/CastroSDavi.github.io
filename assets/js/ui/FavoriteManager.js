@@ -118,12 +118,20 @@ export default class FavoriteManager {
             questionCard.className = 'favorite-question-card';
             questionCard.dataset.perguntaId = fav.id_pergunta;
 
+            const contentWrapperId = `favorite-question-content-${fav.id_pergunta}`;
+            const contentWrapper = document.createElement('div');
+            contentWrapper.className = 'favorite-question-card__content';
+            contentWrapper.id = contentWrapperId;
+
             if (fav.esta_ativa === false) {
                 questionCard.classList.add('favorite-question-card--inactive');
             }
 
             const header = document.createElement('header');
             header.className = 'favorite-question-card__header';
+
+            const headerTopRow = document.createElement('div');
+            headerTopRow.className = 'favorite-question-card__top';
 
             const headingWrapper = document.createElement('div');
             headingWrapper.className = 'favorite-question-card__heading';
@@ -145,7 +153,41 @@ export default class FavoriteManager {
                 headingWrapper.appendChild(statusBadge);
             }
 
-            header.appendChild(headingWrapper);
+            headerTopRow.appendChild(headingWrapper);
+
+            const collapseButton = document.createElement('button');
+            collapseButton.type = 'button';
+            collapseButton.className = 'button button--icon-only favorite-question-card__toggle';
+            collapseButton.setAttribute('aria-expanded', 'false');
+            collapseButton.setAttribute('aria-controls', contentWrapperId);
+
+            const collapseIcon = document.createElement('span');
+            collapseIcon.className = 'material-symbols-outlined';
+            collapseIcon.textContent = 'expand_more';
+            collapseButton.appendChild(collapseIcon);
+
+            const collapseLabel = document.createElement('span');
+            collapseLabel.className = 'u-sr-only';
+            collapseLabel.textContent = 'Expandir detalhes da questão favorita';
+            collapseButton.appendChild(collapseLabel);
+
+            const updateCollapseState = isExpanded => {
+                collapseButton.setAttribute('aria-expanded', String(isExpanded));
+                collapseLabel.textContent = isExpanded
+                    ? 'Ocultar detalhes da questão favorita'
+                    : 'Expandir detalhes da questão favorita';
+                collapseIcon.textContent = isExpanded ? 'expand_less' : 'expand_more';
+                contentWrapper.hidden = !isExpanded;
+                questionCard.classList.toggle('favorite-question-card--collapsed', !isExpanded);
+            };
+
+            collapseButton.addEventListener('click', () => {
+                const isExpanded = collapseButton.getAttribute('aria-expanded') === 'true';
+                updateCollapseState(!isExpanded);
+            });
+
+            headerTopRow.appendChild(collapseButton);
+            header.appendChild(headerTopRow);
 
             const metaContainer = document.createElement('div');
             metaContainer.className = 'favorite-question-card__meta';
@@ -285,8 +327,6 @@ export default class FavoriteManager {
                 body.appendChild(explanationContainer);
             }
 
-            questionCard.appendChild(body);
-
             const footer = document.createElement('footer');
             footer.className = 'favorite-question-card__footer';
 
@@ -354,7 +394,11 @@ export default class FavoriteManager {
             }
 
             footer.appendChild(actionsContainer);
-            questionCard.appendChild(footer);
+            contentWrapper.appendChild(body);
+            contentWrapper.appendChild(footer);
+            questionCard.appendChild(contentWrapper);
+
+            updateCollapseState(false);
 
             container.appendChild(questionCard);
         });

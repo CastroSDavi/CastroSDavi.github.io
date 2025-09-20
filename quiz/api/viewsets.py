@@ -616,13 +616,22 @@ class FavoriteQuestionViewSet(viewsets.ViewSet):
                 for o in pergunta.opcoes.all()
             ]
 
+            categorias_relacionadas = list(pergunta.categorias.all())
+
             perguntas_favoritas_data.append(
                 {
                     'id_pergunta': pergunta.pk,
                     'texto_pergunta': pergunta.texto_pergunta,
                     'url_imagem': pergunta.url_imagem,
                     'referencia_bibliografica': pergunta.referencia_bibliografica,
-                    'categoria_ids': [cat.pk for cat in pergunta.categorias.all()],
+                    'categoria_ids': [cat.pk for cat in categorias_relacionadas],
+                    'categorias': [
+                        {
+                            'id_categoria': cat.pk,
+                            'nome_categoria': cat.nome_categoria,
+                        }
+                        for cat in categorias_relacionadas
+                    ],
                     'nivel_dificuldade': pergunta.nivel_dificuldade,
                     'explicacao_resposta': pergunta.explicacao_resposta,
                     'opcoes': opcoes_data,

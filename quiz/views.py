@@ -918,12 +918,21 @@ def get_favorite_questions_view(request):
             for o in p.opcoes.all()
         ]
 
+        categorias_relacionadas = list(p.categorias.all())
+
         perguntas_favoritas_data.append({
             'id_pergunta': p.pk,
             'texto_pergunta': p.texto_pergunta,
             'url_imagem': p.url_imagem,
             'referencia_bibliografica': p.referencia_bibliografica,
-            'categoria_ids': [cat.pk for cat in p.categorias.all()],
+            'categoria_ids': [cat.pk for cat in categorias_relacionadas],
+            'categorias': [
+                {
+                    'id_categoria': cat.pk,
+                    'nome_categoria': cat.nome_categoria,
+                }
+                for cat in categorias_relacionadas
+            ],
             'nivel_dificuldade': p.nivel_dificuldade,
             'explicacao_resposta': p.explicacao_resposta,
             'opcoes': opcoes_data,

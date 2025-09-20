@@ -20,6 +20,7 @@ from quiz.models import (
     QuestaoFavorita,
     QuizDefinicao,
     RespostasUsuarioPorSessao,
+    EstatisticasDiariasUsuario,
     SessoesQuizUsuario,
 )
 from quiz.services.quiz_service import QuizDataService
@@ -755,8 +756,14 @@ class UserStatisticsViewSet(viewsets.ViewSet):
         period = serializer.validated_data.get('period', '30d')
 
         try:
+            daily_stats_queryset = getattr(request.user, "estatisticas_diarias", None)
+            if daily_stats_queryset is None:
+                daily_stats_queryset = EstatisticasDiariasUsuario.objects.filter(id_usuario=request.user)
+            else:
+                daily_stats_queryset = daily_stats_queryset.all()
+
             daily_stats_period_qs = StatisticsService.filter_queryset_by_period(
-                request.user.estatisticasdiariasusuario_set.all(), period, 'data_estatistica'
+                daily_stats_queryset, period, 'data_estatistica'
             )
             user_sessions_period_qs = StatisticsService.filter_queryset_by_period(
                 SessoesQuizUsuario.objects.filter(

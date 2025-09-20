@@ -92,10 +92,9 @@ export default class ActionOrchestrator {
     }
 
     async tryResumeSession() {
-        this.ui.showSessionLoadingIndicator(true, "Verificando sessão anterior...");
         try {
             const resumeData = await this.apiService.resumeQuizSession();
-            this.ui.showSessionLoadingIndicator(false); 
+            this.ui.showSessionLoadingIndicator(false);
 
             if (resumeData && resumeData.status === 'success' && resumeData.perguntas?.length > 0) {
                 this.store.dispatch({
@@ -388,7 +387,10 @@ export default class ActionOrchestrator {
         }
 
         const btnFav = this.ui.elements.btnToggleFavorite;
-        if (btnFav) this.ui.setButtonLoading(btnFav, true);
+        if (btnFav) {
+            btnFav.disabled = true;
+            btnFav.setAttribute('aria-disabled', 'true');
+        }
 
         try {
             const response = await this.apiService.toggleFavoriteStatus(question.id_pergunta);
@@ -403,7 +405,10 @@ export default class ActionOrchestrator {
         } catch (error) {
             this.ui.showWarning(getFriendlyErrorMessage(error, "Erro de conexão ao favoritar."), 'error');
         } finally {
-            if (btnFav) this.ui.setButtonLoading(btnFav, false);
+            if (btnFav) {
+                btnFav.disabled = false;
+                btnFav.removeAttribute('aria-disabled');
+            }
         }
     }
 

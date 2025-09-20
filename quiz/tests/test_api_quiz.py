@@ -12,6 +12,7 @@ from quiz.models import (
     EstatisticasDiariasUsuario,
     OpcaoResposta,
     Pergunta,
+    QuestaoFavorita,
     SessoesQuizUsuario,
 )
 from quiz.views import get_quiz_config, invalidate_quiz_config_cache
@@ -111,6 +112,24 @@ class QuizApiTests(TestCase):
         self.assertEqual(response.status_code, 200)
         favorites_payload = response.json()
         self.assertEqual(len(favorites_payload['favorite_questions']), 1)
+
+    def test_question_detail_requires_authentication(self):
+        url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 401)
+
+    def test_question_detail_returns_payload(self):
+        self._auth_client()
+        QuestaoFavorita.objects.create(usuario=self.user, pergunta=self.question)
+
+        url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+        payload = response.json()
+        self.assertEqual(payload['status'], 'success')
+        self.assertEqual(payload['question']['id_pergunta'], self.question.pk)
+        self.assertTrue(payload['question']['is_favorited'])
 
     def test_user_statistics_endpoint(self):
         self._auth_client()

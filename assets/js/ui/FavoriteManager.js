@@ -1,5 +1,7 @@
 // assets/js/ui/FavoriteManager.js
 
+export const FAVORITE_REVIEW_STORAGE_KEY = 'medquiz.favoriteReviewTarget';
+
 export default class FavoriteManager {
     constructor(quizUIInstance) {
         this.quizUI = quizUIInstance;
@@ -83,6 +85,7 @@ export default class FavoriteManager {
         if (!container) return;
         
         const { isLoading, items: favoriteQuestionsData, error } = favoritesState;
+        const questionsPageUrl = this._getQuestionsPageUrl();
         
         if (isLoading) {
             this.quizUI.hideElement(emptyState);
@@ -268,7 +271,7 @@ export default class FavoriteManager {
             actionsContainer.className = 'favorite-question-card__actions';
 
             const reviewLink = document.createElement('a');
-            reviewLink.href = `#q${fav.id_pergunta}`;
+            reviewLink.href = questionsPageUrl;
             reviewLink.className = 'button button--outline button--small favorite-question-card__action favorite-question-link';
             reviewLink.dataset.perguntaId = fav.id_pergunta;
             reviewLink.title = `Revisar a questão P${fav.id_pergunta} no quiz`;
@@ -277,6 +280,7 @@ export default class FavoriteManager {
             reviewLabel.className = 'button__label';
             reviewLabel.textContent = 'Ir para a questão';
             reviewLink.appendChild(reviewLabel);
+            reviewLink.addEventListener('click', event => this._handleReviewLinkClick(event, fav));
             actionsContainer.appendChild(reviewLink);
 
             if (explanationContainer) {
@@ -306,6 +310,72 @@ export default class FavoriteManager {
 
             container.appendChild(questionCard);
         });
+    }
+
+    consumePendingReviewRequest() {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return null;
+        }
+
+        const storedValue = window.sessionStorage.getItem(FAVORITE_REVIEW_STORAGE_KEY);
+        if (!storedValue) return null;
+
+        window.sessionStorage.removeItem(FAVORITE_REVIEW_STORAGE_KEY);
+
+        try {
+            const parsedValue = JSON.parse(storedValue);
+            const questionId = Number.parseInt(parsedValue?.questionId, 10);
+            if (!Number.isInteger(questionId) || questionId <= 0) {
+                return null;
+            }
+            return { questionId };
+        } catch (error) {
+            console.warn('FavoriteManager: dados inválidos encontrados para revisão de favorito.', error);
+            return null;
+        }
+    }
+
+    _handleReviewLinkClick(event, favoriteQuestion) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        if (!favoriteQuestion || typeof favoriteQuestion.id_pergunta === 'undefined') {
+            return;
+        }
+
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+            try {
+                window.sessionStorage.setItem(
+                    FAVORITE_REVIEW_STORAGE_KEY,
+                    JSON.stringify({
+                        questionId: favoriteQuestion.id_pergunta,
+                        timestamp: Date.now(),
+                    })
+                );
+            } catch (storageError) {
+                console.warn('FavoriteManager: não foi possível armazenar dados para revisão da questão favorita.', storageError);
+            }
+        }
+
+        const destinationUrl = this._getQuestionsPageUrl();
+        if (typeof window !== 'undefined' && destinationUrl) {
+            window.location.href = destinationUrl;
+        }
+    }
+
+    _getQuestionsPageUrl() {
+        const bottomNav = this.quizUI?.elements?.bottomNavElement;
+        const questionsLink = bottomNav?.querySelector('[data-section-target-django="questions"]');
+        if (questionsLink && questionsLink.href) {
+            return questionsLink.href;
+        }
+
+        if (typeof window !== 'undefined' && window.location) {
+            return `${window.location.origin}/questions/`;
+        }
+
+        return '/questions/';
     }
 
     _formatFavoriteDate(isoDateString) {

@@ -225,6 +225,12 @@ export default class QuestionDisplay {
         const { navigationButtons, prevBtn, nextBtn } = this.elements;
         if (!navigationButtons || !prevBtn || !nextBtn || !question) return;
 
+        const displayMode = this.store?.getState().quiz?.quizDisplayContext?.displayMode;
+        if (displayMode === 'review') {
+            this.quizUI.hideElement(navigationButtons);
+            return;
+        }
+
         if (totalQuestions <= 0) {
             this.quizUI.hideElement(navigationButtons);
         } else {
@@ -250,10 +256,15 @@ export default class QuestionDisplay {
     renderQuestionGrid() {
         const container = this.elements.questionGridContainer;
         if (!container || !this.store) return;
-        
+
         const state = this.store.getState().quiz;
         const { currentQuestionsSet, currentQuestionIndex } = state;
-        
+
+        if (state.quizDisplayContext?.displayMode === 'review') {
+            this.quizUI.hideElement(container);
+            return;
+        }
+
         if (!currentQuestionsSet || currentQuestionsSet.length === 0) {
             this.quizUI.hideElement(container);
             return;

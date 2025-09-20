@@ -11,6 +11,7 @@ export const API_URLS = {
     start_quiz_session: '/api/quiz/start-session/',
     register_answer: '/api/quiz/register-answer/',
     end_quiz_session: '/api/quiz/end-session/',
+    get_question_detail: (perguntaId) => `/api/question/${perguntaId}/`,
     toggle_favorite_status: (perguntaId) => `/api/question/${perguntaId}/toggle_favorite/`,
     get_favorite_questions: '/api/favorites/',
     api_get_user_statistics: '/api/user-statistics/',

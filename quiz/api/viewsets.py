@@ -652,6 +652,41 @@ class QuestionViewSet(viewsets.ViewSet):
     lookup_field = 'pergunta_id'
     lookup_value_regex = r'\d+'
 
+    def retrieve(self, request, pergunta_id=None):
+        if not request.user.is_authenticated:
+            return Response(
+                {'status': 'error', 'message': 'Autenticação necessária.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        pergunta = get_object_or_404(Pergunta.objects.filter(ativa=True), pk=pergunta_id)
+
+        opcoes_data = [
+            {
+                'id_opcao_resposta': opcao.pk,
+                'id_pergunta': opcao.pergunta_id,
+                'texto_opcao': opcao.texto_opcao,
+                'eh_correta': opcao.eh_correta,
+                'ordem_exibicao': opcao.ordem_exibicao,
+                'feedback_opcao': opcao.feedback_opcao,
+            }
+            for opcao in pergunta.opcoes.order_by('ordem_exibicao', 'pk')
+        ]
+
+        question_payload = {
+            'id_pergunta': pergunta.pk,
+            'texto_pergunta': pergunta.texto_pergunta,
+            'url_imagem': pergunta.url_imagem,
+            'referencia_bibliografica': pergunta.referencia_bibliografica,
+            'categoria_ids': list(pergunta.categorias.values_list('pk', flat=True)),
+            'nivel_dificuldade': pergunta.nivel_dificuldade,
+            'explicacao_resposta': pergunta.explicacao_resposta,
+            'opcoes': opcoes_data,
+            'is_favorited': QuestaoFavorita.objects.filter(usuario=request.user, pergunta=pergunta).exists(),
+        }
+
+        return Response({'status': 'success', 'question': question_payload})
+
     @action(detail=True, methods=['post'], url_path='toggle_favorite')
     def toggle_favorite(self, request, pergunta_id=None):
         if not request.user.is_authenticated:

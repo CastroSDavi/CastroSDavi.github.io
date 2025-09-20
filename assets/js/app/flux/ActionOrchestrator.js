@@ -261,13 +261,17 @@ export default class ActionOrchestrator {
     async answerQuestion(selectedOptionId) {
         const state = this.store.getState().quiz;
         const question = state.currentQuestionsSet[state.currentQuestionIndex];
-        
+
         if (!question || question.respostaDadaId !== undefined) return;
 
         const correct = isAnswerCorrect(question, selectedOptionId);
         if (correct === null) return;
         
         this.store.dispatch(quizActions.answerQuestion(selectedOptionId, correct));
+
+        if (!state.currentSessionId) {
+            return;
+        }
 
         try {
             const response = await this.apiService.registerAnswer({
@@ -276,11 +280,11 @@ export default class ActionOrchestrator {
                 opcao_id: selectedOptionId,
                 current_question_index: state.currentQuestionIndex
             });
-            
+
             this.store.dispatch(
                 quizActions.updateUserStats(
                     response.pontuacao_sessao,
-                    response.total_acertos_sessao, 
+                    response.total_acertos_sessao,
                     response.total_erros_sessao
                 )
             );
@@ -295,15 +299,17 @@ export default class ActionOrchestrator {
 
         if (question && question.respostaDadaId === undefined) {
             this.store.dispatch({ type: ActionTypes.SKIP_QUESTION });
-            try {
-                await this.apiService.registerAnswer({ 
-                    session_id: state.currentSessionId, 
-                    pergunta_id: question.id_pergunta, 
-                    opcao_id: null, 
-                    current_question_index: state.currentQuestionIndex 
-                });
-            } catch (err) { 
-                console.warn("ActionOrchestrator: Erro ao registrar pulo de questão:", err); 
+            if (state.currentSessionId) {
+                try {
+                    await this.apiService.registerAnswer({
+                        session_id: state.currentSessionId,
+                        pergunta_id: question.id_pergunta,
+                        opcao_id: null,
+                        current_question_index: state.currentQuestionIndex
+                    });
+                } catch (err) {
+                    console.warn("ActionOrchestrator: Erro ao registrar pulo de questão:", err);
+                }
             }
         }
 
@@ -412,6 +418,41 @@ export default class ActionOrchestrator {
             }
         } catch (error) {
             this.store.dispatch(quizActions.loadFavoritesFailure(error.message));
+        }
+    }
+
+    async reviewFavoriteQuestion(questionId) {
+        const normalizedId = Number.parseInt(questionId, 10);
+        if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+            return false;
+        }
+
+        this.stopTimer();
+
+        this.ui.showSessionLoadingIndicator(true, "Carregando questão favorita...");
+        try {
+            const response = await this.apiService.getQuestionDetail(normalizedId);
+            if (response && response.status === 'success' && response.question) {
+                this.store.dispatch(quizActions.setActiveSection('questions'));
+                this.store.dispatch(
+                    quizActions.initializeQuiz(
+                        [response.question],
+                        'Revisão',
+                        null,
+                        null,
+                        'Questão Favorita'
+                    )
+                );
+                return true;
+            }
+
+            this.ui.showWarning(response?.message || 'Não foi possível carregar a questão favorita.', 'error');
+            return false;
+        } catch (error) {
+            this.ui.showWarning(getFriendlyErrorMessage(error, 'Erro ao carregar questão favorita.'), 'error');
+            return false;
+        } finally {
+            this.ui.showSessionLoadingIndicator(false);
         }
     }
 }

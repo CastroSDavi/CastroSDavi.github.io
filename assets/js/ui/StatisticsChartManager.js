@@ -126,6 +126,64 @@ export default class StatisticsChartManager {
                                 "Suas taxas de acerto aparecerão aqui quando você responder questões.",
                 };
 
+                this.periodHighlightsElements = {
+                        container: document.getElementById("statistics-period-highlights"),
+                        activeDays: {
+                                valueEl: document.getElementById("summary-active-days"),
+                                detailEl: document.getElementById("summary-active-days-detail"),
+                        },
+                        averageQuestions: {
+                                valueEl: document.getElementById("summary-average-questions"),
+                                detailEl: document.getElementById("summary-average-questions-detail"),
+                        },
+                        averageStudyTime: {
+                                valueEl: document.getElementById("summary-average-study-time"),
+                                detailEl: document.getElementById("summary-average-study-time-detail"),
+                        },
+                        sessionsCompleted: {
+                                valueEl: document.getElementById("summary-sessions-completed"),
+                                detailEl: document.getElementById("summary-sessions-completed-detail"),
+                        },
+                };
+
+                this.periodHighlightDefaults = {
+                        activeDays: {
+                                detail: this.periodHighlightsElements.activeDays.detailEl?.textContent?.trim() ||
+                                        "Monte uma rotina consistente de estudos.",
+                        },
+                        averageQuestions: {
+                                detail: this.periodHighlightsElements.averageQuestions.detailEl?.textContent?.trim() ||
+                                        "Resolva perguntas com frequência para ver sua média.",
+                        },
+                        averageStudyTime: {
+                                detail: this.periodHighlightsElements.averageStudyTime.detailEl?.textContent?.trim() ||
+                                        "Complete sessões para calcular seu tempo médio diário.",
+                        },
+                        sessionsCompleted: {
+                                detail: this.periodHighlightsElements.sessionsCompleted.detailEl?.textContent?.trim() ||
+                                        "Inicie um quiz para analisar seu ritmo de conclusão.",
+                        },
+                };
+
+                this.accuracyTrendElements = {
+                        container: document.getElementById("accuracy-trend-card"),
+                        valueEl: document.getElementById("trend-accuracy-value"),
+                        detailEl: document.getElementById("trend-accuracy-detail"),
+                        badgeEl: document.getElementById("trend-accuracy-badge"),
+                        iconEl: document.getElementById("trend-accuracy-icon"),
+                };
+
+                this.trendDefaults = {
+                        detail:
+                                this.accuracyTrendElements.detailEl?.textContent?.trim() ||
+                                "Complete quizzes para acompanhar a evolução do seu desempenho.",
+                        badge: this.accuracyTrendElements.badgeEl?.textContent?.trim() || "Sem dados",
+                };
+
+                this.loadingMessage = "Carregando dados...";
+                this.summaryErrorMessage = "Não foi possível carregar o resumo do período.";
+                this.trendErrorMessage = "Não foi possível carregar a variação de precisão.";
+
                 const initialPeriodValue = this.elements.periodSelectEl
                         ? this.elements.periodSelectEl.value
                         : null;
@@ -289,6 +347,8 @@ export default class StatisticsChartManager {
 
                         if (!hasAnyData) {
                                 this._showNoDataInsights();
+                                this._showNoPeriodHighlights();
+                                this._showEmptyAccuracyTrend();
                                 const currentLabel = this._getCurrentPeriodLabel();
                                 if (this.elements.noStatsDataTitleEl) {
                                         this.elements.noStatsDataTitleEl.textContent =
@@ -322,6 +382,8 @@ export default class StatisticsChartManager {
                                                 this.elements.noStatsDataMessageEl
                                         );
                                 }
+                                this._updatePeriodHighlights(statsData.period_summary);
+                                this._updateAccuracyTrend(statsData.accuracy_trend);
                                 this._updateInsights(statsData);
                                 this._renderOverallAccuracyChart(
                                         statsData.overall_accuracy
@@ -534,9 +596,11 @@ export default class StatisticsChartManager {
                 Object.keys(this.charts).forEach((chartKey) =>
                         this._destroyChart(chartKey)
                 );
-        if (this.elements.studyHeatmapChartEl) this.elements.studyHeatmapChartEl.innerHTML = '<p class="chart-placeholder" style="display:block; text-align:center;">Carregando gráfico...</p>';
+                if (this.elements.studyHeatmapChartEl) this.elements.studyHeatmapChartEl.innerHTML = '<p class="chart-placeholder" style="display:block; text-align:center;">Carregando gráfico...</p>';
 
                 this._showLoadingInsights();
+                this._showLoadingPeriodHighlights();
+                this._showLoadingAccuracyTrend();
 
                 if (this.elements.noStatsDataMessageEl) {
                         this.quizUI.hideElement(this.elements.noStatsDataMessageEl);
@@ -554,6 +618,8 @@ export default class StatisticsChartManager {
                         }
                 });
                 this._showErrorInsights(errorMessage);
+                this._showPeriodHighlightsError(errorMessage);
+                this._showErrorAccuracyTrend(errorMessage);
                 if (this.elements.noStatsDataTitleEl) {
                         this.elements.noStatsDataTitleEl.textContent =
                                 "Erro ao carregar estatísticas";
@@ -615,6 +681,411 @@ export default class StatisticsChartManager {
                         this.elements.totalStudyTimeEl.textContent =
                                 hours > 0 ? `${hours}h ${remainingMinutes}m` : `${minutes}m`;
                 }
+        }
+
+        _applyStateToElement(element, state) {
+                if (!element) {
+                        return;
+                }
+
+                if (state && state !== "default") {
+                        element.dataset.state = state;
+                } else {
+                        delete element.dataset.state;
+                }
+        }
+
+        _setPeriodHighlightState(key, valueText, detailText, state = "default") {
+                if (!this.periodHighlightsElements || !this.periodHighlightsElements[key]) {
+                        return;
+                }
+                const item = this.periodHighlightsElements[key];
+                if (item.valueEl) {
+                        item.valueEl.textContent = valueText;
+                        this._applyStateToElement(item.valueEl, state);
+                }
+                if (item.detailEl) {
+                        item.detailEl.textContent = detailText;
+                        this._applyStateToElement(item.detailEl, state);
+                }
+        }
+
+        _showLoadingPeriodHighlights() {
+                if (!this.periodHighlightsElements) {
+                        return;
+                }
+                this.periodHighlightsElements.container?.classList.add("is-loading");
+                const loadingText = this.loadingMessage;
+                this._setPeriodHighlightState("activeDays", "--", loadingText, "loading");
+                this._setPeriodHighlightState("averageQuestions", "--", loadingText, "loading");
+                this._setPeriodHighlightState("averageStudyTime", "--", loadingText, "loading");
+                this._setPeriodHighlightState("sessionsCompleted", "--", loadingText, "loading");
+        }
+
+        _showNoPeriodHighlights() {
+                if (!this.periodHighlightsElements) {
+                        return;
+                }
+                this.periodHighlightsElements.container?.classList.remove("is-loading");
+                this._setPeriodHighlightState(
+                        "activeDays",
+                        "--",
+                        this.periodHighlightDefaults.activeDays.detail,
+                        "empty"
+                );
+                this._setPeriodHighlightState(
+                        "averageQuestions",
+                        "--",
+                        this.periodHighlightDefaults.averageQuestions.detail,
+                        "empty"
+                );
+                this._setPeriodHighlightState(
+                        "averageStudyTime",
+                        "--",
+                        this.periodHighlightDefaults.averageStudyTime.detail,
+                        "empty"
+                );
+                this._setPeriodHighlightState(
+                        "sessionsCompleted",
+                        "--",
+                        this.periodHighlightDefaults.sessionsCompleted.detail,
+                        "empty"
+                );
+        }
+
+        _showPeriodHighlightsError(message) {
+                if (!this.periodHighlightsElements) {
+                        return;
+                }
+                this.periodHighlightsElements.container?.classList.remove("is-loading");
+                const detail = message || this.summaryErrorMessage;
+                this._setPeriodHighlightState("activeDays", "--", detail, "error");
+                this._setPeriodHighlightState("averageQuestions", "--", detail, "error");
+                this._setPeriodHighlightState("averageStudyTime", "--", detail, "error");
+                this._setPeriodHighlightState("sessionsCompleted", "--", detail, "error");
+        }
+
+        _formatAverageValue(value) {
+                const numeric = Number(value);
+                if (Number.isNaN(numeric) || numeric <= 0) {
+                        return "0";
+                }
+                const useDecimals = numeric < 10 && numeric % 1 !== 0;
+                return this._formatNumber(numeric, {
+                        minimumFractionDigits: useDecimals ? 1 : 0,
+                        maximumFractionDigits: useDecimals ? 1 : 0,
+                });
+        }
+
+        _formatDurationFromSeconds(seconds) {
+                const numeric = Number(seconds);
+                if (Number.isNaN(numeric) || numeric <= 0) {
+                        return "0 min";
+                }
+                const totalMinutes = Math.round(numeric / 60);
+                if (totalMinutes >= 60) {
+                        const hours = Math.floor(totalMinutes / 60);
+                        const remainingMinutes = totalMinutes % 60;
+                        if (remainingMinutes === 0) {
+                                return `${hours}h`;
+                        }
+                        return `${hours}h ${remainingMinutes}m`;
+                }
+                if (totalMinutes > 0) {
+                        return `${totalMinutes} min`;
+                }
+                const secondsValue = Math.max(Math.round(numeric), 1);
+                return `${secondsValue}s`;
+        }
+
+        _updatePeriodHighlights(summaryData) {
+                if (!this.periodHighlightsElements) {
+                        return;
+                }
+                this.periodHighlightsElements.container?.classList.remove("is-loading");
+
+                if (!summaryData || summaryData.has_activity === false) {
+                        this._showNoPeriodHighlights();
+                        return;
+                }
+
+                const activeDays = Number(summaryData.active_days) || 0;
+                const requestedDays = summaryData.requested_days;
+                const trackedDays = Number(summaryData.tracked_days) || 0;
+                const activeDayRatio = Number(summaryData.active_day_ratio) || 0;
+                const totalQuestions = Number(summaryData.total_questions_answered) || 0;
+                const avgQuestionsActive = Number(summaryData.average_questions_per_active_day) || 0;
+                const avgQuestionsPeriod = Number(summaryData.average_questions_per_day) || 0;
+                const totalStudySeconds = Number(summaryData.total_study_time_seconds) || 0;
+                const avgStudySeconds = Number(summaryData.average_study_time_per_active_day_seconds) || 0;
+                const sessionsCompleted = Number(summaryData.sessions_completed) || 0;
+                const avgSessionDurationSeconds = Number(summaryData.average_session_duration_seconds) || 0;
+                const lastActivityDate = summaryData.last_activity_date;
+
+                const activeDaysValueText = activeDays > 0
+                        ? this._formatNumber(activeDays)
+                        : "--";
+                let activeDaysDetailText = this.periodHighlightDefaults.activeDays.detail;
+                let activeState = activeDays > 0 ? "default" : "empty";
+                const totalDaysForRatio = requestedDays || trackedDays;
+                if (activeDays > 0 && totalDaysForRatio) {
+                        const ratioPercent = Math.round((activeDayRatio || 0) * 100);
+                        const ratioText = `${this._formatNumber(ratioPercent, { minimumFractionDigits: 0 })}%`;
+                        activeDaysDetailText = `Atividade em ${this._formatNumber(activeDays)} de ${this._formatNumber(totalDaysForRatio)} dias (${ratioText}).`;
+                } else if (activeDays > 0) {
+                        const plural = activeDays === 1 ? "dia" : "dias";
+                        activeDaysDetailText = `Atividade registrada em ${this._formatNumber(activeDays)} ${plural}.`;
+                }
+                this._setPeriodHighlightState(
+                        "activeDays",
+                        activeDaysValueText,
+                        activeDaysDetailText,
+                        activeState
+                );
+
+                const averageQuestionsValueText = avgQuestionsActive > 0
+                        ? this._formatAverageValue(avgQuestionsActive)
+                        : "--";
+                let averageQuestionsDetailText = this.periodHighlightDefaults.averageQuestions.detail;
+                let averageQuestionsState = avgQuestionsActive > 0 ? "default" : "empty";
+                if (avgQuestionsActive > 0) {
+                        const parts = [
+                                `Média de ${this._formatAverageValue(avgQuestionsActive)} questões nos dias ativos.`,
+                        ];
+                        if (avgQuestionsPeriod > 0 && totalDaysForRatio) {
+                                parts.push(
+                                        `No período completo: ${this._formatAverageValue(avgQuestionsPeriod)} por dia.`
+                                );
+                        }
+                        parts.push(`Total de ${this._formatQuestionCount(totalQuestions)} respondidas.`);
+                        averageQuestionsDetailText = parts.join(" ");
+                }
+                this._setPeriodHighlightState(
+                        "averageQuestions",
+                        averageQuestionsValueText,
+                        averageQuestionsDetailText,
+                        averageQuestionsState
+                );
+
+                const averageStudyValueText = avgStudySeconds > 0
+                        ? `${this._formatDurationFromSeconds(avgStudySeconds)} / dia`
+                        : "--";
+                let averageStudyDetailText = this.periodHighlightDefaults.averageStudyTime.detail;
+                let averageStudyState = avgStudySeconds > 0 ? "default" : "empty";
+                if (avgStudySeconds > 0) {
+                        const parts = [
+                                `Média de ${this._formatDurationFromSeconds(avgStudySeconds)} por dia ativo.`,
+                        ];
+                        if (totalStudySeconds > 0) {
+                                parts.push(`No período: ${this._formatDurationFromSeconds(totalStudySeconds)} dedicados aos estudos.`);
+                        }
+                        if (lastActivityDate) {
+                                const formattedDate = this._formatDate(lastActivityDate, {
+                                        day: "numeric",
+                                        month: "short",
+                                });
+                                parts.push(`Atualizado em ${formattedDate}.`);
+                        }
+                        averageStudyDetailText = parts.join(" ");
+                }
+                this._setPeriodHighlightState(
+                        "averageStudyTime",
+                        averageStudyValueText,
+                        averageStudyDetailText,
+                        averageStudyState
+                );
+
+                const sessionsValueText = sessionsCompleted > 0
+                        ? this._formatNumber(sessionsCompleted)
+                        : "--";
+                let sessionsDetailText = this.periodHighlightDefaults.sessionsCompleted.detail;
+                let sessionsState = sessionsCompleted > 0 ? "default" : "empty";
+                if (sessionsCompleted > 0) {
+                        const plural = sessionsCompleted === 1 ? "sessão" : "sessões";
+                        const parts = [
+                                `${this._formatNumber(sessionsCompleted)} ${plural} concluída${sessionsCompleted === 1 ? '' : 's'}.`,
+                        ];
+                        if (avgSessionDurationSeconds > 0) {
+                                parts.push(`Média de ${this._formatDurationFromSeconds(avgSessionDurationSeconds)} por sessão.`);
+                        }
+                        sessionsDetailText = parts.join(" ");
+                }
+                this._setPeriodHighlightState(
+                        "sessionsCompleted",
+                        sessionsValueText,
+                        sessionsDetailText,
+                        sessionsState
+                );
+        }
+
+        _resetTrendContainerState() {
+                const container = this.accuracyTrendElements?.container;
+                if (!container) {
+                        return;
+                }
+                container.classList.remove(
+                        "statistics-trend-card--up",
+                        "statistics-trend-card--down",
+                        "statistics-trend-card--flat",
+                        "statistics-trend-card--empty",
+                        "statistics-trend-card--error",
+                        "is-loading"
+                );
+        }
+
+        _setAccuracyTrendState({
+                valueText,
+                detailText,
+                badgeText,
+                icon,
+                modifierClass,
+                isLoading = false,
+        }) {
+                const elements = this.accuracyTrendElements;
+                if (!elements || !elements.container) {
+                        return;
+                }
+                this._resetTrendContainerState();
+                if (modifierClass) {
+                        elements.container.classList.add(modifierClass);
+                }
+                if (isLoading) {
+                        elements.container.classList.add("is-loading");
+                }
+                if (elements.valueEl) {
+                        elements.valueEl.textContent = valueText;
+                }
+                if (elements.detailEl) {
+                        elements.detailEl.textContent = detailText;
+                }
+                if (elements.badgeEl) {
+                        elements.badgeEl.textContent = badgeText;
+                }
+                if (elements.iconEl && icon) {
+                        elements.iconEl.textContent = icon;
+                }
+        }
+
+        _showLoadingAccuracyTrend() {
+                if (!this.accuracyTrendElements) {
+                        return;
+                }
+                this._setAccuracyTrendState({
+                        valueText: "--",
+                        detailText: this.loadingMessage,
+                        badgeText: "Carregando",
+                        icon: "hourglass_empty",
+                        modifierClass: "statistics-trend-card--flat",
+                        isLoading: true,
+                });
+        }
+
+        _showEmptyAccuracyTrend() {
+                if (!this.accuracyTrendElements) {
+                        return;
+                }
+                this._setAccuracyTrendState({
+                        valueText: "--",
+                        detailText: this.trendDefaults.detail,
+                        badgeText: this.trendDefaults.badge,
+                        icon: "trending_flat",
+                        modifierClass: "statistics-trend-card--empty",
+                });
+        }
+
+        _showErrorAccuracyTrend(message) {
+                if (!this.accuracyTrendElements) {
+                        return;
+                }
+                this._setAccuracyTrendState({
+                        valueText: "--",
+                        detailText: message || this.trendErrorMessage,
+                        badgeText: "Erro",
+                        icon: "error",
+                        modifierClass: "statistics-trend-card--error",
+                });
+        }
+
+        _updateAccuracyTrend(trendData) {
+                if (!this.accuracyTrendElements) {
+                        return;
+                }
+
+                if (!trendData || trendData.has_data !== true) {
+                        this._showEmptyAccuracyTrend();
+                        return;
+                }
+
+                const finalAccuracy = Number(trendData.end_accuracy);
+                const startAccuracy = Number(trendData.start_accuracy);
+                const delta = Number(trendData.delta) || 0;
+                const direction = trendData.direction || (delta > 0 ? "up" : delta < 0 ? "down" : "flat");
+                const hasMultiplePoints = Boolean(trendData.has_multiple_points);
+                const lastDate = trendData.last_date
+                        ? this._formatDate(trendData.last_date, { day: "numeric", month: "short" })
+                        : null;
+
+                const accuracyValueText = Number.isFinite(finalAccuracy)
+                        ? `${this._formatNumber(finalAccuracy, {
+                                  minimumFractionDigits: 0,
+                                  maximumFractionDigits: 1,
+                          })}%`
+                        : "--";
+
+                let modifierClass = "statistics-trend-card--flat";
+                let badgeText = this.trendDefaults.badge;
+                let iconName = "trending_flat";
+
+                if (direction === "up") {
+                        modifierClass = "statistics-trend-card--up";
+                        badgeText = `${delta > 0 ? "+" : ""}${this._formatNumber(delta, {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 1,
+                        })} pts`;
+                        iconName = "trending_up";
+                } else if (direction === "down") {
+                        modifierClass = "statistics-trend-card--down";
+                        badgeText = `${this._formatNumber(delta, {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 1,
+                        })} pts`;
+                        iconName = "trending_down";
+                } else {
+                        badgeText = "Estável";
+                }
+
+                let detailText = this.trendDefaults.detail;
+                if (hasMultiplePoints && Number.isFinite(startAccuracy) && Number.isFinite(finalAccuracy)) {
+                        const startText = `${this._formatNumber(startAccuracy, {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 1,
+                        })}%`;
+                        const endText = `${this._formatNumber(finalAccuracy, {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 1,
+                        })}%`;
+                        const periodLabel = this._getCurrentPeriodLabel();
+                        const context = periodLabel ? `nos ${periodLabel}` : "no período analisado";
+                        detailText = `Saiu de ${startText} para ${endText} ${context}.`;
+                } else if (Number.isFinite(finalAccuracy)) {
+                        if (lastDate) {
+                                detailText = `Último registro em ${lastDate}: ${accuracyValueText} de acerto.`;
+                        } else {
+                                detailText = `Precisão atual de ${accuracyValueText}.`;
+                        }
+                }
+
+                if (lastDate && hasMultiplePoints) {
+                        detailText += ` Atualizado em ${lastDate}.`;
+                }
+
+                this._setAccuracyTrendState({
+                        valueText: accuracyValueText,
+                        detailText,
+                        badgeText,
+                        icon: iconName,
+                        modifierClass,
+                });
         }
 
         _setInsight(insightKey, valueText, detailText) {
@@ -818,12 +1289,42 @@ export default class StatisticsChartManager {
                 }
         }
 
-        _formatNumber(value) {
+        _formatNumber(value, options = {}) {
                 const numericValue = Number(value);
                 if (Number.isNaN(numericValue) || value === null || value === undefined) {
+                        if (typeof options.fallback === "string") {
+                                return options.fallback;
+                        }
+                        if (typeof options.minimumFractionDigits === "number" && options.minimumFractionDigits > 0) {
+                                return Number(0).toLocaleString("pt-BR", {
+                                        minimumFractionDigits: options.minimumFractionDigits,
+                                        maximumFractionDigits:
+                                                typeof options.maximumFractionDigits === "number"
+                                                        ? Math.max(options.maximumFractionDigits, options.minimumFractionDigits)
+                                                        : options.minimumFractionDigits,
+                                });
+                        }
                         return "0";
                 }
-                return numericValue.toLocaleString("pt-BR");
+                const localeOptions = {};
+                if (typeof options.minimumFractionDigits === "number") {
+                        localeOptions.minimumFractionDigits = options.minimumFractionDigits;
+                }
+                if (typeof options.maximumFractionDigits === "number") {
+                        localeOptions.maximumFractionDigits = Math.max(
+                                options.maximumFractionDigits,
+                                localeOptions.minimumFractionDigits ?? 0
+                        );
+                } else if (
+                        typeof localeOptions.minimumFractionDigits === "number" &&
+                        localeOptions.minimumFractionDigits > 0
+                ) {
+                        localeOptions.maximumFractionDigits = Math.max(
+                                localeOptions.minimumFractionDigits,
+                                2
+                        );
+                }
+                return numericValue.toLocaleString("pt-BR", localeOptions);
         }
 
         _formatQuestionCount(count) {

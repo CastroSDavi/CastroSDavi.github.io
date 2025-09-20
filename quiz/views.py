@@ -131,6 +131,24 @@ def _get_key_metrics(user: User, daily_stats_period_qs):
     return StatisticsService.get_key_metrics(user, daily_stats_period_qs)
 
 
+def _resolve_period_day_count(period_str: str | None) -> int | None:
+    """Converte o parâmetro de período (ex.: '30d', '7') para a quantidade de dias."""
+    normalized = str(period_str).strip().lower() if period_str is not None else "30d"
+
+    if normalized == "all":
+        return None
+
+    if normalized.endswith("d"):
+        normalized = normalized[:-1]
+
+    try:
+        days = int(normalized)
+    except (TypeError, ValueError):
+        return None
+
+    return days if days > 0 else None
+
+
 def _get_overall_accuracy_data(daily_stats_period_qs):
     total_questions_answered = daily_stats_period_qs.aggregate(
         total=Sum('perguntas_respondidas_dia'))['total'] or 0
@@ -437,6 +455,115 @@ def _get_study_time_detail_data(user: User):
     return {
         'labels': day_labels_pt_ordered_sun_first,
         'data': ordered_minutes_data
+    }
+
+
+def _get_period_activity_summary(daily_stats_period_qs, user_sessions_period_qs, requested_days: int | None):
+    aggregates = daily_stats_period_qs.aggregate(
+        total_questions=Sum('perguntas_respondidas_dia'),
+        total_study_time=Sum('tempo_estudo_segundos_dia'),
+    )
+    total_questions = aggregates.get('total_questions') or 0
+    total_study_time = aggregates.get('total_study_time') or 0
+
+    active_days = daily_stats_period_qs.filter(
+        perguntas_respondidas_dia__gt=0
+    ).values('data_estatistica').distinct().count()
+    tracked_days = daily_stats_period_qs.values('data_estatistica').distinct().count()
+
+    average_questions_per_active_day = (
+        total_questions / active_days if active_days else 0
+    )
+
+    denominator_days = requested_days or tracked_days or active_days
+    average_questions_per_day = (
+        total_questions / denominator_days if denominator_days else 0
+    )
+
+    average_study_time_per_active_day_seconds = (
+        total_study_time / active_days if active_days else 0
+    )
+
+    session_durations = []
+    for session in user_sessions_period_qs.values(
+        'tempo_total_segundos', 'data_inicio', 'data_fim'
+    ):
+        duration_seconds = session.get('tempo_total_segundos')
+        start_dt = session.get('data_inicio')
+        end_dt = session.get('data_fim')
+        if duration_seconds is None and start_dt and end_dt:
+            duration_seconds = int(max((end_dt - start_dt).total_seconds(), 0))
+        if duration_seconds is not None and duration_seconds >= 0:
+            session_durations.append(duration_seconds)
+
+    average_session_duration_seconds = 0
+    if session_durations:
+        average_session_duration_seconds = sum(session_durations) / len(session_durations)
+
+    last_activity_date = daily_stats_period_qs.order_by('-data_estatistica').values_list(
+        'data_estatistica', flat=True
+    ).first()
+
+    denominator_for_ratio = (denominator_days or 0)
+    active_day_ratio = (
+        (active_days / denominator_for_ratio) if denominator_for_ratio else 0
+    )
+
+    return {
+        'active_days': active_days,
+        'tracked_days': tracked_days,
+        'requested_days': requested_days,
+        'total_questions_answered': total_questions,
+        'average_questions_per_active_day': round(average_questions_per_active_day, 2) if average_questions_per_active_day else 0,
+        'average_questions_per_day': round(average_questions_per_day, 2) if average_questions_per_day else 0,
+        'total_study_time_seconds': total_study_time,
+        'average_study_time_per_active_day_seconds': round(average_study_time_per_active_day_seconds, 2) if average_study_time_per_active_day_seconds else 0,
+        'sessions_completed': user_sessions_period_qs.count(),
+        'sessions_with_duration': len(session_durations),
+        'average_session_duration_seconds': round(average_session_duration_seconds, 2) if average_session_duration_seconds else 0,
+        'active_day_ratio': round(active_day_ratio, 4) if active_day_ratio else 0,
+        'last_activity_date': last_activity_date.isoformat() if last_activity_date else None,
+        'has_activity': bool(total_questions or total_study_time or session_durations),
+    }
+
+
+def _get_accuracy_trend_summary(learning_progress_data):
+    valid_points = [
+        point for point in learning_progress_data
+        if point and point.get('daily_accuracy') is not None and point.get('date_str')
+    ]
+
+    if not valid_points:
+        return {
+            'has_data': False,
+            'data_point_count': 0,
+        }
+
+    first_point = valid_points[0]
+    last_point = valid_points[-1]
+
+    start_accuracy = float(first_point.get('daily_accuracy') or 0)
+    end_accuracy = float(last_point.get('daily_accuracy') or 0)
+    delta = round(end_accuracy - start_accuracy, 1)
+
+    direction_threshold = 0.1
+    if delta > direction_threshold:
+        direction = 'up'
+    elif delta < -direction_threshold:
+        direction = 'down'
+    else:
+        direction = 'flat'
+
+    return {
+        'has_data': True,
+        'data_point_count': len(valid_points),
+        'has_multiple_points': len(valid_points) > 1,
+        'start_accuracy': round(start_accuracy, 1),
+        'end_accuracy': round(end_accuracy, 1),
+        'delta': delta,
+        'direction': direction,
+        'first_date': first_point.get('date_str'),
+        'last_date': last_point.get('date_str'),
     }
 
 
@@ -1147,12 +1274,21 @@ def api_get_user_statistics_view(request):
         )
 
         key_metrics = _get_key_metrics(user, daily_stats_period_qs)
+        requested_days = _resolve_period_day_count(period)
+        period_summary = _get_period_activity_summary(
+            daily_stats_period_qs,
+            user_sessions_period_qs,
+            requested_days,
+        )
         overall_accuracy_data = _get_overall_accuracy_data(
             daily_stats_period_qs)
         category_performance_list = _get_category_performance_data(
             user_sessions_period_qs)
         learning_progress_data = _get_learning_progress_data(
             daily_stats_period_qs)
+        accuracy_trend_summary = _get_accuracy_trend_summary(
+            learning_progress_data
+        )
         study_heatmap_data = _get_study_heatmap_data(daily_stats_period_qs)
         study_time_chart_data = _get_study_time_detail_data(user)
         difficulty_performance_list = _get_difficulty_performance_data(
@@ -1162,9 +1298,11 @@ def api_get_user_statistics_view(request):
             'status': 'success',
             'period_applied': period,
             'key_metrics': key_metrics,
+            'period_summary': period_summary,
             'overall_accuracy': overall_accuracy_data,
             'category_performance': category_performance_list,
             'learning_progress': learning_progress_data,
+            'accuracy_trend': accuracy_trend_summary,
             'study_heatmap': study_heatmap_data,
             'study_time_detail': study_time_chart_data,
             'difficulty_performance': difficulty_performance_list,

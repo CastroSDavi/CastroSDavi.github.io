@@ -24,7 +24,12 @@
                     <div class="filter-search" role="search">
                         <span class="material-symbols-outlined filter-search__icon" aria-hidden="true">search</span>
                         <input type="search" id="category-search-input" class="filter-search__input"
-                            placeholder="Buscar categorias ou termos" autocomplete="off">
+                            placeholder="Buscar categorias ou termos" autocomplete="off" spellcheck="false"
+                            enterkeyhint="search">
+                        <button type="button" id="category-search-clear" class="filter-search__clear"
+                            aria-label="Limpar busca" aria-hidden="true" tabindex="-1">
+                            <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                        </button>
                     </div>
                 </div>
             </div>

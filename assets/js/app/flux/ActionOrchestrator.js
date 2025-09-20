@@ -421,11 +421,46 @@ export default class ActionOrchestrator {
         }
     }
 
-    async reviewFavoriteQuestion(questionId) {
+    async reviewFavoriteQuestion(questionId, cachedQuestionData = null) {
         const normalizedId = Number.parseInt(questionId, 10);
         if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
             return false;
         }
+
+        const initializeQuizWithQuestion = question => {
+            if (!question) {
+                return false;
+            }
+
+            const questionPayload = { ...question };
+            if (typeof questionPayload.is_favorited === 'undefined') {
+                questionPayload.is_favorited = true;
+            }
+
+            this.store.dispatch(quizActions.setActiveSection('questions'));
+            this.store.dispatch(
+                quizActions.initializeQuiz(
+                    [questionPayload],
+                    'Revisão',
+                    null,
+                    null,
+                    'Questão Favorita'
+                )
+            );
+            return true;
+        };
+
+        const useCachedQuestion = (message = null, messageType = 'warning') => {
+            if (!cachedQuestionData) {
+                return false;
+            }
+
+            const initialized = initializeQuizWithQuestion(cachedQuestionData);
+            if (initialized && message) {
+                this.ui.showWarning(message, messageType);
+            }
+            return initialized;
+        };
 
         this.stopTimer();
 
@@ -433,22 +468,21 @@ export default class ActionOrchestrator {
         try {
             const response = await this.apiService.getQuestionDetail(normalizedId);
             if (response && response.status === 'success' && response.question) {
-                this.store.dispatch(quizActions.setActiveSection('questions'));
-                this.store.dispatch(
-                    quizActions.initializeQuiz(
-                        [response.question],
-                        'Revisão',
-                        null,
-                        null,
-                        'Questão Favorita'
-                    )
-                );
+                initializeQuizWithQuestion(response.question);
+                return true;
+            }
+
+            if (useCachedQuestion(response?.message || 'Não foi possível carregar a versão mais recente da questão. Exibindo dados salvos.')) {
                 return true;
             }
 
             this.ui.showWarning(response?.message || 'Não foi possível carregar a questão favorita.', 'error');
             return false;
         } catch (error) {
+            if (error?.response?.status === 404 && useCachedQuestion('Questão não encontrada no banco atual. Exibindo dados salvos da sua lista de favoritos.')) {
+                return true;
+            }
+
             this.ui.showWarning(getFriendlyErrorMessage(error, 'Erro ao carregar questão favorita.'), 'error');
             return false;
         } finally {

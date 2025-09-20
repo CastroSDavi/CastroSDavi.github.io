@@ -469,6 +469,10 @@ export default class ActionOrchestrator {
             const response = await this.apiService.getQuestionDetail(normalizedId);
             if (response && response.status === 'success' && response.question) {
                 initializeQuizWithQuestion(response.question);
+                if (response.message) {
+                    const messageType = typeof response.message_type === 'string' ? response.message_type : 'info';
+                    this.ui.showWarning(response.message, messageType);
+                }
                 return true;
             }
 

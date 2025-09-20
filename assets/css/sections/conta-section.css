@@ -2206,12 +2206,25 @@
     .profile-form { max-width: 100%; gap: var(--spacing-md, 18px); }
     .profile-form .form-label { font-size: 0.9rem; }
     .profile-form .form-control { padding: var(--spacing-sm, 14px); font-size: 1rem; }
-    .security-actions { flex-direction: column; gap: var(--spacing-md, 16px); }
+    .security-form__actions {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .security-actions {
+        flex-direction: column;
+        gap: var(--spacing-md, 16px);
+        align-items: center;
+    }
     .security-actions .button,
     #btn-open-delete-account-modal,
     .security-form__actions .button {
-        width: 100%; font-size: 1rem;
-        padding: var(--spacing-md, 14px) !important;
+        width: min(100%, 320px);
+        margin-inline: auto;
+        --button-font-size: clamp(0.9rem, 2.8vw, 0.98rem);
+        --button-padding-y: clamp(9px, 2.8vw, 12px);
+        --button-padding-x: clamp(14px, 6vw, 20px);
+        --button-min-height: clamp(40px, 10vw, 46px);
     }
 }
 
@@ -2236,9 +2249,13 @@
     .security-actions .button,
     #btn-open-delete-account-modal,
     .security-form__actions .button {
-        font-size: 0.95rem;
-        padding: var(--spacing-sm, 13px) !important;
+        width: min(100%, 280px);
+        --button-font-size: clamp(0.86rem, 4vw, 0.92rem);
+        --button-padding-y: clamp(8px, 3.8vw, 11px);
+        --button-padding-x: clamp(12px, 7vw, 18px);
+        --button-min-height: clamp(38px, 12vw, 44px);
     }
+    .security-actions { gap: var(--spacing-sm, 12px); }
 
     .account-content__back-button {
         top: var(--spacing-sm, 16px);

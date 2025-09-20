@@ -12,6 +12,15 @@ class Categoria(models.Model):
     """
     Categoriza as perguntas. Pode ter uma estrutura hierárquica (pai/filho).
     """
+    codigo_importacao = models.CharField(
+        max_length=64,
+        unique=True,
+        db_index=True,
+        blank=True,
+        null=True,
+        verbose_name="Código de Importação",
+        help_text="Identificador externo usado durante processos de importação.",
+    )
     nome_categoria = models.CharField(
         max_length=150,
         verbose_name="Nome da Categoria"
@@ -194,6 +203,15 @@ class Pergunta(models.Model):
     """
     Representa uma pergunta do quiz.
     """
+    codigo_importacao = models.CharField(
+        max_length=64,
+        unique=True,
+        db_index=True,
+        blank=True,
+        null=True,
+        verbose_name="Código de Importação",
+        help_text="Identificador externo usado durante processos de importação.",
+    )
     texto_pergunta = models.TextField(verbose_name="Texto da Pergunta")
     url_imagem = models.URLField(
         max_length=512,
@@ -260,6 +278,15 @@ class OpcaoResposta(models.Model):
     """
     Representa uma opção de resposta para uma Pergunta.
     """
+    codigo_importacao = models.CharField(
+        max_length=64,
+        unique=True,
+        db_index=True,
+        blank=True,
+        null=True,
+        verbose_name="Código de Importação",
+        help_text="Identificador externo usado durante processos de importação.",
+    )
     pergunta = models.ForeignKey(
         Pergunta,
         related_name='opcoes',

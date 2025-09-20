@@ -113,7 +113,7 @@ export default class FavoriteManager {
 
         container.classList.add('favorite-questions-list');
 
-        favoriteQuestionsData.forEach(fav => {
+        favoriteQuestionsData.forEach((fav, index) => {
             const questionCard = document.createElement('article');
             questionCard.className = 'favorite-question-card';
             questionCard.dataset.perguntaId = fav.id_pergunta;
@@ -127,6 +127,8 @@ export default class FavoriteManager {
                 questionCard.classList.add('favorite-question-card--inactive');
             }
 
+            const questionDisplayLabel = `Questão favorita ${index + 1}`;
+
             const header = document.createElement('header');
             header.className = 'favorite-question-card__header';
 
@@ -138,7 +140,7 @@ export default class FavoriteManager {
 
             const idBadge = document.createElement('span');
             idBadge.className = 'favorite-question-card__badge';
-            idBadge.textContent = `P${fav.id_pergunta}`;
+            idBadge.textContent = questionDisplayLabel;
             headingWrapper.appendChild(idBadge);
 
             const title = document.createElement('h3');
@@ -168,14 +170,14 @@ export default class FavoriteManager {
 
             const collapseLabel = document.createElement('span');
             collapseLabel.className = 'u-sr-only';
-            collapseLabel.textContent = 'Expandir detalhes da questão favorita';
+            collapseLabel.textContent = `Expandir detalhes da ${questionDisplayLabel}`;
             collapseButton.appendChild(collapseLabel);
 
             const updateCollapseState = isExpanded => {
                 collapseButton.setAttribute('aria-expanded', String(isExpanded));
                 collapseLabel.textContent = isExpanded
-                    ? 'Ocultar detalhes da questão favorita'
-                    : 'Expandir detalhes da questão favorita';
+                    ? `Ocultar detalhes da ${questionDisplayLabel}`
+                    : `Expandir detalhes da ${questionDisplayLabel}`;
                 collapseIcon.textContent = isExpanded ? 'expand_less' : 'expand_more';
                 contentWrapper.hidden = !isExpanded;
                 questionCard.classList.toggle('favorite-question-card--collapsed', !isExpanded);
@@ -224,7 +226,7 @@ export default class FavoriteManager {
                 const imageElement = document.createElement('img');
                 imageElement.className = 'favorite-question-card__image';
                 imageElement.src = fav.url_imagem;
-                imageElement.alt = `Imagem ilustrativa da questão P${fav.id_pergunta}`;
+                imageElement.alt = `Imagem ilustrativa da ${questionDisplayLabel}`;
                 imageWrapper.appendChild(imageElement);
 
                 body.appendChild(imageWrapper);

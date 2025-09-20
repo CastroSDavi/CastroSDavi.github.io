@@ -127,6 +127,11 @@ export default class ApiService {
         return _request(API_URLS.get_favorite_questions, 'GET');
     }
 
+    async getQuestionDetail(perguntaId) {
+        const endpoint = API_URLS.get_question_detail(perguntaId);
+        return _request(endpoint, 'GET');
+    }
+
     async fetchUserStatistics(period = '30d') {
         const queryParams = { period };
         if (!API_URLS.api_get_user_statistics) {

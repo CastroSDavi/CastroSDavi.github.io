@@ -298,6 +298,9 @@ export function quizReducer(state = initialState, action) {
                 mainQuizTitle = quizDefinitionName;
             } else if (mode === 'Rápido') {
                 mainQuizTitle = 'Quiz Rápido';
+            } else if (mode === 'Revisão') {
+                displayMode = 'review';
+                mainQuizTitle = quizDefinitionName || 'Questão Favorita';
             }
 
             const newQuizState = {

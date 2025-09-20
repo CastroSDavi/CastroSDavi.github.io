@@ -79,17 +79,27 @@ export default class QuizUI {
         }
         
         const currentState = this.store.getState();
-        const wasQuizActive = this.previousState.quiz?.currentSessionId !== null;
-        const isQuizActive = currentState.quiz?.currentSessionId !== null;
-    
+        const previousSessionId = this.previousState.quiz?.currentSessionId;
+        const currentSessionId = currentState.quiz?.currentSessionId;
+        const wasQuizActive = previousSessionId !== null && previousSessionId !== undefined;
+        const isQuizActive = currentSessionId !== null && currentSessionId !== undefined;
+
         const wasQuizEnded = this.previousState.quiz?.quizEnded === true;
         const isQuizEnded = currentState.quiz?.quizEnded === true;
-    
-        if (!wasQuizActive && isQuizActive) {
+
+        const previousDisplayMode = this.previousState.quiz?.quizDisplayContext?.displayMode;
+        const currentDisplayMode = currentState.quiz?.quizDisplayContext?.displayMode;
+        const wasInReviewMode = previousDisplayMode === 'review';
+        const isInReviewMode = currentDisplayMode === 'review';
+
+        const wasQuizVisible = wasQuizActive || wasInReviewMode;
+        const isQuizVisible = isQuizActive || isInReviewMode;
+
+        if (!wasQuizVisible && isQuizVisible) {
             this.displayQuizLayout(true);
         }
-    
-        if ((wasQuizActive || wasQuizEnded) && !isQuizActive && !isQuizEnded) {
+
+        if ((wasQuizVisible || wasQuizEnded) && !isQuizVisible && !isQuizEnded) {
             this.displayQuizLayout(false);
         }
     
@@ -313,13 +323,17 @@ export default class QuizUI {
     
     displayQuizLayout(showQuizLayout = true) {
         const { placeholderFiltrosContainer, quizSectionContent, bottomNavElement } = this.elements;
-        
+        const displayMode = this.store?.getState()?.quiz?.quizDisplayContext?.displayMode || 'challenge';
+
         if (showQuizLayout) {
-            if (this.scorePanel) this.scorePanel.show();
+            if (this.scorePanel) {
+                if (displayMode === 'review') this.scorePanel.hide();
+                else this.scorePanel.show();
+            }
             if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
-            this.showElement(quizSectionContent); 
-            if (this.warningDisplay) this.warningDisplay.clear(); 
-            this.hideElement(placeholderFiltrosContainer); 
+            this.showElement(quizSectionContent);
+            if (this.warningDisplay) this.warningDisplay.clear();
+            this.hideElement(placeholderFiltrosContainer);
             if (this.resultDisplay) this.resultDisplay.hide();
             if (bottomNavElement) this.hideElement(bottomNavElement);
             // --- INÍCIO DA ALTERAÇÃO: Remoção da chamada ao banner antigo ---

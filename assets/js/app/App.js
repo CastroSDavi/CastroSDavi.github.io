@@ -54,6 +54,7 @@ export default class App {
 
             if (currentPageId === 'questions') {
                 await this.actionOrchestrator.initializeQuizPage();
+                await this._handlePendingFavoriteReview();
             } else if (currentPageId === 'account') {
                 this.accountPageManager.init();
             }
@@ -139,6 +140,20 @@ export default class App {
             }
         }
     }
+
+    async _handlePendingFavoriteReview() {
+        if (!this.favoriteManager || typeof this.favoriteManager.consumePendingReviewRequest !== 'function') {
+            return;
+        }
+
+        const pendingReview = this.favoriteManager.consumePendingReviewRequest();
+        if (!pendingReview || !pendingReview.questionId) {
+            return;
+        }
+
+        await this.actionOrchestrator.reviewFavoriteQuestion(pendingReview.questionId);
+    }
+
     handleLoadError(message) {
         console.error("App.js: handleLoadError - ", message);
         try {

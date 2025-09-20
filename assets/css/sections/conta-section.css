@@ -1322,14 +1322,15 @@
 
 .security-summary-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--spacing-md, 20px);
+    justify-content: center;
 }
 
 .security-summary-card {
     position: relative;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-sm, 12px);
     padding: var(--spacing-md, 20px);
     border-radius: var(--border-radius-lg, 12px);
@@ -1354,6 +1355,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
+    align-items: flex-start;
 }
 
 .security-summary-card__label {
@@ -1435,8 +1437,17 @@
 
 .security-form__grid {
     display: grid;
-    gap: var(--spacing-md, 18px);
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-lg, 24px);
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.security-card--form .profile-form {
+    width: 100%;
+    max-width: none;
+}
+
+.security-card--form .form-group {
+    width: 100%;
 }
 
 .security-form__full {

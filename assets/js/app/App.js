@@ -153,7 +153,8 @@ export default class App {
 
         await this.actionOrchestrator.reviewFavoriteQuestion(
             pendingReview.questionId,
-            pendingReview.questionData || null
+            pendingReview.questionData || null,
+            { forceUseCache: pendingReview.forceUseCache === true }
         );
     }
 

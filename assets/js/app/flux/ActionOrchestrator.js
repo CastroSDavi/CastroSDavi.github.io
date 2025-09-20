@@ -421,11 +421,13 @@ export default class ActionOrchestrator {
         }
     }
 
-    async reviewFavoriteQuestion(questionId, cachedQuestionData = null) {
+    async reviewFavoriteQuestion(questionId, cachedQuestionData = null, options = {}) {
         const normalizedId = Number.parseInt(questionId, 10);
         if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
             return false;
         }
+
+        const forceUseCache = options?.forceUseCache === true;
 
         const initializeQuizWithQuestion = question => {
             if (!question) {
@@ -463,6 +465,18 @@ export default class ActionOrchestrator {
         };
 
         this.stopTimer();
+
+        if (forceUseCache) {
+            if (useCachedQuestion(
+                'Esta questão não está mais disponível no banco atual. Exibindo dados salvos da sua lista de favoritos.',
+                'warning'
+            )) {
+                return true;
+            }
+
+            this.ui.showWarning('Não foi possível carregar a questão favorita.', 'error');
+            return false;
+        }
 
         this.ui.showSessionLoadingIndicator(true, "Carregando questão favorita...");
         try {

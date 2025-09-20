@@ -625,6 +625,7 @@ class FavoriteQuestionViewSet(viewsets.ViewSet):
                     'nivel_dificuldade': pergunta.nivel_dificuldade,
                     'explicacao_resposta': pergunta.explicacao_resposta,
                     'opcoes': opcoes_data,
+                    'esta_ativa': pergunta.ativa,
                     'data_favoritada': fav.data_favoritada.isoformat(),
                 }
             )

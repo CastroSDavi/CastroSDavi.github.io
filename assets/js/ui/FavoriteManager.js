@@ -86,7 +86,6 @@ export default class FavoriteManager {
         if (!container) return;
         
         const { isLoading, items: favoriteQuestionsData, error } = favoritesState;
-        const questionsPageUrl = this._getQuestionsPageUrl();
         
         if (isLoading) {
             this.quizUI.hideElement(emptyState);
@@ -209,7 +208,9 @@ export default class FavoriteManager {
 
             body.appendChild(tagsContainer);
 
+            const optionFeedbackElements = [];
             const options = Array.isArray(fav.opcoes) ? [...fav.opcoes] : [];
+            let optionsList = null;
             if (options.length > 0) {
                 options.sort((a, b) => {
                     const orderA = typeof a.ordem_exibicao === 'number' ? a.ordem_exibicao : Number.MAX_SAFE_INTEGER;
@@ -220,8 +221,9 @@ export default class FavoriteManager {
                     return orderA - orderB;
                 });
 
-                const optionsList = document.createElement('ul');
+                optionsList = document.createElement('ul');
                 optionsList.className = 'favorite-question-card__options';
+                optionsList.id = `favorite-question-options-${fav.id_pergunta}`;
 
                 options.forEach((option, index) => {
                     const optionItem = document.createElement('li');
@@ -235,11 +237,27 @@ export default class FavoriteManager {
                     letterSpan.textContent = this._getOptionLetter(index);
                     optionItem.appendChild(letterSpan);
 
+                    const optionContent = document.createElement('div');
+                    optionContent.className = 'favorite-question-card__option-content';
+
                     const optionText = document.createElement('span');
                     optionText.className = 'favorite-question-card__option-text';
-                    optionText.textContent = option.texto_opcao;
-                    optionItem.appendChild(optionText);
+                    optionText.textContent = option.texto_opcao || '';
+                    optionContent.appendChild(optionText);
 
+                    const optionFeedbackText = typeof option.feedback_opcao === 'string'
+                        ? option.feedback_opcao.trim()
+                        : '';
+                    if (optionFeedbackText) {
+                        const optionFeedback = document.createElement('p');
+                        optionFeedback.className = 'favorite-question-card__option-feedback';
+                        optionFeedback.textContent = optionFeedbackText;
+                        optionFeedback.hidden = true;
+                        optionContent.appendChild(optionFeedback);
+                        optionFeedbackElements.push(optionFeedback);
+                    }
+
+                    optionItem.appendChild(optionContent);
                     optionsList.appendChild(optionItem);
                 });
 
@@ -282,19 +300,34 @@ export default class FavoriteManager {
             const actionsContainer = document.createElement('div');
             actionsContainer.className = 'favorite-question-card__actions';
 
-            const reviewLink = document.createElement('a');
-            const reviewUrl = this._buildQuestionReviewLink(questionsPageUrl, fav.id_pergunta);
-            reviewLink.href = reviewUrl || questionsPageUrl;
-            reviewLink.className = 'button button--outline button--small favorite-question-card__action favorite-question-link';
-            reviewLink.dataset.perguntaId = fav.id_pergunta;
-            reviewLink.title = `Revisar a questão P${fav.id_pergunta} no quiz`;
+            if (optionFeedbackElements.length > 0 && optionsList) {
+                const optionFeedbackButton = document.createElement('button');
+                optionFeedbackButton.type = 'button';
+                optionFeedbackButton.className = 'button button--outline button--small favorite-question-card__action';
+                optionFeedbackButton.setAttribute('aria-expanded', 'false');
+                optionFeedbackButton.setAttribute('aria-controls', optionsList.id);
 
-            const reviewLabel = document.createElement('span');
-            reviewLabel.className = 'button__label';
-            reviewLabel.textContent = 'Ir para a questão';
-            reviewLink.appendChild(reviewLabel);
-            reviewLink.addEventListener('click', event => this._handleReviewLinkClick(event, fav));
-            actionsContainer.appendChild(reviewLink);
+                const optionFeedbackLabel = document.createElement('span');
+                optionFeedbackLabel.className = 'button__label';
+                optionFeedbackLabel.textContent = 'Ver explicações das alternativas';
+                optionFeedbackButton.appendChild(optionFeedbackLabel);
+
+                optionFeedbackButton.addEventListener('click', () => {
+                    const isExpanded = optionFeedbackButton.getAttribute('aria-expanded') === 'true';
+                    const nextExpandedState = !isExpanded;
+                    optionFeedbackButton.setAttribute('aria-expanded', String(nextExpandedState));
+                    optionFeedbackLabel.textContent = nextExpandedState
+                        ? 'Ocultar explicações das alternativas'
+                        : 'Ver explicações das alternativas';
+                    optionFeedbackElements.forEach(element => {
+                        element.hidden = !nextExpandedState;
+                    });
+                    questionCard.classList.toggle('favorite-question-card--showing-feedback', nextExpandedState);
+                    optionsList.classList.toggle('favorite-question-card__options--showing-feedback', nextExpandedState);
+                });
+
+                actionsContainer.appendChild(optionFeedbackButton);
+            }
 
             if (explanationContainer) {
                 const explanationButton = document.createElement('button');
@@ -305,14 +338,16 @@ export default class FavoriteManager {
 
                 const explanationButtonLabel = document.createElement('span');
                 explanationButtonLabel.className = 'button__label';
-                explanationButtonLabel.textContent = 'Ver explicação';
+                explanationButtonLabel.textContent = 'Ver explicação da questão';
                 explanationButton.appendChild(explanationButtonLabel);
 
                 explanationButton.addEventListener('click', () => {
                     const isExpanded = explanationButton.getAttribute('aria-expanded') === 'true';
                     explanationContainer.hidden = isExpanded;
                     explanationButton.setAttribute('aria-expanded', String(!isExpanded));
-                    explanationButtonLabel.textContent = isExpanded ? 'Ver explicação' : 'Ocultar explicação';
+                    explanationButtonLabel.textContent = isExpanded
+                        ? 'Ver explicação da questão'
+                        : 'Ocultar explicação da questão';
                 });
 
                 actionsContainer.appendChild(explanationButton);

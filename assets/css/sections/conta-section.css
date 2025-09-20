@@ -543,14 +543,41 @@
     margin-top: 2px;
 }
 
+.favorite-question-card__option-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 8px);
+}
+
 .favorite-question-card__option.is-correct .favorite-question-card__option-letter {
     background-color: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.18);
     color: var(--color-secondary-green);
 }
 
 .favorite-question-card__option-text {
-    flex: 1;
+    display: block;
     word-break: break-word;
+}
+
+.favorite-question-card__option-feedback {
+    margin: 0;
+    padding: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
+    border-radius: var(--border-radius-sm, 4px);
+    background-color: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.65);
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.55;
+    border-left: 3px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.4);
+}
+
+.favorite-question-card__option-feedback[hidden] {
+    display: none;
+}
+
+.favorite-question-card__options--showing-feedback .favorite-question-card__option {
+    background-color: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.35);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.3);
 }
 
 .favorite-question-card__explanation {

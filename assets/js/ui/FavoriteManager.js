@@ -328,7 +328,12 @@ export default class FavoriteManager {
             if (!Number.isInteger(questionId) || questionId <= 0) {
                 return null;
             }
-            return { questionId };
+
+            const questionData = parsedValue?.questionData && typeof parsedValue.questionData === 'object'
+                ? parsedValue.questionData
+                : null;
+
+            return { questionId, questionData };
         } catch (error) {
             console.warn('FavoriteManager: dados inválidos encontrados para revisão de favorito.', error);
             return null;
@@ -346,12 +351,19 @@ export default class FavoriteManager {
 
         if (typeof window !== 'undefined' && window.sessionStorage) {
             try {
+                const sanitizedQuestionData = this._sanitizeFavoriteQuestionForReview(favoriteQuestion);
+                const payloadToStore = {
+                    questionId: favoriteQuestion.id_pergunta,
+                    timestamp: Date.now(),
+                };
+
+                if (sanitizedQuestionData) {
+                    payloadToStore.questionData = sanitizedQuestionData;
+                }
+
                 window.sessionStorage.setItem(
                     FAVORITE_REVIEW_STORAGE_KEY,
-                    JSON.stringify({
-                        questionId: favoriteQuestion.id_pergunta,
-                        timestamp: Date.now(),
-                    })
+                    JSON.stringify(payloadToStore)
                 );
             } catch (storageError) {
                 console.warn('FavoriteManager: não foi possível armazenar dados para revisão da questão favorita.', storageError);
@@ -362,6 +374,53 @@ export default class FavoriteManager {
         if (typeof window !== 'undefined' && destinationUrl) {
             window.location.href = destinationUrl;
         }
+    }
+
+    _sanitizeFavoriteQuestionForReview(favoriteQuestion) {
+        if (!favoriteQuestion || typeof favoriteQuestion.id_pergunta === 'undefined') {
+            return null;
+        }
+
+        const sanitizedQuestion = {
+            id_pergunta: favoriteQuestion.id_pergunta,
+            texto_pergunta: favoriteQuestion.texto_pergunta || '',
+            url_imagem: favoriteQuestion.url_imagem || null,
+            referencia_bibliografica: favoriteQuestion.referencia_bibliografica || null,
+            categoria_ids: Array.isArray(favoriteQuestion.categoria_ids)
+                ? [...favoriteQuestion.categoria_ids]
+                : [],
+            nivel_dificuldade: favoriteQuestion.nivel_dificuldade || null,
+            explicacao_resposta: favoriteQuestion.explicacao_resposta || null,
+            is_favorited: true,
+        };
+
+        if (Array.isArray(favoriteQuestion.opcoes)) {
+            sanitizedQuestion.opcoes = favoriteQuestion.opcoes
+                .map(option => ({
+                    id_opcao_resposta: option.id_opcao_resposta,
+                    id_pergunta: option.id_pergunta ?? favoriteQuestion.id_pergunta,
+                    texto_opcao: option.texto_opcao || '',
+                    eh_correta: Boolean(option.eh_correta),
+                    ordem_exibicao: typeof option.ordem_exibicao === 'number' ? option.ordem_exibicao : null,
+                    feedback_opcao: option.feedback_opcao || null,
+                }))
+                .sort((a, b) => {
+                    const orderA = typeof a.ordem_exibicao === 'number' ? a.ordem_exibicao : Number.MAX_SAFE_INTEGER;
+                    const orderB = typeof b.ordem_exibicao === 'number' ? b.ordem_exibicao : Number.MAX_SAFE_INTEGER;
+
+                    if (orderA === orderB) {
+                        const idA = typeof a.id_opcao_resposta === 'number' ? a.id_opcao_resposta : Number.MAX_SAFE_INTEGER;
+                        const idB = typeof b.id_opcao_resposta === 'number' ? b.id_opcao_resposta : Number.MAX_SAFE_INTEGER;
+                        return idA - idB;
+                    }
+
+                    return orderA - orderB;
+                });
+        } else {
+            sanitizedQuestion.opcoes = [];
+        }
+
+        return sanitizedQuestion;
     }
 
     _getQuestionsPageUrl() {

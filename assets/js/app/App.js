@@ -151,7 +151,10 @@ export default class App {
             return;
         }
 
-        await this.actionOrchestrator.reviewFavoriteQuestion(pendingReview.questionId);
+        await this.actionOrchestrator.reviewFavoriteQuestion(
+            pendingReview.questionId,
+            pendingReview.questionData || null
+        );
     }
 
     handleLoadError(message) {

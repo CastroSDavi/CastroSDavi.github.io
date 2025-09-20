@@ -117,13 +117,13 @@ export default class StatisticsChartManager {
                 };
                 this.defaultInsightMessages = {
                         bestCategory:
-                                "Complete quizzes para desbloquear esta informação.",
+                                "Responda quizzes para descobrir onde você tem maior domínio.",
                         bestDifficulty:
-                                "Resolva questões para descobrir em qual nível você mais acerta.",
+                                "Avance pelos níveis para comparar acertos entre fácil, médio e difícil.",
                         productiveDay:
-                                "Assim que houver atividades recentes, destacaremos o melhor dia.",
+                                "Assim que houver atividades recentes indicaremos o melhor dia para estudar.",
                         accuracy:
-                                "Suas taxas de acerto aparecerão aqui quando você responder questões.",
+                                "Mantenha sua sequência de estudos ativa para acompanhar a taxa de acertos.",
                 };
 
                 this.periodHighlightsElements = {
@@ -149,19 +149,19 @@ export default class StatisticsChartManager {
                 this.periodHighlightDefaults = {
                         activeDays: {
                                 detail: this.periodHighlightsElements.activeDays.detailEl?.textContent?.trim() ||
-                                        "Monte uma rotina consistente de estudos.",
+                                        "Crie uma rotina consistente para manter a constância dos estudos.",
                         },
                         averageQuestions: {
                                 detail: this.periodHighlightsElements.averageQuestions.detailEl?.textContent?.trim() ||
-                                        "Resolva perguntas com frequência para ver sua média.",
+                                        "Resolva perguntas com frequência para ver a média crescer.",
                         },
                         averageStudyTime: {
                                 detail: this.periodHighlightsElements.averageStudyTime.detailEl?.textContent?.trim() ||
-                                        "Complete sessões para calcular seu tempo médio diário.",
+                                        "Finalize sessões para calcular o tempo médio diário.",
                         },
                         sessionsCompleted: {
                                 detail: this.periodHighlightsElements.sessionsCompleted.detailEl?.textContent?.trim() ||
-                                        "Inicie um quiz para analisar seu ritmo de conclusão.",
+                                        "Inicie um quiz para acompanhar o ritmo de conclusão semanal.",
                         },
                 };
 

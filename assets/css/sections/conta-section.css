@@ -416,7 +416,6 @@
     font-size: clamp(0.95rem, 1.6vw, 1.15rem);
     line-height: 1.65;
     color: var(--color-text-primary);
-    font-weight: var(--font-weight-semibold, 600);
     flex: 1;
     word-break: break-word;
 }

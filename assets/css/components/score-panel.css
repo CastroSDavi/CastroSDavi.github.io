@@ -14,10 +14,10 @@
   padding: var(--score-panel-padding-y, var(--spacing-lg, 28px)) var(--score-panel-padding-x, var(--spacing-md, 22px));
   width: var(--score-panel-width, 260px);
   min-width: var(--score-panel-width, 260px);
-  background-color: var(--score-panel-bg-color, var(--color-white));
-  
+  background-color: var(--score-panel-bg-color, var(--color-surface-1));
+
   box-shadow: var(--score-panel-shadow, 2px 0px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.04));
-  border-right: 1px solid var(--score-panel-border-color, var(--color-gray-200));
+  border-right: 1px solid var(--score-panel-border-color, var(--color-border-subtle));
   flex-shrink: 0;
 
   position: sticky;
@@ -40,9 +40,9 @@
 /* Scrollbar sutil */
 .score-panel::-webkit-scrollbar { width: 4px; }
 .score-panel::-webkit-scrollbar-track { background: transparent; margin: var(--spacing-xs) 0; }
-.score-panel::-webkit-scrollbar-thumb { background-color: var(--color-gray-200); border-radius: 8px; }
-.score-panel::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-300); }
-.score-panel { scrollbar-width: thin; scrollbar-color: var(--color-gray-200) transparent; }
+.score-panel::-webkit-scrollbar-thumb { background-color: var(--score-panel-scroll-thumb, var(--color-border-subtle)); border-radius: 8px; }
+.score-panel::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-strong); }
+.score-panel { scrollbar-width: thin; scrollbar-color: var(--score-panel-scroll-thumb, var(--color-border-subtle)) transparent; }
 
 /* Element: .score-panel__timer */
 .score-panel__timer {
@@ -51,7 +51,7 @@
   align-items: center;
   text-align: center;
   padding-bottom: var(--spacing-md, 20px);
-  border-bottom: 1px solid var(--color-gray-300); 
+  border-bottom: 1px solid var(--color-border-subtle);
   margin-bottom: var(--spacing-xs, 6px);
 }
 
@@ -115,9 +115,9 @@
 }
 
 .score-panel__stat-label {
-  font-size: var(--stat-label-font-size, 0.8rem); 
-  font-weight: var(--font-weight-medium); 
-  color: var(--stat-label-color, var(--color-text-secondary)); 
+  font-size: var(--stat-label-font-size, 0.8rem);
+  font-weight: var(--font-weight-medium);
+  color: var(--stat-label-color, var(--color-text-muted));
   text-transform: uppercase;
   letter-spacing: 0.4px;
   margin-bottom: 1px;

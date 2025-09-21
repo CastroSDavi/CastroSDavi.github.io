@@ -34,7 +34,10 @@
 
     --color-accent-yellow: gold;
     --color-accent-yellow-rgb: 255, 215, 0;
-    /* Tons de cinza e neutros */
+    --color-accent-yellow-bg: #fffbea;
+    --color-accent-yellow-border: #ffe58f;
+    --color-accent-yellow-text: #7a5b00;
+    /* Tons de cinza e superfícies */
     --color-gray-900: #343a40;
     --color-gray-800: #495057;
     --color-gray-700: #6c757d;
@@ -45,6 +48,8 @@
     --color-gray-300: #e9ecef;
     --color-gray-200: #f1f3f5;
     --color-gray-100: #f8f9fa;
+    --color-gray-50: #fdfefe;
+
     --color-white: #ffffff;
     --color-white-rgb: 255, 255, 255;
     --color-dark: #333;
@@ -53,6 +58,29 @@
     --color-gray-200-rgb: 241, 243, 245;
     --color-gray-500-rgb: 206, 212, 218;
     --color-gray-900-rgb: 52, 58, 64;
+
+    --color-background: var(--color-gray-100);
+    --color-background-rgb: 248, 249, 250;
+
+    --color-surface-1: var(--color-white);
+    --color-surface-1-rgb: 255, 255, 255;
+    --color-surface-2: #f3f7fb;
+    --color-surface-2-rgb: 243, 247, 251;
+    --color-surface-3: #eaf1f8;
+    --color-surface-3-rgb: 234, 241, 248;
+
+    --color-border-subtle: rgba(var(--color-gray-900-rgb), 0.1);
+    --color-border-strong: rgba(var(--color-gray-900-rgb), 0.16);
+    --color-surface-hover: rgba(var(--color-primary-medium-rgb), 0.1);
+    --color-surface-active: rgba(var(--color-primary-medium-rgb), 0.16);
+    --color-text-inverse: #ffffff;
+
+    --modal-backdrop-bg: rgba(15, 23, 42, 0.45);
+
+    --form-field-bg: var(--color-gray-100);
+    --form-field-border: var(--color-gray-200);
+    --form-field-focus-bg: var(--color-white);
+    --form-field-placeholder: var(--color-gray-500);
 
     /* Texto */
     --color-text-primary: var(--color-gray-900);
@@ -158,57 +186,105 @@
     --bottom-nav-height: 68px;
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
+    --question-section-main-bg: var(--color-surface-3);
 }
 
 :root[data-theme='dark'] {
-    --color-primary-dark: #0d3b66;
-    --color-primary-dark-rgb: 13, 59, 102;
+    --color-primary-dark: #0f4c8a;
+    --color-primary-dark-rgb: 15, 76, 138;
 
-    --color-primary-medium: #1a5f9e;
-    --color-primary-medium-rgb: 26, 95, 158;
+    --color-primary-medium: #4b8ed7;
+    --color-primary-medium-rgb: 75, 142, 215;
 
-    --color-primary-light: #3b86ca;
-    --color-primary-light-rgb: 59, 134, 202;
+    --color-primary-light: #6ca9f2;
+    --color-primary-light-rgb: 108, 169, 242;
 
-    --color-secondary-green: #2a9d8f;
-    --color-secondary-green-rgb: 42, 157, 143;
+    --color-secondary-green: #3ec4ad;
+    --color-secondary-green-rgb: 62, 196, 173;
 
-    --color-secondary-green-light: #5fda9a;
-    --color-secondary-green-light-rgb: 95, 218, 154;
+    --color-secondary-green-light: #6fe7c6;
+    --color-secondary-green-light-rgb: 111, 231, 198;
 
     --color-accent-red: #e63946;
     --color-accent-red-rgb: 230, 57, 70;
 
-    --color-gray-100: #434b5f;
-    --color-gray-200: #4c5469;
-    --color-gray-300: #555e74;
-    --color-gray-400: #606880;
-    --color-gray-500: #6b738c;
-    --color-gray-600: #788097;
-    --color-gray-700: #cfd6e4;
-    --color-gray-800: #e7edf7;
-    --color-gray-900: #f5f8fc;
+    --color-gray-900: #e4ecf8;
+    --color-gray-800: #cbd9ef;
+    --color-gray-700: #9fb2d4;
+    --color-gray-600: #6f82a0;
+    --color-gray-500: #4d5d7a;
+    --color-gray-400: #3b4d67;
+    --color-gray-300: #2d3d55;
+    --color-gray-200: #233247;
+    --color-gray-100: #19273a;
+    --color-gray-50: #131d2f;
 
-    --color-gray-100-rgb: 67, 75, 95;
-    --color-gray-200-rgb: 76, 84, 105;
-    --color-gray-300-rgb: 85, 94, 116;
-    --color-gray-400-rgb: 96, 104, 128;
-    --color-gray-500-rgb: 107, 115, 140;
-    --color-gray-900-rgb: 245, 248, 252;
+    --color-gray-100-rgb: 25, 39, 58;
+    --color-gray-200-rgb: 35, 50, 71;
+    --color-gray-300-rgb: 45, 61, 85;
+    --color-gray-400-rgb: 59, 77, 103;
+    --color-gray-500-rgb: 77, 93, 122;
+    --color-gray-900-rgb: 228, 236, 248;
 
-    --color-white: #f0f3f9;
-    --color-white-rgb: 240, 243, 249;
+    --color-white: #f6f8ff;
+    --color-white-rgb: 246, 248, 255;
 
-    --color-text-primary: #f4f7ff;
-    --color-text-secondary: #d8e0f0;
-    --color-text-muted: #b3bed3;
-    --color-text-link: #9fc8f8;
-    --color-text-link-hover: #b7d6ff;
+    --color-background: #0b1626;
+    --color-background-rgb: 11, 22, 38;
 
-    --shadow-xs: 0 1px 2px rgba(20, 28, 44, 0.1);
-    --shadow-sm: 0 4px 10px rgba(20, 28, 44, 0.14);
-    --shadow-md: 0 8px 18px rgba(20, 28, 44, 0.16);
-    --shadow-lg: 0 12px 24px rgba(20, 28, 44, 0.18);
-    --shadow-xl: 0 18px 32px rgba(20, 28, 44, 0.2);
+    --color-surface-1: #13223b;
+    --color-surface-1-rgb: 19, 34, 59;
+    --color-surface-2: #1a2f4a;
+    --color-surface-2-rgb: 26, 47, 74;
+    --color-surface-3: #223a57;
+    --color-surface-3-rgb: 34, 58, 87;
+
+    --color-border-subtle: rgba(148, 173, 210, 0.28);
+    --color-border-strong: rgba(148, 173, 210, 0.45);
+    --color-surface-hover: rgba(var(--color-primary-light-rgb), 0.18);
+    --color-surface-active: rgba(var(--color-primary-light-rgb), 0.28);
+    --color-text-inverse: #0c1628;
+
+    --color-text-primary: #e4ecf8;
+    --color-text-secondary: #c3d5f0;
+    --color-text-muted: #94a8c6;
+    --color-text-link: #8cc4ff;
+    --color-text-link-hover: #aed4ff;
+
+    --color-correct-bg: rgba(var(--color-secondary-green-rgb), 0.18);
+    --color-correct-border: rgba(var(--color-secondary-green-light-rgb), 0.55);
+    --color-correct-text: #7de3c6;
+    --color-correct-text-rgb: 125, 227, 198;
+    --color-correct-bg-alt: rgba(var(--color-secondary-green-rgb), 0.12);
+
+    --color-incorrect-bg: rgba(var(--color-accent-red-rgb), 0.22);
+    --color-incorrect-border: rgba(var(--color-accent-red-rgb), 0.55);
+    --color-incorrect-text: #ff9aa5;
+    --color-incorrect-text-rgb: 255, 154, 165;
+    --color-incorrect-bg-alt: rgba(var(--color-accent-red-rgb), 0.16);
+
+    --color-accent-yellow: #ffd166;
+    --color-accent-yellow-rgb: 255, 209, 102;
+    --color-accent-yellow-bg: rgba(var(--color-accent-yellow-rgb), 0.18);
+    --color-accent-yellow-border: rgba(var(--color-accent-yellow-rgb), 0.42);
+    --color-accent-yellow-text: #ffe8a3;
+
+    --modal-backdrop-bg: rgba(6, 12, 21, 0.78);
+
+    --form-field-bg: var(--color-surface-2);
+    --form-field-border: rgba(148, 173, 210, 0.35);
+    --form-field-focus-bg: var(--color-surface-1);
+    --form-field-placeholder: var(--color-text-muted);
+
+    --shadow-xs: 0 1px 2px rgba(2, 10, 22, 0.45);
+    --shadow-sm: 0 4px 12px rgba(2, 10, 22, 0.5);
+    --shadow-md: 0 8px 20px rgba(2, 10, 22, 0.55);
+    --shadow-lg: 0 12px 28px rgba(2, 10, 22, 0.6);
+    --shadow-xl: 0 18px 40px rgba(2, 10, 22, 0.65);
+    --shadow-button: 0 4px 10px rgba(10, 20, 40, 0.5);
+    --shadow-button-hover: 0 6px 16px rgba(10, 20, 40, 0.55);
+    --shadow-inner: inset 0 1px 2px rgba(8, 16, 30, 0.6);
+    --shadow-grid-current-subtle: 0 4px 12px rgba(var(--color-primary-light-rgb), 0.22);
+    --question-section-main-bg: var(--color-surface-3);
 }
 

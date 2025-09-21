@@ -132,21 +132,21 @@ body.cadastro-page {
     padding-left: 52px; /* Padding esquerdo aumentado para o ícone */
     font-size: 1rem; /* Fonte do input */
     line-height: 1.5; /* Altura da linha */
-    color: var(--color-gray-900);
-    background-color: var(--color-gray-100); /* Fundo levemente acinzentado */
-    border: 2px solid var(--color-gray-200); /* Borda mais suave */
+    color: var(--color-text-primary);
+    background-color: var(--form-field-bg); /* Fundo levemente acinzentado */
+    border: 2px solid var(--form-field-border); /* Borda mais suave */
     border-radius: var(--border-radius-md, 8px); /* Bordas um pouco menos arredondadas que o card */
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
 
 .form-control::placeholder {
-    color: var(--color-gray-500);
+    color: var(--form-field-placeholder);
     opacity: 1;
 }
 
 .form-control:focus {
     border-color: var(--color-primary-medium);
-    background-color: var(--color-white);
+    background-color: var(--form-field-focus-bg);
     outline: 0;
     box-shadow: 0 0 0 3.5px rgba(var(--color-primary-medium-rgb), 0.2);
 }
@@ -167,7 +167,7 @@ body.cadastro-page {
 
 .form-control.is-valid {
     border-color: var(--color-secondary-green) !important;
-    background-color: var(--color-white); /* Fundo branco quando válido */
+    background-color: var(--form-field-focus-bg); /* Fundo quando válido */
 }
 .form-control.is-valid:focus {
     box-shadow: 0 0 0 3.5px rgba(var(--color-secondary-green-rgb), 0.2);
@@ -178,7 +178,7 @@ body.cadastro-page {
 
 .form-control.is-invalid {
     border-color: var(--color-accent-red) !important;
-    background-color: var(--color-white); /* Fundo branco quando inválido */
+    background-color: var(--form-field-focus-bg); /* Fundo quando inválido */
 }
 .form-control.is-invalid:focus {
     box-shadow: 0 0 0 3.5px rgba(var(--color-accent-red-rgb), 0.2);

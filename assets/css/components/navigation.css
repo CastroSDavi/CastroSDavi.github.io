@@ -9,8 +9,8 @@
 /* ===== NAVEGAÇÃO PRINCIPAL (SUPERIOR - DESKTOP) ===== */
 .main-nav {
   flex-shrink: 0;
-  background-color: var(--main-nav-bg-color, var(--color-white));
-  border-bottom: var(--main-nav-border-bottom-width, var(--border-width)) solid var(--main-nav-border-bottom-color, var(--color-gray-400));
+  background-color: var(--main-nav-bg-color, var(--color-surface-1));
+  border-bottom: var(--main-nav-border-bottom-width, var(--border-width)) solid var(--main-nav-border-bottom-color, var(--color-border-subtle));
   height: var(--main-nav-height, 50px);
   display: flex;
   position: relative;
@@ -41,7 +41,7 @@
   font-family: var(--font-family-heading);
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-nav-link, 0.95rem);
-  color: var(--color-text-secondary, var(--color-gray-800));
+  color: var(--main-nav-link-color, var(--color-text-secondary));
   text-decoration: none;
   transition: color var(--transition-medium), border-color var(--transition-slow);
 }
@@ -60,7 +60,7 @@
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: -2px;
   border-radius: var(--border-radius-sm);
-  background-color: var(--color-gray-100);
+  background-color: var(--color-surface-hover);
   text-decoration: none;
 }
 
@@ -90,11 +90,11 @@
   padding: var(--spacing-xs, 8px);
   display: flex;
   position: relative;
-  background: rgba(238, 242, 248, 0.6);
+  background: rgba(var(--color-surface-1-rgb, 255, 255, 255), 0.7);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
   border-radius: var(--border-radius-pill);
-  border: 1px solid rgba(var(--color-white-rgb), 0.5);
+  border: 1px solid var(--color-border-subtle);
   box-shadow: 0 10px 30px -5px rgba(var(--color-gray-900-rgb), 0.12);
 }
 
@@ -116,7 +116,7 @@
   z-index: 2;
   -webkit-tap-highlight-color: transparent;
   transition: color 0.3s ease-in-out;
-  color: var(--color-text-secondary);
+  color: var(--bottom-nav-link-color, var(--color-text-secondary));
 }
 
 .bottom-nav__link:hover:not(.bottom-nav__link--active) {
@@ -163,7 +163,7 @@
 
 .bottom-nav__link:focus-visible {
   outline: none;
-  background-color: rgba(var(--color-primary-light-rgb), 0.9);
+  background-color: var(--color-surface-hover);
 }
 
 /* --- INÍCIO DA CORREÇÃO --- */

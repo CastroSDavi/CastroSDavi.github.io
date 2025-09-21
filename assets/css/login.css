@@ -5,7 +5,7 @@
     flex-direction: column;
     min-height: 100vh;
      /* Degradê radial sutil */
-    background-color: var(--color-gray-100); /* Cor de fundo sólida */
+    background-color: var(--color-background); /* Cor de fundo sólida */
     position: relative;
     font-family: var(--font-family-sans);
     color: var(--color-text-primary);
@@ -68,19 +68,19 @@
 
 .login-card-container {
     width: 100%;
-    background-color: var(--color-white);
+    background-color: var(--login-card-bg, var(--color-surface-1));
     border-radius: var(--border-radius-lg, 12px);
     /* Padding interno do card aumentado para mais "respiro" */
     padding: var(--spacing-xl, 40px) clamp(var(--spacing-md, 25px), 6vw, var(--spacing-lg, 35px));
     box-shadow: 0 8px 25px rgba(var(--color-primary-dark-rgb), 0.08); /* Sombra mais sutil ainda */
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid var(--color-border-subtle);
 }
 
 .login-card__title {
     font-family: var(--font-family-heading);
     font-size: clamp(1.5rem, 5vw, 1.8rem);
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary-dark);
+    color: var(--login-card-title-color, var(--color-text-primary));
     text-align: center;
     margin-top: 0;
     margin-bottom: var(--spacing-xs, 10px);
@@ -119,14 +119,14 @@
     position: absolute;
     left: var(--spacing-sm, 12px);
     font-size: 1.25rem;
-    color: var(--color-gray-400);
+    color: var(--form-field-placeholder, var(--color-text-muted));
     pointer-events: none;
     transition: color 0.2s ease-out;
 }
 
 .login-form .form-control {
-    background-color: var(--color-gray-50); /* Fundo do input muito sutil */
-    border: 1.5px solid var(--color-gray-300);
+    background-color: var(--form-field-bg); /* Fundo do input muito sutil */
+    border: 1.5px solid var(--form-field-border);
     /* Padding do input, considerando o ícone à esquerda */
     padding: var(--spacing-sm, 12px) var(--spacing-sm, 12px) var(--spacing-sm, 12px) calc(var(--spacing-sm, 12px) + 20px + var(--spacing-xs, 8px)); /* padding-left: padding-base + largura-icone + espaco-icone-input */
     font-size: 0.95rem;
@@ -135,7 +135,7 @@
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .login-form .form-control::placeholder {
-    color: var(--color-gray-400); /* Placeholder visível e sutil */
+    color: var(--form-field-placeholder); /* Placeholder visível e sutil */
 }
 
 .login-form .form-group:focus-within .form-label {
@@ -145,7 +145,7 @@
     color: var(--color-primary-medium); /* Destaca o ícone */
 }
 .login-form .form-control:focus {
-    background-color: var(--color-white);
+    background-color: var(--form-field-focus-bg);
     border-color: var(--color-primary-medium);
     box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.15);
 }
@@ -195,7 +195,7 @@
     margin-top: var(--spacing-lg, 30px);
     text-align: center;
     font-size: var(--font-size-sm, 0.85rem);
-    color: var(--color-gray-700);
+    color: var(--color-text-secondary);
 }
 .login-card__alternative-actions p:first-of-type {
     margin-bottom: var(--spacing-md, 20px);

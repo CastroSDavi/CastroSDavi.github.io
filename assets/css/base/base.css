@@ -11,8 +11,8 @@ html {
 
 body {
     font-family: var(--font-family-sans);
-    color: var(--color-gray-900); /* Cor de texto principal */
-    background-color: var(--color-gray-100); /* Cor de fundo padrão do corpo */
+    color: var(--color-text-primary); /* Cor de texto principal */
+    background-color: var(--color-background); /* Cor de fundo padrão do corpo */
     line-height: 1.6; /* Altura de linha base para legibilidade */
     display: flex;
     flex-direction: column;

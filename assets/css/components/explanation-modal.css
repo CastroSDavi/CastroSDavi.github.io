@@ -7,7 +7,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.6);
+    background-color: var(--modal-backdrop-bg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.6));
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     display: flex;
@@ -28,7 +28,7 @@
 .explanation-modal__dialog {
     width: 90%;
     max-width: 700px;
-    background-color: var(--color-white);
+    background-color: var(--explanation-modal-bg, var(--color-surface-1));
     border-radius: var(--border-radius-xl, 16px);
     box-shadow: 0 10px 35px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
                 0 4px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);
@@ -52,20 +52,20 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md, 20px) var(--spacing-lg, 28px);
-    border-bottom: 1px solid var(--color-gray-100);
+    border-bottom: 1px solid var(--color-border-subtle);
     flex-shrink: 0;
 }
 .explanation-modal__title {
     font-family: var(--font-family-heading);
     font-size: var(--font-size-h2, 1.5rem);
-    color: var(--color-primary-dark);
+    color: var(--explanation-modal-title-color, var(--color-text-primary));
     font-weight: var(--font-weight-bold);
     margin: 0;
     line-height: 1.3;
     letter-spacing: -0.2px;
 }
 .explanation-modal__close-button {
-    color: var(--color-gray-600);
+    color: var(--color-text-muted);
     background-color: transparent;
     /* Herda estilos de .button e .button--icon-only */
 }
@@ -78,8 +78,8 @@
 /* --- SEÇÃO META INFO --- */
 .explanation-modal__meta-info {
     padding: var(--spacing-sm, 14px) var(--spacing-lg, 28px);
-    background-color: var(--color-gray-50);
-    border-bottom: 1px solid var(--color-gray-100);
+    background-color: var(--explanation-modal-meta-bg, var(--color-surface-2));
+    border-bottom: 1px solid var(--color-border-subtle);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs, 8px);
@@ -116,10 +116,10 @@
 }
 /* Estilização da Scrollbar */
 .explanation-modal__body::-webkit-scrollbar { width: 8px; }
-.explanation-modal__body::-webkit-scrollbar-track { background: var(--color-gray-50); border-radius: 4px; }
-.explanation-modal__body::-webkit-scrollbar-thumb { background-color: var(--color-gray-300); border-radius: 4px; border: 2px solid var(--color-gray-50); }
-.explanation-modal__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
-.explanation-modal__body { scrollbar-width: auto; scrollbar-color: var(--color-gray-300) var(--color-gray-50); }
+.explanation-modal__body::-webkit-scrollbar-track { background: var(--explanation-modal-scroll-track, var(--color-surface-2)); border-radius: 4px; }
+.explanation-modal__body::-webkit-scrollbar-thumb { background-color: var(--explanation-modal-scroll-thumb, var(--color-border-subtle)); border-radius: 4px; border: 2px solid var(--explanation-modal-scroll-track, var(--color-surface-2)); }
+.explanation-modal__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-border-strong); }
+.explanation-modal__body { scrollbar-width: auto; scrollbar-color: var(--explanation-modal-scroll-thumb, var(--color-border-subtle)) var(--explanation-modal-scroll-track, var(--color-surface-2)); }
 
 .explanation-modal__subtitle {
     font-family: var(--font-family-heading);
@@ -147,7 +147,7 @@
 .explanation-modal__text {
     font-size: var(--font-size-base, 0.95rem);
     line-height: 1.7;
-    color: var(--color-gray-700);
+    color: var(--explanation-modal-text-color, var(--color-text-secondary));
 }
 .explanation-modal__text p:not(:last-child) { margin-bottom: var(--spacing-sm, 14px); }
 .explanation-modal__text p:last-child { margin-bottom: 0; }
@@ -172,11 +172,11 @@
 .explanation-modal__option-item {
     padding: var(--spacing-sm, 12px) var(--spacing-md, 16px);
     padding-left: calc(var(--spacing-md, 16px) + 20px); /* Espaço para o ícone na borda */
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid var(--explanation-option-border-color, var(--color-border-subtle));
     border-left-width: 4px;
-    border-left-color: var(--color-gray-300); /* Padrão para não marcada, não correta, não incorreta geral */
+    border-left-color: var(--explanation-option-border-left-color, rgba(var(--color-primary-medium-rgb), 0.35)); /* Padrão para não marcada, não correta, não incorreta geral */
     border-radius: var(--border-radius-md);
-    background-color: var(--color-white);
+    background-color: var(--explanation-option-bg, var(--color-surface-2));
     position: relative;
     transition: background-color 0.2s, border-left-color 0.2s;
 }
@@ -195,9 +195,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-white); /* Fundo para o ícone se destacar da borda */
-    box-shadow: 0 0 0 3px var(--color-white); /* Cria um "espaço" entre o ícone e a borda colorida */
-    color: var(--color-gray-500); /* Cor padrão do ícone */
+    background-color: var(--explanation-option-chip-bg, var(--color-surface-1)); /* Fundo para o ícone se destacar da borda */
+    box-shadow: 0 0 0 3px var(--explanation-option-chip-bg, var(--color-surface-1)); /* Cria um "espaço" entre o ícone e a borda colorida */
+    color: var(--explanation-option-chip-color, var(--color-text-muted)); /* Cor padrão do ícone */
     font-variation-settings: 'FILL' 0, 'wght' 300; /* Leve por padrão */
     content: 'radio_button_unchecked'; /* Ícone padrão para opções não selecionadas e não corretas */
 }
@@ -279,7 +279,7 @@
 
 .explanation-modal__option-item .option-item__feedback {
     display: block;
-    color: var(--color-gray-800);
+    color: var(--option-feedback-color, var(--color-text-secondary));
     font-size: var(--font-size-sm, 0.875rem);
     line-height: 1.6;
     padding-left: 0;
@@ -289,7 +289,7 @@
 
 /* Divisor */
 .explanation-modal__divider {
-    border: 0; height: 1px; background-color: var(--color-gray-100);
+    border: 0; height: 1px; background-color: var(--color-border-subtle);
     margin: var(--spacing-md, 18px) 0;
 }
 .explanation-modal__divider.u-is-hidden { display: none; }
@@ -311,11 +311,11 @@
 /* Rodapé */
 .explanation-modal__footer {
     padding: var(--spacing-md, 20px) var(--spacing-lg, 28px);
-    border-top: 1px solid var(--color-gray-100);
+    border-top: 1px solid var(--color-border-subtle);
     display: flex;
     justify-content: flex-end;
     flex-shrink: 0;
-    background-color: var(--color-white);
+    background-color: var(--explanation-modal-footer-bg, var(--color-surface-1));
 }
 #btn-got-it-explanation.button--primary {
     font-weight: var(--font-weight-semibold);

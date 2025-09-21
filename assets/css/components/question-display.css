@@ -37,10 +37,10 @@
     height: auto;
     max-height: 350px;
     border-radius: var(--border-radius-md);
-    border: 1px solid var(--color-gray-300);
+    border: 1px solid var(--question-image-border-color, var(--color-border-subtle));
     box-shadow: 0 2px 5px rgba(0,0,0,0.07);
     object-fit: contain;
-    background-color: var(--color-gray-50);
+    background-color: var(--question-image-bg-color, var(--color-surface-2));
 }
 
 /* --- ESTILOS PARA A LISTA DE RESPOSTAS E OPÇÕES --- */
@@ -59,9 +59,9 @@
   width: 100%;
   text-align: left;
   padding: var(--answer-padding-y, 14px) var(--answer-padding-x, 18px);
-  color: var(--answer-color, var(--color-gray-800));
-  background-color: var(--answer-bg-color, var(--color-white));
-  border: 1.5px solid var(--answer-border-color, var(--color-gray-300));
+  color: var(--answer-color, var(--color-text-primary));
+  background-color: var(--answer-bg-color, var(--color-surface-1));
+  border: 1.5px solid var(--answer-border-color, var(--color-border-subtle));
   border-radius: var(--border-radius-md, 8px);
   font-size: var(--answer-font-size, 0.95rem);
   font-weight: var(--font-weight-normal);
@@ -74,7 +74,7 @@
 
 .question-display__answer-option:not(.question-display__answer-option--answered):hover {
   border-color: var(--color-primary-medium);
-  background-color: var(--color-primary-light);
+  background-color: var(--answer-hover-bg-color, var(--color-surface-hover));
   color: var(--color-primary-dark);
   transform: translateY(-2px);
   box-shadow: 0 3px 8px rgba(var(--color-primary-medium-rgb), 0.15);
@@ -127,7 +127,7 @@
 .question-display__reference {
     margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-sm, 12px);
-    border-top: 1px solid var(--color-gray-200);
+    border-top: 1px solid var(--color-border-subtle);
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--color-text-muted);
     text-align: right;
@@ -155,7 +155,7 @@
 .question-display__actions.question-display__actions--visible {
     margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-md, 18px);
-    border-top-color: var(--color-gray-300); /* Linha pontilhada visível */
+    border-top-color: var(--color-border-subtle); /* Linha pontilhada visível */
     min-height: 50px; /* Altura para o botão, ajuste se necessário */
 }
 /* O botão #btn-toggle-explanation em si é estilizado em button.css */

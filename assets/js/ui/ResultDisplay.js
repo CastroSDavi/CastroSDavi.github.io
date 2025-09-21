@@ -59,7 +59,21 @@ export default class ResultDisplay {
             resultadoPontosPorQuestao,
             resultadoTempoMedio,
             resultadoInsightDestaqueText,
-            resultadoInsightMetaText
+            resultadoInsightMetaText,
+            resultadoGamificacao,
+            resultadoXpGanho,
+            resultadoXpTotal,
+            resultadoNivelAtual,
+            resultadoNivelProgress,
+            resultadoNivelProgressFill,
+            resultadoProgressoLabel,
+            resultadoXpProximo,
+            resultadoNivelAlert,
+            resultadoNivelAlertText,
+            resultadoConquistasWrapper,
+            resultadoConquistasCount,
+            resultadoConquistasList,
+            resultadoConquistasEmpty,
         } = this.elements;
 
         if (!resultadoCard || !user || !state) {
@@ -130,6 +144,146 @@ export default class ResultDisplay {
         if (resultadoInsightDestaqueText) resultadoInsightDestaqueText.textContent = insightDestaque;
         if (resultadoInsightMetaText) resultadoInsightMetaText.textContent = insightMeta;
 
+        const gamificationData = state.user?.gamification || null;
+        const xpTotalValue = Number.isFinite(state.user?.xp) ? Number(state.user.xp) : 0;
+        const xpGanhoValue = Number.isFinite(gamificationData?.xp_ganho) ? Number(gamificationData.xp_ganho) : 0;
+        const levelNameValue = gamificationData?.level?.nome || null;
+        const achievementsUnlockedValue = Number(
+            state.user?.achievementsUnlocked ??
+            (gamificationData?.achievements?.newly_unlocked?.length ?? 0)
+        );
+
+        if (resultadoGamificacao) {
+            if (gamificationData) {
+                this.quizUI.showElement(resultadoGamificacao);
+
+                if (resultadoXpGanho) {
+                    const formattedXpGanho = `${xpGanhoValue >= 0 ? '+' : ''}${Math.round(xpGanhoValue).toLocaleString('pt-BR')} XP`;
+                    resultadoXpGanho.textContent = formattedXpGanho;
+                }
+                if (resultadoXpTotal) {
+                    resultadoXpTotal.textContent = `${Math.round(xpTotalValue).toLocaleString('pt-BR')} XP total`;
+                }
+                if (resultadoNivelAtual) {
+                    resultadoNivelAtual.textContent = levelNameValue || '—';
+                }
+
+                const progressPercent = Math.max(0, Math.min(Number(gamificationData?.progress?.percent ?? 0), 100));
+                if (resultadoNivelProgress) {
+                    resultadoNivelProgress.setAttribute('aria-valuenow', progressPercent.toFixed(0));
+                }
+                if (resultadoNivelProgressFill) {
+                    resultadoNivelProgressFill.style.width = `${progressPercent}%`;
+                }
+
+                const xpRangeStart = Number(gamificationData?.progress?.xp_range_start ?? 0);
+                const xpRangeEnd = gamificationData?.progress?.xp_range_end;
+                const xpIntoLevel = Number(gamificationData?.progress?.xp_into_level ?? 0);
+                if (resultadoProgressoLabel) {
+                    if (typeof xpRangeEnd === 'number') {
+                        const totalForLevel = Math.max(xpRangeEnd - xpRangeStart, 0);
+                        resultadoProgressoLabel.textContent = `${xpIntoLevel.toLocaleString('pt-BR')} / ${totalForLevel.toLocaleString('pt-BR')} XP no nível`;
+                    } else {
+                        resultadoProgressoLabel.textContent = `${xpIntoLevel.toLocaleString('pt-BR')} XP neste nível`;
+                    }
+                }
+
+                if (resultadoXpProximo) {
+                    const xpToNext = gamificationData?.progress?.xp_to_next_level;
+                    if (typeof xpToNext === 'number' && xpToNext > 0) {
+                        const nextLevelName = gamificationData?.next_level?.nome || 'o próximo nível';
+                        resultadoXpProximo.textContent = `${xpToNext.toLocaleString('pt-BR')} XP para ${nextLevelName}`;
+                    } else if (typeof xpToNext === 'number' && xpToNext <= 0 && gamificationData?.next_level) {
+                        resultadoXpProximo.textContent = `Pronto para ${gamificationData.next_level.nome}!`;
+                    } else {
+                        resultadoXpProximo.textContent = 'Nível máximo alcançado';
+                    }
+                }
+
+                if (resultadoNivelAlert) {
+                    if (gamificationData.level_up && levelNameValue) {
+                        if (resultadoNivelAlertText) {
+                            resultadoNivelAlertText.textContent = `Você alcançou o nível ${levelNameValue}!`;
+                        }
+                        this.quizUI.showElement(resultadoNivelAlert);
+                    } else {
+                        this.quizUI.hideElement(resultadoNivelAlert);
+                    }
+                }
+
+                if (resultadoConquistasCount) {
+                    resultadoConquistasCount.textContent = achievementsUnlockedValue.toString();
+                }
+
+                const recentAchievements = Array.isArray(state.user?.recentAchievements) && state.user.recentAchievements.length > 0
+                    ? state.user.recentAchievements
+                    : (gamificationData?.achievements?.newly_unlocked && gamificationData.achievements.newly_unlocked.length > 0
+                        ? gamificationData.achievements.newly_unlocked
+                        : gamificationData?.achievements?.recent || []);
+
+                if (resultadoConquistasList) {
+                    resultadoConquistasList.innerHTML = '';
+                    recentAchievements.slice(0, 4).forEach((achievement) => {
+                        if (!achievement) return;
+                        const item = document.createElement('li');
+                        item.className = 'gamification-achievements__item';
+
+                        const icon = document.createElement('span');
+                        icon.className = 'material-symbols-outlined';
+                        icon.textContent = 'emoji_events';
+                        icon.setAttribute('aria-hidden', 'true');
+                        item.appendChild(icon);
+
+                        const content = document.createElement('div');
+                        content.className = 'gamification-achievements__item-content';
+
+                        const title = document.createElement('strong');
+                        title.textContent = achievement.nome || 'Conquista desbloqueada';
+                        content.appendChild(title);
+
+                        if (achievement.descricao) {
+                            const description = document.createElement('p');
+                            description.textContent = achievement.descricao;
+                            content.appendChild(description);
+                        }
+
+                        if (achievement.data_conquista) {
+                            const meta = document.createElement('span');
+                            meta.className = 'gamification-achievements__item-meta';
+                            try {
+                                const data = new Date(achievement.data_conquista);
+                                meta.textContent = `Desbloqueada em ${data.toLocaleDateString('pt-BR')}`;
+                            } catch (err) {
+                                meta.textContent = 'Conquista recente';
+                            }
+                            content.appendChild(meta);
+                        }
+
+                        item.appendChild(content);
+                        resultadoConquistasList.appendChild(item);
+                    });
+                }
+
+                if (resultadoConquistasEmpty) {
+                    if (resultadoConquistasList && resultadoConquistasList.childElementCount > 0) {
+                        resultadoConquistasEmpty.classList.add('u-is-hidden');
+                    } else {
+                        resultadoConquistasEmpty.classList.remove('u-is-hidden');
+                    }
+                }
+
+                if (resultadoConquistasWrapper) {
+                    if (resultadoConquistasList && resultadoConquistasList.childElementCount === 0 && !achievementsUnlockedValue) {
+                        resultadoConquistasWrapper.classList.add('is-empty');
+                    } else {
+                        resultadoConquistasWrapper.classList.remove('is-empty');
+                    }
+                }
+            } else {
+                this.quizUI.hideElement(resultadoGamificacao);
+            }
+        }
+
         this.lastRenderedSnapshot = {
             pontos,
             acertos,
@@ -137,7 +291,11 @@ export default class ResultDisplay {
             totalRespondidas,
             tempoFormatado,
             tempoMedioFormatado,
-            accuracyPercent
+            accuracyPercent,
+            xpTotal: xpTotalValue,
+            xpGanho: xpGanhoValue,
+            levelName: levelNameValue,
+            achievementsUnlocked: achievementsUnlockedValue,
         };
         this.latestShareMessage = this._buildShareMessage(this.lastRenderedSnapshot);
 
@@ -203,7 +361,11 @@ export default class ResultDisplay {
             accuracyPercent,
             totalRespondidas,
             tempoFormatado,
-            tempoMedioFormatado
+            tempoMedioFormatado,
+            xpTotal,
+            xpGanho,
+            levelName,
+            achievementsUnlocked
         } = snapshot;
 
         if (totalRespondidas === 0) {
@@ -219,7 +381,23 @@ export default class ResultDisplay {
             ? ` (média de ${tempoMedioFormatado} por questão)`
             : '';
 
-        return `Acabei de concluir um desafio no MedQuiz com ${pontosTexto}, ${accuracyPercent}% de acerto e ${questoesTexto}${tempoTotalTexto}${tempoMedioTexto}. Vamos estudar juntos?`;
+        const baseMensagem = `Acabei de concluir um desafio no MedQuiz com ${pontosTexto}, ${accuracyPercent}% de acerto e ${questoesTexto}${tempoTotalTexto}${tempoMedioTexto}.`;
+
+        const extras = [];
+        if (typeof xpGanho === 'number') {
+            const xpTexto = `${xpGanho >= 0 ? '+' : ''}${xpGanho} XP`;
+            extras.push(`Ganhei ${xpTexto}`);
+        }
+        if (levelName) {
+            extras.push(`Alcancei o nível ${levelName}`);
+        }
+        if (achievementsUnlocked) {
+            extras.push(`Desbloqueei ${achievementsUnlocked} conquista${achievementsUnlocked === 1 ? '' : 's'}`);
+        }
+
+        const extrasMensagem = extras.length ? ` ${extras.join(' e ')}.` : '';
+
+        return `${baseMensagem}${extrasMensagem} Vamos estudar juntos?`;
     }
 
     _clearShareFeedback() {

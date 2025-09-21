@@ -516,8 +516,10 @@ class QuizViewSet(viewsets.ViewSet):
                 'total_acertos': sessao_quiz.total_acertos,
                 'total_erros': sessao_quiz.total_erros,
                 'xp_final': sessao_quiz.xp_total_sessao,
-                'sequencia_final': sessao_quiz.melhor_sequencia_acertos,
+                'sequencia_final': sessao_quiz.sequencia_acertos_atual,
+                'melhor_sequencia': sessao_quiz.melhor_sequencia_acertos,
                 'conquistas_desbloqueadas': gamification_result.conquistas_desbloqueadas,
+                'gamificacao': gamification_result.snapshot,
             })
         except SessoesQuizUsuario.DoesNotExist:
             return Response(

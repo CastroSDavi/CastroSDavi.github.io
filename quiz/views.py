@@ -349,6 +349,12 @@ def _build_account_profile_summary(user: User):
     completion_percentage = round((completed_fields / total_profile_fields) * 100) if total_profile_fields else 100
     missing_fields = [label for label, filled in profile_fields_status.items() if not filled]
 
+    gamification_service = GamificationService()
+    gamification_snapshot = gamification_service.get_profile_snapshot(
+        user,
+        include_catalog=True,
+    )
+
     return {
         'display_name': display_name,
         'initials': initials,
@@ -377,6 +383,7 @@ def _build_account_profile_summary(user: User):
             'missing_fields': missing_fields,
         },
         'last_session': last_session_info,
+        'gamification': gamification_snapshot,
     }
 
 
@@ -1075,7 +1082,11 @@ def end_quiz_session_view(request):
         stats.tempo_estudo_segundos_dia += tempo_total_segundos_frontend
         stats.save()
 
-        gamification_service.apply_session_result(request.user, sessao_quiz, score_result)
+        gamification_result = gamification_service.apply_session_result(
+            request.user,
+            sessao_quiz,
+            score_result,
+        )
 
         return JsonResponse({
             'status': 'success', 'message': 'Sessão finalizada com sucesso.',
@@ -1083,7 +1094,10 @@ def end_quiz_session_view(request):
             'total_acertos': sessao_quiz.total_acertos,
             'total_erros': sessao_quiz.total_erros,
             'xp_final': sessao_quiz.xp_total_sessao,
-            'sequencia_final': sessao_quiz.melhor_sequencia_acertos
+            'sequencia_final': sessao_quiz.sequencia_acertos_atual,
+            'melhor_sequencia': sessao_quiz.melhor_sequencia_acertos,
+            'conquistas_desbloqueadas': gamification_result.conquistas_desbloqueadas,
+            'gamificacao': gamification_result.snapshot,
         })
     except SessoesQuizUsuario.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Sessão de quiz inválida ou não pertence ao usuário.'}, status=403)
@@ -1183,8 +1197,11 @@ def api_resume_quiz_session_view(request):
             'respostas_dadas': respostas_dadas_map,
             'indice_ultima_pergunta_vista': sessao_ativa.indice_ultima_pergunta_vista,
             'pontuacao_atual': sessao_ativa.pontuacao_final,
+            'xp_atual': sessao_ativa.xp_total_sessao,
             'total_acertos_atual': sessao_ativa.total_acertos,
             'total_erros_atual': sessao_ativa.total_erros,
+            'sequencia_atual': sessao_ativa.sequencia_acertos_atual,
+            'melhor_sequencia': sessao_ativa.melhor_sequencia_acertos,
             'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(),
         })
 

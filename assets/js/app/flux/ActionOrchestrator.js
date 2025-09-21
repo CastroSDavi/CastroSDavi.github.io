@@ -122,7 +122,13 @@ export default class ActionOrchestrator {
             quizActions.updateUserStats(
                 resumableSession.pontuacao_atual,
                 resumableSession.total_acertos_atual,
-                resumableSession.total_erros_atual
+                resumableSession.total_erros_atual,
+                {
+                    xp: resumableSession.xp_atual ?? 0,
+                    currentStreak: resumableSession.sequencia_atual ?? 0,
+                    bestStreak: resumableSession.melhor_sequencia ?? 0,
+                    multiplier: resumableSession.multiplicador_atual ?? 1,
+                }
             )
         );
         
@@ -262,7 +268,9 @@ export default class ActionOrchestrator {
     }
 
     async answerQuestion(selectedOptionId) {
-        const state = this.store.getState().quiz;
+        const rootState = this.store.getState();
+        const state = rootState.quiz;
+        const userState = rootState.user || {};
         const question = state.currentQuestionsSet[state.currentQuestionIndex];
 
         if (!question || question.respostaDadaId !== undefined) return;
@@ -288,7 +296,15 @@ export default class ActionOrchestrator {
                 quizActions.updateUserStats(
                     response.pontuacao_sessao,
                     response.total_acertos_sessao,
-                    response.total_erros_sessao
+                    response.total_erros_sessao,
+                    {
+                        xp: response.xp_sessao ?? userState.xp ?? 0,
+                        currentStreak: response.sequencia_atual ?? userState.currentStreak ?? 0,
+                        bestStreak: response.melhor_sequencia_sessao ?? userState.bestStreak ?? 0,
+                        multiplier: typeof response.multiplicador_atual === 'number'
+                            ? response.multiplicador_atual
+                            : userState.multiplier ?? 1,
+                    }
                 )
             );
         } catch (error) {
@@ -352,12 +368,21 @@ export default class ActionOrchestrator {
                 session_id: sessionId,
                 tempo_total_segundos: state.timer.seconds,
             });
-            
+
             this.store.dispatch(
                 quizActions.updateUserStats(
                     responseData.pontuacao_final,
-                    responseData.total_acertos, 
-                    responseData.total_erros
+                    responseData.total_acertos,
+                    responseData.total_erros,
+                    {
+                        xp: responseData.xp_final ?? state.user?.xp ?? 0,
+                        currentStreak: responseData.sequencia_final ?? 0,
+                        bestStreak: responseData.melhor_sequencia ?? state.user?.bestStreak ?? 0,
+                        multiplier: 1,
+                        achievementsUnlocked: responseData.conquistas_desbloqueadas ?? 0,
+                        recentAchievements: responseData.gamificacao?.achievements?.newly_unlocked || [],
+                        gamification: responseData.gamificacao || state.user?.gamification || null,
+                    }
                 )
             );
         } catch (error) {

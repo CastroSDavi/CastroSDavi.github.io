@@ -688,7 +688,6 @@
     }
 
     .profile-overview__aside {
-        flex-direction: column;
         align-items: stretch;
     }
 

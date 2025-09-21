@@ -159,3 +159,38 @@
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
 }
+
+:root[data-theme='dark'] {
+    --color-gray-100: #0f172a;
+    --color-gray-200: #111c2f;
+    --color-gray-300: #1e293b;
+    --color-gray-400: #273449;
+    --color-gray-500: #2f3e55;
+    --color-gray-600: #3f4d67;
+    --color-gray-700: #94a3b8;
+    --color-gray-800: #cbd5f5;
+    --color-gray-900: #e2e8f0;
+
+    --color-gray-100-rgb: 15, 23, 42;
+    --color-gray-200-rgb: 17, 28, 47;
+    --color-gray-300-rgb: 30, 41, 59;
+    --color-gray-400-rgb: 39, 52, 73;
+    --color-gray-500-rgb: 47, 62, 85;
+    --color-gray-900-rgb: 226, 232, 240;
+
+    --color-white: #1e293b;
+    --color-white-rgb: 30, 41, 59;
+
+    --color-primary-light: #13213f;
+    --color-primary-light-rgb: 19, 33, 63;
+
+    --color-text-primary: #e2e8f0;
+    --color-text-secondary: #cbd5f5;
+    --color-text-muted: #94a3b8;
+
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 8px 18px rgba(0, 0, 0, 0.55);
+    --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.6);
+}

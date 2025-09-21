@@ -3,7 +3,7 @@ import json
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
 from datetime import timedelta  # Mantido, pode ser útil
@@ -12,7 +12,7 @@ from django.db.models import (
     Max,
 )
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from collections import defaultdict
 
@@ -22,13 +22,15 @@ from .models import (
     QuestaoFavorita,
     QuizDefinicao,  # NOVO MODELO
     QuizDefinicaoPergunta,  # NOVO MODELO
-    ConfiguracoesGeraisQuiz  # NOVO MODELO
+    ConfiguracoesGeraisQuiz,  # NOVO MODELO
+    UserPreferences,
 )
 from .forms import (
     CustomUserCreationForm,
     UserUpdateForm,
     AccountDeleteForm,
-    CustomPasswordChangeForm
+    CustomPasswordChangeForm,
+    UserPreferencesForm,
 )
 
 from .services.quiz_service import QuizDataService
@@ -117,6 +119,24 @@ def get_or_create_daily_stats(user: User):
     #     # Lógica para quando um novo dia de estatísticas começa para o usuário
     #     pass
     return stats
+
+
+def _get_theme_options_metadata():
+    """Retorna os metadados utilizados para renderizar as opções de tema."""
+    return [
+        {
+            'value': UserPreferences.ThemePreference.LIGHT,
+            'label': 'Claro',
+            'icon': 'light_mode',
+            'description': 'Visual equilibrado e iluminado para longas sessões de estudo.',
+        },
+        {
+            'value': UserPreferences.ThemePreference.DARK,
+            'label': 'Escuro',
+            'icon': 'dark_mode',
+            'description': 'Tons escuros que reduzem o brilho em ambientes com pouca luz.',
+        },
+    ]
 
 
 def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str = "data_estatistica"):
@@ -527,13 +547,20 @@ def register_view(request):
 def account_view(request):
     user_sessions = SessoesQuizUsuario.objects.filter(
         id_usuario=request.user).order_by('-data_inicio')[:10]
+    user_preferences, _ = UserPreferences.objects.get_or_create(user=request.user)
     update_form = UserUpdateForm(instance=request.user)
     delete_form = AccountDeleteForm(user=request.user)
+    preferences_form = UserPreferencesForm(instance=user_preferences)
+    selected_theme = preferences_form['theme_preference'].value() or user_preferences.theme_preference
     context = {
         'page_title': 'MedQuiz - Minha Conta',
         'user_sessions': user_sessions,
         'update_form': update_form,
         'delete_form': delete_form,
+        'preferences_form': preferences_form,
+        'user_preferences': user_preferences,
+        'theme_options': _get_theme_options_metadata(),
+        'selected_theme': selected_theme,
         'profile_summary': _build_account_profile_summary(request.user),
     }
     return render(request, 'quiz/account_page.html', context)
@@ -551,6 +578,9 @@ def update_profile_view(request):
             user_sessions = SessoesQuizUsuario.objects.filter(
                 id_usuario=request.user).order_by('-data_inicio')[:10]
             delete_form = AccountDeleteForm(user=request.user)
+            user_preferences, _ = UserPreferences.objects.get_or_create(user=request.user)
+            preferences_form = UserPreferencesForm(instance=user_preferences)
+            selected_theme = preferences_form['theme_preference'].value() or user_preferences.theme_preference
             for field, errors_list in form.errors.items():
                 field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
                 for error in errors_list:
@@ -562,11 +592,58 @@ def update_profile_view(request):
             context = {
                 'page_title': 'MedQuiz - Minha Conta', 'user_sessions': user_sessions,
                 'update_form': form, 'delete_form': delete_form,
+                'preferences_form': preferences_form,
+                'user_preferences': user_preferences,
+                'theme_options': _get_theme_options_metadata(),
+                'selected_theme': selected_theme,
                 'active_tab_on_error': 'security-content'
             }
             context['profile_summary'] = _build_account_profile_summary(request.user)
             return render(request, 'quiz/account_page.html', context)
     return redirect('quiz:account')
+
+
+@login_required
+@require_POST
+def update_preferences_view(request):
+    preferences, _ = UserPreferences.objects.get_or_create(user=request.user)
+    form = UserPreferencesForm(request.POST, instance=preferences)
+
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'Suas preferências foram atualizadas com sucesso!')
+        redirect_url = f"{reverse('quiz:account')}#preferences"
+        return HttpResponseRedirect(redirect_url)
+
+    user_sessions = SessoesQuizUsuario.objects.filter(
+        id_usuario=request.user).order_by('-data_inicio')[:10]
+    update_form = UserUpdateForm(instance=request.user)
+    delete_form = AccountDeleteForm(user=request.user)
+    selected_theme = form['theme_preference'].value() or preferences.theme_preference
+
+    for field, errors_list in form.errors.items():
+        field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
+        for error in errors_list:
+            messages.error(
+                request, f"{field_label if field_label else 'Preferências'}: {error}".strip(': '))
+
+    if not form.errors:
+        messages.error(
+            request, 'Não foi possível atualizar suas preferências. Verifique os dados e tente novamente.')
+
+    context = {
+        'page_title': 'MedQuiz - Minha Conta',
+        'user_sessions': user_sessions,
+        'update_form': update_form,
+        'delete_form': delete_form,
+        'preferences_form': form,
+        'user_preferences': preferences,
+        'theme_options': _get_theme_options_metadata(),
+        'selected_theme': selected_theme,
+        'active_tab_on_error': 'preferences-content'
+    }
+    context['profile_summary'] = _build_account_profile_summary(request.user)
+    return render(request, 'quiz/account_page.html', context)
 
 
 @login_required
@@ -583,6 +660,9 @@ def delete_account_view(request):
         user_sessions = SessoesQuizUsuario.objects.filter(
             id_usuario=request.user).order_by('-data_inicio')[:10]
         update_form = UserUpdateForm(instance=request.user)
+        user_preferences, _ = UserPreferences.objects.get_or_create(user=request.user)
+        preferences_form = UserPreferencesForm(instance=user_preferences)
+        selected_theme = preferences_form['theme_preference'].value() or user_preferences.theme_preference
         for field, errors_list in form.errors.items():
             field_label = form.fields[field].label if field in form.fields and field != '__all__' else ''
             for error in errors_list:
@@ -597,6 +677,10 @@ def delete_account_view(request):
             'user_sessions': user_sessions,
             'update_form': update_form,
             'delete_form': form,
+            'preferences_form': preferences_form,
+            'user_preferences': user_preferences,
+            'theme_options': _get_theme_options_metadata(),
+            'selected_theme': selected_theme,
             'active_tab_on_error': 'security-content',
             'show_delete_account_modal_on_error': True
         }

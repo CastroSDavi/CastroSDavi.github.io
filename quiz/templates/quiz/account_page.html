@@ -637,36 +637,141 @@
 
             {# --- Seção: Preferências --- #}
             <div id="preferences-content" class="account-content__section">
-                 <div class="card card--conta-perfil">
-                    <h2 class="card__title">Preferências</h2>
-                    <div class="card__body">
-                        <p>Ajuste as configurações da sua conta e da plataforma.</p>
-                        <form class="profile-form">
-                            <div class="form-group">
-                                <label for="pref-theme" class="form-label">Tema da Interface:</label>
-                                <select id="pref-theme" name="theme_preference" class="form-control">
-                                    <option value="light">Claro</option>
-                                    <option value="dark" disabled>Escuro (em breve)</option>
-                                </select>
+                <div class="preferences-dashboard">
+                    <section class="card card--conta-perfil preferences-card preferences-card--overview">
+                        <div class="card__body">
+                            <div class="preferences-card__header">
+                                <h2 class="card__title" tabindex="-1">Preferências e experiência</h2>
+                                <p class="preferences-card__description">Personalize a plataforma de acordo com o seu ritmo de estudo e com as comunicações que deseja receber.</p>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Notificações por Email:</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="news" id="pref-notify-news" name="email_notifications" checked>
-                                    <label class="form-check-label" for="pref-notify-news">
-                                        Novidades e atualizações do MedQuiz
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="progress" id="pref-notify-progress" name="email_notifications">
-                                    <label class="form-check-label" for="pref-notify-progress">
-                                        Resumos semanais de progresso
-                                    </label>
-                                </div>
+                            <div class="preferences-summary-grid">
+                                <article class="preferences-summary-card" data-preferences-summary-item>
+                                    <span class="material-symbols-outlined preferences-summary-card__icon" aria-hidden="true">palette</span>
+                                    <div class="preferences-summary-card__content">
+                                        <span class="preferences-summary-card__label">Tema ativo</span>
+                                        <span class="preferences-summary-card__value">{{ user_preferences.get_theme_preference_display }}</span>
+                                        <span class="preferences-summary-card__hint">Atualizado em {{ user_preferences.updated_at|date:'d/m/Y \\à\\s H:i' }}</span>
+                                    </div>
+                                </article>
+                                <article class="preferences-summary-card" data-preferences-summary-item>
+                                    <span class="material-symbols-outlined preferences-summary-card__icon" aria-hidden="true">campaign</span>
+                                    <div class="preferences-summary-card__content">
+                                        <span class="preferences-summary-card__label">Novidades do MedQuiz</span>
+                                        <span class="preferences-summary-card__value">{% if user_preferences.receive_product_updates %}Ativadas{% else %}Desativadas{% endif %}</span>
+                                        <span class="preferences-summary-card__hint">{% if user_preferences.receive_product_updates %}Você receberá avisos sobre novos recursos e comunicados importantes.{% else %}Você optou por não receber comunicados gerais no momento.{% endif %}</span>
+                                    </div>
+                                </article>
+                                <article class="preferences-summary-card" data-preferences-summary-item>
+                                    <span class="material-symbols-outlined preferences-summary-card__icon" aria-hidden="true">insights</span>
+                                    <div class="preferences-summary-card__content">
+                                        <span class="preferences-summary-card__label">Resumos de progresso</span>
+                                        <span class="preferences-summary-card__value">{% if user_preferences.receive_progress_reports %}Ativados{% else %}Desativados{% endif %}</span>
+                                        <span class="preferences-summary-card__hint">{% if user_preferences.receive_progress_reports %}Você receberá relatórios com estatísticas e metas sugeridas.{% else %}Ative quando quiser acompanhar seus resultados por email.{% endif %}</span>
+                                    </div>
+                                </article>
                             </div>
-                            <button type="submit" class="button button--primary" style="margin-top: var(--spacing-md);">Salvar Preferências</button>
-                        </form>
-                    </div>
+                        </div>
+                    </section>
+
+                    <section class="card card--conta-perfil preferences-card preferences-card--form">
+                        <div class="card__body">
+                            <div class="preferences-card__header">
+                                <h3 class="preferences-card__title">Ajuste suas preferências</h3>
+                                <p class="preferences-card__description">Escolha o visual ideal para estudar e controle as comunicações que deseja receber do MedQuiz.</p>
+                            </div>
+
+                            {% if active_tab_on_error == 'preferences-content' and preferences_form.errors %}
+                                <div class="form-message form-message--error" role="alert">
+                                    <p><strong>Não foi possível salvar suas preferências:</strong></p>
+                                    {% for error in preferences_form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                    {% for field in preferences_form %}
+                                        {% for error in field.errors %}
+                                            <p><strong>{{ field.label }}:</strong> {{ error }}</p>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <form method="post" action="{% url 'quiz:update_preferences' %}" class="profile-form preferences-form">
+                                {% csrf_token %}
+                                <fieldset class="preferences-form__section">
+                                    <legend id="preferences-theme-label" class="preferences-form__legend">Aparência do painel</legend>
+                                    <p class="preferences-form__helper">Escolha o tema que melhor se adapta ao seu ambiente de estudos.</p>
+                                    <div class="preferences-theme-options" role="radiogroup" aria-labelledby="preferences-theme-label">
+                                        {% for option in theme_options %}
+                                            {% with input_id=preferences_form.theme_preference.id_for_label|add:'_'|add:option.value %}
+                                                <label class="preferences-theme-option{% if selected_theme == option.value %} is-selected{% endif %}" for="{{ input_id }}">
+                                                    <input type="radio"
+                                                           name="{{ preferences_form.theme_preference.name }}"
+                                                           value="{{ option.value }}"
+                                                           id="{{ input_id }}"
+                                                           class="preferences-theme-option__input"
+                                                           {% if selected_theme == option.value %}checked{% endif %}>
+                                                    <span class="material-symbols-outlined preferences-theme-option__icon" aria-hidden="true">{{ option.icon }}</span>
+                                                    <span class="preferences-theme-option__texts">
+                                                        <span class="preferences-theme-option__title">{{ option.label }}</span>
+                                                        <span class="preferences-theme-option__hint">{{ option.description }}</span>
+                                                    </span>
+                                                </label>
+                                            {% endwith %}
+                                        {% endfor %}
+                                    </div>
+                                    {% for error in preferences_form.theme_preference.errors %}
+                                        <small class="form-text-feedback is-invalid">{{ error }}</small>
+                                    {% endfor %}
+                                </fieldset>
+
+                                <fieldset class="preferences-form__section">
+                                    <legend class="preferences-form__legend">Notificações por email</legend>
+                                    <p class="preferences-form__helper">Personalize os avisos enviados para sua caixa de entrada.</p>
+                                    <div class="preferences-toggle-group">
+                                        <label class="preferences-toggle" for="{{ preferences_form.receive_product_updates.id_for_label }}">
+                                            {{ preferences_form.receive_product_updates }}
+                                            <span class="preferences-toggle__control" aria-hidden="true">
+                                                <span class="preferences-toggle__track"></span>
+                                                <span class="preferences-toggle__thumb"></span>
+                                            </span>
+                                            <span class="preferences-toggle__content">
+                                                <span class="preferences-toggle__title">{{ preferences_form.receive_product_updates.label }}</span>
+                                                <span class="preferences-toggle__description">{{ preferences_form.receive_product_updates.help_text }}</span>
+                                            </span>
+                                        </label>
+                                        {% for error in preferences_form.receive_product_updates.errors %}
+                                            <small class="form-text-feedback is-invalid">{{ error }}</small>
+                                        {% endfor %}
+
+                                        <label class="preferences-toggle" for="{{ preferences_form.receive_progress_reports.id_for_label }}">
+                                            {{ preferences_form.receive_progress_reports }}
+                                            <span class="preferences-toggle__control" aria-hidden="true">
+                                                <span class="preferences-toggle__track"></span>
+                                                <span class="preferences-toggle__thumb"></span>
+                                            </span>
+                                            <span class="preferences-toggle__content">
+                                                <span class="preferences-toggle__title">{{ preferences_form.receive_progress_reports.label }}</span>
+                                                <span class="preferences-toggle__description">{{ preferences_form.receive_progress_reports.help_text }}</span>
+                                            </span>
+                                        </label>
+                                        {% for error in preferences_form.receive_progress_reports.errors %}
+                                            <small class="form-text-feedback is-invalid">{{ error }}</small>
+                                        {% endfor %}
+                                    </div>
+                                </fieldset>
+
+                                <div class="preferences-form__actions">
+                                    <button type="submit" class="button button--primary">
+                                        <span class="material-symbols-outlined button__icon" aria-hidden="true">save</span>
+                                        Salvar preferências
+                                    </button>
+                                    <button type="button" class="button button--text" data-open-account-tab="profile-info-content">
+                                        <span class="material-symbols-outlined button__icon" aria-hidden="true">account_circle</span>
+                                        Ver dados do perfil
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
                 </div>
             </div>
         </main>

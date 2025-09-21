@@ -397,6 +397,56 @@ class QuizDefinicaoPergunta(models.Model):
         return f"'{self.pergunta.texto_pergunta[:30]}...' no quiz '{self.quiz_definicao.nome_quiz}' (Ordem: {self.ordem})"
 
 
+
+class UserPreferences(models.Model):
+    """Armazena as preferências do usuário relacionadas à experiência na plataforma."""
+
+    class ThemePreference(models.TextChoices):
+        LIGHT = 'light', 'Claro'
+        DARK = 'dark', 'Escuro'
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='preferences',
+        verbose_name='Usuário',
+    )
+    theme_preference = models.CharField(
+        max_length=20,
+        choices=ThemePreference.choices,
+        default=ThemePreference.LIGHT,
+        verbose_name='Tema da Interface',
+        help_text='Define a aparência padrão utilizada na interface.',
+    )
+    receive_product_updates = models.BooleanField(
+        default=True,
+        verbose_name='Receber novidades do MedQuiz',
+        help_text='Recebe emails com atualizações importantes e comunicados.',
+    )
+    receive_progress_reports = models.BooleanField(
+        default=False,
+        verbose_name='Receber resumos de progresso',
+        help_text='Recebe um resumo periódico com seus indicadores de estudo.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+
+    class Meta:
+        verbose_name = 'Preferência do Usuário'
+        verbose_name_plural = 'Preferências dos Usuários'
+
+    def __str__(self):
+        return f"Preferências de {self.user.get_username()}"
+
+    @property
+    def email_preferences(self):
+        """Retorna um dicionário resumindo as preferências de email."""
+        return {
+            'product_updates': self.receive_product_updates,
+            'progress_reports': self.receive_progress_reports,
+        }
+
+
 # --- Modelos de Interação do Usuário e Estatísticas ---
 
 class SessoesQuizUsuario(models.Model):

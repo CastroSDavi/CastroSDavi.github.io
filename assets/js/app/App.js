@@ -30,6 +30,8 @@ export default class App {
             this.quizUI,
             this.apiService
         );
+
+        this._applyUserThemePreference();
     }
 
     async initialize() {
@@ -61,6 +63,24 @@ export default class App {
         } catch (error) {
             console.error("App.js: initialize - Erro crítico durante a inicialização:", error);
             this.handleLoadError(`Erro crítico ao inicializar: ${error.message}. Verifique o console para mais detalhes.`);
+        }
+    }
+
+    _applyUserThemePreference() {
+        if (typeof document === 'undefined') {
+            return;
+        }
+
+        const { body, documentElement } = document;
+        if (!body || !documentElement) {
+            return;
+        }
+
+        const theme = body.dataset?.userTheme;
+        if (theme && theme !== 'light') {
+            documentElement.setAttribute('data-theme', theme);
+        } else {
+            documentElement.removeAttribute('data-theme');
         }
     }
     

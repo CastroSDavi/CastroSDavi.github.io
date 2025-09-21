@@ -29,6 +29,7 @@ urlpatterns = [
 
     # Novas URLs para gerenciamento de conta (já existentes no seu arquivo)
     path('account/update-profile/', views.update_profile_view, name='update_profile'),
+    path('account/update-preferences/', views.update_preferences_view, name='update_preferences'),
     path('account/delete-account/', views.delete_account_view, name='delete_account'),
 
     path('', include(router.urls)),

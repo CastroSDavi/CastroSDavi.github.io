@@ -161,36 +161,54 @@
 }
 
 :root[data-theme='dark'] {
+    --color-primary-dark: #3c82f6;
+    --color-primary-dark-rgb: 60, 130, 246;
+
+    --color-primary-medium: #7aa8ff;
+    --color-primary-medium-rgb: 122, 168, 255;
+
+    --color-primary-light: #22365c;
+    --color-primary-light-rgb: 34, 54, 92;
+
+    --color-secondary-green: #4bcfb5;
+    --color-secondary-green-rgb: 75, 207, 181;
+
+    --color-secondary-green-light: #7fe2c8;
+    --color-secondary-green-light-rgb: 127, 226, 200;
+
+    --color-accent-red: #ff7b8a;
+    --color-accent-red-rgb: 255, 123, 138;
+
     --color-gray-100: #0f172a;
-    --color-gray-200: #111c2f;
-    --color-gray-300: #1e293b;
-    --color-gray-400: #273449;
-    --color-gray-500: #2f3e55;
-    --color-gray-600: #3f4d67;
-    --color-gray-700: #94a3b8;
-    --color-gray-800: #cbd5f5;
-    --color-gray-900: #e2e8f0;
+    --color-gray-200: #121d33;
+    --color-gray-300: #16243f;
+    --color-gray-400: #1c2d4f;
+    --color-gray-500: #243861;
+    --color-gray-600: #2e4472;
+    --color-gray-700: #90b4ff;
+    --color-gray-800: #ced8ff;
+    --color-gray-900: #eef2ff;
 
     --color-gray-100-rgb: 15, 23, 42;
-    --color-gray-200-rgb: 17, 28, 47;
-    --color-gray-300-rgb: 30, 41, 59;
-    --color-gray-400-rgb: 39, 52, 73;
-    --color-gray-500-rgb: 47, 62, 85;
-    --color-gray-900-rgb: 226, 232, 240;
+    --color-gray-200-rgb: 18, 29, 51;
+    --color-gray-300-rgb: 22, 36, 63;
+    --color-gray-400-rgb: 28, 45, 79;
+    --color-gray-500-rgb: 36, 56, 97;
+    --color-gray-900-rgb: 238, 242, 255;
 
-    --color-white: #1e293b;
-    --color-white-rgb: 30, 41, 59;
+    --color-white: #121d33;
+    --color-white-rgb: 18, 29, 51;
 
-    --color-primary-light: #13213f;
-    --color-primary-light-rgb: 19, 33, 63;
+    --color-text-primary: #f5f8ff;
+    --color-text-secondary: #d3ddff;
+    --color-text-muted: #9fb3d9;
+    --color-text-link: #8ab9ff;
+    --color-text-link-hover: #b7d4ff;
 
-    --color-text-primary: #e2e8f0;
-    --color-text-secondary: #cbd5f5;
-    --color-text-muted: #94a3b8;
-
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.45);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 8px 18px rgba(0, 0, 0, 0.55);
-    --shadow-xl: 0 12px 28px rgba(0, 0, 0, 0.6);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.32);
+    --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.38);
+    --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.45);
+    --shadow-xl: 0 24px 48px rgba(0, 0, 0, 0.5);
 }
+

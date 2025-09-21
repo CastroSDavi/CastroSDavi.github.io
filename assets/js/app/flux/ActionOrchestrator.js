@@ -380,7 +380,7 @@ export default class ActionOrchestrator {
     async toggleFavoriteCurrentQuestion() {
         const state = this.store.getState().quiz;
         const question = state.currentQuestionsSet[state.currentQuestionIndex];
-        
+
         if (!question) {
              console.warn("ActionOrchestrator: Tentativa de favoritar sem questão atual.");
              return;
@@ -414,6 +414,61 @@ export default class ActionOrchestrator {
                 btnFav.removeAttribute('aria-disabled');
             }
         }
+    }
+
+    async toggleFavoriteFromAccountPage(questionId) {
+        const normalizedId = Number.parseInt(questionId, 10);
+        if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+            console.warn('ActionOrchestrator: ID inválido recebido para remover favorito.', questionId);
+            return false;
+        }
+
+        if (!this.ui.userIsAuthenticated) {
+            this.ui.showWarning('Faça login para gerenciar seus favoritos.', 'info');
+            return false;
+        }
+
+        try {
+            const response = await this.apiService.toggleFavoriteStatus(normalizedId);
+            if (response && response.status === 'success') {
+                const isStillFavorited = (() => {
+                    if (typeof response.is_favorited === 'string') {
+                        return response.is_favorited.toLowerCase() === 'true';
+                    }
+                    return Boolean(response.is_favorited);
+                })();
+
+                if (isStillFavorited) {
+                    const warningMessage = typeof response.message === 'string'
+                        ? response.message
+                        : 'Não foi possível remover esta questão dos favoritos.';
+                    const warningType = typeof response.message_type === 'string'
+                        ? response.message_type
+                        : 'warning';
+                    this.ui.showWarning(warningMessage, warningType);
+                    return false;
+                }
+
+                this.store.dispatch(quizActions.removeFavoriteFromList(normalizedId));
+                const successMessage = typeof response.message === 'string'
+                    ? response.message
+                    : 'Questão removida dos favoritos.';
+                const successType = typeof response.message_type === 'string'
+                    ? response.message_type
+                    : 'success';
+                this.ui.showWarning(successMessage, successType);
+                return true;
+            }
+
+            this.ui.showWarning(
+                getFriendlyErrorMessage({ data: response }, 'Não foi possível atualizar seus favoritos.'),
+                'error'
+            );
+        } catch (error) {
+            this.ui.showWarning(getFriendlyErrorMessage(error, 'Erro ao atualizar seus favoritos.'), 'error');
+        }
+
+        return false;
     }
 
     async loadAndDisplayFavoriteQuestionsForAccountPage() {

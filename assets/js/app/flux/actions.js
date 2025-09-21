@@ -26,6 +26,7 @@ export const ActionTypes = {
     LOAD_FAVORITES_REQUEST: 'LOAD_FAVORITES_REQUEST',
     LOAD_FAVORITES_SUCCESS: 'LOAD_FAVORITES_SUCCESS',
     LOAD_FAVORITES_FAILURE: 'LOAD_FAVORITES_FAILURE',
+    REMOVE_FAVORITE_FROM_LIST: 'REMOVE_FAVORITE_FROM_LIST',
 
     // Ações de Dados Gerais
     SET_INITIAL_DATA: 'SET_INITIAL_DATA',
@@ -108,6 +109,11 @@ export const quizActions = {
     loadFavoritesFailure: (error) => ({
         type: ActionTypes.LOAD_FAVORITES_FAILURE,
         payload: { error }
+    }),
+
+    removeFavoriteFromList: (questionId) => ({
+        type: ActionTypes.REMOVE_FAVORITE_FROM_LIST,
+        payload: { questionId }
     }),
 
     fetchFilteredCountRequest: (filters) => ({

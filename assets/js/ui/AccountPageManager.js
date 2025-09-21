@@ -25,6 +25,18 @@ export default class AccountPageManager {
             deleteAccountForm: this.quizUI.elements.deleteAccountForm,
             passwordInputDelete: this.quizUI.elements.passwordInputDeleteAccount,
         };
+        this.preferencesElements = {
+            section: document.getElementById('preferences-content'),
+            summaryCards: [],
+            themeOptionLabels: [],
+            summaryValueMap: {},
+            summaryHintMap: {},
+            summaryCardMap: {},
+            initialState: {
+                theme: '',
+                toggles: {},
+            },
+        };
         this.historyElements = {
             contentSection: document.getElementById('quiz-history-content'),
             loadingMessage: document.getElementById('quiz-history-loading'),
@@ -52,6 +64,7 @@ export default class AccountPageManager {
         // --- FIM DA CORREÇÃO ---
         this.defaultMenuTargetId = 'profile-info-content';
         this.securityCopyFeedbackTimeout = null;
+        this.preferencesInteractionsInitialized = false;
         this.historyState = {
             initialized: false,
             isLoading: false,
@@ -139,6 +152,8 @@ export default class AccountPageManager {
             }
         });
 
+        this._setupPreferencesInteractions();
+
         this.elements.accountSectionPage?.addEventListener('click', (event) => {
             const securityActionTrigger = event.target.closest('[data-security-action]');
             if (securityActionTrigger) {
@@ -167,6 +182,266 @@ export default class AccountPageManager {
                 this._updateUIVisibility(true);
             }
         });
+    }
+
+    _setupPreferencesInteractions() {
+        if (this.preferencesInteractionsInitialized) {
+            return;
+        }
+
+        const { section } = this.preferencesElements;
+        if (!section) {
+            return;
+        }
+
+        const themeOptionLabels = Array.from(section.querySelectorAll('.preferences-theme-option'));
+        const summaryCards = Array.from(section.querySelectorAll('[data-preferences-summary-item]'));
+        const summaryValueNodes = Array.from(section.querySelectorAll('[data-preferences-summary-value]'));
+        const summaryHintNodes = Array.from(section.querySelectorAll('[data-preferences-summary-hint]'));
+        const toggleWrappers = Array.from(section.querySelectorAll('.preferences-toggle'));
+
+        const summaryValueMap = {};
+        summaryValueNodes.forEach((node) => {
+            const key = node.dataset.preferencesSummaryValue;
+            if (!key) {
+                return;
+            }
+
+            summaryValueMap[key] = node;
+            if (!node.dataset.defaultValue) {
+                node.dataset.defaultValue = node.textContent.trim();
+            }
+        });
+
+        const summaryHintMap = {};
+        summaryHintNodes.forEach((node) => {
+            const key = node.dataset.preferencesSummaryHint;
+            if (!key) {
+                return;
+            }
+
+            summaryHintMap[key] = node;
+            if (!node.dataset.defaultHint) {
+                node.dataset.defaultHint = node.textContent.trim();
+            }
+        });
+
+        const summaryCardMap = {};
+        summaryCards.forEach((card) => {
+            const key = card.dataset.preferencesSummaryKey;
+            if (key) {
+                summaryCardMap[key] = card;
+            }
+        });
+
+        const pendingHintMessage = section.dataset.preferencesPendingHint
+            || 'Lembre-se de salvar suas alterações para aplicá-las.';
+
+        const summaryDefaults = new Map();
+        Object.entries(summaryValueMap).forEach(([key, node]) => {
+            const entry = summaryDefaults.get(key) || {};
+            entry.value = node.textContent.trim();
+            summaryDefaults.set(key, entry);
+        });
+        Object.entries(summaryHintMap).forEach(([key, node]) => {
+            const entry = summaryDefaults.get(key) || {};
+            entry.hint = node.textContent.trim();
+            summaryDefaults.set(key, entry);
+        });
+
+        const themeInitialInput = section.querySelector('.preferences-theme-option__input:checked');
+        const themeInitialValue = themeInitialInput?.value || '';
+        const toggleInitialStates = {};
+
+        toggleWrappers.forEach((wrapper) => {
+            const summaryKey = wrapper.dataset.summaryKey;
+            const input = wrapper.querySelector('.preferences-toggle__input');
+            if (!summaryKey || !input) {
+                return;
+            }
+
+            toggleInitialStates[summaryKey] = Boolean(input.checked);
+        });
+
+        const updateSummaryCardPendingState = (key, isPending) => {
+            const card = summaryCardMap[key];
+            if (card) {
+                card.classList.toggle('is-pending-save', Boolean(isPending));
+            }
+        };
+
+        const updateThemeSummaryCard = () => {
+            const summaryValueNode = summaryValueMap.theme;
+            const summaryHintNode = summaryHintMap.theme;
+            const selectedInput = section.querySelector('.preferences-theme-option__input:checked');
+            const selectedLabel = selectedInput?.closest('.preferences-theme-option');
+            const summaryLabel = selectedLabel?.dataset.summaryLabel
+                || selectedLabel?.querySelector('.preferences-theme-option__title')?.textContent?.trim()
+                || summaryDefaults.get('theme')?.value
+                || '';
+
+            if (summaryValueNode && summaryLabel) {
+                summaryValueNode.textContent = summaryLabel;
+            }
+
+            const isDirty = Boolean(selectedInput?.value) && selectedInput.value !== themeInitialValue;
+            if (summaryHintNode) {
+                if (isDirty) {
+                    summaryHintNode.textContent = pendingHintMessage;
+                } else {
+                    const defaultHint = summaryDefaults.get('theme')?.hint;
+                    if (defaultHint) {
+                        summaryHintNode.textContent = defaultHint;
+                    }
+                }
+            }
+
+            updateSummaryCardPendingState('theme', isDirty);
+        };
+
+        const updateThemeSelectionState = () => {
+            themeOptionLabels.forEach((label) => {
+                const input = label.querySelector('.preferences-theme-option__input');
+                label.classList.toggle('is-selected', Boolean(input?.checked));
+            });
+
+            updateThemeSummaryCard();
+        };
+
+        if (themeOptionLabels.length > 0) {
+            themeOptionLabels.forEach((label) => {
+                const input = label.querySelector('.preferences-theme-option__input');
+                if (!input) {
+                    return;
+                }
+
+                input.addEventListener('change', updateThemeSelectionState);
+            });
+
+            updateThemeSelectionState();
+        } else {
+            updateThemeSummaryCard();
+        }
+
+        const updateToggleSummary = (wrapper) => {
+            const summaryKey = wrapper.dataset.summaryKey;
+            const input = wrapper.querySelector('.preferences-toggle__input');
+            if (!summaryKey || !input) {
+                return;
+            }
+
+            const summaryValueNode = summaryValueMap[summaryKey];
+            const summaryHintNode = summaryHintMap[summaryKey];
+            const defaults = summaryDefaults.get(summaryKey) || {};
+
+            const onLabel = wrapper.dataset.summaryOnLabel
+                || summaryValueNode?.dataset.valueOn
+                || defaults.value
+                || '';
+            const offLabel = wrapper.dataset.summaryOffLabel
+                || summaryValueNode?.dataset.valueOff
+                || defaults.value
+                || '';
+            const onHint = wrapper.dataset.summaryOnHint
+                || summaryHintNode?.dataset.hintOn
+                || defaults.hint
+                || '';
+            const offHint = wrapper.dataset.summaryOffHint
+                || summaryHintNode?.dataset.hintOff
+                || defaults.hint
+                || '';
+
+            const isChecked = Boolean(input.checked);
+            const initialState = Object.prototype.hasOwnProperty.call(toggleInitialStates, summaryKey)
+                ? toggleInitialStates[summaryKey]
+                : isChecked;
+            const isDirty = initialState !== isChecked;
+
+            if (summaryValueNode) {
+                summaryValueNode.textContent = isChecked ? onLabel : offLabel;
+            }
+
+            if (summaryHintNode) {
+                summaryHintNode.textContent = isDirty
+                    ? pendingHintMessage
+                    : (isChecked ? onHint : offHint);
+            }
+
+            updateSummaryCardPendingState(summaryKey, isDirty);
+        };
+
+        if (summaryCards.length > 0) {
+            summaryCards.forEach((card) => {
+                if (!card.hasAttribute('tabindex')) {
+                    card.setAttribute('tabindex', '0');
+                }
+
+                if (!card.hasAttribute('role')) {
+                    card.setAttribute('role', 'button');
+                }
+
+                card.addEventListener('click', () => {
+                    this._scrollToPreferencesForm();
+                });
+
+                card.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        this._scrollToPreferencesForm();
+                    }
+                });
+            });
+        }
+
+        toggleWrappers.forEach((wrapper) => {
+            const input = wrapper.querySelector('.preferences-toggle__input');
+            if (!input) {
+                return;
+            }
+
+            input.addEventListener('change', () => updateToggleSummary(wrapper));
+            updateToggleSummary(wrapper);
+        });
+
+        this.preferencesElements = {
+            section,
+            summaryCards,
+            themeOptionLabels,
+            summaryValueMap,
+            summaryHintMap,
+            summaryCardMap,
+            initialState: {
+                theme: themeInitialValue,
+                toggles: toggleInitialStates,
+            },
+        };
+
+        this.preferencesInteractionsInitialized = true;
+    }
+
+    _scrollToPreferencesForm() {
+        const form = this.preferencesElements.section?.querySelector('.preferences-form');
+        if (!form) {
+            return;
+        }
+
+        form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        const focusableSelector = 'input:not([type="hidden"]), select, textarea, button';
+        const focusTarget = form.querySelector(focusableSelector);
+        if (!focusTarget) {
+            return;
+        }
+
+        const focusElement = () => {
+            focusTarget.focus({ preventScroll: true });
+        };
+
+        if (typeof window.requestAnimationFrame === 'function') {
+            window.requestAnimationFrame(focusElement);
+        } else {
+            focusElement();
+        }
     }
 
     _handleSecurityAction(trigger) {

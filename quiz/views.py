@@ -121,10 +121,8 @@ def get_or_create_daily_stats(user: User):
         # no dicionário 'defaults'. Ex:
         # defaults={'algum_campo_obrigatorio': 0}
     )
-    # Se precisar fazer algo específico quando um novo registro de stats é criado:
-    # if created:
-    #     # Lógica para quando um novo dia de estatísticas começa para o usuário
-    #     pass
+    if StatisticsService.initialize_daily_streak(stats):
+        stats.save(update_fields=['sequencia_dias_quiz'])
     return stats
 
 

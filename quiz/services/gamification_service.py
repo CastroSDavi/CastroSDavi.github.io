@@ -6,10 +6,12 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from django.db import transaction
+from django.db.models import Count, Max
 
 from quiz.models import (
     Conquista,
     ConquistaUsuario,
+    EstatisticasDiariasUsuario,
     NivelGamificacao,
     PerfilGamificacaoUsuario,
     SessoesQuizUsuario,
@@ -39,6 +41,7 @@ class GamificationService:
         user,
         sessao: SessoesQuizUsuario,
         score_result: SessionScoreResult,
+        daily_stats: Optional[EstatisticasDiariasUsuario] = None,
     ) -> GamificationUpdateResult:
         profile = self.ensure_profile(user)
 
@@ -54,13 +57,19 @@ class GamificationService:
         profile.save(update_fields=fields_to_update)
         profile.atualizar_nivel()
 
-        conquistas_novas = self._unlock_achievements(profile, sessao, score_result)
+        conquistas_novas = self._unlock_achievements(
+            profile,
+            sessao,
+            score_result,
+            daily_stats=daily_stats,
+        )
 
         snapshot = self._serialize_profile(
             profile=profile,
             xp_ganho=score_result.total_xp,
             conquistas_novas=conquistas_novas,
             nivel_anterior=nivel_anterior,
+            daily_stats=daily_stats,
         )
 
         return GamificationUpdateResult(
@@ -79,12 +88,18 @@ class GamificationService:
 
         profile = self.ensure_profile(user)
         profile.atualizar_nivel()
+        daily_stats = (
+            EstatisticasDiariasUsuario.objects.filter(id_usuario=user)
+            .order_by('-data_estatistica')
+            .first()
+        )
         return self._serialize_profile(
             profile=profile,
             xp_ganho=0,
             conquistas_novas=None,
             nivel_anterior=None,
             include_catalog=include_catalog,
+            daily_stats=daily_stats,
         )
 
     def _unlock_achievements(
@@ -92,10 +107,38 @@ class GamificationService:
         profile: PerfilGamificacaoUsuario,
         sessao: SessoesQuizUsuario,
         score_result: SessionScoreResult,
+        daily_stats: Optional[EstatisticasDiariasUsuario] = None,
     ) -> List[ConquistaUsuario]:
         conquistas_disponiveis = Conquista.objects.all()
         ja_desbloqueadas = set(profile.conquistas.values_list('id', flat=True))
         a_criar: List[Dict[str, Any]] = []
+
+        daily_stat_reference = daily_stats
+        if not daily_stat_reference:
+            daily_stat_reference = (
+                EstatisticasDiariasUsuario.objects.filter(id_usuario=profile.user)
+                .order_by('-data_estatistica')
+                .first()
+            )
+
+        perguntas_dia = daily_stat_reference.perguntas_respondidas_dia if daily_stat_reference else 0
+        xp_diario_val = daily_stat_reference.xp_ganho_dia if daily_stat_reference else 0
+
+        if daily_stat_reference and perguntas_dia > 0:
+            daily_streak = daily_stat_reference.sequencia_dias_quiz or 0
+        else:
+            daily_streak = 0
+
+        sessions_qs = SessoesQuizUsuario.objects.filter(
+            id_usuario=profile.user,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+        )
+        session_metrics = sessions_qs.aggregate(
+            max_score=Max('pontuacao_final'),
+            max_correct=Max('total_acertos'),
+            total_sessions=Count('id'),
+        )
+        total_sessions_completed = session_metrics.get('total_sessions') or 0
 
         for conquista in conquistas_disponiveis:
             if conquista.id in ja_desbloqueadas:
@@ -120,6 +163,14 @@ class GamificationService:
                 a_criar.append({'conquista': conquista, 'metadata': {'pontuacao': sessao.pontuacao_final}})
             elif tipo == 'respostas_corretas_sessao' and score_result.total_correct >= valor_num:
                 a_criar.append({'conquista': conquista, 'metadata': {'acertos': score_result.total_correct}})
+            elif tipo == 'dias_consecutivos' and daily_streak >= valor_num:
+                a_criar.append({'conquista': conquista, 'metadata': {'dias_consecutivos': daily_streak}})
+            elif tipo == 'quizzes_completos' and total_sessions_completed >= valor_num:
+                a_criar.append({'conquista': conquista, 'metadata': {'quizzes_completos': total_sessions_completed}})
+            elif tipo == 'perguntas_diarias' and perguntas_dia >= valor_num:
+                a_criar.append({'conquista': conquista, 'metadata': {'perguntas_diarias': perguntas_dia}})
+            elif tipo == 'xp_diario' and xp_diario_val >= valor_num:
+                a_criar.append({'conquista': conquista, 'metadata': {'xp_diario': xp_diario_val}})
 
         criadas: List[ConquistaUsuario] = []
         for payload in a_criar:
@@ -142,10 +193,45 @@ class GamificationService:
         conquistas_novas: Optional[List[ConquistaUsuario]] = None,
         nivel_anterior: Optional[NivelGamificacao] = None,
         include_catalog: bool = False,
+        daily_stats: Optional[EstatisticasDiariasUsuario] = None,
     ) -> Dict[str, Any]:
         """Transforma o perfil em um payload amigável para o frontend."""
 
         xp_ganho_int = int(max(xp_ganho or 0, 0))
+
+        daily_stats_obj = daily_stats
+        if daily_stats_obj is None:
+            daily_stats_obj = (
+                EstatisticasDiariasUsuario.objects.filter(id_usuario=profile.user)
+                .order_by('-data_estatistica')
+                .first()
+            )
+
+        daily_engagement_payload = None
+        if daily_stats_obj:
+            daily_engagement_payload = {
+                'date': daily_stats_obj.data_estatistica.isoformat(),
+                'questions_today': daily_stats_obj.perguntas_respondidas_dia,
+                'correct_today': daily_stats_obj.acertos_dia,
+                'xp_today': daily_stats_obj.xp_ganho_dia,
+                'points_today': daily_stats_obj.pontos_dia,
+                'streak_days': daily_stats_obj.sequencia_dias_quiz,
+                'has_activity_today': daily_stats_obj.perguntas_respondidas_dia > 0,
+            }
+
+        daily_streak_value = 0
+        if daily_engagement_payload:
+            daily_streak_value = daily_engagement_payload.get('streak_days') or 0
+
+        sessions_qs = SessoesQuizUsuario.objects.filter(
+            id_usuario=profile.user,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+        )
+        session_metrics = sessions_qs.aggregate(
+            max_score=Max('pontuacao_final'),
+            max_correct=Max('total_acertos'),
+            total_sessions=Count('id'),
+        )
 
         conquistas_relacoes = list(
             profile.conquistas_usuarios.select_related('conquista').order_by('-data_conquista')
@@ -200,13 +286,32 @@ class GamificationService:
         conquistas_recentemente = [_serialize_relacao(rel) for rel in conquistas_novas]
         conquistas_recentes = [_serialize_relacao(rel) for rel in conquistas_relacoes[:3]]
 
-        catalogo_conquistas: Optional[List[Dict[str, Any]]] = None
-        if include_catalog:
-            relacoes_por_conquista = {rel.conquista_id: rel for rel in conquistas_relacoes}
-            catalogo_conquistas = []
-            for conquista in Conquista.objects.all().order_by('ordem_exibicao', 'nome'):
-                rel = relacoes_por_conquista.get(conquista.id)
-                catalogo_conquistas.append(
+        relacoes_por_conquista = {rel.conquista_id: rel for rel in conquistas_relacoes}
+        catalogo_conquistas_itens: List[Dict[str, Any]] = []
+        upcoming_candidates: List[Dict[str, Any]] = []
+        for conquista in Conquista.objects.all().order_by('ordem_exibicao', 'nome'):
+            rel = relacoes_por_conquista.get(conquista.id)
+            progress_payload = self._build_achievement_progress(
+                conquista=conquista,
+                profile=profile,
+                daily_stats=daily_stats_obj,
+                daily_streak=daily_streak_value,
+                session_metrics=session_metrics,
+            )
+
+            if rel is None and progress_payload:
+                upcoming_candidates.append(
+                    {
+                        'slug': conquista.slug,
+                        'nome': conquista.nome,
+                        'descricao': conquista.descricao,
+                        'icone': conquista.icone,
+                        'progress': progress_payload,
+                    }
+                )
+
+            if include_catalog:
+                catalogo_conquistas_itens.append(
                     {
                         'slug': conquista.slug,
                         'nome': conquista.nome,
@@ -215,8 +320,17 @@ class GamificationService:
                         'is_unlocked': rel is not None,
                         'data_conquista': rel.data_conquista.isoformat() if rel and rel.data_conquista else None,
                         'metadata': rel.metadata if rel else {},
+                        'progress': progress_payload,
                     }
                 )
+
+        catalogo_conquistas: Optional[List[Dict[str, Any]]] = (
+            catalogo_conquistas_itens if include_catalog else None
+        )
+        upcoming_highlights = sorted(
+            upcoming_candidates,
+            key=lambda item: (-item['progress']['percent'], item['nome']),
+        )[:3]
 
         current_level_payload = None
         if current_level:
@@ -268,11 +382,90 @@ class GamificationService:
                 'xp_range_end': xp_limite,
                 'xp_to_next_level': xp_para_proximo,
             },
+            'daily_engagement': daily_engagement_payload,
             'achievements': {
                 'total_unlocked': total_desbloqueadas,
                 'total_available': total_disponiveis,
                 'newly_unlocked': conquistas_recentemente,
                 'recent': conquistas_recentes,
                 'catalog': catalogo_conquistas,
+                'upcoming': upcoming_highlights,
             },
+        }
+
+    def _build_achievement_progress(
+        self,
+        *,
+        conquista: Conquista,
+        profile: PerfilGamificacaoUsuario,
+        daily_stats: Optional[EstatisticasDiariasUsuario],
+        daily_streak: int,
+        session_metrics: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        criterio = conquista.criterio_json or {}
+        tipo = str(criterio.get('tipo', '')).lower()
+        valor = criterio.get('valor')
+        if valor in (None, ''):
+            return None
+
+        try:
+            target_value = float(valor)
+        except (TypeError, ValueError):
+            return None
+
+        if target_value <= 0:
+            return None
+
+        unit_label = 'progresso'
+        if tipo == 'xp_total':
+            current_value = profile.xp_total
+            unit_label = 'XP'
+        elif tipo == 'melhor_sequencia':
+            current_value = profile.melhor_sequencia_geral
+            unit_label = 'acertos'
+        elif tipo == 'pontuacao_sessao':
+            current_value = session_metrics.get('max_score') or 0
+            unit_label = 'pontos'
+        elif tipo == 'respostas_corretas_sessao':
+            current_value = session_metrics.get('max_correct') or 0
+            unit_label = 'acertos'
+        elif tipo == 'dias_consecutivos':
+            current_value = daily_streak
+            unit_label = 'dias'
+        elif tipo == 'quizzes_completos':
+            current_value = session_metrics.get('total_sessions') or 0
+            unit_label = 'quizzes'
+        elif tipo == 'perguntas_diarias':
+            current_value = daily_stats.perguntas_respondidas_dia if daily_stats else 0
+            unit_label = 'perguntas'
+        elif tipo == 'xp_diario':
+            current_value = daily_stats.xp_ganho_dia if daily_stats else 0
+            unit_label = 'XP'
+        else:
+            return None
+
+        current_value = max(float(current_value), 0.0)
+        percent = 0.0
+        if target_value:
+            percent = max(0.0, min((current_value / target_value) * 100, 100.0))
+
+        current_int = int(round(current_value))
+        target_int = int(round(target_value))
+        remaining_int = max(target_int - current_int, 0)
+
+        if remaining_int > 0:
+            remaining_label = f"Faltam {remaining_int} {unit_label}"
+        else:
+            remaining_label = 'Meta alcançada'
+
+        label = f"{current_int} / {target_int} {unit_label}"
+
+        return {
+            'metric': tipo,
+            'current': current_int,
+            'target': target_int,
+            'percent': round(percent, 1),
+            'label': label,
+            'remaining_label': remaining_label,
+            'unit': unit_label,
         }

@@ -9,8 +9,8 @@
 /* ===== NAVEGAÇÃO PRINCIPAL (SUPERIOR - DESKTOP) ===== */
 .main-nav {
   flex-shrink: 0;
-  background-color: var(--main-nav-bg-color, var(--color-white));
-  border-bottom: var(--main-nav-border-bottom-width, var(--border-width)) solid var(--main-nav-border-bottom-color, var(--color-gray-400));
+  background-color: var(--main-nav-bg-color, var(--surface-nav, var(--color-white)));
+  border-bottom: var(--main-nav-border-bottom-width, var(--border-width)) solid var(--main-nav-border-bottom-color, var(--border-subtle-color, var(--color-gray-400)));
   height: var(--main-nav-height, 50px);
   display: flex;
   position: relative;
@@ -72,7 +72,7 @@
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: -2px;
   border-radius: var(--border-radius-sm);
-  background-color: var(--color-gray-100);
+  background-color: var(--surface-card-muted, var(--color-gray-100));
   text-decoration: none;
 }
 
@@ -86,8 +86,8 @@
   width: 100%;
   height: var(--bottom-nav-height, 60px); /* Altura da barra */
   padding-bottom: env(safe-area-inset-bottom, 0);
-  background-color: var(--bottom-nav-bg-color, var(--color-white));
-  border-top: var(--border-width) solid var(--bottom-nav-border-top-color, var(--color-gray-300));
+  background-color: var(--bottom-nav-bg-color, var(--surface-bottom-nav, var(--color-white)));
+  border-top: var(--border-width) solid var(--bottom-nav-border-top-color, var(--border-subtle-color, var(--color-gray-300)));
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
   z-index: var(--z-index-bottom-nav, 100);
 }
@@ -146,7 +146,7 @@
 
 .bottom-nav__link:hover {
   color: var(--bottom-nav-link-hover-color, var(--color-primary-dark));
-  background-color: var(--bottom-nav-link-hover-bg, var(--color-gray-100));
+  background-color: var(--bottom-nav-link-hover-bg, var(--surface-card-muted, var(--color-gray-100)));
 }
 
 .bottom-nav__link:active .bottom-nav__icon {
@@ -171,7 +171,7 @@
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: -2px; /* Ajuste para dentro da barra */
   border-radius: var(--border-radius-sm); /* Adiciona um leve arredondamento no foco */
-  background-color: var(--color-gray-200);
+  background-color: var(--surface-card-muted, var(--color-gray-200));
 }
 
 

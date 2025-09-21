@@ -7,14 +7,15 @@
     justify-content: center;
     align-items: center;
     padding: var(--spacing-md, 20px);
-    background-color: var(--color-gray-900);
-    color: var(--color-gray-300);
+    background-color: var(--footer-bg-color, var(--color-gray-900));
+    color: var(--footer-text-color, var(--color-gray-300));
     box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06);
-    border-top: var(--border-width) solid var(--color-gray-800);
+    border-top: var(--border-width) solid var(--footer-border-color, var(--color-gray-800));
     height: var(--footer-height, 65px);
     flex-shrink: 0;
     position: relative;
     z-index: var(--z-index-default);
+    transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
 }
 
 /* Element: .site-footer__text */

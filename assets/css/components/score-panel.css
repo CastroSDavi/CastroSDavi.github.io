@@ -14,10 +14,10 @@
   padding: var(--score-panel-padding-y, var(--spacing-lg, 28px)) var(--score-panel-padding-x, var(--spacing-md, 22px));
   width: var(--score-panel-width, 260px);
   min-width: var(--score-panel-width, 260px);
-  background-color: var(--score-panel-bg-color, var(--color-white));
-  
+  background-color: var(--score-panel-bg-color, var(--surface-panel, var(--color-white)));
+
   box-shadow: var(--score-panel-shadow, 2px 0px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.04));
-  border-right: 1px solid var(--score-panel-border-color, var(--color-gray-200));
+  border-right: 1px solid var(--score-panel-border-color, var(--border-subtle-color, var(--color-gray-200)));
   flex-shrink: 0;
 
   position: sticky;
@@ -42,7 +42,7 @@
   align-items: center;
   text-align: center;
   padding-bottom: var(--spacing-md, 20px);
-  border-bottom: 1px solid var(--color-gray-300); 
+  border-bottom: 1px solid var(--score-panel-divider-color, var(--border-subtle-color, var(--color-gray-300)));
   margin-bottom: var(--spacing-xs, 6px);
 }
 
@@ -188,7 +188,7 @@
     .score-panel {
         position: static; height: auto; overflow-y: visible; width: 100%;
         min-width: 100%;
-        background-color: var(--score-panel-bg-color-mobile, var(--color-white));
+        background-color: var(--score-panel-bg-color-mobile, var(--surface-panel, var(--color-white)));
         box-shadow: 0 2px 8px rgba(var(--color-primary-dark-rgb), 0.05);
         border-right: none; border-bottom: 1px solid var(--color-gray-200);
         flex-direction: row; justify-content: space-between;

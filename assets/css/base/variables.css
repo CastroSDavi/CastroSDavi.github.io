@@ -1,5 +1,6 @@
 /* assets/css/base/variables.css */
 :root {
+    color-scheme: light;
     /* Cores principais */
     --color-primary-dark: #0d3b66;
     --color-primary-dark-rgb: 13, 59, 102; /* Adicionado para rgba() */
@@ -45,6 +46,67 @@
     --color-gray-50: #fbfcfe;
     --color-white: #ffffff;
     --color-dark: #333;
+
+    /* Superfícies e fundos temáticos */
+    --body-background-color: var(--surface-page, var(--color-gray-100));
+    --body-text-color: var(--color-text-primary, var(--color-gray-900));
+    --surface-page: var(--color-gray-50);
+    --surface-card: var(--color-white);
+    --surface-card-muted: var(--color-gray-50);
+    --surface-header: var(--color-white);
+    --surface-nav: var(--color-white);
+    --surface-bottom-nav: var(--color-white);
+    --surface-panel: var(--color-white);
+    --surface-panel-alt: var(--color-gray-50);
+    --surface-overlay: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.18);
+
+    --footer-bg-color: var(--color-gray-900);
+    --footer-text-color: var(--color-gray-300);
+    --footer-border-color: var(--color-gray-800);
+
+    /* Bordas e sombras reutilizáveis */
+    --border-subtle-color: var(--color-gray-300);
+    --border-strong-color: var(--color-gray-400);
+    --card-box-shadow: var(--shadow-md);
+    --card-border-color: var(--color-gray-400);
+    --card-header-border-bottom-color: var(--color-gray-300);
+    --card-footer-border-top-color: var(--color-gray-300);
+    --card-aviso-bg-color: var(--surface-card-muted, var(--color-gray-50));
+    --card-aviso-border-color: var(--border-subtle-color, var(--color-gray-300));
+    --card-placeholder-bg-color: var(--surface-card-muted, var(--color-gray-50));
+    --card-placeholder-border-color: var(--border-subtle-color, var(--color-gray-300));
+    --card-result-bg: var(--surface-card, var(--color-white));
+    --card-result-shadow: 0 20px 60px -10px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
+                0 8px 20px -5px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);
+
+    /* Valores padrão usados em componentes específicos */
+    --hero-bg-gradient: linear-gradient(135deg,
+            var(--color-primary-dark) 0%,
+            var(--color-primary-medium) 60%,
+            var(--color-secondary-green) 100%);
+    --hero-text-color: var(--color-white);
+    --question-grid-item-bg: var(--color-white);
+    --question-grid-item-border-color: var(--color-gray-200);
+    --question-grid-item-color: var(--color-text-secondary);
+    --answer-bg-color: var(--color-white);
+    --answer-border-color: var(--color-gray-300);
+    --filter-panel-shadow: -4px 0 25px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.12);
+    --filter-panel-scroll-thumb-hover: var(--color-gray-400, #ced4da);
+    --explanation-modal-shadow: 0 10px 35px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
+                0 4px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1);
+    --explanation-modal-scroll-track: var(--color-gray-50);
+    --explanation-modal-scroll-thumb: var(--color-gray-300);
+    --explanation-modal-scroll-thumb-hover: var(--color-gray-400);
+    --challenge-hub-shadow: var(--shadow-md);
+    --challenge-hub-bg: var(--surface-card-muted, var(--color-gray-100));
+    --challenge-card-bg: var(--surface-card, var(--color-white));
+    --challenge-card-border-color: var(--border-subtle-color, var(--color-gray-300));
+    --challenge-card-shadow: var(--shadow-sm);
+    --challenge-card-shadow-hover: var(--shadow-lg);
+    --challenge-card-icon-bg: var(--color-primary-light);
+    --challenge-card-disabled-bg: var(--color-gray-200);
+    --score-panel-border-color: var(--border-subtle-color, var(--color-gray-200));
+    --score-panel-divider-color: var(--border-subtle-color, var(--color-gray-300));
 
     /* Texto */
     --color-text-primary: var(--color-gray-900);
@@ -146,4 +208,236 @@
     --main-nav-height: 48px; /* Ajustado para uma nav um pouco menor */
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+        color-scheme: dark;
+
+        --color-gray-900: #e2e8f0;
+        --color-gray-800: #cbd5f5;
+        --color-gray-700: #a9b7ca;
+        --color-gray-600: #8c9bb2;
+        --color-gray-500: #6b7a92;
+        --color-gray-400: #4c5567;
+        --color-gray-300: #384152;
+        --color-gray-200: #2c3445;
+        --color-gray-100: #1f2735;
+        --color-gray-50: #171f2b;
+        --color-dark: #0b1120;
+
+        --body-background-color: #0f172a;
+        --body-text-color: var(--color-text-primary);
+        --surface-page: #0f172a;
+        --surface-card: #152235;
+        --surface-card-muted: #111d2c;
+        --surface-header: rgba(15, 23, 42, 0.92);
+        --surface-nav: rgba(15, 23, 42, 0.95);
+        --surface-bottom-nav: rgba(15, 23, 42, 0.95);
+        --surface-panel: #182437;
+        --surface-panel-alt: #1c2a3d;
+        --surface-overlay: rgba(8, 15, 28, 0.72);
+
+        --border-subtle-color: rgba(148, 163, 184, 0.24);
+        --border-strong-color: rgba(148, 163, 184, 0.38);
+        --card-box-shadow: 0 18px 42px rgba(8, 15, 28, 0.55);
+        --card-border-color: rgba(148, 163, 184, 0.22);
+        --card-header-border-bottom-color: rgba(148, 163, 184, 0.16);
+        --card-footer-border-top-color: rgba(148, 163, 184, 0.16);
+        --card-aviso-bg-color: rgba(17, 28, 44, 0.82);
+        --card-aviso-border-color: rgba(148, 163, 184, 0.24);
+        --card-placeholder-bg-color: rgba(17, 28, 44, 0.85);
+        --card-placeholder-border-color: rgba(148, 163, 184, 0.26);
+        --card-result-bg: var(--surface-card);
+        --card-result-shadow: 0 24px 65px rgba(8, 15, 28, 0.6);
+
+        --color-text-primary: #e2e8f0;
+        --color-text-secondary: #c0ccdc;
+        --color-text-muted: #94a3b8;
+        --color-text-link: #8dbbff;
+        --color-text-link-hover: #a8d4ff;
+
+        --hero-text-color: #f5f9ff;
+        --hero-bg-gradient: linear-gradient(135deg, #0b2f55 0%, #154170 55%, #1f7a78 100%);
+
+        --main-nav-bg-color: var(--surface-nav);
+        --main-nav-border-bottom-color: rgba(148, 163, 184, 0.18);
+        --bottom-nav-bg-color: var(--surface-bottom-nav);
+        --bottom-nav-border-top-color: rgba(148, 163, 184, 0.18);
+        --bottom-nav-link-color: #cbd5f5;
+        --bottom-nav-link-hover-color: #f4faff;
+        --bottom-nav-link-active-color: #f8fbff;
+        --bottom-nav-link-hover-bg: rgba(148, 163, 184, 0.14);
+        --bottom-nav-link-active-bg: rgba(59, 130, 246, 0.2);
+
+        --footer-bg-color: #0b1220;
+        --footer-text-color: #94a3b8;
+        --footer-border-color: rgba(148, 163, 184, 0.24);
+
+        --score-panel-bg-color: var(--surface-panel);
+        --score-panel-bg-color-mobile: var(--surface-panel);
+        --score-panel-border-color: rgba(148, 163, 184, 0.22);
+        --score-panel-shadow: 0 18px 45px rgba(8, 15, 28, 0.45);
+        --score-panel-divider-color: rgba(148, 163, 184, 0.18);
+        --timer-color: #f1f5f9;
+        --timer-label-color: #a5b4ca;
+        --stat-label-color: #a5b4ca;
+        --stat-value-color: #e2e8f0;
+
+        --question-grid-item-bg: rgba(17, 26, 40, 0.95);
+        --question-grid-item-border-color: rgba(148, 163, 184, 0.25);
+        --question-grid-item-color: #cbd5f5;
+
+        --answer-bg-color: rgba(18, 29, 44, 0.85);
+        --answer-border-color: rgba(148, 163, 184, 0.28);
+
+        --stat-card-bg: rgba(15, 23, 42, 0.68);
+        --stat-card-border-color: rgba(148, 163, 184, 0.22);
+        --stat-card-hover-bg: rgba(17, 29, 48, 0.85);
+        --stat-card-hover-shadow: 0 12px 35px rgba(8, 15, 28, 0.45);
+
+        --filter-panel-bg-color: var(--surface-panel);
+        --filter-panel-header-bg-color: var(--surface-panel);
+        --filter-panel-border-color: rgba(148, 163, 184, 0.2);
+        --filter-panel-overlay-color: rgba(8, 15, 28, 0.6);
+        --filter-panel-scroll-track: rgba(148, 163, 184, 0.08);
+        --filter-panel-scroll-thumb: rgba(148, 163, 184, 0.22);
+        --filter-panel-scroll-thumb-hover: rgba(148, 163, 184, 0.32);
+        --filter-panel-shadow: -4px 0 35px rgba(8, 15, 28, 0.45);
+
+        --explanation-modal-overlay-color: rgba(8, 15, 28, 0.7);
+        --explanation-modal-bg-color: var(--surface-panel);
+        --explanation-modal-section-bg: rgba(15, 23, 42, 0.9);
+        --explanation-modal-border-color: rgba(148, 163, 184, 0.22);
+        --explanation-modal-shadow: 0 18px 45px rgba(8, 15, 28, 0.5);
+        --explanation-modal-scroll-track: rgba(17, 28, 44, 0.85);
+        --explanation-modal-scroll-thumb: rgba(148, 163, 184, 0.28);
+        --explanation-modal-scroll-thumb-hover: rgba(148, 163, 184, 0.38);
+
+        --challenge-hub-shadow: 0 18px 45px rgba(8, 15, 28, 0.45);
+        --challenge-hub-bg: rgba(17, 28, 44, 0.92);
+        --challenge-card-bg: var(--surface-card);
+        --challenge-card-border-color: rgba(148, 163, 184, 0.22);
+        --challenge-card-shadow: 0 15px 35px rgba(8, 15, 28, 0.5);
+        --challenge-card-shadow-hover: 0 20px 45px rgba(8, 15, 28, 0.6);
+        --challenge-card-icon-bg: rgba(59, 130, 246, 0.18);
+        --challenge-card-disabled-bg: rgba(28, 36, 52, 0.65);
+
+        --modal-backdrop-bg: rgba(8, 15, 28, 0.75);
+    }
+}
+
+:where(:root[data-theme='dark'], body[data-theme='dark'], body.dark-theme) {
+    color-scheme: dark;
+
+    --color-gray-900: #e2e8f0;
+    --color-gray-800: #cbd5f5;
+    --color-gray-700: #a9b7ca;
+    --color-gray-600: #8c9bb2;
+    --color-gray-500: #6b7a92;
+    --color-gray-400: #4c5567;
+    --color-gray-300: #384152;
+    --color-gray-200: #2c3445;
+    --color-gray-100: #1f2735;
+    --color-gray-50: #171f2b;
+    --color-dark: #0b1120;
+
+    --body-background-color: #0f172a;
+    --body-text-color: var(--color-text-primary);
+    --surface-page: #0f172a;
+    --surface-card: #152235;
+    --surface-card-muted: #111d2c;
+    --surface-header: rgba(15, 23, 42, 0.92);
+    --surface-nav: rgba(15, 23, 42, 0.95);
+    --surface-bottom-nav: rgba(15, 23, 42, 0.95);
+    --surface-panel: #182437;
+    --surface-panel-alt: #1c2a3d;
+    --surface-overlay: rgba(8, 15, 28, 0.72);
+
+    --border-subtle-color: rgba(148, 163, 184, 0.24);
+    --border-strong-color: rgba(148, 163, 184, 0.38);
+    --card-box-shadow: 0 18px 42px rgba(8, 15, 28, 0.55);
+    --card-border-color: rgba(148, 163, 184, 0.22);
+    --card-header-border-bottom-color: rgba(148, 163, 184, 0.16);
+    --card-footer-border-top-color: rgba(148, 163, 184, 0.16);
+    --card-aviso-bg-color: rgba(17, 28, 44, 0.82);
+    --card-aviso-border-color: rgba(148, 163, 184, 0.24);
+    --card-placeholder-bg-color: rgba(17, 28, 44, 0.85);
+    --card-placeholder-border-color: rgba(148, 163, 184, 0.26);
+    --card-result-bg: var(--surface-card);
+    --card-result-shadow: 0 24px 65px rgba(8, 15, 28, 0.6);
+
+    --color-text-primary: #e2e8f0;
+    --color-text-secondary: #c0ccdc;
+    --color-text-muted: #94a3b8;
+    --color-text-link: #8dbbff;
+    --color-text-link-hover: #a8d4ff;
+
+    --hero-text-color: #f5f9ff;
+    --hero-bg-gradient: linear-gradient(135deg, #0b2f55 0%, #154170 55%, #1f7a78 100%);
+
+    --main-nav-bg-color: var(--surface-nav);
+    --main-nav-border-bottom-color: rgba(148, 163, 184, 0.18);
+    --bottom-nav-bg-color: var(--surface-bottom-nav);
+    --bottom-nav-border-top-color: rgba(148, 163, 184, 0.18);
+    --bottom-nav-link-color: #cbd5f5;
+    --bottom-nav-link-hover-color: #f4faff;
+    --bottom-nav-link-active-color: #f8fbff;
+    --bottom-nav-link-hover-bg: rgba(148, 163, 184, 0.14);
+    --bottom-nav-link-active-bg: rgba(59, 130, 246, 0.2);
+
+    --footer-bg-color: #0b1220;
+    --footer-text-color: #94a3b8;
+    --footer-border-color: rgba(148, 163, 184, 0.24);
+
+    --score-panel-bg-color: var(--surface-panel);
+    --score-panel-bg-color-mobile: var(--surface-panel);
+    --score-panel-border-color: rgba(148, 163, 184, 0.22);
+    --score-panel-shadow: 0 18px 45px rgba(8, 15, 28, 0.45);
+    --score-panel-divider-color: rgba(148, 163, 184, 0.18);
+    --timer-color: #f1f5f9;
+    --timer-label-color: #a5b4ca;
+    --stat-label-color: #a5b4ca;
+    --stat-value-color: #e2e8f0;
+
+    --question-grid-item-bg: rgba(17, 26, 40, 0.95);
+    --question-grid-item-border-color: rgba(148, 163, 184, 0.25);
+    --question-grid-item-color: #cbd5f5;
+
+    --answer-bg-color: rgba(18, 29, 44, 0.85);
+    --answer-border-color: rgba(148, 163, 184, 0.28);
+
+    --stat-card-bg: rgba(15, 23, 42, 0.68);
+    --stat-card-border-color: rgba(148, 163, 184, 0.22);
+    --stat-card-hover-bg: rgba(17, 29, 48, 0.85);
+    --stat-card-hover-shadow: 0 12px 35px rgba(8, 15, 28, 0.45);
+
+    --filter-panel-bg-color: var(--surface-panel);
+    --filter-panel-header-bg-color: var(--surface-panel);
+    --filter-panel-border-color: rgba(148, 163, 184, 0.2);
+    --filter-panel-overlay-color: rgba(8, 15, 28, 0.6);
+    --filter-panel-scroll-track: rgba(148, 163, 184, 0.08);
+    --filter-panel-scroll-thumb: rgba(148, 163, 184, 0.22);
+    --filter-panel-scroll-thumb-hover: rgba(148, 163, 184, 0.32);
+    --filter-panel-shadow: -4px 0 35px rgba(8, 15, 28, 0.45);
+
+    --explanation-modal-overlay-color: rgba(8, 15, 28, 0.7);
+    --explanation-modal-bg-color: var(--surface-panel);
+    --explanation-modal-section-bg: rgba(15, 23, 42, 0.9);
+    --explanation-modal-border-color: rgba(148, 163, 184, 0.22);
+    --explanation-modal-shadow: 0 18px 45px rgba(8, 15, 28, 0.5);
+    --explanation-modal-scroll-track: rgba(17, 28, 44, 0.85);
+    --explanation-modal-scroll-thumb: rgba(148, 163, 184, 0.28);
+    --explanation-modal-scroll-thumb-hover: rgba(148, 163, 184, 0.38);
+
+    --challenge-hub-shadow: 0 18px 45px rgba(8, 15, 28, 0.45);
+    --challenge-hub-bg: rgba(17, 28, 44, 0.92);
+    --challenge-card-bg: var(--surface-card);
+    --challenge-card-border-color: rgba(148, 163, 184, 0.22);
+    --challenge-card-shadow: 0 15px 35px rgba(8, 15, 28, 0.5);
+    --challenge-card-shadow-hover: 0 20px 45px rgba(8, 15, 28, 0.6);
+    --challenge-card-icon-bg: rgba(59, 130, 246, 0.18);
+    --challenge-card-disabled-bg: rgba(28, 36, 52, 0.65);
+
+    --modal-backdrop-bg: rgba(8, 15, 28, 0.75);
 }

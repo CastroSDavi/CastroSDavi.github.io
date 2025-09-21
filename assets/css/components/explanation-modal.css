@@ -7,7 +7,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.6);
+    background-color: var(--explanation-modal-overlay-color, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.6));
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     display: flex;
@@ -28,10 +28,10 @@
 .explanation-modal__dialog {
     width: 90%;
     max-width: 700px; /* Largura máxima um pouco menor para não ser tão largo */
-    background-color: var(--color-white);
+    background-color: var(--explanation-modal-bg-color, var(--surface-panel, var(--color-white)));
     border-radius: var(--border-radius-xl, 16px); /* Cantos mais arredondados */
-    box-shadow: 0 10px 35px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
-                0 4px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1); /* Sombra sofisticada */
+    box-shadow: var(--explanation-modal-shadow, 0 10px 35px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15),
+                0 4px 12px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.1)); /* Sombra sofisticada */
     display: flex;
     flex-direction: column;
     max-height: 88vh;
@@ -52,7 +52,7 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-md, 20px) var(--spacing-lg, 28px); /* Padding ajustado */
-    border-bottom: 1px solid var(--color-gray-100); /* Linha muito sutil */
+    border-bottom: 1px solid var(--explanation-modal-border-color, var(--border-subtle-color, var(--color-gray-100))); /* Linha muito sutil */
     flex-shrink: 0;
 }
 .explanation-modal__title {
@@ -85,10 +85,10 @@
 }
 /* Estilização da Scrollbar */
 .explanation-modal__body::-webkit-scrollbar { width: 8px; }
-.explanation-modal__body::-webkit-scrollbar-track { background: var(--color-gray-50); border-radius: 4px; }
-.explanation-modal__body::-webkit-scrollbar-thumb { background-color: var(--color-gray-300); border-radius: 4px; border: 2px solid var(--color-gray-50); }
-.explanation-modal__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-gray-400); }
-.explanation-modal__body { scrollbar-width: auto; scrollbar-color: var(--color-gray-300) var(--color-gray-50); }
+.explanation-modal__body::-webkit-scrollbar-track { background: var(--explanation-modal-scroll-track, var(--color-gray-50)); border-radius: 4px; }
+.explanation-modal__body::-webkit-scrollbar-thumb { background-color: var(--explanation-modal-scroll-thumb, var(--color-gray-300)); border-radius: 4px; border: 2px solid var(--explanation-modal-scroll-track, var(--color-gray-50)); }
+.explanation-modal__body::-webkit-scrollbar-thumb:hover { background-color: var(--explanation-modal-scroll-thumb-hover, var(--color-gray-400)); }
+.explanation-modal__body { scrollbar-width: auto; scrollbar-color: var(--explanation-modal-scroll-thumb, var(--color-gray-300)) var(--explanation-modal-scroll-track, var(--color-gray-50)); }
 
 .explanation-modal__subtitle {
     font-family: var(--font-family-heading);
@@ -135,11 +135,11 @@
 
 .explanation-modal__options-list li {
     padding: var(--spacing-md, 16px);
-    border: 1px solid var(--color-gray-200); /* Borda geral muito sutil */
+    border: 1px solid var(--explanation-modal-border-color, var(--border-subtle-color, var(--color-gray-200))); /* Borda geral muito sutil */
     border-left-width: 4px; /* Borda esquerda será colorida */
     border-left-color: var(--color-gray-300); /* Cor padrão da borda esquerda (para itens neutros, se houver) */
     border-radius: var(--border-radius-md);
-    background-color: var(--color-white); /* Fundo branco para os itens */
+    background-color: var(--explanation-modal-section-bg, var(--surface-card, var(--color-white))); /* Fundo branco para os itens */
     transition: border-left-color var(--transition-fast), background-color var(--transition-fast);
 }
 /* Classes JS para colorir a borda esquerda e o fundo sutilmente */

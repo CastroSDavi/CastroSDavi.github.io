@@ -11,9 +11,9 @@
     width: 100%;
     max-width: 800px; /* Largura máxima do hub */
     margin: var(--spacing-xl, 30px) auto; /* Margem vertical e centralização horizontal */
-    background-color: var(--color-gray-100); /* Fundo suave para o hub */
+    background-color: var(--challenge-hub-bg, var(--surface-card-muted, var(--color-gray-100))); /* Fundo suave para o hub */
     border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--challenge-hub-shadow, var(--shadow-md));
     min-height: 400px; /* Altura mínima para melhor visualização */
 }
 
@@ -47,10 +47,10 @@
 }
 
 .challenge-card {
-    background-color: var(--color-white);
-    border: var(--border-width) solid var(--color-gray-300);
+    background-color: var(--challenge-card-bg, var(--surface-card, var(--color-white)));
+    border: var(--border-width) solid var(--challenge-card-border-color, var(--border-subtle-color, var(--color-gray-300)));
     border-radius: var(--border-radius-md); /* Consistente com .card */
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--challenge-card-shadow, var(--shadow-sm));
     padding: var(--spacing-lg, 25px);
     text-align: left;
     display: flex; /* Para alinhar ícone e conteúdo */
@@ -65,7 +65,7 @@
 .challenge-card:hover,
 .challenge-card:focus-visible {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-lg); /* Sombra mais pronunciada no hover/focus */
+    box-shadow: var(--challenge-card-shadow-hover, var(--shadow-lg)); /* Sombra mais pronunciada no hover/focus */
     border-color: var(--color-primary-medium); /* Destaque na borda */
 }
 
@@ -77,7 +77,7 @@
 
 .challenge-card__icon-wrapper {
     flex-shrink: 0; /* Para o wrapper do ícone não encolher */
-    background-color: var(--color-primary-light); /* Fundo suave para o ícone */
+    background-color: var(--challenge-card-icon-bg, var(--color-primary-light)); /* Fundo suave para o ícone */
     border-radius: var(--border-radius-circle);
     padding: var(--spacing-sm, 12px);
     display: inline-flex; /* Para centralizar o ícone dentro */
@@ -113,7 +113,7 @@
 }
 
 .challenge-card--disabled {
-    background-color: var(--color-gray-200);
+    background-color: var(--challenge-card-disabled-bg, var(--color-gray-200));
     cursor: not-allowed;
     opacity: 0.7;
 }

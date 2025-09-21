@@ -9,7 +9,8 @@ from .models import (
     Categoria, Pergunta, OpcaoResposta,
     SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
     QuestaoFavorita, # Adicionado se não estiver lá
-    QuizDefinicao, QuizDefinicaoPergunta, ConfiguracoesGeraisQuiz # Novos modelos
+    QuizDefinicao, QuizDefinicaoPergunta, ConfiguracoesGeraisQuiz, # Novos modelos
+    UserPreferences,
 )
 
 # Inline para OpcoesResposta dentro de PerguntaAdmin
@@ -370,6 +371,20 @@ class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
     @admin.display(description='Última Modificação', ordering='data_modificacao')
     def data_modificacao_formatada(self, obj):
         return obj.data_modificacao.strftime("%d/%m/%Y %H:%M") if obj.data_modificacao else "-"
+
+
+@admin.register(UserPreferences)
+class UserPreferencesAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'theme_preference',
+        'receive_product_updates',
+        'receive_progress_reports',
+        'updated_at',
+    )
+    list_filter = ('theme_preference', 'receive_product_updates', 'receive_progress_reports')
+    search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name')
+    readonly_fields = ('created_at', 'updated_at')
 
 # Opcional: Desregistrar e registrar UserAdmin se quiser adicionar inlines ou campos
 # from django.contrib.auth.admin import UserAdmin as BaseUserAdmin

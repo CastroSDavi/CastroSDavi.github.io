@@ -4,6 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _ # For translation
 
+from .models import UserPreferences
+
 class CustomAuthenticationForm(AuthenticationForm):
     """
     Formulário de autenticação personalizado para adicionar classes CSS aos campos.
@@ -90,6 +92,41 @@ class UserUpdateForm(forms.ModelForm):
         if email and User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
             raise forms.ValidationError(_("Este endereço de email já está em uso por outro usuário."))
         return email
+
+
+class UserPreferencesForm(forms.ModelForm):
+    theme_preference = forms.ChoiceField(
+        label='Tema da interface',
+        choices=UserPreferences.ThemePreference.choices,
+        widget=forms.RadioSelect(attrs={'class': 'preferences-theme__input'}),
+        error_messages={
+            'required': _('Escolha o tema que deseja utilizar na interface.'),
+        },
+    )
+    receive_product_updates = forms.BooleanField(
+        label='Novidades e avisos do MedQuiz',
+        required=False,
+        help_text='Recomendações de estudo, atualizações importantes e melhorias na plataforma.',
+        widget=forms.CheckboxInput(attrs={'class': 'preferences-toggle__input'}),
+    )
+    receive_progress_reports = forms.BooleanField(
+        label='Resumos de progresso de estudo',
+        required=False,
+        help_text='Resumo periódico com seus indicadores de desempenho e hábitos de estudo.',
+        widget=forms.CheckboxInput(attrs={'class': 'preferences-toggle__input'}),
+    )
+
+    class Meta:
+        model = UserPreferences
+        fields = [
+            'theme_preference',
+            'receive_product_updates',
+            'receive_progress_reports',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['theme_preference'].widget.attrs.update({'aria-label': self.fields['theme_preference'].label})
 
 class AccountDeleteForm(forms.Form):
     password = forms.CharField(

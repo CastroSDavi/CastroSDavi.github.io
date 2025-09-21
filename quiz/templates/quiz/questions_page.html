@@ -157,37 +157,106 @@
             <div id="question-grid-container" class="question-grid u-is-hidden">
             </div>
 
-            <div class="card card--quiz-result u-is-hidden">
-                <div class="card__body quiz-results__body"> <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
-                    <div class="quiz-results__primary-score">
-                        <span class="quiz-results__primary-score-value" id="resultado-pontos">0</span>
-                        <span class="quiz-results__primary-score-label">PONTOS</span>
+            <div class="card card--quiz-result u-is-hidden" aria-live="polite">
+                <div class="card__body quiz-results__body">
+                    <div class="quiz-results__header">
+                        <span class="quiz-results__badge">
+                            <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+                            Sessão concluída
+                        </span>
+                        <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
+                        <p class="quiz-results__subtitle" id="resultado-subtitulo">Veja como você se saiu nesta rodada.</p>
                     </div>
+
+                    <div class="quiz-results__summary">
+                        <div class="quiz-results__score-meter" id="resultado-score-meter" role="img" aria-label="Precisão de 0%">
+                            <div class="quiz-results__score-meter-inner">
+                                <span class="quiz-results__score-meter-value" id="resultado-precisao">0%</span>
+                                <span class="quiz-results__score-meter-caption">Precisão</span>
+                            </div>
+                        </div>
+
+                        <div class="quiz-results__score-content">
+                            <div class="quiz-results__primary-score">
+                                <span class="quiz-results__primary-score-label">Pontuação total</span>
+                                <span class="quiz-results__primary-score-value" id="resultado-pontos">0</span>
+                            </div>
+
+                            <div class="quiz-results__score-breakdown">
+                                <div class="score-breakdown__item">
+                                    <span class="score-breakdown__label">Questões respondidas</span>
+                                    <span class="score-breakdown__value" id="resultado-questoes">0</span>
+                                </div>
+                                <div class="score-breakdown__item">
+                                    <span class="score-breakdown__label">Pontuação por questão</span>
+                                    <span class="score-breakdown__value" id="resultado-pontos-por-questao">0</span>
+                                </div>
+                                <div class="score-breakdown__item">
+                                    <span class="score-breakdown__label">Tempo médio</span>
+                                    <span class="score-breakdown__value" id="resultado-tempo-medio">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="quiz-results__secondary-stats">
-                        <div class="stat-block"> <span class="material-symbols-outlined stat-block__icon">timer</span>
-                            <span class="stat-block__label">Tempo</span>
+                        <div class="stat-block">
+                            <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">timer</span>
+                            <span class="stat-block__label">Tempo total</span>
                             <span class="stat-block__value" id="resultado-tempo">00:00</span>
                         </div>
-                        <div class="stat-block stat-block--correct"> <span class="material-symbols-outlined stat-block__icon">check_circle</span>
+                        <div class="stat-block stat-block--correct">
+                            <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">check_circle</span>
                             <span class="stat-block__label">Acertos</span>
                             <span class="stat-block__value" id="resultado-acertos">0</span>
                         </div>
-                        <div class="stat-block stat-block--incorrect"> <span class="material-symbols-outlined stat-block__icon">cancel</span>
+                        <div class="stat-block stat-block--incorrect">
+                            <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">cancel</span>
                             <span class="stat-block__label">Erros</span>
                             <span class="stat-block__value" id="resultado-erros">0</span>
                         </div>
                     </div>
-                    <p class="quiz-results__message" id="resultado-mensagem-motivacional">Continue praticando!</p>
+
+                    <div class="quiz-results__insights">
+                        <h4 class="quiz-results__insights-title">
+                            <span class="material-symbols-outlined" aria-hidden="true">insights</span>
+                            Insights da sessão
+                        </h4>
+                        <p class="quiz-results__message" id="resultado-mensagem-motivacional">Continue praticando!</p>
+                        <div class="quiz-results__insights-grid">
+                            <div class="insight-chip">
+                                <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                                <span class="insight-chip__text" id="resultado-insight-destaque-text">Aproveitamento consistente</span>
+                            </div>
+                            <div class="insight-chip">
+                                <span class="material-symbols-outlined" aria-hidden="true">flag_circle</span>
+                                <span class="insight-chip__text" id="resultado-insight-meta-text">Defina sua próxima meta a partir dos pontos fortes.</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="card__footer quiz-results__actions">
-                    <button id="btn-recomecar" class="button button--primary quiz-results__action-button">
-                        <span class="material-symbols-outlined button__icon">refresh</span>
-                        Nova Tentativa
-                    </button>
-                    <button id="btn-explorar-mais" class="button button--outline quiz-results__action-button">
-                        <span class="material-symbols-outlined button__icon">home</span>
-                        Voltar ao Início
-                    </button>
+                    <div class="quiz-results__primary-actions">
+                        <button id="btn-recomecar" class="button button--primary quiz-results__action-button">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">refresh</span>
+                            <span class="button__label">Nova Tentativa</span>
+                        </button>
+                        <button id="btn-explorar-mais" class="button button--outline quiz-results__action-button">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">home</span>
+                            <span class="button__label">Voltar ao Início</span>
+                        </button>
+                    </div>
+                    <div class="quiz-results__secondary-actions">
+                        <a href="{% url 'quiz:account' %}" class="button button--text quiz-results__aux-action" id="resultado-painel-link">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">dashboard</span>
+                            <span class="button__label">Painel de desempenho</span>
+                        </a>
+                        <button id="btn-compartilhar-resultado" class="button button--text quiz-results__aux-action" type="button">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">share</span>
+                            <span class="button__label">Compartilhar resultado</span>
+                        </button>
+                    </div>
                 </div>
             </div>
          </div>{# Fim de .question-section__main-content #}

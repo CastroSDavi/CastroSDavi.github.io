@@ -50,11 +50,21 @@ export default class ScorePanel {
         if (
             currentUserState.pontos !== this.previousUserState.pontos ||
             currentUserState.acertos !== this.previousUserState.acertos ||
-            currentUserState.erros !== this.previousUserState.erros
+            currentUserState.erros !== this.previousUserState.erros ||
+            currentUserState.xp !== this.previousUserState.xp ||
+            currentUserState.currentStreak !== this.previousUserState.currentStreak ||
+            currentUserState.multiplier !== this.previousUserState.multiplier
         ) {
-            this._render(currentUserState.pontos, currentUserState.acertos, currentUserState.erros);
+            this._render(
+                currentUserState.pontos,
+                currentUserState.acertos,
+                currentUserState.erros,
+                currentUserState.xp,
+                currentUserState.currentStreak,
+                currentUserState.multiplier
+            );
         }
-        
+
         // Atualiza o estado anterior
         this.previousUserState = { ...currentUserState };
     }
@@ -73,7 +83,7 @@ export default class ScorePanel {
      * Método privado que realmente atualiza o DOM.
      * Substitui o antigo `updateDisplay`.
      */
-    _render(pontos, acertos, erros) {
+    _render(pontos, acertos, erros, xp = 0, streak = 0, multiplier = 1) {
         if (this.elements.pontuacaoDisplay) {
             this.elements.pontuacaoDisplay.textContent = pontos;
         }
@@ -82,6 +92,22 @@ export default class ScorePanel {
         }
         if (this.elements.errosNumDisplay) {
             this.elements.errosNumDisplay.textContent = erros;
+        }
+        if (this.elements.xpDisplay) {
+            this.elements.xpDisplay.textContent = Number(xp || 0).toLocaleString('pt-BR');
+        }
+        if (this.elements.sequenciaDisplay) {
+            this.elements.sequenciaDisplay.textContent = Number(streak || 0).toLocaleString('pt-BR');
+        }
+        if (this.elements.multiplicadorDisplay) {
+            const multiplierNumber = Number.isFinite(multiplier) ? Number(multiplier) : 1;
+            const decimals = multiplierNumber % 1 === 0 ? 0 : 1;
+            this.elements.multiplicadorDisplay.textContent = `x${multiplierNumber.toFixed(decimals)}`;
+            if (multiplierNumber > 1) {
+                this.elements.multiplicadorDisplay.classList.add('is-active');
+            } else {
+                this.elements.multiplicadorDisplay.classList.remove('is-active');
+            }
         }
     }
 

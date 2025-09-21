@@ -39,6 +39,13 @@ const initialState = {
         pontos: 0,
         acertos: 0,
         erros: 0,
+        xp: 0,
+        currentStreak: 0,
+        bestStreak: 0,
+        multiplier: 1,
+        achievementsUnlocked: 0,
+        recentAchievements: [],
+        gamification: null,
         favorites: {
             isLoading: false,
             items: [],
@@ -223,7 +230,8 @@ export function quizReducer(state = initialState, action) {
         }
             
         // --- AÇÕES DO USUÁRIO ---
-        case ActionTypes.UPDATE_USER_STATS:
+        case ActionTypes.UPDATE_USER_STATS: {
+            const extras = action.payload.extras || {};
             return {
                 ...state,
                 user: {
@@ -231,8 +239,18 @@ export function quizReducer(state = initialState, action) {
                     pontos: action.payload.pontos,
                     acertos: action.payload.acertos,
                     erros: action.payload.erros,
+                    xp: extras.xp ?? state.user.xp,
+                    currentStreak: extras.currentStreak ?? state.user.currentStreak,
+                    bestStreak: extras.bestStreak ?? state.user.bestStreak,
+                    multiplier: extras.multiplier ?? state.user.multiplier,
+                    achievementsUnlocked: extras.achievementsUnlocked ?? state.user.achievementsUnlocked,
+                    recentAchievements: Array.isArray(extras.recentAchievements)
+                        ? [...extras.recentAchievements]
+                        : state.user.recentAchievements,
+                    gamification: extras.gamification ?? state.user.gamification,
                 }
             };
+        }
             
         // --- AÇÕES DE FAVORITOS (DENTRO DO 'user') ---
         case ActionTypes.LOAD_FAVORITES_REQUEST:

@@ -82,9 +82,9 @@ export const quizActions = {
         payload: { selectedOptionId, isCorrect }
     }),
 
-    updateUserStats: (pontos, acertos, erros) => ({
+    updateUserStats: (pontos, acertos, erros, extras = {}) => ({
         type: ActionTypes.UPDATE_USER_STATS,
-        payload: { pontos, acertos, erros }
+        payload: { pontos, acertos, erros, extras }
     }),
 
     setActiveSection: (section) => ({

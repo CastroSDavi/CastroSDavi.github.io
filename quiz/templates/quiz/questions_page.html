@@ -18,6 +18,13 @@
                         <span id="pontuacao" class="score-panel__stat-value">0</span>
                     </div>
                 </div>
+                <div class="score-panel__stat score-panel__stat--xp">
+                    <span class="material-symbols-outlined score-panel__stat-icon">workspace_premium</span>
+                    <div class="score-panel__stat-content">
+                        <span class="score-panel__stat-label">XP</span>
+                        <span id="xp-numero" class="score-panel__stat-value">0</span>
+                    </div>
+                </div>
                 <div class="score-panel__stat score-panel__stat--correct">
                     <span class="material-symbols-outlined score-panel__stat-icon">check_circle</span>
                     <div class="score-panel__stat-content">
@@ -30,6 +37,14 @@
                     <div class="score-panel__stat-content">
                         <span class="score-panel__stat-label">ERROS</span>
                         <span id="erros-numero" class="score-panel__stat-value">0</span>
+                    </div>
+                </div>
+                <div class="score-panel__stat score-panel__stat--streak">
+                     <span class="material-symbols-outlined score-panel__stat-icon">local_fire_department</span>
+                    <div class="score-panel__stat-content">
+                        <span class="score-panel__stat-label">SEQUÊNCIA</span>
+                        <span id="sequencia-numero" class="score-panel__stat-value">0</span>
+                        <span id="multiplicador-atual" class="score-panel__stat-extra">x1.0</span>
                     </div>
                 </div>
             </div>
@@ -214,6 +229,49 @@
                             <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">cancel</span>
                             <span class="stat-block__label">Erros</span>
                             <span class="stat-block__value" id="resultado-erros">0</span>
+                        </div>
+                    </div>
+
+                    <div class="quiz-results__gamification" id="resultado-gamificacao">
+                        <div class="quiz-results__gamification-summary">
+                            <div class="gamification-summary__item">
+                                <span class="gamification-summary__label">XP ganho</span>
+                                <span class="gamification-summary__value" id="resultado-xp-ganho">+0 XP</span>
+                            </div>
+                            <div class="gamification-summary__item">
+                                <span class="gamification-summary__label">XP total</span>
+                                <span class="gamification-summary__value" id="resultado-xp-total">0 XP</span>
+                            </div>
+                            <div class="gamification-summary__item">
+                                <span class="gamification-summary__label">Nível atual</span>
+                                <span class="gamification-summary__value" id="resultado-nivel-atual">—</span>
+                            </div>
+                        </div>
+
+                        <div class="quiz-results__gamification-progress" role="group" aria-label="Progresso do nível">
+                            <div class="gamification-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="resultado-nivel-progress">
+                                <span class="gamification-progress-bar__fill" id="resultado-nivel-progress-fill"></span>
+                            </div>
+                            <div class="gamification-progress-meta">
+                                <span id="resultado-progresso-label">0 XP de 0</span>
+                                <span id="resultado-xp-proximo">—</span>
+                            </div>
+                            <div class="gamification-level-alert u-is-hidden" id="resultado-nivel-alert">
+                                <span class="material-symbols-outlined" aria-hidden="true">celebration</span>
+                                <span id="resultado-nivel-alert-text">Você subiu de nível!</span>
+                            </div>
+                        </div>
+
+                        <div class="quiz-results__gamification-achievements" id="resultado-conquistas-wrapper">
+                            <div class="gamification-achievements__header">
+                                <span class="gamification-achievements__title">
+                                    <span class="material-symbols-outlined" aria-hidden="true">trophy</span>
+                                    Conquistas desta sessão
+                                </span>
+                                <span class="gamification-achievements__count" id="resultado-conquistas-count">0</span>
+                            </div>
+                            <ul class="gamification-achievements__list" id="resultado-conquistas-list"></ul>
+                            <p class="gamification-achievements__empty u-is-hidden" id="resultado-conquistas-empty">Nenhuma nova conquista desta vez, continue praticando!</p>
                         </div>
                     </div>
 

@@ -2023,19 +2023,19 @@
 }
 
 :root[data-theme='dark'] .preferences-card .card__body {
-    background: linear-gradient(165deg, rgba(var(--color-gray-200-rgb, 21, 33, 47), 0.9), rgba(var(--color-gray-300-rgb, 28, 42, 58), 0.88));
-    border-color: rgba(var(--color-gray-500-rgb, 48, 66, 89), 0.55);
-    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+    background: linear-gradient(165deg, rgba(var(--color-gray-200-rgb, 44, 55, 71), 0.78), rgba(var(--color-gray-300-rgb, 51, 64, 87), 0.74));
+    border-color: rgba(var(--color-gray-500-rgb, 73, 86, 112), 0.38);
+    box-shadow: 0 10px 24px rgba(10, 16, 26, 0.24);
 }
 
 :root[data-theme='dark'] .preferences-summary-card {
-    border: 1px solid rgba(var(--color-gray-400-rgb, 35, 52, 71), 0.7);
-    background: linear-gradient(150deg, rgba(var(--color-gray-200-rgb, 21, 33, 47), 0.94), rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18));
-    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(var(--color-gray-400-rgb, 61, 74, 98), 0.42);
+    background: linear-gradient(150deg, rgba(var(--color-gray-200-rgb, 44, 55, 71), 0.82), rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18));
+    box-shadow: 0 12px 28px rgba(10, 16, 26, 0.26);
 }
 
 :root[data-theme='dark'] .preferences-summary-card:hover {
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 16px 34px rgba(10, 16, 26, 0.28);
 }
 
 :root[data-theme='dark'] .preferences-summary-card__icon {
@@ -2043,30 +2043,30 @@
 }
 
 :root[data-theme='dark'] .preferences-summary-card.is-pending-save {
-    border-color: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.65);
-    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.28);
+    border-color: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.45);
+    box-shadow: 0 14px 32px rgba(10, 16, 26, 0.26), 0 0 0 1px rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.22);
 }
 
 :root[data-theme='dark'] .preferences-summary-card.is-pending-save .preferences-summary-card__hint {
-    color: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.85);
+    color: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.82);
 }
 
 :root[data-theme='dark'] .preferences-theme-option {
-    border: 1px solid rgba(var(--color-gray-500-rgb, 48, 66, 89), 0.7);
-    background: linear-gradient(160deg, rgba(var(--color-gray-200-rgb, 21, 33, 47), 0.96), rgba(var(--color-gray-100-rgb, 16, 25, 35), 0.92));
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(var(--color-gray-500-rgb, 73, 86, 112), 0.38);
+    background: linear-gradient(160deg, rgba(var(--color-gray-200-rgb, 44, 55, 71), 0.8), rgba(var(--color-gray-100-rgb, 37, 47, 61), 0.74));
+    box-shadow: 0 12px 26px rgba(10, 16, 26, 0.24);
 }
 
 :root[data-theme='dark'] .preferences-theme-option.is-selected {
     border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.6);
-    background: linear-gradient(160deg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.35), rgba(var(--color-gray-100-rgb, 16, 25, 35), 0.9));
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.52);
+    background: linear-gradient(160deg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.28), rgba(var(--color-gray-100-rgb, 37, 47, 61), 0.82));
+    box-shadow: 0 14px 30px rgba(10, 16, 26, 0.26);
 }
 
 :root[data-theme='dark'] .preferences-theme-option:hover,
 :root[data-theme='dark'] .preferences-theme-option:focus-within {
-    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.75);
-    box-shadow: 0 22px 40px rgba(0, 0, 0, 0.55);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.72);
+    box-shadow: 0 16px 34px rgba(10, 16, 26, 0.28);
 }
 
 :root[data-theme='dark'] .preferences-theme-option__icon {
@@ -2074,28 +2074,28 @@
 }
 
 :root[data-theme='dark'] .preferences-toggle {
-    border: 1px solid rgba(var(--color-gray-500-rgb, 48, 66, 89), 0.65);
-    background: linear-gradient(165deg, rgba(var(--color-gray-200-rgb, 21, 33, 47), 0.94), rgba(var(--color-gray-100-rgb, 16, 25, 35), 0.9));
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(var(--color-gray-500-rgb, 73, 86, 112), 0.38);
+    background: linear-gradient(165deg, rgba(var(--color-gray-200-rgb, 44, 55, 71), 0.76), rgba(var(--color-gray-100-rgb, 37, 47, 61), 0.7));
+    box-shadow: 0 10px 24px rgba(10, 16, 26, 0.24);
 }
 
 :root[data-theme='dark'] .preferences-toggle:hover {
-    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.55);
-    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.5);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.62);
+    box-shadow: 0 14px 28px rgba(10, 16, 26, 0.26);
 }
 
 :root[data-theme='dark'] .preferences-toggle:focus-within {
-    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.6);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.4);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.65);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.26);
 }
 
 :root[data-theme='dark'] .preferences-toggle__track {
-    background: rgba(var(--color-gray-500-rgb, 48, 66, 89), 0.7);
+    background: rgba(var(--color-gray-500-rgb, 73, 86, 112), 0.42);
 }
 
 :root[data-theme='dark'] .preferences-toggle__thumb {
-    background: var(--color-gray-900, #f1f4f8);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+    background: var(--color-gray-900, #f5f8fc);
+    box-shadow: 0 4px 10px rgba(10, 16, 26, 0.2);
 }
 
 :root[data-theme='dark'] .preferences-toggle__input:checked + .preferences-toggle__control .preferences-toggle__track {
@@ -2104,7 +2104,7 @@
 
 :root[data-theme='dark'] .preferences-toggle__input:checked + .preferences-toggle__control .preferences-toggle__thumb {
     background: var(--color-primary-dark, #0d3b66);
-    box-shadow: 0 5px 16px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.5);
+    box-shadow: 0 6px 18px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.4);
 }
 
 :root[data-theme='dark'] .preferences-toggle__input:checked ~ .preferences-toggle__content .preferences-toggle__title {

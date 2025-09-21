@@ -1,71 +1,79 @@
 """Serializers encapsulating validation for quiz API endpoints."""
 
-from django import forms
-
 from rest_framework import serializers
 
 
 class QuizDataQuerySerializer(serializers.Serializer):
-    category_ids = forms.CharField(required=False)
-    difficulty_levels = forms.CharField(required=False)
-    mode = forms.CharField(required=False)
-    count = forms.CharField(required=False)
-    num_questions = forms.CharField(required=False)
-    quiz_definicao_id = forms.IntegerField(required=False)
-    search_query = forms.CharField(required=False)
+    category_ids = serializers.CharField(required=False, allow_blank=True)
+    difficulty_levels = serializers.CharField(required=False, allow_blank=True)
+    mode = serializers.CharField(required=False, allow_blank=True)
+    count = serializers.CharField(required=False, allow_blank=True)
+    num_questions = serializers.CharField(required=False, allow_blank=True)
+    quiz_definicao_id = serializers.IntegerField(required=False)
+    search_query = serializers.CharField(required=False, allow_blank=True)
 
 
 class FilteredQuestionCountSerializer(serializers.Serializer):
-    category_ids = forms.CharField(required=False)
-    difficulty_levels = forms.CharField(required=False)
-    search_query = forms.CharField(required=False)
+    category_ids = serializers.CharField(required=False, allow_blank=True)
+    difficulty_levels = serializers.CharField(required=False, allow_blank=True)
+    search_query = serializers.CharField(required=False, allow_blank=True)
 
 
 class StartQuizSessionSerializer(serializers.Serializer):
-    modo_quiz = forms.CharField(required=True)
-    categoria_ids = forms.JSONField(required=False)
-    question_ids_in_session = forms.JSONField(required=True)
-    quiz_definicao_id = forms.IntegerField(required=False)
-    dificuldades_selecionadas = forms.JSONField(required=False)
-    num_questoes_solicitadas = forms.IntegerField(required=False)
+    modo_quiz = serializers.CharField(required=True, allow_blank=False)
+    categoria_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=False,
+        allow_empty=True,
+        allow_null=True,
+        default=list,
+    )
+    question_ids_in_session = serializers.ListField(
+        child=serializers.IntegerField(),
+        required=True,
+        allow_empty=False,
+    )
+    quiz_definicao_id = serializers.IntegerField(required=False, allow_null=True)
+    dificuldades_selecionadas = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True,
+        allow_null=True,
+    )
+    num_questoes_solicitadas = serializers.IntegerField(required=False, allow_null=True)
 
-    def clean_categoria_ids(self):
-        categoria_ids = self.cleaned_data.get('categoria_ids', [])
-        if categoria_ids in (None, ''):
+    def validate_categoria_ids(self, value):
+        if value in (None, ''):
             return []
-        if not isinstance(categoria_ids, list):
-            raise forms.ValidationError('categoria_ids deve ser uma lista.')
-        return categoria_ids
+        return value
 
-    def clean_question_ids_in_session(self):
-        question_ids = self.cleaned_data['question_ids_in_session']
-        if not isinstance(question_ids, list) or not all(isinstance(qid, int) for qid in question_ids):
-            raise forms.ValidationError('question_ids_in_session deve ser uma lista de inteiros.')
-        return question_ids
+    def validate_question_ids_in_session(self, value):
+        if not value:
+            raise serializers.ValidationError(
+                'question_ids_in_session deve conter ao menos um ID de pergunta.'
+            )
+        return value
 
-    def clean_dificuldades_selecionadas(self):
-        dificuldades = self.cleaned_data.get('dificuldades_selecionadas')
-        if dificuldades in (None, ''):
+    def validate_dificuldades_selecionadas(self, value):
+        if value in (None, ''):
             return None
-        if not isinstance(dificuldades, list):
-            raise forms.ValidationError('dificuldades_selecionadas deve ser uma lista.')
-        return dificuldades
+        return value
 
 
 class RegisterAnswerSerializer(serializers.Serializer):
-    session_id = forms.IntegerField(required=True)
-    pergunta_id = forms.IntegerField(required=True)
-    opcao_id = forms.IntegerField(required=False)
-    current_question_index = forms.IntegerField(required=False)
+    session_id = serializers.IntegerField(required=True)
+    pergunta_id = serializers.IntegerField(required=True)
+    opcao_id = serializers.IntegerField(required=False, allow_null=True)
+    current_question_index = serializers.IntegerField(required=False, allow_null=True)
 
 
 class EndQuizSessionSerializer(serializers.Serializer):
-    session_id = forms.IntegerField(required=True)
-    tempo_total_segundos = forms.IntegerField(required=False)
+    session_id = serializers.IntegerField(required=True)
+    tempo_total_segundos = serializers.IntegerField(required=False, allow_null=True)
 
 
 class StatisticsQuerySerializer(serializers.Serializer):
-    period = forms.CharField(required=False)
+    period = serializers.CharField(required=False, allow_blank=True)
 
 
 class UserQuestionHistoryQuerySerializer(serializers.Serializer):

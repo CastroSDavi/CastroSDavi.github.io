@@ -303,16 +303,24 @@
 
             {# --- Seção: Questões Favoritas --- #}
             <div id="favorite-questions-content" class="account-content__section">
-                <div class="card card--conta-perfil">
-                    <h2 class="card__title">Minhas Questões Favoritas</h2>
-                    <div class="card__body" id="favorite-questions-container">
-                        <p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>
-                        {# Conteúdo será preenchido por FavoriteManager.js #}
+                <div class="card card--conta-perfil favorite-questions">
+                    <div class="card__header favorite-questions__header">
+                        <div class="favorite-questions__header-text">
+                            <h2 class="card__title">Minhas Questões Favoritas</h2>
+                            <p class="favorite-questions__description">Revisite as questões marcadas com estrela para reforçar o aprendizado e acessar rapidamente suas explicações.</p>
+                        </div>
+                        <span class="material-symbols-outlined favorite-questions__header-icon" aria-hidden="true">stars</span>
                     </div>
-                    <div class="card__footer u-is-hidden" id="favorite-questions-empty-state" style="text-align:center; padding-top: var(--spacing-md); border-top: 1px solid var(--color-gray-200);">
-                        <span class="material-symbols-outlined" style="font-size: 2.8rem; color: var(--color-text-muted); margin-bottom: 10px; display:block;">playlist_add_check</span>
-                        <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Você ainda não favoritou nenhuma questão.</p>
-                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-top: 5px;">Use o ícone <span class="material-symbols-outlined" style="font-size: 1em; vertical-align: middle; color: var(--color-accent-yellow);">star_outline</span> durante os quizzes para salvar questões aqui!</p>
+                    <div class="card__body favorite-questions__body">
+                        <div id="favorite-questions-container" class="favorite-questions-list" aria-live="polite" aria-busy="true">
+                            <p class="favorite-questions__status placeholder-text">Carregando suas questões favoritas...</p>
+                            {# Conteúdo será preenchido por FavoriteManager.js #}
+                        </div>
+                    </div>
+                    <div class="card__footer favorite-questions__empty-state u-is-hidden" id="favorite-questions-empty-state" aria-live="polite">
+                        <span class="material-symbols-outlined favorite-questions__empty-icon" aria-hidden="true">playlist_add_check</span>
+                        <p class="favorite-questions__empty-title">Você ainda não favoritou nenhuma questão.</p>
+                        <p class="favorite-questions__empty-description">Use o ícone <span class="material-symbols-outlined" aria-hidden="true">star_outline</span> durante os quizzes para salvar questões aqui!</p>
                     </div>
                 </div>
             </div>

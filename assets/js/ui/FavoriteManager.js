@@ -86,16 +86,18 @@ export default class FavoriteManager {
         if (!container) return;
         
         const { isLoading, items: favoriteQuestionsData, error } = favoritesState;
-        
+
+        container.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+
         if (isLoading) {
             this.quizUI.hideElement(emptyState);
-            container.innerHTML = '<p class="placeholder-text" style="text-align: center; color: var(--color-text-muted); padding: var(--spacing-md) 0;">Carregando suas questões favoritas...</p>';
+            this._renderFavoriteStatus(container, 'Carregando suas questões favoritas...', 'loading');
             return;
         }
 
         if (error) {
             this.quizUI.hideElement(emptyState);
-            container.innerHTML = `<p class="placeholder-text" style="text-align:center; color: var(--color-accent-red); padding: var(--spacing-md) 0;">${error}</p>`;
+            this._renderFavoriteStatus(container, error, 'error');
             return;
         }
 
@@ -402,6 +404,11 @@ export default class FavoriteManager {
                 actionsContainer.appendChild(explanationButton);
             }
 
+            const unfavoriteButton = this._createUnfavoriteButton(fav);
+            if (unfavoriteButton) {
+                actionsContainer.appendChild(unfavoriteButton);
+            }
+
             footer.appendChild(actionsContainer);
             contentWrapper.appendChild(body);
             contentWrapper.appendChild(footer);
@@ -411,6 +418,95 @@ export default class FavoriteManager {
 
             container.appendChild(questionCard);
         });
+    }
+
+    _renderFavoriteStatus(container, message, modifier = null) {
+        if (!container) return;
+
+        container.innerHTML = '';
+        const statusElement = document.createElement('p');
+        statusElement.className = 'favorite-questions__status placeholder-text';
+
+        if (modifier === 'error') {
+            statusElement.classList.add('favorite-questions__status--error');
+        } else if (modifier === 'empty') {
+            statusElement.classList.add('favorite-questions__status--empty');
+        }
+
+        statusElement.textContent = typeof message === 'string' ? message : String(message ?? '');
+        container.appendChild(statusElement);
+    }
+
+    _createUnfavoriteButton(favoriteQuestion) {
+        if (!favoriteQuestion) return null;
+
+        const questionId = Number.parseInt(favoriteQuestion.id_pergunta, 10);
+        if (!Number.isInteger(questionId) || questionId <= 0) {
+            return null;
+        }
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'button button--text button--small favorite-question-card__action favorite-question-card__unfavorite';
+        button.dataset.perguntaId = String(questionId);
+
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-outlined';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = 'bookmark_remove';
+        button.appendChild(icon);
+
+        const label = document.createElement('span');
+        label.className = 'button__label';
+        label.textContent = 'Remover dos favoritos';
+        button.appendChild(label);
+
+        button.addEventListener('click', () => {
+            this._handleUnfavoriteClick(questionId, button);
+        });
+
+        return button;
+    }
+
+    async _handleUnfavoriteClick(questionId, buttonElement) {
+        if (!Number.isInteger(questionId) || questionId <= 0) {
+            return false;
+        }
+
+        if (!this.actionOrchestrator) {
+            console.warn('FavoriteManager: actionOrchestrator não configurado para remover favoritos.');
+            return false;
+        }
+
+        if (!buttonElement) {
+            return false;
+        }
+
+        const labelElement = buttonElement.querySelector('.button__label');
+        const originalLabel = labelElement ? labelElement.textContent : null;
+
+        buttonElement.disabled = true;
+        buttonElement.setAttribute('aria-disabled', 'true');
+        if (labelElement) {
+            labelElement.textContent = 'Removendo...';
+        }
+
+        let wasRemoved = false;
+        try {
+            wasRemoved = await this.actionOrchestrator.toggleFavoriteFromAccountPage(questionId);
+        } catch (error) {
+            console.error('FavoriteManager: erro ao remover questão dos favoritos.', error);
+        } finally {
+            if (!wasRemoved && buttonElement.isConnected) {
+                if (labelElement && originalLabel !== null) {
+                    labelElement.textContent = originalLabel;
+                }
+                buttonElement.disabled = false;
+                buttonElement.removeAttribute('aria-disabled');
+            }
+        }
+
+        return wasRemoved;
     }
 
     consumePendingReviewRequest() {

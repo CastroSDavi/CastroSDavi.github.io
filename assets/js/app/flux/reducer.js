@@ -253,6 +253,28 @@ export function quizReducer(state = initialState, action) {
                 user: { ...state.user, favorites: { ...state.user.favorites, isLoading: false, error: action.payload.error, hasBeenFetched: true } }
             };
 
+        case ActionTypes.REMOVE_FAVORITE_FROM_LIST: {
+            const currentFavorites = state.user?.favorites || {};
+            const currentItems = Array.isArray(currentFavorites.items) ? currentFavorites.items : [];
+            const normalizedId = Number.parseInt(action.payload.questionId, 10);
+
+            const filteredItems = currentItems.filter(item => {
+                const itemId = Number.parseInt(item?.id_pergunta, 10);
+                return Number.isNaN(normalizedId) || itemId !== normalizedId;
+            });
+
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    favorites: {
+                        ...currentFavorites,
+                        items: filteredItems,
+                    }
+                }
+            };
+        }
+
         // --- AÇÕES DO TIMER ---
         case ActionTypes.START_TIMER:
             return { ...state, timer: { ...state.timer, isRunning: true, seconds: action.payload.initialSeconds || 0 } };

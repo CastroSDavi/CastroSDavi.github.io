@@ -106,6 +106,12 @@
 .score-panel__stat--incorrect .score-panel__stat-icon {
   color: var(--color-accent-red);
 }
+.score-panel__stat--xp .score-panel__stat-icon {
+  color: var(--color-secondary-green);
+}
+.score-panel__stat--streak .score-panel__stat-icon {
+  color: var(--color-accent-yellow);
+}
 
 .score-panel__stat-content {
   display: flex;
@@ -125,10 +131,21 @@
 
 .score-panel__stat-value {
   font-family: var(--font-family-sans);
-  font-size: var(--stat-value-font-size, 1.4rem); 
-  font-weight: var(--font-weight-bold); 
-  color: var(--stat-value-color, var(--color-primary-dark)); 
+  font-size: var(--stat-value-font-size, 1.4rem);
+  font-weight: var(--font-weight-bold);
+  color: var(--stat-value-color, var(--color-primary-dark));
   line-height: 1;
+}
+
+.score-panel__stat-extra {
+  margin-top: 2px;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+.score-panel__stat-extra.is-active {
+  color: var(--color-secondary-green);
 }
 
 /* Element: .score-panel__action-button (Botão Encerrar) */

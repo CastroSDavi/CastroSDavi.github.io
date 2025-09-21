@@ -73,6 +73,9 @@ class StatisticsService:
         total_study_time_seconds_period = daily_stats_period_qs.aggregate(
             total=Sum("tempo_estudo_segundos_dia")
         )["total"] or 0
+        total_xp_period = daily_stats_period_qs.aggregate(
+            total=Sum("xp_ganho_dia")
+        )["total"] or 0
 
         latest_daily_stat = (
             EstatisticasDiariasUsuario.objects.filter(id_usuario=user).order_by("-data_estatistica").first()
@@ -82,10 +85,15 @@ class StatisticsService:
         total_score_all_time = SessoesQuizUsuario.objects.filter(
             id_usuario=user, status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA
         ).aggregate(total_score=Sum("pontuacao_final"))["total_score"] or 0
+        total_xp_all_time = SessoesQuizUsuario.objects.filter(
+            id_usuario=user, status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA
+        ).aggregate(total_xp=Sum("xp_total_sessao"))["total_xp"] or 0
 
         return {
             "total_questions_answered": total_questions_answered_period,
             "max_streak": max_streak,
             "total_score_all_time": total_score_all_time,
+            "total_xp_all_time": total_xp_all_time,
             "total_study_time_seconds": total_study_time_seconds_period,
+            "total_xp_period": total_xp_period,
         }

@@ -5,6 +5,26 @@ from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from datetime import timedelta
+from typing import Dict, List
+
+
+def default_difficulty_rewards() -> Dict[str, Dict[str, int]]:
+    """Configuração padrão para pontuação, XP e penalidades por dificuldade."""
+    return {
+        "Fácil": {"points": 10, "xp": 5, "penalty": 2},
+        "Médio": {"points": 20, "xp": 12, "penalty": 5},
+        "Difícil": {"points": 35, "xp": 20, "penalty": 8},
+    }
+
+
+def default_streak_bonus_rules() -> List[Dict[str, int]]:
+    """Bônus padrão progressivo baseado em sequência de acertos."""
+    return [
+        {"streak": 3, "bonus_percent": 5},
+        {"streak": 5, "bonus_percent": 12},
+        {"streak": 8, "bonus_percent": 18},
+        {"streak": 12, "bonus_percent": 25},
+    ]
 
 # --- Modelos de Conteúdo do Quiz ---
 
@@ -481,6 +501,23 @@ class SessoesQuizUsuario(models.Model):
     )
     total_acertos = models.IntegerField(default=0, verbose_name="Total de Acertos", validators=[MinValueValidator(0)])
     total_erros = models.IntegerField(default=0, verbose_name="Total de Erros", validators=[MinValueValidator(0)])
+    xp_total_sessao = models.IntegerField(
+        default=0,
+        verbose_name="XP Ganha na Sessão",
+        validators=[MinValueValidator(0)],
+        help_text="Experiência total acumulada pelo usuário nesta sessão.",
+    )
+    sequencia_acertos_atual = models.IntegerField(
+        default=0,
+        verbose_name="Sequência Atual de Acertos",
+        validators=[MinValueValidator(0)],
+    )
+    melhor_sequencia_acertos = models.IntegerField(
+        default=0,
+        verbose_name="Melhor Sequência de Acertos",
+        validators=[MinValueValidator(0)],
+        help_text="Maior sequência contínua de acertos registrada na sessão.",
+    )
 
     class ModoQuiz(models.TextChoices):
         POR_CATEGORIA = 'Por Categoria', 'Por Categoria'
@@ -544,6 +581,12 @@ class SessoesQuizUsuario(models.Model):
             raise ValidationError({'total_acertos': 'O número de acertos não pode ser maior que o total de perguntas.'})
         if self.total_erros > self.total_perguntas_sessao:
             raise ValidationError({'total_erros': 'O número de erros não pode ser maior que o total de perguntas.'})
+        if self.xp_total_sessao < 0:
+            raise ValidationError({'xp_total_sessao': 'O XP total da sessão deve ser zero ou positivo.'})
+        if self.sequencia_acertos_atual < 0:
+            raise ValidationError({'sequencia_acertos_atual': 'Sequência atual não pode ser negativa.'})
+        if self.melhor_sequencia_acertos < 0:
+            raise ValidationError({'melhor_sequencia_acertos': 'Melhor sequência não pode ser negativa.'})
         
         # Validação de modo_quiz e id_quiz_definicao
         if self.modo_quiz == self.ModoQuiz.DEFINIDO and not self.id_quiz_definicao:
@@ -632,6 +675,22 @@ class RespostasUsuarioPorSessao(models.Model):
         help_text="True se correta, False se incorreta, Nulo se pulada/não respondida."
     )
     data_resposta = models.DateTimeField(auto_now_add=True, verbose_name="Data da Resposta")
+    pontos_obtidos = models.IntegerField(
+        default=0,
+        verbose_name="Pontos da Resposta",
+        help_text="Pontuação líquida obtida nesta resposta específica.",
+    )
+    xp_obtido = models.IntegerField(
+        default=0,
+        verbose_name="XP Obtido",
+        help_text="Experiência concedida por esta resposta.",
+        validators=[MinValueValidator(0)],
+    )
+    multiplicador_aplicado = models.FloatField(
+        default=1.0,
+        verbose_name="Multiplicador Aplicado",
+        help_text="Fator de multiplicação aplicado em função de bônus de sequência.",
+    )
 
     def __str__(self):
         status_resposta = "Pulada/Não Avaliada"
@@ -663,6 +722,11 @@ class EstatisticasDiariasUsuario(models.Model):
     perguntas_respondidas_dia = models.IntegerField(default=0, verbose_name="Perguntas Respondidas", validators=[MinValueValidator(0)])
     acertos_dia = models.IntegerField(default=0, verbose_name="Acertos no Dia", validators=[MinValueValidator(0)])
     pontos_dia = models.IntegerField(default=0, verbose_name="Pontos Ganhos no Dia")
+    xp_ganho_dia = models.IntegerField(
+        default=0,
+        verbose_name="XP Ganhado no Dia",
+        validators=[MinValueValidator(0)],
+    )
     sequencia_dias_quiz = models.IntegerField(default=0, verbose_name="Sequência de Dias Consecutivos de Quiz", validators=[MinValueValidator(0)])
     tempo_estudo_segundos_dia = models.IntegerField(default=0, verbose_name="Tempo de Estudo no Dia (segundos)", validators=[MinValueValidator(0)])
     data_atualizacao_estatistica = models.DateTimeField(auto_now=True, verbose_name="Última Atualização")
@@ -752,6 +816,28 @@ class ConfiguracoesGeraisQuiz(models.Model):
         verbose_name="Penalidade por Erro",
         help_text="Número de pontos deduzidos por cada resposta incorreta (use 0 se não houver penalidade)."
     )
+    configuracao_pontuacao_dificuldade = models.JSONField(
+        default=default_difficulty_rewards,
+        verbose_name="Regras de Pontuação por Dificuldade",
+        help_text=(
+            "Estrutura JSON com pontos, XP e penalidades por nível de dificuldade. "
+            "Exemplo: {'Fácil': {'points': 10, 'xp': 5, 'penalty': 2}}"
+        ),
+    )
+    bonus_sequencia_acertos = models.JSONField(
+        default=default_streak_bonus_rules,
+        verbose_name="Bônus por Sequência de Acertos",
+        help_text=(
+            "Lista ordenada de objetos contendo 'streak' e 'bonus_percent', representando o aumento percentual "
+            "aplicado ao acerto conforme a sequência atual."
+        ),
+    )
+    multiplicador_bonus_maximo = models.FloatField(
+        default=2.0,
+        verbose_name="Multiplicador Máximo de Bônus",
+        help_text="Limita o multiplicador total aplicado por bônus de sequência para evitar valores extremos.",
+        validators=[MinValueValidator(1.0)],
+    )
     # Adicione outros campos de configuração global aqui conforme necessário
     # Ex: permitir_pular_questoes = models.BooleanField(default=True, ...)
     # Ex: tempo_limite_padrao_quiz_minutos = models.PositiveIntegerField(default=30, ...)
@@ -767,6 +853,8 @@ class ConfiguracoesGeraisQuiz(models.Model):
             raise ValidationError('Só pode haver uma instância de ConfiguracoesGeraisQuiz. Edite a existente.')
         if self.penalidade_por_erro < 0:
             raise ValidationError({'penalidade_por_erro': 'A penalidade por erro não pode ser negativa.'})
+        self._validate_dificuldades()
+        self._validate_bonus()
         result = super().save(*args, **kwargs)
         try:
             from .views import invalidate_quiz_config_cache
@@ -776,6 +864,262 @@ class ConfiguracoesGeraisQuiz(models.Model):
             pass
         return result
 
+    def _validate_dificuldades(self) -> None:
+        payload = self.configuracao_pontuacao_dificuldade or {}
+        if not isinstance(payload, dict):
+            raise ValidationError({'configuracao_pontuacao_dificuldade': 'A configuração deve ser um objeto JSON.'})
+
+        required = {'points', 'xp', 'penalty'}
+        for difficulty, rule in payload.items():
+            if not isinstance(rule, dict):
+                raise ValidationError({
+                    'configuracao_pontuacao_dificuldade': f"A configuração de '{difficulty}' deve ser um objeto com pontos/xp/penalidade."
+                })
+            missing = required - set(rule.keys())
+            if missing:
+                raise ValidationError({
+                    'configuracao_pontuacao_dificuldade': f"A configuração de '{difficulty}' está sem as chaves: {', '.join(sorted(missing))}."
+                })
+            for key in required:
+                value = rule[key]
+                if not isinstance(value, (int, float)):
+                    raise ValidationError({
+                        'configuracao_pontuacao_dificuldade': f"O valor de '{key}' para '{difficulty}' deve ser numérico."
+                    })
+                if key != 'penalty' and value < 0:
+                    raise ValidationError({
+                        'configuracao_pontuacao_dificuldade': f"O valor de '{key}' para '{difficulty}' deve ser não negativo."
+                    })
+                if key == 'penalty' and value < 0:
+                    raise ValidationError({
+                        'configuracao_pontuacao_dificuldade': f"A penalidade para '{difficulty}' deve ser zero ou positiva."
+                    })
+
+    def _validate_bonus(self) -> None:
+        payload = self.bonus_sequencia_acertos or []
+        if not isinstance(payload, list):
+            raise ValidationError({'bonus_sequencia_acertos': 'A configuração deve ser uma lista de objetos ordenados.'})
+
+        last_streak = 0
+        for index, rule in enumerate(payload):
+            if not isinstance(rule, dict):
+                raise ValidationError({'bonus_sequencia_acertos': f"A posição {index} deve conter um objeto com 'streak' e 'bonus_percent'."})
+            if 'streak' not in rule or 'bonus_percent' not in rule:
+                raise ValidationError({'bonus_sequencia_acertos': f"A posição {index} deve conter as chaves 'streak' e 'bonus_percent'."})
+            streak_value = rule['streak']
+            bonus_value = rule['bonus_percent']
+            if not isinstance(streak_value, int) or streak_value <= 0:
+                raise ValidationError({'bonus_sequencia_acertos': f"O valor de sequência na posição {index} deve ser um inteiro positivo."})
+            if streak_value <= last_streak:
+                raise ValidationError({'bonus_sequencia_acertos': 'As sequências devem ser fornecidas em ordem crescente.'})
+            if not isinstance(bonus_value, (int, float)):
+                raise ValidationError({'bonus_sequencia_acertos': f"O bônus na posição {index} deve ser numérico."})
+            last_streak = streak_value
+
+    def get_difficulty_rule(self, difficulty: str) -> Dict[str, float]:
+        payload = self.configuracao_pontuacao_dificuldade or {}
+        if difficulty in payload:
+            return payload[difficulty]
+        normalized = difficulty.lower()
+        for key, value in payload.items():
+            if key.lower() == normalized:
+                return value
+        return {
+            'points': float(self.pontuacao_por_acerto),
+            'xp': float(self.pontuacao_por_acerto),
+            'penalty': float(self.penalidade_por_erro),
+        }
+
+    def get_bonus_percent_for_streak(self, streak: int) -> float:
+        if streak <= 0:
+            return 0.0
+        applicable = 0.0
+        for rule in self.bonus_sequencia_acertos or []:
+            try:
+                if streak >= int(rule.get('streak', 0)):
+                    applicable = float(rule.get('bonus_percent', 0))
+            except (TypeError, ValueError):
+                continue
+        return applicable
+
+    def get_max_bonus_multiplier(self) -> float:
+        try:
+            return float(self.multiplicador_bonus_maximo)
+        except (TypeError, ValueError):
+            return 2.0
+
     class Meta:
         verbose_name = "Configuração Geral do Quiz"
         verbose_name_plural = "Configurações Gerais do Quiz" # Embora seja singleton, o admin usa isso.
+
+
+class NivelGamificacao(models.Model):
+    """Representa os níveis de progressão disponíveis na plataforma."""
+
+    identificador = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name="Identificador Interno",
+        help_text="Slug único para integrações ou referências em código.",
+    )
+    nome = models.CharField(max_length=150, verbose_name="Nome do Nível")
+    descricao = models.TextField(blank=True, verbose_name="Descrição do Nível")
+    ordem = models.PositiveIntegerField(
+        default=1,
+        verbose_name="Ordem de Exibição",
+        help_text="Determina a ordem dos níveis (menor valor aparece primeiro).",
+    )
+    xp_minimo = models.PositiveIntegerField(verbose_name="XP Mínimo")
+    xp_maximo = models.PositiveIntegerField(
+        verbose_name="XP Máximo",
+        null=True,
+        blank=True,
+        help_text="Opcional. Se vazio, considera-se que o nível não possui limite superior.",
+    )
+    recompensas_json = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Recompensas",
+        help_text="Campo flexível para descrever benefícios concedidos ao alcançar o nível (ex: descontos, acesso antecipado).",
+    )
+
+    class Meta:
+        verbose_name = "Nível de Gamificação"
+        verbose_name_plural = "Níveis de Gamificação"
+        ordering = ['ordem', 'xp_minimo']
+
+    def __str__(self):
+        return f"{self.nome} (XP {self.xp_minimo}+ )"
+
+    def clean(self):
+        super().clean()
+        if self.xp_maximo is not None and self.xp_maximo < self.xp_minimo:
+            raise ValidationError({'xp_maximo': 'O XP máximo deve ser maior ou igual ao XP mínimo.'})
+
+
+class Conquista(models.Model):
+    """Define conquistas/badges desbloqueáveis pelos usuários."""
+
+    slug = models.SlugField(
+        max_length=150,
+        unique=True,
+        verbose_name="Slug da Conquista",
+        help_text="Identificador único usado para integrar regras de gamificação.",
+    )
+    nome = models.CharField(max_length=150, verbose_name="Nome da Conquista")
+    descricao = models.TextField(blank=True, verbose_name="Descrição")
+    criterio_json = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Critério",
+        help_text="Estrutura flexível descrevendo a regra para desbloqueio (ex: {'tipo': 'xp_total', 'valor': 1000}).",
+    )
+    icone = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Ícone",
+        help_text="Nome de ícone ou caminho para imagem a ser exibida ao usuário.",
+    )
+    ordem_exibicao = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Ordem de Exibição",
+        help_text="Permite priorizar a exibição de conquistas em coleções.",
+    )
+
+    class Meta:
+        verbose_name = "Conquista"
+        verbose_name_plural = "Conquistas"
+        ordering = ['ordem_exibicao', 'nome']
+
+    def __str__(self):
+        return self.nome
+
+
+class PerfilGamificacaoUsuario(models.Model):
+    """Perfil agregador das métricas de gamificação de cada usuário."""
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='gamification_profile',
+        verbose_name="Usuário",
+    )
+    xp_total = models.PositiveIntegerField(default=0, verbose_name="XP Total")
+    nivel_atual = models.ForeignKey(
+        NivelGamificacao,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='perfis_associados',
+        verbose_name="Nível Atual",
+    )
+    melhor_sequencia_geral = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Melhor Sequência Geral",
+    )
+    sequencia_atual = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Sequência Atual",
+    )
+    conquistas = models.ManyToManyField(
+        Conquista,
+        through='ConquistaUsuario',
+        related_name='perfis_dos_usuarios',
+        blank=True,
+        verbose_name="Conquistas Desbloqueadas",
+    )
+    ultima_atualizacao = models.DateTimeField(auto_now=True, verbose_name="Última Atualização")
+
+    class Meta:
+        verbose_name = "Perfil de Gamificação do Usuário"
+        verbose_name_plural = "Perfis de Gamificação dos Usuários"
+
+    def __str__(self):
+        return f"Perfil de Gamificação de {self.user.get_username()}"
+
+    def atualizar_nivel(self):
+        """Atualiza o nível do usuário com base no XP total."""
+        nivel_compativel = (
+            NivelGamificacao.objects.filter(
+                xp_minimo__lte=self.xp_total,
+            )
+            .filter(
+                models.Q(xp_maximo__gte=self.xp_total) | models.Q(xp_maximo__isnull=True)
+            )
+            .order_by('ordem', 'xp_minimo')
+            .last()
+        )
+        if nivel_compativel != self.nivel_atual:
+            self.nivel_atual = nivel_compativel
+            self.save(update_fields=['nivel_atual', 'ultima_atualizacao'])
+
+
+class ConquistaUsuario(models.Model):
+    """Relaciona um perfil de gamificação com uma conquista desbloqueada."""
+
+    perfil = models.ForeignKey(
+        PerfilGamificacaoUsuario,
+        on_delete=models.CASCADE,
+        related_name='conquistas_usuarios',
+    )
+    conquista = models.ForeignKey(
+        Conquista,
+        on_delete=models.CASCADE,
+        related_name='desbloqueios',
+    )
+    data_conquista = models.DateTimeField(auto_now_add=True, verbose_name="Data da Conquista")
+    metadata = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Metadados",
+        help_text="Informações extras sobre o desbloqueio (ex: motivo, valores alcançados).",
+    )
+
+    class Meta:
+        verbose_name = "Conquista do Usuário"
+        verbose_name_plural = "Conquistas dos Usuários"
+        unique_together = ('perfil', 'conquista')
+        ordering = ['-data_conquista']
+
+    def __str__(self):
+        return f"{self.perfil.user.get_username()} -> {self.conquista.nome}"

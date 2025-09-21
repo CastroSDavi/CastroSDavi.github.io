@@ -11,6 +11,7 @@ from .models import (
     QuestaoFavorita, # Adicionado se não estiver lá
     QuizDefinicao, QuizDefinicaoPergunta, ConfiguracoesGeraisQuiz, # Novos modelos
     UserPreferences,
+    NivelGamificacao, Conquista, PerfilGamificacaoUsuario, ConquistaUsuario,
 )
 
 # Inline para OpcoesResposta dentro de PerguntaAdmin
@@ -159,16 +160,17 @@ class RespostasUsuarioPorSessaoInline(admin.TabularInline):
 class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'link_usuario', 'data_inicio_formatada', 'duracao_sessao_formatada',
-        'modo_quiz', 'status_sessao', 'pontuacao_final',
-        'total_acertos', 'percentual_acertos',
-        'total_erros', 'total_perguntas_sessao', 'link_quiz_definicao'
+        'modo_quiz', 'status_sessao', 'pontuacao_final', 'xp_total_sessao',
+        'total_acertos', 'percentual_acertos', 'total_erros',
+        'sequencia_acertos_atual', 'melhor_sequencia_acertos',
+        'total_perguntas_sessao', 'link_quiz_definicao'
     )
     list_filter = ('modo_quiz', 'status_sessao', 'data_inicio', 'id_usuario__username', 'id_quiz_definicao')
     search_fields = ('id_usuario__username', 'id_usuario__email', 'id', 'id_quiz_definicao__nome_quiz')
     readonly_fields = (
-        'data_inicio', 'data_fim', 'tempo_total_segundos', 'pontuacao_final',
+        'data_inicio', 'data_fim', 'tempo_total_segundos', 'pontuacao_final', 'xp_total_sessao',
         'total_acertos', 'total_erros', 'total_perguntas_sessao',
-        'duracao_sessao_formatada', 'percentual_acertos',
+        'duracao_sessao_formatada', 'percentual_acertos', 'sequencia_acertos_atual', 'melhor_sequencia_acertos',
         'ids_perguntas_json', 'indice_ultima_pergunta_vista' # Novos campos como readonly
     )
     autocomplete_fields = ['id_usuario', 'id_quiz_definicao']
@@ -191,7 +193,11 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
         }),
         ('Resultados (Automático)', {
-            'fields': ('pontuacao_final', 'total_perguntas_sessao', 'total_acertos', 'percentual_acertos', 'total_erros'),
+            'fields': (
+                'pontuacao_final', 'xp_total_sessao', 'total_perguntas_sessao',
+                'total_acertos', 'percentual_acertos', 'total_erros',
+                'sequencia_acertos_atual', 'melhor_sequencia_acertos'
+            ),
             'classes': ('collapse',),
         }),
     )
@@ -217,10 +223,13 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
 
 @admin.register(RespostasUsuarioPorSessao)
 class RespostasUsuarioPorSessaoAdmin(admin.ModelAdmin):
-    list_display = ('id', 'link_sessao_quiz_formatado', 'link_pergunta_curta', 'link_opcao_selecionada_curta', 'foi_correta', 'data_resposta_formatada')
+    list_display = (
+        'id', 'link_sessao_quiz_formatado', 'link_pergunta_curta', 'link_opcao_selecionada_curta',
+        'foi_correta', 'pontos_obtidos', 'xp_obtido', 'multiplicador_aplicado', 'data_resposta_formatada'
+    )
     list_filter = ('foi_correta', 'data_resposta', 'id_sessao_quiz__id_usuario__username', 'id_pergunta__nivel_dificuldade', 'id_sessao_quiz__modo_quiz')
     search_fields = ('id_sessao_quiz__id', 'id_pergunta__texto_pergunta', 'id_opcao_resposta_selecionada__texto_opcao', 'id_sessao_quiz__id_usuario__username')
-    readonly_fields = ('data_resposta',)
+    readonly_fields = ('data_resposta', 'pontos_obtidos', 'xp_obtido', 'multiplicador_aplicado')
     autocomplete_fields = ['id_sessao_quiz', 'id_pergunta', 'id_opcao_resposta_selecionada']
     list_select_related = ('id_sessao_quiz__id_usuario', 'id_pergunta', 'id_opcao_resposta_selecionada')
     date_hierarchy = 'data_resposta'
@@ -254,7 +263,7 @@ class EstatisticasDiariasUsuarioAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'link_usuario_stats', 'data_estatistica', 'perguntas_respondidas_dia',
         'acertos_dia', 'precisao_dia',
-        'pontos_dia', 'sequencia_dias_quiz',
+        'pontos_dia', 'xp_ganho_dia', 'sequencia_dias_quiz',
         'tempo_estudo_formatado',
         'data_atualizacao_estatistica_fmt'
     )
@@ -267,7 +276,7 @@ class EstatisticasDiariasUsuarioAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('id_usuario', 'data_estatistica')}),
-        ('Desempenho Diário', {'fields': ('perguntas_respondidas_dia', 'acertos_dia', 'precisao_dia', 'pontos_dia', 'tempo_estudo_segundos_dia', 'tempo_estudo_formatado')}),
+        ('Desempenho Diário', {'fields': ('perguntas_respondidas_dia', 'acertos_dia', 'precisao_dia', 'pontos_dia', 'xp_ganho_dia', 'tempo_estudo_segundos_dia', 'tempo_estudo_formatado')}),
         ('Engajamento', {'fields': ('sequencia_dias_quiz',)}),
         ('Datas de Auditoria', {'fields': ('data_atualizacao_estatistica',), 'classes': ('collapse',)}),
     )
@@ -348,11 +357,34 @@ class QuizDefinicaoAdmin(admin.ModelAdmin):
 
 @admin.register(ConfiguracoesGeraisQuiz)
 class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'numero_perguntas_quiz_rapido', 'pontuacao_por_acerto', 'penalidade_por_erro', 'data_modificacao_formatada')
+    list_display = (
+        '__str__',
+        'numero_perguntas_quiz_rapido',
+        'pontuacao_por_acerto',
+        'penalidade_por_erro',
+        'multiplicador_bonus_maximo',
+        'data_modificacao_formatada',
+    )
     readonly_fields = ('data_modificacao',)
     fieldsets = (
         (None, {
-            'fields': ('numero_perguntas_quiz_rapido', 'pontuacao_por_acerto', 'penalidade_por_erro')
+            'fields': (
+                'numero_perguntas_quiz_rapido',
+                'pontuacao_por_acerto',
+                'penalidade_por_erro',
+                'multiplicador_bonus_maximo',
+            )
+        }),
+        ('Pontuação Dinâmica', {
+            'fields': (
+                'configuracao_pontuacao_dificuldade',
+                'bonus_sequencia_acertos',
+            ),
+            'classes': ('collapse',),
+            'description': (
+                'Configure recompensas específicas por dificuldade e os bônus aplicados a sequências de acertos. '
+                'Essas estruturas JSON permitem integrar regras avançadas sem alterar o código.'
+            ),
         }),
         ('Datas de Auditoria', {
             'fields': ('data_modificacao',),
@@ -393,3 +425,35 @@ class UserPreferencesAdmin(admin.ModelAdmin):
 # @admin.register(User)
 # class CustomUserAdmin(BaseUserAdmin):
 #     pass
+
+@admin.register(NivelGamificacao)
+class NivelGamificacaoAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'ordem', 'xp_minimo', 'xp_maximo')
+    search_fields = ('nome', 'identificador')
+    list_editable = ('ordem',)
+    ordering = ('ordem', 'xp_minimo')
+
+
+@admin.register(Conquista)
+class ConquistaAdmin(admin.ModelAdmin):
+    list_display = ('nome', 'slug', 'ordem_exibicao')
+    search_fields = ('nome', 'slug')
+    list_editable = ('ordem_exibicao',)
+    ordering = ('ordem_exibicao', 'nome')
+
+
+@admin.register(PerfilGamificacaoUsuario)
+class PerfilGamificacaoUsuarioAdmin(admin.ModelAdmin):
+    list_display = ('user', 'xp_total', 'nivel_atual', 'melhor_sequencia_geral', 'sequencia_atual', 'ultima_atualizacao')
+    search_fields = ('user__username', 'user__email')
+    list_select_related = ('user', 'nivel_atual')
+    readonly_fields = ('ultima_atualizacao',)
+    autocomplete_fields = ('user', 'nivel_atual', 'conquistas')
+
+
+@admin.register(ConquistaUsuario)
+class ConquistaUsuarioAdmin(admin.ModelAdmin):
+    list_display = ('perfil', 'conquista', 'data_conquista')
+    search_fields = ('perfil__user__username', 'conquista__nome')
+    list_filter = ('conquista', 'data_conquista')
+    autocomplete_fields = ('perfil', 'conquista')

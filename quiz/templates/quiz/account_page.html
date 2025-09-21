@@ -189,7 +189,19 @@
 
                                                     <div class="profile-gamification-card__stats">
                                                         <div class="gamification-stat">
-                                                            <span class="gamification-stat__label">Sequência atual</span>
+                                                            <span class="gamification-stat__label">Sequência diária</span>
+                                                            <span class="gamification-stat__value">{{ gamification.daily_engagement.streak_days|default_if_none:0 }}</span>
+                                                        </div>
+                                                        <div class="gamification-stat">
+                                                            <span class="gamification-stat__label">Perguntas hoje</span>
+                                                            <span class="gamification-stat__value">{{ gamification.daily_engagement.questions_today|default_if_none:0 }}</span>
+                                                        </div>
+                                                        <div class="gamification-stat">
+                                                            <span class="gamification-stat__label">XP hoje</span>
+                                                            <span class="gamification-stat__value">{{ gamification.daily_engagement.xp_today|default_if_none:0 }}</span>
+                                                        </div>
+                                                        <div class="gamification-stat">
+                                                            <span class="gamification-stat__label">Sequência de acertos</span>
                                                             <span class="gamification-stat__value">{{ gamification.current_streak }}</span>
                                                         </div>
                                                         <div class="gamification-stat">
@@ -201,6 +213,26 @@
                                                             <span class="gamification-stat__value">{{ gamification.achievements.total_unlocked }} / {{ gamification.achievements.total_available }}</span>
                                                         </div>
                                                     </div>
+
+                                                    {% with daily=gamification.daily_engagement %}
+                                                        {% if daily %}
+                                                            <div class="profile-gamification-card__daily-status {% if not daily.has_activity_today %}is-inactive{% endif %}">
+                                                                <span class="material-symbols-outlined" aria-hidden="true">
+                                                                    {% if daily.has_activity_today %}verified{% else %}alarm{% endif %}
+                                                                </span>
+                                                                <div>
+                                                                    <strong>{% if daily.has_activity_today %}Meta diária concluída{% else %}Meta diária pendente{% endif %}</strong>
+                                                                    <p>
+                                                                        {% if daily.has_activity_today %}
+                                                                            Você respondeu {{ daily.questions_today|default_if_none:0 }} perguntas hoje e manteve uma sequência de {{ daily.streak_days|default_if_none:0 }} dia{{ daily.streak_days|default_if_none:0|pluralize }}. Continue acumulando XP!
+                                                                        {% else %}
+                                                                            Nenhuma atividade registrada hoje. Responda pelo menos uma pergunta para manter sua sequência ativa.
+                                                                        {% endif %}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endwith %}
 
                                                     <div class="profile-gamification-card__achievements">
                                                         <div class="profile-gamification-card__achievements-header">
@@ -221,6 +253,10 @@
                                                                                 <span class="gamification-achievement__meta">Desbloqueada em {{ conquest.data_conquista|date:"d/m/Y" }}</span>
                                                                             {% else %}
                                                                                 <span class="gamification-achievement__meta gamification-achievement__meta--locked">Ainda não conquistada</span>
+                                                                                {% if conquest.progress %}
+                                                                                    <span class="gamification-achievement__progress">{{ conquest.progress.label }} ({{ conquest.progress.percent|floatformat:0 }}%)</span>
+                                                                                    <span class="gamification-achievement__meta gamification-achievement__meta--remaining">{{ conquest.progress.remaining_label }}</span>
+                                                                                {% endif %}
                                                                             {% endif %}
                                                                         </div>
                                                                     </li>
@@ -231,6 +267,28 @@
                                                                 </li>
                                                             {% endif %}
                                                         </ul>
+                                                        {% if gamification.achievements.upcoming %}
+                                                        <div class="profile-gamification-card__upcoming">
+                                                            <h5>Próximas metas</h5>
+                                                            <ul class="profile-upcoming-list">
+                                                                {% for upcoming in gamification.achievements.upcoming %}
+                                                                <li class="profile-upcoming-list__item">
+                                                                    <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+                                                                    <div>
+                                                                        <strong>{{ upcoming.nome }}</strong>
+                                                                        {% if upcoming.descricao %}
+                                                                            <p>{{ upcoming.descricao }}</p>
+                                                                        {% endif %}
+                                                                        {% if upcoming.progress %}
+                                                                            <span class="profile-upcoming-list__progress">{{ upcoming.progress.label }} ({{ upcoming.progress.percent|floatformat:0 }}%)</span>
+                                                                            <span class="profile-upcoming-list__meta">{{ upcoming.progress.remaining_label }}</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </li>
+                                                                {% endfor %}
+                                                            </ul>
+                                                        </div>
+                                                        {% endif %}
                                                     </div>
                                                 </div>
                                             </div>

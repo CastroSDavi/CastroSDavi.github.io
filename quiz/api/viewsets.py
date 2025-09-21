@@ -491,6 +491,7 @@ class QuizViewSet(viewsets.ViewSet):
             sessao_quiz.save(update_fields=['data_fim', 'tempo_total_segundos', 'status_sessao'])
 
             stats = get_or_create_daily_stats(request.user)
+            perguntas_respondidas_antes = stats.perguntas_respondidas_dia
             perguntas_respondidas_na_sessao = RespostasUsuarioPorSessao.objects.filter(
                 id_sessao_quiz=sessao_quiz,
                 id_opcao_resposta_selecionada__isnull=False,
@@ -501,12 +502,25 @@ class QuizViewSet(viewsets.ViewSet):
             stats.pontos_dia += sessao_quiz.pontuacao_final
             stats.xp_ganho_dia += sessao_quiz.xp_total_sessao
             stats.tempo_estudo_segundos_dia += tempo_total_segundos_frontend
-            stats.save()
+            campos_atualizados = [
+                'perguntas_respondidas_dia',
+                'acertos_dia',
+                'pontos_dia',
+                'xp_ganho_dia',
+                'tempo_estudo_segundos_dia',
+            ]
+            if StatisticsService.update_daily_streak_after_activity(
+                stats,
+                had_activity_before=perguntas_respondidas_antes > 0,
+            ):
+                campos_atualizados.append('sequencia_dias_quiz')
+            stats.save(update_fields=campos_atualizados)
 
             gamification_result = self._gamification_service.apply_session_result(
                 request.user,
                 sessao_quiz,
                 score_result,
+                daily_stats=stats,
             )
 
             return Response({

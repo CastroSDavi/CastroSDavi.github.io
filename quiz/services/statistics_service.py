@@ -97,3 +97,66 @@ class StatisticsService:
             "total_study_time_seconds": total_study_time_seconds_period,
             "total_xp_period": total_xp_period,
         }
+
+    @staticmethod
+    def _get_previous_daily_stat(stats: EstatisticasDiariasUsuario):
+        if not stats or not stats.data_estatistica:
+            return None
+
+        previous_date = stats.data_estatistica - timedelta(days=1)
+        return (
+            EstatisticasDiariasUsuario.objects.filter(
+                id_usuario=stats.id_usuario,
+                data_estatistica=previous_date,
+            )
+            .order_by("-data_estatistica")
+            .first()
+        )
+
+    @classmethod
+    def initialize_daily_streak(cls, stats: EstatisticasDiariasUsuario) -> bool:
+        """Ensure new daily stat records inherit the correct streak baseline."""
+
+        if (
+            not stats
+            or stats.perguntas_respondidas_dia > 0
+            or stats.sequencia_dias_quiz
+        ):
+            return False
+
+        previous_stat = cls._get_previous_daily_stat(stats)
+        base_streak = 0
+        if previous_stat and previous_stat.perguntas_respondidas_dia > 0:
+            base_streak = previous_stat.sequencia_dias_quiz or 0
+
+        if stats.sequencia_dias_quiz != base_streak:
+            stats.sequencia_dias_quiz = base_streak
+            return True
+        return False
+
+    @classmethod
+    def update_daily_streak_after_activity(
+        cls,
+        stats: EstatisticasDiariasUsuario,
+        *,
+        had_activity_before: bool = False,
+    ) -> bool:
+        """Update the user's consecutive-day streak once activity is registered."""
+
+        if not stats or stats.perguntas_respondidas_dia <= 0:
+            return False
+
+        if had_activity_before and stats.sequencia_dias_quiz > 0:
+            return False
+
+        previous_stat = cls._get_previous_daily_stat(stats)
+
+        if previous_stat and previous_stat.perguntas_respondidas_dia > 0:
+            new_streak = (previous_stat.sequencia_dias_quiz or 0) + 1
+        else:
+            new_streak = 1
+
+        if stats.sequencia_dias_quiz != new_streak:
+            stats.sequencia_dias_quiz = new_streak
+            return True
+        return False

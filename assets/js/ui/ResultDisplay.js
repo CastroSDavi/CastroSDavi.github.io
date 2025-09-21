@@ -74,6 +74,14 @@ export default class ResultDisplay {
             resultadoConquistasCount,
             resultadoConquistasList,
             resultadoConquistasEmpty,
+            resultadoDailyWrapper,
+            resultadoDailyStreak,
+            resultadoDailyQuestions,
+            resultadoDailyXp,
+            resultadoDailyStatus,
+            resultadoUpcomingWrapper,
+            resultadoUpcomingList,
+            resultadoUpcomingEmpty,
         } = this.elements;
 
         if (!resultadoCard || !user || !state) {
@@ -279,6 +287,109 @@ export default class ResultDisplay {
                         resultadoConquistasWrapper.classList.remove('is-empty');
                     }
                 }
+
+                const dailyEngagement = gamificationData?.daily_engagement || null;
+                if (resultadoDailyWrapper) {
+                    if (dailyEngagement) {
+                        this.quizUI.showElement(resultadoDailyWrapper);
+                        const streakDays = Number(dailyEngagement.streak_days) || 0;
+                        if (resultadoDailyStreak) {
+                            resultadoDailyStreak.textContent = `${streakDays.toLocaleString('pt-BR')} dia${streakDays === 1 ? '' : 's'}`;
+                        }
+                        if (resultadoDailyQuestions) {
+                            const questionsToday = Number(dailyEngagement.questions_today) || 0;
+                            resultadoDailyQuestions.textContent = questionsToday.toLocaleString('pt-BR');
+                        }
+                        if (resultadoDailyXp) {
+                            const xpToday = Number(dailyEngagement.xp_today) || 0;
+                            resultadoDailyXp.textContent = `${xpToday.toLocaleString('pt-BR')} XP`;
+                        }
+                        if (resultadoDailyStatus) {
+                            const hasActivityToday = Boolean(dailyEngagement.has_activity_today);
+                            if (hasActivityToday) {
+                                resultadoDailyStatus.textContent = 'Sequência diária garantida hoje. Continue acumulando XP!';
+                                resultadoDailyStatus.classList.remove('is-inactive');
+                            } else {
+                                resultadoDailyStatus.textContent = 'Você ainda precisa responder uma pergunta hoje para manter a sequência ativa.';
+                                resultadoDailyStatus.classList.add('is-inactive');
+                            }
+                        }
+                    } else {
+                        this.quizUI.hideElement(resultadoDailyWrapper);
+                        if (resultadoDailyStatus) {
+                            resultadoDailyStatus.textContent = '';
+                            resultadoDailyStatus.classList.remove('is-inactive');
+                        }
+                    }
+                }
+
+                if (resultadoUpcomingWrapper) {
+                    const upcomingAchievements = Array.isArray(gamificationData?.achievements?.upcoming)
+                        ? gamificationData.achievements.upcoming.filter((item) => item && item.progress)
+                        : [];
+
+                    if (upcomingAchievements.length > 0) {
+                        if (resultadoUpcomingList) {
+                            resultadoUpcomingList.innerHTML = '';
+                            upcomingAchievements.forEach((achievement) => {
+                                const item = document.createElement('li');
+                                item.className = 'gamification-upcoming__item';
+
+                                const icon = document.createElement('span');
+                                icon.className = 'material-symbols-outlined gamification-upcoming__icon';
+                                icon.textContent = achievement.progress?.percent >= 100 ? 'military_tech' : 'flag';
+                                icon.setAttribute('aria-hidden', 'true');
+                                item.appendChild(icon);
+
+                                const content = document.createElement('div');
+                                content.className = 'gamification-upcoming__content';
+
+                                const title = document.createElement('strong');
+                                title.textContent = achievement.nome || 'Nova conquista';
+                                content.appendChild(title);
+
+                                if (achievement.descricao) {
+                                    const description = document.createElement('p');
+                                    description.textContent = achievement.descricao;
+                                    content.appendChild(description);
+                                }
+
+                                if (achievement.progress) {
+                                    const progress = document.createElement('span');
+                                    progress.className = 'gamification-upcoming__progress';
+                                    const percent = Number(achievement.progress.percent) || 0;
+                                    progress.textContent = `Progresso: ${achievement.progress.label} (${percent.toFixed(0)}%)`;
+                                    content.appendChild(progress);
+
+                                    if (achievement.progress.remaining_label) {
+                                        const remaining = document.createElement('span');
+                                        remaining.className = 'gamification-upcoming__meta';
+                                        remaining.textContent = achievement.progress.remaining_label;
+                                        content.appendChild(remaining);
+                                    }
+                                }
+
+                                item.appendChild(content);
+                                resultadoUpcomingList.appendChild(item);
+                            });
+                        }
+
+                        this.quizUI.showElement(resultadoUpcomingWrapper);
+                        resultadoUpcomingWrapper.classList.remove('is-empty');
+                        if (resultadoUpcomingEmpty) {
+                            resultadoUpcomingEmpty.classList.add('u-is-hidden');
+                        }
+                    } else {
+                        if (resultadoUpcomingList) {
+                            resultadoUpcomingList.innerHTML = '';
+                        }
+                        if (resultadoUpcomingEmpty) {
+                            resultadoUpcomingEmpty.classList.remove('u-is-hidden');
+                        }
+                        this.quizUI.showElement(resultadoUpcomingWrapper);
+                        resultadoUpcomingWrapper.classList.add('is-empty');
+                    }
+                }
             } else {
                 this.quizUI.hideElement(resultadoGamificacao);
             }
@@ -296,6 +407,8 @@ export default class ResultDisplay {
             xpGanho: xpGanhoValue,
             levelName: levelNameValue,
             achievementsUnlocked: achievementsUnlockedValue,
+            dailyStreak: gamificationData?.daily_engagement?.streak_days || 0,
+            dailyXp: gamificationData?.daily_engagement?.xp_today || 0,
         };
         this.latestShareMessage = this._buildShareMessage(this.lastRenderedSnapshot);
 
@@ -365,7 +478,9 @@ export default class ResultDisplay {
             xpTotal,
             xpGanho,
             levelName,
-            achievementsUnlocked
+            achievementsUnlocked,
+            dailyStreak,
+            dailyXp
         } = snapshot;
 
         if (totalRespondidas === 0) {
@@ -393,6 +508,15 @@ export default class ResultDisplay {
         }
         if (achievementsUnlocked) {
             extras.push(`Desbloqueei ${achievementsUnlocked} conquista${achievementsUnlocked === 1 ? '' : 's'}`);
+        }
+        if (typeof dailyStreak === 'number' && dailyStreak > 0) {
+            const streakTexto = Number(dailyStreak).toLocaleString('pt-BR');
+            const sufixo = Number(dailyStreak) === 1 ? '' : 's';
+            extras.push(`Mantive uma sequência de ${streakTexto} dia${sufixo}`);
+        }
+        if (typeof dailyXp === 'number' && dailyXp > 0) {
+            const xpHojeTexto = Number(dailyXp).toLocaleString('pt-BR');
+            extras.push(`Somei ${xpHojeTexto} XP hoje`);
         }
 
         const extrasMensagem = extras.length ? ` ${extras.join(' e ')}.` : '';

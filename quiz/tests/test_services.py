@@ -7,13 +7,17 @@ from django.utils import timezone
 from quiz.models import (
     Categoria,
     ConfiguracoesGeraisQuiz,
+    Conquista,
     EstatisticasDiariasUsuario,
+    NivelGamificacao,
     OpcaoResposta,
     Pergunta,
     QuestaoFavorita,
     SessoesQuizUsuario,
 )
+from quiz.services.gamification_service import GamificationService
 from quiz.services.quiz_service import QuizDataService
+from quiz.services.scoring_service import SessionScoreResult
 from quiz.services.statistics_service import StatisticsService
 from quiz.views import get_quiz_config, invalidate_quiz_config_cache
 
@@ -151,3 +155,150 @@ class StatisticsServiceTests(TestCase):
         self.assertEqual(metrics['total_xp_all_time'], 60)
         self.assertEqual(metrics['total_xp_period'], 90)
         self.assertGreater(metrics['total_study_time_seconds'], 0)
+
+    def test_initialize_daily_streak_uses_previous_day(self):
+        future_stat = EstatisticasDiariasUsuario.objects.create(
+            id_usuario=self.user,
+            data_estatistica=timezone.now().date() + timedelta(days=1),
+            perguntas_respondidas_dia=0,
+            acertos_dia=0,
+            pontos_dia=0,
+            xp_ganho_dia=0,
+            sequencia_dias_quiz=0,
+        )
+
+        updated = StatisticsService.initialize_daily_streak(future_stat)
+        self.assertTrue(updated)
+        self.assertEqual(future_stat.sequencia_dias_quiz, self.stat_recent.sequencia_dias_quiz)
+
+    def test_update_daily_streak_after_activity_increments(self):
+        future_stat = EstatisticasDiariasUsuario.objects.create(
+            id_usuario=self.user,
+            data_estatistica=timezone.now().date() + timedelta(days=1),
+            perguntas_respondidas_dia=0,
+            acertos_dia=0,
+            pontos_dia=0,
+            xp_ganho_dia=0,
+            sequencia_dias_quiz=0,
+        )
+
+        StatisticsService.initialize_daily_streak(future_stat)
+        future_stat.perguntas_respondidas_dia = 7
+        changed = StatisticsService.update_daily_streak_after_activity(
+            future_stat,
+            had_activity_before=False,
+        )
+        self.assertTrue(changed)
+        self.assertEqual(
+            future_stat.sequencia_dias_quiz,
+            (self.stat_recent.sequencia_dias_quiz or 0) + 1,
+        )
+
+        # Calling again without new activity should not change the streak
+        changed_again = StatisticsService.update_daily_streak_after_activity(
+            future_stat,
+            had_activity_before=True,
+        )
+        self.assertFalse(changed_again)
+
+
+class GamificationServiceTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('gamer', 'gamer@example.com', 'secret')
+        self.service = GamificationService()
+
+        self.level = NivelGamificacao.objects.create(
+            identificador='iniciante',
+            nome='Iniciante',
+            descricao='Nível inicial',
+            ordem=1,
+            xp_minimo=0,
+            xp_maximo=150,
+        )
+
+        Conquista.objects.create(
+            slug='xp-50',
+            nome='Acumule 50 XP',
+            criterio_json={'tipo': 'xp_total', 'valor': 50},
+        )
+        Conquista.objects.create(
+            slug='streak-dias-2',
+            nome='Dois dias seguidos',
+            criterio_json={'tipo': 'dias_consecutivos', 'valor': 2},
+        )
+        Conquista.objects.create(
+            slug='perguntas-dia',
+            nome='Responder 10 perguntas no dia',
+            criterio_json={'tipo': 'perguntas_diarias', 'valor': 10},
+        )
+        Conquista.objects.create(
+            slug='xp-diario',
+            nome='Ganhe 60 XP no dia',
+            criterio_json={'tipo': 'xp_diario', 'valor': 60},
+        )
+        Conquista.objects.create(
+            slug='xp-200',
+            nome='Rumo aos 200 XP',
+            criterio_json={'tipo': 'xp_total', 'valor': 200},
+        )
+
+        self.daily_stat = EstatisticasDiariasUsuario.objects.create(
+            id_usuario=self.user,
+            data_estatistica=timezone.now().date(),
+            perguntas_respondidas_dia=12,
+            acertos_dia=10,
+            pontos_dia=180,
+            xp_ganho_dia=75,
+            sequencia_dias_quiz=3,
+        )
+
+        self.previous_session = SessoesQuizUsuario.objects.create(
+            id_usuario=self.user,
+            modo_quiz=SessoesQuizUsuario.ModoQuiz.RAPIDO,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            total_perguntas_sessao=10,
+            total_acertos=8,
+            total_erros=2,
+            pontuacao_final=160,
+            xp_total_sessao=55,
+        )
+
+        self.session = SessoesQuizUsuario.objects.create(
+            id_usuario=self.user,
+            modo_quiz=SessoesQuizUsuario.ModoQuiz.RAPIDO,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            total_perguntas_sessao=12,
+            total_acertos=11,
+            total_erros=1,
+            pontuacao_final=220,
+            xp_total_sessao=80,
+        )
+
+        self.score_result = SessionScoreResult(
+            total_points=220,
+            total_xp=80,
+            total_correct=11,
+            total_incorrect=1,
+            total_answered=12,
+            current_streak=5,
+            best_streak=6,
+            response_scores=[],
+        )
+
+    def test_apply_session_result_returns_daily_and_upcoming(self):
+        result = self.service.apply_session_result(
+            self.user,
+            self.session,
+            self.score_result,
+            daily_stats=self.daily_stat,
+        )
+
+        snapshot = result.snapshot
+        self.assertIn('daily_engagement', snapshot)
+        self.assertEqual(snapshot['daily_engagement']['streak_days'], self.daily_stat.sequencia_dias_quiz)
+        self.assertGreaterEqual(snapshot['achievements']['total_unlocked'], 4)
+
+        upcoming = snapshot['achievements']['upcoming']
+        self.assertIsInstance(upcoming, list)
+        self.assertTrue(any(item.get('progress') for item in upcoming))
+        self.assertTrue(any(item['progress']['metric'] == 'xp_total' for item in upcoming if item.get('progress')))

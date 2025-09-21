@@ -134,7 +134,6 @@ class Migration(migrations.Migration):
                 ('melhor_sequencia_geral', models.PositiveIntegerField(default=0, verbose_name='Melhor Sequência Geral')),
                 ('sequencia_atual', models.PositiveIntegerField(default=0, verbose_name='Sequência Atual')),
                 ('ultima_atualizacao', models.DateTimeField(auto_now=True, verbose_name='Última Atualização')),
-                ('conquistas', models.ManyToManyField(blank=True, related_name='perfis_dos_usuarios', through='quiz.ConquistaUsuario', to='quiz.conquista', verbose_name='Conquistas Desbloqueadas')),
                 ('nivel_atual', models.ForeignKey(blank=True, null=True, on_delete=models.deletion.SET_NULL, related_name='perfis_associados', to='quiz.nivelgamificacao', verbose_name='Nível Atual')),
                 ('user', models.OneToOneField(on_delete=models.deletion.CASCADE, related_name='gamification_profile', to='auth.user', verbose_name='Usuário')),
             ],
@@ -158,5 +157,10 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'Conquistas dos Usuários',
                 'unique_together': {('perfil', 'conquista')},
             },
+        ),
+        migrations.AddField(
+            model_name='perfilgamificacaousuario',
+            name='conquistas',
+            field=models.ManyToManyField(blank=True, related_name='perfis_dos_usuarios', through='quiz.ConquistaUsuario', to='quiz.conquista', verbose_name='Conquistas Desbloqueadas'),
         ),
     ]

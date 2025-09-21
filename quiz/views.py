@@ -24,6 +24,8 @@ from .models import (
     QuizDefinicaoPergunta,  # NOVO MODELO
     ConfiguracoesGeraisQuiz,  # NOVO MODELO
     UserPreferences,
+    default_difficulty_rewards,
+    default_streak_bonus_rules,
 )
 from .forms import (
     CustomUserCreationForm,
@@ -35,6 +37,8 @@ from .forms import (
 
 from .services.quiz_service import QuizDataService
 from .services.statistics_service import StatisticsService
+from .services.scoring_service import ScoringService
+from .services.gamification_service import GamificationService
 
 # region Lógica de Negócio e Utilitários de Dados
 
@@ -61,7 +65,10 @@ def get_quiz_config():
             defaults={
                 'numero_perguntas_quiz_rapido': 10,  # Valor padrão
                 'pontuacao_por_acerto': 15,       # Valor padrão
-                'penalidade_por_erro': 5          # Valor padrão
+                'penalidade_por_erro': 5,         # Valor padrão
+                'configuracao_pontuacao_dificuldade': default_difficulty_rewards(),
+                'bonus_sequencia_acertos': default_streak_bonus_rules(),
+                'multiplicador_bonus_maximo': 2.0,
             }
         )
         if created:
@@ -894,6 +901,7 @@ def start_quiz_session_view(request):
 @require_POST
 def register_answer_view(request):
     quiz_config = get_quiz_config()
+    scoring_service = ScoringService(quiz_config)
 
     try:
         data = json.loads(request.body.decode('utf-8'))
@@ -932,15 +940,30 @@ def register_answer_view(request):
             }
         )
 
-        respostas_da_sessao = RespostasUsuarioPorSessao.objects.filter(
-            id_sessao_quiz=sessao_quiz)
-        sessao_quiz.total_acertos = respostas_da_sessao.filter(
-            foi_correta=True).count()
-        sessao_quiz.total_erros = respostas_da_sessao.filter(
-            foi_correta=False, id_opcao_resposta_selecionada__isnull=False).count()
+        respostas_da_sessao = list(
+            RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_quiz)
+            .select_related('id_pergunta')
+            .order_by('data_resposta', 'pk')
+        )
+        score_result = scoring_service.compute_session_result(respostas_da_sessao)
+        if respostas_da_sessao:
+            for resp_obj, resp_score in zip(respostas_da_sessao, score_result.response_scores):
+                resp_obj.pontos_obtidos = resp_score.pontos
+                resp_obj.xp_obtido = resp_score.xp
+                resp_obj.multiplicador_aplicado = resp_score.multiplicador
+            RespostasUsuarioPorSessao.objects.bulk_update(
+                respostas_da_sessao,
+                ['pontos_obtidos', 'xp_obtido', 'multiplicador_aplicado']
+            )
 
-        sessao_quiz.pontuacao_final = max(0, (sessao_quiz.total_acertos * quiz_config.pontuacao_por_acerto) -
-                                             (sessao_quiz.total_erros * quiz_config.penalidade_por_erro))
+        sessao_quiz.total_acertos = score_result.total_correct
+        sessao_quiz.total_erros = score_result.total_incorrect
+        sessao_quiz.pontuacao_final = score_result.total_points
+        sessao_quiz.xp_total_sessao = score_result.total_xp
+        sessao_quiz.sequencia_acertos_atual = score_result.current_streak
+        sessao_quiz.melhor_sequencia_acertos = score_result.best_streak
+        if score_result.total_answered > sessao_quiz.total_perguntas_sessao:
+            sessao_quiz.total_perguntas_sessao = score_result.total_answered
 
         if current_question_index is not None:
             try:
@@ -954,14 +977,21 @@ def register_answer_view(request):
                 print(
                     f"Warning: Valor de current_question_index não numérico ({current_question_index}) para sessão {sessao_quiz.pk}.")
 
-        sessao_quiz.save()
+        sessao_quiz.save(update_fields=[
+            'total_acertos', 'total_erros', 'pontuacao_final', 'xp_total_sessao',
+            'sequencia_acertos_atual', 'melhor_sequencia_acertos', 'total_perguntas_sessao'
+        ])
 
         return JsonResponse({
             'status': 'success', 'message': 'Resposta registrada.',
             'foi_correta': foi_correta_calculada,
             'pontuacao_sessao': sessao_quiz.pontuacao_final,
+            'xp_sessao': sessao_quiz.xp_total_sessao,
             'total_acertos_sessao': sessao_quiz.total_acertos,
-            'total_erros_sessao': sessao_quiz.total_erros
+            'total_erros_sessao': sessao_quiz.total_erros,
+            'sequencia_atual': sessao_quiz.sequencia_acertos_atual,
+            'melhor_sequencia_sessao': sessao_quiz.melhor_sequencia_acertos,
+            'multiplicador_atual': score_result.last_multiplier,
         })
 
     except SessoesQuizUsuario.DoesNotExist:
@@ -979,6 +1009,8 @@ def register_answer_view(request):
 @require_POST
 def end_quiz_session_view(request):
     quiz_config = get_quiz_config()
+    gamification_service = GamificationService()
+    scoring_service = ScoringService(quiz_config)
     try:
         data = json.loads(request.body.decode('utf-8'))
         session_id = data.get('session_id')
@@ -993,13 +1025,43 @@ def end_quiz_session_view(request):
                 'status': 'info', 'message': 'Sessão já finalizada.',
                 'pontuacao_final': sessao_quiz.pontuacao_final,
                 'total_acertos': sessao_quiz.total_acertos,
-                'total_erros': sessao_quiz.total_erros
+                'total_erros': sessao_quiz.total_erros,
+                'xp_final': sessao_quiz.xp_total_sessao,
             }, status=200)
+
+        respostas_da_sessao = list(
+            RespostasUsuarioPorSessao.objects.filter(id_sessao_quiz=sessao_quiz)
+            .select_related('id_pergunta')
+            .order_by('data_resposta', 'pk')
+        )
+        score_result = scoring_service.compute_session_result(respostas_da_sessao)
+        if respostas_da_sessao:
+            for resp_obj, resp_score in zip(respostas_da_sessao, score_result.response_scores):
+                resp_obj.pontos_obtidos = resp_score.pontos
+                resp_obj.xp_obtido = resp_score.xp
+                resp_obj.multiplicador_aplicado = resp_score.multiplicador
+            RespostasUsuarioPorSessao.objects.bulk_update(
+                respostas_da_sessao,
+                ['pontos_obtidos', 'xp_obtido', 'multiplicador_aplicado']
+            )
+
+        sessao_quiz.total_acertos = score_result.total_correct
+        sessao_quiz.total_erros = score_result.total_incorrect
+        sessao_quiz.pontuacao_final = score_result.total_points
+        sessao_quiz.xp_total_sessao = score_result.total_xp
+        sessao_quiz.sequencia_acertos_atual = score_result.current_streak
+        sessao_quiz.melhor_sequencia_acertos = score_result.best_streak
+        if score_result.total_answered > sessao_quiz.total_perguntas_sessao:
+            sessao_quiz.total_perguntas_sessao = score_result.total_answered
 
         sessao_quiz.data_fim = timezone.now()
         sessao_quiz.tempo_total_segundos = tempo_total_segundos_frontend
         sessao_quiz.status_sessao = SessoesQuizUsuario.StatusSessao.COMPLETA
-        sessao_quiz.save()
+        sessao_quiz.save(update_fields=[
+            'data_fim', 'tempo_total_segundos', 'status_sessao', 'total_acertos',
+            'total_erros', 'pontuacao_final', 'xp_total_sessao',
+            'sequencia_acertos_atual', 'melhor_sequencia_acertos', 'total_perguntas_sessao'
+        ])
 
         stats = get_or_create_daily_stats(request.user)
         perguntas_respondidas_na_sessao = RespostasUsuarioPorSessao.objects.filter(
@@ -1009,14 +1071,19 @@ def end_quiz_session_view(request):
         stats.perguntas_respondidas_dia += perguntas_respondidas_na_sessao
         stats.acertos_dia += sessao_quiz.total_acertos
         stats.pontos_dia += sessao_quiz.pontuacao_final
+        stats.xp_ganho_dia += sessao_quiz.xp_total_sessao
         stats.tempo_estudo_segundos_dia += tempo_total_segundos_frontend
         stats.save()
+
+        gamification_service.apply_session_result(request.user, sessao_quiz, score_result)
 
         return JsonResponse({
             'status': 'success', 'message': 'Sessão finalizada com sucesso.',
             'pontuacao_final': sessao_quiz.pontuacao_final,
             'total_acertos': sessao_quiz.total_acertos,
-            'total_erros': sessao_quiz.total_erros
+            'total_erros': sessao_quiz.total_erros,
+            'xp_final': sessao_quiz.xp_total_sessao,
+            'sequencia_final': sessao_quiz.melhor_sequencia_acertos
         })
     except SessoesQuizUsuario.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Sessão de quiz inválida ou não pertence ao usuário.'}, status=403)

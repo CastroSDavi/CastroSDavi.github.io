@@ -102,6 +102,7 @@ class StatisticsServiceTests(TestCase):
             total_acertos=3,
             total_erros=2,
             pontuacao_final=45,
+            xp_total_sessao=36,
         )
         self.session_old = SessoesQuizUsuario.objects.create(
             id_usuario=self.user,
@@ -111,6 +112,7 @@ class StatisticsServiceTests(TestCase):
             total_acertos=2,
             total_erros=2,
             pontuacao_final=30,
+            xp_total_sessao=24,
             data_inicio=timezone.now() - timedelta(days=120),
         )
         self.stat_recent = EstatisticasDiariasUsuario.objects.create(
@@ -121,6 +123,7 @@ class StatisticsServiceTests(TestCase):
             pontos_dia=90,
             sequencia_dias_quiz=4,
             tempo_estudo_segundos_dia=1200,
+            xp_ganho_dia=72,
         )
         self.stat_old = EstatisticasDiariasUsuario.objects.create(
             id_usuario=self.user,
@@ -130,6 +133,7 @@ class StatisticsServiceTests(TestCase):
             pontos_dia=30,
             sequencia_dias_quiz=1,
             tempo_estudo_segundos_dia=600,
+            xp_ganho_dia=18,
         )
 
     def test_filter_queryset_by_period_limits_records(self):
@@ -144,4 +148,6 @@ class StatisticsServiceTests(TestCase):
         self.assertEqual(metrics['total_questions_answered'], 13)
         self.assertEqual(metrics['max_streak'], self.stat_recent.sequencia_dias_quiz)
         self.assertEqual(metrics['total_score_all_time'], 75)
+        self.assertEqual(metrics['total_xp_all_time'], 60)
+        self.assertEqual(metrics['total_xp_period'], 90)
         self.assertGreater(metrics['total_study_time_seconds'], 0)

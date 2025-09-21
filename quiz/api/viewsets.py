@@ -9,6 +9,7 @@ from datetime import datetime, time
 from django.db.models import Case, Count, Q, When
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.http import QueryDict, RawPostDataException
 
 from rest_framework import serializers, status, viewsets
 from rest_framework.decorators import action
@@ -59,9 +60,31 @@ class QuizViewSet(viewsets.ViewSet):
 
     def _parse_json_body(self, request):
         try:
-            return json.loads(request.body.decode('utf-8') or '{}')
-        except json.JSONDecodeError:
-            raise serializers.ValidationError({'detail': 'Corpo da requisição JSON inválido.'})
+            raw_body = request.body
+        except RawPostDataException:
+            raw_body = None
+
+        if raw_body not in (None, b'', ''):
+            try:
+                return json.loads(raw_body.decode('utf-8') or '{}')
+            except json.JSONDecodeError:
+                raise serializers.ValidationError({'detail': 'Corpo da requisição JSON inválido.'})
+
+        try:
+            parsed_data = request.data
+        except RawPostDataException as exc:
+            raise serializers.ValidationError({'detail': 'Não foi possível ler o corpo da requisição.'}) from exc
+
+        if isinstance(parsed_data, QueryDict):
+            return parsed_data.dict()
+
+        if parsed_data in (None, '', b''):
+            return {}
+
+        if isinstance(parsed_data, (dict, list)):
+            return parsed_data
+
+        return {}
 
     @action(detail=False, methods=['get'], url_path='summary')
     def summary(self, request):

@@ -1,5 +1,4 @@
 """Utilities for updating gamification profiles and achievements."""
-"""Utilities for updating gamification profiles and achievements."""
 
 from __future__ import annotations
 

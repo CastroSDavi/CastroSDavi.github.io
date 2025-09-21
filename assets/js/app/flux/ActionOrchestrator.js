@@ -253,8 +253,35 @@ export default class ActionOrchestrator {
         await this._fetchAndInitiateQuiz(params);
     }
 
-    async startQuickQuiz() {
-        await this._fetchAndInitiateQuiz({ mode: 'Rápido' });
+    async startQuickQuiz(count = null) {
+        const params = { mode: 'Rápido' };
+        if (Number.isInteger(count) && count > 0) {
+            params.count = count;
+        }
+        await this._fetchAndInitiateQuiz(params);
+    }
+
+    async startCuratedChallenge({
+        categoryIds = [],
+        difficultyLevels = null,
+        numQuestions = null,
+        modeLabel = 'Por Categoria',
+    } = {}) {
+        const params = { mode: modeLabel || 'Por Categoria' };
+
+        if (Array.isArray(categoryIds) && categoryIds.length > 0) {
+            params.category_ids = categoryIds;
+        }
+
+        if (Array.isArray(difficultyLevels) && difficultyLevels.length > 0) {
+            params.difficulty_levels = difficultyLevels;
+        }
+
+        if (Number.isInteger(numQuestions) && numQuestions > 0) {
+            params.num_questions = numQuestions;
+        }
+
+        await this._fetchAndInitiateQuiz(params);
     }
 
     async startPredefinedQuiz(quizDefinicaoId) {

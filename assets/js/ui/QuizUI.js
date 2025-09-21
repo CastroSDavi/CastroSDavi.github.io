@@ -113,6 +113,40 @@ export default class QuizUI {
             } else if (hadResumableSession && !hasResumableSession) {
                 this.challengeHubInstance.hideResumeOption();
             }
+
+            const prevTotalQuestions = this.previousState.geral?.totalQuestionsAvailable;
+            const currentTotalQuestions = currentState.geral?.totalQuestionsAvailable;
+            if (prevTotalQuestions !== currentTotalQuestions) {
+                this.challengeHubInstance.updateTotalQuestionsCount(currentTotalQuestions);
+            }
+
+            const prevQuickCount = this.previousState.geral?.homeSummary?.quickQuizDefaultCount;
+            const currentQuickCount = currentState.geral?.homeSummary?.quickQuizDefaultCount;
+            if (prevQuickCount !== currentQuickCount) {
+                this.challengeHubInstance.updateQuickQuizCount(currentQuickCount);
+            }
+
+            const prevCategoryCount = this.previousState.geral?.homeSummary?.totalCategories;
+            const currentCategoryCount = currentState.geral?.homeSummary?.totalCategories;
+            if (prevCategoryCount !== currentCategoryCount) {
+                this.challengeHubInstance.updateTotalCategoriesCount(currentCategoryCount);
+            }
+
+            const prevCategories = this.previousState.geral?.allCategories;
+            const currentCategories = currentState.geral?.allCategories;
+            if (prevCategories !== currentCategories) {
+                this.challengeHubInstance.updateFeaturedCategories(currentCategories);
+            }
+
+            const prevUserStats = this.previousState.user;
+            const currentUserStats = currentState.user;
+            if (
+                prevUserStats?.pontos !== currentUserStats?.pontos
+                || prevUserStats?.acertos !== currentUserStats?.acertos
+                || prevUserStats?.erros !== currentUserStats?.erros
+            ) {
+                this.challengeHubInstance.updateUserStats(currentUserStats);
+            }
         }
         // --- FIM DA ALTERAÇÃO ---
 
@@ -197,6 +231,14 @@ export default class QuizUI {
             challengeHubContainer: document.getElementById('challenge-hub-container'),
             hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'),
             hubQuickQuizCount: document.getElementById('hub-quick-quiz-count'),
+            hubTotalCategoriesCount: document.getElementById('hub-total-categories-count'),
+            hubDailyChallengeBtn: document.getElementById('hub-daily-challenge-btn'),
+            hubFocusedReviewBtn: document.getElementById('hub-focused-review-btn'),
+            hubQuickFilterList: document.getElementById('hub-quick-filter-list'),
+            hubCategoryChipList: document.getElementById('hub-category-chip-list'),
+            hubStatTotalPoints: document.getElementById('hub-stat-total-points'),
+            hubStatQuestionsMastered: document.getElementById('hub-stat-questions-mastered'),
+            hubStatQuestionsToReview: document.getElementById('hub-stat-questions-to-review'),
             hubCustomizeQuizBtn: document.getElementById('hub-customize-quiz-btn'),
             hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'),
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),

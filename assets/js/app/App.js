@@ -117,6 +117,12 @@ export default class App {
             challengeHub.updateTotalQuestionsCount(totalQuestions);
             const quickQuizCount = state.geral.homeSummary?.quickQuizDefaultCount ?? QUICK_QUIZ_COUNT;
             challengeHub.updateQuickQuizCount(quickQuizCount);
+            const totalCategories = state.geral.homeSummary?.totalCategories
+                ?? state.geral.allCategories?.length
+                ?? 0;
+            challengeHub.updateTotalCategoriesCount(totalCategories);
+            challengeHub.updateUserStats(state.user);
+            challengeHub.updateFeaturedCategories(state.geral.allCategories);
             challengeHub.setupEventListeners();
         }
 

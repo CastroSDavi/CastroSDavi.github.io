@@ -20,14 +20,40 @@ export default class ChallengeHub {
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
-            
-            // --- INÍCIO DA CORREÇÃO: Mapeando para os novos IDs e estrutura ---
+
             resumeCard: document.getElementById('hub-resume-quiz-card'),
             resumeCardDescription: document.getElementById('hub-resume-card-description'),
             confirmResumeBtn: document.getElementById('hub-confirm-resume-btn'),
             discardResumeBtn: document.getElementById('hub-discard-resume-btn'),
-            // --- FIM DA CORREÇÃO ---
+
+            hubDailyChallengeBtn: document.getElementById('hub-daily-challenge-btn'),
+            hubFocusedReviewBtn: document.getElementById('hub-focused-review-btn'),
+            hubTotalCategoriesCount: document.getElementById('hub-total-categories-count'),
+            statTotalPoints: document.getElementById('hub-stat-total-points'),
+            statQuestionsMastered: document.getElementById('hub-stat-questions-mastered'),
+            statQuestionsToReview: document.getElementById('hub-stat-questions-to-review'),
+            categoryChipList: document.getElementById('hub-category-chip-list'),
+            quickFilterList: document.getElementById('hub-quick-filter-list'),
         };
+    }
+
+    _formatNumber(value) {
+        if (value === null || value === undefined) {
+            return '0';
+        }
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value.toLocaleString('pt-BR');
+        }
+        if (typeof value === 'string') {
+            const trimmed = value.trim();
+            if (trimmed === '') return '0';
+            const parsed = Number(trimmed.replace(/\./g, '').replace(',', '.'));
+            if (!Number.isNaN(parsed)) {
+                return parsed.toLocaleString('pt-BR');
+            }
+            return trimmed;
+        }
+        return '0';
     }
 
     /**
@@ -75,13 +101,15 @@ export default class ChallengeHub {
      * @param {number|string} count - O número de questões.
      */
     updateTotalQuestionsCount(count) {
+        const formattedCount = this._formatNumber(count);
+
         if (this.elements.hubTotalQuestionsCount) {
-            this.elements.hubTotalQuestionsCount.textContent = count || '0';
+            this.elements.hubTotalQuestionsCount.textContent = formattedCount;
         }
-        
+
         const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
         if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) {
-            totalQuestionsSpanHome.textContent = count || '0';
+            totalQuestionsSpanHome.textContent = formattedCount;
         }
     }
 
@@ -90,9 +118,115 @@ export default class ChallengeHub {
      * @param {number|string} count - O número de questões para o quiz rápido.
      */
     updateQuickQuizCount(count) {
+        const formattedCount = this._formatNumber(count);
         if (this.elements.hubQuickQuizCount) {
-            this.elements.hubQuickQuizCount.textContent = count || '0';
+            this.elements.hubQuickQuizCount.textContent = formattedCount;
         }
+    }
+
+    updateTotalCategoriesCount(count) {
+        const formattedCount = this._formatNumber(count);
+        if (this.elements.hubTotalCategoriesCount) {
+            this.elements.hubTotalCategoriesCount.textContent = formattedCount;
+        }
+    }
+
+    updateUserStats(stats = {}) {
+        const {
+            pontos = 0,
+            acertos = 0,
+            erros = 0,
+        } = stats;
+
+        if (this.elements.statTotalPoints) {
+            this.elements.statTotalPoints.textContent = this._formatNumber(pontos);
+        }
+        if (this.elements.statQuestionsMastered) {
+            this.elements.statQuestionsMastered.textContent = this._formatNumber(acertos);
+        }
+        if (this.elements.statQuestionsToReview) {
+            this.elements.statQuestionsToReview.textContent = this._formatNumber(erros);
+        }
+    }
+
+    updateFeaturedCategories(categories = []) {
+        const container = this.elements.categoryChipList;
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        const validCategories = Array.isArray(categories)
+            ? categories.filter(cat => cat && cat.id_categoria !== undefined && cat.nome_categoria)
+            : [];
+
+        if (!validCategories.length) {
+            const emptyState = document.createElement('p');
+            emptyState.className = 'challenge-hub__empty-state';
+            emptyState.textContent = 'As trilhas serão carregadas assim que os dados estiverem disponíveis.';
+            container.appendChild(emptyState);
+            return;
+        }
+
+        const topCategories = validCategories.slice(0, 6);
+
+        topCategories.forEach(cat => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'challenge-chip';
+            chip.dataset.categoryId = cat.id_categoria;
+            chip.setAttribute('role', 'listitem');
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'challenge-chip__label';
+            titleSpan.textContent = cat.nome_categoria;
+            chip.appendChild(titleSpan);
+
+            const description = typeof cat.descricao_categoria === 'string' ? cat.descricao_categoria.trim() : '';
+            if (description) {
+                const truncated = description.length > 72 ? `${description.slice(0, 69)}…` : description;
+                const descriptionSpan = document.createElement('span');
+                descriptionSpan.className = 'challenge-chip__meta';
+                descriptionSpan.textContent = truncated;
+                chip.appendChild(descriptionSpan);
+                chip.title = `${cat.nome_categoria} • ${description}`;
+            } else {
+                chip.title = cat.nome_categoria;
+            }
+
+            container.appendChild(chip);
+        });
+    }
+
+    _openFilterPanelWithPreset({ categoryIds = [], difficultyLevels = ['all'], numQuestions = null } = {}) {
+        if (!this.quizUI.modalManager) {
+            console.error('ChallengeHub: modalManager não encontrado para abrir painel de filtros.');
+            return;
+        }
+
+        const normalizedCategoryIds = Array.isArray(categoryIds)
+            ? categoryIds.filter(Boolean).map(id => id.toString())
+            : [];
+
+        if (this.quizUI.filterPanelInstance) {
+            this.quizUI.filterPanelInstance.setCategoryTreeState(normalizedCategoryIds);
+            if (Array.isArray(difficultyLevels) && difficultyLevels.length > 0) {
+                this.quizUI.filterPanelInstance.setDifficultyState(difficultyLevels);
+            }
+
+            if (Number.isInteger(numQuestions) && numQuestions > 0) {
+                this.quizUI.filterPanelInstance.setNumberOfQuestionsState(numQuestions);
+            } else {
+                this.quizUI.filterPanelInstance.setNumberOfQuestionsState(null);
+            }
+
+            this.quizUI.filterPanelInstance.setSearchQuery('');
+        }
+
+        this.hideHub();
+        if (this.elements.placeholderFiltrosContainer) {
+            this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
+        }
+        this.quizUI.modalManager.toggleFilterPanel(true);
     }
 
     /**
@@ -122,15 +256,7 @@ export default class ChallengeHub {
      */
     setupEventListeners() {
         this.elements.hubCustomizeQuizBtn?.addEventListener('click', () => {
-            if (!this.quizUI.modalManager) { 
-                console.error("ChallengeHub: modalManager não encontrado para abrir painel de filtros.");
-                return;
-            }
-            this.hideHub();
-            if (this.elements.placeholderFiltrosContainer) {
-                this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
-            }
-            this.quizUI.modalManager.toggleFilterPanel(true);
+            this._openFilterPanelWithPreset();
         });
 
         this.elements.hubQuickQuizBtn?.addEventListener('click', () => {
@@ -141,7 +267,28 @@ export default class ChallengeHub {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
-        
+
+        this.elements.hubDailyChallengeBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startQuickQuiz(20);
+            } else {
+                console.error('ChallengeHub: actionOrchestrator indisponível ao iniciar o Desafio do Dia.');
+            }
+        });
+
+        this.elements.hubFocusedReviewBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startCuratedChallenge({
+                    difficultyLevels: ['difícil'],
+                    numQuestions: 12,
+                });
+            } else {
+                console.error('ChallengeHub: actionOrchestrator indisponível ao iniciar Revisão Focada.');
+            }
+        });
+
         // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
         this.elements.confirmResumeBtn?.addEventListener('click', () => {
              if (this.actionOrchestrator) {
@@ -155,5 +302,33 @@ export default class ChallengeHub {
             }
         });
         // --- FIM DA CORREÇÃO ---
+
+        this.elements.categoryChipList?.addEventListener('click', (event) => {
+            const target = event.target.closest('.challenge-chip[data-category-id]');
+            if (!target) return;
+
+            const categoryId = target.dataset.categoryId;
+            if (!categoryId) return;
+
+            this._openFilterPanelWithPreset({ categoryIds: [categoryId] });
+        });
+
+        this.elements.quickFilterList?.addEventListener('click', (event) => {
+            const actionButton = event.target.closest('.challenge-quick-action');
+            if (!actionButton) return;
+            if (!this.actionOrchestrator) {
+                console.error('ChallengeHub: actionOrchestrator indisponível ao utilizar atalhos rápidos.');
+                return;
+            }
+
+            const difficulty = actionButton.dataset.hubDifficulty;
+            const numQuestions = Number.parseInt(actionButton.dataset.hubNumQuestions, 10);
+
+            this.hideHub();
+            this.actionOrchestrator.startCuratedChallenge({
+                difficultyLevels: difficulty ? [difficulty] : undefined,
+                numQuestions: Number.isInteger(numQuestions) && numQuestions > 0 ? numQuestions : undefined,
+            });
+        });
     }
 }

@@ -3,17 +3,23 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import Count, Max
+from django.utils import timezone
 
 from quiz.models import (
     Conquista,
     ConquistaUsuario,
     EstatisticasDiariasUsuario,
+    DesafioDinamico,
     NivelGamificacao,
     PerfilGamificacaoUsuario,
+    ProgressoDesafioUsuario,
+    RecompensaNivelResgatada,
     SessoesQuizUsuario,
 )
 from quiz.services.scoring_service import SessionScoreResult
@@ -26,6 +32,19 @@ class GamificationUpdateResult:
     profile: PerfilGamificacaoUsuario
     conquistas_desbloqueadas: int
     snapshot: Dict[str, Any]
+    desafios_concluidos: int
+
+
+@dataclass
+class GamificationContext:
+    """Estado agregado reutilizado durante o processamento de gamificação."""
+
+    daily_stats: Optional[EstatisticasDiariasUsuario]
+    daily_questions: int
+    daily_xp: int
+    daily_streak: int
+    session_metrics: Dict[str, Any]
+    reference_time: datetime
 
 
 class GamificationService:
@@ -34,6 +53,51 @@ class GamificationService:
     def ensure_profile(self, user) -> PerfilGamificacaoUsuario:
         profile, _ = PerfilGamificacaoUsuario.objects.get_or_create(user=user)
         return profile
+
+    def _build_context(
+        self,
+        profile: PerfilGamificacaoUsuario,
+        *,
+        daily_stats: Optional[EstatisticasDiariasUsuario] = None,
+    ) -> GamificationContext:
+        reference_time = timezone.now()
+
+        daily_stat_reference = daily_stats
+        if not daily_stat_reference:
+            daily_stat_reference = (
+                EstatisticasDiariasUsuario.objects.filter(id_usuario=profile.user)
+                .order_by('-data_estatistica')
+                .first()
+            )
+
+        perguntas_dia = 0
+        xp_diario = 0
+        daily_streak = 0
+
+        if daily_stat_reference:
+            perguntas_dia = daily_stat_reference.perguntas_respondidas_dia or 0
+            xp_diario = daily_stat_reference.xp_ganho_dia or 0
+            if perguntas_dia > 0:
+                daily_streak = daily_stat_reference.sequencia_dias_quiz or 0
+
+        sessions_qs = SessoesQuizUsuario.objects.filter(
+            id_usuario=profile.user,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+        )
+        session_metrics = sessions_qs.aggregate(
+            max_score=Max('pontuacao_final'),
+            max_correct=Max('total_acertos'),
+            total_sessions=Count('id'),
+        )
+
+        return GamificationContext(
+            daily_stats=daily_stat_reference,
+            daily_questions=perguntas_dia,
+            daily_xp=xp_diario,
+            daily_streak=daily_streak,
+            session_metrics=session_metrics,
+            reference_time=reference_time,
+        )
 
     @transaction.atomic
     def apply_session_result(
@@ -57,11 +121,20 @@ class GamificationService:
         profile.save(update_fields=fields_to_update)
         profile.atualizar_nivel()
 
+        context = self._build_context(profile, daily_stats=daily_stats)
+
         conquistas_novas = self._unlock_achievements(
             profile,
             sessao,
             score_result,
-            daily_stats=daily_stats,
+            context=context,
+        )
+
+        desafios_atualizados = self._update_dynamic_challenges(
+            profile,
+            sessao,
+            score_result,
+            context=context,
         )
 
         snapshot = self._serialize_profile(
@@ -69,13 +142,15 @@ class GamificationService:
             xp_ganho=score_result.total_xp,
             conquistas_novas=conquistas_novas,
             nivel_anterior=nivel_anterior,
-            daily_stats=daily_stats,
+            context=context,
+            challenges_updates=desafios_atualizados,
         )
 
         return GamificationUpdateResult(
             profile=profile,
             conquistas_desbloqueadas=len(conquistas_novas),
             snapshot=snapshot,
+            desafios_concluidos=sum(1 for _, concluido in desafios_atualizados if concluido),
         )
 
     def get_profile_snapshot(
@@ -93,13 +168,14 @@ class GamificationService:
             .order_by('-data_estatistica')
             .first()
         )
+        context = self._build_context(profile, daily_stats=daily_stats)
         return self._serialize_profile(
             profile=profile,
             xp_ganho=0,
             conquistas_novas=None,
             nivel_anterior=None,
             include_catalog=include_catalog,
-            daily_stats=daily_stats,
+            context=context,
         )
 
     def _unlock_achievements(
@@ -107,37 +183,17 @@ class GamificationService:
         profile: PerfilGamificacaoUsuario,
         sessao: SessoesQuizUsuario,
         score_result: SessionScoreResult,
-        daily_stats: Optional[EstatisticasDiariasUsuario] = None,
+        *,
+        context: GamificationContext,
     ) -> List[ConquistaUsuario]:
         conquistas_disponiveis = Conquista.objects.all()
         ja_desbloqueadas = set(profile.conquistas.values_list('id', flat=True))
         a_criar: List[Dict[str, Any]] = []
 
-        daily_stat_reference = daily_stats
-        if not daily_stat_reference:
-            daily_stat_reference = (
-                EstatisticasDiariasUsuario.objects.filter(id_usuario=profile.user)
-                .order_by('-data_estatistica')
-                .first()
-            )
-
-        perguntas_dia = daily_stat_reference.perguntas_respondidas_dia if daily_stat_reference else 0
-        xp_diario_val = daily_stat_reference.xp_ganho_dia if daily_stat_reference else 0
-
-        if daily_stat_reference and perguntas_dia > 0:
-            daily_streak = daily_stat_reference.sequencia_dias_quiz or 0
-        else:
-            daily_streak = 0
-
-        sessions_qs = SessoesQuizUsuario.objects.filter(
-            id_usuario=profile.user,
-            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
-        )
-        session_metrics = sessions_qs.aggregate(
-            max_score=Max('pontuacao_final'),
-            max_correct=Max('total_acertos'),
-            total_sessions=Count('id'),
-        )
+        perguntas_dia = context.daily_questions
+        xp_diario_val = context.daily_xp
+        daily_streak = context.daily_streak
+        session_metrics = context.session_metrics or {}
         total_sessions_completed = session_metrics.get('total_sessions') or 0
 
         for conquista in conquistas_disponiveis:
@@ -185,6 +241,159 @@ class GamificationService:
 
         return criadas
 
+    def _resolve_challenge_metric(
+        self,
+        *,
+        challenge: DesafioDinamico,
+        sessao: SessoesQuizUsuario,
+        score_result: SessionScoreResult,
+        context: GamificationContext,
+    ) -> Optional[Tuple[str, float]]:
+        metric_type = challenge.get_metric_type()
+        if not metric_type:
+            return None
+
+        metric_type = metric_type.lower()
+        if metric_type == 'xp_total':
+            return 'accumulate', float(max(score_result.total_xp, 0))
+        if metric_type == 'xp_diario':
+            return 'accumulate', float(max(score_result.total_xp, 0))
+        if metric_type == 'perguntas_diarias':
+            return 'accumulate', float(max(score_result.total_answered, 0))
+        if metric_type == 'quizzes_completos':
+            return 'accumulate', 1.0 if sessao.status_sessao == SessoesQuizUsuario.StatusSessao.COMPLETA else 0.0
+        if metric_type == 'pontuacao_sessao':
+            value = sessao.pontuacao_final if sessao and sessao.pontuacao_final is not None else score_result.total_points
+            return 'max', float(max(value or 0, 0))
+        if metric_type == 'respostas_corretas_sessao':
+            return 'max', float(max(score_result.total_correct, 0))
+        if metric_type == 'melhor_sequencia':
+            return 'max', float(max(score_result.best_streak, 0))
+        if metric_type == 'dias_consecutivos':
+            return 'max', float(max(context.daily_streak, 0))
+        return None
+
+    def _update_dynamic_challenges(
+        self,
+        profile: PerfilGamificacaoUsuario,
+        sessao: SessoesQuizUsuario,
+        score_result: SessionScoreResult,
+        *,
+        context: GamificationContext,
+    ) -> List[Tuple[ProgressoDesafioUsuario, bool]]:
+        active_challenges = list(DesafioDinamico.objects.ativos(context.reference_time))
+        if not active_challenges:
+            return []
+
+        progress_map = {
+            progress.desafio_id: progress
+            for progress in ProgressoDesafioUsuario.objects.filter(
+                perfil=profile,
+                desafio__in=active_challenges,
+            )
+        }
+
+        updates: List[Tuple[ProgressoDesafioUsuario, bool]] = []
+        for challenge in active_challenges:
+            progress = progress_map.get(challenge.id)
+            if not progress:
+                progress = ProgressoDesafioUsuario.objects.create(
+                    desafio=challenge,
+                    perfil=profile,
+                    janela_inicio=challenge.data_inicio,
+                    janela_fim=challenge.data_fim,
+                )
+                progress_map[challenge.id] = progress
+
+            window_reset = progress.reset_for_challenge_window(challenge)
+
+            metric_payload = self._resolve_challenge_metric(
+                challenge=challenge,
+                sessao=sessao,
+                score_result=score_result,
+                context=context,
+            )
+
+            if metric_payload is None:
+                if window_reset:
+                    progress.save(
+                        update_fields=[
+                            'valor_atual',
+                            'concluido',
+                            'data_conclusao',
+                            'metadata',
+                            'janela_inicio',
+                            'janela_fim',
+                        ]
+                    )
+                    updates.append((progress, False))
+                continue
+
+            strategy, measurement = metric_payload
+            measurement = float(measurement or 0.0)
+
+            target_value = challenge.get_target_value()
+            previous_value = progress.valor_atual
+            previous_completed = progress.concluido
+            fields_to_update: List[str] = []
+
+            if window_reset:
+                fields_to_update.extend(
+                    ['valor_atual', 'concluido', 'data_conclusao', 'metadata', 'janela_inicio', 'janela_fim']
+                )
+
+            new_value = previous_value
+            changed = window_reset
+
+            if strategy == 'accumulate':
+                if measurement > 0:
+                    new_value = previous_value + measurement
+                    changed = True
+            elif strategy == 'max':
+                new_value = max(previous_value, measurement)
+                changed = changed or new_value != previous_value
+            else:
+                new_value = max(measurement, 0.0)
+                changed = changed or new_value != previous_value
+
+            if target_value > 0:
+                new_value = min(new_value, target_value)
+
+            if new_value != progress.valor_atual:
+                progress.valor_atual = new_value
+                if 'valor_atual' not in fields_to_update:
+                    fields_to_update.append('valor_atual')
+
+            metadata = progress.metadata or {}
+            metadata['ultima_contribuicao'] = measurement
+            metadata['atualizado_em'] = context.reference_time.isoformat()
+            progress.metadata = metadata
+            if 'metadata' not in fields_to_update:
+                fields_to_update.append('metadata')
+
+            newly_completed = False
+            if target_value > 0 and progress.valor_atual >= target_value:
+                if not progress.concluido:
+                    newly_completed = True
+                progress.concluido = True
+                progress.data_conclusao = context.reference_time
+                fields_to_update.extend(['concluido', 'data_conclusao'])
+            elif progress.concluido and progress.valor_atual < target_value:
+                progress.concluido = False
+                progress.data_conclusao = None
+                fields_to_update.extend(['concluido', 'data_conclusao'])
+
+            if fields_to_update:
+                if 'atualizado_em' not in fields_to_update:
+                    fields_to_update.append('atualizado_em')
+                progress.save(update_fields=list(dict.fromkeys(fields_to_update)))
+                changed = True
+
+            if changed or newly_completed or previous_completed != progress.concluido:
+                updates.append((progress, newly_completed))
+
+        return updates
+
     def _serialize_profile(
         self,
         *,
@@ -193,19 +402,15 @@ class GamificationService:
         conquistas_novas: Optional[List[ConquistaUsuario]] = None,
         nivel_anterior: Optional[NivelGamificacao] = None,
         include_catalog: bool = False,
-        daily_stats: Optional[EstatisticasDiariasUsuario] = None,
+        context: Optional[GamificationContext] = None,
+        challenges_updates: Optional[List[Tuple[ProgressoDesafioUsuario, bool]]] = None,
     ) -> Dict[str, Any]:
         """Transforma o perfil em um payload amigável para o frontend."""
 
         xp_ganho_int = int(max(xp_ganho or 0, 0))
 
-        daily_stats_obj = daily_stats
-        if daily_stats_obj is None:
-            daily_stats_obj = (
-                EstatisticasDiariasUsuario.objects.filter(id_usuario=profile.user)
-                .order_by('-data_estatistica')
-                .first()
-            )
+        context_obj = context or self._build_context(profile)
+        daily_stats_obj = context_obj.daily_stats
 
         daily_engagement_payload = None
         if daily_stats_obj:
@@ -222,16 +427,10 @@ class GamificationService:
         daily_streak_value = 0
         if daily_engagement_payload:
             daily_streak_value = daily_engagement_payload.get('streak_days') or 0
+        elif context_obj:
+            daily_streak_value = context_obj.daily_streak
 
-        sessions_qs = SessoesQuizUsuario.objects.filter(
-            id_usuario=profile.user,
-            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
-        )
-        session_metrics = sessions_qs.aggregate(
-            max_score=Max('pontuacao_final'),
-            max_correct=Max('total_acertos'),
-            total_sessions=Count('id'),
-        )
+        session_metrics = context_obj.session_metrics or {}
 
         conquistas_relacoes = list(
             profile.conquistas_usuarios.select_related('conquista').order_by('-data_conquista')
@@ -294,9 +493,7 @@ class GamificationService:
             progress_payload = self._build_achievement_progress(
                 conquista=conquista,
                 profile=profile,
-                daily_stats=daily_stats_obj,
-                daily_streak=daily_streak_value,
-                session_metrics=session_metrics,
+                context=context_obj,
             )
 
             if rel is None and progress_payload:
@@ -391,6 +588,12 @@ class GamificationService:
                 'catalog': catalogo_conquistas,
                 'upcoming': upcoming_highlights,
             },
+            'challenges': self._serialize_challenges(
+                profile=profile,
+                context=context_obj,
+                recently_updated=challenges_updates,
+            ),
+            'rewards': self._serialize_rewards(profile=profile, current_level=current_level),
         }
 
     def _build_achievement_progress(
@@ -398,9 +601,7 @@ class GamificationService:
         *,
         conquista: Conquista,
         profile: PerfilGamificacaoUsuario,
-        daily_stats: Optional[EstatisticasDiariasUsuario],
-        daily_streak: int,
-        session_metrics: Dict[str, Any],
+        context: GamificationContext,
     ) -> Optional[Dict[str, Any]]:
         criterio = conquista.criterio_json or {}
         tipo = str(criterio.get('tipo', '')).lower()
@@ -415,6 +616,10 @@ class GamificationService:
 
         if target_value <= 0:
             return None
+
+        daily_stats = context.daily_stats
+        daily_streak = context.daily_streak
+        session_metrics = context.session_metrics or {}
 
         unit_label = 'progresso'
         if tipo == 'xp_total':
@@ -469,3 +674,243 @@ class GamificationService:
             'remaining_label': remaining_label,
             'unit': unit_label,
         }
+
+    def _serialize_challenges(
+        self,
+        *,
+        profile: PerfilGamificacaoUsuario,
+        context: GamificationContext,
+        recently_updated: Optional[List[Tuple[ProgressoDesafioUsuario, bool]]],
+    ) -> Dict[str, Any]:
+        active_challenges = list(DesafioDinamico.objects.ativos(context.reference_time))
+        if not active_challenges:
+            return {'active': [], 'completed_now': [], 'total_active': 0}
+
+        progress_map = {
+            progress.desafio_id: progress
+            for progress in ProgressoDesafioUsuario.objects.filter(
+                perfil=profile,
+                desafio__in=active_challenges,
+            )
+        }
+
+        active_payload: List[Dict[str, Any]] = []
+        for challenge in active_challenges:
+            progress = progress_map.get(challenge.id)
+            if not progress:
+                progress = ProgressoDesafioUsuario(
+                    desafio=challenge,
+                    perfil=profile,
+                    janela_inicio=challenge.data_inicio,
+                    janela_fim=challenge.data_fim,
+                )
+            active_payload.append(
+                self._serialize_single_challenge(
+                    challenge=challenge,
+                    progress=progress,
+                    reference_time=context.reference_time,
+                )
+            )
+
+        completed_payload: List[Dict[str, Any]] = []
+        if recently_updated:
+            seen_ids = set()
+            for progress, completed_now in recently_updated:
+                if completed_now and progress.desafio_id not in seen_ids:
+                    completed_payload.append(
+                        self._serialize_single_challenge(
+                            challenge=progress.desafio,
+                            progress=progress,
+                            reference_time=context.reference_time,
+                        )
+                    )
+                    seen_ids.add(progress.desafio_id)
+
+        return {
+            'active': active_payload,
+            'completed_now': completed_payload,
+            'total_active': len(active_payload),
+        }
+
+    def _serialize_single_challenge(
+        self,
+        *,
+        challenge: DesafioDinamico,
+        progress: ProgressoDesafioUsuario,
+        reference_time: datetime,
+    ) -> Dict[str, Any]:
+        target_value = challenge.get_target_value()
+        current_value = float(progress.valor_atual or 0.0)
+        percent = progress.progress_percent(target_value) if target_value else 0.0
+        remaining = None
+        if target_value:
+            remaining = max(int(round(target_value - current_value)), 0)
+
+        label = f"{int(round(current_value))}"
+        if target_value:
+            label = f"{int(round(current_value))} / {int(round(target_value))}"
+
+        time_remaining_seconds = None
+        if challenge.data_fim:
+            delta = challenge.data_fim - reference_time
+            seconds = int(delta.total_seconds())
+            time_remaining_seconds = max(seconds, 0)
+
+        return {
+            'slug': challenge.slug,
+            'nome': challenge.nome,
+            'descricao': challenge.descricao,
+            'tipo': challenge.tipo,
+            'start': challenge.data_inicio.isoformat() if challenge.data_inicio else None,
+            'end': challenge.data_fim.isoformat() if challenge.data_fim else None,
+            'target': int(round(target_value)) if target_value else None,
+            'progress': {
+                'current': int(round(current_value)),
+                'percent': round(percent, 1) if target_value else 0.0,
+                'label': label,
+                'remaining': remaining,
+            },
+            'reward': challenge.recompensa_json or {},
+            'is_completed': bool(progress.concluido),
+            'completed_at': progress.data_conclusao.isoformat() if progress.data_conclusao else None,
+            'time_remaining_seconds': time_remaining_seconds,
+            'metadata': progress.metadata or {},
+        }
+
+    def _serialize_rewards(
+        self,
+        *,
+        profile: PerfilGamificacaoUsuario,
+        current_level: Optional[NivelGamificacao],
+    ) -> Dict[str, Any]:
+        claimed_qs = RecompensaNivelResgatada.objects.filter(perfil=profile)
+        claimed_map = {
+            (claim.nivel_id, claim.recompensa_id): claim
+            for claim in claimed_qs
+        }
+
+        eligible_levels = NivelGamificacao.objects.filter(
+            xp_minimo__lte=profile.xp_total,
+        ).order_by('ordem', 'xp_minimo')
+
+        all_rewards: List[Dict[str, Any]] = []
+        available_to_claim: List[Dict[str, Any]] = []
+        claimed_list: List[Dict[str, Any]] = []
+
+        for level in eligible_levels:
+            for reward in level.get_reward_definitions():
+                reward_id = str(reward.get('id'))
+                payload = {
+                    'level_id': level.id,
+                    'level_name': level.nome,
+                    'level_identifier': level.identificador,
+                    'reward_id': reward_id,
+                    'name': reward.get('nome'),
+                    'description': reward.get('descricao'),
+                    'type': reward.get('tipo'),
+                    'value': reward.get('valor'),
+                    'metadata': reward.get('metadata') or {},
+                    'is_claimed': False,
+                    'claimed_at': None,
+                }
+                claim = claimed_map.get((level.id, reward_id))
+                if claim:
+                    payload['is_claimed'] = True
+                    payload['claimed_at'] = claim.data_resgate.isoformat()
+                    payload['claimed_metadata'] = claim.dados_recompensa or {}
+                    claimed_list.append(payload)
+                else:
+                    available_to_claim.append(payload)
+                all_rewards.append(payload)
+
+        next_level = None
+        if current_level:
+            next_level = (
+                NivelGamificacao.objects.filter(xp_minimo__gt=current_level.xp_minimo)
+                .order_by('ordem', 'xp_minimo')
+                .first()
+            )
+        if not next_level:
+            next_level = (
+                NivelGamificacao.objects.filter(xp_minimo__gt=profile.xp_total)
+                .order_by('ordem', 'xp_minimo')
+                .first()
+            )
+
+        upcoming_rewards: List[Dict[str, Any]] = []
+        if next_level:
+            for reward in next_level.get_reward_definitions():
+                upcoming_rewards.append(
+                    {
+                        'level_id': next_level.id,
+                        'level_name': next_level.nome,
+                        'level_identifier': next_level.identificador,
+                        'reward_id': str(reward.get('id')),
+                        'name': reward.get('nome'),
+                        'description': reward.get('descricao'),
+                        'type': reward.get('tipo'),
+                        'value': reward.get('valor'),
+                        'metadata': reward.get('metadata') or {},
+                    }
+                )
+
+        return {
+            'available_to_claim': available_to_claim,
+            'claimed': claimed_list,
+            'all': all_rewards,
+            'upcoming': upcoming_rewards,
+        }
+
+    def claim_level_reward(
+        self,
+        user,
+        *,
+        level_id: int,
+        reward_id: str,
+    ) -> Dict[str, Any]:
+        profile = self.ensure_profile(user)
+        profile.atualizar_nivel()
+
+        try:
+            level = NivelGamificacao.objects.get(pk=level_id)
+        except NivelGamificacao.DoesNotExist as exc:
+            raise ValidationError({'level_id': 'Nível informado é inválido.'}) from exc
+
+        if profile.xp_total < level.xp_minimo:
+            raise ValidationError('O usuário ainda não alcançou este nível.')
+
+        reward_identifier = str(reward_id)
+        reward_definition = None
+        for reward in level.get_reward_definitions():
+            if str(reward.get('id')) == reward_identifier:
+                reward_definition = reward
+                break
+
+        if not reward_definition:
+            raise ValidationError({'reward_id': 'Recompensa não encontrada para este nível.'})
+
+        claim, created = RecompensaNivelResgatada.objects.get_or_create(
+            perfil=profile,
+            nivel=level,
+            recompensa_id=reward_identifier,
+            defaults={'dados_recompensa': reward_definition},
+        )
+
+        if not created:
+            raise ValidationError('Esta recompensa já foi resgatada anteriormente.')
+
+        reward_payload = {
+            'level_id': level.id,
+            'level_name': level.nome,
+            'reward_id': reward_identifier,
+            'name': reward_definition.get('nome'),
+            'description': reward_definition.get('descricao'),
+            'type': reward_definition.get('tipo'),
+            'value': reward_definition.get('valor'),
+            'metadata': reward_definition.get('metadata') or {},
+            'claimed_at': claim.data_resgate.isoformat(),
+        }
+
+        rewards_state = self._serialize_rewards(profile=profile, current_level=profile.nivel_atual)
+
+        return {'reward': reward_payload, 'rewards_state': rewards_state}

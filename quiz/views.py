@@ -950,7 +950,7 @@ def register_answer_view(request):
             .select_related('id_pergunta')
             .order_by('data_resposta', 'pk')
         )
-        score_result = scoring_service.compute_session_result(respostas_da_sessao)
+        score_result = scoring_service.compute_session_result(respostas_da_sessao, session=sessao_quiz)
         if respostas_da_sessao:
             for resp_obj, resp_score in zip(respostas_da_sessao, score_result.response_scores):
                 resp_obj.pontos_obtidos = resp_score.pontos
@@ -1039,7 +1039,7 @@ def end_quiz_session_view(request):
             .select_related('id_pergunta')
             .order_by('data_resposta', 'pk')
         )
-        score_result = scoring_service.compute_session_result(respostas_da_sessao)
+        score_result = scoring_service.compute_session_result(respostas_da_sessao, session=sessao_quiz)
         if respostas_da_sessao:
             for resp_obj, resp_score in zip(respostas_da_sessao, score_result.response_scores):
                 resp_obj.pontos_obtidos = resp_score.pontos

@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
-from datetime import timedelta
-from typing import Dict, List
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
 
 def default_difficulty_rewards() -> Dict[str, Dict[str, int]]:
@@ -996,6 +996,70 @@ class NivelGamificacao(models.Model):
         if self.xp_maximo is not None and self.xp_maximo < self.xp_minimo:
             raise ValidationError({'xp_maximo': 'O XP máximo deve ser maior ou igual ao XP mínimo.'})
 
+    def get_reward_definitions(self) -> List[Dict[str, Any]]:
+        """Normaliza o JSON de recompensas em uma lista de itens estruturados."""
+
+        payload = self.recompensas_json or {}
+        items: List[Dict[str, Any]] = []
+
+        if isinstance(payload, dict):
+            raw_items = payload.get('items') or payload.get('recompensas') or payload
+        else:
+            raw_items = payload
+
+        if isinstance(raw_items, dict):
+            for key, value in raw_items.items():
+                if isinstance(value, dict):
+                    normalized = {
+                        'id': str(value.get('id') or key),
+                        'nome': value.get('nome') or str(key).replace('_', ' ').title(),
+                        'descricao': value.get('descricao') or value.get('description'),
+                        'tipo': value.get('tipo'),
+                        'valor': value.get('valor'),
+                        'metadata': value.get('metadata') or {},
+                    }
+                else:
+                    normalized = {
+                        'id': str(key),
+                        'nome': str(key).replace('_', ' ').title(),
+                        'descricao': str(value),
+                        'tipo': None,
+                        'valor': value,
+                        'metadata': {},
+                    }
+                items.append(normalized)
+        elif isinstance(raw_items, list):
+            for index, value in enumerate(raw_items):
+                if isinstance(value, dict):
+                    normalized = {
+                        'id': str(value.get('id') or value.get('slug') or f'item-{index}'),
+                        'nome': value.get('nome') or value.get('titulo') or value.get('title') or f'Recompensa {index + 1}',
+                        'descricao': value.get('descricao') or value.get('description'),
+                        'tipo': value.get('tipo'),
+                        'valor': value.get('valor'),
+                        'metadata': value.get('metadata') or {},
+                    }
+                else:
+                    normalized = {
+                        'id': f'item-{index}',
+                        'nome': f'Recompensa {index + 1}',
+                        'descricao': str(value),
+                        'tipo': None,
+                        'valor': value,
+                        'metadata': {},
+                    }
+                items.append(normalized)
+
+        deduped: Dict[str, Dict[str, Any]] = {}
+        for item in items:
+            identifier = item.get('id') or f"item-{len(deduped)}"
+            if identifier in deduped:
+                continue
+            item['id'] = identifier
+            deduped[identifier] = item
+
+        return list(deduped.values())
+
 
 class Conquista(models.Model):
     """Define conquistas/badges desbloqueáveis pelos usuários."""
@@ -1123,3 +1187,167 @@ class ConquistaUsuario(models.Model):
 
     def __str__(self):
         return f"{self.perfil.user.get_username()} -> {self.conquista.nome}"
+
+
+class DesafioDinamicoQuerySet(models.QuerySet):
+    def ativos(self, reference_time: Optional[datetime] = None):
+        reference = reference_time or timezone.now()
+        return self.filter(ativo=True).filter(
+            models.Q(data_inicio__isnull=True) | models.Q(data_inicio__lte=reference)
+        ).filter(
+            models.Q(data_fim__isnull=True) | models.Q(data_fim__gte=reference)
+        )
+
+
+class DesafioDinamico(models.Model):
+    """Desafios temporários para manter o engajamento."""
+
+    class TipoDesafio(models.TextChoices):
+        DIARIO = 'daily', 'Diário'
+        SEMANAL = 'weekly', 'Semanal'
+        ESPECIAL = 'event', 'Evento'
+
+    slug = models.SlugField(max_length=150, unique=True, verbose_name="Slug do Desafio")
+    nome = models.CharField(max_length=200, verbose_name="Nome do Desafio")
+    descricao = models.TextField(blank=True, verbose_name="Descrição")
+    tipo = models.CharField(
+        max_length=20,
+        choices=TipoDesafio.choices,
+        default=TipoDesafio.ESPECIAL,
+        verbose_name="Tipo",
+    )
+    criterio_json = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Critério",
+        help_text="Estrutura {'tipo': 'xp_total', 'valor': 500} ou similar.",
+    )
+    recompensa_json = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Recompensa",
+        help_text="Metadados da recompensa entregue ao concluir o desafio.",
+    )
+    data_inicio = models.DateTimeField(null=True, blank=True, verbose_name="Início")
+    data_fim = models.DateTimeField(null=True, blank=True, verbose_name="Fim")
+    ativo = models.BooleanField(default=True, verbose_name="Ativo")
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
+
+    objects = DesafioDinamicoQuerySet.as_manager()
+
+    class Meta:
+        verbose_name = "Desafio Dinâmico"
+        verbose_name_plural = "Desafios Dinâmicos"
+        ordering = ['-ativo', 'data_inicio', 'nome']
+
+    def __str__(self):
+        return self.nome
+
+    def clean(self):
+        super().clean()
+        if self.data_inicio and self.data_fim and self.data_fim < self.data_inicio:
+            raise ValidationError({'data_fim': 'A data de término deve ser posterior à data de início.'})
+
+    def is_active(self, reference_time: Optional[datetime] = None) -> bool:
+        reference = reference_time or timezone.now()
+        return DesafioDinamico.objects.ativos(reference).filter(pk=self.pk).exists()
+
+    def get_target_value(self) -> float:
+        criterio = self.criterio_json or {}
+        try:
+            return float(criterio.get('valor') or 0)
+        except (TypeError, ValueError):
+            return 0.0
+
+    def get_metric_type(self) -> str:
+        criterio = self.criterio_json or {}
+        return str(criterio.get('tipo', '')).lower()
+
+
+class ProgressoDesafioUsuario(models.Model):
+    """Progresso do usuário dentro de um desafio dinâmico."""
+
+    desafio = models.ForeignKey(
+        DesafioDinamico,
+        on_delete=models.CASCADE,
+        related_name='progresso_usuarios',
+        verbose_name="Desafio",
+    )
+    perfil = models.ForeignKey(
+        PerfilGamificacaoUsuario,
+        on_delete=models.CASCADE,
+        related_name='progresso_desafios',
+        verbose_name="Perfil",
+    )
+    valor_atual = models.FloatField(default=0.0, verbose_name="Valor Atual")
+    concluido = models.BooleanField(default=False, verbose_name="Concluído")
+    data_conclusao = models.DateTimeField(null=True, blank=True, verbose_name="Concluído em")
+    janela_inicio = models.DateTimeField(null=True, blank=True, verbose_name="Início do Ciclo")
+    janela_fim = models.DateTimeField(null=True, blank=True, verbose_name="Fim do Ciclo")
+    metadata = models.JSONField(default=dict, blank=True, verbose_name="Metadados")
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
+
+    class Meta:
+        verbose_name = "Progresso de Desafio do Usuário"
+        verbose_name_plural = "Progressos de Desafios dos Usuários"
+        unique_together = ('desafio', 'perfil')
+        indexes = [
+            models.Index(fields=['perfil', 'desafio'], name='idx_desafio_perfil'),
+        ]
+
+    def __str__(self):
+        return f"{self.perfil.user.get_username()} em {self.desafio.nome}"
+
+    def reset_for_challenge_window(self, desafio: DesafioDinamico) -> bool:
+        """Reseta o progresso se o período do desafio foi alterado."""
+
+        new_start = desafio.data_inicio
+        new_end = desafio.data_fim
+        if self.janela_inicio == new_start and self.janela_fim == new_end:
+            return False
+
+        self.valor_atual = 0.0
+        self.concluido = False
+        self.data_conclusao = None
+        self.metadata = {}
+        self.janela_inicio = new_start
+        self.janela_fim = new_end
+        return True
+
+    def progress_percent(self, target: float) -> float:
+        if target <= 0:
+            return 0.0
+        return max(0.0, min((self.valor_atual / target) * 100.0, 100.0))
+
+
+class RecompensaNivelResgatada(models.Model):
+    """Recompensas de nível que já foram resgatadas."""
+
+    perfil = models.ForeignKey(
+        PerfilGamificacaoUsuario,
+        on_delete=models.CASCADE,
+        related_name='recompensas_resgatadas',
+        verbose_name="Perfil",
+    )
+    nivel = models.ForeignKey(
+        NivelGamificacao,
+        on_delete=models.CASCADE,
+        related_name='recompensas_resgatadas',
+        verbose_name="Nível",
+    )
+    recompensa_id = models.CharField(max_length=150, verbose_name="Identificador da Recompensa")
+    dados_recompensa = models.JSONField(default=dict, blank=True, verbose_name="Dados da Recompensa")
+    data_resgate = models.DateTimeField(auto_now_add=True, verbose_name="Data de Resgate")
+
+    class Meta:
+        verbose_name = "Recompensa de Nível Resgatada"
+        verbose_name_plural = "Recompensas de Nível Resgatadas"
+        unique_together = ('perfil', 'nivel', 'recompensa_id')
+        indexes = [
+            models.Index(fields=['perfil', 'nivel'], name='idx_resgate_perfil_nivel'),
+        ]
+
+    def __str__(self):
+        return f"{self.recompensa_id} - {self.perfil.user.get_username()}"

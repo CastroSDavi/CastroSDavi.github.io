@@ -76,6 +76,11 @@ class StatisticsQuerySerializer(serializers.Serializer):
     period = serializers.CharField(required=False, allow_blank=True)
 
 
+class LevelRewardClaimSerializer(serializers.Serializer):
+    level_id = serializers.IntegerField(required=True)
+    reward_id = serializers.CharField(required=True, allow_blank=False)
+
+
 class UserQuestionHistoryQuerySerializer(serializers.Serializer):
     """Validates filters applied to the question history endpoint."""
 

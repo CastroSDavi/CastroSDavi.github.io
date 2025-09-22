@@ -12,6 +12,7 @@ from .models import (
     QuizDefinicao, QuizDefinicaoPergunta, ConfiguracoesGeraisQuiz, # Novos modelos
     UserPreferences,
     NivelGamificacao, Conquista, PerfilGamificacaoUsuario, ConquistaUsuario,
+    DesafioDinamico, ProgressoDesafioUsuario, RecompensaNivelResgatada,
 )
 
 # Inline para OpcoesResposta dentro de PerguntaAdmin
@@ -403,6 +404,65 @@ class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
     @admin.display(description='Última Modificação', ordering='data_modificacao')
     def data_modificacao_formatada(self, obj):
         return obj.data_modificacao.strftime("%d/%m/%Y %H:%M") if obj.data_modificacao else "-"
+
+
+@admin.register(DesafioDinamico)
+class DesafioDinamicoAdmin(admin.ModelAdmin):
+    list_display = (
+        'nome', 'slug', 'tipo', 'ativo', 'data_inicio', 'data_fim', 'criterio_resumo', 'recompensa_resumo'
+    )
+    list_filter = ('tipo', 'ativo', 'data_inicio', 'data_fim')
+    search_fields = ('nome', 'slug', 'descricao')
+    readonly_fields = ('criado_em', 'atualizado_em')
+    fieldsets = (
+        (None, {'fields': ('nome', 'slug', 'descricao', 'tipo', 'ativo')}),
+        ('Regras', {'fields': ('criterio_json', 'recompensa_json')}),
+        ('Janela de Ativação', {'fields': ('data_inicio', 'data_fim')}),
+        ('Auditoria', {'fields': ('criado_em', 'atualizado_em'), 'classes': ('collapse',)}),
+    )
+
+    @admin.display(description='Critério')
+    def criterio_resumo(self, obj):
+        criterio = obj.criterio_json or {}
+        tipo = criterio.get('tipo')
+        valor = criterio.get('valor')
+        if tipo is None and not valor:
+            return '—'
+        return f"{tipo}: {valor}"
+
+    @admin.display(description='Recompensa')
+    def recompensa_resumo(self, obj):
+        recompensa = obj.recompensa_json or {}
+        if not recompensa:
+            return '—'
+        titulo = recompensa.get('titulo') or recompensa.get('nome') or recompensa.get('type')
+        if not titulo and isinstance(recompensa, dict):
+            titulo = ', '.join(recompensa.keys())[:40]
+        return titulo or 'Configuração'
+
+
+@admin.register(ProgressoDesafioUsuario)
+class ProgressoDesafioUsuarioAdmin(admin.ModelAdmin):
+    list_display = (
+        'perfil', 'desafio', 'valor_atual', 'concluido', 'data_conclusao', 'atualizado_em'
+    )
+    list_filter = ('concluido', 'desafio__tipo')
+    search_fields = (
+        'perfil__user__username', 'perfil__user__email', 'desafio__nome',
+    )
+    autocomplete_fields = ['perfil', 'desafio']
+    readonly_fields = ('criado_em', 'atualizado_em')
+
+
+@admin.register(RecompensaNivelResgatada)
+class RecompensaNivelResgatadaAdmin(admin.ModelAdmin):
+    list_display = ('perfil', 'nivel', 'recompensa_id', 'data_resgate')
+    list_filter = ('nivel',)
+    search_fields = (
+        'perfil__user__username', 'perfil__user__email', 'nivel__nome', 'recompensa_id'
+    )
+    autocomplete_fields = ['perfil', 'nivel']
+    readonly_fields = ('data_resgate',)
 
 
 @admin.register(UserPreferences)

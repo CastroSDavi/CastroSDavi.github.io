@@ -6,6 +6,7 @@ import json
 from collections import defaultdict
 from datetime import datetime, time
 
+from django.core.exceptions import ValidationError
 from django.db.models import Case, Count, Q, When
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -49,6 +50,7 @@ from .serializers import (
     StartQuizSessionSerializer,
     StatisticsQuerySerializer,
     UserQuestionHistoryQuerySerializer,
+    LevelRewardClaimSerializer,
 )
 
 
@@ -227,7 +229,7 @@ class QuizViewSet(viewsets.ViewSet):
         )
 
         scoring_service = ScoringService(quiz_config)
-        score_result = scoring_service.compute_session_result(responses)
+        score_result = scoring_service.compute_session_result(responses, session=sessao_quiz)
 
         if responses:
             for response_obj, response_score in zip(responses, score_result.response_scores):
@@ -533,6 +535,7 @@ class QuizViewSet(viewsets.ViewSet):
                 'sequencia_final': sessao_quiz.sequencia_acertos_atual,
                 'melhor_sequencia': sessao_quiz.melhor_sequencia_acertos,
                 'conquistas_desbloqueadas': gamification_result.conquistas_desbloqueadas,
+                'desafios_concluidos': gamification_result.desafios_concluidos,
                 'gamificacao': gamification_result.snapshot,
             })
         except SessoesQuizUsuario.DoesNotExist:
@@ -687,6 +690,61 @@ class QuizViewSet(viewsets.ViewSet):
                 {'status': 'error', 'message': 'Erro interno ao tentar retomar sessão.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
+
+    @action(detail=False, methods=['post'], url_path='claim-level-reward')
+    def claim_level_reward(self, request):
+        if not request.user.is_authenticated:
+            return Response(
+                {'status': 'error', 'message': 'Autenticação necessária.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        try:
+            payload = self._parse_json_body(request)
+        except serializers.ValidationError as exc:
+            detail = exc.args[0] if exc.args else {}
+            message = detail.get('detail', 'Corpo da requisição JSON inválido.') if isinstance(detail, dict) else 'Corpo da requisição JSON inválido.'
+            return Response({'status': 'error', 'message': message}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = LevelRewardClaimSerializer(data=payload)
+        try:
+            serializer.is_valid(raise_exception=True)
+        except serializers.ValidationError:
+            return Response({'status': 'error', 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        data = serializer.validated_data
+        level_id = data.get('level_id')
+        reward_id = data.get('reward_id')
+
+        try:
+            claim_payload = self._gamification_service.claim_level_reward(
+                request.user,
+                level_id=level_id,
+                reward_id=reward_id,
+            )
+        except ValidationError as exc:
+            if hasattr(exc, 'message_dict'):
+                message = exc.message_dict
+            else:
+                messages = getattr(exc, 'messages', None) or [str(exc)]
+                message = messages[0]
+            return Response({'status': 'error', 'message': message}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception:
+            return Response(
+                {'status': 'error', 'message': 'Não foi possível resgatar a recompensa.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        snapshot = self._gamification_service.get_profile_snapshot(request.user)
+
+        return Response(
+            {
+                'status': 'success',
+                'reward': claim_payload['reward'],
+                'rewards_state': claim_payload['rewards_state'],
+                'gamificacao': snapshot,
+            }
+        )
 
 
 class UserQuestionHistoryPagination(PageNumberPagination):

@@ -1,4 +1,7 @@
 from datetime import timedelta
+from types import SimpleNamespace
+
+from datetime import timedelta
 
 from django.contrib.auth.models import User
 from django.test import TestCase
@@ -14,10 +17,12 @@ from quiz.models import (
     Pergunta,
     QuestaoFavorita,
     SessoesQuizUsuario,
+    DesafioDinamico,
+    RecompensaNivelResgatada,
 )
 from quiz.services.gamification_service import GamificationService
 from quiz.services.quiz_service import QuizDataService
-from quiz.services.scoring_service import SessionScoreResult
+from quiz.services.scoring_service import ScoringService, SessionScoreResult
 from quiz.services.statistics_service import StatisticsService
 from quiz.views import get_quiz_config, invalidate_quiz_config_cache
 
@@ -215,6 +220,16 @@ class GamificationServiceTests(TestCase):
             xp_minimo=0,
             xp_maximo=150,
         )
+        self.level.recompensas_json = {
+            'items': [
+                {
+                    'id': 'ebook',
+                    'nome': 'Guia de Estudos',
+                    'descricao': 'Material complementar exclusivo.',
+                }
+            ]
+        }
+        self.level.save()
 
         Conquista.objects.create(
             slug='xp-50',
@@ -250,6 +265,16 @@ class GamificationServiceTests(TestCase):
             pontos_dia=180,
             xp_ganho_dia=75,
             sequencia_dias_quiz=3,
+        )
+
+        self.dynamic_challenge = DesafioDinamico.objects.create(
+            slug='desafio-responda-15',
+            nome='Responder 15 perguntas',
+            tipo=DesafioDinamico.TipoDesafio.SEMANAL,
+            criterio_json={'tipo': 'perguntas_diarias', 'valor': 15},
+            recompensa_json={'xp_bonus': 20},
+            data_inicio=timezone.now() - timedelta(days=1),
+            data_fim=timezone.now() + timedelta(days=5),
         )
 
         self.previous_session = SessoesQuizUsuario.objects.create(
@@ -302,3 +327,108 @@ class GamificationServiceTests(TestCase):
         self.assertIsInstance(upcoming, list)
         self.assertTrue(any(item.get('progress') for item in upcoming))
         self.assertTrue(any(item['progress']['metric'] == 'xp_total' for item in upcoming if item.get('progress')))
+
+    def test_dynamic_challenge_progress_and_completion(self):
+        first_result = self.service.apply_session_result(
+            self.user,
+            self.session,
+            self.score_result,
+            daily_stats=self.daily_stat,
+        )
+
+        challenges_snapshot = first_result.snapshot['challenges']
+        self.assertGreater(challenges_snapshot['total_active'], 0)
+        active_challenge = challenges_snapshot['active'][0]
+        self.assertEqual(active_challenge['progress']['current'], 12)
+        self.assertFalse(active_challenge['is_completed'])
+
+        extra_session = SessoesQuizUsuario.objects.create(
+            id_usuario=self.user,
+            modo_quiz=SessoesQuizUsuario.ModoQuiz.RAPIDO,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            total_perguntas_sessao=5,
+            total_acertos=4,
+            total_erros=1,
+            pontuacao_final=95,
+            xp_total_sessao=45,
+        )
+        extra_score = SessionScoreResult(
+            total_points=95,
+            total_xp=45,
+            total_correct=4,
+            total_incorrect=1,
+            total_answered=5,
+            current_streak=3,
+            best_streak=4,
+            response_scores=[],
+        )
+
+        second_result = self.service.apply_session_result(
+            self.user,
+            extra_session,
+            extra_score,
+            daily_stats=self.daily_stat,
+        )
+
+        self.assertGreaterEqual(second_result.desafios_concluidos, 1)
+        challenges_after = second_result.snapshot['challenges']
+        self.assertTrue(any(item['is_completed'] for item in challenges_after['active']))
+        self.assertTrue(len(challenges_after['completed_now']) >= 1)
+
+    def test_rewards_available_and_claim_flow(self):
+        result = self.service.apply_session_result(
+            self.user,
+            self.session,
+            self.score_result,
+            daily_stats=self.daily_stat,
+        )
+
+        rewards_snapshot = result.snapshot['rewards']
+        self.assertTrue(rewards_snapshot['available_to_claim'])
+        reward_payload = rewards_snapshot['available_to_claim'][0]
+
+        claim_payload = self.service.claim_level_reward(
+            self.user,
+            level_id=self.level.id,
+            reward_id=reward_payload['reward_id'],
+        )
+
+        self.assertEqual(RecompensaNivelResgatada.objects.filter(perfil__user=self.user).count(), 1)
+        self.assertEqual(claim_payload['reward']['reward_id'], reward_payload['reward_id'])
+
+        refreshed_snapshot = self.service.get_profile_snapshot(self.user)
+        self.assertFalse(refreshed_snapshot['rewards']['available_to_claim'])
+        self.assertTrue(refreshed_snapshot['rewards']['claimed'])
+
+
+class ScoringServiceTests(TestCase):
+    def setUp(self):
+        invalidate_quiz_config_cache()
+        ConfiguracoesGeraisQuiz.objects.all().delete()
+        self.config = ConfiguracoesGeraisQuiz.objects.create()
+        self.service = ScoringService(self.config)
+        self.user = User.objects.create_user('scorer', 'scorer@example.com', 'secret')
+        self.question = Pergunta.objects.create(
+            texto_pergunta='Pergunta difícil?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.DIFICIL,
+        )
+        self.option = OpcaoResposta.objects.create(
+            pergunta=self.question,
+            texto_opcao='Resposta correta',
+            eh_correta=True,
+        )
+
+    def test_scoring_service_awards_distinct_xp(self):
+        response = SimpleNamespace(
+            pk=1,
+            data_resposta=timezone.now(),
+            id_pergunta=SimpleNamespace(nivel_dificuldade=self.question.nivel_dificuldade),
+            id_opcao_resposta_selecionada_id=self.option.pk,
+            foi_correta=True,
+        )
+        session = SimpleNamespace(tempo_total_segundos=90)
+
+        result = self.service.compute_session_result([response], session=session)
+
+        self.assertNotEqual(result.total_points, result.total_xp)
+        self.assertGreater(result.secondary_xp_bonus, 0)

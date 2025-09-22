@@ -322,6 +322,8 @@ class GamificationServiceTests(TestCase):
         self.assertIn('daily_engagement', snapshot)
         self.assertEqual(snapshot['daily_engagement']['streak_days'], self.daily_stat.sequencia_dias_quiz)
         self.assertGreaterEqual(snapshot['achievements']['total_unlocked'], 4)
+        self.assertIsInstance(snapshot['achievements']['catalog'], list)
+        self.assertGreater(len(snapshot['achievements']['catalog']), 0)
 
         upcoming = snapshot['achievements']['upcoming']
         self.assertIsInstance(upcoming, list)
@@ -399,6 +401,8 @@ class GamificationServiceTests(TestCase):
         refreshed_snapshot = self.service.get_profile_snapshot(self.user)
         self.assertFalse(refreshed_snapshot['rewards']['available_to_claim'])
         self.assertTrue(refreshed_snapshot['rewards']['claimed'])
+        self.assertIsInstance(refreshed_snapshot['achievements']['catalog'], list)
+        self.assertGreater(len(refreshed_snapshot['achievements']['catalog']), 0)
 
 
 class ScoringServiceTests(TestCase):

@@ -735,7 +735,10 @@ class QuizViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-        snapshot = self._gamification_service.get_profile_snapshot(request.user)
+        snapshot = self._gamification_service.get_profile_snapshot(
+            request.user,
+            include_catalog=True,
+        )
 
         return Response(
             {

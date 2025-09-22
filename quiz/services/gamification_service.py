@@ -142,6 +142,7 @@ class GamificationService:
             xp_ganho=score_result.total_xp,
             conquistas_novas=conquistas_novas,
             nivel_anterior=nivel_anterior,
+            include_catalog=True,
             context=context,
             challenges_updates=desafios_atualizados,
         )
@@ -157,7 +158,7 @@ class GamificationService:
         self,
         user,
         *,
-        include_catalog: bool = False,
+        include_catalog: bool = True,
     ) -> Dict[str, Any]:
         """Retorna um snapshot serializado do perfil de gamificação do usuário."""
 
@@ -563,6 +564,30 @@ class GamificationService:
             atual_id = getattr(current_level, 'id', None)
             level_up = atual_id is not None and atual_id != prev_id
 
+        claimed_rewards = list(
+            RecompensaNivelResgatada.objects.filter(perfil=profile).select_related('nivel')
+        )
+
+        rewards_payload = self._serialize_rewards(
+            profile=profile,
+            current_level=current_level,
+            claimed_records=claimed_rewards,
+        )
+
+        lifetime_stats = self._build_lifetime_stats(
+            profile=profile,
+            context=context_obj,
+            daily_engagement=daily_engagement_payload,
+            rewards_state=rewards_payload,
+        )
+
+        activity_feed = self._build_activity_feed(
+            profile=profile,
+            achievements_relations=conquistas_relacoes,
+            claimed_rewards=claimed_rewards,
+            context=context_obj,
+        )
+
         return {
             'xp_total': profile.xp_total,
             'xp_ganho': xp_ganho_int,
@@ -593,7 +618,9 @@ class GamificationService:
                 context=context_obj,
                 recently_updated=challenges_updates,
             ),
-            'rewards': self._serialize_rewards(profile=profile, current_level=current_level),
+            'rewards': rewards_payload,
+            'lifetime_stats': lifetime_stats,
+            'activity_feed': activity_feed,
         }
 
     def _build_achievement_progress(
@@ -782,11 +809,18 @@ class GamificationService:
         *,
         profile: PerfilGamificacaoUsuario,
         current_level: Optional[NivelGamificacao],
+        claimed_records: Optional[List[RecompensaNivelResgatada]] = None,
     ) -> Dict[str, Any]:
-        claimed_qs = RecompensaNivelResgatada.objects.filter(perfil=profile)
+        if claimed_records is None:
+            claimed_records = list(
+                RecompensaNivelResgatada.objects.filter(perfil=profile).select_related('nivel')
+            )
+        else:
+            claimed_records = list(claimed_records)
+
         claimed_map = {
             (claim.nivel_id, claim.recompensa_id): claim
-            for claim in claimed_qs
+            for claim in claimed_records
         }
 
         eligible_levels = NivelGamificacao.objects.filter(
@@ -860,6 +894,250 @@ class GamificationService:
             'all': all_rewards,
             'upcoming': upcoming_rewards,
         }
+
+    def _build_lifetime_stats(
+        self,
+        *,
+        profile: PerfilGamificacaoUsuario,
+        context: GamificationContext,
+        daily_engagement: Optional[Dict[str, Any]],
+        rewards_state: Dict[str, Any],
+    ) -> Dict[str, Any]:
+        session_metrics = context.session_metrics or {}
+
+        def _safe_int(value: Any, default: Optional[int] = 0) -> Optional[int]:
+            try:
+                number = float(value)
+            except (TypeError, ValueError):
+                return default
+            return int(round(number))
+
+        total_sessions = _safe_int(session_metrics.get('total_sessions'), default=0) or 0
+        best_score_value = _safe_int(session_metrics.get('max_score'), default=0) or 0
+        best_correct_value = _safe_int(session_metrics.get('max_correct'), default=0) or 0
+
+        rewards_claimed_count = len(rewards_state.get('claimed') or [])
+        rewards_available_count = len(rewards_state.get('available_to_claim') or [])
+
+        daily_points_value = None
+        xp_today_value = None
+        if daily_engagement:
+            if daily_engagement.get('points_today') is not None:
+                daily_points_value = _safe_int(daily_engagement.get('points_today'), default=0)
+            if daily_engagement.get('xp_today') is not None:
+                xp_today_value = _safe_int(daily_engagement.get('xp_today'), default=0)
+
+        last_update_iso = None
+        last_update_display = None
+        if profile.ultima_atualizacao:
+            try:
+                localized = timezone.localtime(profile.ultima_atualizacao)
+            except (ValueError, TypeError):
+                localized = profile.ultima_atualizacao
+            last_update_iso = localized.isoformat()
+            last_update_display = localized.strftime('%d/%m/%Y %H:%M')
+
+        return {
+            'total_sessions': total_sessions,
+            'best_score': best_score_value,
+            'best_correct_answers': best_correct_value,
+            'rewards_claimed_count': rewards_claimed_count,
+            'rewards_available_count': rewards_available_count,
+            'daily_points': daily_points_value,
+            'xp_today': xp_today_value,
+            'last_update': last_update_iso,
+            'last_update_display': last_update_display,
+        }
+
+    def _build_activity_feed(
+        self,
+        *,
+        profile: PerfilGamificacaoUsuario,
+        achievements_relations: List[ConquistaUsuario],
+        claimed_rewards: List[RecompensaNivelResgatada],
+        context: GamificationContext,
+    ) -> List[Dict[str, Any]]:
+        reference_time = context.reference_time if context else timezone.now()
+
+        events: List[Tuple[datetime, Dict[str, Any]]] = []
+
+        for relation in achievements_relations[:8]:
+            if not relation.data_conquista:
+                continue
+            conquista = relation.conquista
+            timestamp = relation.data_conquista
+            localized_display = self._format_datetime_display(timestamp)
+            events.append(
+                (
+                    timestamp,
+                    {
+                        'type': 'achievement',
+                        'icon': conquista.icone or 'emoji_events',
+                        'identifier': conquista.slug,
+                        'title': conquista.nome,
+                        'description': conquista.descricao,
+                        'date': timestamp.isoformat(),
+                        'date_display': localized_display,
+                        'metadata': relation.metadata or {},
+                        'meta_summary': self._summaries_for_achievement(relation.metadata or {}),
+                    },
+                )
+            )
+
+        challenge_history = list(
+            ProgressoDesafioUsuario.objects.filter(
+                perfil=profile,
+                concluido=True,
+                data_conclusao__isnull=False,
+            )
+            .select_related('desafio')
+            .order_by('-data_conclusao')[:8]
+        )
+
+        for progress in challenge_history:
+            challenge = progress.desafio
+            if not challenge:
+                continue
+            timestamp = progress.data_conclusao or reference_time
+            serialized = self._serialize_single_challenge(
+                challenge=challenge,
+                progress=progress,
+                reference_time=reference_time,
+            )
+            localized_display = self._format_datetime_display(timestamp)
+            events.append(
+                (
+                    timestamp,
+                    {
+                        'type': 'challenge',
+                        'icon': 'flag',
+                        'identifier': challenge.slug,
+                        'title': challenge.nome,
+                        'description': challenge.descricao,
+                        'date': timestamp.isoformat(),
+                        'date_display': localized_display,
+                        'metadata': {
+                            'reward': serialized.get('reward') or challenge.recompensa_json or {},
+                            'progress': serialized.get('progress') or {},
+                            'raw': serialized.get('metadata') or {},
+                        },
+                        'meta_summary': self._summaries_for_challenge(serialized),
+                    },
+                )
+            )
+
+        for claim in claimed_rewards[:8]:
+            timestamp = claim.data_resgate or reference_time
+            reward_definition = claim.dados_recompensa or {}
+            localized_display = self._format_datetime_display(timestamp)
+            events.append(
+                (
+                    timestamp,
+                    {
+                        'type': 'reward',
+                        'icon': 'redeem',
+                        'identifier': claim.recompensa_id,
+                        'title': reward_definition.get('nome') or 'Recompensa resgatada',
+                        'description': reward_definition.get('descricao'),
+                        'date': timestamp.isoformat(),
+                        'date_display': localized_display,
+                        'metadata': {
+                            'level': claim.nivel.nome if claim.nivel else None,
+                            'reward': reward_definition,
+                        },
+                        'meta_summary': self._summaries_for_reward(reward_definition, claim.nivel),
+                    },
+                )
+            )
+
+        sorted_events = sorted(
+            (event for event in events if event[0]),
+            key=lambda item: item[0],
+            reverse=True,
+        )
+
+        return [payload for _, payload in sorted_events[:12]]
+
+    def _format_datetime_display(self, value: Optional[datetime]) -> Optional[str]:
+        if not value:
+            return None
+        try:
+            localized = timezone.localtime(value)
+        except (ValueError, TypeError):
+            localized = value
+        return localized.strftime('%d/%m/%Y %H:%M')
+
+    def _summaries_for_achievement(self, metadata: Dict[str, Any]) -> List[str]:
+        if not metadata:
+            return []
+
+        summary: List[str] = []
+        mapping = {
+            'xp_total': ('XP total', ' XP'),
+            'pontuacao': ('Pontuação', ' pts'),
+            'acertos': ('Acertos', ''),
+            'dias_consecutivos': ('Dias consecutivos', ' dias'),
+            'quizzes_completos': ('Quizzes completos', ''),
+            'perguntas_diarias': ('Perguntas no dia', ''),
+            'xp_diario': ('XP diário', ' XP'),
+            'melhor_sequencia': ('Sequência', ' acertos'),
+        }
+
+        for key, (label, suffix) in mapping.items():
+            if metadata.get(key) in (None, ''):
+                continue
+            try:
+                value = int(round(float(metadata.get(key))))
+            except (TypeError, ValueError):
+                continue
+            suffix_value = suffix or ''
+            summary.append(f"{label}: {value}{suffix_value}")
+
+        return summary
+
+    def _summaries_for_challenge(self, challenge_payload: Dict[str, Any]) -> List[str]:
+        summary: List[str] = []
+
+        progress_payload = challenge_payload.get('progress') or {}
+        progress_label = progress_payload.get('label')
+        if progress_label:
+            summary.append(f"Progresso final: {progress_label}")
+
+        reward_payload = challenge_payload.get('reward') or {}
+        reward_name = reward_payload.get('nome') or reward_payload.get('valor')
+        if reward_name:
+            summary.append(f"Recompensa: {reward_name}")
+
+        metadata_payload = challenge_payload.get('metadata') or {}
+        last_contribution = metadata_payload.get('ultima_contribuicao')
+        if last_contribution not in (None, ''):
+            try:
+                contribution = int(round(float(last_contribution)))
+                summary.append(f"Última contribuição: {contribution}")
+            except (TypeError, ValueError):
+                pass
+
+        return summary
+
+    def _summaries_for_reward(
+        self,
+        reward_payload: Dict[str, Any],
+        level: Optional[NivelGamificacao],
+    ) -> List[str]:
+        summary: List[str] = []
+
+        if level and level.nome:
+            summary.append(f"Nível: {level.nome}")
+
+        reward_type = reward_payload.get('tipo')
+        if reward_type:
+            summary.append(f"Tipo: {reward_type}")
+
+        reward_value = reward_payload.get('valor')
+        if reward_value not in (None, ''):
+            summary.append(f"Valor: {reward_value}")
+
+        return summary
 
     def claim_level_reward(
         self,

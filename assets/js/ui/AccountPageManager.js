@@ -1,6 +1,7 @@
 // assets/js/ui/AccountPageManager.js
 
 import { quizActions } from '../app/flux/actions.js';
+import GamificationDashboard from './GamificationDashboard.js';
 
 export default class AccountPageManager {
     constructor(quizUIInstance) {
@@ -10,6 +11,7 @@ export default class AccountPageManager {
         this.actionOrchestrator = null;
         this.statisticsChartManager = null;
         this.favoriteManager = null;
+        this.gamificationDashboard = new GamificationDashboard();
 
         this.hasInitialized = false;
         this.previousActiveTab = null;
@@ -91,10 +93,12 @@ export default class AccountPageManager {
         if(this.store) {
             this.store.subscribe(this.handleStateUpdate.bind(this));
         }
+        this.gamificationDashboard?.setStore(storeInstance);
     }
 
     setActionOrchestrator(orchestrator) {
         this.actionOrchestrator = orchestrator;
+        this.gamificationDashboard?.setActionOrchestrator(orchestrator);
     }
     
     setStatisticsChartManager(manager) {
@@ -121,7 +125,9 @@ export default class AccountPageManager {
         this._setInitialTabFromURL();
 
         this._updateUIVisibility(!this._isMobileView());
-        
+
+        this.gamificationDashboard?.init();
+
         this.hasInitialized = true;
     }
 
@@ -600,6 +606,8 @@ export default class AccountPageManager {
             this._initializeHistoryTab();
         } else if (targetId === 'statistics-content' && this.statisticsChartManager) {
             this.statisticsChartManager.init();
+        } else if (targetId === 'gamification-content' || targetId === 'missions-rewards-content') {
+            this.gamificationDashboard?.init();
         }
     }
 

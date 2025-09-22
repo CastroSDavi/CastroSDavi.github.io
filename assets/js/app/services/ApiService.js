@@ -178,4 +178,18 @@ export default class ApiService {
         }
         return _request(API_URLS.api_resume_quiz_session, 'GET');
     }
+
+    async claimLevelReward(levelId, rewardId) {
+        if (!API_URLS.claim_level_reward) {
+            console.error('ApiService.js: URL para claim_level_reward não definida em API_URLS.');
+            throw new Error('URL para resgate de recompensa não configurada.');
+        }
+
+        const payload = {
+            level_id: levelId,
+            reward_id: rewardId,
+        };
+
+        return _request(API_URLS.claim_level_reward, 'POST', payload);
+    }
 }

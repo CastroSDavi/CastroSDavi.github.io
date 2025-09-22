@@ -17,6 +17,7 @@ export const API_URLS = {
     api_get_user_statistics: '/api/user-statistics/',
     api_resume_quiz_session: '/api/quiz/resume-session/',
     api_get_user_question_history: '/api/question-history/',
+    claim_level_reward: '/api/quiz/claim-level-reward/',
 };
 
 /**

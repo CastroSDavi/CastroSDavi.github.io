@@ -496,6 +496,47 @@ export default class ActionOrchestrator {
         return false;
     }
 
+    async claimLevelReward(levelId, rewardId) {
+        const normalizedLevel = Number.parseInt(levelId, 10);
+        const rewardIdentifier = typeof rewardId === 'string' ? rewardId : String(rewardId);
+
+        if (!Number.isInteger(normalizedLevel) || !rewardIdentifier) {
+            throw new Error('Recompensa informada é inválida.');
+        }
+
+        try {
+            const response = await this.apiService.claimLevelReward(normalizedLevel, rewardIdentifier);
+            if (!response || response.status !== 'success') {
+                throw new Error(response?.message || 'Não foi possível resgatar a recompensa.');
+            }
+
+            const state = this.store.getState();
+            const userState = state?.user || {};
+
+            this.store.dispatch(
+                quizActions.updateUserStats(
+                    userState.pontos,
+                    userState.acertos,
+                    userState.erros,
+                    {
+                        xp: userState.xp,
+                        currentStreak: userState.currentStreak,
+                        bestStreak: userState.bestStreak,
+                        multiplier: userState.multiplier,
+                        achievementsUnlocked: userState.achievementsUnlocked,
+                        recentAchievements: userState.recentAchievements,
+                        gamification: response.gamificacao || userState.gamification || null,
+                    },
+                ),
+            );
+
+            return response;
+        } catch (error) {
+            const message = error?.message || 'Não foi possível resgatar a recompensa.';
+            throw new Error(message);
+        }
+    }
+
     async loadAndDisplayFavoriteQuestionsForAccountPage() {
         this.store.dispatch(quizActions.loadFavoritesRequest());
         try {

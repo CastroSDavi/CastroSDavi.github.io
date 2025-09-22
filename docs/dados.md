@@ -44,3 +44,21 @@ Os modelos `Categoria`, `Pergunta` e `OpcaoResposta` possuem o campo `codigo_imp
 - Populado automaticamente em registros antigos através das migrations, usando o `pk` como valor inicial.
 
 Graças a esse campo, o comando `load_quiz_data` se torna idempotente: rodadas subsequentes da importação atualizam os registros existentes sem criar duplicatas, desde que o identificador externo seja preservado.
+
+## Populando dados de gamificação
+
+Para facilitar os testes dos recursos de gamificação, o projeto inclui uma migration (`0011_seed_gamification_data`) e um comando de management que inserem níveis com recompensas, conquistas e desafios dinâmicos de demonstração.
+
+Após aplicar as migrations execute:
+
+```bash
+python manage.py seed_gamification_data
+```
+
+O comando cria ou atualiza os registros sem gerar duplicatas e apresenta um resumo com o que foi inserido, atualizado ou mantido. Caso deseje reiniciar completamente os dados de gamificação, utilize a opção `--purge`:
+
+```bash
+python manage.py seed_gamification_data --purge
+```
+
+Esse utilitário é útil para restaurar o banco de dados para um estado conhecido durante testes locais ou demonstrações.

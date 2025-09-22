@@ -84,7 +84,10 @@ def unseed_gamification(apps, _):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('quiz', '0010_dynamic_challenges'),
+        (
+            'quiz',
+            '0011_remove_progressodesafiousuario_quiz_progresso_desafio_usuario_desafio_perfil_uniq_and_more',
+        ),
     ]
 
     operations = [

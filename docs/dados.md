@@ -47,7 +47,7 @@ Graças a esse campo, o comando `load_quiz_data` se torna idempotente: rodadas s
 
 ## Populando dados de gamificação
 
-Para facilitar os testes dos recursos de gamificação, o projeto inclui uma migration (`0011_seed_gamification_data`) e um comando de management que inserem níveis com recompensas, conquistas e desafios dinâmicos de demonstração.
+Para facilitar os testes dos recursos de gamificação, o projeto inclui uma migration (`0012_seed_gamification_data`) e um comando de management que inserem níveis com recompensas, conquistas e desafios dinâmicos de demonstração.
 
 Após aplicar as migrations execute:
 

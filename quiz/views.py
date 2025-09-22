@@ -503,20 +503,75 @@ def _get_difficulty_performance_data(user_sessions_period_qs):
 def home_view(request):
     daily_stats = None
     accuracy_percentage_str = "0%"
+    gamification_snapshot = None
+    daily_engagement_snapshot = None
+
+    home_highlights = {
+        'questions_today': 0,
+        'xp_today': 0,
+        'daily_streak': 0,
+        'active_challenges': 0,
+        'available_rewards': 0,
+    }
+
     if request.user.is_authenticated:
         # **** CHAMADA CORRIGIDA ****
         daily_stats = get_or_create_daily_stats(request.user)
         if daily_stats and daily_stats.perguntas_respondidas_dia > 0:
-            accuracy = (daily_stats.acertos_dia /
-                        daily_stats.perguntas_respondidas_dia) * 100
+            accuracy = (
+                daily_stats.acertos_dia
+                / daily_stats.perguntas_respondidas_dia
+            ) * 100
             accuracy_percentage_str = f"{accuracy:.0f}%"
         elif daily_stats:
             accuracy_percentage_str = "0%"
+
+        gamification_service = GamificationService()
+        gamification_snapshot = gamification_service.get_profile_snapshot(
+            request.user,
+            include_catalog=False,
+        )
+        daily_engagement_snapshot = (
+            gamification_snapshot.get('daily_engagement')
+            if gamification_snapshot
+            else None
+        )
+
+        if daily_engagement_snapshot:
+            home_highlights['questions_today'] = (
+                daily_engagement_snapshot.get('questions_today') or 0
+            )
+            home_highlights['xp_today'] = (
+                daily_engagement_snapshot.get('xp_today') or 0
+            )
+            home_highlights['daily_streak'] = (
+                daily_engagement_snapshot.get('streak_days') or 0
+            )
+        elif daily_stats:
+            home_highlights['questions_today'] = (
+                daily_stats.perguntas_respondidas_dia or 0
+            )
+            home_highlights['xp_today'] = daily_stats.xp_ganho_dia or 0
+            home_highlights['daily_streak'] = (
+                daily_stats.sequencia_dias_quiz or 0
+            )
+
+        if gamification_snapshot:
+            challenges_payload = gamification_snapshot.get('challenges') or {}
+            rewards_payload = gamification_snapshot.get('rewards') or {}
+            home_highlights['active_challenges'] = (
+                challenges_payload.get('total_active') or 0
+            )
+            available_rewards = rewards_payload.get('available_to_claim') or []
+            home_highlights['available_rewards'] = len(available_rewards)
 
     context = {
         'page_title': 'MedQuiz - Início',
         'daily_stats': daily_stats,
         'accuracy_percentage': accuracy_percentage_str,
+        'gamification': gamification_snapshot,
+        'daily_engagement': daily_engagement_snapshot,
+        'home_highlights': home_highlights,
     }
     return render(request, 'quiz/home.html', context)
 

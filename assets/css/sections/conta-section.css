@@ -3279,6 +3279,90 @@
     }
 }
 
+/* --- Gamification detail sections --- */
+.profile-gamification-card__section {
+    margin-top: var(--spacing-lg, 28px);
+    padding-top: var(--spacing-lg, 28px);
+    border-top: 1px solid var(--color-gray-200);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md, 18px);
+}
+
+.profile-gamification-card__section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-sm, 12px);
+}
+
+.profile-gamification-card__section-header h5,
+.profile-gamification-card__reward-group h6 {
+    margin: 0;
+    font-size: var(--font-size-base, 1rem);
+    color: var(--color-text-primary);
+}
+
+.profile-gamification-card__section-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    padding: 4px 12px;
+    border-radius: var(--border-radius-pill, 999px);
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
+    color: var(--color-primary-medium);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm, 0.9rem);
+}
+
+.profile-gamification-card__challenge-list,
+.profile-gamification-card__reward-list {
+    margin: 0;
+    padding: 0;
+}
+
+.profile-gamification-card__challenge {
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.04);
+}
+
+.profile-gamification-card__rewards-wrapper {
+    display: grid;
+    gap: var(--spacing-md, 18px);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.profile-gamification-card__reward-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm, 14px);
+    background: rgba(var(--color-gray-100-rgb, 244, 247, 251), 0.6);
+    border-radius: var(--border-radius-lg, 18px);
+    padding: var(--spacing-sm, 14px) var(--spacing-md, 18px);
+}
+
+.profile-gamification-card__reward-group--claimed {
+    background: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.08);
+}
+
+.profile-gamification-card__reward-group h6 {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-secondary);
+}
+
+.profile-gamification-card__empty {
+    margin: 0;
+}
+
+.profile-gamification-card__challenge .gamification-progress__bar {
+    height: 10px;
+}
+
+.profile-gamification-card__challenge .gamification-progress__meta {
+    font-size: var(--font-size-xs, 0.82rem);
+    color: var(--color-text-secondary);
+}
+
 @media (max-width: 480px) {
     .account-sidebar { padding: var(--spacing-sm, 12px); }
     .account-sidebar__link {

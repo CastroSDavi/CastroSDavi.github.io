@@ -14,6 +14,7 @@ import AccountPageManager from '../ui/AccountPageManager.js';
 import BottomNavManager from '../ui/BottomNavManager.js';
 import StatisticsChartManager from '../ui/StatisticsChartManager.js';
 import FavoriteManager, { FAVORITE_REVIEW_QUERY_PARAM } from '../ui/FavoriteManager.js';
+import GamificationPanelManager from '../ui/GamificationPanelManager.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
 
 export default class App {
@@ -30,6 +31,7 @@ export default class App {
             this.quizUI,
             this.apiService
         );
+        this.gamificationPanelManager = new GamificationPanelManager(this.apiService);
 
         this._applyUserThemePreference();
     }
@@ -124,6 +126,8 @@ export default class App {
         resultDisplay.setActionOrchestrator(this.actionOrchestrator);
         resultDisplay.init();
         this.quizUI.setResultDisplayInstance(resultDisplay);
+
+        this.gamificationPanelManager.init();
         
         if (document.getElementById('account-section-page')) {
             const statisticsManager = new StatisticsChartManager(this.quizUI);

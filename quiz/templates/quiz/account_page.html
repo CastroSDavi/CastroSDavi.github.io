@@ -93,8 +93,8 @@
                                                 Sequência: {{ profile_summary.metrics.current_streak }} dia{{ profile_summary.metrics.current_streak|pluralize:"s" }}
                                             </span>
                                         {% endif %}
-                                    </div>
-                                </div>
+                                                      </div>
+                                                  </div>
                                 <div class="profile-overview__actions">
                                     <button class="button button--secondary button--small profile-overview__action" type="button" data-open-account-tab="security-content">
                                         <span class="material-symbols-outlined button__icon" aria-hidden="true">edit</span>
@@ -140,7 +140,7 @@
 
                                     {% with gamification=profile_summary.gamification %}
                                         {% if gamification %}
-                                            <div class="profile-gamification-card card">
+                                            <div class="profile-gamification-card card" data-gamification-panel data-panel-context="account">
                                                 <div class="profile-gamification-card__header">
                                                     <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
                                                     <div class="profile-gamification-card__heading">
@@ -153,25 +153,25 @@
                                                             {% endif %}
                                                         </span>
                                                     </div>
-                                                    <span class="profile-gamification-card__xp">{{ gamification.xp_total|default:0 }} XP</span>
+                                                    <span class="profile-gamification-card__xp" data-gamification-xp-total>{{ gamification.xp_total|default:0 }} XP</span>
                                                 </div>
 
                                                 <div class="profile-gamification-card__body">
                                                     <div class="profile-gamification-card__progress" role="group" aria-label="Progresso para o próximo nível">
                                                         {% with percent=gamification.progress.percent|default_if_none:0 %}
-                                                            <div class="profile-gamification-card__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ percent|floatformat:0 }}">
-                                                                <span style="width: {{ percent|floatformat:0 }}%;"></span>
+                                                            <div class="profile-gamification-card__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ percent|floatformat:0 }}" data-gamification-progress-bar>
+                                                                <span style="width: {{ percent|floatformat:0 }}%;" data-gamification-progress-fill></span>
                                                             </div>
                                                         {% endwith %}
                                                         <div class="profile-gamification-card__progress-meta">
-                                                            <span>
+                                                            <span data-gamification-level-name>
                                                                 {% if gamification.level %}
                                                                     Nível atual: {{ gamification.level.nome }}
                                                                 {% else %}
                                                                     Sem nível definido ainda
                                                                 {% endif %}
                                                             </span>
-                                                            <span>
+                                                            <span data-gamification-xp-next>
                                                                 {% if gamification.progress.xp_to_next_level is not None and gamification.next_level %}
                                                                     {{ gamification.progress.xp_to_next_level }} XP para {{ gamification.next_level.nome }}
                                                                 {% else %}
@@ -190,19 +190,19 @@
                                                     <div class="profile-gamification-card__stats">
                                                         <div class="gamification-stat">
                                                             <span class="gamification-stat__label">Sequência diária</span>
-                                                            <span class="gamification-stat__value">{{ gamification.daily_engagement.streak_days|default_if_none:0 }}</span>
+                                                            <span class="gamification-stat__value" data-gamification-daily-streak>{{ gamification.daily_engagement.streak_days|default_if_none:0 }}</span>
                                                         </div>
                                                         <div class="gamification-stat">
                                                             <span class="gamification-stat__label">Perguntas hoje</span>
-                                                            <span class="gamification-stat__value">{{ gamification.daily_engagement.questions_today|default_if_none:0 }}</span>
+                                                            <span class="gamification-stat__value" data-gamification-daily-questions>{{ gamification.daily_engagement.questions_today|default_if_none:0 }}</span>
                                                         </div>
                                                         <div class="gamification-stat">
                                                             <span class="gamification-stat__label">XP hoje</span>
-                                                            <span class="gamification-stat__value">{{ gamification.daily_engagement.xp_today|default_if_none:0 }}</span>
+                                                            <span class="gamification-stat__value" data-gamification-daily-xp>{{ gamification.daily_engagement.xp_today|default_if_none:0 }}</span>
                                                         </div>
                                                         <div class="gamification-stat">
                                                             <span class="gamification-stat__label">Sequência de acertos</span>
-                                                            <span class="gamification-stat__value">{{ gamification.current_streak }}</span>
+                                                            <span class="gamification-stat__value" data-gamification-current-streak>{{ gamification.current_streak }}</span>
                                                         </div>
                                                         <div class="gamification-stat">
                                                             <span class="gamification-stat__label">Melhor sequência</span>
@@ -210,7 +210,7 @@
                                                         </div>
                                                         <div class="gamification-stat">
                                                             <span class="gamification-stat__label">Conquistas</span>
-                                                            <span class="gamification-stat__value">{{ gamification.achievements.total_unlocked }} / {{ gamification.achievements.total_available }}</span>
+                                                            <span class="gamification-stat__value" data-gamification-achievement-count>{{ gamification.achievements.total_unlocked }} / {{ gamification.achievements.total_available }}</span>
                                                         </div>
                                                     </div>
 
@@ -222,7 +222,7 @@
                                                                 </span>
                                                                 <div>
                                                                     <strong>{% if daily.has_activity_today %}Meta diária concluída{% else %}Meta diária pendente{% endif %}</strong>
-                                                                    <p>
+                                                                    <p data-gamification-daily-status>
                                                                         {% if daily.has_activity_today %}
                                                                             Você respondeu {{ daily.questions_today|default_if_none:0 }} perguntas hoje e manteve uma sequência de {{ daily.streak_days|default_if_none:0 }} dia{{ daily.streak_days|default_if_none:0|pluralize }}. Continue acumulando XP!
                                                                         {% else %}
@@ -237,7 +237,7 @@
                                                     <div class="profile-gamification-card__achievements">
                                                         <div class="profile-gamification-card__achievements-header">
                                                             <h4>Conquistas em destaque</h4>
-                                                            <span>{{ gamification.achievements.total_unlocked }} desbloqueada{{ gamification.achievements.total_unlocked|pluralize:"s" }}</span>
+                                                            <span data-gamification-achievement-count>{{ gamification.achievements.total_unlocked }} desbloqueada{{ gamification.achievements.total_unlocked|pluralize:"s" }}</span>
                                                         </div>
                                                         <ul class="profile-gamification-card__achievements-list">
                                                             {% if gamification.achievements.catalog %}
@@ -290,6 +290,125 @@
                                                         </div>
                                                         {% endif %}
                                                     </div>
+                                                    {% with challenges=gamification.challenges %}
+                                                    <div class="profile-gamification-card__section profile-gamification-card__section--challenges" data-gamification-challenges>
+                                                        <div class="profile-gamification-card__section-header">
+                                                            <h5>Desafios ativos</h5>
+                                                            <span class="profile-gamification-card__section-count">{{ challenges.total_active|default:0 }}</span>
+                                                        </div>
+                                                        {% if challenges.active %}
+                                                        <ul class="profile-gamification-card__challenge-list" data-gamification-challenges-list>
+                                                            {% for challenge in challenges.active %}
+                                                            <li class="profile-gamification-card__challenge{% if challenge.is_completed %} is-completed{% endif %}">
+                                                                <div class="profile-gamification-card__challenge-main">
+                                                                    <strong>{{ challenge.nome }}</strong>
+                                                                    {% if challenge.progress %}
+                                                                    <span class="profile-gamification-card__challenge-progress">{{ challenge.progress.label }}</span>
+                                                                    {% endif %}
+                                                                </div>
+                                                                {% if challenge.descricao %}
+                                                                <p class="profile-gamification-card__challenge-description">{{ challenge.descricao }}</p>
+                                                                {% endif %}
+                                                                {% if challenge.progress %}
+                                                                <div class="gamification-progress gamification-progress--compact">
+                                                                    <div class="gamification-progress__bar" aria-hidden="true">
+                                                                        <span class="gamification-progress__fill" style="width: {{ challenge.progress.percent|default:0 }}%;"></span>
+                                                                    </div>
+                                                                    <div class="gamification-progress__meta">
+                                                                        {% if challenge.progress.remaining is not None %}
+                                                                        <span>Faltam {{ challenge.progress.remaining }} {{ challenge.progress.unit|default:"" }}</span>
+                                                                        {% endif %}
+                                                                        {% if challenge.end %}
+                                                                        <span>Até {{ challenge.end|date:"d/m H:i" }}</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                {% endif %}
+                                                                {% if challenge.reward.nome %}
+                                                                <span class="profile-gamification-card__challenge-reward">
+                                                                    <span class="material-symbols-outlined" aria-hidden="true">redeem</span>
+                                                                    {{ challenge.reward.nome }}
+                                                                </span>
+                                                                {% endif %}
+                                                            </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                        {% else %}
+                                                        <p class="profile-gamification-card__empty">Nenhum desafio ativo no momento.</p>
+                                                        {% endif %}
+                                                    </div>
+                                                    {% endwith %}
+
+                                                    {% with rewards=gamification.rewards %}
+                                                    <div class="profile-gamification-card__section profile-gamification-card__section--rewards" data-gamification-rewards>
+                                                        <div class="profile-gamification-card__section-header">
+                                                            <h5>Recompensas de nível</h5>
+                                                            {% if rewards.available_to_claim %}
+                                                            <span class="profile-gamification-card__section-count" data-gamification-rewards-count>{{ rewards.available_to_claim|length }}</span>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="profile-gamification-card__rewards-wrapper">
+                                                            <div class="profile-gamification-card__reward-group">
+                                                                <h6>Disponíveis</h6>
+                                                                {% if rewards.available_to_claim %}
+                                                                <ul class="profile-gamification-card__reward-list" data-gamification-rewards-available-list>
+                                                                    {% for reward in rewards.available_to_claim %}
+                                                                    <li class="gamification-reward">
+                                                                        <div class="gamification-reward__info">
+                                                                            <strong>{{ reward.name }}</strong>
+                                                                            {% if reward.description %}
+                                                                            <p>{{ reward.description }}</p>
+                                                                            {% endif %}
+                                                                            <span class="gamification-reward__level">Nível {{ reward.level_name }}</span>
+                                                                        </div>
+                                                                        <button class="button button--secondary button--small gamification-reward__button" data-gamification-claim-button data-level-id="{{ reward.level_id }}" data-reward-id="{{ reward.reward_id }}">Resgatar</button>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                                {% else %}
+                                                                <p class="profile-gamification-card__empty" data-gamification-rewards-available-empty>Sem recompensas disponíveis para resgate agora.</p>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="profile-gamification-card__reward-group">
+                                                                <h6>Próximas recompensas</h6>
+                                                                {% if rewards.upcoming %}
+                                                                <ul class="profile-gamification-card__reward-list" data-gamification-rewards-upcoming-list>
+                                                                    {% for reward in rewards.upcoming %}
+                                                                    <li class="gamification-reward gamification-reward--upcoming">
+                                                                        <div class="gamification-reward__info">
+                                                                            <strong>{{ reward.name }}</strong>
+                                                                            {% if reward.description %}
+                                                                            <p>{{ reward.description }}</p>
+                                                                            {% endif %}
+                                                                            <span class="gamification-reward__level">Disponível no {{ reward.level_name }}</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                                {% else %}
+                                                                <p class="profile-gamification-card__empty" data-gamification-rewards-upcoming-empty>Suba de nível para desbloquear novas recompensas.</p>
+                                                                {% endif %}
+                                                            </div>
+                                                            {% if rewards.claimed %}
+                                                            <div class="profile-gamification-card__reward-group profile-gamification-card__reward-group--claimed">
+                                                                <h6>Recompensas resgatadas</h6>
+                                                                <ul class="profile-gamification-card__reward-list" data-gamification-rewards-claimed-list>
+                                                                    {% for reward in rewards.claimed %}
+                                                                    <li class="gamification-reward gamification-reward--claimed">
+                                                                        <div class="gamification-reward__info">
+                                                                            <strong>{{ reward.name }}</strong>
+                                                                            <span class="gamification-reward__level">Resgatada em {{ reward.claimed_at|date:"d/m/Y" }}</span>
+                                                                        </div>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                    {% endwith %}
+
+                                                    <div class="gamification-panel__feedback" data-gamification-feedback role="status" aria-live="polite"></div>
                                                 </div>
                                             </div>
                                         {% endif %}

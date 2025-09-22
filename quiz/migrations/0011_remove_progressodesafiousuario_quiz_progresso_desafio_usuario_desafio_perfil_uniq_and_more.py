@@ -1,0 +1,27 @@
+from django.db import migrations
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('quiz', '0010_dynamic_challenges'),
+    ]
+
+    operations = [
+        migrations.RemoveConstraint(
+            model_name='progressodesafiousuario',
+            name='quiz_progresso_desafio_usuario_desafio_perfil_uniq',
+        ),
+        migrations.AlterUniqueTogether(
+            name='progressodesafiousuario',
+            unique_together={('desafio', 'perfil')},
+        ),
+        migrations.RemoveConstraint(
+            model_name='recompensanivelresgatada',
+            name='quiz_recompensa_nivel_resgatada_unq',
+        ),
+        migrations.AlterUniqueTogether(
+            name='recompensanivelresgatada',
+            unique_together={('perfil', 'nivel', 'recompensa_id')},
+        ),
+    ]

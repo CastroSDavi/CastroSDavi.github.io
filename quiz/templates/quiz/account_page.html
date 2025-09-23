@@ -584,27 +584,11 @@
                                     <strong class="progression-summary-card__value">{{ metrics.study_time_last_30_display|default:"--" }}</strong>
                                 </article>
                                 <article class="progression-summary-card">
-                                    <span class="material-symbols-outlined progression-summary-card__icon">task_alt</span>
-                                    <span class="progression-summary-card__label">Perguntas respondidas (30 dias)</span>
-                                    <strong class="progression-summary-card__value">{{ metrics.questions_last_30_days|default:0 }}</strong>
-                                </article>
-                                <article class="progression-summary-card">
                                     <span class="material-symbols-outlined progression-summary-card__icon">local_fire_department</span>
                                     <span class="progression-summary-card__label">Sequência ativa</span>
                                     <strong class="progression-summary-card__value">
                                         {% if gamification %}
                                             {{ gamification.current_streak|default_if_none:0 }}
-                                        {% else %}
-                                            0
-                                        {% endif %}
-                                    </strong>
-                                </article>
-                                <article class="progression-summary-card">
-                                    <span class="material-symbols-outlined progression-summary-card__icon">workspace_premium</span>
-                                    <span class="progression-summary-card__label">Conquistas desbloqueadas</span>
-                                    <strong class="progression-summary-card__value">
-                                        {% if gamification %}
-                                            {{ gamification.achievements.total_unlocked|default:0 }} / {{ gamification.achievements.total_available|default:0 }}
                                         {% else %}
                                             0
                                         {% endif %}
@@ -684,40 +668,64 @@
                                             <span class="metric-card__value" id="metric-total-study-time">--</span>
                                         </div>
                                     </div>
-                                    <div class="stats-grid">
-                                        <div class="stats-card chart-card stats-card--with-overall-accuracy">
-                                            <h3 class="chart-title">Precisão Geral</h3>
-                                            <div id="chart-overall-accuracy" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
+                                    <div class="statistics-overview">
+                                        <div class="accuracy-insight" data-insight="accuracy">
+                                            <div class="accuracy-insight__meter">
+                                                <div class="accuracy-insight__ring" data-role="accuracy-ring" style="--progress:0;"></div>
+                                                <span class="accuracy-insight__value" data-role="accuracy-value">--%</span>
                                             </div>
+                                            <dl class="accuracy-insight__legend">
+                                                <div>
+                                                    <dt>Acertos</dt>
+                                                    <dd data-role="accuracy-correct">--</dd>
+                                                </div>
+                                                <div>
+                                                    <dt>Erros</dt>
+                                                    <dd data-role="accuracy-incorrect">--</dd>
+                                                </div>
+                                            </dl>
                                         </div>
-                                        <div class="stats-card chart-card">
-                                            <h3 class="chart-title">Desempenho por Categoria</h3>
-                                            <div id="chart-category-performance" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
+                                        <div class="insights-grid">
+                                            <article class="insight-card" data-role="best-category-insight">
+                                                <h4 class="insight-card__title">Maior destaque</h4>
+                                                <p class="insight-card__body">
+                                                    <strong data-role="best-category-name">--</strong>
+                                                    <span data-role="best-category-detail">Complete mais quizzes para identificar seu melhor desempenho.</span>
+                                                </p>
+                                            </article>
+                                            <article class="insight-card" data-role="focus-category-insight">
+                                                <h4 class="insight-card__title">Precisa de atenção</h4>
+                                                <p class="insight-card__body">
+                                                    <strong data-role="focus-category-name">--</strong>
+                                                    <span data-role="focus-category-detail">Responder novas sessões ajudará a mapear suas oportunidades.</span>
+                                                </p>
+                                            </article>
+                                            <article class="insight-card" data-role="difficulty-insight">
+                                                <h4 class="insight-card__title">Nível de maior rendimento</h4>
+                                                <p class="insight-card__body">
+                                                    <strong data-role="difficulty-highlight">--</strong>
+                                                    <span data-role="difficulty-detail">Ainda precisamos de mais dados para entender seu ritmo.</span>
+                                                </p>
+                                            </article>
+                                            <article class="insight-card" data-role="study-insight">
+                                                <h4 class="insight-card__title">Hábito de estudo</h4>
+                                                <p class="insight-card__body">
+                                                    <strong data-role="study-highlight">--</strong>
+                                                    <span data-role="study-detail">Complete quizzes em dias diferentes para revelar padrões.</span>
+                                                </p>
+                                            </article>
                                         </div>
+                                    </div>
+                                    <div class="statistics-charts">
                                         <div class="stats-card chart-card stats-card--full-width">
-                                            <h3 class="chart-title">Evolução da Precisão</h3>
+                                            <h3 class="chart-title">Evolução da precisão</h3>
                                             <div id="chart-learning-progress" class="chart-container">
                                                 <p class="chart-placeholder">Carregando gráfico...</p>
                                             </div>
                                         </div>
                                         <div class="stats-card chart-card stats-card--full-width">
-                                            <h3 class="chart-title">Frequência de Estudos (Heatmap)</h3>
-                                            <div id="chart-study-heatmap" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
-                                        </div>
-                                        <div class="stats-card chart-card">
-                                            <h3 class="chart-title">Tempo de Estudo Detalhado</h3>
-                                            <div id="chart-study-time" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
-                                        </div>
-                                        <div class="stats-card chart-card">
-                                            <h3 class="chart-title">Acertos por Dificuldade</h3>
-                                            <div id="chart-difficulty-performance" class="chart-container">
+                                            <h3 class="chart-title">Equilíbrio entre categorias</h3>
+                                            <div id="chart-category-performance" class="chart-container">
                                                 <p class="chart-placeholder">Carregando gráfico...</p>
                                             </div>
                                         </div>

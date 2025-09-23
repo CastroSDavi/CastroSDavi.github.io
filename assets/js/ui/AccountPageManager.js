@@ -604,9 +604,15 @@ export default class AccountPageManager {
             }
         } else if (targetId === 'quiz-history-content') {
             this._initializeHistoryTab();
-        } else if (targetId === 'statistics-content' && this.statisticsChartManager) {
-            this.statisticsChartManager.init();
-        } else if (targetId === 'gamification-content' || targetId === 'missions-rewards-content') {
+        } else if (
+            targetId === 'progression-content' ||
+            targetId === 'statistics-content' ||
+            targetId === 'gamification-content' ||
+            targetId === 'missions-rewards-content'
+        ) {
+            if (this.statisticsChartManager) {
+                this.statisticsChartManager.init();
+            }
             this.gamificationDashboard?.init();
         }
     }

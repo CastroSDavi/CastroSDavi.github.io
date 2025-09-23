@@ -356,7 +356,7 @@
 }
 
 .profile-gamification-card {
-    --card-padding: var(--spacing-lg, 28px);
+    --card-padding: clamp(var(--spacing-md, 22px), 4vw, var(--spacing-lg, 28px));
     background: linear-gradient(150deg,
         rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.85),
         rgba(255, 255, 255, 0.98));
@@ -365,9 +365,10 @@
     box-shadow: 0 24px 54px -30px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.32);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg, 26px);
+    gap: clamp(var(--spacing-md, 22px), 4vw, var(--spacing-lg, 26px));
     position: relative;
     overflow: hidden;
+    min-width: 0;
 }
 
 .profile-gamification-card::after {
@@ -382,7 +383,9 @@
 .profile-gamification-card__header {
     display: flex;
     align-items: center;
-    gap: var(--spacing-md, 18px);
+    gap: clamp(var(--spacing-sm, 14px), 3vw, var(--spacing-md, 18px));
+    flex-wrap: wrap;
+    row-gap: clamp(var(--spacing-xs, 10px), 2.8vw, var(--spacing-sm, 14px));
     color: var(--color-primary-dark);
 }
 
@@ -413,25 +416,28 @@
     font-family: var(--font-family-heading);
     font-size: clamp(1.2rem, 3.5vw, 1.4rem);
     color: var(--color-primary-dark);
-    padding: 6px 14px;
+    padding: clamp(6px, 1.6vw, 10px) clamp(14px, 4vw, 18px);
     border-radius: var(--border-radius-pill);
     background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.1);
     border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18);
+    flex: 0 0 auto;
+    align-self: flex-start;
 }
 
 .profile-gamification-card__body {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg, 24px);
+    gap: clamp(var(--spacing-md, 20px), 4vw, var(--spacing-lg, 24px));
     position: relative;
     z-index: 1;
+    min-width: 0;
 }
 
 .profile-gamification-card__progress {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm, 18px);
-    padding: var(--spacing-md, 22px);
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
+    padding: clamp(var(--spacing-sm, 18px), 4vw, var(--spacing-md, 22px));
     border-radius: var(--border-radius-lg, 22px);
     background: rgba(255, 255, 255, 0.92);
     border: 1px solid rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.08);
@@ -461,10 +467,22 @@
 .profile-gamification-card__progress-meta {
     display: flex;
     justify-content: space-between;
-    gap: var(--spacing-xs, 12px);
+    gap: clamp(var(--spacing-xxs, 8px), 2.6vw, var(--spacing-xs, 12px));
     flex-wrap: wrap;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-sm, 0.9rem);
+    font-size: clamp(var(--font-size-xxs, 0.78rem), 2.4vw, var(--font-size-sm, 0.9rem));
+    row-gap: var(--spacing-xxs, 6px);
+}
+
+.profile-gamification-card__progress-meta span {
+    display: inline-flex;
+    gap: var(--spacing-xxs, 6px);
+    align-items: flex-start;
+    flex: 1 1 180px;
+    min-width: 0;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    max-width: 100%;
 }
 
 .profile-gamification-card__alert {
@@ -485,15 +503,15 @@
 
 .profile-gamification-card__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: var(--spacing-sm, 16px);
+    grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
 }
 
 .gamification-stat {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xxs, 6px);
-    padding: var(--spacing-sm, 16px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 10px));
+    padding: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     border-radius: var(--border-radius-lg, 18px);
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.08);
@@ -515,10 +533,11 @@
 
 .profile-gamification-card__daily-status {
     display: flex;
-    gap: var(--spacing-sm, 16px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     align-items: flex-start;
+    flex-wrap: wrap;
     margin-top: var(--spacing-sm, 16px);
-    padding: var(--spacing-sm, 16px);
+    padding: clamp(var(--spacing-xs, 12px), 3.5vw, var(--spacing-sm, 16px));
     border-radius: var(--border-radius-lg, 18px);
     background: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.12);
     border: 1px solid rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.24);
@@ -534,6 +553,7 @@
 .profile-gamification-card__daily-status .material-symbols-outlined {
     font-size: 1.8rem;
     color: currentColor;
+    flex-shrink: 0;
 }
 
 .profile-gamification-card__daily-status strong {
@@ -552,10 +572,10 @@
     background: rgba(255, 255, 255, 0.94);
     border: 1px dashed rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.14);
     border-radius: var(--border-radius-xl);
-    padding: var(--spacing-lg, 24px);
+    padding: clamp(var(--spacing-md, 20px), 4vw, var(--spacing-lg, 24px));
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm, 18px);
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
 }
 
 .profile-gamification-card__achievements-header {
@@ -583,15 +603,16 @@
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: var(--spacing-sm, 16px);
+    grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
 }
 
 .gamification-achievement {
     display: flex;
     align-items: flex-start;
-    gap: var(--spacing-sm, 16px);
-    padding: var(--spacing-sm, 16px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
+    flex-wrap: wrap;
+    padding: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     border-radius: var(--border-radius-lg, 18px);
     background: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.9);
     border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.16);
@@ -622,12 +643,15 @@
 .gamification-achievement__info {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xxs, 6px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 10px));
+    flex: 1 1 220px;
+    min-width: 0;
 }
 
 .gamification-achievement__info strong {
     font-size: 1rem;
     color: var(--color-text-primary);
+    overflow-wrap: anywhere;
 }
 
 .gamification-achievement__info p {
@@ -635,12 +659,15 @@
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm, 0.92rem);
     line-height: 1.45;
+    overflow-wrap: anywhere;
 }
 
 .gamification-achievement__meta {
     font-size: var(--font-size-xs, 0.82rem);
     color: var(--color-secondary-green);
     font-weight: var(--font-weight-medium);
+    flex: 1 1 100%;
+    margin-top: var(--spacing-xxs, 6px);
 }
 
 .gamification-achievement__meta--locked {
@@ -649,7 +676,7 @@
 }
 
 .gamification-achievement__progress {
-    font-size: var(--font-size-xs, 0.82rem);
+    font-size: clamp(var(--font-size-xxs, 0.78rem), 2.2vw, var(--font-size-xs, 0.82rem));
     color: var(--color-primary-dark);
     font-weight: var(--font-weight-medium);
 }
@@ -695,9 +722,10 @@
 
 .profile-upcoming-list__item {
     display: flex;
-    gap: var(--spacing-sm, 14px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     align-items: flex-start;
-    padding: var(--spacing-sm, 16px);
+    flex-wrap: wrap;
+    padding: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     border-radius: var(--border-radius-lg, 18px);
     background: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.9);
     border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.14);
@@ -713,18 +741,21 @@
     color: var(--color-text-primary);
     font-weight: var(--font-weight-semibold);
     display: block;
+    overflow-wrap: anywhere;
 }
 
 .profile-upcoming-list__item p {
     margin: 0;
     color: var(--color-text-secondary);
     font-size: var(--font-size-sm, 0.9rem);
+    overflow-wrap: anywhere;
 }
 
 .profile-upcoming-list__progress {
-    font-size: var(--font-size-xs, 0.8rem);
+    font-size: clamp(var(--font-size-xxs, 0.75rem), 2.2vw, var(--font-size-xs, 0.8rem));
     color: var(--color-primary-dark);
     font-weight: var(--font-weight-medium);
+    flex: 1 1 100%;
 }
 
 .profile-upcoming-list__meta {
@@ -732,6 +763,7 @@
     color: var(--color-text-muted);
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    flex: 1 1 100%;
 }
 
 /* --- Painel expandido de Gamificação --- */
@@ -739,7 +771,7 @@
 .missions-rewards-dashboard {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xl, 36px);
+    gap: clamp(var(--spacing-lg, 28px), 4vw, var(--spacing-xl, 36px));
 }
 
 .gamification-card {
@@ -754,8 +786,9 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--spacing-lg, 24px);
+    gap: clamp(var(--spacing-md, 20px), 4vw, var(--spacing-lg, 24px));
     margin-bottom: var(--spacing-md, 20px);
+    flex-wrap: wrap;
 }
 
 .gamification-card__title {
@@ -773,7 +806,7 @@
 .gamification-overview {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg, 28px);
+    gap: clamp(var(--spacing-md, 22px), 4vw, var(--spacing-lg, 28px));
 }
 
 .gamification-overview__header {
@@ -781,14 +814,15 @@
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: var(--spacing-lg, 24px);
+    gap: clamp(var(--spacing-md, 20px), 4vw, var(--spacing-lg, 24px));
 }
 
 .gamification-overview__level-badge {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm, 16px);
-    padding: var(--spacing-sm, 16px) var(--spacing-md, 22px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
+    padding: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px))
+             clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-md, 22px));
     border-radius: var(--border-radius-pill);
     background: linear-gradient(135deg, rgba(26, 95, 158, 0.1), rgba(42, 157, 143, 0.08));
     border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.25);
@@ -859,18 +893,18 @@
 
 .gamification-overview__stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--spacing-md, 20px);
+    grid-template-columns: repeat(auto-fit, minmax(min(160px, 100%), 1fr));
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
 }
 
 .gamification-overview__stat {
     background: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.7);
     border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.15);
     border-radius: var(--border-radius-lg);
-    padding: var(--spacing-md, 18px);
+    padding: clamp(var(--spacing-sm, 14px), 3vw, var(--spacing-md, 18px));
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs, 8px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 8px));
     text-align: center;
 }
 
@@ -891,8 +925,8 @@
 .gamification-daily-summary {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm, 16px);
-    padding: var(--spacing-md, 20px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
+    padding: clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-md, 20px));
     border-radius: var(--border-radius-lg);
     background: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.12);
     border: 1px solid rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.2);
@@ -909,8 +943,8 @@
 
 .gamification-daily-summary__list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: var(--spacing-sm, 16px);
+    grid-template-columns: repeat(auto-fit, minmax(min(140px, 100%), 1fr));
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -941,15 +975,15 @@
 
 .gamification-records__grid {
     display: grid;
-    gap: var(--spacing-md, 20px);
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
 }
 
 .gamification-record-card {
     display: flex;
     align-items: flex-start;
-    gap: var(--spacing-md, 18px);
-    padding: var(--spacing-md, 20px);
+    gap: clamp(var(--spacing-sm, 14px), 3vw, var(--spacing-md, 18px));
+    padding: clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-md, 20px));
     border-radius: var(--border-radius-lg);
     border: 1px solid rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.85);
     background: rgba(var(--color-white-rgb, 255, 255, 255), 0.96);
@@ -971,7 +1005,7 @@
 .gamification-record-card__body {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xxs, 6px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 10px));
 }
 
 .gamification-record-card__label {
@@ -998,14 +1032,14 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-md, 20px);
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
 }
 
 .gamification-activity__item {
     display: flex;
     align-items: flex-start;
-    gap: var(--spacing-md, 18px);
-    padding: var(--spacing-md, 20px);
+    gap: clamp(var(--spacing-sm, 14px), 3vw, var(--spacing-md, 18px));
+    padding: clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-md, 20px));
     border-radius: var(--border-radius-lg);
     border: 1px solid rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.9);
     background: rgba(var(--color-white-rgb, 255, 255, 255), 0.98);
@@ -1056,7 +1090,7 @@
 .gamification-activity__content {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs, 8px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 8px));
     flex: 1;
 }
 
@@ -1064,7 +1098,7 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    gap: var(--spacing-sm, 12px);
+    gap: clamp(var(--spacing-xs, 10px), 2.5vw, var(--spacing-sm, 12px));
 }
 
 .gamification-activity__type {
@@ -1098,7 +1132,7 @@
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-xs, 10px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 10px));
 }
 
 .gamification-activity__meta li {
@@ -1115,20 +1149,20 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--spacing-md, 20px);
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
 }
 
 .gamification-filter-chip-group {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-xs, 10px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 10px));
 }
 
 .gamification-filter-chip {
     border: 1px solid var(--color-gray-300);
     background: var(--color-white);
     color: var(--color-text-secondary);
-    padding: 8px 14px;
+    padding: clamp(6px, 2vw, 8px) clamp(12px, 4vw, 14px);
     border-radius: var(--border-radius-pill);
     font-size: 0.85rem;
     font-weight: var(--font-weight-medium);
@@ -1151,8 +1185,8 @@
 .gamification-search {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-xs, 10px);
-    padding: 6px 12px;
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 10px));
+    padding: clamp(6px, 2vw, 8px) clamp(12px, 4vw, 16px);
     border-radius: var(--border-radius-pill);
     border: 1px solid var(--color-gray-300);
     background: var(--color-white);
@@ -1162,20 +1196,20 @@
     border: none;
     outline: none;
     font-size: 0.95rem;
-    width: 200px;
+    width: min(220px, 60vw);
 }
 
 .gamification-achievements__grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--spacing-md, 20px);
+    grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+    gap: clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-md, 20px));
 }
 
 .achievement-card {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-sm, 16px);
-    padding: var(--spacing-md, 20px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
+    padding: clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-md, 20px));
     border: 1px solid var(--color-gray-200);
     border-radius: var(--border-radius-xl);
     background: var(--color-white);
@@ -1196,7 +1230,7 @@
 
 .achievement-card__header {
     display: flex;
-    gap: var(--spacing-sm, 16px);
+    gap: clamp(var(--spacing-xs, 12px), 3vw, var(--spacing-sm, 16px));
     align-items: flex-start;
 }
 
@@ -1223,7 +1257,7 @@
     font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: var(--spacing-xs, 8px);
+    gap: clamp(var(--spacing-xxs, 6px), 2vw, var(--spacing-xs, 8px));
 }
 
 .achievement-card__status--unlocked {
@@ -1920,6 +1954,9 @@
         align-items: flex-start;
         gap: var(--spacing-xxs, 8px);
     }
+    .profile-gamification-card__progress-meta span {
+        flex: 1 1 100%;
+    }
 
     .profile-gamification-card__achievements-list {
         grid-template-columns: 1fr;
@@ -1972,10 +2009,25 @@
     .profile-gamification-card {
         --card-padding: var(--spacing-md, 20px);
     }
+    .profile-gamification-card__progress {
+        padding: var(--spacing-sm, 18px);
+        gap: var(--spacing-sm, 14px);
+    }
+    .profile-gamification-card__progress-meta span {
+        flex: 1 1 100%;
+    }
+    .profile-gamification-card__daily-status {
+        gap: var(--spacing-xs, 12px);
+        padding: var(--spacing-sm, 14px);
+    }
 
     .gamification-achievement {
         flex-direction: column;
         align-items: stretch;
+        gap: var(--spacing-xs, 12px);
+    }
+    .profile-upcoming-list__item {
+        gap: var(--spacing-xs, 12px);
     }
 }
 /* Wrapper para tabelas de dados */

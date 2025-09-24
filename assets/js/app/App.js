@@ -14,6 +14,7 @@ import AccountPageManager from '../ui/AccountPageManager.js';
 import BottomNavManager from '../ui/BottomNavManager.js';
 import StatisticsChartManager from '../ui/StatisticsChartManager.js';
 import FavoriteManager, { FAVORITE_REVIEW_QUERY_PARAM } from '../ui/FavoriteManager.js';
+import MessageCenter from '../ui/MessageCenter.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
 
 export default class App {
@@ -25,6 +26,7 @@ export default class App {
         this.quizUI = new QuizUI();
         this.favoriteManager = new FavoriteManager(this.quizUI);
         this.accountPageManager = new AccountPageManager(this.quizUI);
+        this.messageCenter = new MessageCenter();
         this.actionOrchestrator = new ActionOrchestrator(
             this.store,
             this.quizUI,
@@ -36,6 +38,7 @@ export default class App {
 
     async initialize() {
         this._connectManagersToFlux();
+        this.messageCenter.init();
 
         const initialSectionId = this._deriveInitialSectionId();
         this._ensureActiveSection(initialSectionId);

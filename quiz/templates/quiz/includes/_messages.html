@@ -1,0 +1,43 @@
+{# quiz/templates/quiz/includes/_messages.html #}
+<div class="message-center"
+     data-message-center
+     role="region"
+     aria-live="polite"
+     aria-atomic="false"
+     {% if not messages %}hidden{% endif %}>
+    <div class="message-center__list" data-message-center-list>
+        {% for message in messages %}
+            <section class="message-card message-card--{{ message.level_tag }}{% if 'announcement' in message.tags %} message-card--announcement{% endif %}"
+                     data-message-card
+                     data-auto-dismiss="{% if 'no-auto-dismiss' in message.tags %}false{% else %}true{% endif %}"
+                     data-auto-dismiss-ms="{% if 'long-dismiss' in message.tags %}12000{% else %}7000{% endif %}"
+                     role="alert"
+                     {% if 'announcement' in message.tags %}aria-label="Novidade do MedQuiz"{% endif %}>
+                <div class="message-card__icon" aria-hidden="true">
+                    <span class="material-symbols-outlined">
+                        {% if message.level_tag == 'success' %}
+                            check_circle
+                        {% elif message.level_tag == 'warning' %}
+                            warning
+                        {% elif message.level_tag == 'error' %}
+                            error
+                        {% else %}
+                            info
+                        {% endif %}
+                    </span>
+                </div>
+                <div class="message-card__content">
+                    <div class="message-card__message">
+                        {{ message }}
+                    </div>
+                </div>
+                <button type="button"
+                        class="message-card__close"
+                        data-message-dismiss
+                        aria-label="Fechar alerta">
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                </button>
+            </section>
+        {% endfor %}
+    </div>
+</div>

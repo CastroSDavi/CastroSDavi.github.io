@@ -27,38 +27,7 @@
     {% include "quiz/includes/_main_nav.html" %}
 
     <main>
-        {# Django messages block - Mantido como estava #}
-        {% if messages %}
-            <div class="messages-container" style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 2000; width: auto; max-width: 90%;">
-                {% for message in messages %}
-                    <div class="alert alert--{{ message.tags }}" role="alert">
-                        {{ message }}
-                        <button type="button" class="alert__close-btn" aria-label="Fechar notificação">&times;</button>
-                    </div>
-                {% endfor %}
-            </div>
-            <script>
-                // Script simples para fechar alertas
-                document.addEventListener('DOMContentLoaded', () => {
-                    document.querySelectorAll('.alert__close-btn').forEach(button => {
-                        button.addEventListener('click', () => {
-                            button.closest('.alert').style.display = 'none';
-                        });
-                    });
-                    // Auto-fechar alertas após um tempo
-                    setTimeout(() => {
-                        document.querySelectorAll('.alert').forEach(alertEl => {
-                            if (alertEl.style.display !== 'none') { 
-                                alertEl.style.transition = 'opacity 0.5s ease';
-                                alertEl.style.opacity = '0';
-                                setTimeout(() => alertEl.style.display = 'none', 500);
-                            }
-                        });
-                    }, 7000); 
-                });
-            </script>
-        {% endif %}
-        {# Fim do Django messages block #}
+        {% include "quiz/includes/_messages.html" %}
 
         {% block content %}{% endblock content %}
     </main>

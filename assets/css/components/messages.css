@@ -1,4 +1,260 @@
-/* assets/css/components/messages.css - REFINADO com texto centralizado/justificado */
+/* assets/css/components/messages.css */
+
+/* ========================================================================== */
+/* 1. Central de mensagens global (toasts)                                    */
+/* ========================================================================== */
+
+.message-center {
+    position: fixed;
+    top: calc(var(--header-height, 75px) + var(--spacing-sm, 12px));
+    right: clamp(1rem, 2vw, 2.5rem);
+    width: min(420px, calc(100vw - 2rem));
+    display: flex;
+    flex-direction: column;
+    z-index: 2200;
+    pointer-events: none;
+}
+
+.message-center[hidden] {
+    display: none;
+}
+
+.message-center__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm, 12px);
+    pointer-events: none;
+}
+
+.message-card {
+    --message-card-bg: var(--color-white, #fff);
+    --message-card-border: rgba(var(--color-gray-500-rgb, 206, 212, 218), 0.65);
+    --message-card-text: var(--color-text-primary, #343a40);
+    --message-card-icon-bg: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
+    --message-card-icon-color: var(--color-primary-medium, #1a5f9e);
+    --message-card-progress: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.55);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: flex-start;
+    gap: var(--spacing-sm, 12px);
+    padding: var(--spacing-sm, 12px) var(--spacing-md, 20px);
+    border-radius: var(--border-radius-lg, 10px);
+    border: 1px solid var(--message-card-border);
+    box-shadow: var(--shadow-md);
+    background-color: var(--message-card-bg);
+    color: var(--message-card-text);
+    pointer-events: auto;
+    overflow: hidden;
+    transform: translateY(10px);
+    opacity: 0;
+    animation: messageSlideIn 0.35s var(--transition-timing-function-ease-out, ease-out) forwards;
+}
+
+.message-card__icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background-color: var(--message-card-icon-bg);
+    color: var(--message-card-icon-color);
+    margin-top: 2px;
+}
+
+.message-card__icon .material-symbols-outlined {
+    font-size: 22px;
+}
+
+.message-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxs, 6px);
+}
+
+.message-card__message {
+    font-size: var(--font-size-sm, 0.95rem);
+    line-height: 1.6;
+}
+
+.message-card__message strong {
+    font-weight: var(--font-weight-semibold, 600);
+}
+
+.message-card__message ul,
+.message-card__list {
+    margin: var(--spacing-xxs, 4px) 0 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.25rem;
+}
+
+.message-card__message li,
+.message-card__list li {
+    list-style: disc;
+}
+
+.message-card__close {
+    border: none;
+    background: transparent;
+    color: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xxs, 6px);
+    border-radius: var(--border-radius-md, 8px);
+    cursor: pointer;
+    transition: background-color var(--transition-duration-fast, 0.15s) ease-out,
+                color var(--transition-duration-fast, 0.15s) ease-out;
+}
+
+.message-card__close:hover,
+.message-card__close:focus-visible {
+    background-color: rgba(var(--color-gray-500-rgb, 206, 212, 218), 0.25);
+}
+
+.message-card__close .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.message-card.is-leaving {
+    animation: messageSlideOut 0.25s var(--transition-timing-function-ease-in-out, ease-in-out) forwards;
+}
+
+.message-card[data-auto-dismiss="true"]::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 3px;
+    background: var(--message-card-progress);
+    transform-origin: left;
+    animation: messageProgress var(--message-dismiss-duration, 7000ms) linear forwards;
+}
+
+.message-card--success {
+    --message-card-bg: rgba(var(--color-secondary-green-light-rgb, 95, 218, 154), 0.22);
+    --message-card-border: var(--color-correct-border, #a3e9c1);
+    --message-card-text: var(--color-correct-text, #1e7f74);
+    --message-card-icon-bg: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.18);
+    --message-card-icon-color: var(--color-secondary-green, #2a9d8f);
+    --message-card-progress: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.45);
+}
+
+.message-card--warning {
+    --message-card-bg: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.16);
+    --message-card-border: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.55);
+    --message-card-text: #7a5b00;
+    --message-card-icon-bg: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.18);
+    --message-card-icon-color: #7a5b00;
+    --message-card-progress: rgba(var(--color-accent-yellow-rgb, 255, 215, 0), 0.6);
+}
+
+.message-card--error {
+    --message-card-bg: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.14);
+    --message-card-border: var(--color-incorrect-border, #f1aeb5);
+    --message-card-text: var(--color-incorrect-text, #c12634);
+    --message-card-icon-bg: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.18);
+    --message-card-icon-color: var(--color-accent-red, #e63946);
+    --message-card-progress: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.55);
+}
+
+.message-card--announcement {
+    --message-card-bg: linear-gradient(135deg, rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.95), rgba(var(--color-secondary-green-light-rgb, 95, 218, 154), 0.9));
+    --message-card-border: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.35);
+    --message-card-text: rgba(var(--color-gray-900-rgb, 52, 58, 64), 0.92);
+    --message-card-icon-bg: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.22);
+    --message-card-icon-color: var(--color-primary-dark, #0d3b66);
+    --message-card-progress: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.65);
+    border-width: var(--border-width-md, 1.5px);
+    box-shadow: 0 12px 30px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.15);
+}
+
+:root[data-theme='dark'] .message-card {
+    --message-card-bg: rgba(var(--color-gray-200-rgb, 18, 29, 51), 0.98);
+    --message-card-border: rgba(var(--color-gray-500-rgb, 36, 56, 97), 0.6);
+    --message-card-text: var(--color-gray-800, #ced8ff);
+    --message-card-icon-bg: rgba(var(--color-primary-medium-rgb, 122, 168, 255), 0.16);
+    --message-card-icon-color: var(--color-primary-medium, #7aa8ff);
+    --message-card-progress: rgba(var(--color-primary-medium-rgb, 122, 168, 255), 0.5);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.38);
+}
+
+:root[data-theme='dark'] .message-card--announcement {
+    --message-card-bg: linear-gradient(135deg, rgba(var(--color-primary-light-rgb, 34, 54, 92), 0.95), rgba(var(--color-secondary-green-light-rgb, 127, 226, 200), 0.16));
+    --message-card-text: rgba(var(--color-gray-900-rgb, 238, 242, 255), 0.95);
+    --message-card-border: rgba(var(--color-primary-medium-rgb, 122, 168, 255), 0.45);
+}
+
+@keyframes messageSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes messageSlideOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-6px) scale(0.98);
+    }
+}
+
+@keyframes messageProgress {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .message-center {
+        top: calc(var(--header-height-mobile, 65px) + var(--spacing-sm, 12px));
+        right: clamp(0.75rem, 2vw, 1.5rem);
+        width: min(100%, calc(100vw - 1.5rem));
+    }
+
+    .message-card {
+        grid-template-columns: auto 1fr;
+    }
+
+    .message-card__close {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .message-card {
+        animation: none;
+        transform: none;
+        opacity: 1;
+    }
+
+    .message-card.is-leaving {
+        animation: none;
+        opacity: 0;
+    }
+
+    .message-card[data-auto-dismiss="true"]::after {
+        animation: none;
+    }
+}
+
+/* ========================================================================== */
+/* 2. Mensagens de formulário (legado)                                        */
+/* ========================================================================== */
 
 /* Base para todas as mensagens de formulário/sistema */
 .form-message {

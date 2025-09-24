@@ -34,6 +34,30 @@ export default class ActionOrchestrator {
         }
     }
 
+    pauseTimer() {
+        const state = this.store.getState();
+        if (state?.timer?.isRunning) {
+            this.stopTimer();
+        }
+    }
+
+    resumeTimer() {
+        const state = this.store.getState();
+        if (!state) return;
+
+        const quizState = state.quiz || {};
+        if (quizState.quizEnded || !quizState.currentSessionId) {
+            return;
+        }
+
+        if (state.timer?.isRunning) {
+            return;
+        }
+
+        const currentSeconds = state.timer?.seconds ?? 0;
+        this.startTimer(currentSeconds);
+    }
+
     // --- MÉTODOS DE INICIALIZAÇÃO E FLUXO ---
     async loadInitialSummary() {
         const state = this.store.getState();

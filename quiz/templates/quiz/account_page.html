@@ -548,53 +548,55 @@
 
             {# --- Seção: Progresso & Recompensas --- #}
             <div id="progression-content" class="account-content__section">
-                <div class="progression-dashboard">
+                <div class="account-progress">
                     {% with metrics=profile_summary.metrics gamification=profile_summary.gamification %}
-                    <section class="card card--conta-perfil progression-card progression-card--hero">
-                        <header class="progression-hero__header">
-                            <div class="progression-hero__heading">
-                                <span class="progression-hero__eyebrow">Painel de progresso</span>
-                                <h2 class="card__title progression-hero__title">Mapa da sua evolução</h2>
-                                <p class="card__subtitle progression-hero__subtitle">Métricas consolidadas, hábitos recentes e conquistas lado a lado.</p>
-                            </div>
-                            {% if gamification %}
-                                <div class="progression-hero__highlights">
-                                    <div class="progression-highlight progression-highlight--level" role="group" aria-label="Nível atual">
-                                        <span class="material-symbols-outlined progression-highlight__icon" aria-hidden="true">workspace_premium</span>
-                                        <div class="progression-highlight__content">
-                                            <span class="progression-highlight__label">Nível atual</span>
-                                            <strong class="progression-highlight__value">{{ gamification.level.nome|default:"Comece sua jornada" }}</strong>
-                                        </div>
-                                    </div>
-                                    <div class="progression-highlight progression-highlight--xp" role="group" aria-label="XP acumulado">
-                                        <span class="progression-highlight__label">XP acumulado</span>
-                                        <strong class="progression-highlight__value">{{ gamification.xp_total|default:0 }}</strong>
-                                    </div>
+                    <section class="card card--conta-perfil account-progress__hero">
+                        <header class="card__header account-progress__hero-header">
+                            <div class="account-progress__hero-top">
+                                <div class="account-progress__hero-intro">
+                                    <span class="account-progress__eyebrow">Painel de progresso</span>
+                                    <h2 class="card__title">Sua evolução em foco</h2>
+                                    <p class="card__subtitle">Uma visão integrada de desempenho, hábitos e recompensas para manter seu ritmo de estudo.</p>
                                 </div>
-                            {% endif %}
+                                {% if gamification %}
+                                    <div class="account-progress__hero-pills">
+                                        <div class="account-progress__pill">
+                                            <span class="material-symbols-outlined account-progress__pill-icon" aria-hidden="true">workspace_premium</span>
+                                            <div>
+                                                <span class="account-progress__pill-label">Nível atual</span>
+                                                <strong class="account-progress__pill-value">{{ gamification.level.nome|default:"Comece sua jornada" }}</strong>
+                                            </div>
+                                        </div>
+                                        <div class="account-progress__pill account-progress__pill--accent">
+                                            <span class="account-progress__pill-label">XP total</span>
+                                            <strong class="account-progress__pill-value">{{ gamification.xp_total|default:0 }}</strong>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </header>
-                        <div class="progression-hero__layout">
-                            <div class="progression-hero__metrics">
-                                <div class="progression-hero__stats-grid">
-                                    <article class="progression-stat">
-                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">quiz</span>
-                                        <div class="progression-stat__content">
-                                            <span class="progression-stat__label">Quizzes concluídos</span>
-                                            <strong class="progression-stat__value">{{ metrics.total_sessions|default:0 }}</strong>
+                        <div class="card__body account-progress__hero-body">
+                            <div class="account-progress__hero-grid">
+                                <div class="account-progress__metrics">
+                                    <article class="account-progress__metric">
+                                        <span class="material-symbols-outlined account-progress__metric-icon" aria-hidden="true">quiz</span>
+                                        <div>
+                                            <span class="account-progress__metric-label">Quizzes concluídos</span>
+                                            <strong class="account-progress__metric-value">{{ metrics.total_sessions|default:0 }}</strong>
                                         </div>
                                     </article>
-                                    <article class="progression-stat">
-                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">help_center</span>
-                                        <div class="progression-stat__content">
-                                            <span class="progression-stat__label">Perguntas respondidas</span>
-                                            <strong class="progression-stat__value">{{ metrics.total_questions_answered|default:0 }}</strong>
+                                    <article class="account-progress__metric">
+                                        <span class="material-symbols-outlined account-progress__metric-icon" aria-hidden="true">help_center</span>
+                                        <div>
+                                            <span class="account-progress__metric-label">Perguntas respondidas</span>
+                                            <strong class="account-progress__metric-value">{{ metrics.total_questions_answered|default:0 }}</strong>
                                         </div>
                                     </article>
-                                    <article class="progression-stat">
-                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">target</span>
-                                        <div class="progression-stat__content">
-                                            <span class="progression-stat__label">Precisão geral</span>
-                                            <strong class="progression-stat__value">
+                                    <article class="account-progress__metric">
+                                        <span class="material-symbols-outlined account-progress__metric-icon" aria-hidden="true">target</span>
+                                        <div>
+                                            <span class="account-progress__metric-label">Precisão geral</span>
+                                            <strong class="account-progress__metric-value">
                                                 {% if metrics.accuracy is not None %}
                                                     {{ metrics.accuracy|floatformat:1 }}%
                                                 {% else %}
@@ -603,11 +605,11 @@
                                             </strong>
                                         </div>
                                     </article>
-                                    <article class="progression-stat">
-                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">local_fire_department</span>
-                                        <div class="progression-stat__content">
-                                            <span class="progression-stat__label">Maior sequência</span>
-                                            <strong class="progression-stat__value">
+                                    <article class="account-progress__metric">
+                                        <span class="material-symbols-outlined account-progress__metric-icon" aria-hidden="true">local_fire_department</span>
+                                        <div>
+                                            <span class="account-progress__metric-label">Maior sequência</span>
+                                            <strong class="account-progress__metric-value">
                                                 {% if gamification %}
                                                     {{ gamification.best_streak|default_if_none:0 }} dia{{ gamification.best_streak|default_if_none:0|pluralize }}
                                                 {% else %}
@@ -617,188 +619,208 @@
                                         </div>
                                     </article>
                                 </div>
-                            </div>
-                            <div class="progression-hero__callout-wrapper">
-                                {% if gamification and gamification.daily_engagement %}
-                                    {% with daily=gamification.daily_engagement %}
-                                    <div class="progression-hero__callout{% if not daily.has_activity_today %} is-inactive{% endif %}">
-                                        <span class="material-symbols-outlined progression-hero__callout-icon" aria-hidden="true">
-                                            {% if daily.has_activity_today %}verified{% else %}alarm{% endif %}
-                                        </span>
-                                        <div>
-                                            <strong class="progression-hero__callout-title">
-                                                {% if daily.has_activity_today %}Meta diária concluída{% else %}Mantenha sua sequência{% endif %}
-                                            </strong>
-                                            <p class="progression-hero__callout-text">
-                                                {% if daily.has_activity_today %}
-                                                    Você respondeu {{ daily.questions_today|default_if_none:0 }} perguntas hoje e garantiu {{ daily.xp_today|default_if_none:0 }} XP.
-                                                {% else %}
-                                                    Responda uma questão hoje para proteger sua sequência de {{ daily.streak_days|default_if_none:0 }} dia{{ daily.streak_days|default_if_none:0|pluralize }}.
-                                                {% endif %}
-                                            </p>
+                                <div class="account-progress__spotlight">
+                                    {% if gamification %}
+                                        {% with percent=gamification.progress.percent|default_if_none:0 %}
+                                        <div class="account-progress__progress" role="group" aria-label="Progresso do nível">
+                                            <div class="account-progress__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ percent|floatformat:0 }}">
+                                                <span style="width: {{ percent|floatformat:0 }}%;"></span>
+                                            </div>
+                                            <div class="account-progress__progress-meta">
+                                                <span>{{ gamification.progress.xp_into_level|default_if_none:0 }} XP neste nível</span>
+                                                <span>
+                                                    {% if gamification.progress.xp_to_next_level %}
+                                                        Faltam {{ gamification.progress.xp_to_next_level }} XP para {% if gamification.next_level %}{{ gamification.next_level.nome }}{% else %}o próximo nível{% endif %}
+                                                    {% else %}
+                                                        Você alcançou o patamar máximo registrado.
+                                                    {% endif %}
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    {% endwith %}
-                                {% else %}
-                                    <div class="progression-hero__callout is-inactive">
-                                        <span class="material-symbols-outlined progression-hero__callout-icon" aria-hidden="true">rocket_launch</span>
-                                        <div>
-                                            <strong class="progression-hero__callout-title">Comece sua jornada</strong>
-                                            <p class="progression-hero__callout-text">Complete um quiz para liberar gráficos personalizados, missões e recompensas exclusivas.</p>
+                                        {% endwith %}
+                                    {% endif %}
+                                    {% if gamification and gamification.daily_engagement %}
+                                        {% with daily=gamification.daily_engagement %}
+                                        <div class="account-progress__daily-card{% if not daily.has_activity_today %} is-pending{% endif %}">
+                                            <span class="material-symbols-outlined account-progress__daily-icon" aria-hidden="true">
+                                                {% if daily.has_activity_today %}verified{% else %}alarm{% endif %}
+                                            </span>
+                                            <div>
+                                                <strong class="account-progress__daily-title">
+                                                    {% if daily.has_activity_today %}Meta diária concluída{% else %}Mantenha sua sequência{% endif %}
+                                                </strong>
+                                                <p class="account-progress__daily-text">
+                                                    {% if daily.has_activity_today %}
+                                                        Você respondeu {{ daily.questions_today|default_if_none:0 }} perguntas e garantiu {{ daily.xp_today|default_if_none:0 }} XP hoje.
+                                                    {% else %}
+                                                        Responda uma questão para proteger sua sequência de {{ daily.streak_days|default_if_none:0 }} dia{{ daily.streak_days|default_if_none:0|pluralize }}.
+                                                    {% endif %}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </div>
-                                {% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                        <div class="account-progress__daily-card is-pending">
+                                            <span class="material-symbols-outlined account-progress__daily-icon" aria-hidden="true">rocket_launch</span>
+                                            <div>
+                                                <strong class="account-progress__daily-title">Comece sua jornada</strong>
+                                                <p class="account-progress__daily-text">Complete um quiz para liberar gráficos personalizados, missões e recompensas exclusivas.</p>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </section>
                     {% endwith %}
 
-                    <div class="progression-layout">
-                        <div class="progression-layout__main">
-                            <section class="card card--conta-perfil progression-card progression-card--analytics">
-                                <header class="progression-card__header">
-                                    <div class="progression-card__heading">
+                    <div class="account-progress__grid">
+                        <div class="account-progress__column account-progress__column--primary">
+                            <section class="card card--conta-perfil account-progress__panel progression-card--analytics">
+                                <header class="card__header account-progress__panel-header">
+                                    <div>
                                         <h3 class="card__title">Radar de desempenho</h3>
                                         <p class="card__subtitle">Heatmap, indicadores do período e listas inteligentes em um só painel.</p>
                                     </div>
-                                    <div class="progression-card__actions">
-                                        <div class="progression-analytics__filters">
-                                            <label for="stats-period-select" class="form-label">Período</label>
-                                            <select id="stats-period-select" class="form-control form-control--small">
-                                                <option value="7d">Últimos 7 dias</option>
-                                                <option value="30d" selected>Últimos 30 dias</option>
-                                                <option value="90d">Últimos 90 dias</option>
-                                                <option value="all">Desde o início</option>
-                                            </select>
-                                        </div>
+                                    <div class="account-progress__panel-actions">
+                                        <label for="stats-period-select" class="form-label account-progress__panel-label">Período</label>
+                                        <select id="stats-period-select" class="form-control form-control--small">
+                                            <option value="7d">Últimos 7 dias</option>
+                                            <option value="30d" selected>Últimos 30 dias</option>
+                                            <option value="90d">Últimos 90 dias</option>
+                                            <option value="all">Desde o início</option>
+                                        </select>
                                     </div>
                                 </header>
-                                <div class="progression-card__body">
-                                    <div id="no-stats-data-message" class="progression-feedback progression-feedback--empty u-is-hidden" role="status">
+                                <div class="card__body account-progress__panel-body">
+                                    <div id="no-stats-data-message" class="account-progress__feedback progression-feedback progression-feedback--empty u-is-hidden" role="status">
                                         <span class="material-symbols-outlined" aria-hidden="true">sentiment_dissatisfied</span>
                                         <p data-role="feedback-text">Nenhuma estatística encontrada para o período selecionado. Complete um quiz para desbloquear seu painel.</p>
                                     </div>
-                                    <div id="progression-insights-grid" class="progression-analytics__layout">
-                                <article class="insight-block insight-block--heatmap">
-                                    <header class="insight-block__header">
-                                        <h4 class="insight-block__title">Frequência de estudos</h4>
-                                        <p class="insight-block__subtitle">Veja quantas perguntas respondeu em cada dia do ano.</p>
-                                    </header>
-                                    <div class="insight-block__content insight-block__content--heatmap">
-                                        <div id="chart-study-heatmap" class="heatmap-wrapper">
-                                            <p class="chart-placeholder">Carregando dados...</p>
-                                        </div>
-                                    </div>
-                                </article>
+                                    <div id="progression-insights-grid" class="account-progress__insights">
+                                        <article class="insight-block insight-block--heatmap">
+                                            <header class="insight-block__header">
+                                                <h4 class="insight-block__title">Frequência de estudos</h4>
+                                                <p class="insight-block__subtitle">Veja quantas perguntas respondeu em cada dia do ano.</p>
+                                            </header>
+                                            <div class="insight-block__content insight-block__content--heatmap">
+                                                <div id="chart-study-heatmap" class="heatmap-wrapper">
+                                                    <p class="chart-placeholder">Carregando dados...</p>
+                                                </div>
+                                            </div>
+                                        </article>
 
-                                <article class="insight-block insight-block--period">
-                                    <header class="insight-block__header">
-                                        <h4 class="insight-block__title">Resumo do período</h4>
-                                        <p class="insight-block__subtitle">Indicadores atualizados conforme o filtro escolhido.</p>
-                                    </header>
-                                    <div class="insight-block__content">
-                                        <dl class="period-summary">
-                                            <div class="period-summary__item">
-                                                <dt>Perguntas respondidas</dt>
-                                                <dd id="metric-period-questions">--</dd>
+                                        <article class="insight-block insight-block--period">
+                                            <header class="insight-block__header">
+                                                <h4 class="insight-block__title">Resumo do período</h4>
+                                                <p class="insight-block__subtitle">Indicadores atualizados conforme o filtro escolhido.</p>
+                                            </header>
+                                            <div class="insight-block__content">
+                                                <dl class="period-summary">
+                                                    <div class="period-summary__item">
+                                                        <dt>Perguntas respondidas</dt>
+                                                        <dd id="metric-period-questions">--</dd>
+                                                    </div>
+                                                    <div class="period-summary__item">
+                                                        <dt>Tempo de estudo</dt>
+                                                        <dd id="metric-period-study-time">--</dd>
+                                                    </div>
+                                                    <div class="period-summary__item">
+                                                        <dt>XP conquistado</dt>
+                                                        <dd id="metric-period-xp">--</dd>
+                                                    </div>
+                                                    <div class="period-summary__item">
+                                                        <dt>Sequência ativa máx.</dt>
+                                                        <dd id="metric-period-streak">--</dd>
+                                                    </div>
+                                                </dl>
                                             </div>
-                                            <div class="period-summary__item">
-                                                <dt>Tempo de estudo</dt>
-                                                <dd id="metric-period-study-time">--</dd>
-                                            </div>
-                                            <div class="period-summary__item">
-                                                <dt>XP conquistado</dt>
-                                                <dd id="metric-period-xp">--</dd>
-                                            </div>
-                                            <div class="period-summary__item">
-                                                <dt>Sequência ativa máx.</dt>
-                                                <dd id="metric-period-streak">--</dd>
-                                            </div>
-                                        </dl>
-                                    </div>
-                                </article>
-                                <article class="insight-block insight-block--trend">
-                                    <header class="insight-block__header">
-                                        <h4 class="insight-block__title">Ritmo de acertos</h4>
-                                        <p class="insight-block__subtitle">Precisão diária, tendência e variação média recente.</p>
-                                    </header>
-                                    <div class="insight-block__content insight-block__content--trend">
-                                        <div class="trend-summary">
-                                            <div class="trend-summary__current">
-                                                <span class="trend-summary__label">Média recente</span>
-                                                <strong id="trend-current-accuracy" class="trend-summary__value">--</strong>
-                                            </div>
-                                            <div class="trend-summary__change">
-                                                <span class="trend-summary__label">Variação</span>
-                                                <span id="trend-accuracy-change" class="trend-badge">--</span>
-                                            </div>
-                                        </div>
-                                        <ul id="trend-accuracy-list" class="trend-list">
-                                            <li class="trend-list__item trend-list__item--empty">Complete um quiz para visualizar o histórico de precisão.</li>
-                                        </ul>
-                                    </div>
-                                </article>
+                                        </article>
 
-                                <article class="insight-block insight-block--categories">
-                                    <header class="insight-block__header">
-                                        <h4 class="insight-block__title">Forças e oportunidades</h4>
-                                        <p class="insight-block__subtitle">Categorias em que você se destaca e temas para reforçar.</p>
-                                    </header>
-                                    <div class="insight-block__content insight-block__content--split">
-                                        <div class="insight-block__column">
-                                            <h5 class="insight-block__column-title">Melhores resultados</h5>
-                                            <ul id="category-highlights-best" class="insight-list insight-list--positive">
-                                                <li class="insight-list__item insight-list__item--empty">Sem dados suficientes.</li>
-                                            </ul>
-                                        </div>
-                                        <div class="insight-block__column">
-                                            <h5 class="insight-block__column-title">Para focar</h5>
-                                            <ul id="category-highlights-focus" class="insight-list insight-list--attention">
-                                                <li class="insight-list__item insight-list__item--empty">Sem dados suficientes.</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="insight-block insight-block--difficulty">
-                                    <header class="insight-block__header">
-                                        <h4 class="insight-block__title">Desempenho por dificuldade</h4>
-                                        <p class="insight-block__subtitle">Compare a taxa de acertos em cada nível.</p>
-                                    </header>
-                                    <div class="insight-block__content">
-                                        <ul id="difficulty-summary-list" class="difficulty-list">
-                                            <li class="difficulty-list__item difficulty-list__item--empty">Nenhuma sessão registrada no período.</li>
-                                        </ul>
-                                    </div>
-                                </article>
+                                        <article class="insight-block insight-block--trend">
+                                            <header class="insight-block__header">
+                                                <h4 class="insight-block__title">Ritmo de acertos</h4>
+                                                <p class="insight-block__subtitle">Precisão diária, tendência e variação média recente.</p>
+                                            </header>
+                                            <div class="insight-block__content insight-block__content--trend">
+                                                <div class="trend-summary">
+                                                    <div class="trend-summary__current">
+                                                        <span class="trend-summary__label">Média recente</span>
+                                                        <strong id="trend-current-accuracy" class="trend-summary__value">--</strong>
+                                                    </div>
+                                                    <div class="trend-summary__change">
+                                                        <span class="trend-summary__label">Variação</span>
+                                                        <span id="trend-accuracy-change" class="trend-badge">--</span>
+                                                    </div>
+                                                </div>
+                                                <ul id="trend-accuracy-list" class="trend-list">
+                                                    <li class="trend-list__item trend-list__item--empty">Complete um quiz para visualizar o histórico de precisão.</li>
+                                                </ul>
+                                            </div>
+                                        </article>
 
-                                <article class="insight-block insight-block--rhythm">
-                                    <header class="insight-block__header">
-                                        <h4 class="insight-block__title">Ritmo semanal</h4>
-                                        <p class="insight-block__subtitle">Distribuição do tempo dedicado em cada dia.</p>
-                                    </header>
-                                    <div class="insight-block__content">
-                                        <ul id="study-rhythm-list" class="rhythm-list">
-                                            <li class="rhythm-list__item rhythm-list__item--empty">Ainda não há sessões suficientes para montar o ritmo.</li>
-                                        </ul>
+                                        <article class="insight-block insight-block--categories">
+                                            <header class="insight-block__header">
+                                                <h4 class="insight-block__title">Forças e oportunidades</h4>
+                                                <p class="insight-block__subtitle">Categorias em que você se destaca e temas para reforçar.</p>
+                                            </header>
+                                            <div class="insight-block__content insight-block__content--split">
+                                                <div class="insight-block__column">
+                                                    <h5 class="insight-block__column-title">Melhores resultados</h5>
+                                                    <ul id="category-highlights-best" class="insight-list insight-list--positive">
+                                                        <li class="insight-list__item insight-list__item--empty">Sem dados suficientes.</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="insight-block__column">
+                                                    <h5 class="insight-block__column-title">Para focar</h5>
+                                                    <ul id="category-highlights-focus" class="insight-list insight-list--attention">
+                                                        <li class="insight-list__item insight-list__item--empty">Sem dados suficientes.</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </article>
+
+                                        <article class="insight-block insight-block--difficulty">
+                                            <header class="insight-block__header">
+                                                <h4 class="insight-block__title">Desempenho por dificuldade</h4>
+                                                <p class="insight-block__subtitle">Compare a taxa de acertos em cada nível.</p>
+                                            </header>
+                                            <div class="insight-block__content">
+                                                <ul id="difficulty-summary-list" class="difficulty-list">
+                                                    <li class="difficulty-list__item difficulty-list__item--empty">Nenhuma sessão registrada no período.</li>
+                                                </ul>
+                                            </div>
+                                        </article>
+
+                                        <article class="insight-block insight-block--rhythm">
+                                            <header class="insight-block__header">
+                                                <h4 class="insight-block__title">Ritmo semanal</h4>
+                                                <p class="insight-block__subtitle">Distribuição do tempo dedicado em cada dia.</p>
+                                            </header>
+                                            <div class="insight-block__content">
+                                                <ul id="study-rhythm-list" class="rhythm-list">
+                                                    <li class="rhythm-list__item rhythm-list__item--empty">Ainda não há sessões suficientes para montar o ritmo.</li>
+                                                </ul>
+                                            </div>
+                                        </article>
                                     </div>
-                                </article>
-                            </div>
                                 </div>
                             </section>
                         </div>
-                        <aside class="progression-layout__aside">
-                            <section class="card card--conta-perfil progression-card progression-card--gamification" data-gamification-dashboard>
-                                <header class="progression-card__header">
-                                    <div class="progression-card__heading">
+                        <aside class="account-progress__column account-progress__column--secondary">
+                            <section class="card card--conta-perfil account-progress__module" data-gamification-dashboard>
+                                <header class="card__header account-progress__module-header">
+                                    <div>
                                         <h3 class="card__title">Gamificação e conquistas</h3>
                                         <p class="card__subtitle">Resumo de níveis, marcos, catálogo de conquistas e linha do tempo.</p>
                                     </div>
                                 </header>
-                                <div class="progression-card__body">
-                                    <div class="progression-card__sections">
-                                    <section class="progression-card__section progression-card__section--highlight">
-                                        <h4 class="progression-card__section-title">Resumo da jornada</h4>
-                                        <div class="gamification-overview" data-gamification-overview>
+                                <div class="card__body account-progress__module-body">
+                                    <section class="account-progress__subsection account-progress__subsection--highlight">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Resumo da jornada</h4>
+                                        </header>
+                                        <div class="account-progress__subsection-content" data-gamification-overview>
                                             {% with gamification=profile_summary.gamification %}
                                                 {% if gamification %}
                                                     <header class="gamification-overview__header">
@@ -822,7 +844,7 @@
                                                             <span>{{ gamification.progress.xp_into_level|default_if_none:0 }} XP no nível atual</span>
                                                             <span>
                                                                 {% if gamification.progress.xp_to_next_level %}
-                                                                    Faltam {{ gamification.progress.xp_to_next_level }} XP para {% if gamification.next_level %}{{ gamification.next_level.nome }}{% else %}o próximo nível{% endif %}
+                                                                    Faltam {{ gamification.progress.xp_to_next_level }} XP para{% if gamification.next_level %} {{ gamification.next_level.nome }}{% else %} o próximo nível{% endif %}
                                                                 {% else %}
                                                                     Você alcançou o patamar máximo registrado.
                                                                 {% endif %}
@@ -882,17 +904,18 @@
                                             {% endwith %}
                                         </div>
                                     </section>
+
                                     {% with stats=profile_summary.gamification.lifetime_stats %}
-                                    <section class="progression-card__section">
-                                        <div class="progression-card__section-header">
-                                            <h4 class="progression-card__section-title">Marcos acumulados</h4>
-                                            <span id="gamification-records-updated" class="progression-card__section-meta"{% if stats and stats.last_update_display %} title="{{ stats.last_update_display }}"{% endif %}>
+                                    <section class="account-progress__subsection">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Marcos acumulados</h4>
+                                            <span id="gamification-records-updated" class="account-progress__subsection-meta"{% if stats and stats.last_update_display %} title="{{ stats.last_update_display }}"{% endif %}>
                                                 {% if stats and stats.last_update_display %}
                                                     Atualizado em {{ stats.last_update_display }}
                                                 {% endif %}
                                             </span>
-                                        </div>
-                                        <div id="gamification-records-list" class="gamification-records__grid">
+                                        </header>
+                                        <div id="gamification-records-list" class="account-progress__subsection-content gamification-records__grid">
                                             {% if stats %}
                                                 <article class="gamification-record-card">
                                                     <span class="material-symbols-outlined gamification-record-card__icon" aria-hidden="true">playlist_add_check</span>
@@ -960,10 +983,11 @@
                                         </div>
                                     </section>
                                     {% endwith %}
-                                    <section class="progression-card__section">
-                                        <div class="progression-card__section-header">
-                                            <h4 class="progression-card__section-title">Catálogo de conquistas</h4>
-                                            <div class="progression-card__section-actions">
+
+                                    <section class="account-progress__subsection">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Catálogo de conquistas</h4>
+                                            <div class="account-progress__subsection-tools">
                                                 <div class="gamification-filter-chip-group" id="achievements-filter-group" role="group" aria-label="Filtros de conquistas">
                                                     <button type="button" class="gamification-filter-chip is-active" data-achievements-filter="all">Todas</button>
                                                     <button type="button" class="gamification-filter-chip" data-achievements-filter="unlocked">Conquistadas</button>
@@ -975,8 +999,8 @@
                                                     <input type="search" id="achievements-search" placeholder="Buscar conquistas" autocomplete="off">
                                                 </label>
                                             </div>
-                                        </div>
-                                        <div id="gamification-achievement-grid" class="gamification-achievements__grid" aria-live="polite">
+                                        </header>
+                                        <div id="gamification-achievement-grid" class="account-progress__subsection-content gamification-achievements__grid" aria-live="polite">
                                             {% with achievements=profile_summary.gamification.achievements.catalog %}
                                                 {% if achievements %}
                                                     {% for conquest in achievements %}
@@ -1016,8 +1040,8 @@
                                             {% endwith %}
                                         </div>
                                         {% with upcoming=profile_summary.gamification.achievements.upcoming %}
-                                            <div class="progression-card__section-footer">
-                                                <h5 class="progression-card__section-subtitle">Próximas metas em destaque</h5>
+                                            <footer class="account-progress__subsection-footer">
+                                                <h5 class="account-progress__subsection-subtitle">Próximas metas em destaque</h5>
                                                 <ul class="gamification-achievements__upcoming-list" id="upcoming-achievements-list">
                                                     {% if upcoming %}
                                                         {% for item in upcoming %}
@@ -1036,12 +1060,15 @@
                                                         <li class="placeholder-text">Complete mais desafios para revelar novas metas.</li>
                                                     {% endif %}
                                                 </ul>
-                                            </div>
+                                            </footer>
                                         {% endwith %}
                                     </section>
-                                    <section class="progression-card__section">
-                                        <h4 class="progression-card__section-title">Linha do tempo</h4>
-                                        <ul id="gamification-activity-feed" class="gamification-activity__list">
+
+                                    <section class="account-progress__subsection">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Linha do tempo</h4>
+                                        </header>
+                                        <ul id="gamification-activity-feed" class="account-progress__subsection-content gamification-activity__list">
                                             {% with timeline=profile_summary.gamification.activity %}
                                                 {% if timeline %}
                                                     {% for event in timeline %}
@@ -1070,21 +1097,22 @@
                                             {% endwith %}
                                         </ul>
                                     </section>
-                                    </div>
                                 </div>
                             </section>
-                            <section class="card card--conta-perfil progression-card progression-card--missions" data-gamification-missions>
-                                <header class="progression-card__header">
-                                    <div class="progression-card__heading">
+
+                            <section class="card card--conta-perfil account-progress__module" data-gamification-missions>
+                                <header class="card__header account-progress__module-header">
+                                    <div>
                                         <h3 class="card__title">Missões e recompensas</h3>
                                         <p class="card__subtitle">Desafios ativos, conquistas recentes e benefícios disponíveis.</p>
                                     </div>
                                 </header>
-                                <div class="progression-card__body">
-                                    <div class="progression-card__sections">
-                                    <section class="progression-card__section">
-                                        <h4 class="progression-card__section-title">Desafios ativos</h4>
-                                        <div id="active-challenges-list" class="challenge-list" aria-live="polite">
+                                <div class="card__body account-progress__module-body">
+                                    <section class="account-progress__subsection">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Desafios ativos</h4>
+                                        </header>
+                                        <div id="active-challenges-list" class="account-progress__subsection-content challenge-list" aria-live="polite">
                                             {% with challenges=profile_summary.gamification.challenges.active %}
                                                 {% if challenges %}
                                                     {% for challenge in challenges %}
@@ -1149,10 +1177,13 @@
                                             {% endwith %}
                                         </div>
                                     </section>
+
                                     {% with completed=profile_summary.gamification.challenges.completed_now %}
-                                    <section class="progression-card__section">
-                                        <h4 class="progression-card__section-title">Concluídos recentemente</h4>
-                                        <div id="completed-challenges-list" class="challenge-list challenge-list--compact">
+                                    <section class="account-progress__subsection">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Concluídos recentemente</h4>
+                                        </header>
+                                        <div id="completed-challenges-list" class="account-progress__subsection-content challenge-list challenge-list--compact">
                                             {% if completed %}
                                                 {% for challenge in completed %}
                                                     <article class="challenge-card challenge-card--compact is-completed" data-challenge-slug="{{ challenge.slug }}">
@@ -1171,8 +1202,11 @@
                                         </div>
                                     </section>
                                     {% endwith %}
-                                    <section class="progression-card__section">
-                                        <h4 class="progression-card__section-title">Central de recompensas</h4>
+
+                                    <section class="account-progress__subsection">
+                                        <header class="account-progress__subsection-header">
+                                            <h4 class="account-progress__subsection-title">Central de recompensas</h4>
+                                        </header>
                                         <div id="rewards-feedback" class="rewards-feedback" role="status" aria-live="polite"></div>
                                         <div class="rewards-columns">
                                             <div class="rewards-column">
@@ -1253,13 +1287,13 @@
                                             </div>
                                         </div>
                                     </section>
-                                    </div>
                                 </div>
                             </section>
                         </aside>
                     </div>
                 </div>
             </div>
+
 
             {# --- Seção: Segurança e Dados --- #}
             <div id="security-content" class="account-content__section">

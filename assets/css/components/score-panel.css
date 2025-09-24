@@ -154,8 +154,8 @@
 }
 
 .score-panel__pause-button {
-  width: var(--score-panel-pause-button-size, 52px);
-  height: var(--score-panel-pause-button-size, 52px);
+  width: var(--score-panel-pause-button-size, 48px);
+  height: var(--score-panel-pause-button-size, 48px);
   border-radius: var(--border-radius-circle);
   background-color: var(--color-primary-medium);
   color: var(--color-white);
@@ -283,21 +283,28 @@
         box-shadow: 0 2px 8px rgba(var(--color-primary-dark-rgb), 0.05);
         border-right: none;
         border-bottom: 1px solid var(--color-gray-200);
-        flex-direction: row;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+            "timer pause"
+            "stats stats"
+            "action action";
         align-items: center;
         padding: var(--spacing-sm, 10px) var(--spacing-md, 16px);
-        gap: var(--spacing-sm, 10px);
-        flex-wrap: nowrap;
+        gap: var(--spacing-sm, 12px);
         z-index: var(--z-index-sticky, 10);
     }
 
     .score-panel__timer {
-        order: 1;
+        grid-area: timer;
         flex-direction: row;
         align-items: center;
+        justify-content: flex-start;
         flex-wrap: wrap;
-        padding-bottom: 0; border-bottom: none; margin-bottom: 0;
+        text-align: left;
+        padding-bottom: 0;
+        border-bottom: none;
+        margin-bottom: 0;
         gap: var(--spacing-xs, 6px);
     }
     .score-panel__timer-value {
@@ -312,22 +319,21 @@
     }
 
     .score-panel__stats-group {
-        order: 2;
-        flex-direction: row;
-        gap: var(--spacing-sm, 12px);
+        grid-area: stats;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: var(--spacing-xs, 10px);
     }
     .score-panel__stat {
-        flex-direction: row;
-        align-items: center;
         gap: var(--spacing-xxs, 4px);
         padding: 0;
     }
     .score-panel__stat-content {
         align-items: flex-start;
-        line-height: 1;
+        line-height: 1.1;
     }
     .score-panel__stat-label { display: none; }
-    .score-panel__stat-icon { font-size: 1.25rem; width: 20px; height: 20px; }
+    .score-panel__stat-icon { font-size: 1.2rem; width: 20px; height: 20px; }
     .score-panel__stat-value {
         font-size: 0.95rem;
         font-weight: var(--font-weight-semibold);
@@ -335,63 +341,82 @@
     }
 
     .score-panel__pause-control {
+        grid-area: pause;
         width: auto;
-        order: 3;
-        margin-left: auto;
         justify-content: flex-end;
     }
 
     .score-panel__pause-button {
-        width: 48px;
-        height: 48px;
+        width: 44px;
+        height: 44px;
     }
 
     .score-panel__action-button {
-        order: 4;
-        width: auto; /* Permite que o botão se ajuste ao conteúdo */
-        min-width: 0; /* Remove qualquer min-width que possa impedir a centralização */
+        grid-area: action;
+        width: 100%;
+        min-width: 0;
         margin: 0;
-
-        /* As propriedades flex já devem ser herdadas de .button, mas podemos reforçar */
         display: inline-flex;
         align-items: center;
         justify-content: center;
-
         font-size: 0.8rem;
-        /* Padding horizontal simétrico para ajudar na centralização do texto */
         padding: 7px 12px;
-        line-height: 1; /* Ajuda a normalizar a altura */
-        text-align: center; /* Reforço para centralização do texto */
-
+        line-height: 1;
+        text-align: center;
         color: var(--color-primary-dark);
         border-color: var(--color-primary-dark);
         background-color: transparent;
-        /* Manter o border-radius da classe base .button ou definir um específico se necessário */
-        /* border-radius: var(--border-radius-md); */ /* Exemplo, se a classe .button já não tiver */
     }
     .score-panel__action-button:hover,
     .score-panel__action-button:focus-visible {
         background-color: var(--color-primary-dark);
         color: var(--color-white);
         border-color: var(--color-primary-dark);
-        transform: none; /* Removido transform no mobile para estabilidade */
+        transform: none;
         box-shadow: 0 2px 6px rgba(var(--color-primary-dark-rgb), 0.15);
+    }
+}
+
+@media (max-width: 600px) {
+    .score-panel {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+    .score-panel__stats-group {
+        grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+    }
+    .score-panel__pause-control {
+        justify-content: flex-end;
     }
 }
 
 @media (max-width: 480px) {
     .score-panel {
-        padding: var(--spacing-xs, 8px) var(--spacing-sm, 10px);
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "timer"
+            "pause"
+            "stats"
+            "action";
+        padding: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
         gap: var(--spacing-xs, 8px);
     }
-    .score-panel__timer-value { font-size: 1.1rem; }
+    .score-panel__timer {
+        justify-content: space-between;
+    }
+    .score-panel__timer-value { font-size: 1.05rem; }
     .score-panel__timer-label { display: none; }
-    .score-panel__stats-group { gap: var(--spacing-xs, 10px); }
-    .score-panel__stat-icon { font-size: 1.1rem; width: 18px; height: 18px; }
+    .score-panel__stats-group {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--spacing-xs, 8px);
+    }
+    .score-panel__stat-icon { font-size: 1.05rem; width: 18px; height: 18px; }
     .score-panel__stat-value { font-size: 0.85rem; }
+    .score-panel__pause-control {
+        justify-content: flex-start;
+    }
     .score-panel__pause-button {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
     }
     .score-panel__action-button {
         font-size: 0.75rem;

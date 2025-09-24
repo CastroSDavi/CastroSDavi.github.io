@@ -189,25 +189,29 @@ export default class ScorePanel {
         const labelElement = this.elements.btnTogglePauseLabel;
         const iconElement = this.elements.btnTogglePauseIcon;
 
+        const setButtonContent = (labelText, iconName) => {
+            if (labelElement) labelElement.textContent = labelText;
+            button.setAttribute('aria-label', labelText);
+            button.setAttribute('title', labelText);
+            if (iconElement) iconElement.textContent = iconName;
+        };
+
         const hasActiveSession = Boolean(quizState?.currentSessionId) && quizState?.quizEnded !== true;
 
         button.disabled = !hasActiveSession;
 
         if (!hasActiveSession) {
             button.setAttribute('aria-pressed', 'false');
-            if (labelElement) labelElement.textContent = 'Pausar';
-            if (iconElement) iconElement.textContent = 'pause';
+            setButtonContent('Pausar', 'pause');
             return;
         }
 
         if (isRunning) {
             button.setAttribute('aria-pressed', 'false');
-            if (labelElement) labelElement.textContent = 'Pausar';
-            if (iconElement) iconElement.textContent = 'pause';
+            setButtonContent('Pausar', 'pause');
         } else {
             button.setAttribute('aria-pressed', 'true');
-            if (labelElement) labelElement.textContent = 'Retomar';
-            if (iconElement) iconElement.textContent = 'play_arrow';
+            setButtonContent('Retomar', 'play_arrow');
         }
     }
 }

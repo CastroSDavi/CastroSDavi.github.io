@@ -120,8 +120,15 @@
     font-variation-settings: 'wght' 300;
     color: var(--color-gray-700);
     transition: color 0.18s ease-out, font-variation-settings 0.18s ease-out;
-    margin-right: 0; 
+    margin-right: 0;
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    min-width: 28px;
+    height: 28px;
+    overflow: hidden;
 }
 .account-sidebar__link:hover {
     background-color: var(--color-gray-100) !important;

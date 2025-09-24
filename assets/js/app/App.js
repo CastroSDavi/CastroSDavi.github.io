@@ -37,27 +37,28 @@ export default class App {
     async initialize() {
         this._connectManagersToFlux();
 
-        const currentPageId = document.body.dataset.pageId || 'home';
+        const initialSectionId = this._deriveInitialSectionId();
+        this._ensureActiveSection(initialSectionId);
 
         try {
-            if (currentPageId === 'questions') {
+            if (initialSectionId === 'questions') {
                 await this.actionOrchestrator.initializeAppData();
-            } else if (currentPageId === 'home') {
+            } else if (initialSectionId === 'home') {
                 await this.actionOrchestrator.loadInitialSummary();
             }
 
             this._setupUIComponents();
-            this._determineInitialSection();
+            this._determineInitialSection(initialSectionId);
 
             this.store.dispatch({ type: 'UI_READY' });
 
             const isQuizActive = this.store.getState().quiz.currentSessionId !== null;
             this.quizUI.displayQuizLayout(isQuizActive);
 
-            if (currentPageId === 'questions') {
+            if (initialSectionId === 'questions') {
                 await this.actionOrchestrator.initializeQuizPage();
                 await this._handlePendingFavoriteReview();
-            } else if (currentPageId === 'account') {
+            } else if (initialSectionId === 'account') {
                 this.accountPageManager.init();
             }
         } catch (error) {
@@ -137,16 +138,9 @@ export default class App {
         this.bottomNavManager.init();
     }
     
-    _determineInitialSection() {
-        const bodyPageId = document.body.dataset.pageId || 'home';
-        let initialSectionId = 'home';
-
-        const validSections = ['home', 'questions', 'account'];
-        if (validSections.includes(bodyPageId)) {
-            initialSectionId = bodyPageId;
-        }
-
-        this.store.dispatch(quizActions.setActiveSection(initialSectionId));
+    _determineInitialSection(providedSectionId = null) {
+        const initialSectionId = providedSectionId ?? this._deriveInitialSectionId();
+        this._ensureActiveSection(initialSectionId);
 
         if (initialSectionId === 'home') {
             const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
@@ -158,6 +152,27 @@ export default class App {
                     : (totalQuestions || '0');
                 totalQuestionsSpanHome.textContent = formattedTotal;
             }
+        }
+    }
+
+    _deriveInitialSectionId() {
+        if (typeof document === 'undefined') {
+            return 'home';
+        }
+
+        const bodyPageId = document.body?.dataset?.pageId || 'home';
+        const validSections = ['home', 'questions', 'account'];
+        return validSections.includes(bodyPageId) ? bodyPageId : 'home';
+    }
+
+    _ensureActiveSection(targetSection) {
+        if (!this.store || !targetSection) {
+            return;
+        }
+
+        const currentActive = this.store.getState()?.ui?.activeSection;
+        if (currentActive !== targetSection) {
+            this.store.dispatch(quizActions.setActiveSection(targetSection));
         }
     }
 

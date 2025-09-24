@@ -61,6 +61,7 @@ export default class AccountPageManager {
             },
         };
         this.bodyElement = document.body;
+        this.mobileContentVisibleClass = 'is-mobile-content-visible';
         // --- INÍCIO DA CORREÇÃO ---
         // A referência ao bottomNavElement foi removida daqui.
         // --- FIM DA CORREÇÃO ---
@@ -1166,6 +1167,14 @@ export default class AccountPageManager {
 
     _updateUIVisibility(isContentActive) {
         const isMobile = this._isMobileView();
+        const contentArea = this.elements.contentArea;
+
+        if (isMobile && contentArea) {
+            contentArea.classList.toggle(this.mobileContentVisibleClass, Boolean(isContentActive));
+        } else {
+            contentArea?.classList.remove(this.mobileContentVisibleClass);
+        }
+
         if (isMobile) {
             this.quizUI.showElement(isContentActive ? this.elements.backToMenuButton : this.elements.sidebar);
             this.quizUI.hideElement(isContentActive ? this.elements.sidebar : this.elements.backToMenuButton);

@@ -302,6 +302,7 @@
         gap: var(--spacing-sm, 12px);
         overflow: hidden;
         z-index: var(--z-index-sticky, 10);
+        flex-direction: row;
     }
 
     .score-panel__timer {
@@ -332,7 +333,9 @@
         order: 2;
         flex: 1 1 auto;
         display: flex;
+        flex-direction: row;
         align-items: center;
+        justify-content: center;
         gap: var(--spacing-xs, 10px);
         overflow-x: auto;
         padding: 4px 0;

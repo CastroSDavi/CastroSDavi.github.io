@@ -559,7 +559,12 @@ export default class ActionOrchestrator {
                 const successType = typeof response.message_type === 'string'
                     ? response.message_type
                     : 'success';
-                this.ui.showWarning(successMessage, successType);
+
+                if (successType === 'success' && typeof this.ui.showToast === 'function') {
+                    this.ui.showToast(successMessage, 'success');
+                } else {
+                    this.ui.showWarning(successMessage, successType);
+                }
                 return true;
             }
 

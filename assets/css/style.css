@@ -26,6 +26,7 @@
 @import 'components/hero-block.css';
 @import 'components/stats-deck.css';
 @import 'components/messages.css';
+@import 'components/toast.css';
 @import 'components/loading-indicator.css';
 @import 'components/stats-heatmap.css';
 /* 4. SECTIONS */

@@ -413,14 +413,25 @@ export default class FilterPanel {
         
         feedbackTextEl.className = 'form-text-feedback form-text-feedback--filter-panel';
         const enableAplicarFiltros = (enable) => { aplicarFiltrosBtn.disabled = !enable; };
+        const setAplicarFiltrosBusyState = (isBusy) => {
+            if (isBusy) {
+                aplicarFiltrosBtn.setAttribute('aria-busy', 'true');
+                aplicarFiltrosBtn.classList.add('is-loading');
+            } else {
+                aplicarFiltrosBtn.removeAttribute('aria-busy');
+                aplicarFiltrosBtn.classList.remove('is-loading');
+            }
+        };
 
         if (isLoadingCount) {
             feedbackTextEl.textContent = "Verificando...";
             feedbackTextEl.classList.add('is-loading');
-            enableAplicarFiltros(false);
+            setAplicarFiltrosBusyState(true);
             return;
         }
-        
+
+        setAplicarFiltrosBusyState(false);
+
         if (countError) {
             input.removeAttribute('max');
             feedbackTextEl.textContent = countError;

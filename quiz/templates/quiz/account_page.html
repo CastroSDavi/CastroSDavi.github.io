@@ -7,48 +7,102 @@
 <section id="account-section-page" class="main-section">
     <div class="account-layout-container">
         {# === BARRA LATERAL (MENU) === #}
-        <aside class="account-sidebar">
-            <div class="account-sidebar__header">
-                <a href="{% url 'quiz:home' %}" class="button button--icon-only account-sidebar__back-button" aria-label="Voltar para o Início">
-                    <span class="material-symbols-outlined">arrow_back_ios_new</span>
-                </a>
-            </div>
-            <nav class="account-sidebar__nav">
-                <ul>
+        <aside class="account-sidebar" aria-label="Menu da conta">
+            <header class="account-sidebar__header">
+                <div class="account-sidebar__profile">
+                    <div class="account-sidebar__avatar" aria-hidden="true">
+                        {{ profile_summary.initials }}
+                    </div>
+                    <div class="account-sidebar__identity">
+                        <span class="account-sidebar__name">{{ profile_summary.display_name }}</span>
+                        <span class="account-sidebar__username">@{{ profile_summary.username }}</span>
+                    </div>
+                    <a href="{% url 'quiz:home' %}" class="account-sidebar__back-button" aria-label="Voltar para o Início">
+                        <span class="material-symbols-outlined" aria-hidden="true">home</span>
+                        <span class="account-sidebar__back-label">Início</span>
+                    </a>
+                </div>
+                <div class="account-sidebar__meta">
+                    <span class="account-sidebar__badge">
+                        <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+                        Membro desde {{ profile_summary.date_joined|date:"d/m/Y" }}
+                    </span>
+                    <span class="account-sidebar__badge">
+                        <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+                        {{ profile_summary.metrics.total_sessions|default:0 }} quizzes concluídos
+                    </span>
+                    {% if profile_summary.metrics.current_streak %}
+                        <span class="account-sidebar__badge account-sidebar__badge--success">
+                            <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+                            {{ profile_summary.metrics.current_streak }} dia{{ profile_summary.metrics.current_streak|pluralize:"s" }} de sequência
+                        </span>
+                    {% endif %}
+                    {% if profile_summary.gamification and profile_summary.gamification.level %}
+                        <span class="account-sidebar__badge account-sidebar__badge--highlight">
+                            <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
+                            {{ profile_summary.gamification.level.nome }}
+                        </span>
+                    {% endif %}
+                </div>
+            </header>
+            <nav class="account-sidebar__nav" aria-label="Seções da conta">
+                <p class="account-sidebar__section-label">Visão geral</p>
+                <ul class="account-sidebar__menu">
                     <li>
-                        <a href="#profile-info" class="account-sidebar__link is-active" data-target="profile-info-content">
-                            <span class="material-symbols-outlined">person</span>
-                            Informações do Perfil
+                        <a href="#profile-info" class="account-sidebar__link is-active" data-target="profile-info-content" aria-current="page">
+                            <span class="material-symbols-outlined account-sidebar__icon" aria-hidden="true">person</span>
+                            <span class="account-sidebar__link-text">
+                                <span class="account-sidebar__link-title">Informações do Perfil</span>
+                                <span class="account-sidebar__link-description">Resumo e dados pessoais</span>
+                            </span>
                         </a>
                     </li>
                     <li>
                         <a href="#favorite-questions" class="account-sidebar__link" data-target="favorite-questions-content">
-                            <span class="material-symbols-outlined">star</span>
-                            Questões Favoritas
+                            <span class="material-symbols-outlined account-sidebar__icon" aria-hidden="true">star</span>
+                            <span class="account-sidebar__link-text">
+                                <span class="account-sidebar__link-title">Questões Favoritas</span>
+                                <span class="account-sidebar__link-description">Coleção de questões salvas</span>
+                            </span>
                         </a>
                     </li>
                     <li>
                         <a href="#quiz-history" class="account-sidebar__link" data-target="quiz-history-content">
-                            <span class="material-symbols-outlined">history</span>
-                            Histórico de Quizzes
+                            <span class="material-symbols-outlined account-sidebar__icon" aria-hidden="true">history</span>
+                            <span class="account-sidebar__link-text">
+                                <span class="account-sidebar__link-title">Histórico de Quizzes</span>
+                                <span class="account-sidebar__link-description">Acompanhe suas atividades recentes</span>
+                            </span>
                         </a>
                     </li>
                     <li>
                         <a href="#progression" class="account-sidebar__link" data-target="progression-content">
-                            <span class="material-symbols-outlined">insights</span>
-                            Progresso &amp; Recompensas
+                            <span class="material-symbols-outlined account-sidebar__icon" aria-hidden="true">insights</span>
+                            <span class="account-sidebar__link-text">
+                                <span class="account-sidebar__link-title">Progresso &amp; Recompensas</span>
+                                <span class="account-sidebar__link-description">Desempenho, níveis e conquistas</span>
+                            </span>
                         </a>
                     </li>
+                </ul>
+                <p class="account-sidebar__section-label">Configurações</p>
+                <ul class="account-sidebar__menu">
                     <li>
                         <a href="#security" class="account-sidebar__link" data-target="security-content">
-                            <span class="material-symbols-outlined">security</span>
-                            Segurança e Dados
+                            <span class="material-symbols-outlined account-sidebar__icon" aria-hidden="true">security</span>
+                            <span class="account-sidebar__link-text">
+                                <span class="account-sidebar__link-title">Segurança e Dados</span>
+                                <span class="account-sidebar__link-description">Gerencie acesso e privacidade</span>
+                            </span>
                         </a>
                     </li>
                     <li>
                         <a href="#preferences" class="account-sidebar__link" data-target="preferences-content">
-                            <span class="material-symbols-outlined">tune</span>
-                            Preferências
+                            <span class="material-symbols-outlined account-sidebar__icon" aria-hidden="true">tune</span>
+                            <span class="account-sidebar__link-text">
+                                <span class="account-sidebar__link-title">Preferências</span>
+                                <span class="account-sidebar__link-description">Personalize notificações e estudos</span>
+                            </span>
                         </a>
                     </li>
                 </ul>

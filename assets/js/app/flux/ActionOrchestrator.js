@@ -9,8 +9,10 @@ export default class ActionOrchestrator {
         this.ui = ui;
         this.apiService = apiService;
         this.isFetching = false;
-        
+
         this.timerIntervalId = null;
+
+        this.lastQuizRequest = null;
     }
 
     // --- MÉTODOS DE CONTROLE DO TIMER ---
@@ -133,7 +135,8 @@ export default class ActionOrchestrator {
             if (error.data && error.data.status === 'not_found') {
                 this.ui.challengeHubInstance?.showHub();
             } else {
-                this.ui.showWarning(getFriendlyErrorMessage(error, "Não foi possível verificar sua sessão anterior."), 'error');
+                const detail = getFriendlyErrorMessage(error, "Não foi possível verificar sua sessão anterior.");
+                this.ui.showWarning({ key: 'quiz.resumeSessionError', detail });
             }
         }
     }
@@ -180,36 +183,79 @@ export default class ActionOrchestrator {
         this.store.dispatch(quizActions.resetQuiz());
     }
 
-    async _fetchAndInitiateQuiz(filterParams) {
+    _cloneQuizRequest(filterParams = {}) {
+        if (!filterParams || typeof filterParams !== 'object') {
+            return {};
+        }
+
+        const cloned = { ...filterParams };
+
+        if (Array.isArray(filterParams.category_ids)) {
+            cloned.category_ids = [...filterParams.category_ids];
+        }
+
+        if (Array.isArray(filterParams.difficulty_levels)) {
+            cloned.difficulty_levels = [...filterParams.difficulty_levels];
+        }
+
+        if (Array.isArray(filterParams.question_ids_in_session)) {
+            cloned.question_ids_in_session = [...filterParams.question_ids_in_session];
+        }
+
+        return cloned;
+    }
+
+    _storeLastQuizRequest(filterParams) {
+        this.lastQuizRequest = this._cloneQuizRequest(filterParams);
+    }
+
+    async retryLastQuizRequest() {
+        if (!this.lastQuizRequest) {
+            this.ui.showWarning({
+                body: 'Nenhum quiz anterior disponível para tentar novamente.',
+                type: 'info',
+                isTextCentered: true,
+            });
+            return false;
+        }
+
+        await this._fetchAndInitiateQuiz({ ...this.lastQuizRequest });
+        return true;
+    }
+
+    async _fetchAndInitiateQuiz(filterParams = {}) {
         if (this.isFetching) return;
         this.isFetching = true;
         this.ui.showSessionLoadingIndicator(true, "Preparando novo desafio...");
-        
+
+        const requestParams = this._cloneQuizRequest(filterParams);
+        this._storeLastQuizRequest(requestParams);
+
         try {
             const resumableSession = this.store.getState().quiz.resumableSession;
             if (resumableSession && resumableSession.session_id) {
                 await this.apiService.endQuizSession({ session_id: resumableSession.session_id, tempo_total_segundos: 0 });
                 this.store.dispatch({ type: ActionTypes.CLEAR_RESUMABLE_SESSION });
             }
-            
+
             this.ui.showSessionLoadingIndicator(true, "Carregando questões...");
 
-            const data = await this.apiService.fetchQuizData(filterParams);
+            const data = await this.apiService.fetchQuizData(requestParams);
             const questionsArray = data?.perguntas || [];
 
             if (questionsArray.length === 0) {
-                this.ui.showWarning("Nenhuma questão encontrada para os filtros selecionados.", 'info', true);
+                this.ui.showWarning({ key: 'quiz.noQuestionsForFilters' });
                 this.store.dispatch(quizActions.resetQuiz());
                 return;
             }
 
             const sessionPayload = {
-                modo_quiz: filterParams.mode,
+                modo_quiz: requestParams.mode,
                 question_ids_in_session: questionsArray.map(q => q.id_pergunta),
-                quiz_definicao_id: filterParams.quiz_definicao_id,
-                categoria_ids: filterParams.category_ids,
-                dificuldades_selecionadas: filterParams.difficulty_levels,
-                num_questoes_solicitadas: filterParams.num_questions,
+                quiz_definicao_id: requestParams.quiz_definicao_id,
+                categoria_ids: requestParams.category_ids,
+                dificuldades_selecionadas: requestParams.difficulty_levels,
+                num_questoes_solicitadas: requestParams.num_questions,
             };
 
             const session = await this.apiService.startQuizSession(sessionPayload);
@@ -217,19 +263,23 @@ export default class ActionOrchestrator {
                 this.store.dispatch(
                     quizActions.initializeQuiz(
                         questionsArray,
-                        filterParams.mode,
+                        requestParams.mode,
                         session.session_id,
-                        filterParams.quiz_definicao_id,
+                        requestParams.quiz_definicao_id,
                         data.quiz_definition_name
                     )
                 );
                 this.startTimer();
             } else {
-                 this.ui.showWarning(session.message || "Não foi possível iniciar uma nova sessão de quiz.", 'error', true);
+                 this.ui.showWarning({
+                    key: 'quiz.startSessionFailed',
+                    detail: session?.message,
+                });
             }
 
         } catch (error) {
-            this.ui.showWarning(getFriendlyErrorMessage(error, "Erro ao carregar perguntas."), 'error', true);
+            const detail = getFriendlyErrorMessage(error, "Erro ao carregar perguntas.");
+            this.ui.showWarning({ key: 'quiz.loadQuestionsError', detail });
         } finally {
             this.isFetching = false;
             this.ui.showSessionLoadingIndicator(false);
@@ -332,7 +382,8 @@ export default class ActionOrchestrator {
                 )
             );
         } catch (error) {
-            this.ui.showWarning(getFriendlyErrorMessage(error, "Erro ao salvar resposta."), 'error');
+            const detail = getFriendlyErrorMessage(error, "Erro ao salvar resposta.");
+            this.ui.showWarning({ key: 'quiz.saveAnswerError', detail });
         }
     }
 
@@ -411,9 +462,10 @@ export default class ActionOrchestrator {
             );
         } catch (error) {
              console.error("ActionOrchestrator: ERRO ao finalizar sessão:", error);
-             this.ui.showWarning(getFriendlyErrorMessage(error, "Erro ao finalizar sessão."), 'warning');
+             const detail = getFriendlyErrorMessage(error, "Erro ao finalizar sessão.");
+             this.ui.showWarning({ key: 'quiz.finalizeSessionError', detail });
         } finally {
-            this.store.dispatch({ type: ActionTypes.QUIZ_ENDED }); 
+            this.store.dispatch({ type: ActionTypes.QUIZ_ENDED });
         }
     }
 
@@ -435,7 +487,7 @@ export default class ActionOrchestrator {
              return;
         }
         if (!this.ui.userIsAuthenticated) {
-            this.ui.showWarning("Faça login para favoritar questões.", 'info');
+            this.ui.showWarning({ key: 'favorites.loginRequiredToFavorite' });
             return;
         }
 
@@ -448,15 +500,17 @@ export default class ActionOrchestrator {
         try {
             const response = await this.apiService.toggleFavoriteStatus(question.id_pergunta);
             if (response && response.status === 'success') {
-                this.store.dispatch({ 
-                    type: ActionTypes.UPDATE_FAVORITE_STATUS, 
-                    payload: { isFavorited: response.is_favorited } 
+                this.store.dispatch({
+                    type: ActionTypes.UPDATE_FAVORITE_STATUS,
+                    payload: { isFavorited: response.is_favorited }
                 });
             } else {
-                this.ui.showWarning(getFriendlyErrorMessage({ data: response }, "Falha ao favoritar."), 'error');
+                const detail = getFriendlyErrorMessage({ data: response }, "Falha ao favoritar.");
+                this.ui.showWarning({ key: 'favorites.toggleError', detail });
             }
         } catch (error) {
-            this.ui.showWarning(getFriendlyErrorMessage(error, "Erro de conexão ao favoritar."), 'error');
+            const detail = getFriendlyErrorMessage(error, "Erro de conexão ao favoritar.");
+            this.ui.showWarning({ key: 'favorites.networkError', detail });
         } finally {
             if (btnFav) {
                 btnFav.disabled = false;
@@ -473,7 +527,7 @@ export default class ActionOrchestrator {
         }
 
         if (!this.ui.userIsAuthenticated) {
-            this.ui.showWarning('Faça login para gerenciar seus favoritos.', 'info');
+            this.ui.showWarning({ key: 'favorites.loginRequiredToManage' });
             return false;
         }
 
@@ -509,12 +563,11 @@ export default class ActionOrchestrator {
                 return true;
             }
 
-            this.ui.showWarning(
-                getFriendlyErrorMessage({ data: response }, 'Não foi possível atualizar seus favoritos.'),
-                'error'
-            );
+            const detail = getFriendlyErrorMessage({ data: response }, 'Não foi possível atualizar seus favoritos.');
+            this.ui.showWarning({ key: 'favorites.toggleError', detail });
         } catch (error) {
-            this.ui.showWarning(getFriendlyErrorMessage(error, 'Erro ao atualizar seus favoritos.'), 'error');
+            const detail = getFriendlyErrorMessage(error, 'Erro ao atualizar seus favoritos.');
+            this.ui.showWarning({ key: 'favorites.toggleError', detail });
         }
 
         return false;
@@ -628,7 +681,7 @@ export default class ActionOrchestrator {
                 return true;
             }
 
-            this.ui.showWarning('Não foi possível carregar a questão favorita.', 'error');
+            this.ui.showWarning({ key: 'favorites.loadSingleError' });
             return false;
         }
 
@@ -648,14 +701,15 @@ export default class ActionOrchestrator {
                 return true;
             }
 
-            this.ui.showWarning(response?.message || 'Não foi possível carregar a questão favorita.', 'error');
+            this.ui.showWarning({ key: 'favorites.loadSingleError', detail: response?.message });
             return false;
         } catch (error) {
             if (error?.response?.status === 404 && useCachedQuestion('Questão não encontrada no banco atual. Exibindo dados salvos da sua lista de favoritos.')) {
                 return true;
             }
 
-            this.ui.showWarning(getFriendlyErrorMessage(error, 'Erro ao carregar questão favorita.'), 'error');
+            const detail = getFriendlyErrorMessage(error, 'Erro ao carregar questão favorita.');
+            this.ui.showWarning({ key: 'favorites.loadSingleError', detail });
             return false;
         } finally {
             this.ui.showSessionLoadingIndicator(false);

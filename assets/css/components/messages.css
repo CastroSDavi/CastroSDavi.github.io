@@ -38,6 +38,69 @@
     margin-top: 1px; /* Pode precisar de ajuste fino com text-align: justify */
 }
 
+.form-message__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm, 14px);
+    flex: 1;
+}
+
+.form-message__title {
+    margin: 0;
+    font-size: var(--font-size-md, 1.05rem);
+    font-weight: 700;
+    color: inherit;
+}
+
+.form-message__body {
+    margin: 0;
+    text-align: justify;
+}
+
+.form-message__supporting {
+    margin: 0;
+    font-size: var(--font-size-xs, 0.85rem);
+    color: var(--color-text-muted, rgba(0, 0, 0, 0.6));
+    text-align: justify;
+}
+
+.form-message__feature-list {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxs, 6px);
+}
+
+.form-message__feature-item {
+    font-size: var(--font-size-sm, 0.95rem);
+    line-height: 1.45;
+}
+
+.form-message__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm, 12px);
+}
+
+.form-message__action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xxs, 6px);
+}
+
+.form-message__action-icon {
+    font-size: 1.2em;
+}
+
+.form-message__action-label {
+    font-weight: 600;
+}
+
+.form-message.text-centered .form-message__actions {
+    justify-content: center;
+}
+
 /* Para centralizar TODO o bloco da mensagem (incluindo ícone e texto como um todo)
    você aplicaria text-align: center ao container PAI da .form-message,
    ou se a .form-message for ela mesma o container principal, você pode

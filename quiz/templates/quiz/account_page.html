@@ -551,99 +551,104 @@
                 <div class="progression-dashboard">
                     {% with metrics=profile_summary.metrics gamification=profile_summary.gamification %}
                     <section class="card card--conta-perfil progression-card progression-card--hero">
-                        <div class="progression-hero__header">
-                            <div class="progression-hero__intro">
-                                <h2 class="card__title">Painel de Progresso</h2>
-                                <p class="card__subtitle">Métricas consolidadas, hábitos recentes e conquistas lado a lado.</p>
+                        <header class="progression-hero__header">
+                            <div class="progression-hero__heading">
+                                <span class="progression-hero__eyebrow">Painel de progresso</span>
+                                <h2 class="card__title progression-hero__title">Mapa da sua evolução</h2>
+                                <p class="card__subtitle progression-hero__subtitle">Métricas consolidadas, hábitos recentes e conquistas lado a lado.</p>
                             </div>
                             {% if gamification %}
-                                <div class="progression-hero__meta">
-                                    <div class="progression-hero__level" role="group" aria-label="Nível atual">
-                                        <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
-                                        <div class="progression-hero__meta-content">
-                                            <span class="progression-hero__meta-label">Nível atual</span>
-                                            <strong class="progression-hero__meta-value">{{ gamification.level.nome|default:"Comece sua jornada" }}</strong>
+                                <div class="progression-hero__highlights">
+                                    <div class="progression-highlight progression-highlight--level" role="group" aria-label="Nível atual">
+                                        <span class="material-symbols-outlined progression-highlight__icon" aria-hidden="true">workspace_premium</span>
+                                        <div class="progression-highlight__content">
+                                            <span class="progression-highlight__label">Nível atual</span>
+                                            <strong class="progression-highlight__value">{{ gamification.level.nome|default:"Comece sua jornada" }}</strong>
                                         </div>
                                     </div>
-                                    <div class="progression-hero__xp-chip" role="group" aria-label="XP acumulado">
-                                        <span class="progression-hero__meta-label">XP acumulado</span>
-                                        <strong class="progression-hero__meta-value">{{ gamification.xp_total|default:0 }}</strong>
+                                    <div class="progression-highlight progression-highlight--xp" role="group" aria-label="XP acumulado">
+                                        <span class="progression-highlight__label">XP acumulado</span>
+                                        <strong class="progression-highlight__value">{{ gamification.xp_total|default:0 }}</strong>
                                     </div>
                                 </div>
                             {% endif %}
-                        </div>
-                        <div class="progression-hero__content">
-                            <div class="progression-hero__stats-grid">
-                                <article class="progression-stat">
-                                    <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">quiz</span>
-                                    <div class="progression-stat__content">
-                                        <span class="progression-stat__label">Quizzes concluídos</span>
-                                        <strong class="progression-stat__value">{{ metrics.total_sessions|default:0 }}</strong>
-                                    </div>
-                                </article>
-                                <article class="progression-stat">
-                                    <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">help_center</span>
-                                    <div class="progression-stat__content">
-                                        <span class="progression-stat__label">Perguntas respondidas</span>
-                                        <strong class="progression-stat__value">{{ metrics.total_questions_answered|default:0 }}</strong>
-                                    </div>
-                                </article>
-                                <article class="progression-stat">
-                                    <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">target</span>
-                                    <div class="progression-stat__content">
-                                        <span class="progression-stat__label">Precisão geral</span>
-                                        <strong class="progression-stat__value">
-                                            {% if metrics.accuracy is not None %}
-                                                {{ metrics.accuracy|floatformat:1 }}%
-                                            {% else %}
-                                                --
-                                            {% endif %}
-                                        </strong>
-                                    </div>
-                                </article>
-                                <article class="progression-stat">
-                                    <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">local_fire_department</span>
-                                    <div class="progression-stat__content">
-                                        <span class="progression-stat__label">Maior sequência</span>
-                                        <strong class="progression-stat__value">
-                                            {% if gamification %}
-                                                {{ gamification.best_streak|default_if_none:0 }} dia{{ gamification.best_streak|default_if_none:0|pluralize }}
-                                            {% else %}
-                                                0
-                                            {% endif %}
-                                        </strong>
-                                    </div>
-                                </article>
+                        </header>
+                        <div class="progression-hero__layout">
+                            <div class="progression-hero__metrics">
+                                <div class="progression-hero__stats-grid">
+                                    <article class="progression-stat">
+                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">quiz</span>
+                                        <div class="progression-stat__content">
+                                            <span class="progression-stat__label">Quizzes concluídos</span>
+                                            <strong class="progression-stat__value">{{ metrics.total_sessions|default:0 }}</strong>
+                                        </div>
+                                    </article>
+                                    <article class="progression-stat">
+                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">help_center</span>
+                                        <div class="progression-stat__content">
+                                            <span class="progression-stat__label">Perguntas respondidas</span>
+                                            <strong class="progression-stat__value">{{ metrics.total_questions_answered|default:0 }}</strong>
+                                        </div>
+                                    </article>
+                                    <article class="progression-stat">
+                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">target</span>
+                                        <div class="progression-stat__content">
+                                            <span class="progression-stat__label">Precisão geral</span>
+                                            <strong class="progression-stat__value">
+                                                {% if metrics.accuracy is not None %}
+                                                    {{ metrics.accuracy|floatformat:1 }}%
+                                                {% else %}
+                                                    --
+                                                {% endif %}
+                                            </strong>
+                                        </div>
+                                    </article>
+                                    <article class="progression-stat">
+                                        <span class="material-symbols-outlined progression-stat__icon" aria-hidden="true">local_fire_department</span>
+                                        <div class="progression-stat__content">
+                                            <span class="progression-stat__label">Maior sequência</span>
+                                            <strong class="progression-stat__value">
+                                                {% if gamification %}
+                                                    {{ gamification.best_streak|default_if_none:0 }} dia{{ gamification.best_streak|default_if_none:0|pluralize }}
+                                                {% else %}
+                                                    0
+                                                {% endif %}
+                                            </strong>
+                                        </div>
+                                    </article>
+                                </div>
                             </div>
-                            {% if gamification and gamification.daily_engagement %}
-                                {% with daily=gamification.daily_engagement %}
-                                <div class="progression-hero__callout{% if not daily.has_activity_today %} is-inactive{% endif %}">
-                                    <span class="material-symbols-outlined progression-hero__callout-icon" aria-hidden="true">
-                                        {% if daily.has_activity_today %}verified{% else %}alarm{% endif %}
-                                    </span>
-                                    <div>
-                                        <strong class="progression-hero__callout-title">
-                                            {% if daily.has_activity_today %}Meta diária concluída{% else %}Mantenha sua sequência{% endif %}
-                                        </strong>
-                                        <p class="progression-hero__callout-text">
-                                            {% if daily.has_activity_today %}
-                                                Você respondeu {{ daily.questions_today|default_if_none:0 }} perguntas hoje e garantiu {{ daily.xp_today|default_if_none:0 }} XP.
-                                            {% else %}
-                                                Responda uma questão hoje para proteger sua sequência de {{ daily.streak_days|default_if_none:0 }} dia{{ daily.streak_days|default_if_none:0|pluralize }}.
-                                            {% endif %}
-                                        </p>
+                            <div class="progression-hero__callout-wrapper">
+                                {% if gamification and gamification.daily_engagement %}
+                                    {% with daily=gamification.daily_engagement %}
+                                    <div class="progression-hero__callout{% if not daily.has_activity_today %} is-inactive{% endif %}">
+                                        <span class="material-symbols-outlined progression-hero__callout-icon" aria-hidden="true">
+                                            {% if daily.has_activity_today %}verified{% else %}alarm{% endif %}
+                                        </span>
+                                        <div>
+                                            <strong class="progression-hero__callout-title">
+                                                {% if daily.has_activity_today %}Meta diária concluída{% else %}Mantenha sua sequência{% endif %}
+                                            </strong>
+                                            <p class="progression-hero__callout-text">
+                                                {% if daily.has_activity_today %}
+                                                    Você respondeu {{ daily.questions_today|default_if_none:0 }} perguntas hoje e garantiu {{ daily.xp_today|default_if_none:0 }} XP.
+                                                {% else %}
+                                                    Responda uma questão hoje para proteger sua sequência de {{ daily.streak_days|default_if_none:0 }} dia{{ daily.streak_days|default_if_none:0|pluralize }}.
+                                                {% endif %}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                                {% endwith %}
-                            {% else %}
-                                <div class="progression-hero__callout is-inactive">
-                                    <span class="material-symbols-outlined progression-hero__callout-icon" aria-hidden="true">rocket_launch</span>
-                                    <div>
-                                        <strong class="progression-hero__callout-title">Comece sua jornada</strong>
-                                        <p class="progression-hero__callout-text">Complete um quiz para liberar gráficos personalizados, missões e recompensas exclusivas.</p>
+                                    {% endwith %}
+                                {% else %}
+                                    <div class="progression-hero__callout is-inactive">
+                                        <span class="material-symbols-outlined progression-hero__callout-icon" aria-hidden="true">rocket_launch</span>
+                                        <div>
+                                            <strong class="progression-hero__callout-title">Comece sua jornada</strong>
+                                            <p class="progression-hero__callout-text">Complete um quiz para liberar gráficos personalizados, missões e recompensas exclusivas.</p>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
                     </section>
                     {% endwith %}

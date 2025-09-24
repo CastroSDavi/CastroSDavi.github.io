@@ -56,8 +56,10 @@ export default class ChallengeHub {
             this.quizUI.hideElement(this.quizUI.elements.scorePanel);
         }
         
-        if (this.quizUI.warningDisplay) {
-            this.quizUI.warningDisplay.clear(); 
+        if (typeof this.quizUI.clearInlineMessages === 'function') {
+            this.quizUI.clearInlineMessages();
+        } else if (this.quizUI.warningDisplay) {
+            this.quizUI.warningDisplay.clear();
         }
     }
 

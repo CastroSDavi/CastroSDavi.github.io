@@ -30,6 +30,7 @@ export default class QuizUI {
         this.warningDisplay = new WarningDisplay(this);
 
         this.lastSystemMessage = null;
+        this.messageCenter = null;
 
         this.filterPanelInstance = null;
         this.challengeHubInstance = null;
@@ -56,10 +57,30 @@ export default class QuizUI {
         this.modalManager?.setActionOrchestrator(orchestrator);
         this.questionDisplay?.setActionOrchestrator(orchestrator);
         this.scorePanel?.setActionOrchestrator(orchestrator);
-        this.resultDisplay?.setActionOrchestrator(orchestrator); 
-        this.challengeHubInstance?.setActionOrchestrator(orchestrator); 
-        
+        this.resultDisplay?.setActionOrchestrator(orchestrator);
+        this.challengeHubInstance?.setActionOrchestrator(orchestrator);
+
         this.setupGlobalEventListeners();
+    }
+
+    setMessageCenter(messageCenter) {
+        this.messageCenter = messageCenter;
+
+        if (this.messageCenter) {
+            this.messageCenter.setInlineRenderer(
+                (messageConfig) => {
+                    if (this.warningDisplay) {
+                        this.warningDisplay.show(messageConfig);
+                    }
+                },
+                () => {
+                    if (this.warningDisplay) {
+                        this.warningDisplay.clear();
+                    }
+                    this.lastSystemMessage = null;
+                },
+            );
+        }
     }
     
     setFilterPanelInstance(filterPanelInstance) {
@@ -377,7 +398,7 @@ export default class QuizUI {
             }
             if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
             this.showElement(quizSectionContent);
-            if (this.warningDisplay) this.warningDisplay.clear();
+            this.clearInlineMessages();
             this.hideElement(placeholderFiltrosContainer);
             if (this.resultDisplay) this.resultDisplay.hide();
             if (bottomNavElement) this.hideElement(bottomNavElement);
@@ -439,7 +460,7 @@ export default class QuizUI {
                 // --- FIM DA ALTERAÇÃO ---
 
                 if (this.scorePanel) this.scorePanel.hide();
-                if (this.warningDisplay) this.warningDisplay.clear();
+                this.clearInlineMessages();
                 document.body.classList.add('no-scroll');
             } else {
                 this.elements.sessionLoadingIndicator.classList.remove('modal--visible');
@@ -468,42 +489,94 @@ export default class QuizUI {
     }
     
     showWarning(messageInput, type = 'warning', isTextCentered = false) {
-        const messageConfig = resolveSystemMessage(messageInput, {
+        const resolveOptions = {
             defaultType: type,
             defaultCentered: isTextCentered,
-        });
+        };
 
-        if (!messageConfig.body && typeof messageInput === 'string') {
-            messageConfig.body = messageInput;
-        }
+        let messageConfig = null;
 
-        if (!messageConfig.supportingText && messageConfig.detail) {
-            messageConfig.supportingText = messageConfig.detail;
-        }
+        if (this.messageCenter) {
+            messageConfig = this.messageCenter.showInline(messageInput, resolveOptions);
+        } else {
+            messageConfig = resolveSystemMessage(messageInput, resolveOptions);
 
-        if (!messageConfig.type) {
-            messageConfig.type = type;
-        }
+            if (!messageConfig.body && typeof messageInput === 'string') {
+                messageConfig.body = messageInput;
+            }
 
-        if (typeof messageConfig.isTextCentered !== 'boolean') {
-            messageConfig.isTextCentered = isTextCentered;
+            if (!messageConfig.supportingText && messageConfig.detail) {
+                messageConfig.supportingText = messageConfig.detail;
+            }
+
+            if (!messageConfig.type) {
+                messageConfig.type = type;
+            }
+
+            if (typeof messageConfig.isTextCentered !== 'boolean') {
+                messageConfig.isTextCentered = isTextCentered;
+            }
+
+            if (this.warningDisplay) {
+                this.warningDisplay.show(messageConfig);
+            } else {
+                const fallbackText = messageConfig.body
+                    || messageConfig.supportingText
+                    || (typeof messageInput === 'string' ? messageInput : '');
+                const effectiveType = messageConfig.type || type || 'info';
+
+                if (fallbackText) {
+                    if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+                        window.alert(`[${effectiveType.toUpperCase()}] ${fallbackText}`);
+                    } else {
+                        console.warn(`Mensagem (${effectiveType}):`, fallbackText);
+                    }
+                } else if (typeof window !== 'undefined' && typeof window.alert === 'function') {
+                    window.alert(`[${effectiveType.toUpperCase()}] Aviso exibido.`);
+                }
+            }
         }
 
         this.lastSystemMessage = messageConfig;
+        return messageConfig;
+    }
 
-        if (this.warningDisplay) {
-            this.warningDisplay.show(messageConfig);
-        } else {
-            const fallbackText = messageConfig.body
-                || messageConfig.supportingText
-                || (typeof messageInput === 'string' ? messageInput : '');
-            const effectiveType = messageConfig.type || type || 'info';
-            if (fallbackText) {
-                alert(`[${effectiveType.toUpperCase()}] ${fallbackText}`);
-            } else {
-                alert(`[${effectiveType.toUpperCase()}] Aviso exibido.`);
-            }
+    showToast(messageInput, type = 'info', options = {}) {
+        const resolveOptions = {
+            defaultType: type,
+            defaultCentered: options.defaultCentered ?? false,
+        };
+
+        if (this.messageCenter) {
+            return this.messageCenter.showToast(messageInput, {
+                resolveOptions,
+                autoDismiss: options.autoDismiss !== undefined ? options.autoDismiss : true,
+                dismissIn: options.dismissIn,
+            });
         }
+
+        const messageConfig = resolveSystemMessage(messageInput, resolveOptions);
+        const fallbackText = messageConfig.body
+            || messageConfig.supportingText
+            || (typeof messageInput === 'string' ? messageInput : '');
+
+        if (fallbackText && typeof window !== 'undefined' && typeof window.alert === 'function') {
+            window.alert(fallbackText);
+        } else if (fallbackText) {
+            console.info('Toast:', fallbackText);
+        }
+
+        return null;
+    }
+
+    clearInlineMessages() {
+        if (this.messageCenter) {
+            this.messageCenter.clearInline();
+        } else if (this.warningDisplay) {
+            this.warningDisplay.clear();
+        }
+
+        this.lastSystemMessage = null;
     }
 
     handleSystemMessageAction(actionId) {
@@ -514,9 +587,7 @@ export default class QuizUI {
                 }
                 break;
             case 'returnToHub':
-                if (this.warningDisplay) {
-                    this.warningDisplay.clear();
-                }
+                this.clearInlineMessages();
                 this.displayQuizLayout(false);
                 break;
             case 'retryLastQuiz':

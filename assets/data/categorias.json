@@ -1,665 +1,1829 @@
 [
   {
     "id_categoria": 1,
-    "nome_categoria": "Ciências Biomédicas Fundamentais",
+    "nome_categoria": "Ci\u00eancias Biom\u00e9dicas Fundamentais",
     "id_categoria_pai": null,
-    "descricao_categoria": "Bases moleculares, celulares, bioquímicas e genéticas da medicina."
+    "descricao_categoria": "Bases moleculares, celulares, bioqu\u00edmicas e gen\u00e9ticas da medicina."
   },
   {
     "id_categoria": 2,
-    "nome_categoria": "Fisiologia e Anatomia Sistêmica",
+    "nome_categoria": "Fisiologia e Anatomia Sist\u00eamica",
     "id_categoria_pai": null,
-    "descricao_categoria": "Estrutura e função normal dos órgãos e sistemas do corpo humano."
+    "descricao_categoria": "Estrutura e fun\u00e7\u00e3o normal dos \u00f3rg\u00e3os e sistemas do corpo humano."
   },
   {
     "id_categoria": 3,
     "nome_categoria": "Patologia e Fisiopatologia",
     "id_categoria_pai": null,
-    "descricao_categoria": "Estudo das doenças: causas, mecanismos, alterações funcionais e estruturais."
+    "descricao_categoria": "Estudo das doen\u00e7as: causas, mecanismos, altera\u00e7\u00f5es funcionais e estruturais."
   },
   {
     "id_categoria": 4,
-    "nome_categoria": "Prática Clínica e Terapêutica",
+    "nome_categoria": "Pr\u00e1tica Cl\u00ednica e Terap\u00eautica",
     "id_categoria_pai": null,
-    "descricao_categoria": "Aplicação do conhecimento médico: diagnóstico, tratamento (não cirúrgico), farmacologia e especialidades clínicas."
+    "descricao_categoria": "Aplica\u00e7\u00e3o do conhecimento m\u00e9dico: diagn\u00f3stico, tratamento (n\u00e3o cir\u00fargico), farmacologia e especialidades cl\u00ednicas."
   },
   {
     "id_categoria": 5,
-    "nome_categoria": "Saúde Pública e Humanidades Médicas",
+    "nome_categoria": "Sa\u00fade P\u00fablica e Humanidades M\u00e9dicas",
     "id_categoria_pai": null,
-    "descricao_categoria": "Dimensões sociais, populacionais, éticas e preventivas da medicina."
+    "descricao_categoria": "Dimens\u00f5es sociais, populacionais, \u00e9ticas e preventivas da medicina."
   },
   {
     "id_categoria": 6,
-    "nome_categoria": "Ciências Cirúrgicas e Anestesiologia",
+    "nome_categoria": "Ci\u00eancias Cir\u00fargicas e Anestesiologia",
     "id_categoria_pai": null,
-    "descricao_categoria": "Princípios e práticas da cirurgia, suas especialidades e da anestesiologia."
-  },
-  {
-    "id_categoria": 10,
-    "nome_categoria": "DRAMA",
-    "id_categoria_pai": null,
-    "descricao_categoria": "Danos, Reparo, Adaptação, Morte e Autodefesa Celular e Tecidual"
-  },
-  {
-    "id_categoria": 1001,
-    "nome_categoria": "Poluição Atmosférica",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Efeitos da poluição do ar nas células e tecidos."
-  },
-  {
-    "id_categoria": 1002,
-    "nome_categoria": "Pesticidas",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Impacto de pesticidas e agrotóxicos."
-  },
-  {
-    "id_categoria": 1003,
-    "nome_categoria": "Metais Pesados",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Toxicidade de metais como chumbo, mercúrio, etc."
-  },
-  {
-    "id_categoria": 1004,
-    "nome_categoria": "Radiação Ionizante",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Danos celulares causados por radiação ionizante."
-  },
-  {
-    "id_categoria": 1005,
-    "nome_categoria": "Agentes Químicos (Geral)",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Outros agentes químicos tóxicos."
-  },
-  {
-    "id_categoria": 1006,
-    "nome_categoria": "Infecções Parasitárias",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Doenças e danos celulares/teciduais causados por infecções de agentes parasitários (ex: helmintos, protozoários) e a resposta do organismo."
-  },
-  {
-    "id_categoria": 1007,
-    "nome_categoria": "Prova (DRAMA)",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Questões gerais de avaliação ou simulação de prova para o módulo DRAMA."
-  },
-  {
-    "id_categoria": 1008,
-    "nome_categoria": "PAIR e Efeitos do Ruído (DRAMA)",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Questões relacionadas à Perda Auditiva Induzida por Ruído e outros efeitos da exposição ao ruído no contexto do módulo DRAMA."
-  },
-  {
-    "id_categoria": 1009,
-    "nome_categoria": "Toxinfecções Alimentares (DRAMA)",
-    "id_categoria_pai": 10,
-    "descricao_categoria": "Questões sobre doenças transmitidas por alimentos, incluindo intoxicações e infecções bacterianas, no contexto do módulo DRAMA."
+    "descricao_categoria": "Princ\u00edpios e pr\u00e1ticas da cirurgia, suas especialidades e da anestesiologia."
   },
   {
     "id_categoria": 101,
     "nome_categoria": "Biologia Celular e Molecular",
     "id_categoria_pai": 1,
-    "descricao_categoria": "Estrutura, função, comunicação e ciclo vital das células."
+    "descricao_categoria": "Estrutura, fun\u00e7\u00e3o, comunica\u00e7\u00e3o e ciclo vital das c\u00e9lulas."
   },
   {
     "id_categoria": 102,
-    "nome_categoria": "Genética Médica",
+    "nome_categoria": "Bioqu\u00edmica e Metabolismo",
     "id_categoria_pai": 1,
-    "descricao_categoria": "Princípios de hereditariedade, doenças genéticas e biologia molecular do gene."
+    "descricao_categoria": "Estrutura e fun\u00e7\u00e3o de biomol\u00e9culas, vias metab\u00f3licas e bioenerg\u00e9tica."
   },
   {
     "id_categoria": 103,
-    "nome_categoria": "Bioquímica e Metabolismo",
+    "nome_categoria": "Gen\u00e9tica M\u00e9dica",
     "id_categoria_pai": 1,
-    "descricao_categoria": "Estrutura e função de biomoléculas, vias metabólicas e bioenergética."
+    "descricao_categoria": "Princ\u00edpios de hereditariedade, doen\u00e7as gen\u00e9ticas e biologia molecular do gene."
   },
   {
     "id_categoria": 104,
     "nome_categoria": "Histologia e Biologia Tecidual",
     "id_categoria_pai": 1,
-    "descricao_categoria": "Estudo microscópico da estrutura, organização e função dos tecidos biológicos."
+    "descricao_categoria": "Estudo microsc\u00f3pico da estrutura, organiza\u00e7\u00e3o e fun\u00e7\u00e3o dos tecidos biol\u00f3gicos."
   },
   {
     "id_categoria": 201,
-    "nome_categoria": "Neurociências Básicas",
+    "nome_categoria": "Anatomia e Fisiologia da Pele",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Anatomia e fisiologia do sistema nervoso central, periférico e autônomo."
+    "descricao_categoria": "Estrutura e fun\u00e7\u00f5es do sistema tegumentar."
   },
   {
     "id_categoria": 202,
-    "nome_categoria": "Fisiologia Cardiovascular e Hematológica",
+    "nome_categoria": "Embriologia e Sistema Reprodutor",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Função normal do coração, vasos, sangue e hemostasia."
+    "descricao_categoria": "Desenvolvimento embrion\u00e1rio e fetal, anatomia e fisiologia reprodutiva."
   },
   {
     "id_categoria": 203,
-    "nome_categoria": "Fisiologia Respiratória",
+    "nome_categoria": "Fisiologia Cardiovascular e Hematol\u00f3gica",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Mecânica ventilatória, trocas gasosas e transporte de gases."
+    "descricao_categoria": "Fun\u00e7\u00e3o normal do cora\u00e7\u00e3o, vasos, sangue e hemostasia."
   },
   {
     "id_categoria": 204,
-    "nome_categoria": "Fisiologia e Anatomia Musculoesquelética",
+    "nome_categoria": "Fisiologia Digest\u00f3ria e Nutri\u00e7\u00e3o",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Estrutura e função de ossos, músculos, articulações e tecido conjuntivo."
+    "descricao_categoria": "Processos de digest\u00e3o, absor\u00e7\u00e3o e metabolismo de nutrientes."
   },
   {
     "id_categoria": 205,
-    "nome_categoria": "Fisiologia Digestória e Nutrição",
+    "nome_categoria": "Fisiologia End\u00f3crina e Metab\u00f3lica",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Processos de digestão, absorção e metabolismo de nutrientes."
+    "descricao_categoria": "Fun\u00e7\u00e3o dos horm\u00f4nios, gl\u00e2ndulas end\u00f3crinas e regula\u00e7\u00e3o metab\u00f3lica."
   },
   {
     "id_categoria": 206,
-    "nome_categoria": "Fisiologia Endócrina e Metabólica",
+    "nome_categoria": "Fisiologia Renal e do Meio Interno",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Função dos hormônios, glândulas endócrinas e regulação metabólica."
+    "descricao_categoria": "Fun\u00e7\u00e3o renal, equil\u00edbrio hidroeletrol\u00edtico e \u00e1cido-base."
   },
   {
     "id_categoria": 207,
-    "nome_categoria": "Fisiologia Renal e do Meio Interno",
+    "nome_categoria": "Fisiologia Respirat\u00f3ria",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Função renal, equilíbrio hidroeletrolítico e ácido-base."
+    "descricao_categoria": "Mec\u00e2nica ventilat\u00f3ria, trocas gasosas e transporte de gases."
   },
   {
     "id_categoria": 208,
-    "nome_categoria": "Imunologia Básica",
+    "nome_categoria": "Fisiologia e Anatomia Musculoesquel\u00e9tica",
+    "id_categoria_pai": 2,
+    "descricao_categoria": "Estrutura e fun\u00e7\u00e3o de ossos, m\u00fasculos, articula\u00e7\u00f5es e tecido conjuntivo."
+  },
+  {
+    "id_categoria": 209,
+    "nome_categoria": "Imunologia B\u00e1sica",
     "id_categoria_pai": 2,
     "descricao_categoria": "Componentes e mecanismos da resposta imune inata e adaptativa."
   },
   {
-    "id_categoria": 209,
-    "nome_categoria": "Embriologia e Sistema Reprodutor",
-    "id_categoria_pai": 2,
-    "descricao_categoria": "Desenvolvimento embrionário e fetal, anatomia e fisiologia reprodutiva."
-  },
-  {
     "id_categoria": 210,
-    "nome_categoria": "Anatomia e Fisiologia da Pele",
+    "nome_categoria": "Neuroci\u00eancias B\u00e1sicas",
     "id_categoria_pai": 2,
-    "descricao_categoria": "Estrutura e funções do sistema tegumentar."
+    "descricao_categoria": "Anatomia e fisiologia do sistema nervoso central, perif\u00e9rico e aut\u00f4nomo."
   },
   {
     "id_categoria": 301,
-    "nome_categoria": "Patologia Geral",
+    "nome_categoria": "Imunopatologia",
     "id_categoria_pai": 3,
-    "descricao_categoria": "Princípios de lesão celular, inflamação, reparo, neoplasia e distúrbios hemodinâmicos."
+    "descricao_categoria": "Doen\u00e7as causadas por disfun\u00e7\u00e3o do sistema imune (autoimunidade, hipersensibilidade, imunodefici\u00eancia)."
   },
   {
     "id_categoria": 302,
-    "nome_categoria": "Oncologia Básica (Biologia do Câncer)",
+    "nome_categoria": "Microbiologia M\u00e9dica e Parasitologia",
     "id_categoria_pai": 3,
-    "descricao_categoria": "Bases moleculares e celulares da carcinogênese e progressão tumoral."
+    "descricao_categoria": "Estudo dos microrganismos (bact\u00e9rias, v\u00edrus, fungos, parasitas) e sua rela\u00e7\u00e3o com doen\u00e7as."
   },
   {
     "id_categoria": 303,
-    "nome_categoria": "Microbiologia Médica e Parasitologia",
+    "nome_categoria": "Oncologia B\u00e1sica (Biologia do C\u00e2ncer)",
     "id_categoria_pai": 3,
-    "descricao_categoria": "Estudo dos microrganismos (bactérias, vírus, fungos, parasitas) e sua relação com doenças."
+    "descricao_categoria": "Bases moleculares e celulares da carcinog\u00eanese e progress\u00e3o tumoral."
   },
   {
     "id_categoria": 304,
-    "nome_categoria": "Imunopatologia",
+    "nome_categoria": "Patologia Geral",
     "id_categoria_pai": 3,
-    "descricao_categoria": "Doenças causadas por disfunção do sistema imune (autoimunidade, hipersensibilidade, imunodeficiência)."
+    "descricao_categoria": "Princ\u00edpios de les\u00e3o celular, inflama\u00e7\u00e3o, reparo, neoplasia e dist\u00farbios hemodin\u00e2micos."
   },
   {
     "id_categoria": 305,
-    "nome_categoria": "Toxicologia Médica",
+    "nome_categoria": "Toxicologia M\u00e9dica",
     "id_categoria_pai": 3,
-    "descricao_categoria": "Estudo dos efeitos adversos de substâncias químicas e físicas nos organismos vivos."
+    "descricao_categoria": "Estudo dos efeitos adversos de subst\u00e2ncias qu\u00edmicas e f\u00edsicas nos organismos vivos."
   },
   {
     "id_categoria": 401,
-    "nome_categoria": "Farmacologia Geral e Clínica",
+    "nome_categoria": "Cardiologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Princípios de ação dos fármacos (farmacocinética, farmacodinâmica) e seu uso terapêutico."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as cardiovasculares."
   },
   {
     "id_categoria": 402,
-    "nome_categoria": "Semiologia Médica",
+    "nome_categoria": "Dermatologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Técnicas de anamnese e exame físico para o diagnóstico."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as da pele e anexos."
+  },
+  {
+    "id_categoria": 403,
+    "nome_categoria": "Diagn\u00f3stico Laboratorial e por Imagem",
+    "id_categoria_pai": 4,
+    "descricao_categoria": "Interpreta\u00e7\u00e3o de exames laboratoriais e de imagem (radiologia, USG, TC, RM)."
   },
   {
     "id_categoria": 404,
-    "nome_categoria": "Diagnóstico Laboratorial e por Imagem",
+    "nome_categoria": "Endocrinologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Interpretação de exames laboratoriais e de imagem (radiologia, USG, TC, RM)."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as end\u00f3crinas e metab\u00f3licas."
   },
   {
     "id_categoria": 405,
-    "nome_categoria": "Medicina de Emergência",
+    "nome_categoria": "Farmacologia Geral e Cl\u00ednica",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Abordagem e manejo de condições médicas e traumáticas agudas."
+    "descricao_categoria": "Princ\u00edpios de a\u00e7\u00e3o dos f\u00e1rmacos (farmacocin\u00e9tica, farmacodin\u00e2mica) e seu uso terap\u00eautico."
   },
   {
     "id_categoria": 406,
-    "nome_categoria": "Psiquiatria e Saúde Mental",
+    "nome_categoria": "Gastroenterologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento dos transtornos mentais."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as do aparelho digestivo."
   },
   {
     "id_categoria": 407,
-    "nome_categoria": "Cardiologia (Clínica)",
+    "nome_categoria": "Ginecologia e Obstetr\u00edcia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças cardiovasculares."
+    "descricao_categoria": "Cuidados da sa\u00fade da mulher, gesta\u00e7\u00e3o e parto."
   },
   {
     "id_categoria": 408,
-    "nome_categoria": "Pneumologia (Clínica)",
+    "nome_categoria": "Hematologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças respiratórias."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as do sangue e \u00f3rg\u00e3os hematopoi\u00e9ticos."
   },
   {
     "id_categoria": 409,
-    "nome_categoria": "Gastroenterologia (Clínica)",
+    "nome_categoria": "Infectologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças do aparelho digestivo."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as infecciosas."
   },
   {
     "id_categoria": 410,
-    "nome_categoria": "Endocrinologia (Clínica)",
+    "nome_categoria": "Medicina de Emerg\u00eancia",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças endócrinas e metabólicas."
+    "descricao_categoria": "Abordagem e manejo de condi\u00e7\u00f5es m\u00e9dicas e traum\u00e1ticas agudas."
   },
   {
     "id_categoria": 411,
-    "nome_categoria": "Nefrologia (Clínica)",
+    "nome_categoria": "Nefrologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças renais."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as renais."
   },
   {
     "id_categoria": 412,
-    "nome_categoria": "Reumatologia (Clínica)",
+    "nome_categoria": "Neurologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças reumáticas e do tecido conjuntivo."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as do sistema nervoso."
   },
   {
     "id_categoria": 413,
-    "nome_categoria": "Ginecologia e Obstetrícia (Clínica)",
+    "nome_categoria": "Oncologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Cuidados da saúde da mulher, gestação e parto."
+    "descricao_categoria": "Diagn\u00f3stico, estadiamento e tratamento do c\u00e2ncer."
   },
   {
     "id_categoria": 414,
-    "nome_categoria": "Dermatologia (Clínica)",
+    "nome_categoria": "Pneumologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças da pele e anexos."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as respirat\u00f3rias."
   },
   {
     "id_categoria": 415,
-    "nome_categoria": "Infectologia (Clínica)",
+    "nome_categoria": "Psiquiatria e Sa\u00fade Mental",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças infecciosas."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento dos transtornos mentais."
   },
   {
     "id_categoria": 416,
-    "nome_categoria": "Neurologia (Clínica)",
+    "nome_categoria": "Reumatologia (Cl\u00ednica)",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças do sistema nervoso."
+    "descricao_categoria": "Diagn\u00f3stico e tratamento das doen\u00e7as reum\u00e1ticas e do tecido conjuntivo."
   },
   {
     "id_categoria": 417,
-    "nome_categoria": "Hematologia (Clínica)",
+    "nome_categoria": "Semiologia M\u00e9dica",
     "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico e tratamento das doenças do sangue e órgãos hematopoiéticos."
-  },
-  {
-    "id_categoria": 418,
-    "nome_categoria": "Oncologia (Clínica)",
-    "id_categoria_pai": 4,
-    "descricao_categoria": "Diagnóstico, estadiamento e tratamento do câncer."
+    "descricao_categoria": "T\u00e9cnicas de anamnese e exame f\u00edsico para o diagn\u00f3stico."
   },
   {
     "id_categoria": 501,
-    "nome_categoria": "Saúde Pública e Epidemiologia",
+    "nome_categoria": "Ciclos da Vida (Pediatria e Geriatria)",
     "id_categoria_pai": 5,
-    "descricao_categoria": "Estudo da distribuição e determinantes da saúde em populações, vigilância e políticas."
+    "descricao_categoria": "Aspectos da sa\u00fade relacionados \u00e0 idade: inf\u00e2ncia, adolesc\u00eancia, vida adulta e envelhecimento."
   },
   {
     "id_categoria": 502,
-    "nome_categoria": "Ética Médica e Bioética",
+    "nome_categoria": "Determinantes Sociais da Saude e Equidade",
     "id_categoria_pai": 5,
-    "descricao_categoria": "Princípios éticos e legais na prática e pesquisa médica."
+    "descricao_categoria": "Analise de determinantes sociais, saude global e desigualdades em saude."
   },
   {
     "id_categoria": 503,
-    "nome_categoria": "Ciclos da Vida (Pediatria e Geriatria)",
+    "nome_categoria": "Medicina Preventiva e Comunit\u00e1ria",
     "id_categoria_pai": 5,
-    "descricao_categoria": "Aspectos da saúde relacionados à idade: infância, adolescência, vida adulta e envelhecimento."
+    "descricao_categoria": "Estrat\u00e9gias de preven\u00e7\u00e3o prim\u00e1ria, secund\u00e1ria e terci\u00e1ria; sa\u00fade da fam\u00edlia e comunidade."
   },
   {
     "id_categoria": 504,
-    "nome_categoria": "Medicina Preventiva e Comunitária",
+    "nome_categoria": "Politicas de Saude e Gestao do SUS",
     "id_categoria_pai": 5,
-    "descricao_categoria": "Estratégias de prevenção primária, secundária e terciária; saúde da família e comunidade."
+    "descricao_categoria": "Organizacao de sistemas de saude, financiamento e avaliacao de servicos no SUS."
+  },
+  {
+    "id_categoria": 505,
+    "nome_categoria": "Programas de Imunizacao e Calendario Vacinal",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Estrategias de cobertura vacinal, indicacoes e manejo de eventos adversos."
+  },
+  {
+    "id_categoria": 506,
+    "nome_categoria": "Saude Ambiental e Ocupacional",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Impacto de fatores ambientais e ocupacionais na saude individual e coletiva."
+  },
+  {
+    "id_categoria": 507,
+    "nome_categoria": "Sa\u00fade P\u00fablica e Epidemiologia",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Estudo da distribui\u00e7\u00e3o e determinantes da sa\u00fade em popula\u00e7\u00f5es, vigil\u00e2ncia e pol\u00edticas."
+  },
+  {
+    "id_categoria": 508,
+    "nome_categoria": "Vigilancia Epidemiologica e Resposta a Surto",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Metodologias de vigilancia, investigacao de surtos e comunicacao de risco."
+  },
+  {
+    "id_categoria": 509,
+    "nome_categoria": "\u00c9tica M\u00e9dica e Bio\u00e9tica",
+    "id_categoria_pai": 5,
+    "descricao_categoria": "Princ\u00edpios \u00e9ticos e legais na pr\u00e1tica e pesquisa m\u00e9dica."
   },
   {
     "id_categoria": 601,
-    "nome_categoria": "Princípios Gerais da Cirurgia",
+    "nome_categoria": "Anestesiologia",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Fundamentos da prática cirúrgica, resposta ao trauma e cuidados perioperatórios."
+    "descricao_categoria": "Princ\u00edpios e pr\u00e1tica da anestesia e manejo da dor."
   },
   {
     "id_categoria": 602,
-    "nome_categoria": "Anestesiologia",
+    "nome_categoria": "Cirurgia Cardiovascular",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Princípios e prática da anestesia e manejo da dor."
+    "descricao_categoria": "Tratamento cir\u00fargico de doen\u00e7as do cora\u00e7\u00e3o e grandes vasos."
   },
   {
     "id_categoria": 603,
     "nome_categoria": "Cirurgia Geral e do Aparelho Digestivo",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Tratamento cirúrgico de afecções abdominais e do trato digestório."
+    "descricao_categoria": "Tratamento cir\u00fargico de afec\u00e7\u00f5es abdominais e do trato digest\u00f3rio."
   },
   {
     "id_categoria": 604,
-    "nome_categoria": "Cirurgia Cardiovascular",
+    "nome_categoria": "Cirurgia Oncol\u00f3gica",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Tratamento cirúrgico de doenças do coração e grandes vasos."
+    "descricao_categoria": "Tratamento cir\u00fargico de tumores malignos."
   },
   {
     "id_categoria": 605,
-    "nome_categoria": "Neurocirurgia",
+    "nome_categoria": "Cirurgia Ortop\u00e9dica e Traumatologia",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Tratamento cirúrgico de doenças do sistema nervoso central e periférico."
+    "descricao_categoria": "Tratamento cir\u00fargico de les\u00f5es e doen\u00e7as do sistema musculoesquel\u00e9tico."
   },
   {
     "id_categoria": 606,
-    "nome_categoria": "Cirurgia Ortopédica e Traumatologia",
+    "nome_categoria": "Cirurgia Pedi\u00e1trica",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Tratamento cirúrgico de lesões e doenças do sistema musculoesquelético."
+    "descricao_categoria": "Tratamento cir\u00fargico de doen\u00e7as em neonatos, crian\u00e7as e adolescentes."
   },
   {
     "id_categoria": 607,
-    "nome_categoria": "Cirurgia Pediátrica",
+    "nome_categoria": "Cirurgia Pl\u00e1stica e Reparadora",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Tratamento cirúrgico de doenças em neonatos, crianças e adolescentes."
+    "descricao_categoria": "Corre\u00e7\u00e3o cir\u00fargica de deformidades cong\u00eanitas ou adquiridas e procedimentos est\u00e9ticos."
   },
   {
     "id_categoria": 608,
-    "nome_categoria": "Cirurgia Plástica e Reparadora",
+    "nome_categoria": "Cirurgia de Urg\u00eancia e Trauma",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Correção cirúrgica de deformidades congênitas ou adquiridas e procedimentos estéticos."
+    "descricao_categoria": "Abordagem cir\u00fargica de pacientes com condi\u00e7\u00f5es agudas e v\u00edtimas de trauma."
   },
   {
     "id_categoria": 609,
-    "nome_categoria": "Cirurgia Oncológica",
+    "nome_categoria": "Neurocirurgia",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Tratamento cirúrgico de tumores malignos."
+    "descricao_categoria": "Tratamento cir\u00fargico de doen\u00e7as do sistema nervoso central e perif\u00e9rico."
   },
   {
     "id_categoria": 610,
-    "nome_categoria": "Cirurgia de Urgência e Trauma",
+    "nome_categoria": "Princ\u00edpios Gerais da Cirurgia",
     "id_categoria_pai": 6,
-    "descricao_categoria": "Abordagem cirúrgica de pacientes com condições agudas e vítimas de trauma."
+    "descricao_categoria": "Fundamentos da pr\u00e1tica cir\u00fargica, resposta ao trauma e cuidados perioperat\u00f3rios."
   },
-  { "id_categoria": 1101, "nome_categoria": "Organelas Celulares: Estrutura e Função", "id_categoria_pai": 101 },
-  { "id_categoria": 1102, "nome_categoria": "Ciclo Celular e Regulação", "id_categoria_pai": 101 },
-  { "id_categoria": 1103, "nome_categoria": "Vias de Sinalização Intracelular", "id_categoria_pai": 101 },
-  { "id_categoria": 1104, "nome_categoria": "Transporte de Membrana", "id_categoria_pai": 101 },
-  { "id_categoria": 1105, "nome_categoria": "Metabolismo de Carboidratos (Glicólise, Gliconeogênese, Via das Pentoses)", "id_categoria_pai": 103 },
-  { "id_categoria": 1106, "nome_categoria": "Metabolismo de Lipídeos (Ácidos Graxos, Colesterol)", "id_categoria_pai": 103 },
-  { "id_categoria": 1107, "nome_categoria": "Metabolismo de Aminoácidos e Ciclo da Ureia", "id_categoria_pai": 103 },
-  { "id_categoria": 1108, "nome_categoria": "Cadeia Respiratória e Fosforilação Oxidativa", "id_categoria_pai": 103 },
-  { "id_categoria": 1109, "nome_categoria": "Neuroanatomia Funcional", "id_categoria_pai": 201 },
-  { "id_categoria": 1110, "nome_categoria": "Neurofisiologia: Potencial de Ação e Sinapse", "id_categoria_pai": 201 },
-  { "id_categoria": 1111, "nome_categoria": "Fisiologia Sensorial (Visão, Audição, Tato, etc.)", "id_categoria_pai": 201 },
-  { "id_categoria": 1112, "nome_categoria": "Fisiologia Motora (Controle e Vias)", "id_categoria_pai": 201 },
-  { "id_categoria": 1113, "nome_categoria": "Bases Neurobiológicas da Cognição", "id_categoria_pai": 201 },
-  { "id_categoria": 1114, "nome_categoria": "Eletrofisiologia Cardíaca e ECG", "id_categoria_pai": 202 },
-  { "id_categoria": 1115, "nome_categoria": "Regulação Cardiovascular e Pressão Arterial", "id_categoria_pai": 202 },
-  { "id_categoria": 1116, "nome_categoria": "Eritropoiese, Leucopoiese e Plaquetopoiese", "id_categoria_pai": 202 },
-  { "id_categoria": 1117, "nome_categoria": "Fisiologia da Hemostasia e Coagulação", "id_categoria_pai": 202 },
-  { "id_categoria": 1118, "nome_categoria": "Lesão e Morte Celular (Necrose, Apoptose, Autofagia)", "id_categoria_pai": 301 },
-  { "id_categoria": 1119, "nome_categoria": "Inflamação: Mediadores e Tipos", "id_categoria_pai": 301 },
-  { "id_categoria": 1120, "nome_categoria": "Reparo Tecidual: Regeneração e Cicatrização", "id_categoria_pai": 301 },
-  { "id_categoria": 1121, "nome_categoria": "Distúrbios Hemodinâmicos e Trombose", "id_categoria_pai": 301 },
-  { "id_categoria": 1122, "nome_categoria": "Bacteriologia Médica: Principais Patógenos", "id_categoria_pai": 303 },
-  { "id_categoria": 1123, "nome_categoria": "Virologia Médica: Principais Vírus Patogênicos", "id_categoria_pai": 303 },
-  { "id_categoria": 1124, "nome_categoria": "Micologia Médica: Micoses Superficiais e Sistêmicas", "id_categoria_pai": 303 },
-  { "id_categoria": 1125, "nome_categoria": "Parasitologia Médica: Protozooses e Helmintíases", "id_categoria_pai": 303 },
-  { "id_categoria": 1126, "nome_categoria": "Farmacocinética Aplicada", "id_categoria_pai": 401 },
-  { "id_categoria": 1127, "nome_categoria": "Alvos Farmacológicos e Mecanismos de Ação", "id_categoria_pai": 401 },
-  { "id_categoria": 1128, "nome_categoria": "Farmacologia do SNA e SNC", "id_categoria_pai": 401 },
-  { "id_categoria": 1129, "nome_categoria": "Farmacovigilância e Reações Adversas", "id_categoria_pai": 401 },
-  { "id_categoria": 1130, "nome_categoria": "Fases do Desenvolvimento de Fármacos", "id_categoria_pai": 401 },
-  { "id_categoria": 1131, "nome_categoria": "Diabetes Mellitus: Tipos, Diagnóstico e Tratamento", "id_categoria_pai": 410 },
-  { "id_categoria": 1132, "nome_categoria": "Obesidade e Síndrome Metabólica: Manejo Clínico", "id_categoria_pai": 410 },
-  { "id_categoria": 1133, "nome_categoria": "Tireoidopatias: Hipo/Hipertireoidismo, Bócio, Câncer", "id_categoria_pai": 410 },
-  { "id_categoria": 1134, "nome_categoria": "Doenças da Adrenal e da Hipófise", "id_categoria_pai": 410 },
-  { "id_categoria": 1135, "nome_categoria": "Distúrbios do Metabolismo Ósseo (Osteoporose, etc.)", "id_categoria_pai": 410 },
-  { "id_categoria": 1136, "nome_categoria": "Tipos de Estudos Epidemiológicos (Coorte, Caso-Controle, etc.)", "id_categoria_pai": 501 },
-  { "id_categoria": 1137, "nome_categoria": "Medidas de Frequência e Associação em Epidemiologia", "id_categoria_pai": 501 },
-  { "id_categoria": 1138, "nome_categoria": "Vigilância em Saúde e Investigação de Surtos", "id_categoria_pai": 501 },
-  { "id_categoria": 1139, "nome_categoria": "Epidemiologia e Controle de Doenças Crônicas", "id_categoria_pai": 501 },
-  { "id_categoria": 1140, "nome_categoria": "Políticas e Sistemas de Saúde Comparados", "id_categoria_pai": 501 },
-  { "id_categoria": 1141, "nome_categoria": "Padrões de Herança Monogênica (Autossômica, Ligada ao X)", "id_categoria_pai": 102 },
-  { "id_categoria": 1142, "nome_categoria": "Mutações Gênicas e Cromossômicas", "id_categoria_pai": 102 },
-  { "id_categoria": 1143, "nome_categoria": "Doenças Genéticas Comuns (Ex: Fibrose Cística, Anemia Falciforme)", "id_categoria_pai": 102 },
-  { "id_categoria": 1144, "nome_categoria": "Aconselhamento Genético", "id_categoria_pai": 102 },
-  { "id_categoria": 1145, "nome_categoria": "Farmacogenômica e Terapia Gênica", "id_categoria_pai": 102 },
-  { "id_categoria": 1146, "nome_categoria": "Mecânica Ventilatória: Volumes e Capacidades Pulmonares", "id_categoria_pai": 203 },
-  { "id_categoria": 1147, "nome_categoria": "Difusão de Gases e Relação Ventilação/Perfusão (V/Q)", "id_categoria_pai": 203 },
-  { "id_categoria": 1148, "nome_categoria": "Transporte de Oxigênio e Dióxido de Carbono no Sangue", "id_categoria_pai": 203 },
-  { "id_categoria": 1149, "nome_categoria": "Controle Neural e Químico da Respiração", "id_categoria_pai": 203 },
-  { "id_categoria": 1150, "nome_categoria": "Adaptações Respiratórias (Altitude, Exercício)", "id_categoria_pai": 203 },
-  { "id_categoria": 1151, "nome_categoria": "Tipos de Tecido Muscular (Estriado, Liso, Cardíaco)", "id_categoria_pai": 204 },
-  { "id_categoria": 1152, "nome_categoria": "Contração Muscular: Mecanismo Deslizante dos Filamentos", "id_categoria_pai": 204 },
-  { "id_categoria": 1153, "nome_categoria": "Metabolismo Energético Muscular", "id_categoria_pai": 204 },
-  { "id_categoria": 1154, "nome_categoria": "Fisiologia Óssea: Remodelação e Crescimento", "id_categoria_pai": 204 },
-  { "id_categoria": 1155, "nome_categoria": "Biomecânica das Articulações", "id_categoria_pai": 204 },
-  { "id_categoria": 1156, "nome_categoria": "Motilidade Gastrointestinal", "id_categoria_pai": 205 },
-  { "id_categoria": 1157, "nome_categoria": "Secreções Digestivas (Salivar, Gástrica, Pancreática, Biliar)", "id_categoria_pai": 205 },
-  { "id_categoria": 1158, "nome_categoria": "Digestão e Absorção de Macronutrientes", "id_categoria_pai": 205 },
-  { "id_categoria": 1159, "nome_categoria": "Absorção de Vitaminas e Minerais", "id_categoria_pai": 205 },
-  { "id_categoria": 1160, "nome_categoria": "Fisiologia Hepática e Biliar", "id_categoria_pai": 205 },
-  { "id_categoria": 1161, "nome_categoria": "Eixo Hipotálamo-Hipofisário e Seus Hormônios", "id_categoria_pai": 206 },
-  { "id_categoria": 1162, "nome_categoria": "Fisiologia da Tireoide", "id_categoria_pai": 206 },
-  { "id_categoria": 1163, "nome_categoria": "Fisiologia das Glândulas Adrenais (Córtex e Medula)", "id_categoria_pai": 206 },
-  { "id_categoria": 1164, "nome_categoria": "Pâncreas Endócrino (Insulina, Glucagon, Somatostatina)", "id_categoria_pai": 206 },
-  { "id_categoria": 1165, "nome_categoria": "Regulação Hormonal do Metabolismo do Cálcio e Fosfato", "id_categoria_pai": 206 },
-  { "id_categoria": 1166, "nome_categoria": "Filtração Glomerular e Depuração Renal", "id_categoria_pai": 207 },
-  { "id_categoria": 1167, "nome_categoria": "Processos Tubulares: Reabsorção e Secreção", "id_categoria_pai": 207 },
-  { "id_categoria": 1168, "nome_categoria": "Mecanismos de Concentração e Diluição Urinária", "id_categoria_pai": 207 },
-  { "id_categoria": 1169, "nome_categoria": "Regulação Renal do Equilíbrio Hidroeletrolítico", "id_categoria_pai": 207 },
-  { "id_categoria": 1170, "nome_categoria": "Regulação Renal do Equilíbrio Ácido-Base", "id_categoria_pai": 207 },
-  { "id_categoria": 1171, "nome_categoria": "Células do Sistema Imune (Linfócitos, Fagócitos, Células Apresentadoras)", "id_categoria_pai": 208 },
-  { "id_categoria": 1172, "nome_categoria": "Imunidade Inata: Barreiras e Respostas Iniciais", "id_categoria_pai": 208 },
-  { "id_categoria": 1173, "nome_categoria": "Imunidade Adaptativa: Resposta Humoral (Anticorpos)", "id_categoria_pai": 208 },
-  { "id_categoria": 1174, "nome_categoria": "Imunidade Adaptativa: Resposta Celular (Linfócitos T)", "id_categoria_pai": 208 },
-  { "id_categoria": 1175, "nome_categoria": "Sistema Complemento e Citocinas", "id_categoria_pai": 208 },
-  { "id_categoria": 1176, "nome_categoria": "Gametogênese (Espermatogênese e Ovogênese)", "id_categoria_pai": 209 },
-  { "id_categoria": 1177, "nome_categoria": "Ciclo Menstrual e Regulação Hormonal Feminina", "id_categoria_pai": 209 },
-  { "id_categoria": 1178, "nome_categoria": "Fecundação, Clivagem e Nidação", "id_categoria_pai": 209 },
-  { "id_categoria": 1179, "nome_categoria": "Períodos Embrionário e Fetal: Principais Eventos", "id_categoria_pai": 209 },
-  { "id_categoria": 1180, "nome_categoria": "Fisiologia da Gestação e Parto", "id_categoria_pai": 209 },
-  { "id_categoria": 1181, "nome_categoria": "Camadas da Pele (Epiderme, Derme, Hipoderme)", "id_categoria_pai": 210 },
-  { "id_categoria": 1182, "nome_categoria": "Anexos Cutâneos (Pelos, Unhas, Glândulas)", "id_categoria_pai": 210 },
-  { "id_categoria": 1183, "nome_categoria": "Funções da Pele (Proteção, Termorregulação, Sensorial)", "id_categoria_pai": 210 },
-  { "id_categoria": 1184, "nome_categoria": "Pigmentação e Resposta à Radiação UV", "id_categoria_pai": 210 },
-  { "id_categoria": 1185, "nome_categoria": "Cicatrização de Feridas Cutâneas", "id_categoria_pai": 210 },
-  { "id_categoria": 1186, "nome_categoria": "Características Celulares da Neoplasia Maligna (Hallmarks of Cancer)", "id_categoria_pai": 302 },
-  { "id_categoria": 1187, "nome_categoria": "Oncogenes e Genes Supressores de Tumor", "id_categoria_pai": 302 },
-  { "id_categoria": 1188, "nome_categoria": "Carcinogênese Química, Física e Viral", "id_categoria_pai": 302 },
-  { "id_categoria": 1189, "nome_categoria": "Angiogênese Tumoral e Metástase", "id_categoria_pai": 302 },
-  { "id_categoria": 1190, "nome_categoria": "Imunologia Tumoral", "id_categoria_pai": 302 },
-  { "id_categoria": 1191, "nome_categoria": "Reações de Hipersensibilidade (Tipos I, II, III, IV)", "id_categoria_pai": 304 },
-  { "id_categoria": 1192, "nome_categoria": "Doenças Autoimunes: Mecanismos e Exemplos (LES, Artrite Reumatoide)", "id_categoria_pai": 304 },
-  { "id_categoria": 1193, "nome_categoria": "Imunodeficiências Primárias e Secundárias (Ex: HIV/AIDS)", "id_categoria_pai": 304 },
-  { "id_categoria": 1194, "nome_categoria": "Imunologia de Transplantes e Rejeição", "id_categoria_pai": 304 },
-  { "id_categoria": 1195, "nome_categoria": "Princípios Gerais da Toxicologia (Dose-Resposta, Toxicocinética)", "id_categoria_pai": 305 },
-  { "id_categoria": 1196, "nome_categoria": "Mecanismos de Toxicidade Celular", "id_categoria_pai": 305 },
-  { "id_categoria": 1197, "nome_categoria": "Toxicologia de Metais Pesados Específicos (Chumbo, Mercúrio, Arsênio)", "id_categoria_pai": 305 },
-  { "id_categoria": 1198, "nome_categoria": "Toxicologia de Solventes Orgânicos e Gases Tóxicos", "id_categoria_pai": 305 },
-  { "id_categoria": 1199, "nome_categoria": "Antídotos e Princípios de Descontaminação", "id_categoria_pai": 305 },
-  { "id_categoria": 1200, "nome_categoria": "Anamnese: Técnicas e Roteiro", "id_categoria_pai": 402 },
-  { "id_categoria": 1201, "nome_categoria": "Exame Físico Geral (Ectoscopia, Sinais Vitais)", "id_categoria_pai": 402 },
-  { "id_categoria": 1202, "nome_categoria": "Semiologia Cardiovascular (Inspeção, Palpação, Ausculta Cardíaca)", "id_categoria_pai": 402 },
-  { "id_categoria": 1203, "nome_categoria": "Semiologia Respiratória (Inspeção, Palpação, Percussão, Ausculta Pulmonar)", "id_categoria_pai": 402 },
-  { "id_categoria": 1204, "nome_categoria": "Semiologia Abdominal", "id_categoria_pai": 402 },
-  { "id_categoria": 1205, "nome_categoria": "Semiologia Neurológica Básica", "id_categoria_pai": 402 },
-  { "id_categoria": 1211, "nome_categoria": "Hematologia Laboratorial (Hemograma, Coagulograma)", "id_categoria_pai": 404 },
-  { "id_categoria": 1212, "nome_categoria": "Bioquímica Clínica (Função Renal, Hepática, Eletrólitos, Glicemia)", "id_categoria_pai": 404 },
-  { "id_categoria": 1213, "nome_categoria": "Urinálise e Exames Parasitológicos de Fezes", "id_categoria_pai": 404 },
-  { "id_categoria": 1214, "nome_categoria": "Princípios de Radiografia, Ultrassonografia, Tomografia e Ressonância", "id_categoria_pai": 404 },
-  { "id_categoria": 1215, "nome_categoria": "Medicina Nuclear e PET Scan", "id_categoria_pai": 404 },
-  { "id_categoria": 1216, "nome_categoria": "Suporte Básico e Avançado de Vida (BLS, ACLS)", "id_categoria_pai": 405 },
-  { "id_categoria": 1217, "nome_categoria": "Atendimento Inicial ao Politraumatizado (ATLS)", "id_categoria_pai": 405 },
-  { "id_categoria": 1218, "nome_categoria": "Emergências Cardiovasculares (SCA, Arritmias Graves, Choque)", "id_categoria_pai": 405 },
-  { "id_categoria": 1219, "nome_categoria": "Emergências Respiratórias (Insuficiência Respiratória Aguda, Asma Grave)", "id_categoria_pai": 405 },
-  { "id_categoria": 1220, "nome_categoria": "Emergências Neurológicas (AVC Agudo, Crise Convulsiva)", "id_categoria_pai": 405 },
-  { "id_categoria": 1221, "nome_categoria": "Transtornos de Ansiedade (TAG, Pânico, Fobias)", "id_categoria_pai": 406 },
-  { "id_categoria": 1222, "nome_categoria": "Transtornos Depressivos e Bipolar", "id_categoria_pai": 406 },
-  { "id_categoria": 1223, "nome_categoria": "Esquizofrenia e Outros Transtornos Psicóticos", "id_categoria_pai": 406 },
-  { "id_categoria": 1224, "nome_categoria": "Transtornos por Uso de Substâncias", "id_categoria_pai": 406 },
-  { "id_categoria": 1225, "nome_categoria": "Psicofarmacologia Básica", "id_categoria_pai": 406 },
-  { "id_categoria": 1226, "nome_categoria": "Doença Arterial Coronariana (Angina, Infarto)", "id_categoria_pai": 407 },
-  { "id_categoria": 1227, "nome_categoria": "Insuficiência Cardíaca: Diagnóstico e Tratamento", "id_categoria_pai": 407 },
-  { "id_categoria": 1228, "nome_categoria": "Hipertensão Arterial Sistêmica: Abordagem Clínica", "id_categoria_pai": 407 },
-  { "id_categoria": 1229, "nome_categoria": "Arritmias Cardíacas Comuns (FA, Extrassístoles)", "id_categoria_pai": 407 },
-  { "id_categoria": 1230, "nome_categoria": "Valvopatias (Estenose e Insuficiência Mitral/Aórtica)", "id_categoria_pai": 407 },
-  { "id_categoria": 1231, "nome_categoria": "Lesão Renal Aguda (LRA): Causas e Manejo", "id_categoria_pai": 411 },
-  { "id_categoria": 1232, "nome_categoria": "Doença Renal Crônica (DRC): Estadiamento e Progressão", "id_categoria_pai": 411 },
-  { "id_categoria": 1233, "nome_categoria": "Glomerulopatias (Síndrome Nefrítica e Nefrótica)", "id_categoria_pai": 411 },
-  { "id_categoria": 1234, "nome_categoria": "Distúrbios Hidroeletrolíticos e Ácido-Base: Abordagem Clínica", "id_categoria_pai": 411 },
-  { "id_categoria": 1235, "nome_categoria": "Terapia Renal Substitutiva (Diálise, Transplante)", "id_categoria_pai": 411 },
-  { "id_categoria": 1236, "nome_categoria": "Princípios Fundamentais da Bioética", "id_categoria_pai": 502 },
-  { "id_categoria": 1237, "nome_categoria": "Relação Médico-Paciente e Consentimento Informado", "id_categoria_pai": 502 },
-  { "id_categoria": 1238, "nome_categoria": "Sigilo Profissional e Confidencialidade", "id_categoria_pai": 502 },
-  { "id_categoria": 1239, "nome_categoria": "Questões Éticas no Início e Fim da Vida", "id_categoria_pai": 502 },
-  { "id_categoria": 1240, "nome_categoria": "Ética em Pesquisa com Seres Humanos", "id_categoria_pai": 502 },
-  { "id_categoria": 1241, "nome_categoria": "Puericultura e Desenvolvimento Infantil", "id_categoria_pai": 503 },
-  { "id_categoria": 1242, "nome_categoria": "Imunizações na Infância e Adolescência", "id_categoria_pai": 503 },
-  { "id_categoria": 1243, "nome_categoria": "Principais Doenças Pediátricas", "id_categoria_pai": 503 },
-  { "id_categoria": 1244, "nome_categoria": "Fisiologia do Envelhecimento e Avaliação Geriátrica Ampla (AGA)", "id_categoria_pai": 503 },
-  { "id_categoria": 1245, "nome_categoria": "Síndromes Geriátricas Comuns (Demência, Incontinência, Quedas)", "id_categoria_pai": 503 },
-  { "id_categoria": 1246, "nome_categoria": "Níveis de Prevenção em Saúde", "id_categoria_pai": 504 },
-  { "id_categoria": 1247, "nome_categoria": "Rastreamento (Screening) de Doenças: Princípios e Programas", "id_categoria_pai": 504 },
-  { "id_categoria": 1248, "nome_categoria": "Promoção da Saúde e Educação em Saúde", "id_categoria_pai": 504 },
-  { "id_categoria": 1249, "nome_categoria": "Saúde da Família e Atenção Primária à Saúde (APS)", "id_categoria_pai": 504 },
-  { "id_categoria": 1250, "nome_categoria": "Saúde Ambiental e Ocupacional", "id_categoria_pai": 504 },
-  { "id_categoria": 1251, "nome_categoria": "Asma Brônquica: Diagnóstico e Manejo", "id_categoria_pai": 408 },
-  { "id_categoria": 1252, "nome_categoria": "Doença Pulmonar Obstrutiva Crônica (DPOC)", "id_categoria_pai": 408 },
-  { "id_categoria": 1253, "nome_categoria": "Pneumonias Comunitárias e Hospitalares", "id_categoria_pai": 408 },
-  { "id_categoria": 1254, "nome_categoria": "Tuberculose Pulmonar", "id_categoria_pai": 408 },
-  { "id_categoria": 1255, "nome_categoria": "Doenças Pulmonares Intersticiais", "id_categoria_pai": 408 },
-  { "id_categoria": 1256, "nome_categoria": "Doença do Refluxo Gastroesofágico (DRGE)", "id_categoria_pai": 409 },
-  { "id_categoria": 1257, "nome_categoria": "Doença Ulcerosa Péptica", "id_categoria_pai": 409 },
-  { "id_categoria": 1258, "nome_categoria": "Doenças Inflamatórias Intestinais (Crohn, Retocolite Ulcerativa)", "id_categoria_pai": 409 },
-  { "id_categoria": 1259, "nome_categoria": "Hepatites Virais (A, B, C)", "id_categoria_pai": 409 },
-  { "id_categoria": 1260, "nome_categoria": "Cirrose Hepática e suas Complicações", "id_categoria_pai": 409 },
-  { "id_categoria": 1261, "nome_categoria": "Síndrome do Intestino Irritável (SII)", "id_categoria_pai": 409 },
-  { "id_categoria": 1262, "nome_categoria": "Artrite Reumatoide: Diagnóstico e Tratamento", "id_categoria_pai": 412 },
-  { "id_categoria": 1263, "nome_categoria": "Lúpus Eritematoso Sistêmico (LES)", "id_categoria_pai": 412 },
-  { "id_categoria": 1264, "nome_categoria": "Espondiloartrites (Ex: Espondilite Anquilosante)", "id_categoria_pai": 412 },
-  { "id_categoria": 1265, "nome_categoria": "Gota e Artropatias por Cristais", "id_categoria_pai": 412 },
-  { "id_categoria": 1266, "nome_categoria": "Osteoartrite (Artrose)", "id_categoria_pai": 412 },
-  { "id_categoria": 1267, "nome_categoria": "Fibromialgia", "id_categoria_pai": 412 },
-  { "id_categoria": 1268, "nome_categoria": "Ginecologia: Ciclo Menstrual e Distúrbios Menstruais", "id_categoria_pai": 413 },
-  { "id_categoria": 1269, "nome_categoria": "Ginecologia: Infecções Sexualmente Transmissíveis (ISTs) na Mulher", "id_categoria_pai": 413 },
-  { "id_categoria": 1270, "nome_categoria": "Ginecologia: Endometriose e Miomas Uterinos", "id_categoria_pai": 413 },
-  { "id_categoria": 1271, "nome_categoria": "Ginecologia: Rastreamento de Cânceres Ginecológicos", "id_categoria_pai": 413 },
-  { "id_categoria": 1272, "nome_categoria": "Obstetrícia: Acompanhamento Pré-Natal", "id_categoria_pai": 413 },
-  { "id_categoria": 1273, "nome_categoria": "Obstetrícia: Complicações da Gestação", "id_categoria_pai": 413 },
-  { "id_categoria": 1274, "nome_categoria": "Obstetrícia: Parto e Puerpério", "id_categoria_pai": 413 },
-  { "id_categoria": 1275, "nome_categoria": "Acne Vulgar e Rosácea", "id_categoria_pai": 414 },
-  { "id_categoria": 1276, "nome_categoria": "Dermatites (Eczemas): Atópica, Contato, Seborreica", "id_categoria_pai": 414 },
-  { "id_categoria": 1277, "nome_categoria": "Psoríase", "id_categoria_pai": 414 },
-  { "id_categoria": 1278, "nome_categoria": "Infecções Cutâneas (Bacterianas, Fúngicas, Virais)", "id_categoria_pai": 414 },
-  { "id_categoria": 1279, "nome_categoria": "Cânceres de Pele (Melanoma, CBC, CEC)", "id_categoria_pai": 414 },
-  { "id_categoria": 1280, "nome_categoria": "Alopécias e Doenças do Couro Cabeludo", "id_categoria_pai": 414 },
-  { "id_categoria": 1281, "nome_categoria": "Síndrome da Imunodeficiência Adquirida (HIV/AIDS): Manejo Clínico", "id_categoria_pai": 415 },
-  { "id_categoria": 1282, "nome_categoria": "Infecções Sexualmente Transmissíveis (ISTs): Abordagem Sindrômica", "id_categoria_pai": 415 },
-  { "id_categoria": 1283, "nome_categoria": "Infecções Hospitalares e Controle de Resistência Antimicrobiana", "id_categoria_pai": 415 },
-  { "id_categoria": 1284, "nome_categoria": "Arboviroses (Dengue, Zika, Chikungunya, Febre Amarela)", "id_categoria_pai": 415 },
-  { "id_categoria": 1285, "nome_categoria": "Sepse e Choque Séptico: Reconhecimento e Tratamento", "id_categoria_pai": 415 },
-  { "id_categoria": 1286, "nome_categoria": "Medicina Tropical e Doenças Infecciosas Endêmicas", "id_categoria_pai": 415 },
-  { "id_categoria": 1287, "nome_categoria": "Acidente Vascular Cerebral (AVC): Prevenção, Tratamento e Reabilitação", "id_categoria_pai": 416 },
-  { "id_categoria": 1288, "nome_categoria": "Epilepsias e Transtornos Convulsivos: Classificação e Manejo", "id_categoria_pai": 416 },
-  { "id_categoria": 1289, "nome_categoria": "Doenças Neurodegenerativas (Alzheimer, Parkinson, ELA)", "id_categoria_pai": 416 },
-  { "id_categoria": 1290, "nome_categoria": "Cefaleias Primárias e Secundárias", "id_categoria_pai": 416 },
-  { "id_categoria": 1291, "nome_categoria": "Esclerose Múltipla e Outras Doenças Desmielinizantes", "id_categoria_pai": 416 },
-  { "id_categoria": 1292, "nome_categoria": "Doenças Neuromusculares (Miopatias, Neuropatias Periféricas, Miastenia Gravis)", "id_categoria_pai": 416 },
-  { "id_categoria": 1293, "nome_categoria": "Anemias: Diagnóstico Diferencial e Tratamento", "id_categoria_pai": 417 },
-  { "id_categoria": 1294, "nome_categoria": "Leucemias Agudas e Crônicas: Classificação e Abordagem", "id_categoria_pai": 417 },
-  { "id_categoria": 1295, "nome_categoria": "Linfomas (Hodgkin e Não-Hodgkin): Diagnóstico e Estadiamento", "id_categoria_pai": 417 },
-  { "id_categoria": 1296, "nome_categoria": "Distúrbios da Hemostasia e Trombofilias", "id_categoria_pai": 417 },
-  { "id_categoria": 1297, "nome_categoria": "Mieloma Múltiplo e Outras Gamopatias Monoclonais", "id_categoria_pai": 417 },
-  { "id_categoria": 1298, "nome_categoria": "Modalidades de Tratamento Oncológico (Quimio, Radio, Imuno, Hormonio)", "id_categoria_pai": 418 },
-  { "id_categoria": 1299, "nome_categoria": "Câncer de Mama: Abordagem Multidisciplinar", "id_categoria_pai": 418 },
-  { "id_categoria": 1300, "nome_categoria": "Câncer de Pulmão: Tipos e Tratamento", "id_categoria_pai": 418 },
-  { "id_categoria": 1301, "nome_categoria": "Cânceres do Trato Gastrointestinal: Abordagens Específicas", "id_categoria_pai": 418 },
-  { "id_categoria": 1302, "nome_categoria": "Cânceres Urológicos: Tipos e Tratamento", "id_categoria_pai": 418 },
-  { "id_categoria": 1303, "nome_categoria": "Cuidados Paliativos e Controle da Dor em Oncologia", "id_categoria_pai": 418 },
-  { "id_categoria": 1304, "nome_categoria": "Matriz Extracelular e Adesão Celular", "id_categoria_pai": 101 },
-  { "id_categoria": 1305, "nome_categoria": "Citoesqueleto e Movimento Celular", "id_categoria_pai": 101 },
-  { "id_categoria": 1306, "nome_categoria": "Vitaminas e Coenzimas", "id_categoria_pai": 103 },
-  { "id_categoria": 1307, "nome_categoria": "Metabolismo de Nucleotídeos", "id_categoria_pai": 103 },
-  { "id_categoria": 1308, "nome_categoria": "Distúrbios do Crescimento e Diferenciação Celular (Hiperplasia, Metaplasia, Displasia)", "id_categoria_pai": 301 },
-  { "id_categoria": 1309, "nome_categoria": "Doenças Ambientais e Nutricionais (Bases Patológicas)", "id_categoria_pai": 301 },
-  { "id_categoria": 1310, "nome_categoria": "Princípios de Diagnóstico Microbiológico (Cultura, Sorologia, Molecular)", "id_categoria_pai": 303 },
-  { "id_categoria": 1311, "nome_categoria": "Mecanismos de Patogenicidade Microbiana (Toxinas, Fatores de Virulência)", "id_categoria_pai": 303 },
-  { "id_categoria": 1312, "nome_categoria": "Doenças Granulomatosas", "id_categoria_pai": 304 },
-  { "id_categoria": 1313, "nome_categoria": "Patologia da Amiloidose", "id_categoria_pai": 304 },
-  { "id_categoria": 1314, "nome_categoria": "Técnicas Histológicas e Microscopia", "id_categoria_pai": 104 },
-  { "id_categoria": 1315, "nome_categoria": "Tecido Epitelial (Revestimento e Glandular)", "id_categoria_pai": 104 },
-  { "id_categoria": 1316, "nome_categoria": "Tecido Conjuntivo (Propriamente Dito, Adiposo, Cartilaginoso, Ósseo, Sanguíneo)", "id_categoria_pai": 104 },
-  { "id_categoria": 1317, "nome_categoria": "Tecido Muscular (Estriado Esquelético, Cardíaco, Liso)", "id_categoria_pai": 104 },
-  { "id_categoria": 1318, "nome_categoria": "Tecido Nervoso (Neurônios, Glia, Organização)", "id_categoria_pai": 104 },
-  { "id_categoria": 1319, "nome_categoria": "Avaliação Pré-operatória e Risco Cirúrgico", "id_categoria_pai": 601 },
-  { "id_categoria": 1320, "nome_categoria": "Resposta Metabólica ao Trauma e Cirurgia", "id_categoria_pai": 601 },
-  { "id_categoria": 1321, "nome_categoria": "Cicatrização de Feridas e Fatores que a Afetam", "id_categoria_pai": 601 },
-  { "id_categoria": 1322, "nome_categoria": "Infecção em Cirurgia e Profilaxia Antimicrobiana", "id_categoria_pai": 601 },
-  { "id_categoria": 1323, "nome_categoria": "Cuidados Pós-operatórios e Manejo de Complicações", "id_categoria_pai": 601 },
-  { "id_categoria": 1324, "nome_categoria": "Avaliação Pré-anestésica", "id_categoria_pai": 602 },
-  { "id_categoria": 1325, "nome_categoria": "Farmacologia dos Anestésicos", "id_categoria_pai": 602 },
-  { "id_categoria": 1326, "nome_categoria": "Técnicas de Anestesia (Geral, Regional, Local)", "id_categoria_pai": 602 },
-  { "id_categoria": 1327, "nome_categoria": "Monitorização Anestésica", "id_categoria_pai": 602 },
-  { "id_categoria": 1328, "nome_categoria": "Complicações Anestésicas e Recuperação Pós-anestésica", "id_categoria_pai": 602 },
-  { "id_categoria": 1329, "nome_categoria": "Hérnias da Parede Abdominal", "id_categoria_pai": 603 },
-  { "id_categoria": 1330, "nome_categoria": "Doenças da Vesícula Biliar e Vias Biliares", "id_categoria_pai": 603 },
-  { "id_categoria": 1331, "nome_categoria": "Apendicite Aguda: Abordagem Cirúrgica", "id_categoria_pai": 603 },
-  { "id_categoria": 1332, "nome_categoria": "Doença Diverticular dos Cólons: Tratamento Cirúrgico", "id_categoria_pai": 603 },
-  { "id_categoria": 1333, "nome_categoria": "Cirurgia Bariátrica e Metabólica: Técnicas e Indicações", "id_categoria_pai": 603 },
-  { "id_categoria": 1334, "nome_categoria": "Hemostasia Cirúrgica e Terapia Transfusional", "id_categoria_pai": 601 },
-  { "id_categoria": 1335, "nome_categoria": "Técnicas de Assepsia, Antissepsia e Esterilização", "id_categoria_pai": 601 },
-  { "id_categoria": 1336, "nome_categoria": "Instrumentação Cirúrgica, Incisões e Suturas", "id_categoria_pai": 601 },
-  { "id_categoria": 1337, "nome_categoria": "Cirurgia Robótica e Minimamente Invasiva: Princípios", "id_categoria_pai": 601 },
-  { "id_categoria": 1338, "nome_categoria": "Cirurgia de Revascularização Miocárdica (CRM)", "id_categoria_pai": 604 },
-  { "id_categoria": 1339, "nome_categoria": "Cirurgia Valvar (Troca e Plastia de Valvas Cardíacas)", "id_categoria_pai": 604 },
-  { "id_categoria": 1340, "nome_categoria": "Cirurgia de Aneurismas e Dissecções da Aorta", "id_categoria_pai": 604 },
-  { "id_categoria": 1341, "nome_categoria": "Cirurgia de Cardiopatias Congênitas", "id_categoria_pai": 604 },
-  { "id_categoria": 1342, "nome_categoria": "Transplante Cardíaco", "id_categoria_pai": 604 },
-  { "id_categoria": 1343, "nome_categoria": "Neurocirurgia de Tumores Cerebrais e Medulares", "id_categoria_pai": 605 },
-  { "id_categoria": 1344, "nome_categoria": "Neurocirurgia Vascular (Aneurismas, MAVs)", "id_categoria_pai": 605 },
-  { "id_categoria": 1345, "nome_categoria": "Cirurgia da Coluna Vertebral (Hérnias Discais, Estenoses)", "id_categoria_pai": 605 },
-  { "id_categoria": 1346, "nome_categoria": "Neurocirurgia Funcional e Estereotáxica (DBS, Epilepsia)", "id_categoria_pai": 605 },
-  { "id_categoria": 1347, "nome_categoria": "Neurotrauma: Tratamento Cirúrgico do TCE e TRM", "id_categoria_pai": 605 },
-  { "id_categoria": 1348, "nome_categoria": "Tratamento Cirúrgico de Fraturas e Luxações", "id_categoria_pai": 606 },
-  { "id_categoria": 1349, "nome_categoria": "Artroplastias (Próteses de Quadril, Joelho, Ombro)", "id_categoria_pai": 606 },
-  { "id_categoria": 1350, "nome_categoria": "Cirurgia Artroscópica (Joelho, Ombro)", "id_categoria_pai": 606 },
-  { "id_categoria": 1351, "nome_categoria": "Cirurgia da Mão e Microcirurgia", "id_categoria_pai": 606 },
-  { "id_categoria": 1352, "nome_categoria": "Ortopedia Pediátrica: Deformidades Congênitas e Adquiridas", "id_categoria_pai": 606 },
-  { "id_categoria": 1353, "nome_categoria": "Malformações Congênitas do Trato Digestório (Atresias, Estenoses)", "id_categoria_pai": 607 },
-  { "id_categoria": 1354, "nome_categoria": "Malformações Congênitas da Parede Abdominal (Onfalocele, Gastrosquise)", "id_categoria_pai": 607 },
-  { "id_categoria": 1355, "nome_categoria": "Cirurgia Neonatal", "id_categoria_pai": 607 },
-  { "id_categoria": 1356, "nome_categoria": "Tumores Sólidos na Infância (Neuroblastoma, Tumor de Wilms)", "id_categoria_pai": 607 },
-  { "id_categoria": 1357, "nome_categoria": "Cirurgia Urológica Pediátrica (Refluxo Vesicoureteral, Hipospádia)", "id_categoria_pai": 607 },
-  { "id_categoria": 1358, "nome_categoria": "Tratamento Cirúrgico de Queimaduras", "id_categoria_pai": 608 },
-  { "id_categoria": 1359, "nome_categoria": "Retalhos Cutâneos e Microcirurgia Reconstrutiva", "id_categoria_pai": 608 },
-  { "id_categoria": 1360, "nome_categoria": "Cirurgia Craniomaxilofacial (Trauma e Deformidades)", "id_categoria_pai": 608 },
-  { "id_categoria": 1361, "nome_categoria": "Cirurgia Estética (Mamoplastia, Lipoaspiração, Rinoplastia)", "id_categoria_pai": 608 },
-  { "id_categoria": 1362, "nome_categoria": "Reconstrução Mamária Pós-Mastectomia", "id_categoria_pai": 608 },
-  { "id_categoria": 1363, "nome_categoria": "Princípios da Ressecção Oncológica e Margens Cirúrgicas", "id_categoria_pai": 609 },
-  { "id_categoria": 1364, "nome_categoria": "Linfadenectomia e Biópsia de Linfonodo Sentinela", "id_categoria_pai": 609 },
-  { "id_categoria": 1365, "nome_categoria": "Cirurgia Citorredutora e Quimioterapia Hipertérmica Intraperitoneal (HIPEC)", "id_categoria_pai": 609 },
-  { "id_categoria": 1366, "nome_categoria": "Abordagem Cirúrgica dos Principais Tumores Sólidos", "id_categoria_pai": 609 },
-  { "id_categoria": 1367, "nome_categoria": "Cirurgia Paliativa em Oncologia", "id_categoria_pai": 609 },
-  { "id_categoria": 1368, "nome_categoria": "Atendimento Cirúrgico ao Politraumatizado (Controle de Danos)", "id_categoria_pai": 610 },
-  { "id_categoria": 1369, "nome_categoria": "Trauma Torácico: Abordagem Cirúrgica", "id_categoria_pai": 610 },
-  { "id_categoria": 1370, "nome_categoria": "Trauma Abdominal: Laparotomia Exploradora e Lesões Específicas", "id_categoria_pai": 610 },
-  { "id_categoria": 1371, "nome_categoria": "Trauma Vascular Periférico", "id_categoria_pai": 610 },
-  { "id_categoria": 1372, "nome_categoria": "Abdome Agudo Cirúrgico (Inflamatório, Perfurativo, Obstrutivo, Vascular)", "id_categoria_pai": 610 }
+  {
+    "id_categoria": 10101,
+    "nome_categoria": "Ciclo Celular e Regula\u00e7\u00e3o",
+    "id_categoria_pai": 101
+  },
+  {
+    "id_categoria": 10102,
+    "nome_categoria": "Citoesqueleto e Movimento Celular",
+    "id_categoria_pai": 101
+  },
+  {
+    "id_categoria": 10103,
+    "nome_categoria": "Matriz Extracelular e Ades\u00e3o Celular",
+    "id_categoria_pai": 101
+  },
+  {
+    "id_categoria": 10104,
+    "nome_categoria": "Organelas Celulares: Estrutura e Fun\u00e7\u00e3o",
+    "id_categoria_pai": 101
+  },
+  {
+    "id_categoria": 10105,
+    "nome_categoria": "Transporte de Membrana",
+    "id_categoria_pai": 101
+  },
+  {
+    "id_categoria": 10106,
+    "nome_categoria": "Vias de Sinaliza\u00e7\u00e3o Intracelular",
+    "id_categoria_pai": 101
+  },
+  {
+    "id_categoria": 10201,
+    "nome_categoria": "Cadeia Respirat\u00f3ria e Fosforila\u00e7\u00e3o Oxidativa",
+    "id_categoria_pai": 102
+  },
+  {
+    "id_categoria": 10202,
+    "nome_categoria": "Metabolismo de Amino\u00e1cidos e Ciclo da Ureia",
+    "id_categoria_pai": 102
+  },
+  {
+    "id_categoria": 10203,
+    "nome_categoria": "Metabolismo de Carboidratos (Glic\u00f3lise, Gliconeog\u00eanese, Via das Pentoses)",
+    "id_categoria_pai": 102
+  },
+  {
+    "id_categoria": 10204,
+    "nome_categoria": "Metabolismo de Lip\u00eddeos (\u00c1cidos Graxos, Colesterol)",
+    "id_categoria_pai": 102
+  },
+  {
+    "id_categoria": 10205,
+    "nome_categoria": "Metabolismo de Nucleot\u00eddeos",
+    "id_categoria_pai": 102
+  },
+  {
+    "id_categoria": 10206,
+    "nome_categoria": "Vitaminas e Coenzimas",
+    "id_categoria_pai": 102
+  },
+  {
+    "id_categoria": 10301,
+    "nome_categoria": "Aconselhamento Gen\u00e9tico",
+    "id_categoria_pai": 103
+  },
+  {
+    "id_categoria": 10302,
+    "nome_categoria": "Doen\u00e7as Gen\u00e9ticas Comuns (Ex: Fibrose C\u00edstica, Anemia Falciforme)",
+    "id_categoria_pai": 103
+  },
+  {
+    "id_categoria": 10303,
+    "nome_categoria": "Farmacogen\u00f4mica e Terapia G\u00eanica",
+    "id_categoria_pai": 103
+  },
+  {
+    "id_categoria": 10304,
+    "nome_categoria": "Muta\u00e7\u00f5es G\u00eanicas e Cromoss\u00f4micas",
+    "id_categoria_pai": 103
+  },
+  {
+    "id_categoria": 10305,
+    "nome_categoria": "Padr\u00f5es de Heran\u00e7a Monog\u00eanica (Autoss\u00f4mica, Ligada ao X)",
+    "id_categoria_pai": 103
+  },
+  {
+    "id_categoria": 10401,
+    "nome_categoria": "Tecido Conjuntivo (Propriamente Dito, Adiposo, Cartilaginoso, \u00d3sseo, Sangu\u00edneo)",
+    "id_categoria_pai": 104
+  },
+  {
+    "id_categoria": 10402,
+    "nome_categoria": "Tecido Epitelial (Revestimento e Glandular)",
+    "id_categoria_pai": 104
+  },
+  {
+    "id_categoria": 10403,
+    "nome_categoria": "Tecido Muscular (Estriado Esquel\u00e9tico, Card\u00edaco, Liso)",
+    "id_categoria_pai": 104
+  },
+  {
+    "id_categoria": 10404,
+    "nome_categoria": "Tecido Nervoso (Neur\u00f4nios, Glia, Organiza\u00e7\u00e3o)",
+    "id_categoria_pai": 104
+  },
+  {
+    "id_categoria": 10405,
+    "nome_categoria": "T\u00e9cnicas Histol\u00f3gicas e Microscopia",
+    "id_categoria_pai": 104
+  },
+  {
+    "id_categoria": 20101,
+    "nome_categoria": "Anexos Cut\u00e2neos (Pelos, Unhas, Gl\u00e2ndulas)",
+    "id_categoria_pai": 201
+  },
+  {
+    "id_categoria": 20102,
+    "nome_categoria": "Camadas da Pele (Epiderme, Derme, Hipoderme)",
+    "id_categoria_pai": 201
+  },
+  {
+    "id_categoria": 20103,
+    "nome_categoria": "Cicatriza\u00e7\u00e3o de Feridas Cut\u00e2neas",
+    "id_categoria_pai": 201
+  },
+  {
+    "id_categoria": 20104,
+    "nome_categoria": "Fun\u00e7\u00f5es da Pele (Prote\u00e7\u00e3o, Termorregula\u00e7\u00e3o, Sensorial)",
+    "id_categoria_pai": 201
+  },
+  {
+    "id_categoria": 20105,
+    "nome_categoria": "Pigmenta\u00e7\u00e3o e Resposta \u00e0 Radia\u00e7\u00e3o UV",
+    "id_categoria_pai": 201
+  },
+  {
+    "id_categoria": 20201,
+    "nome_categoria": "Ciclo Menstrual e Regula\u00e7\u00e3o Hormonal Feminina",
+    "id_categoria_pai": 202
+  },
+  {
+    "id_categoria": 20202,
+    "nome_categoria": "Fecunda\u00e7\u00e3o, Clivagem e Nida\u00e7\u00e3o",
+    "id_categoria_pai": 202
+  },
+  {
+    "id_categoria": 20203,
+    "nome_categoria": "Fisiologia da Gesta\u00e7\u00e3o e Parto",
+    "id_categoria_pai": 202
+  },
+  {
+    "id_categoria": 20204,
+    "nome_categoria": "Gametog\u00eanese (Espermatog\u00eanese e Ovog\u00eanese)",
+    "id_categoria_pai": 202
+  },
+  {
+    "id_categoria": 20205,
+    "nome_categoria": "Per\u00edodos Embrion\u00e1rio e Fetal: Principais Eventos",
+    "id_categoria_pai": 202
+  },
+  {
+    "id_categoria": 20301,
+    "nome_categoria": "Anatomia das Grandes Arterias Toracicas",
+    "id_categoria_pai": 203,
+    "descricao_categoria": "Distribuicao e relacoes anatomicas dos ramos da crossa da aorta e vasos supraaorticos."
+  },
+  {
+    "id_categoria": 20302,
+    "nome_categoria": "Eletrofisiologia Card\u00edaca e ECG",
+    "id_categoria_pai": 203
+  },
+  {
+    "id_categoria": 20303,
+    "nome_categoria": "Eritropoiese, Leucopoiese e Plaquetopoiese",
+    "id_categoria_pai": 203
+  },
+  {
+    "id_categoria": 20304,
+    "nome_categoria": "Fisiologia da Hemostasia e Coagula\u00e7\u00e3o",
+    "id_categoria_pai": 203
+  },
+  {
+    "id_categoria": 20305,
+    "nome_categoria": "Regula\u00e7\u00e3o Cardiovascular e Press\u00e3o Arterial",
+    "id_categoria_pai": 203
+  },
+  {
+    "id_categoria": 20401,
+    "nome_categoria": "Absor\u00e7\u00e3o de Vitaminas e Minerais",
+    "id_categoria_pai": 204
+  },
+  {
+    "id_categoria": 20402,
+    "nome_categoria": "Digest\u00e3o e Absor\u00e7\u00e3o de Macronutrientes",
+    "id_categoria_pai": 204
+  },
+  {
+    "id_categoria": 20403,
+    "nome_categoria": "Fisiologia Hep\u00e1tica e Biliar",
+    "id_categoria_pai": 204
+  },
+  {
+    "id_categoria": 20404,
+    "nome_categoria": "Motilidade Gastrointestinal",
+    "id_categoria_pai": 204
+  },
+  {
+    "id_categoria": 20405,
+    "nome_categoria": "Secre\u00e7\u00f5es Digestivas (Salivar, G\u00e1strica, Pancre\u00e1tica, Biliar)",
+    "id_categoria_pai": 204
+  },
+  {
+    "id_categoria": 20501,
+    "nome_categoria": "Eixo Hipot\u00e1lamo-Hipofis\u00e1rio e Seus Horm\u00f4nios",
+    "id_categoria_pai": 205
+  },
+  {
+    "id_categoria": 20502,
+    "nome_categoria": "Fisiologia da Tireoide",
+    "id_categoria_pai": 205
+  },
+  {
+    "id_categoria": 20503,
+    "nome_categoria": "Fisiologia das Gl\u00e2ndulas Adrenais (C\u00f3rtex e Medula)",
+    "id_categoria_pai": 205
+  },
+  {
+    "id_categoria": 20504,
+    "nome_categoria": "P\u00e2ncreas End\u00f3crino (Insulina, Glucagon, Somatostatina)",
+    "id_categoria_pai": 205
+  },
+  {
+    "id_categoria": 20505,
+    "nome_categoria": "Regula\u00e7\u00e3o Hormonal do Metabolismo do C\u00e1lcio e Fosfato",
+    "id_categoria_pai": 205
+  },
+  {
+    "id_categoria": 20601,
+    "nome_categoria": "Filtra\u00e7\u00e3o Glomerular e Depura\u00e7\u00e3o Renal",
+    "id_categoria_pai": 206
+  },
+  {
+    "id_categoria": 20602,
+    "nome_categoria": "Mecanismos de Concentra\u00e7\u00e3o e Dilui\u00e7\u00e3o Urin\u00e1ria",
+    "id_categoria_pai": 206
+  },
+  {
+    "id_categoria": 20603,
+    "nome_categoria": "Processos Tubulares: Reabsor\u00e7\u00e3o e Secre\u00e7\u00e3o",
+    "id_categoria_pai": 206
+  },
+  {
+    "id_categoria": 20604,
+    "nome_categoria": "Regula\u00e7\u00e3o Renal do Equil\u00edbrio Hidroeletrol\u00edtico",
+    "id_categoria_pai": 206
+  },
+  {
+    "id_categoria": 20605,
+    "nome_categoria": "Regula\u00e7\u00e3o Renal do Equil\u00edbrio \u00c1cido-Base",
+    "id_categoria_pai": 206
+  },
+  {
+    "id_categoria": 20701,
+    "nome_categoria": "Adapta\u00e7\u00f5es Respirat\u00f3rias (Altitude, Exerc\u00edcio)",
+    "id_categoria_pai": 207
+  },
+  {
+    "id_categoria": 20702,
+    "nome_categoria": "Controle Neural e Qu\u00edmico da Respira\u00e7\u00e3o",
+    "id_categoria_pai": 207
+  },
+  {
+    "id_categoria": 20703,
+    "nome_categoria": "Difus\u00e3o de Gases e Rela\u00e7\u00e3o Ventila\u00e7\u00e3o/Perfus\u00e3o (V/Q)",
+    "id_categoria_pai": 207
+  },
+  {
+    "id_categoria": 20704,
+    "nome_categoria": "Mec\u00e2nica Ventilat\u00f3ria: Volumes e Capacidades Pulmonares",
+    "id_categoria_pai": 207
+  },
+  {
+    "id_categoria": 20705,
+    "nome_categoria": "Transporte de Oxig\u00eanio e Di\u00f3xido de Carbono no Sangue",
+    "id_categoria_pai": 207
+  },
+  {
+    "id_categoria": 20801,
+    "nome_categoria": "Biomec\u00e2nica das Articula\u00e7\u00f5es",
+    "id_categoria_pai": 208
+  },
+  {
+    "id_categoria": 20802,
+    "nome_categoria": "Contra\u00e7\u00e3o Muscular: Mecanismo Deslizante dos Filamentos",
+    "id_categoria_pai": 208
+  },
+  {
+    "id_categoria": 20803,
+    "nome_categoria": "Fisiologia \u00d3ssea: Remodela\u00e7\u00e3o e Crescimento",
+    "id_categoria_pai": 208
+  },
+  {
+    "id_categoria": 20804,
+    "nome_categoria": "Metabolismo Energ\u00e9tico Muscular",
+    "id_categoria_pai": 208
+  },
+  {
+    "id_categoria": 20805,
+    "nome_categoria": "Tipos de Tecido Muscular (Estriado, Liso, Card\u00edaco)",
+    "id_categoria_pai": 208
+  },
+  {
+    "id_categoria": 20901,
+    "nome_categoria": "C\u00e9lulas do Sistema Imune (Linf\u00f3citos, Fag\u00f3citos, C\u00e9lulas Apresentadoras)",
+    "id_categoria_pai": 209
+  },
+  {
+    "id_categoria": 20902,
+    "nome_categoria": "Imunidade Adaptativa: Resposta Celular (Linf\u00f3citos T)",
+    "id_categoria_pai": 209
+  },
+  {
+    "id_categoria": 20903,
+    "nome_categoria": "Imunidade Adaptativa: Resposta Humoral (Anticorpos)",
+    "id_categoria_pai": 209
+  },
+  {
+    "id_categoria": 20904,
+    "nome_categoria": "Imunidade Inata: Barreiras e Respostas Iniciais",
+    "id_categoria_pai": 209
+  },
+  {
+    "id_categoria": 20905,
+    "nome_categoria": "Sistema Complemento e Citocinas",
+    "id_categoria_pai": 209
+  },
+  {
+    "id_categoria": 21001,
+    "nome_categoria": "Bases Neurobiol\u00f3gicas da Cogni\u00e7\u00e3o",
+    "id_categoria_pai": 210
+  },
+  {
+    "id_categoria": 21002,
+    "nome_categoria": "Fisiologia Motora (Controle e Vias)",
+    "id_categoria_pai": 210
+  },
+  {
+    "id_categoria": 21003,
+    "nome_categoria": "Fisiologia Sensorial (Vis\u00e3o, Audi\u00e7\u00e3o, Tato, etc.)",
+    "id_categoria_pai": 210
+  },
+  {
+    "id_categoria": 21004,
+    "nome_categoria": "Neuroanatomia Funcional",
+    "id_categoria_pai": 210
+  },
+  {
+    "id_categoria": 21005,
+    "nome_categoria": "Neurofisiologia: Potencial de A\u00e7\u00e3o e Sinapse",
+    "id_categoria_pai": 210
+  },
+  {
+    "id_categoria": 30101,
+    "nome_categoria": "Doen\u00e7as Autoimunes: Mecanismos e Exemplos (LES, Artrite Reumatoide)",
+    "id_categoria_pai": 301
+  },
+  {
+    "id_categoria": 30102,
+    "nome_categoria": "Doen\u00e7as Granulomatosas",
+    "id_categoria_pai": 301
+  },
+  {
+    "id_categoria": 30103,
+    "nome_categoria": "Imunodefici\u00eancias Prim\u00e1rias e Secund\u00e1rias (Ex: HIV/AIDS)",
+    "id_categoria_pai": 301
+  },
+  {
+    "id_categoria": 30104,
+    "nome_categoria": "Imunologia de Transplantes e Rejei\u00e7\u00e3o",
+    "id_categoria_pai": 301
+  },
+  {
+    "id_categoria": 30105,
+    "nome_categoria": "Patologia da Amiloidose",
+    "id_categoria_pai": 301
+  },
+  {
+    "id_categoria": 30106,
+    "nome_categoria": "Rea\u00e7\u00f5es de Hipersensibilidade (Tipos I, II, III, IV)",
+    "id_categoria_pai": 301
+  },
+  {
+    "id_categoria": 30201,
+    "nome_categoria": "Bacteriologia M\u00e9dica: Principais Pat\u00f3genos",
+    "id_categoria_pai": 302
+  },
+  {
+    "id_categoria": 30202,
+    "nome_categoria": "Mecanismos de Patogenicidade Microbiana (Toxinas, Fatores de Virul\u00eancia)",
+    "id_categoria_pai": 302
+  },
+  {
+    "id_categoria": 30203,
+    "nome_categoria": "Micologia M\u00e9dica: Micoses Superficiais e Sist\u00eamicas",
+    "id_categoria_pai": 302
+  },
+  {
+    "id_categoria": 30204,
+    "nome_categoria": "Parasitologia M\u00e9dica: Protozooses e Helmint\u00edases",
+    "id_categoria_pai": 302
+  },
+  {
+    "id_categoria": 30205,
+    "nome_categoria": "Princ\u00edpios de Diagn\u00f3stico Microbiol\u00f3gico (Cultura, Sorologia, Molecular)",
+    "id_categoria_pai": 302
+  },
+  {
+    "id_categoria": 30206,
+    "nome_categoria": "Virologia M\u00e9dica: Principais V\u00edrus Patog\u00eanicos",
+    "id_categoria_pai": 302
+  },
+  {
+    "id_categoria": 30301,
+    "nome_categoria": "Angiog\u00eanese Tumoral e Met\u00e1stase",
+    "id_categoria_pai": 303
+  },
+  {
+    "id_categoria": 30302,
+    "nome_categoria": "Caracter\u00edsticas Celulares da Neoplasia Maligna (Hallmarks of Cancer)",
+    "id_categoria_pai": 303
+  },
+  {
+    "id_categoria": 30303,
+    "nome_categoria": "Carcinog\u00eanese Qu\u00edmica, F\u00edsica e Viral",
+    "id_categoria_pai": 303
+  },
+  {
+    "id_categoria": 30304,
+    "nome_categoria": "Imunologia Tumoral",
+    "id_categoria_pai": 303
+  },
+  {
+    "id_categoria": 30305,
+    "nome_categoria": "Oncogenes e Genes Supressores de Tumor",
+    "id_categoria_pai": 303
+  },
+  {
+    "id_categoria": 30401,
+    "nome_categoria": "Dist\u00farbios Hemodin\u00e2micos e Trombose",
+    "id_categoria_pai": 304
+  },
+  {
+    "id_categoria": 30402,
+    "nome_categoria": "Dist\u00farbios do Crescimento e Diferencia\u00e7\u00e3o Celular (Hiperplasia, Metaplasia, Displasia)",
+    "id_categoria_pai": 304
+  },
+  {
+    "id_categoria": 30403,
+    "nome_categoria": "Doen\u00e7as Ambientais e Nutricionais (Bases Patol\u00f3gicas)",
+    "id_categoria_pai": 304
+  },
+  {
+    "id_categoria": 30404,
+    "nome_categoria": "Inflama\u00e7\u00e3o: Mediadores e Tipos",
+    "id_categoria_pai": 304
+  },
+  {
+    "id_categoria": 30405,
+    "nome_categoria": "Les\u00e3o e Morte Celular (Necrose, Apoptose, Autofagia)",
+    "id_categoria_pai": 304
+  },
+  {
+    "id_categoria": 30406,
+    "nome_categoria": "Reparo Tecidual: Regenera\u00e7\u00e3o e Cicatriza\u00e7\u00e3o",
+    "id_categoria_pai": 304
+  },
+  {
+    "id_categoria": 30501,
+    "nome_categoria": "Ant\u00eddotos e Princ\u00edpios de Descontamina\u00e7\u00e3o",
+    "id_categoria_pai": 305
+  },
+  {
+    "id_categoria": 30502,
+    "nome_categoria": "Mecanismos de Toxicidade Celular",
+    "id_categoria_pai": 305
+  },
+  {
+    "id_categoria": 30503,
+    "nome_categoria": "Princ\u00edpios Gerais da Toxicologia (Dose-Resposta, Toxicocin\u00e9tica)",
+    "id_categoria_pai": 305
+  },
+  {
+    "id_categoria": 30504,
+    "nome_categoria": "Toxicologia de Metais Pesados Espec\u00edficos (Chumbo, Merc\u00fario, Ars\u00eanio)",
+    "id_categoria_pai": 305
+  },
+  {
+    "id_categoria": 30505,
+    "nome_categoria": "Toxicologia de Solventes Org\u00e2nicos e Gases T\u00f3xicos",
+    "id_categoria_pai": 305
+  },
+  {
+    "id_categoria": 40101,
+    "nome_categoria": "Arritmias Card\u00edacas Comuns (FA, Extrass\u00edstoles)",
+    "id_categoria_pai": 401
+  },
+  {
+    "id_categoria": 40102,
+    "nome_categoria": "Doen\u00e7a Arterial Coronariana (Angina, Infarto)",
+    "id_categoria_pai": 401
+  },
+  {
+    "id_categoria": 40103,
+    "nome_categoria": "Hipertens\u00e3o Arterial Sist\u00eamica: Abordagem Cl\u00ednica",
+    "id_categoria_pai": 401
+  },
+  {
+    "id_categoria": 40104,
+    "nome_categoria": "Insufici\u00eancia Card\u00edaca: Diagn\u00f3stico e Tratamento",
+    "id_categoria_pai": 401
+  },
+  {
+    "id_categoria": 40105,
+    "nome_categoria": "Valvopatias (Estenose e Insufici\u00eancia Mitral/A\u00f3rtica)",
+    "id_categoria_pai": 401
+  },
+  {
+    "id_categoria": 40201,
+    "nome_categoria": "Acne Vulgar e Ros\u00e1cea",
+    "id_categoria_pai": 402
+  },
+  {
+    "id_categoria": 40202,
+    "nome_categoria": "Alop\u00e9cias e Doen\u00e7as do Couro Cabeludo",
+    "id_categoria_pai": 402
+  },
+  {
+    "id_categoria": 40203,
+    "nome_categoria": "C\u00e2nceres de Pele (Melanoma, CBC, CEC)",
+    "id_categoria_pai": 402
+  },
+  {
+    "id_categoria": 40204,
+    "nome_categoria": "Dermatites (Eczemas): At\u00f3pica, Contato, Seborreica",
+    "id_categoria_pai": 402
+  },
+  {
+    "id_categoria": 40205,
+    "nome_categoria": "Infec\u00e7\u00f5es Cut\u00e2neas (Bacterianas, F\u00fangicas, Virais)",
+    "id_categoria_pai": 402
+  },
+  {
+    "id_categoria": 40206,
+    "nome_categoria": "Psor\u00edase",
+    "id_categoria_pai": 402
+  },
+  {
+    "id_categoria": 40301,
+    "nome_categoria": "Bioqu\u00edmica Cl\u00ednica (Fun\u00e7\u00e3o Renal, Hep\u00e1tica, Eletr\u00f3litos, Glicemia)",
+    "id_categoria_pai": 403
+  },
+  {
+    "id_categoria": 40302,
+    "nome_categoria": "Hematologia Laboratorial (Hemograma, Coagulograma)",
+    "id_categoria_pai": 403
+  },
+  {
+    "id_categoria": 40303,
+    "nome_categoria": "Medicina Nuclear e PET Scan",
+    "id_categoria_pai": 403
+  },
+  {
+    "id_categoria": 40304,
+    "nome_categoria": "Princ\u00edpios de Radiografia, Ultrassonografia, Tomografia e Resson\u00e2ncia",
+    "id_categoria_pai": 403
+  },
+  {
+    "id_categoria": 40305,
+    "nome_categoria": "Urin\u00e1lise e Exames Parasitol\u00f3gicos de Fezes",
+    "id_categoria_pai": 403
+  },
+  {
+    "id_categoria": 40401,
+    "nome_categoria": "Diabetes Mellitus: Tipos, Diagn\u00f3stico e Tratamento",
+    "id_categoria_pai": 404
+  },
+  {
+    "id_categoria": 40402,
+    "nome_categoria": "Dist\u00farbios do Metabolismo \u00d3sseo (Osteoporose, etc.)",
+    "id_categoria_pai": 404
+  },
+  {
+    "id_categoria": 40403,
+    "nome_categoria": "Doen\u00e7as da Adrenal e da Hip\u00f3fise",
+    "id_categoria_pai": 404
+  },
+  {
+    "id_categoria": 40404,
+    "nome_categoria": "Obesidade e S\u00edndrome Metab\u00f3lica: Manejo Cl\u00ednico",
+    "id_categoria_pai": 404
+  },
+  {
+    "id_categoria": 40405,
+    "nome_categoria": "Tireoidopatias: Hipo/Hipertireoidismo, B\u00f3cio, C\u00e2ncer",
+    "id_categoria_pai": 404
+  },
+  {
+    "id_categoria": 40501,
+    "nome_categoria": "Alvos Farmacol\u00f3gicos e Mecanismos de A\u00e7\u00e3o",
+    "id_categoria_pai": 405
+  },
+  {
+    "id_categoria": 40502,
+    "nome_categoria": "Farmacocin\u00e9tica Aplicada",
+    "id_categoria_pai": 405
+  },
+  {
+    "id_categoria": 40503,
+    "nome_categoria": "Farmacologia do SNA e SNC",
+    "id_categoria_pai": 405
+  },
+  {
+    "id_categoria": 40504,
+    "nome_categoria": "Farmacovigil\u00e2ncia e Rea\u00e7\u00f5es Adversas",
+    "id_categoria_pai": 405
+  },
+  {
+    "id_categoria": 40505,
+    "nome_categoria": "Fases do Desenvolvimento de F\u00e1rmacos",
+    "id_categoria_pai": 405
+  },
+  {
+    "id_categoria": 40601,
+    "nome_categoria": "Cirrose Hep\u00e1tica e suas Complica\u00e7\u00f5es",
+    "id_categoria_pai": 406
+  },
+  {
+    "id_categoria": 40602,
+    "nome_categoria": "Colelitiases e Colecistite Calculosa",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Abordagem diagnostica e terapeutica das afeccoes calculosas do trato biliar."
+  },
+  {
+    "id_categoria": 40603,
+    "nome_categoria": "Doenca Diverticular do Colon",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Diagnostico diferencial, manejo clinico e indicacoes de intervencao na doenca diverticular."
+  },
+  {
+    "id_categoria": 40604,
+    "nome_categoria": "Doenca Hepatica Gordurosa Metabolica",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Reconhecimento, estratificacao de risco e intervencoes na doenca hepatica gordurosa metabolica."
+  },
+  {
+    "id_categoria": 40605,
+    "nome_categoria": "Doen\u00e7a Ulcerosa P\u00e9ptica",
+    "id_categoria_pai": 406
+  },
+  {
+    "id_categoria": 40606,
+    "nome_categoria": "Doen\u00e7a do Refluxo Gastroesof\u00e1gico (DRGE)",
+    "id_categoria_pai": 406
+  },
+  {
+    "id_categoria": 40607,
+    "nome_categoria": "Doen\u00e7as Inflamat\u00f3rias Intestinais (Crohn, Retocolite Ulcerativa)",
+    "id_categoria_pai": 406
+  },
+  {
+    "id_categoria": 40608,
+    "nome_categoria": "Gastrite Aguda e Lesoes Erosivas",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Fatores precipitantes, diagnostico endoscopico e manejo inicial da gastrite aguda."
+  },
+  {
+    "id_categoria": 40609,
+    "nome_categoria": "Gastrite Cronica e Helicobacter pylori",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Estrategias diagnosticas, erradicacao do Helicobacter pylori e prevencao de complicacoes."
+  },
+  {
+    "id_categoria": 40610,
+    "nome_categoria": "Hemorragia Digestiva Alta",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Protocolos de estabilizacao, endoscopia terapeutica e prevencao de recidivas."
+  },
+  {
+    "id_categoria": 40611,
+    "nome_categoria": "Hepatites Virais (A, B, C)",
+    "id_categoria_pai": 406
+  },
+  {
+    "id_categoria": 40612,
+    "nome_categoria": "Pancreatite Aguda",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Criterios diagnosticos, estratificacao de gravidade e condutas baseadas em evidencias."
+  },
+  {
+    "id_categoria": 40613,
+    "nome_categoria": "Pancreatite Cronica",
+    "id_categoria_pai": 406,
+    "descricao_categoria": "Etiologias, manejo da dor, insuficiencia pancreatica e seguimento a longo prazo."
+  },
+  {
+    "id_categoria": 40614,
+    "nome_categoria": "S\u00edndrome do Intestino Irrit\u00e1vel (SII)",
+    "id_categoria_pai": 406
+  },
+  {
+    "id_categoria": 40701,
+    "nome_categoria": "Ginecologia: Ciclo Menstrual e Dist\u00farbios Menstruais",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40702,
+    "nome_categoria": "Ginecologia: Endometriose e Miomas Uterinos",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40703,
+    "nome_categoria": "Ginecologia: Infec\u00e7\u00f5es Sexualmente Transmiss\u00edveis (ISTs) na Mulher",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40704,
+    "nome_categoria": "Ginecologia: Rastreamento de C\u00e2nceres Ginecol\u00f3gicos",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40705,
+    "nome_categoria": "Obstetr\u00edcia: Acompanhamento Pr\u00e9-Natal",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40706,
+    "nome_categoria": "Obstetr\u00edcia: Complica\u00e7\u00f5es da Gesta\u00e7\u00e3o",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40707,
+    "nome_categoria": "Obstetr\u00edcia: Parto e Puerp\u00e9rio",
+    "id_categoria_pai": 407
+  },
+  {
+    "id_categoria": 40801,
+    "nome_categoria": "Anemias: Diagn\u00f3stico Diferencial e Tratamento",
+    "id_categoria_pai": 408
+  },
+  {
+    "id_categoria": 40802,
+    "nome_categoria": "Dist\u00farbios da Hemostasia e Trombofilias",
+    "id_categoria_pai": 408
+  },
+  {
+    "id_categoria": 40803,
+    "nome_categoria": "Leucemias Agudas e Cr\u00f4nicas: Classifica\u00e7\u00e3o e Abordagem",
+    "id_categoria_pai": 408
+  },
+  {
+    "id_categoria": 40804,
+    "nome_categoria": "Linfomas (Hodgkin e N\u00e3o-Hodgkin): Diagn\u00f3stico e Estadiamento",
+    "id_categoria_pai": 408
+  },
+  {
+    "id_categoria": 40805,
+    "nome_categoria": "Mieloma M\u00faltiplo e Outras Gamopatias Monoclonais",
+    "id_categoria_pai": 408
+  },
+  {
+    "id_categoria": 40901,
+    "nome_categoria": "Arboviroses (Dengue, Zika, Chikungunya, Febre Amarela)",
+    "id_categoria_pai": 409
+  },
+  {
+    "id_categoria": 40902,
+    "nome_categoria": "COVID-19: Atualizacoes Clinicas",
+    "id_categoria_pai": 409,
+    "descricao_categoria": "Quadros leves a graves, terapias atualizadas e criterios de alta na COVID-19."
+  },
+  {
+    "id_categoria": 40903,
+    "nome_categoria": "Infec\u00e7\u00f5es Hospitalares e Controle de Resist\u00eancia Antimicrobiana",
+    "id_categoria_pai": 409
+  },
+  {
+    "id_categoria": 40904,
+    "nome_categoria": "Infec\u00e7\u00f5es Sexualmente Transmiss\u00edveis (ISTs): Abordagem Sindr\u00f4mica",
+    "id_categoria_pai": 409
+  },
+  {
+    "id_categoria": 40905,
+    "nome_categoria": "Medicina Tropical e Doen\u00e7as Infecciosas End\u00eamicas",
+    "id_categoria_pai": 409
+  },
+  {
+    "id_categoria": 40906,
+    "nome_categoria": "Profilaxia Pre e Pos Exposicao",
+    "id_categoria_pai": 409,
+    "descricao_categoria": "Protocolos de profilaxia pre e pos exposicao para HIV, hepatites, raiva e outras infeccoes."
+  },
+  {
+    "id_categoria": 40907,
+    "nome_categoria": "Sepse e Choque S\u00e9ptico: Reconhecimento e Tratamento",
+    "id_categoria_pai": 409
+  },
+  {
+    "id_categoria": 40908,
+    "nome_categoria": "S\u00edndrome da Imunodefici\u00eancia Adquirida (HIV/AIDS): Manejo Cl\u00ednico",
+    "id_categoria_pai": 409
+  },
+  {
+    "id_categoria": 40909,
+    "nome_categoria": "Zoonoses e Doencas Emergentes",
+    "id_categoria_pai": 409,
+    "descricao_categoria": "Abordagem clinica de zoonoses emergentes e reemergentes, incluindo mpox e hantavirus."
+  },
+  {
+    "id_categoria": 41001,
+    "nome_categoria": "Atendimento Inicial ao Politraumatizado (ATLS)",
+    "id_categoria_pai": 410
+  },
+  {
+    "id_categoria": 41002,
+    "nome_categoria": "Emerg\u00eancias Cardiovasculares (SCA, Arritmias Graves, Choque)",
+    "id_categoria_pai": 410
+  },
+  {
+    "id_categoria": 41003,
+    "nome_categoria": "Emerg\u00eancias Neurol\u00f3gicas (AVC Agudo, Crise Convulsiva)",
+    "id_categoria_pai": 410
+  },
+  {
+    "id_categoria": 41004,
+    "nome_categoria": "Emerg\u00eancias Respirat\u00f3rias (Insufici\u00eancia Respirat\u00f3ria Aguda, Asma Grave)",
+    "id_categoria_pai": 410
+  },
+  {
+    "id_categoria": 41005,
+    "nome_categoria": "Suporte B\u00e1sico e Avan\u00e7ado de Vida (BLS, ACLS)",
+    "id_categoria_pai": 410
+  },
+  {
+    "id_categoria": 41101,
+    "nome_categoria": "Dist\u00farbios Hidroeletrol\u00edticos e \u00c1cido-Base: Abordagem Cl\u00ednica",
+    "id_categoria_pai": 411
+  },
+  {
+    "id_categoria": 41102,
+    "nome_categoria": "Doen\u00e7a Renal Cr\u00f4nica (DRC): Estadiamento e Progress\u00e3o",
+    "id_categoria_pai": 411
+  },
+  {
+    "id_categoria": 41103,
+    "nome_categoria": "Glomerulopatias (S\u00edndrome Nefr\u00edtica e Nefr\u00f3tica)",
+    "id_categoria_pai": 411
+  },
+  {
+    "id_categoria": 41104,
+    "nome_categoria": "Les\u00e3o Renal Aguda (LRA): Causas e Manejo",
+    "id_categoria_pai": 411
+  },
+  {
+    "id_categoria": 41105,
+    "nome_categoria": "Terapia Renal Substitutiva (Di\u00e1lise, Transplante)",
+    "id_categoria_pai": 411
+  },
+  {
+    "id_categoria": 41201,
+    "nome_categoria": "Acidente Vascular Cerebral (AVC): Preven\u00e7\u00e3o, Tratamento e Reabilita\u00e7\u00e3o",
+    "id_categoria_pai": 412
+  },
+  {
+    "id_categoria": 41202,
+    "nome_categoria": "Cefaleias Prim\u00e1rias e Secund\u00e1rias",
+    "id_categoria_pai": 412
+  },
+  {
+    "id_categoria": 41203,
+    "nome_categoria": "Doen\u00e7as Neurodegenerativas (Alzheimer, Parkinson, ELA)",
+    "id_categoria_pai": 412
+  },
+  {
+    "id_categoria": 41204,
+    "nome_categoria": "Doen\u00e7as Neuromusculares (Miopatias, Neuropatias Perif\u00e9ricas, Miastenia Gravis)",
+    "id_categoria_pai": 412
+  },
+  {
+    "id_categoria": 41205,
+    "nome_categoria": "Epilepsias e Transtornos Convulsivos: Classifica\u00e7\u00e3o e Manejo",
+    "id_categoria_pai": 412
+  },
+  {
+    "id_categoria": 41206,
+    "nome_categoria": "Esclerose M\u00faltipla e Outras Doen\u00e7as Desmielinizantes",
+    "id_categoria_pai": 412
+  },
+  {
+    "id_categoria": 41301,
+    "nome_categoria": "Cuidados Paliativos e Controle da Dor em Oncologia",
+    "id_categoria_pai": 413
+  },
+  {
+    "id_categoria": 41302,
+    "nome_categoria": "C\u00e2ncer de Mama: Abordagem Multidisciplinar",
+    "id_categoria_pai": 413
+  },
+  {
+    "id_categoria": 41303,
+    "nome_categoria": "C\u00e2ncer de Pulm\u00e3o: Tipos e Tratamento",
+    "id_categoria_pai": 413
+  },
+  {
+    "id_categoria": 41304,
+    "nome_categoria": "C\u00e2nceres Urol\u00f3gicos: Tipos e Tratamento",
+    "id_categoria_pai": 413
+  },
+  {
+    "id_categoria": 41305,
+    "nome_categoria": "C\u00e2nceres do Trato Gastrointestinal: Abordagens Espec\u00edficas",
+    "id_categoria_pai": 413
+  },
+  {
+    "id_categoria": 41306,
+    "nome_categoria": "Modalidades de Tratamento Oncol\u00f3gico (Quimio, Radio, Imuno, Hormonio)",
+    "id_categoria_pai": 413
+  },
+  {
+    "id_categoria": 41401,
+    "nome_categoria": "Asma Br\u00f4nquica: Diagn\u00f3stico e Manejo",
+    "id_categoria_pai": 414
+  },
+  {
+    "id_categoria": 41402,
+    "nome_categoria": "Doen\u00e7a Pulmonar Obstrutiva Cr\u00f4nica (DPOC)",
+    "id_categoria_pai": 414
+  },
+  {
+    "id_categoria": 41403,
+    "nome_categoria": "Doen\u00e7as Pulmonares Intersticiais",
+    "id_categoria_pai": 414
+  },
+  {
+    "id_categoria": 41404,
+    "nome_categoria": "Pneumonias Comunit\u00e1rias e Hospitalares",
+    "id_categoria_pai": 414
+  },
+  {
+    "id_categoria": 41405,
+    "nome_categoria": "Tuberculose Pulmonar",
+    "id_categoria_pai": 414
+  },
+  {
+    "id_categoria": 41501,
+    "nome_categoria": "Esquizofrenia e Outros Transtornos Psic\u00f3ticos",
+    "id_categoria_pai": 415
+  },
+  {
+    "id_categoria": 41502,
+    "nome_categoria": "Psicofarmacologia B\u00e1sica",
+    "id_categoria_pai": 415
+  },
+  {
+    "id_categoria": 41503,
+    "nome_categoria": "Transtornos Depressivos e Bipolar",
+    "id_categoria_pai": 415
+  },
+  {
+    "id_categoria": 41504,
+    "nome_categoria": "Transtornos de Ansiedade (TAG, P\u00e2nico, Fobias)",
+    "id_categoria_pai": 415
+  },
+  {
+    "id_categoria": 41505,
+    "nome_categoria": "Transtornos por Uso de Subst\u00e2ncias",
+    "id_categoria_pai": 415
+  },
+  {
+    "id_categoria": 41601,
+    "nome_categoria": "Artrite Reumatoide: Diagn\u00f3stico e Tratamento",
+    "id_categoria_pai": 416
+  },
+  {
+    "id_categoria": 41602,
+    "nome_categoria": "Espondiloartrites (Ex: Espondilite Anquilosante)",
+    "id_categoria_pai": 416
+  },
+  {
+    "id_categoria": 41603,
+    "nome_categoria": "Fibromialgia",
+    "id_categoria_pai": 416
+  },
+  {
+    "id_categoria": 41604,
+    "nome_categoria": "Gota e Artropatias por Cristais",
+    "id_categoria_pai": 416
+  },
+  {
+    "id_categoria": 41605,
+    "nome_categoria": "L\u00fapus Eritematoso Sist\u00eamico (LES)",
+    "id_categoria_pai": 416
+  },
+  {
+    "id_categoria": 41606,
+    "nome_categoria": "Osteoartrite (Artrose)",
+    "id_categoria_pai": 416
+  },
+  {
+    "id_categoria": 41701,
+    "nome_categoria": "Anamnese: T\u00e9cnicas e Roteiro",
+    "id_categoria_pai": 417
+  },
+  {
+    "id_categoria": 41702,
+    "nome_categoria": "Exame F\u00edsico Geral (Ectoscopia, Sinais Vitais)",
+    "id_categoria_pai": 417
+  },
+  {
+    "id_categoria": 41703,
+    "nome_categoria": "Semiologia Abdominal",
+    "id_categoria_pai": 417
+  },
+  {
+    "id_categoria": 41704,
+    "nome_categoria": "Semiologia Cardiovascular (Inspe\u00e7\u00e3o, Palpa\u00e7\u00e3o, Ausculta Card\u00edaca)",
+    "id_categoria_pai": 417
+  },
+  {
+    "id_categoria": 41705,
+    "nome_categoria": "Semiologia Neurol\u00f3gica B\u00e1sica",
+    "id_categoria_pai": 417
+  },
+  {
+    "id_categoria": 41706,
+    "nome_categoria": "Semiologia Respirat\u00f3ria (Inspe\u00e7\u00e3o, Palpa\u00e7\u00e3o, Percuss\u00e3o, Ausculta Pulmonar)",
+    "id_categoria_pai": 417
+  },
+  {
+    "id_categoria": 50101,
+    "nome_categoria": "Fisiologia do Envelhecimento e Avalia\u00e7\u00e3o Geri\u00e1trica Ampla (AGA)",
+    "id_categoria_pai": 501
+  },
+  {
+    "id_categoria": 50102,
+    "nome_categoria": "Imuniza\u00e7\u00f5es na Inf\u00e2ncia e Adolesc\u00eancia",
+    "id_categoria_pai": 501
+  },
+  {
+    "id_categoria": 50103,
+    "nome_categoria": "Principais Doen\u00e7as Pedi\u00e1tricas",
+    "id_categoria_pai": 501
+  },
+  {
+    "id_categoria": 50104,
+    "nome_categoria": "Puericultura e Desenvolvimento Infantil",
+    "id_categoria_pai": 501
+  },
+  {
+    "id_categoria": 50105,
+    "nome_categoria": "S\u00edndromes Geri\u00e1tricas Comuns (Dem\u00eancia, Incontin\u00eancia, Quedas)",
+    "id_categoria_pai": 501
+  },
+  {
+    "id_categoria": 50301,
+    "nome_categoria": "N\u00edveis de Preven\u00e7\u00e3o em Sa\u00fade",
+    "id_categoria_pai": 503
+  },
+  {
+    "id_categoria": 50302,
+    "nome_categoria": "Promo\u00e7\u00e3o da Sa\u00fade e Educa\u00e7\u00e3o em Sa\u00fade",
+    "id_categoria_pai": 503
+  },
+  {
+    "id_categoria": 50303,
+    "nome_categoria": "Rastreamento (Screening) de Doen\u00e7as: Princ\u00edpios e Programas",
+    "id_categoria_pai": 503
+  },
+  {
+    "id_categoria": 50304,
+    "nome_categoria": "Sa\u00fade Ambiental e Ocupacional",
+    "id_categoria_pai": 503
+  },
+  {
+    "id_categoria": 50305,
+    "nome_categoria": "Sa\u00fade da Fam\u00edlia e Aten\u00e7\u00e3o Prim\u00e1ria \u00e0 Sa\u00fade (APS)",
+    "id_categoria_pai": 503
+  },
+  {
+    "id_categoria": 50601,
+    "nome_categoria": "Agentes Quimicos Industriais e Domesticos",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Avaliacoes de risco, intoxicacoes e estrategias de descontaminacao."
+  },
+  {
+    "id_categoria": 50602,
+    "nome_categoria": "Exposicao Ocupacional ao Ruido (PAIR)",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Prevencao, vigilancia audiologica e reabilitacao da perda auditiva induzida por ruido."
+  },
+  {
+    "id_categoria": 50603,
+    "nome_categoria": "Metais Pesados e Contaminacao",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Diagnostico e manejo da exposicao a chumbo, mercurio, arsenio e outros metais pesados."
+  },
+  {
+    "id_categoria": 50604,
+    "nome_categoria": "Pesticidas e Agrotoxicos",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Toxicidade aguda e cronica decorrente da exposicao ocupacional ou ambiental a agrotoxicos."
+  },
+  {
+    "id_categoria": 50605,
+    "nome_categoria": "Poluicao Atmosferica e Saude",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Efeitos respiratorios, cardiovasculares e sistemicos da exposicao a poluentes atmosfericos."
+  },
+  {
+    "id_categoria": 50606,
+    "nome_categoria": "Radiacao Ionizante e Nao Ionizante",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Mecanismos de dano, protecao radiologica e acompanhamento de exposicoes."
+  },
+  {
+    "id_categoria": 50607,
+    "nome_categoria": "Riscos Biologicos Ocupacionais",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Prevencao e condutas frente a exposicao a fluidos biologicos e agentes infecciosos."
+  },
+  {
+    "id_categoria": 50608,
+    "nome_categoria": "Seguranca Alimentar e Toxinfecoes",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Monitoramento, investigacao e controle de surtos de toxinfecoes alimentares."
+  },
+  {
+    "id_categoria": 50609,
+    "nome_categoria": "Simulacoes e Preparacao para Desastres Ambientais",
+    "id_categoria_pai": 506,
+    "descricao_categoria": "Protocolos de treino, resposta rapida e comunicacao em emergencias ambientais."
+  },
+  {
+    "id_categoria": 50701,
+    "nome_categoria": "Epidemiologia e Controle de Doen\u00e7as Cr\u00f4nicas",
+    "id_categoria_pai": 507
+  },
+  {
+    "id_categoria": 50702,
+    "nome_categoria": "Medidas de Frequ\u00eancia e Associa\u00e7\u00e3o em Epidemiologia",
+    "id_categoria_pai": 507
+  },
+  {
+    "id_categoria": 50703,
+    "nome_categoria": "Pol\u00edticas e Sistemas de Sa\u00fade Comparados",
+    "id_categoria_pai": 507
+  },
+  {
+    "id_categoria": 50704,
+    "nome_categoria": "Tipos de Estudos Epidemiol\u00f3gicos (Coorte, Caso-Controle, etc.)",
+    "id_categoria_pai": 507
+  },
+  {
+    "id_categoria": 50705,
+    "nome_categoria": "Vigil\u00e2ncia em Sa\u00fade e Investiga\u00e7\u00e3o de Surtos",
+    "id_categoria_pai": 507
+  },
+  {
+    "id_categoria": 50901,
+    "nome_categoria": "Princ\u00edpios Fundamentais da Bio\u00e9tica",
+    "id_categoria_pai": 509
+  },
+  {
+    "id_categoria": 50902,
+    "nome_categoria": "Quest\u00f5es \u00c9ticas no In\u00edcio e Fim da Vida",
+    "id_categoria_pai": 509
+  },
+  {
+    "id_categoria": 50903,
+    "nome_categoria": "Rela\u00e7\u00e3o M\u00e9dico-Paciente e Consentimento Informado",
+    "id_categoria_pai": 509
+  },
+  {
+    "id_categoria": 50904,
+    "nome_categoria": "Sigilo Profissional e Confidencialidade",
+    "id_categoria_pai": 509
+  },
+  {
+    "id_categoria": 50905,
+    "nome_categoria": "\u00c9tica em Pesquisa com Seres Humanos",
+    "id_categoria_pai": 509
+  },
+  {
+    "id_categoria": 60101,
+    "nome_categoria": "Avalia\u00e7\u00e3o Pr\u00e9-anest\u00e9sica",
+    "id_categoria_pai": 601
+  },
+  {
+    "id_categoria": 60102,
+    "nome_categoria": "Complica\u00e7\u00f5es Anest\u00e9sicas e Recupera\u00e7\u00e3o P\u00f3s-anest\u00e9sica",
+    "id_categoria_pai": 601
+  },
+  {
+    "id_categoria": 60103,
+    "nome_categoria": "Farmacologia dos Anest\u00e9sicos",
+    "id_categoria_pai": 601
+  },
+  {
+    "id_categoria": 60104,
+    "nome_categoria": "Monitoriza\u00e7\u00e3o Anest\u00e9sica",
+    "id_categoria_pai": 601
+  },
+  {
+    "id_categoria": 60105,
+    "nome_categoria": "T\u00e9cnicas de Anestesia (Geral, Regional, Local)",
+    "id_categoria_pai": 601
+  },
+  {
+    "id_categoria": 60201,
+    "nome_categoria": "Cirurgia Valvar (Troca e Plastia de Valvas Card\u00edacas)",
+    "id_categoria_pai": 602
+  },
+  {
+    "id_categoria": 60202,
+    "nome_categoria": "Cirurgia de Aneurismas e Dissec\u00e7\u00f5es da Aorta",
+    "id_categoria_pai": 602
+  },
+  {
+    "id_categoria": 60203,
+    "nome_categoria": "Cirurgia de Cardiopatias Cong\u00eanitas",
+    "id_categoria_pai": 602
+  },
+  {
+    "id_categoria": 60204,
+    "nome_categoria": "Cirurgia de Revasculariza\u00e7\u00e3o Mioc\u00e1rdica (CRM)",
+    "id_categoria_pai": 602
+  },
+  {
+    "id_categoria": 60205,
+    "nome_categoria": "Transplante Card\u00edaco",
+    "id_categoria_pai": 602
+  },
+  {
+    "id_categoria": 60301,
+    "nome_categoria": "Apendicite Aguda: Abordagem Cir\u00fargica",
+    "id_categoria_pai": 603
+  },
+  {
+    "id_categoria": 60302,
+    "nome_categoria": "Cirurgia Bari\u00e1trica e Metab\u00f3lica: T\u00e9cnicas e Indica\u00e7\u00f5es",
+    "id_categoria_pai": 603
+  },
+  {
+    "id_categoria": 60303,
+    "nome_categoria": "Doen\u00e7a Diverticular dos C\u00f3lons: Tratamento Cir\u00fargico",
+    "id_categoria_pai": 603
+  },
+  {
+    "id_categoria": 60304,
+    "nome_categoria": "Doen\u00e7as da Ves\u00edcula Biliar e Vias Biliares",
+    "id_categoria_pai": 603
+  },
+  {
+    "id_categoria": 60305,
+    "nome_categoria": "H\u00e9rnias da Parede Abdominal",
+    "id_categoria_pai": 603
+  },
+  {
+    "id_categoria": 60401,
+    "nome_categoria": "Abordagem Cir\u00fargica dos Principais Tumores S\u00f3lidos",
+    "id_categoria_pai": 604
+  },
+  {
+    "id_categoria": 60402,
+    "nome_categoria": "Cirurgia Citorredutora e Quimioterapia Hipert\u00e9rmica Intraperitoneal (HIPEC)",
+    "id_categoria_pai": 604
+  },
+  {
+    "id_categoria": 60403,
+    "nome_categoria": "Cirurgia Paliativa em Oncologia",
+    "id_categoria_pai": 604
+  },
+  {
+    "id_categoria": 60404,
+    "nome_categoria": "Linfadenectomia e Bi\u00f3psia de Linfonodo Sentinela",
+    "id_categoria_pai": 604
+  },
+  {
+    "id_categoria": 60405,
+    "nome_categoria": "Princ\u00edpios da Ressec\u00e7\u00e3o Oncol\u00f3gica e Margens Cir\u00fargicas",
+    "id_categoria_pai": 604
+  },
+  {
+    "id_categoria": 60501,
+    "nome_categoria": "Artroplastias (Pr\u00f3teses de Quadril, Joelho, Ombro)",
+    "id_categoria_pai": 605
+  },
+  {
+    "id_categoria": 60502,
+    "nome_categoria": "Cirurgia Artrosc\u00f3pica (Joelho, Ombro)",
+    "id_categoria_pai": 605
+  },
+  {
+    "id_categoria": 60503,
+    "nome_categoria": "Cirurgia da M\u00e3o e Microcirurgia",
+    "id_categoria_pai": 605
+  },
+  {
+    "id_categoria": 60504,
+    "nome_categoria": "Ortopedia Pedi\u00e1trica: Deformidades Cong\u00eanitas e Adquiridas",
+    "id_categoria_pai": 605
+  },
+  {
+    "id_categoria": 60505,
+    "nome_categoria": "Tratamento Cir\u00fargico de Fraturas e Luxa\u00e7\u00f5es",
+    "id_categoria_pai": 605
+  },
+  {
+    "id_categoria": 60601,
+    "nome_categoria": "Cirurgia Neonatal",
+    "id_categoria_pai": 606
+  },
+  {
+    "id_categoria": 60602,
+    "nome_categoria": "Cirurgia Urol\u00f3gica Pedi\u00e1trica (Refluxo Vesicoureteral, Hiposp\u00e1dia)",
+    "id_categoria_pai": 606
+  },
+  {
+    "id_categoria": 60603,
+    "nome_categoria": "Malforma\u00e7\u00f5es Cong\u00eanitas da Parede Abdominal (Onfalocele, Gastrosquise)",
+    "id_categoria_pai": 606
+  },
+  {
+    "id_categoria": 60604,
+    "nome_categoria": "Malforma\u00e7\u00f5es Cong\u00eanitas do Trato Digest\u00f3rio (Atresias, Estenoses)",
+    "id_categoria_pai": 606
+  },
+  {
+    "id_categoria": 60605,
+    "nome_categoria": "Tumores S\u00f3lidos na Inf\u00e2ncia (Neuroblastoma, Tumor de Wilms)",
+    "id_categoria_pai": 606
+  },
+  {
+    "id_categoria": 60701,
+    "nome_categoria": "Cirurgia Craniomaxilofacial (Trauma e Deformidades)",
+    "id_categoria_pai": 607
+  },
+  {
+    "id_categoria": 60702,
+    "nome_categoria": "Cirurgia Est\u00e9tica (Mamoplastia, Lipoaspira\u00e7\u00e3o, Rinoplastia)",
+    "id_categoria_pai": 607
+  },
+  {
+    "id_categoria": 60703,
+    "nome_categoria": "Reconstru\u00e7\u00e3o Mam\u00e1ria P\u00f3s-Mastectomia",
+    "id_categoria_pai": 607
+  },
+  {
+    "id_categoria": 60704,
+    "nome_categoria": "Retalhos Cut\u00e2neos e Microcirurgia Reconstrutiva",
+    "id_categoria_pai": 607
+  },
+  {
+    "id_categoria": 60705,
+    "nome_categoria": "Tratamento Cir\u00fargico de Queimaduras",
+    "id_categoria_pai": 607
+  },
+  {
+    "id_categoria": 60801,
+    "nome_categoria": "Abdome Agudo Cir\u00fargico (Inflamat\u00f3rio, Perfurativo, Obstrutivo, Vascular)",
+    "id_categoria_pai": 608
+  },
+  {
+    "id_categoria": 60802,
+    "nome_categoria": "Atendimento Cir\u00fargico ao Politraumatizado (Controle de Danos)",
+    "id_categoria_pai": 608
+  },
+  {
+    "id_categoria": 60803,
+    "nome_categoria": "Trauma Abdominal: Laparotomia Exploradora e Les\u00f5es Espec\u00edficas",
+    "id_categoria_pai": 608
+  },
+  {
+    "id_categoria": 60804,
+    "nome_categoria": "Trauma Tor\u00e1cico: Abordagem Cir\u00fargica",
+    "id_categoria_pai": 608
+  },
+  {
+    "id_categoria": 60805,
+    "nome_categoria": "Trauma Vascular Perif\u00e9rico",
+    "id_categoria_pai": 608
+  },
+  {
+    "id_categoria": 60901,
+    "nome_categoria": "Cirurgia da Coluna Vertebral (H\u00e9rnias Discais, Estenoses)",
+    "id_categoria_pai": 609
+  },
+  {
+    "id_categoria": 60902,
+    "nome_categoria": "Neurocirurgia Funcional e Estereot\u00e1xica (DBS, Epilepsia)",
+    "id_categoria_pai": 609
+  },
+  {
+    "id_categoria": 60903,
+    "nome_categoria": "Neurocirurgia Vascular (Aneurismas, MAVs)",
+    "id_categoria_pai": 609
+  },
+  {
+    "id_categoria": 60904,
+    "nome_categoria": "Neurocirurgia de Tumores Cerebrais e Medulares",
+    "id_categoria_pai": 609
+  },
+  {
+    "id_categoria": 60905,
+    "nome_categoria": "Neurotrauma: Tratamento Cir\u00fargico do TCE e TRM",
+    "id_categoria_pai": 609
+  },
+  {
+    "id_categoria": 61001,
+    "nome_categoria": "Avalia\u00e7\u00e3o Pr\u00e9-operat\u00f3ria e Risco Cir\u00fargico",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61002,
+    "nome_categoria": "Cicatriza\u00e7\u00e3o de Feridas e Fatores que a Afetam",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61003,
+    "nome_categoria": "Cirurgia Rob\u00f3tica e Minimamente Invasiva: Princ\u00edpios",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61004,
+    "nome_categoria": "Cuidados P\u00f3s-operat\u00f3rios e Manejo de Complica\u00e7\u00f5es",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61005,
+    "nome_categoria": "Hemostasia Cir\u00fargica e Terapia Transfusional",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61006,
+    "nome_categoria": "Infec\u00e7\u00e3o em Cirurgia e Profilaxia Antimicrobiana",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61007,
+    "nome_categoria": "Instrumenta\u00e7\u00e3o Cir\u00fargica, Incis\u00f5es e Suturas",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61008,
+    "nome_categoria": "Resposta Metab\u00f3lica ao Trauma e Cirurgia",
+    "id_categoria_pai": 610
+  },
+  {
+    "id_categoria": 61009,
+    "nome_categoria": "T\u00e9cnicas de Assepsia, Antissepsia e Esteriliza\u00e7\u00e3o",
+    "id_categoria_pai": 610
+  }
 ]

@@ -15,6 +15,7 @@ import BottomNavManager from '../ui/BottomNavManager.js';
 import StatisticsChartManager from '../ui/StatisticsChartManager.js';
 import FavoriteManager, { FAVORITE_REVIEW_QUERY_PARAM } from '../ui/FavoriteManager.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
+import SystemMessageCenter from '../ui/messages/SystemMessageCenter.js';
 
 export default class App {
     constructor() {
@@ -22,7 +23,11 @@ export default class App {
         this.store = createStore(quizReducer);
         this.layoutManager = new LayoutManager();
         this.bottomNavManager = new BottomNavManager();
+        this.messageCenter = new SystemMessageCenter({
+            toastContainerSelector: '#global-toast-stack',
+        });
         this.quizUI = new QuizUI();
+        this.quizUI.setMessageCenter(this.messageCenter);
         this.favoriteManager = new FavoriteManager(this.quizUI);
         this.accountPageManager = new AccountPageManager(this.quizUI);
         this.actionOrchestrator = new ActionOrchestrator(
@@ -36,6 +41,14 @@ export default class App {
 
     async initialize() {
         this._connectManagersToFlux();
+
+        if (this.messageCenter) {
+            this.messageCenter.consumeSeedMessages();
+        }
+
+        if (typeof window !== 'undefined') {
+            window.MedQuizMessageCenter = this.messageCenter;
+        }
 
         const initialSectionId = this._deriveInitialSectionId();
         this._ensureActiveSection(initialSectionId);

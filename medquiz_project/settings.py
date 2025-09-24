@@ -30,11 +30,11 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.ngrok-free.app',  # Mantém isso para cobrir o acesso geral
-    '5aac-186-247-27-123.ngrok-free.app', # Adicione o host específico também
+    '7ea944ff518d.ngrok-free.app', # Adicione o host específico também
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://5aac-186-247-27-123.ngrok-free.app"
+    "https://7ea944ff518d.ngrok-free.app"
     # Se o ngrok gerar uma nova URL na próxima vez, você precisará atualizá-la aqui também
     # ou, se o ngrok sempre usar o mesmo domínio base (ex: .ngrok-free.app) e você confia nele,
     # algumas versões mais recentes do Django podem permitir wildcards aqui com cuidado,

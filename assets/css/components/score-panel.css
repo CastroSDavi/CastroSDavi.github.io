@@ -154,8 +154,8 @@
 }
 
 .score-panel__pause-button {
-  width: var(--score-panel-pause-button-size, 48px);
-  height: var(--score-panel-pause-button-size, 48px);
+  width: var(--score-panel-pause-button-size, 42px);
+  height: var(--score-panel-pause-button-size, 42px);
   border-radius: var(--border-radius-circle);
   background-color: var(--color-primary-medium);
   color: var(--color-white);
@@ -171,7 +171,7 @@
 }
 
 .score-panel__pause-button .material-symbols-outlined {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   line-height: 1;
 }
 
@@ -284,14 +284,14 @@
         border-right: none;
         border-bottom: 1px solid var(--color-gray-200);
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
             "timer pause"
             "stats stats"
             "action action";
         align-items: center;
-        padding: var(--spacing-sm, 10px) var(--spacing-md, 16px);
-        gap: var(--spacing-sm, 12px);
+        padding: var(--spacing-xs, 8px) var(--spacing-md, 14px);
+        gap: var(--spacing-xs, 10px);
         z-index: var(--z-index-sticky, 10);
     }
 
@@ -301,19 +301,20 @@
         align-items: center;
         justify-content: flex-start;
         flex-wrap: wrap;
+        min-width: 0;
         text-align: left;
         padding-bottom: 0;
         border-bottom: none;
         margin-bottom: 0;
-        gap: var(--spacing-xs, 6px);
+        gap: var(--spacing-xxs, 4px);
     }
     .score-panel__timer-value {
-        font-size: 1.15rem;
+        font-size: 1.1rem;
         font-weight: var(--font-weight-semibold);
         color: var(--color-primary-dark);
     }
     .score-panel__timer-label {
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         font-weight: var(--font-weight-medium);
         color: var(--color-text-secondary);
     }
@@ -321,8 +322,8 @@
     .score-panel__stats-group {
         grid-area: stats;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: var(--spacing-xs, 10px);
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: var(--spacing-xxs, 6px);
     }
     .score-panel__stat {
         gap: var(--spacing-xxs, 4px);
@@ -330,12 +331,12 @@
     }
     .score-panel__stat-content {
         align-items: flex-start;
-        line-height: 1.1;
+        line-height: 1.05;
     }
     .score-panel__stat-label { display: none; }
-    .score-panel__stat-icon { font-size: 1.2rem; width: 20px; height: 20px; }
+    .score-panel__stat-icon { font-size: 1.15rem; width: 20px; height: 20px; }
     .score-panel__stat-value {
-        font-size: 0.95rem;
+        font-size: 0.92rem;
         font-weight: var(--font-weight-semibold);
         color: var(--color-primary-dark);
     }
@@ -347,8 +348,11 @@
     }
 
     .score-panel__pause-button {
-        width: 44px;
-        height: 44px;
+        width: 38px;
+        height: 38px;
+    }
+    .score-panel__pause-button .material-symbols-outlined {
+        font-size: 1.3rem;
     }
 
     .score-panel__action-button {
@@ -359,8 +363,8 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.8rem;
-        padding: 7px 12px;
+        font-size: 0.78rem;
+        padding: 6px 11px;
         line-height: 1;
         text-align: center;
         color: var(--color-primary-dark);
@@ -380,9 +384,15 @@
 @media (max-width: 600px) {
     .score-panel {
         grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--spacing-xxs, 8px);
     }
     .score-panel__stats-group {
-        grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--spacing-xxs, 6px);
+        min-width: 0;
+    }
+    .score-panel__stat {
+        min-width: 0;
     }
     .score-panel__pause-control {
         justify-content: flex-end;
@@ -391,35 +401,45 @@
 
 @media (max-width: 480px) {
     .score-panel {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
-            "timer"
-            "pause"
-            "stats"
-            "action";
+            "timer pause"
+            "stats stats"
+            "action action";
         padding: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
-        gap: var(--spacing-xs, 8px);
+        gap: var(--spacing-xxs, 8px);
     }
     .score-panel__timer {
-        justify-content: space-between;
-    }
-    .score-panel__timer-value { font-size: 1.05rem; }
-    .score-panel__timer-label { display: none; }
-    .score-panel__stats-group {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--spacing-xs, 8px);
-    }
-    .score-panel__stat-icon { font-size: 1.05rem; width: 18px; height: 18px; }
-    .score-panel__stat-value { font-size: 0.85rem; }
-    .score-panel__pause-control {
         justify-content: flex-start;
     }
+    .score-panel__timer-value { font-size: 1.02rem; }
+    .score-panel__timer-label { display: none; }
+    .score-panel__stats-group {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--spacing-xxs, 6px);
+    }
+    .score-panel__stat {
+        gap: 2px;
+    }
+    .score-panel__stat-content {
+        align-items: center;
+        text-align: center;
+    }
+    .score-panel__stat-icon { font-size: 1rem; width: 18px; height: 18px; }
+    .score-panel__stat-value { font-size: 0.82rem; }
+    .score-panel__stat-extra { font-size: 0.7rem; }
+    .score-panel__pause-control {
+        justify-content: flex-end;
+    }
     .score-panel__pause-button {
-        width: 40px;
-        height: 40px;
+        width: 34px;
+        height: 34px;
+    }
+    .score-panel__pause-button .material-symbols-outlined {
+        font-size: 1.18rem;
     }
     .score-panel__action-button {
-        font-size: 0.75rem;
-        padding: 6px 10px;
+        font-size: 0.72rem;
+        padding: 5px 9px;
     }
 }

@@ -9,6 +9,8 @@ export default class ScorePanel {
         this.store = null;
         this.actionOrchestrator = null;
         this.previousUserState = null; // Para comparar mudanças específicas
+        this.previousTimerState = null;
+        this.previousQuizState = null;
         
         this._setupEventListeners();
     }
@@ -20,9 +22,24 @@ export default class ScorePanel {
     setStore(storeInstance) {
         this.store = storeInstance;
         if (this.store) {
-            // Armazena o estado inicial do usuário para comparação
-            this.previousUserState = { ...this.store.getState().user };
-            
+            const initialState = this.store.getState();
+
+            this.previousUserState = { ...initialState.user };
+            this.previousTimerState = { ...initialState.timer };
+            this.previousQuizState = {
+                currentSessionId: initialState.quiz?.currentSessionId ?? null,
+                quizEnded: initialState.quiz?.quizEnded ?? false,
+            };
+
+            this._render(
+                initialState.user?.pontos ?? 0,
+                initialState.user?.acertos ?? 0,
+                initialState.user?.erros ?? 0,
+                initialState.user?.currentStreak ?? 0,
+                initialState.user?.multiplier ?? 1
+            );
+            this._updatePauseButton(initialState.timer?.isRunning, initialState.quiz);
+
             // Inscreve-se para futuras atualizações
             this.store.subscribe(this.handleStateUpdate.bind(this));
         }
@@ -47,11 +64,13 @@ export default class ScorePanel {
         const currentUserState = currentState.user; // Supondo que os dados do usuário estejam em `state.user`
         
         // Verifica se houve mudança nos dados do usuário para evitar re-renderizações desnecessárias
+        const previousTimerState = this.previousTimerState ?? {};
+        const previousQuizState = this.previousQuizState ?? {};
+
         if (
             currentUserState.pontos !== this.previousUserState.pontos ||
             currentUserState.acertos !== this.previousUserState.acertos ||
             currentUserState.erros !== this.previousUserState.erros ||
-            currentUserState.xp !== this.previousUserState.xp ||
             currentUserState.currentStreak !== this.previousUserState.currentStreak ||
             currentUserState.multiplier !== this.previousUserState.multiplier
         ) {
@@ -59,14 +78,27 @@ export default class ScorePanel {
                 currentUserState.pontos,
                 currentUserState.acertos,
                 currentUserState.erros,
-                currentUserState.xp,
                 currentUserState.currentStreak,
                 currentUserState.multiplier
             );
         }
 
+        const timerChanged = currentState.timer?.isRunning !== previousTimerState.isRunning;
+        const sessionChanged =
+            currentState.quiz?.currentSessionId !== previousQuizState.currentSessionId ||
+            currentState.quiz?.quizEnded !== previousQuizState.quizEnded;
+
+        if (timerChanged || sessionChanged) {
+            this._updatePauseButton(currentState.timer?.isRunning, currentState.quiz);
+        }
+
         // Atualiza o estado anterior
         this.previousUserState = { ...currentUserState };
+        this.previousTimerState = { ...currentState.timer };
+        this.previousQuizState = {
+            currentSessionId: currentState.quiz?.currentSessionId ?? null,
+            quizEnded: currentState.quiz?.quizEnded ?? false,
+        };
     }
 
     _setupEventListeners() {
@@ -77,13 +109,28 @@ export default class ScorePanel {
                 this.quizUI.modalManager.toggleConfirmModal(true);
             }
         });
+
+        this.elements.btnTogglePause?.addEventListener('click', () => {
+            if (!this.store || !this.actionOrchestrator) return;
+
+            const state = this.store.getState();
+            const hasActiveSession = Boolean(state.quiz?.currentSessionId) && state.quiz?.quizEnded !== true;
+
+            if (!hasActiveSession) return;
+
+            if (state.timer?.isRunning) {
+                this.actionOrchestrator.pauseTimer();
+            } else {
+                this.actionOrchestrator.resumeTimer();
+            }
+        });
     }
 
     /**
      * Método privado que realmente atualiza o DOM.
      * Substitui o antigo `updateDisplay`.
      */
-    _render(pontos, acertos, erros, xp = 0, streak = 0, multiplier = 1) {
+    _render(pontos, acertos, erros, streak = 0, multiplier = 1) {
         if (this.elements.pontuacaoDisplay) {
             this.elements.pontuacaoDisplay.textContent = pontos;
         }
@@ -92,9 +139,6 @@ export default class ScorePanel {
         }
         if (this.elements.errosNumDisplay) {
             this.elements.errosNumDisplay.textContent = erros;
-        }
-        if (this.elements.xpDisplay) {
-            this.elements.xpDisplay.textContent = Number(xp || 0).toLocaleString('pt-BR');
         }
         if (this.elements.sequenciaDisplay) {
             this.elements.sequenciaDisplay.textContent = Number(streak || 0).toLocaleString('pt-BR');
@@ -118,6 +162,9 @@ export default class ScorePanel {
         if (this.elements.scorePanel) {
             this.quizUI.showElement(this.elements.scorePanel);
         }
+        if (this.elements.scorePanelControls) {
+            this.quizUI.showElement(this.elements.scorePanelControls);
+        }
         if (this.elements.btnEncerrarSessao) {
             this.quizUI.showElement(this.elements.btnEncerrarSessao);
         }
@@ -127,8 +174,40 @@ export default class ScorePanel {
         if (this.elements.scorePanel) {
             this.quizUI.hideElement(this.elements.scorePanel);
         }
+        if (this.elements.scorePanelControls) {
+            this.quizUI.hideElement(this.elements.scorePanelControls);
+        }
         if (this.elements.btnEncerrarSessao) {
             this.quizUI.hideElement(this.elements.btnEncerrarSessao);
+        }
+    }
+
+    _updatePauseButton(isRunning = false, quizState = {}) {
+        const button = this.elements.btnTogglePause;
+        if (!button) return;
+
+        const labelElement = this.elements.btnTogglePauseLabel;
+        const iconElement = this.elements.btnTogglePauseIcon;
+
+        const hasActiveSession = Boolean(quizState?.currentSessionId) && quizState?.quizEnded !== true;
+
+        button.disabled = !hasActiveSession;
+
+        if (!hasActiveSession) {
+            button.setAttribute('aria-pressed', 'false');
+            if (labelElement) labelElement.textContent = 'Pausar';
+            if (iconElement) iconElement.textContent = 'pause';
+            return;
+        }
+
+        if (isRunning) {
+            button.setAttribute('aria-pressed', 'false');
+            if (labelElement) labelElement.textContent = 'Pausar';
+            if (iconElement) iconElement.textContent = 'pause';
+        } else {
+            button.setAttribute('aria-pressed', 'true');
+            if (labelElement) labelElement.textContent = 'Retomar';
+            if (iconElement) iconElement.textContent = 'play_arrow';
         }
     }
 }

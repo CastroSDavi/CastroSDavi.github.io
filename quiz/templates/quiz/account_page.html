@@ -424,40 +424,132 @@
                                 </div>
                             </div>
 
-                            <div class="account-progress__stats-grid">
-                                <article class="profile-stat-card">
-                                    <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">quiz</span>
-                                    <span class="profile-stat-card__value">{{ metrics.total_sessions|default:0 }}</span>
-                                    <span class="profile-stat-card__label">Quizzes concluídos</span>
-                                </article>
-                                <article class="profile-stat-card">
-                                    <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">help_center</span>
-                                    <span class="profile-stat-card__value">{{ metrics.total_questions_answered|default:0 }}</span>
-                                    <span class="profile-stat-card__label">Perguntas respondidas</span>
-                                </article>
-                                <article class="profile-stat-card">
-                                    <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">target</span>
-                                    <span class="profile-stat-card__value">
-                                        {% if metrics.accuracy is not None %}
-                                            {{ metrics.accuracy|floatformat:1 }}%
-                                        {% else %}
-                                            --
-                                        {% endif %}
+                            {% if gamification %}
+                            <div class="account-progress__level-overview">
+                                <div class="account-progress__level-headline">
+                                    <div>
+                                        <h3>Progresso no nível</h3>
+                                        <p>Mantenha o ritmo para desbloquear novos benefícios.</p>
+                                    </div>
+                                    <span class="account-progress__level-percentage">
+                                        {{ gamification.progress.percent|default_if_none:0|floatformat:0 }}%
                                     </span>
-                                    <span class="profile-stat-card__label">Precisão geral</span>
-                                </article>
-                                <article class="profile-stat-card">
-                                    <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">local_fire_department</span>
-                                    <span class="profile-stat-card__value">
-                                        {% if metrics.current_streak %}
-                                            {{ metrics.current_streak }} dia{{ metrics.current_streak|pluralize:"s" }}
-                                        {% else %}
-                                            0 dias
-                                        {% endif %}
-                                    </span>
-                                    <span class="profile-stat-card__label">Sequência atual</span>
-                                </article>
+                                </div>
+                                <div class="account-progress__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ gamification.progress.percent|default_if_none:0 }}">
+                                    <span class="account-progress__progress-fill" style="width: {{ gamification.progress.percent|default_if_none:0 }}%;"></span>
+                                </div>
+                                <ul class="account-progress__level-details">
+                                    <li>
+                                        <span>XP total</span>
+                                        <strong>{{ gamification.xp_total|default:0 }}</strong>
+                                    </li>
+                                    <li>
+                                        <span>XP dentro do nível</span>
+                                        <strong>{{ gamification.progress.xp_into_level|default:0 }}</strong>
+                                    </li>
+                                    <li>
+                                        <span>XP para o próximo nível</span>
+                                        <strong>
+                                            {% if gamification.progress.xp_to_next_level is not None %}
+                                                {{ gamification.progress.xp_to_next_level }} XP
+                                            {% else %}
+                                                Nível máximo alcançado
+                                            {% endif %}
+                                        </strong>
+                                    </li>
+                                    <li>
+                                        <span>Próximo nível</span>
+                                        <strong>
+                                            {% if gamification.next_level %}
+                                                {{ gamification.next_level.nome }}
+                                            {% else %}
+                                                Você está no topo
+                                            {% endif %}
+                                        </strong>
+                                    </li>
+                                </ul>
                             </div>
+                            {% endif %}
+
+                            {% if gamification %}
+                                {% if gamification.achievements or gamification.rewards %}
+                                    <div class="account-progress__insights-grid">
+                                        {% if gamification.achievements %}
+                                            <section class="account-progress__insight-card">
+                                                <div class="account-progress__insight-header">
+                                                    <h3>Próximas conquistas</h3>
+                                                    <span class="account-progress__insight-count">
+                                                        {{ gamification.achievements.total_unlocked|default:0 }} / {{ gamification.achievements.total_available|default:0 }}
+                                                    </span>
+                                                </div>
+                                                <ul class="account-progress__insight-list">
+                                                    {% if gamification.achievements.upcoming %}
+                                                        {% for item in gamification.achievements.upcoming %}
+                                                            <li class="account-progress__insight-item">
+                                                                <div class="account-progress__insight-info">
+                                                                    <strong>{{ item.nome }}</strong>
+                                                                    <p>{{ item.descricao }}</p>
+                                                                </div>
+                                                                {% if item.progress %}
+                                                                    <span class="account-progress__insight-progress">{{ item.progress.label }}</span>
+                                                                    <span class="account-progress__insight-remaining">{{ item.progress.remaining_label }}</span>
+                                                                {% endif %}
+                                                            </li>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <li class="account-progress__empty">Você desbloqueou todas as conquistas disponíveis por enquanto.</li>
+                                                    {% endif %}
+                                                </ul>
+                                            </section>
+                                        {% endif %}
+
+                                        {% if gamification.rewards %}
+                                            <section class="account-progress__insight-card">
+                                                <div class="account-progress__insight-header">
+                                                    <h3>Recompensas de nível</h3>
+                                                    {% with claimed_count=gamification.rewards.claimed|length available_count=gamification.rewards.available_to_claim|length %}
+                                                        <span class="account-progress__insight-count">
+                                                            {{ claimed_count }} {{ claimed_count|pluralize:"recompensa resgatada,recompensas resgatadas" }} ·
+                                                            {{ available_count }} {{ available_count|pluralize:"recompensa disponível,recompensas disponíveis" }}
+                                                        </span>
+                                                    {% endwith %}
+                                                </div>
+                                                {% with available=gamification.rewards.available_to_claim upcoming=gamification.rewards.upcoming %}
+                                                    <ul class="account-progress__insight-list">
+                                                        {% if available %}
+                                                            {% for reward in available|slice:":3" %}
+                                                                <li class="account-progress__insight-item">
+                                                                    <div class="account-progress__insight-info">
+                                                                        <strong>{{ reward.name }}</strong>
+                                                                        <p>{{ reward.description|default:"Resgate disponível" }}</p>
+                                                                    </div>
+                                                                    <span class="account-progress__insight-tag">Pronto para resgatar</span>
+                                                                </li>
+                                                            {% endfor %}
+                                                        {% endif %}
+
+                                                        {% if not available %}
+                                                            {% if upcoming %}
+                                                                {% for reward in upcoming|slice:":3" %}
+                                                                    <li class="account-progress__insight-item">
+                                                                        <div class="account-progress__insight-info">
+                                                                            <strong>{{ reward.name }}</strong>
+                                                                            <p>{{ reward.description|default:"Recompensa do próximo nível" }}</p>
+                                                                        </div>
+                                                                        <span class="account-progress__insight-remaining">Disponível no {{ reward.level_name }}</span>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                <li class="account-progress__empty">Continue acumulando XP para liberar novas recompensas.</li>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </ul>
+                                                {% endwith %}
+                                            </section>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
 
                             {% if gamification and gamification.daily_engagement %}
                                 {% with daily=gamification.daily_engagement %}

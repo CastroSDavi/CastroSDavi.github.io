@@ -794,39 +794,68 @@
 
 .progression-hero__intro .card__title {
     margin-bottom: var(--spacing-xxs, 6px);
+    padding-bottom: 0;
+    border-bottom: none;
 }
 
 .progression-hero__meta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-sm, 16px);
+    display: flex;
+    align-items: stretch;
+    gap: clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-lg, 28px));
     flex-wrap: wrap;
 }
 
-.progression-hero__level {
-    display: inline-flex;
+.progression-hero__level,
+.progression-hero__xp-chip {
+    display: flex;
     align-items: center;
-    gap: var(--spacing-xxs, 6px);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-primary-dark);
+    gap: var(--spacing-sm, 16px);
+    padding: var(--spacing-xs, 12px) var(--spacing-md, 22px);
+    border-radius: var(--border-radius-xl);
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    box-shadow: var(--shadow-xs);
+    min-height: 72px;
+}
+
+.progression-hero__level {
+    min-width: min(320px, 100%);
 }
 
 .progression-hero__level .material-symbols-outlined {
-    font-size: 1.4rem;
+    font-size: 1.75rem;
     color: var(--color-secondary-green);
 }
 
-.progression-hero__xp-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: var(--spacing-xxs, 6px) var(--spacing-sm, 16px);
-    border-radius: var(--border-radius-pill);
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
-    color: var(--color-primary-dark);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+.progression-hero__meta-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxs, 6px);
+}
+
+.progression-hero__meta-label {
     font-size: var(--font-size-xs, 0.8rem);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+}
+
+.progression-hero__meta-value {
+    font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-dark);
+}
+
+.progression-hero__xp-chip {
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 180px;
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.1);
+    border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.2);
+}
+
+.progression-hero__xp-chip .progression-hero__meta-value {
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
 }
 
 .progression-hero__stats-grid {
@@ -841,6 +870,25 @@
     border-radius: var(--border-radius-lg);
     padding: clamp(var(--spacing-sm, 16px), 4vw, var(--spacing-md, 22px));
     box-shadow: var(--shadow-xs);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: var(--spacing-sm, 16px);
+}
+
+.progression-stat__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-lg);
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
+    color: var(--color-primary-medium);
+    font-size: 1.65rem;
+}
+
+.progression-stat__content {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xxs, 6px);
@@ -867,6 +915,7 @@
     border-radius: var(--border-radius-xl);
     border: 1px solid rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.25);
     background: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.1);
+    flex-wrap: wrap;
 }
 
 .progression-hero__callout.is-inactive {
@@ -904,22 +953,63 @@
     align-items: flex-start;
 }
 
+.progression-layout__main {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--spacing-lg, 28px), 4vw, var(--spacing-xl, 36px));
+    min-width: 0;
+}
+
 .progression-layout__aside {
     display: flex;
     flex-direction: column;
     gap: clamp(var(--spacing-lg, 28px), 4vw, var(--spacing-xl, 36px));
+    min-width: 0;
 }
 
 .progression-card--analytics {
     gap: clamp(var(--spacing-md, 20px), 3vw, var(--spacing-lg, 28px));
 }
 
-.progression-analytics__toolbar {
+.progression-card__header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: clamp(var(--spacing-md, 20px), 3vw, var(--spacing-lg, 28px));
     flex-wrap: wrap;
+}
+
+.progression-card__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xxs, 6px);
+    min-width: min(320px, 100%);
+}
+
+.progression-card__header .card__title {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.progression-card__header .card__subtitle {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm, 0.92rem);
+    line-height: 1.5;
+}
+
+.progression-card__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm, 16px);
+    flex-wrap: wrap;
+}
+
+.progression-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(var(--spacing-md, 20px), 3vw, var(--spacing-lg, 28px));
 }
 
 .progression-analytics__filters {
@@ -1118,10 +1208,6 @@
         grid-template-columns: 1fr;
     }
 
-    .progression-layout__aside {
-        order: -1;
-    }
-
     .progression-card__section {
         padding: var(--spacing-md, 20px);
     }
@@ -1132,8 +1218,13 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .progression-analytics__toolbar {
+    .progression-card__header {
         gap: var(--spacing-md, 20px);
+    }
+
+    .progression-card__actions {
+        width: 100%;
+        justify-content: space-between;
     }
 
     .progression-analytics__filters {

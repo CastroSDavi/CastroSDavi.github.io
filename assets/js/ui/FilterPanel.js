@@ -20,7 +20,13 @@ export default class FilterPanel {
         this.categoryIdSet = new Set();
         this.persistedCategorySelection = new Set();
         this.searchQuery = '';
-        
+
+        this.storageKey = 'medquiz.filterPanelState';
+        this.hasInitialized = false;
+        this.hasGeneratedTree = false;
+        this.cachedCategoriesSignature = null;
+        this.lastPersistedFilters = null;
+
         this.debouncedTriggerCountFetch = debounce(this._triggerCountFetch.bind(this), 400);
 
         this._cacheOwnElements();
@@ -132,6 +138,7 @@ export default class FilterPanel {
             allCheckbox.checked = true;
         }
 
+        this._persistFilters();
         this.debouncedTriggerCountFetch();
     }
 
@@ -142,6 +149,7 @@ export default class FilterPanel {
         }
         this.setSearchQuery(value);
         this.generateCategoryTree(this.allCategories || []);
+        this._persistFilters();
         this.debouncedTriggerCountFetch();
     }
 
@@ -150,6 +158,7 @@ export default class FilterPanel {
         this.setSearchQuery('');
         if (hadQuery) {
             this.generateCategoryTree(this.allCategories || []);
+            this._persistFilters();
             this.debouncedTriggerCountFetch();
         }
         if (focusInput && this.elements.categorySearchInput) {
@@ -210,11 +219,44 @@ export default class FilterPanel {
         }
     }
 
-    render() {
+    render(stateOverride = null) {
         if (!this.store) return;
-        const state = this.store.getState();
-        this.generateCategoryTree(state.geral.allCategories || []);
-        this.resetFiltersToDefault();
+
+        const rootState = stateOverride || this.store.getState();
+        const categories = Array.isArray(rootState?.geral?.allCategories)
+            ? rootState.geral.allCategories
+            : [];
+
+        let initialFilters = null;
+        if (!this.hasInitialized) {
+            const storedFilters = this._loadPersistedFilters();
+            initialFilters = storedFilters || this._getDefaultFilters();
+            this.setSearchQuery(initialFilters.searchQuery || '');
+            this.persistedCategorySelection = new Set(
+                (initialFilters.categoryIds || []).map(id => id.toString())
+            );
+        }
+
+        const categoriesChanged = this._ensureCategoryTree(categories);
+
+        if (!this.hasInitialized) {
+            this.setCategoryTreeState(initialFilters.categoryIds);
+            this.setDifficultyState(initialFilters.difficultyLevels);
+            this.setNumberOfQuestionsState(initialFilters.numQuestions);
+            this._persistFilters();
+            this._triggerCountFetch();
+            this._renderFeedback();
+            this.hasInitialized = true;
+            return;
+        }
+
+        if (categoriesChanged) {
+            const filters = this.lastPersistedFilters || this._captureCurrentFilters();
+            this.setSearchQuery(filters.searchQuery || '');
+            this.setCategoryTreeState(filters.categoryIds);
+        }
+
+        this._renderFeedback();
     }
 
     handleStateUpdate() {
@@ -227,7 +269,7 @@ export default class FilterPanel {
         }
     }
 
-    resetFiltersToDefault() {
+    resetFiltersToDefault({ triggerFetch = true, persistState = true } = {}) {
         const hadSearch = this.getSearchQuery().length > 0;
         this.setSearchQuery('');
         if (hadSearch) {
@@ -236,7 +278,12 @@ export default class FilterPanel {
         this.setCategoryTreeState([]);
         this.setDifficultyState(['all']);
         this.setNumberOfQuestionsState(null);
-        this.debouncedTriggerCountFetch();
+        if (persistState) {
+            this._persistFilters();
+        }
+        if (triggerFetch) {
+            this.debouncedTriggerCountFetch();
+        }
     }
 
     _triggerCountFetch() {
@@ -248,10 +295,115 @@ export default class FilterPanel {
         };
         this.actionOrchestrator.fetchFilteredQuestionCount(filters);
     }
-    
+
+    _getDefaultFilters() {
+        return {
+            categoryIds: [],
+            difficultyLevels: ['all'],
+            numQuestions: null,
+            searchQuery: '',
+        };
+    }
+
+    _sanitizeFilterObject(rawFilters = {}) {
+        const categoryIds = Array.isArray(rawFilters.categoryIds)
+            ? rawFilters.categoryIds
+                .map(id => (id !== null && id !== undefined ? id.toString() : null))
+                .filter(Boolean)
+            : [];
+
+        const difficultyLevels = Array.isArray(rawFilters.difficultyLevels)
+            ? rawFilters.difficultyLevels
+                .filter(level => typeof level === 'string' && level.trim() !== '')
+            : [];
+
+        const normalizedDifficulty = difficultyLevels.length > 0 ? difficultyLevels : ['all'];
+
+        const numQuestions = typeof rawFilters.numQuestions === 'number' && rawFilters.numQuestions > 0
+            ? rawFilters.numQuestions
+            : null;
+
+        const searchQuery = typeof rawFilters.searchQuery === 'string' ? rawFilters.searchQuery : '';
+
+        return {
+            categoryIds,
+            difficultyLevels: normalizedDifficulty,
+            numQuestions,
+            searchQuery,
+        };
+    }
+
+    _captureCurrentFilters() {
+        return this._sanitizeFilterObject({
+            categoryIds: Array.from(this.persistedCategorySelection),
+            difficultyLevels: this.getSelectedDifficulties(),
+            numQuestions: this.getSelectedNumberOfQuestions(),
+            searchQuery: this.getSearchQuery(),
+        });
+    }
+
+    _persistFilters() {
+        const snapshot = this._captureCurrentFilters();
+        this.lastPersistedFilters = snapshot;
+        if (typeof window === 'undefined' || !window.localStorage) {
+            return;
+        }
+        try {
+            window.localStorage.setItem(this.storageKey, JSON.stringify(snapshot));
+        } catch (storageError) {
+            console.warn('FilterPanel: não foi possível salvar os filtros selecionados.', storageError);
+        }
+    }
+
+    _loadPersistedFilters() {
+        if (this.lastPersistedFilters) {
+            return this.lastPersistedFilters;
+        }
+        if (typeof window === 'undefined' || !window.localStorage) {
+            return null;
+        }
+        try {
+            const rawValue = window.localStorage.getItem(this.storageKey);
+            if (!rawValue) {
+                return null;
+            }
+            const parsed = JSON.parse(rawValue);
+            const sanitized = this._sanitizeFilterObject(parsed);
+            this.lastPersistedFilters = sanitized;
+            return sanitized;
+        } catch (storageError) {
+            console.warn('FilterPanel: não foi possível recuperar os filtros salvos.', storageError);
+            return null;
+        }
+    }
+
+    _computeCategoriesSignature(categories) {
+        if (!Array.isArray(categories)) {
+            return '[]';
+        }
+        try {
+            return JSON.stringify(categories.map(cat => [cat?.id_categoria ?? null, cat?.nome_categoria ?? null]));
+        } catch (_signatureError) {
+            return String(categories.length);
+        }
+    }
+
+    _ensureCategoryTree(categories) {
+        const normalizedCategories = Array.isArray(categories) ? categories : [];
+        const signature = this._computeCategoriesSignature(normalizedCategories);
+        const hasChanged = signature !== this.cachedCategoriesSignature;
+        if (hasChanged || !this.hasGeneratedTree) {
+            this.cachedCategoriesSignature = signature;
+            this.generateCategoryTree(normalizedCategories);
+            this.hasGeneratedTree = true;
+            return true;
+        }
+        return false;
+    }
+
     _renderFeedback() {
         if (!this.store) return;
-        
+
         const { isLoadingCount, filteredQuestionsCount, countError } = this.store.getState().ui.filterPanel;
         const input = this.elements.numQuestionsInput;
         const feedbackTextEl = this.elements.numQuestionsFeedbackText;
@@ -311,12 +463,14 @@ export default class FilterPanel {
         if (allCategories) {
             const allCategoryIds = allCategories.map(c => c.id_categoria.toString());
             this.setCategoryTreeState(allCategoryIds);
+            this._persistFilters();
             this.debouncedTriggerCountFetch(); // A chamada de API será rápida por causa do getSelectedCategories() otimizado.
         }
     }
 
     _handleClearAllCategories() {
         this.setCategoryTreeState([]); // Limpa visualmente os checkboxes
+        this._persistFilters();
         this.debouncedTriggerCountFetch(); // Dispara a busca, que será rápida.
     }
     // --- FIM DA CORREÇÃO ---
@@ -369,9 +523,11 @@ export default class FilterPanel {
             } else if (max !== null && numValue > max) {
                 inputElement.value = max.toString();
             } else {
-                inputElement.value = numValue.toString(); 
+                inputElement.value = numValue.toString();
             }
         }
+        this._persistFilters();
+        this._renderFeedback();
     }
     
     getSelectedCategories() {
@@ -689,6 +845,7 @@ export default class FilterPanel {
 
         this._updateParentCheckboxState(listItem.parentElement?.closest('.category-tree__item'));
         this._syncPersistedSelectionWithDOM();
+        this._persistFilters();
         this.debouncedTriggerCountFetch();
     }
     

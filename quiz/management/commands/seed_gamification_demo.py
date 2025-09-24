@@ -185,7 +185,7 @@ class Command(BaseCommand):
                 "nome": "Primeiro Plantao",
                 "descricao": "Conclua seu primeiro quiz completo.",
                 "criterio": {"tipo": "quizzes_completos", "valor": 1},
-                "icone": "medal-outline",
+                "icone": "workspace_premium",
                 "ordem": 1,
             },
             {
@@ -193,7 +193,7 @@ class Command(BaseCommand):
                 "nome": "Ritmo de Residencia",
                 "descricao": "Alcance 500 pontos de XP acumulados.",
                 "criterio": {"tipo": "xp_total", "valor": 500},
-                "icone": "trend-up",
+                "icone": "trending_up",
                 "ordem": 2,
             },
             {
@@ -201,7 +201,7 @@ class Command(BaseCommand):
                 "nome": "Foco Maximo",
                 "descricao": "Mantenha uma sequencia de 10 acertos em uma sessao.",
                 "criterio": {"tipo": "melhor_sequencia", "valor": 10},
-                "icone": "flame",
+                "icone": "local_fire_department",
                 "ordem": 3,
             },
             {
@@ -209,7 +209,7 @@ class Command(BaseCommand):
                 "nome": "Resposta Perfeita",
                 "descricao": "Some 900 pontos em uma unica sessao.",
                 "criterio": {"tipo": "pontuacao_sessao", "valor": 900},
-                "icone": "trophy",
+                "icone": "emoji_events",
                 "ordem": 4,
             },
             {
@@ -217,7 +217,7 @@ class Command(BaseCommand):
                 "nome": "Dia Intenso",
                 "descricao": "Resolva 50 perguntas em um unico dia.",
                 "criterio": {"tipo": "perguntas_diarias", "valor": 50},
-                "icone": "calendar-check",
+                "icone": "event_available",
                 "ordem": 5,
             },
         ]

@@ -642,90 +642,133 @@
                     </section>
                     {% endwith %}
                     <div class="progression-columns">
-                        <section class="card card--conta-perfil progression-card progression-card--statistics">
-                            <div class="card__body">
-                                <div class="statistics-dashboard">
-                                    <div class="statistics-header">
-                                        <div class="statistics-header__text">
-                                            <h3 class="card__title">Estatísticas de estudo</h3>
-                                            <p class="card__subtitle">Visualize seu desempenho em cada período selecionado.</p>
-                                        </div>
-                                        <div class="statistics-filters">
-                                            <div class="form-group statistics-period-filter">
-                                                <label for="stats-period-select" class="form-label">Período:</label>
-                                                <select id="stats-period-select" class="form-control form-control--small">
-                                                    <option value="7d">Últimos 7 dias</option>
-                                                    <option value="30d" selected>Últimos 30 dias</option>
-                                                    <option value="90d">Últimos 90 dias</option>
-                                                    <option value="all">Desde o início</option>
-                                                </select>
+                        <section class="card card--conta-perfil progression-card progression-card--analytics">
+                            <div class="card__header progression-card__header">
+                                <div>
+                                    <h3 class="card__title">Radar de desempenho</h3>
+                                    <p class="card__subtitle">Acompanhe seu ritmo recente de estudos, pontos fortes e oportunidades em um só lugar.</p>
+                                </div>
+                                <div class="progression-analytics__filters">
+                                    <label for="stats-period-select" class="form-label">Período</label>
+                                    <select id="stats-period-select" class="form-control form-control--small">
+                                        <option value="7d">Últimos 7 dias</option>
+                                        <option value="30d" selected>Últimos 30 dias</option>
+                                        <option value="90d">Últimos 90 dias</option>
+                                        <option value="all">Desde o início</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card__body progression-analytics__body">
+                                <div id="no-stats-data-message" class="progression-feedback progression-feedback--empty u-is-hidden" role="status">
+                                    <span class="material-symbols-outlined" aria-hidden="true">sentiment_dissatisfied</span>
+                                    <p data-role="feedback-text">Nenhuma estatística encontrada para o período selecionado. Complete um quiz para desbloquear seu painel.</p>
+                                </div>
+                                <div id="progression-insights-grid" class="progression-analytics-grid">
+                                    <article class="insight-block insight-block--heatmap">
+                                        <header class="insight-block__header">
+                                            <h4 class="insight-block__title">Frequência de estudos</h4>
+                                            <p class="insight-block__subtitle">Veja quantas questões você respondeu dia a dia.</p>
+                                        </header>
+                                        <div class="insight-block__content insight-block__content--heatmap">
+                                            <div id="chart-study-heatmap" class="heatmap-wrapper">
+                                                <p class="chart-placeholder">Carregando dados...</p>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="key-metrics-summary" id="key-metrics-summary-container">
-                                        <div class="metric-card">
-                                            <span class="material-symbols-outlined metric-card__icon">functions</span>
-                                            <span class="metric-card__label">Total de Questões</span>
-                                            <span class="metric-card__value" id="metric-total-questions">--</span>
+                                    </article>
+
+                                    <article class="insight-block insight-block--trend">
+                                        <header class="insight-block__header">
+                                            <h4 class="insight-block__title">Ritmo de acertos</h4>
+                                            <p class="insight-block__subtitle">Acompanhe como sua precisão evoluiu ao longo do período selecionado.</p>
+                                        </header>
+                                        <div class="insight-block__content insight-block__content--trend">
+                                            <div class="trend-summary">
+                                                <div class="trend-summary__current">
+                                                    <span class="trend-summary__label">Média recente</span>
+                                                    <strong id="trend-current-accuracy" class="trend-summary__value">--</strong>
+                                                </div>
+                                                <div class="trend-summary__change">
+                                                    <span class="trend-summary__label">Variação</span>
+                                                    <span id="trend-accuracy-change" class="trend-badge">--</span>
+                                                </div>
+                                            </div>
+                                            <ul id="trend-accuracy-list" class="trend-list">
+                                                <li class="trend-list__item trend-list__item--empty">Complete um quiz para visualizar o histórico de precisão.</li>
+                                            </ul>
                                         </div>
-                                        <div class="metric-card">
-                                            <span class="material-symbols-outlined metric-card__icon">local_fire_department</span>
-                                            <span class="metric-card__label">Sequência Máx.</span>
-                                            <span class="metric-card__value" id="metric-max-streak">--</span>
+                                    </article>
+
+                                    <article class="insight-block insight-block--summary">
+                                        <header class="insight-block__header">
+                                            <h4 class="insight-block__title">Resumo do período</h4>
+                                            <p class="insight-block__subtitle">Indicadores atualizados conforme o filtro escolhido.</p>
+                                        </header>
+                                        <div class="insight-block__content">
+                                            <dl class="period-summary">
+                                                <div class="period-summary__item">
+                                                    <dt>Perguntas respondidas</dt>
+                                                    <dd id="metric-period-questions">--</dd>
+                                                </div>
+                                                <div class="period-summary__item">
+                                                    <dt>Tempo de estudo</dt>
+                                                    <dd id="metric-period-study-time">--</dd>
+                                                </div>
+                                                <div class="period-summary__item">
+                                                    <dt>XP conquistado</dt>
+                                                    <dd id="metric-period-xp">--</dd>
+                                                </div>
+                                                <div class="period-summary__item">
+                                                    <dt>Sequência ativa máx.</dt>
+                                                    <dd id="metric-period-streak">--</dd>
+                                                </div>
+                                            </dl>
                                         </div>
-                                        <div class="metric-card">
-                                            <span class="material-symbols-outlined metric-card__icon">military_tech</span>
-                                            <span class="metric-card__label">Pontuação Total</span>
-                                            <span class="metric-card__value" id="metric-total-score">--</span>
-                                        </div>
-                                        <div class="metric-card">
-                                            <span class="material-symbols-outlined metric-card__icon">timer</span>
-                                            <span class="metric-card__label">Tempo Total Estudo</span>
-                                            <span class="metric-card__value" id="metric-total-study-time">--</span>
-                                        </div>
-                                    </div>
-                                    <div class="stats-grid">
-                                        <div class="stats-card chart-card stats-card--with-overall-accuracy">
-                                            <h3 class="chart-title">Precisão Geral</h3>
-                                            <div id="chart-overall-accuracy" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
+                                    </article>
+
+                                    <article class="insight-block insight-block--categories">
+                                        <header class="insight-block__header">
+                                            <h4 class="insight-block__title">Forças e oportunidades</h4>
+                                            <p class="insight-block__subtitle">Categorias com melhor desempenho e aquelas que merecem atenção.</p>
+                                        </header>
+                                        <div class="insight-block__content insight-block__content--split">
+                                            <div class="insight-block__column">
+                                                <h5 class="insight-block__column-title">Melhores resultados</h5>
+                                                <ul id="category-highlights-best" class="insight-list insight-list--positive">
+                                                    <li class="insight-list__item insight-list__item--empty">Sem dados suficientes.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="insight-block__column">
+                                                <h5 class="insight-block__column-title">Para focar</h5>
+                                                <ul id="category-highlights-focus" class="insight-list insight-list--attention">
+                                                    <li class="insight-list__item insight-list__item--empty">Sem dados suficientes.</li>
+                                                </ul>
                                             </div>
                                         </div>
-                                        <div class="stats-card chart-card">
-                                            <h3 class="chart-title">Desempenho por Categoria</h3>
-                                            <div id="chart-category-performance" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
+                                    </article>
+
+                                    <article class="insight-block insight-block--difficulty">
+                                        <header class="insight-block__header">
+                                            <h4 class="insight-block__title">Desempenho por dificuldade</h4>
+                                            <p class="insight-block__subtitle">Compare sua taxa de acertos em cada nível.</p>
+                                        </header>
+                                        <div class="insight-block__content">
+                                            <ul id="difficulty-summary-list" class="difficulty-list">
+                                                <li class="difficulty-list__item difficulty-list__item--empty">Nenhuma sessão registrada no período.</li>
+                                            </ul>
                                         </div>
-                                        <div class="stats-card chart-card stats-card--full-width">
-                                            <h3 class="chart-title">Evolução da Precisão</h3>
-                                            <div id="chart-learning-progress" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
+                                    </article>
+
+                                    <article class="insight-block insight-block--rhythm">
+                                        <header class="insight-block__header">
+                                            <h4 class="insight-block__title">Ritmo semanal de estudos</h4>
+                                            <p class="insight-block__subtitle">Distribuição do tempo dedicado em cada dia da semana.</p>
+                                        </header>
+                                        <div class="insight-block__content">
+                                            <ul id="study-rhythm-list" class="rhythm-list">
+                                                <li class="rhythm-list__item rhythm-list__item--empty">Ainda não há sessões suficientes para montar o ritmo.</li>
+                                            </ul>
                                         </div>
-                                        <div class="stats-card chart-card stats-card--full-width">
-                                            <h3 class="chart-title">Frequência de Estudos (Heatmap)</h3>
-                                            <div id="chart-study-heatmap" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
-                                        </div>
-                                        <div class="stats-card chart-card">
-                                            <h3 class="chart-title">Tempo de Estudo Detalhado</h3>
-                                            <div id="chart-study-time" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
-                                        </div>
-                                        <div class="stats-card chart-card">
-                                            <h3 class="chart-title">Acertos por Dificuldade</h3>
-                                            <div id="chart-difficulty-performance" class="chart-container">
-                                                <p class="chart-placeholder">Carregando gráfico...</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div id="no-stats-data-message" class="u-is-hidden placeholder-text progression-empty-state">
-                                        <span class="material-symbols-outlined" aria-hidden="true">sentiment_dissatisfied</span>
-                                        Nenhuma estatística encontrada para o período selecionado. Comece um quiz para ver seu progresso!
-                                    </div>
+                                    </article>
                                 </div>
                             </div>
                         </section>

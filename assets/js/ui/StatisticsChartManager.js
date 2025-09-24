@@ -1,299 +1,598 @@
 // assets/js/ui/StatisticsChartManager.js
 
-/**
- * Realiza uma mesclagem profunda (deep merge) de dois objetos, preservando propriedades aninhadas.
- * @param {object} target - O objeto de destino.
- * @param {object} source - O objeto de origem, cujas propriedades irão sobrescrever as do destino.
- * @returns {object} Um novo objeto com as propriedades mescladas.
- */
-function deepMerge(target, source) {
-    const output = { ...target };
-    if (isObject(target) && isObject(source)) {
-        Object.keys(source).forEach(key => {
-            if (isObject(source[key])) {
-                if (!(key in target)) {
-                    Object.assign(output, { [key]: source[key] });
-                } else {
-                    output[key] = deepMerge(target[key], source[key]);
-                }
-            } else {
-                Object.assign(output, { [key]: source[key] });
-            }
-        });
+const DEFAULT_PERIOD = "30d";
+
+function formatNumber(value) {
+    if (value === undefined || value === null) {
+        return "--";
     }
-    return output;
+    try {
+        return Number(value).toLocaleString("pt-BR");
+    } catch (error) {
+        return String(value);
+    }
 }
 
-/**
- * Verifica se um item é um objeto (e não um array ou null).
- * @param {*} item - O item a ser verificado.
- * @returns {boolean}
- */
-function isObject(item) {
-    return (item && typeof item === 'object' && !Array.isArray(item));
+function formatDuration(seconds) {
+    if (seconds === undefined || seconds === null) {
+        return "--";
+    }
+
+    const totalSeconds = Math.max(0, Number(seconds));
+    if (Number.isNaN(totalSeconds) || totalSeconds === 0) {
+        return "0 min";
+    }
+
+    const minutes = Math.floor(totalSeconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0) {
+        return `${hours}h ${remainingMinutes}min`;
+    }
+
+    if (minutes > 0) {
+        return `${minutes} min`;
+    }
+
+    return `${Math.max(1, Math.floor(totalSeconds))} s`;
 }
 
+function safeText(element, text) {
+    if (!element) return;
+    element.textContent = text;
+}
 
 export default class StatisticsChartManager {
-	constructor(quizUIInstance) {
-		this.quizUI = quizUIInstance;
+    constructor(quizUIInstance) {
+        this.quizUI = quizUIInstance;
+        this.store = null;
+        this.actionOrchestrator = null;
+        this.hasInitialized = false;
+        this.previousStatsState = null;
+        this.heatmapTooltip = null;
 
-		this.store = null;
-		this.actionOrchestrator = null;
-		this.hasInitialized = false;
+        this.elements = {
+            statisticsCardEl: document.querySelector(".progression-card--analytics"),
+            periodSelectEl: document.getElementById("stats-period-select"),
+            insightsGridEl: document.getElementById("progression-insights-grid"),
+            feedbackEl: document.getElementById("no-stats-data-message"),
+            feedbackTextEl: document.querySelector("#no-stats-data-message [data-role='feedback-text']"),
+            heatmapContainerEl: document.getElementById("chart-study-heatmap"),
+            periodQuestionsEl: document.getElementById("metric-period-questions"),
+            periodStudyTimeEl: document.getElementById("metric-period-study-time"),
+            periodXpEl: document.getElementById("metric-period-xp"),
+            periodStreakEl: document.getElementById("metric-period-streak"),
+            trendCurrentEl: document.getElementById("trend-current-accuracy"),
+            trendChangeEl: document.getElementById("trend-accuracy-change"),
+            trendListEl: document.getElementById("trend-accuracy-list"),
+            categoryBestListEl: document.getElementById("category-highlights-best"),
+            categoryFocusListEl: document.getElementById("category-highlights-focus"),
+            difficultyListEl: document.getElementById("difficulty-summary-list"),
+            studyRhythmListEl: document.getElementById("study-rhythm-list"),
+        };
 
-		this.elements = {
-			overallAccuracyChartEl: document.getElementById(
-				"chart-overall-accuracy"
-			),
-			categoryPerformanceChartEl: document.getElementById(
-				"chart-category-performance"
-			),
-			learningProgressChartEl: document.getElementById(
-				"chart-learning-progress"
-			),
-			studyHeatmapChartEl: document.getElementById("chart-study-heatmap"),
-			studyTimeChartEl: document.getElementById("chart-study-time"),
-			difficultyPerformanceChartEl: document.getElementById(
-				"chart-difficulty-performance"
-			),
-			periodSelectEl: document.getElementById("stats-period-select"),
-			totalQuestionsEl: document.getElementById("metric-total-questions"),
-			maxStreakEl: document.getElementById("metric-max-streak"),
-			totalScoreEl: document.getElementById("metric-total-score"),
-			totalStudyTimeEl: document.getElementById(
-				"metric-total-study-time"
-			),
-			noStatsDataMessageEl: document.getElementById(
-				"no-stats-data-message"
-			),
-			statisticsDashboardContainer: document.querySelector(
-				".statistics-dashboard"
-			),
-		};
-                this.charts = {};
-                this.heatmapTooltip = null;
+        const initialPeriod = this.elements.periodSelectEl?.value;
+        this.currentPeriod = this._normalizePeriodValue(initialPeriod);
 
-                const initialPeriodValue = this.elements.periodSelectEl
-                        ? this.elements.periodSelectEl.value
-                        : null;
-                this.currentPeriod = this._normalizePeriodValue(initialPeriodValue);
+        if (this.elements.periodSelectEl && this.elements.periodSelectEl.value !== this.currentPeriod) {
+            const option = this.elements.periodSelectEl.querySelector(`option[value="${this.currentPeriod}"]`);
+            if (option) {
+                this.elements.periodSelectEl.value = this.currentPeriod;
+            }
+        }
+    }
 
-                if (
-                        this.elements.periodSelectEl &&
-                        this.elements.periodSelectEl.value !== this.currentPeriod
-                ) {
-                        const matchingOption = this.elements.periodSelectEl.querySelector(
-                                `option[value="${this.currentPeriod}"]`
-                        );
-                        if (matchingOption) {
-                                this.elements.periodSelectEl.value = this.currentPeriod;
-                        }
-                }
-
-                this.previousStatsState = {};
+    _normalizePeriodValue(rawValue) {
+        if (rawValue === undefined || rawValue === null) {
+            return DEFAULT_PERIOD;
         }
 
-        _normalizePeriodValue(rawValue) {
-                const DEFAULT_PERIOD = "30d";
-
-                if (rawValue === undefined || rawValue === null) {
-                        return DEFAULT_PERIOD;
-                }
-
-                const normalizedValue = String(rawValue).trim().toLowerCase();
-
-                if (normalizedValue === "all") {
-                        return "all";
-                }
-
-                const match = normalizedValue.match(/^(\d+)(d)?$/);
-                if (match) {
-                        const days = parseInt(match[1], 10);
-                        if (!Number.isNaN(days) && days > 0) {
-                                return `${days}d`;
-                        }
-                }
-
-                return DEFAULT_PERIOD;
+        const normalized = String(rawValue).trim().toLowerCase();
+        if (normalized === "all") {
+            return "all";
         }
 
-        setStore(storeInstance) {
-                this.store = storeInstance;
-                if (this.store) {
-                        this.previousStatsState = this.store.getState().statistics;
-                        this.store.subscribe(this.handleStateUpdate.bind(this));
-		}
-	}
+        const match = normalized.match(/^(\d+)(d)?$/);
+        if (match) {
+            const days = parseInt(match[1], 10);
+            if (!Number.isNaN(days) && days > 0) {
+                return `${days}d`;
+            }
+        }
 
-	setActionOrchestrator(orchestrator) {
-		this.actionOrchestrator = orchestrator;
-	}
+        return DEFAULT_PERIOD;
+    }
 
-	init() {
-		if (this.hasInitialized) {
-			return;
-		}
+    setStore(storeInstance) {
+        this.store = storeInstance;
+        if (this.store) {
+            this.store.subscribe(this.handleStateUpdate.bind(this));
+        }
+    }
 
-		if (!this.elements.periodSelectEl) return;
+    setActionOrchestrator(orchestrator) {
+        this.actionOrchestrator = orchestrator;
+    }
 
-                this.elements.periodSelectEl.addEventListener("change", (event) => {
-                        const selectEl = event.target;
-                        const normalizedPeriod = this._normalizePeriodValue(
-                                selectEl.value
-                        );
+    init() {
+        if (this.hasInitialized || !this.elements.periodSelectEl) {
+            return;
+        }
 
-                        if (selectEl.value !== normalizedPeriod) {
-                                const matchingOption = selectEl.querySelector(
-                                        `option[value="${normalizedPeriod}"]`
-                                );
-                                if (matchingOption) {
-                                        selectEl.value = normalizedPeriod;
-                                }
-                        }
+        this.elements.periodSelectEl.addEventListener("change", (event) => {
+            const selectEl = event.target;
+            const normalizedPeriod = this._normalizePeriodValue(selectEl.value);
 
-                        this.currentPeriod = normalizedPeriod;
-                        this._triggerFetchStatistics();
-                });
+            if (selectEl.value !== normalizedPeriod) {
+                const option = selectEl.querySelector(`option[value="${normalizedPeriod}"]`);
+                if (option) {
+                    selectEl.value = normalizedPeriod;
+                }
+            }
 
-		const currentStats = this.store.getState().statistics;
-		if (!currentStats.data && !currentStats.isLoading) {
-			this._triggerFetchStatistics();
-		}
+            this.currentPeriod = normalizedPeriod;
+            this._triggerFetchStatistics();
+        });
 
-		this.hasInitialized = true;
-	}
+        const currentStats = this.store?.getState().statistics;
+        if (currentStats && !currentStats.data && !currentStats.isLoading) {
+            this._triggerFetchStatistics();
+        }
 
-	_triggerFetchStatistics() {
-		if (this.actionOrchestrator) {
-			this.actionOrchestrator.fetchStatistics(this.currentPeriod);
-		}
-	}
+        this.hasInitialized = true;
+    }
 
-	handleStateUpdate() {
-		if (!this.store) return;
-		const newStatsState = this.store.getState().statistics;
+    _triggerFetchStatistics() {
+        if (this.actionOrchestrator) {
+            this.actionOrchestrator.fetchStatistics(this.currentPeriod);
+        }
+    }
 
-		if (
-			JSON.stringify(newStatsState) !==
-			JSON.stringify(this.previousStatsState)
-		) {
-			this._render(newStatsState);
-			this.previousStatsState = newStatsState;
-		}
-	}
+    handleStateUpdate() {
+        if (!this.store) return;
+        const newStatsState = this.store.getState().statistics;
 
-	_render(statsState) {
-		const { isLoading, data: statsData, error } = statsState;
+        if (JSON.stringify(newStatsState) !== JSON.stringify(this.previousStatsState)) {
+            this._render(newStatsState);
+            this.previousStatsState = newStatsState;
+        }
+    }
 
-		if (isLoading) {
-			this._showLoadingPlaceholders();
-			return;
-		}
+    _render(statsState) {
+        if (!statsState) return;
 
-		this.elements.statisticsDashboardContainer?.classList.remove(
-			"is-loading"
-		);
+        const { isLoading, data, error } = statsState;
 
-		if (error) {
-			this._showErrorState(error);
-			return;
-		}
+        if (isLoading) {
+            this._showLoadingPlaceholders();
+            return;
+        }
 
-		if (statsData && statsData.status === "success") {
-			this._updateKeyMetrics(statsData.key_metrics);
-			const hasAnyData =
-				statsData.key_metrics?.total_questions_answered > 0;
+        this.elements.statisticsCardEl?.classList.remove("is-loading");
 
-			if (!hasAnyData) {
-				if (this.elements.noStatsDataMessageEl)
-					this.quizUI.showElement(this.elements.noStatsDataMessageEl);
-				document
-					.querySelectorAll(".chart-container .chart-placeholder")
-					.forEach((p) => {
-						this._showNoDataMessageForChart(
-							p.parentElement,
-							"Sem dados para o período."
-						);
-					});
-			} else {
-				if (this.elements.noStatsDataMessageEl)
-					this.quizUI.hideElement(this.elements.noStatsDataMessageEl);
-				this._renderOverallAccuracyChart(statsData.overall_accuracy);
-				this._renderCategoryPerformanceChart(
-					statsData.category_performance
-				);
-				this._renderLearningProgressChart(statsData.learning_progress);
-				this._renderStudyHeatmapChart(statsData.study_heatmap);
-				this._renderStudyTimeChart(statsData.study_time_detail);
-				this._renderDifficultyPerformanceChart(
-					statsData.difficulty_performance
-				);
-			}
-		} else {
-			this._showErrorState(
-				statsData?.message || "Falha ao processar estatísticas."
-			);
-		}
-	}
-    
+        if (error) {
+            this._toggleInsightsVisibility(false);
+            this._setFeedback(error, "error");
+            return;
+        }
+
+        if (!data || data.status !== "success") {
+            this._toggleInsightsVisibility(false);
+            this._setFeedback("Não foi possível carregar suas estatísticas no momento.", "error");
+            return;
+        }
+
+        const hasActivity = (data.key_metrics?.total_questions_answered ?? 0) > 0;
+
+        if (!hasActivity) {
+            this._toggleInsightsVisibility(false);
+            this._setFeedback("Nenhuma estatística encontrada para o período selecionado. Complete um quiz para desbloquear o painel.", "empty");
+            this._updatePeriodSummary(null);
+            this._resetTrendInsights();
+            this._resetCategoryHighlights();
+            this._resetDifficultySummary();
+            this._resetStudyRhythm();
+            this._clearHeatmap();
+            return;
+        }
+
+        this._toggleInsightsVisibility(true);
+        this._hideFeedback();
+
+        this._updatePeriodSummary(data.key_metrics);
+        this._renderStudyHeatmapChart(data.study_heatmap);
+        this._updateTrendInsights(data.learning_progress);
+        this._updateCategoryHighlights(data.category_performance);
+        this._updateDifficultySummary(data.difficulty_performance);
+        this._updateStudyRhythm(data.study_time_detail);
+    }
+
+    _showLoadingPlaceholders() {
+        this.elements.statisticsCardEl?.classList.add("is-loading");
+        this._hideFeedback();
+        this._toggleInsightsVisibility(true);
+
+        safeText(this.elements.periodQuestionsEl, "--");
+        safeText(this.elements.periodStudyTimeEl, "--");
+        safeText(this.elements.periodXpEl, "--");
+        safeText(this.elements.periodStreakEl, "--");
+        safeText(this.elements.trendCurrentEl, "--");
+        this._updateTrendBadge(null);
+
+        this._setListLoadingState(this.elements.trendListEl, "trend-list__item trend-list__item--empty");
+        this._setListLoadingState(this.elements.categoryBestListEl, "insight-list__item insight-list__item--empty");
+        this._setListLoadingState(this.elements.categoryFocusListEl, "insight-list__item insight-list__item--empty");
+        this._setListLoadingState(this.elements.difficultyListEl, "difficulty-list__item difficulty-list__item--empty");
+        this._setListLoadingState(this.elements.studyRhythmListEl, "rhythm-list__item rhythm-list__item--empty");
+
+        if (this.elements.heatmapContainerEl) {
+            this.elements.heatmapContainerEl.innerHTML = '<p class="chart-placeholder">Carregando dados...</p>';
+        }
+    }
+
+    _setListLoadingState(listEl, className = "trend-list__item trend-list__item--empty") {
+        if (!listEl) return;
+        listEl.innerHTML = "";
+        const li = document.createElement("li");
+        li.className = className;
+        li.textContent = "Carregando...";
+        listEl.appendChild(li);
+    }
+
+    _toggleInsightsVisibility(show) {
+        if (!this.elements.insightsGridEl) return;
+        if (show) {
+            this.quizUI.showElement(this.elements.insightsGridEl);
+        } else {
+            this.quizUI.hideElement(this.elements.insightsGridEl);
+        }
+    }
+
+    _setFeedback(message, type = "empty") {
+        if (!this.elements.feedbackEl) return;
+
+        this.elements.feedbackEl.classList.toggle("progression-feedback--error", type === "error");
+        this.elements.feedbackEl.classList.toggle("progression-feedback--empty", type !== "error");
+        safeText(this.elements.feedbackTextEl, message);
+        this.quizUI.showElement(this.elements.feedbackEl);
+    }
+
+    _hideFeedback() {
+        if (this.elements.feedbackEl) {
+            this.quizUI.hideElement(this.elements.feedbackEl);
+        }
+    }
+
+    _updatePeriodSummary(keyMetrics) {
+        const metrics = keyMetrics || {};
+        safeText(this.elements.periodQuestionsEl, formatNumber(metrics.total_questions_answered ?? 0));
+        safeText(this.elements.periodStudyTimeEl, formatDuration(metrics.total_study_time_seconds));
+        safeText(this.elements.periodXpEl, formatNumber(metrics.total_xp_period ?? 0));
+        safeText(this.elements.periodStreakEl, formatNumber(metrics.max_streak ?? 0));
+    }
+
+    _resetTrendInsights() {
+        safeText(this.elements.trendCurrentEl, "--");
+        this._updateTrendBadge(null);
+        if (this.elements.trendListEl) {
+            this.elements.trendListEl.innerHTML = "";
+            const li = document.createElement("li");
+            li.className = "trend-list__item trend-list__item--empty";
+            li.textContent = "Complete um quiz para visualizar o histórico de precisão.";
+            this.elements.trendListEl.appendChild(li);
+        }
+    }
+
+    _updateTrendInsights(data) {
+        if (!this.elements.trendListEl) return;
+
+        const validData = Array.isArray(data)
+            ? data.filter((item) => item && typeof item.daily_accuracy === "number" && item.date_str)
+            : [];
+
+        if (validData.length === 0) {
+            this._resetTrendInsights();
+            return;
+        }
+
+        const lastEntry = validData[validData.length - 1];
+        const firstEntry = validData[0];
+        const change = lastEntry.daily_accuracy - firstEntry.daily_accuracy;
+
+        safeText(this.elements.trendCurrentEl, `${lastEntry.daily_accuracy.toFixed(1)}%`);
+        this._updateTrendBadge(change);
+
+        const recentEntries = validData.slice(-7).reverse();
+        this.elements.trendListEl.innerHTML = "";
+
+        recentEntries.forEach((entry) => {
+            const li = document.createElement("li");
+            li.className = "trend-list__item";
+
+            const dayLabel = document.createElement("span");
+            dayLabel.className = "trend-list__day";
+            dayLabel.textContent = this._formatDateLabel(entry.date_str);
+
+            const value = document.createElement("span");
+            value.className = "trend-list__value";
+            value.textContent = `${entry.daily_accuracy.toFixed(1)}%`;
+
+            li.append(dayLabel, value);
+            this.elements.trendListEl.appendChild(li);
+        });
+    }
+
+    _updateTrendBadge(changeValue) {
+        const badgeEl = this.elements.trendChangeEl;
+        if (!badgeEl) return;
+
+        badgeEl.classList.remove("trend-badge--up", "trend-badge--down");
+
+        if (changeValue === null || changeValue === undefined) {
+            badgeEl.textContent = "--";
+            return;
+        }
+
+        if (changeValue > 0) {
+            badgeEl.classList.add("trend-badge--up");
+            badgeEl.textContent = `+${changeValue.toFixed(1)} pts`;
+        } else if (changeValue < 0) {
+            badgeEl.classList.add("trend-badge--down");
+            badgeEl.textContent = `${changeValue.toFixed(1)} pts`;
+        } else {
+            badgeEl.textContent = "Estável";
+        }
+    }
+
+    _resetCategoryHighlights() {
+        this._setEmptyCategoryState(this.elements.categoryBestListEl, "Sem dados suficientes.");
+        this._setEmptyCategoryState(this.elements.categoryFocusListEl, "Sem dados suficientes.");
+    }
+
+    _updateCategoryHighlights(data) {
+        const categories = Array.isArray(data) ? data : [];
+        const bestList = this.elements.categoryBestListEl;
+        const focusList = this.elements.categoryFocusListEl;
+
+        if (!bestList || !focusList) return;
+
+        if (categories.length === 0) {
+            this._resetCategoryHighlights();
+            return;
+        }
+
+        const sortedByAccuracyDesc = [...categories].sort((a, b) => (b.accuracy ?? 0) - (a.accuracy ?? 0));
+        const sortedByAccuracyAsc = [...categories].sort((a, b) => (a.accuracy ?? 0) - (b.accuracy ?? 0));
+
+        this._populateCategoryList(bestList, sortedByAccuracyDesc.slice(0, 3));
+        this._populateCategoryList(focusList, sortedByAccuracyAsc.slice(0, 3));
+    }
+
+    _populateCategoryList(listEl, entries) {
+        if (!listEl) return;
+        listEl.innerHTML = "";
+
+        if (!entries || entries.length === 0) {
+            this._setEmptyCategoryState(listEl, "Sem dados suficientes.");
+            return;
+        }
+
+        entries.forEach((entry) => {
+            const li = document.createElement("li");
+            li.className = "insight-list__item";
+
+            const textWrapper = document.createElement("div");
+            textWrapper.className = "insight-list__item-text";
+
+            const label = document.createElement("span");
+            label.className = "insight-list__item-label";
+            label.textContent = entry.name || "Categoria";
+
+            const hint = document.createElement("span");
+            hint.className = "insight-list__hint";
+            hint.textContent = `${entry.correct ?? 0} acertos de ${entry.total ?? 0}`;
+
+            textWrapper.append(label, hint);
+
+            const value = document.createElement("span");
+            value.className = "insight-list__value";
+            value.textContent = `${Math.round(entry.accuracy ?? 0)}%`;
+
+            li.append(textWrapper, value);
+            listEl.appendChild(li);
+        });
+    }
+
+    _setEmptyCategoryState(listEl, message) {
+        if (!listEl) return;
+        listEl.innerHTML = "";
+        const li = document.createElement("li");
+        li.className = "insight-list__item insight-list__item--empty";
+        li.textContent = message;
+        listEl.appendChild(li);
+    }
+
+    _resetDifficultySummary() {
+        this._setEmptyDifficultyState("Nenhuma sessão registrada no período.");
+    }
+
+    _updateDifficultySummary(data) {
+        const listEl = this.elements.difficultyListEl;
+        if (!listEl) return;
+
+        const items = Array.isArray(data) ? data.filter((entry) => entry.total > 0) : [];
+
+        if (items.length === 0) {
+            this._resetDifficultySummary();
+            return;
+        }
+
+        listEl.innerHTML = "";
+        items.forEach((item) => {
+            const li = document.createElement("li");
+            li.className = "difficulty-list__item";
+
+            const header = document.createElement("div");
+            header.className = "difficulty-list__item-header";
+
+            const label = document.createElement("span");
+            label.className = "difficulty-list__item-label";
+            label.textContent = item.name || "Dificuldade";
+
+            const value = document.createElement("span");
+            value.className = "difficulty-list__item-value";
+            value.textContent = `${Math.round(item.accuracy ?? 0)}%`;
+
+            header.append(label, value);
+
+            const hint = document.createElement("span");
+            hint.className = "insight-list__hint";
+            hint.textContent = `${item.correct ?? 0} acertos em ${item.total ?? 0}`;
+
+            const barContainer = document.createElement("div");
+            barContainer.className = "difficulty-list__bar";
+            const barFill = document.createElement("span");
+            barFill.style.width = `${Math.min(100, Math.max(0, item.accuracy ?? 0))}%`;
+            barContainer.appendChild(barFill);
+
+            li.append(header, hint, barContainer);
+            listEl.appendChild(li);
+        });
+    }
+
+    _setEmptyDifficultyState(message) {
+        const listEl = this.elements.difficultyListEl;
+        if (!listEl) return;
+        listEl.innerHTML = "";
+        const li = document.createElement("li");
+        li.className = "difficulty-list__item difficulty-list__item--empty";
+        li.textContent = message;
+        listEl.appendChild(li);
+    }
+
+    _resetStudyRhythm() {
+        const listEl = this.elements.studyRhythmListEl;
+        if (!listEl) return;
+        listEl.innerHTML = "";
+        const li = document.createElement("li");
+        li.className = "rhythm-list__item rhythm-list__item--empty";
+        li.textContent = "Ainda não há sessões suficientes para montar o ritmo.";
+        listEl.appendChild(li);
+    }
+
+    _updateStudyRhythm(data) {
+        const listEl = this.elements.studyRhythmListEl;
+        if (!listEl) return;
+
+        if (!data || !Array.isArray(data.labels) || !Array.isArray(data.data) || data.labels.length === 0) {
+            this._resetStudyRhythm();
+            return;
+        }
+
+        const values = data.data.map((value) => Number(value) || 0);
+        const maxValue = Math.max(...values, 0);
+
+        listEl.innerHTML = "";
+        data.labels.forEach((label, index) => {
+            const amount = values[index];
+            const li = document.createElement("li");
+            li.className = "rhythm-list__item";
+
+            const day = document.createElement("span");
+            day.className = "rhythm-list__item-label";
+            day.textContent = label;
+
+            const barContainer = document.createElement("div");
+            barContainer.className = "rhythm-list__item-bar";
+            const barFill = document.createElement("span");
+            const widthPercentage = maxValue > 0 ? Math.max(6, (amount / maxValue) * 100) : 6;
+            barFill.style.width = `${Math.min(100, widthPercentage)}%`;
+            barContainer.appendChild(barFill);
+
+            const valueLabel = document.createElement("span");
+            valueLabel.className = "rhythm-list__item-value";
+            valueLabel.textContent = `${amount} min`;
+
+            li.append(day, barContainer, valueLabel);
+            listEl.appendChild(li);
+        });
+    }
+
     _renderStudyHeatmapChart(data) {
-        this._destroyChart('studyHeatmap');
-        const container = this.elements.studyHeatmapChartEl;
-
+        const container = this.elements.heatmapContainerEl;
         if (!container) return;
-        container.innerHTML = '';
 
-        if (!data || data.length === 0) {
-            this._showNoDataMessageForChart(container, "Sem dados de frequência para exibir.");
+        container.innerHTML = "";
+
+        if (!Array.isArray(data) || data.length === 0) {
+            this._showNoDataMessageForHeatmap("Sem dados de frequência para exibir.");
             return;
         }
 
         this._createTooltip();
-        const dataMap = new Map(data.map(d => [d.date_str, d.questions_done]));
-        
+        const dataMap = new Map(data.map((entry) => [entry.date_str, entry.questions_done]));
+
         const today = new Date();
         const currentYear = today.getUTCFullYear();
-        const startDate = new Date(Date.UTC(currentYear, 0, 1)); // Jan 1st
-        const endDate = new Date(Date.UTC(currentYear, 11, 31)); // Dec 31st
+        const startDate = new Date(Date.UTC(currentYear, 0, 1));
+        const endDate = new Date(Date.UTC(currentYear, 11, 31));
 
-        const heatmapContainer = document.createElement('div');
-        heatmapContainer.className = 'heatmap-container';
+        const heatmapContainer = document.createElement("div");
+        heatmapContainer.className = "heatmap-container";
 
-        const grid = document.createElement('div');
-        grid.className = 'heatmap-grid';
-        
+        const grid = document.createElement("div");
+        grid.className = "heatmap-grid";
+
         const graphData = this._generateGraphElements(startDate, endDate, dataMap);
 
         grid.appendChild(graphData.daysOfWeek);
         grid.appendChild(graphData.months);
         grid.appendChild(graphData.graph);
+
         heatmapContainer.appendChild(grid);
         heatmapContainer.appendChild(this._createLegend());
         container.appendChild(heatmapContainer);
     }
-    
+
+    _showNoDataMessageForHeatmap(message) {
+        if (!this.elements.heatmapContainerEl) return;
+        this.elements.heatmapContainerEl.innerHTML = "";
+        const placeholder = document.createElement("p");
+        placeholder.className = "chart-placeholder";
+        placeholder.textContent = message;
+        this.elements.heatmapContainerEl.appendChild(placeholder);
+    }
+
+    _clearHeatmap() {
+        if (this.elements.heatmapContainerEl) {
+            this.elements.heatmapContainerEl.innerHTML = "";
+        }
+    }
+
     _generateGraphElements(startDate, endDate, dataMap) {
-        const graph = document.createElement('div');
-        graph.className = 'heatmap-graph';
-        
-        const monthsContainer = document.createElement('div');
-        monthsContainer.className = 'heatmap-months';
-        
-        const daysContainer = document.createElement('div');
-        daysContainer.className = 'heatmap-days-of-week';
-        ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].forEach(day => {
-            daysContainer.innerHTML += `<div>${day}</div>`;
+        const graph = document.createElement("div");
+        graph.className = "heatmap-graph";
+
+        const monthsContainer = document.createElement("div");
+        monthsContainer.className = "heatmap-months";
+
+        const daysContainer = document.createElement("div");
+        daysContainer.className = "heatmap-days-of-week";
+        ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"].forEach((day) => {
+            const div = document.createElement("div");
+            div.textContent = day;
+            daysContainer.appendChild(div);
         });
 
         let currentDate = new Date(startDate);
         const firstDayOfWeek = startDate.getUTCDay();
 
-        for (let i = 0; i < firstDayOfWeek; i++) {
-            const dayEl = document.createElement('div');
-            dayEl.className = 'heatmap-day';
-            dayEl.style.visibility = 'hidden';
-            graph.appendChild(dayEl);
+        for (let i = 0; i < firstDayOfWeek; i += 1) {
+            const emptyDay = document.createElement("div");
+            emptyDay.className = "heatmap-day";
+            emptyDay.style.visibility = "hidden";
+            graph.appendChild(emptyDay);
         }
 
         const monthLabels = [];
@@ -302,12 +601,12 @@ export default class StatisticsChartManager {
         let weekCount = 1;
 
         while (currentDate <= endDate) {
-            const dateStr = currentDate.toISOString().split('T')[0];
+            const dateStr = currentDate.toISOString().split("T")[0];
             const count = dataMap.get(dateStr) || 0;
             const level = this._getContributionLevel(count);
 
-            const dayEl = document.createElement('div');
-            dayEl.className = 'heatmap-day';
+            const dayEl = document.createElement("div");
+            dayEl.className = "heatmap-day";
             dayEl.dataset.level = level.toString();
             dayEl.dataset.date = dateStr;
             dayEl.dataset.count = count.toString();
@@ -320,16 +619,16 @@ export default class StatisticsChartManager {
                 lastMonth = currentMonth;
             }
 
-            if (currentDate.getUTCDay() === 6) { 
-                weekCount++;
+            if (currentDate.getUTCDay() === 6) {
+                weekCount += 1;
             }
-            
+
             currentDate.setUTCDate(currentDate.getUTCDate() + 1);
         }
-        
-        monthLabels.forEach(label => {
-            const monthEl = document.createElement('div');
-            monthEl.className = 'heatmap-month-label';
+
+        monthLabels.forEach((label) => {
+            const monthEl = document.createElement("div");
+            monthEl.className = "heatmap-month-label";
             monthEl.textContent = label.name;
             monthEl.style.gridColumnStart = label.startColumn;
             monthsContainer.appendChild(monthEl);
@@ -348,579 +647,73 @@ export default class StatisticsChartManager {
 
     _createTooltip() {
         if (this.heatmapTooltip) return;
-        this.heatmapTooltip = document.createElement('div');
-        this.heatmapTooltip.className = 'heatmap-tooltip';
+        this.heatmapTooltip = document.createElement("div");
+        this.heatmapTooltip.className = "heatmap-tooltip";
         document.body.appendChild(this.heatmapTooltip);
     }
 
     _addTooltipEvents(element) {
-        element.addEventListener('mouseover', (e) => {
-            const count = e.target.dataset.count;
-            const dateStr = e.target.dataset.date;
-            const date = new Date(`${dateStr}T00:00:00Z`);
-            const formattedDate = date.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
-            
-            const contributions = count === '1' ? '1 questão' : `${count} questões`;
-            this.heatmapTooltip.innerHTML = `<strong>${contributions}</strong> em ${formattedDate}`;
-            
-            const rect = e.target.getBoundingClientRect();
-            this.heatmapTooltip.style.left = `${rect.left + rect.width / 2}px`;
-            this.heatmapTooltip.style.top = `${rect.top}px`;
-            this.heatmapTooltip.classList.add('is-visible');
+        element.addEventListener("mouseover", (event) => {
+            const count = event.target.dataset.count;
+            const dateStr = event.target.dataset.date;
+            const formattedDate = this._formatTooltipDate(dateStr);
+            this.heatmapTooltip.innerHTML = `<strong>${count} questão${count === "1" ? "" : "s"}</strong><span>${formattedDate}</span>`;
+            this.heatmapTooltip.classList.add("is-visible");
         });
 
-        element.addEventListener('mouseleave', () => {
-            this.heatmapTooltip.classList.remove('is-visible');
+        element.addEventListener("mousemove", (event) => {
+            const tooltipWidth = this.heatmapTooltip.offsetWidth;
+            const tooltipHeight = this.heatmapTooltip.offsetHeight;
+            const offset = 14;
+            this.heatmapTooltip.style.left = `${event.pageX - tooltipWidth / 2}px`;
+            this.heatmapTooltip.style.top = `${event.pageY - tooltipHeight - offset}px`;
+        });
+
+        element.addEventListener("mouseleave", () => {
+            this.heatmapTooltip.classList.remove("is-visible");
         });
     }
 
     _createLegend() {
-        const legend = document.createElement('div');
-        legend.className = 'heatmap-legend';
-        legend.innerHTML = `
-            <span>Menos</span>
-            <ul>
-                <li style="background-color: var(--heatmap-level-0);" data-level="0"></li>
-                <li style="background-color: var(--heatmap-level-1);" data-level="1"></li>
-                <li style="background-color: var(--heatmap-level-2);" data-level="2"></li>
-                <li style="background-color: var(--heatmap-level-3);" data-level="3"></li>
-                <li style="background-color: var(--heatmap-level-4);" data-level="4"></li>
-            </ul>
-            <span>Mais</span>
-        `;
-        this._addTooltipEventsToLegend(legend);
+        const legend = document.createElement("div");
+        legend.className = "heatmap-legend";
+
+        const label = document.createElement("span");
+        label.textContent = "Menos";
+
+        const list = document.createElement("ul");
+        for (let level = 0; level <= 4; level += 1) {
+            const item = document.createElement("li");
+            item.dataset.level = level;
+            list.appendChild(item);
+        }
+
+        const labelMax = document.createElement("span");
+        labelMax.textContent = "Mais";
+
+        legend.append(label, list, labelMax);
         return legend;
     }
-    
-    _addTooltipEventsToLegend(legendContainer){
-         legendContainer.querySelectorAll('li').forEach(item => {
-            item.addEventListener('mouseover', (e) => {
-                const level = e.target.dataset.level;
-                let text = "Sem atividades";
-                if(level === "1") text = "1-4 questões";
-                else if(level === "2") text = "5-9 questões";
-                else if(level === "3") text = "10-19 questões";
-                else if(level === "4") text = "20+ questões";
 
-                this.heatmapTooltip.innerHTML = `<strong>${text}</strong>`;
-                const rect = e.target.getBoundingClientRect();
-                this.heatmapTooltip.style.left = `${rect.left + rect.width / 2}px`;
-                this.heatmapTooltip.style.top = `${rect.top}px`;
-                this.heatmapTooltip.classList.add('is-visible');
-            });
-            item.addEventListener('mouseleave', () => {
-                 this.heatmapTooltip.classList.remove('is-visible');
-            });
+    _formatTooltipDate(dateStr) {
+        if (!dateStr) return "";
+        const date = new Date(`${dateStr}T00:00:00Z`);
+        return date.toLocaleDateString("pt-BR", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            timeZone: "UTC",
         });
     }
 
-	_showLoadingPlaceholders() {
-		this.elements.statisticsDashboardContainer?.classList.add("is-loading");
-		document
-			.querySelectorAll(".chart-container .chart-placeholder")
-			.forEach((p) => {
-				p.textContent = "Carregando gráfico...";
-				p.style.color = "var(--color-text-muted)";
-				this.quizUI.showElement(p);
-			});
-		Object.keys(this.charts).forEach((chartKey) =>
-			this._destroyChart(chartKey)
-		);
-        if (this.elements.studyHeatmapChartEl) this.elements.studyHeatmapChartEl.innerHTML = '<p class="chart-placeholder" style="display:block; text-align:center;">Carregando gráfico...</p>';
-
-		if (this.elements.noStatsDataMessageEl) {
-			this.quizUI.hideElement(this.elements.noStatsDataMessageEl);
-		}
-	}
-
-	_showErrorState(errorMessage) {
-		this._updateKeyMetrics(null);
-		document.querySelectorAll(".chart-container").forEach((container) => {
-			const placeholder = container.querySelector(".chart-placeholder");
-			if (placeholder) {
-				placeholder.textContent = errorMessage;
-				placeholder.style.color = "var(--color-accent-red)";
-				this.quizUI.showElement(placeholder);
-			}
-		});
-		if (this.elements.noStatsDataMessageEl) {
-			this.elements.noStatsDataMessageEl.textContent = errorMessage;
-			this.elements.noStatsDataMessageEl.style.color =
-				"var(--color-accent-red)";
-			this.quizUI.showElement(this.elements.noStatsDataMessageEl);
-		}
-	}
-
-	_hideLoadingPlaceholder(chartEl) {
-		const placeholder = chartEl?.querySelector(".chart-placeholder");
-		if (placeholder) this.quizUI.hideElement(placeholder);
-	}
-
-	_showNoDataMessageForChart(
-		chartEl,
-		message = "Sem dados para este gráfico."
-	) {
-        if(!chartEl) return;
-		chartEl.innerHTML = '';
-        const placeholder = document.createElement('p');
-        placeholder.className = 'chart-placeholder';
-        placeholder.style.textAlign = 'center';
-		placeholder.textContent = message;
-		placeholder.style.color = "var(--color-text-muted)";
-        chartEl.appendChild(placeholder);
-		this.quizUI.showElement(placeholder);
-	}
-
-	_updateKeyMetrics(keyMetrics) {
-		const metrics = keyMetrics || {
-			total_questions_answered: 0,
-			max_streak: 0,
-			total_score_all_time: 0,
-			total_study_time_seconds: 0,
-		};
-		if (this.elements.totalQuestionsEl)
-			this.elements.totalQuestionsEl.textContent =
-				metrics.total_questions_answered.toLocaleString("pt-BR");
-		if (this.elements.maxStreakEl)
-			this.elements.maxStreakEl.textContent =
-				metrics.max_streak.toLocaleString("pt-BR");
-		if (this.elements.totalScoreEl)
-			this.elements.totalScoreEl.textContent =
-				metrics.total_score_all_time.toLocaleString("pt-BR");
-		if (this.elements.totalStudyTimeEl) {
-			const totalSeconds = metrics.total_study_time_seconds || 0;
-			const minutes = Math.floor(totalSeconds / 60);
-			const hours = Math.floor(minutes / 60);
-			const remainingMinutes = minutes % 60;
-			this.elements.totalStudyTimeEl.textContent =
-				hours > 0 ? `${hours}h ${remainingMinutes}m` : `${minutes}m`;
-		}
-	}
-
-	_destroyChart(chartKey) {
-		if (
-			this.charts[chartKey] &&
-			typeof this.charts[chartKey].destroy === "function"
-		) {
-			try {
-				this.charts[chartKey].destroy();
-			} catch (e) {}
-		}
-		this.charts[chartKey] = null;
-	}
-
-	_getChartDefaultOptions(extraOptions = {}) {
-		const bodyStyles = getComputedStyle(document.body);
-		const fontFamily =
-			bodyStyles.getPropertyValue("--font-family-sans").trim() ||
-			"Roboto, sans-serif";
-			
-		const defaultOptions = {
-			chart: {
-				fontFamily: fontFamily,
-				foreColor: bodyStyles.getPropertyValue("--color-text-secondary").trim(),
-				toolbar: {
-					show: true,
-					tools: {
-						download: true,
-						selection: false,
-						zoom: false,
-						zoomin: false,
-						zoomout: false,
-						pan: false,
-						reset: true,
-					},
-				},
-				animations: {
-					enabled: true,
-					easing: "easeinout",
-					speed: 600,
-				},
-			},
-			grid: {
-				borderColor: bodyStyles.getPropertyValue("--color-gray-200").trim(),
-				strokeDashArray: 4,
-			},
-			stroke: { width: 2.5, curve: "smooth" },
-			markers: { size: 0, hover: { size: 5, sizeOffset: 2 } },
-			tooltip: {
-				theme: "light",
-				style: { fontSize: "12px", fontFamily: fontFamily },
-				x: { format: "dd MMM yy" },
-			},
-			legend: {
-				fontFamily: fontFamily,
-				fontWeight: 500,
-				fontSize: "12px",
-			},
-			noData: {
-				text: "Sem dados para exibir.",
-				style: {
-					color: bodyStyles.getPropertyValue("--color-text-secondary").trim(),
-					fontSize: "14px",
-					fontFamily: fontFamily,
-				},
-			},
-			colors: [
-				bodyStyles.getPropertyValue("--color-primary-medium").trim(),
-				bodyStyles.getPropertyValue("--color-secondary-green").trim(),
-				bodyStyles.getPropertyValue("--color-accent-red").trim(),
-				bodyStyles.getPropertyValue("--color-accent-yellow").trim(),
-			],
-		};
-
-		return deepMerge(defaultOptions, extraOptions);
-	}
-
-	_renderOverallAccuracyChart(data) {
-		this._destroyChart("overallAccuracy");
-		if (
-			!this.elements.overallAccuracyChartEl ||
-			!data ||
-			(data.correct === 0 && data.incorrect === 0)
-		) {
-			this._showNoDataMessageForChart(
-				this.elements.overallAccuracyChartEl,
-				"Sem dados de precisão."
-			);
-			return;
-		}
-		this._hideLoadingPlaceholder(this.elements.overallAccuracyChartEl);
-        
-        const bodyStyles = getComputedStyle(document.body);
-		const chartOptions = this._getChartDefaultOptions({
-			chart: { type: "donut", height: 280 },
-			series: [data.correct, data.incorrect],
-			labels: ["Acertos", "Erros"],
-            colors: [
-                bodyStyles.getPropertyValue("--color-secondary-green").trim(),
-                bodyStyles.getPropertyValue("--color-accent-red").trim()
-            ],
-			plotOptions: {
-				pie: {
-					donut: {
-						size: "70%",
-						labels: {
-							show: true,
-							name: { show: true },
-							value: {
-								show: true,
-								formatter: (val, { seriesIndex, w }) => {
-									const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-									return total > 0 ? ((w.globals.series[seriesIndex] / total) * 100).toFixed(0) + "%" : "0%";
-								},
-							},
-							total: {
-								show: true,
-								showAlways: true,
-								label: "Total Questões",
-                                fontSize: '14px',
-                                fontWeight: 'normal',
-								formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString("pt-BR"),
-							},
-						},
-					},
-				},
-			},
-			legend: { position: "bottom" },
-			dataLabels: { enabled: false },
-			tooltip: {
-				y: {
-					formatter: (val) => val.toLocaleString("pt-BR") + " questões",
-				},
-			},
-			responsive: [{
-                breakpoint: 768,
-                options: {
-                    chart: { height: 240 },
-                    legend: { position: 'bottom' }
-                }
-            }]
-		});
-		this.charts.overallAccuracy = new ApexCharts(
-			this.elements.overallAccuracyChartEl,
-			chartOptions
-		);
-		this.charts.overallAccuracy.render();
-	}
-
-    // --- INÍCIO DA ESTRATÉGIA DISRUPTIVA: Reconstrução com HTML/CSS ---
-	_renderCategoryPerformanceChart(data) {
-		this._destroyChart("categoryPerformance"); 
-        const container = this.elements.categoryPerformanceChartEl;
-		if (!container) return;
-
-		if (!data || data.length === 0) {
-			this._showNoDataMessageForChart(container, "Sem dados de categoria.");
-			return;
-		}
-
-		this._hideLoadingPlaceholder(container);
-		container.innerHTML = ''; // Limpa o contêiner de qualquer conteúdo anterior
-
-		const topData = data.slice(0, 10);
-
-		const list = document.createElement('ul');
-		list.className = 'category-performance-list';
-
-		topData.forEach(item => {
-			const accuracy = parseFloat(item.accuracy.toFixed(1));
-
-			const listItem = document.createElement('li');
-			listItem.className = 'category-performance-item';
-
-			const label = document.createElement('span');
-			label.className = 'category-performance-item__label';
-			label.textContent = item.name;
-			label.title = item.name; // Adiciona um tooltip nativo com o nome completo
-
-			const value = document.createElement('span');
-			value.className = 'category-performance-item__value';
-			value.textContent = `${accuracy.toFixed(0)}%`;
-
-			const barContainer = document.createElement('div');
-			barContainer.className = 'category-performance-item__bar-container';
-
-			const bar = document.createElement('div');
-			bar.className = 'category-performance-item__bar';
-
-			// Adiciona a barra ao contêiner antes de animar para garantir que a transição CSS funcione
-			barContainer.appendChild(bar);
-
-            listItem.appendChild(label);
-            listItem.appendChild(value);
-            listItem.appendChild(barContainer);
-
-			list.appendChild(listItem);
-            
-            // Usa um pequeno timeout para permitir que o elemento entre no DOM antes de animar a largura
-            setTimeout(() => {
-                bar.style.width = `${accuracy}%`;
-            }, 50);
-		});
-
-		container.appendChild(list);
-	}
-    // --- FIM DA ESTRATÉGIA DISRUPTIVA ---
-    
-    _calculateMovingAverage(data, windowSize) {
-        if (!data || data.length < windowSize) return [];
-        
-        const smoothedData = [];
-        for (let i = 0; i <= data.length - windowSize; i++) {
-            const windowSlice = data.slice(i, i + windowSize);
-            const sum = windowSlice.reduce((acc, point) => acc + point.y, 0);
-            const average = sum / windowSize;
-            
-            const pointInTime = windowSlice[windowSize - 1].x;
-            smoothedData.push({ x: pointInTime, y: parseFloat(average.toFixed(1)) });
-        }
-        return smoothedData;
+    _formatDateLabel(dateStr) {
+        if (!dateStr) return "";
+        const date = new Date(`${dateStr}T00:00:00Z`);
+        return date.toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "short",
+            timeZone: "UTC",
+        });
     }
-
-	_renderLearningProgressChart(data) {
-		this._destroyChart("learningProgress");
-		if (!this.elements.learningProgressChartEl || !data || data.length < 2) {
-			this._showNoDataMessageForChart(this.elements.learningProgressChartEl, "Dados insuficientes para progresso.");
-			return;
-		}
-		this._hideLoadingPlaceholder(this.elements.learningProgressChartEl);
-
-		const dailyData = data.map((item) => ({
-			x: new Date(item.date_str).getTime(),
-			y: item.daily_accuracy,
-		}));
-
-        const movingAverageData = this._calculateMovingAverage(dailyData, 7);
-        const bodyStyles = getComputedStyle(document.body);
-
-		const chartOptions = this._getChartDefaultOptions({
-			chart: {
-				type: "line",
-				height: 330,
-                zoom: {
-                    enabled: false
-                },
-			},
-			series: [
-                {
-                    name: "Precisão Diária",
-                    type: 'bar',
-                    data: dailyData
-                },
-                {
-                    name: 'Média Móvel (7 dias)',
-                    type: 'line',
-                    data: movingAverageData
-                }
-            ],
-            colors: [
-                bodyStyles.getPropertyValue("--color-primary-light").trim(),
-                bodyStyles.getPropertyValue("--color-secondary-green").trim(),
-            ],
-			stroke: {
-				width: [0, 3], 
-				curve: 'smooth'
-			},
-            plotOptions: {
-                bar: {
-                    columnWidth: '60%'
-                }
-            },
-            fill: {
-                opacity: [0.8, 1],
-            },
-			xaxis: {
-				type: "datetime",
-				labels: { datetimeUTC: false, format: "dd MMM" },
-			},
-			yaxis: {
-				min: 0,
-				max: 100,
-				title: { text: "Precisão" },
-				labels: { formatter: (val) => val.toFixed(0) + "%" },
-			},
-			tooltip: {
-                shared: true,
-                intersect: false,
-				y: { formatter: (val) => val !== undefined ? val.toFixed(1) + "%" : "N/A" },
-			},
-			dataLabels: { enabled: false },
-            legend: {
-                position: 'top',
-                horizontalAlign: 'left'
-            }
-		});
-		this.charts.learningProgress = new ApexCharts(
-			this.elements.learningProgressChartEl,
-			chartOptions
-		);
-		this.charts.learningProgress.render();
-	}
-
-	_renderStudyTimeChart(data) {
-		this._destroyChart("studyTime");
-		if (!this.elements.studyTimeChartEl || !data || data.data.every((d) => d === 0)) {
-			this._showNoDataMessageForChart(this.elements.studyTimeChartEl, "Sem dados de tempo de estudo.");
-			return;
-		}
-		this._hideLoadingPlaceholder(this.elements.studyTimeChartEl);
-		const chartOptions = this._getChartDefaultOptions({
-			chart: { type: "bar", height: 280 },
-			series: [{ name: "Minutos de Estudo", data: data.data }],
-			plotOptions: {
-				bar: {
-					borderRadius: 5,
-                    columnWidth: '60%',
-					dataLabels: { position: "top" },
-				},
-			},
-			dataLabels: {
-				enabled: true,
-				formatter: (val) => (val > 0 ? val + "m" : ""),
-				offsetY: -18,
-				style: {
-					fontSize: "10px",
-					fontWeight: "bold",
-					colors: [ getComputedStyle(document.body).getPropertyValue("--color-text-primary").trim() ],
-				},
-			},
-			xaxis: { categories: data.labels },
-			yaxis: { title: { text: "Minutos" } },
-			tooltip: {
-				y: { formatter: (val) => val + " min" },
-			},
-			responsive: [{
-                breakpoint: 768,
-                options: {
-                    chart: { height: 260 },
-                    dataLabels: { enabled: false },
-                }
-            }]
-		});
-		this.charts.studyTime = new ApexCharts(
-			this.elements.studyTimeChartEl,
-			chartOptions
-		);
-		this.charts.studyTime.render();
-	}
-
-	_renderDifficultyPerformanceChart(data) {
-		this._destroyChart("difficultyPerformance");
-		if (!this.elements.difficultyPerformanceChartEl || !data || data.length === 0 || data.every((d) => d.total === 0)) {
-			this._showNoDataMessageForChart(this.elements.difficultyPerformanceChartEl, "Sem dados de dificuldade.");
-			return;
-		}
-		this._hideLoadingPlaceholder(this.elements.difficultyPerformanceChartEl);
-		const bodyStyles = getComputedStyle(document.body);
-		const difficulties = data.map((item) => item.name);
-		const accuracies = data.map((item) => parseFloat(item.accuracy.toFixed(1)));
-		const difficultyColors = [
-			bodyStyles.getPropertyValue("--color-secondary-green").trim(),
-			bodyStyles.getPropertyValue("--color-primary-medium").trim(),
-			bodyStyles.getPropertyValue("--color-accent-red").trim(),
-		];
-		const seriesColors = difficulties.map((d) => {
-			if (d.toLowerCase().includes("fácil")) return difficultyColors[0];
-			if (d.toLowerCase().includes("médio")) return difficultyColors[1];
-			if (d.toLowerCase().includes("difícil")) return difficultyColors[2];
-			return bodyStyles.getPropertyValue("--color-gray-500").trim();
-		});
-		const chartOptions = this._getChartDefaultOptions({
-			chart: { type: "bar", height: 280 },
-			series: [{ name: "Precisão", data: accuracies }],
-			colors: seriesColors,
-			plotOptions: {
-				bar: {
-					horizontal: true,
-					barHeight: "60%",
-					borderRadius: 4,
-					distributed: true,
-					dataLabels: { position: "top" },
-				},
-			},
-			dataLabels: {
-				enabled: true,
-				formatter: (val, opts) => {
-					const totalQuestions = data[opts.dataPointIndex]?.total || 0;
-					return val > 0 ? `${val.toFixed(0)}% (${totalQuestions})` : "";
-				},
-				offsetX: 22,
-				textAnchor: "start",
-                style: {
-                    colors: ['#333']
-                }
-			},
-			xaxis: {
-				categories: difficulties,
-				min: 0,
-				max: 100,
-				labels: { formatter: (val) => val + "%" },
-			},
-			tooltip: {
-				y: {
-					formatter: (val, { dataPointIndex }) => {
-						const totalQuestions = data[dataPointIndex]?.total || 0;
-						return `${val.toFixed(1)}% (de ${totalQuestions} questões)`;
-					},
-				},
-			},
-			legend: { show: false },
-			responsive: [{
-                breakpoint: 768,
-                options: {
-                    chart: { height: 240 },
-					dataLabels: {
-						style: { fontSize: '10px' },
-						offsetX: 15
-					}
-                }
-            }]
-		});
-		this.charts.difficultyPerformance = new ApexCharts(
-			this.elements.difficultyPerformanceChartEl,
-			chartOptions
-		);
-		this.charts.difficultyPerformance.render();
-	}
 }

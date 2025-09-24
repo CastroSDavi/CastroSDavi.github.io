@@ -7,6 +7,7 @@ import QuestionDisplay from './QuestionDisplay.js';
 import ScorePanel from './ScorePanel.js';
 import WarningDisplay from './WarningDisplay.js';
 import { TRANSITION_DURATION } from '../utils/constants.js';
+import { resolveSystemMessage } from './messages/index.js';
 
 export default class QuizUI {
     constructor() {
@@ -27,6 +28,8 @@ export default class QuizUI {
         this.questionDisplay = new QuestionDisplay(this);
         this.scorePanel = new ScorePanel(this);
         this.warningDisplay = new WarningDisplay(this);
+
+        this.lastSystemMessage = null;
 
         this.filterPanelInstance = null;
         this.challengeHubInstance = null;
@@ -208,7 +211,11 @@ export default class QuizUI {
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
             closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'),
             avisoContainer: document.getElementById('aviso-container'),
-            avisoMensagem: document.querySelector('#aviso-container .card--aviso p'),
+            avisoTitle: document.querySelector('#aviso-container [data-role="message-title"]'),
+            avisoBody: document.querySelector('#aviso-container [data-role="message-body"]'),
+            avisoSupporting: document.querySelector('#aviso-container [data-role="message-supporting"]'),
+            avisoFeatureList: document.querySelector('#aviso-container [data-role="message-feature-list"]'),
+            avisoActions: document.querySelector('#aviso-container [data-role="message-actions"]'),
             mainContentQuestoes: document.querySelector('#question-section .question-section__main-content'),
             quizSectionContent: document.getElementById('quiz-section'),
             questionWrap: document.querySelector('#quiz-section .card--question-wrap'),
@@ -460,11 +467,86 @@ export default class QuizUI {
         });
     }
     
-    showWarning(message, type = 'warning', isTextCentered = false) {
+    showWarning(messageInput, type = 'warning', isTextCentered = false) {
+        const messageConfig = resolveSystemMessage(messageInput, {
+            defaultType: type,
+            defaultCentered: isTextCentered,
+        });
+
+        if (!messageConfig.body && typeof messageInput === 'string') {
+            messageConfig.body = messageInput;
+        }
+
+        if (!messageConfig.supportingText && messageConfig.detail) {
+            messageConfig.supportingText = messageConfig.detail;
+        }
+
+        if (!messageConfig.type) {
+            messageConfig.type = type;
+        }
+
+        if (typeof messageConfig.isTextCentered !== 'boolean') {
+            messageConfig.isTextCentered = isTextCentered;
+        }
+
+        this.lastSystemMessage = messageConfig;
+
         if (this.warningDisplay) {
-            this.warningDisplay.show(message, type, isTextCentered);
+            this.warningDisplay.show(messageConfig);
         } else {
-            alert(`[${type.toUpperCase()}] ${message}`); 
+            const fallbackText = messageConfig.body
+                || messageConfig.supportingText
+                || (typeof messageInput === 'string' ? messageInput : '');
+            const effectiveType = messageConfig.type || type || 'info';
+            if (fallbackText) {
+                alert(`[${effectiveType.toUpperCase()}] ${fallbackText}`);
+            } else {
+                alert(`[${effectiveType.toUpperCase()}] Aviso exibido.`);
+            }
+        }
+    }
+
+    handleSystemMessageAction(actionId) {
+        switch (actionId) {
+            case 'openFilters':
+                if (this.modalManager && typeof this.modalManager.toggleFilterPanel === 'function') {
+                    this.modalManager.toggleFilterPanel(true);
+                }
+                break;
+            case 'returnToHub':
+                if (this.warningDisplay) {
+                    this.warningDisplay.clear();
+                }
+                this.displayQuizLayout(false);
+                break;
+            case 'retryLastQuiz':
+                if (this.actionOrchestrator && typeof this.actionOrchestrator.retryLastQuizRequest === 'function') {
+                    this.actionOrchestrator.retryLastQuizRequest();
+                }
+                break;
+            case 'reloadPage':
+                if (typeof window !== 'undefined') {
+                    window.location.reload();
+                }
+                break;
+            case 'contactSupport':
+                if (typeof window !== 'undefined') {
+                    window.open('mailto:suporte@medquiz.app?subject=Ajuda%20no%20MedQuiz');
+                }
+                break;
+            case 'goToLogin':
+                if (typeof window !== 'undefined') {
+                    const nextParam = encodeURIComponent(`${window.location.pathname}${window.location.search}${window.location.hash}`);
+                    window.location.assign(`/accounts/login/?next=${nextParam}`);
+                }
+                break;
+            case 'goToRegister':
+                if (typeof window !== 'undefined') {
+                    window.location.assign('/register/');
+                }
+                break;
+            default:
+                console.warn(`QuizUI: ação de mensagem desconhecida recebida: ${actionId}`);
         }
     }
 }

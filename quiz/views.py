@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
+from django.utils.html import format_html, format_html_join
 from datetime import timedelta  # Mantido, pode ser útil
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch,
@@ -44,6 +45,33 @@ from .services.gamification_service import GamificationService
 
 # Cache simples em memória para configurações gerais
 _quiz_config_cache = None
+
+
+def _queue_latest_product_announcement(request):
+    """Adiciona a mensagem de novidades do produto caso o usuário ainda não a tenha visto."""
+    announcement_id = '2024-05-experience-refresh'
+    seen_announcements = list(request.session.get('seen_announcements', []))
+
+    if announcement_id in seen_announcements:
+        return
+
+    highlights = (
+        'Nova central de mensagens: alertas mais claros, acessíveis e rápidos de fechar.',
+        'Hub de desafios com card para retomar quizzes em andamento em poucos cliques.',
+        'Preferências de conta sincronizam automaticamente o tema e avisos entre dispositivos.',
+    )
+
+    message_body = format_html(
+        '<strong>{}</strong><ul class="message-card__list">{}</ul>',
+        'Novidades do MedQuiz',
+        format_html_join('', '<li>{}</li>', ((item,) for item in highlights))
+    )
+
+    messages.info(request, message_body, extra_tags='announcement no-auto-dismiss')
+
+    seen_announcements.append(announcement_id)
+    request.session['seen_announcements'] = seen_announcements
+    request.session.modified = True
 
 
 def invalidate_quiz_config_cache():
@@ -501,6 +529,7 @@ def _get_difficulty_performance_data(user_sessions_period_qs):
 
 @login_required
 def home_view(request):
+    _queue_latest_product_announcement(request)
     daily_stats = None
     accuracy_percentage_str = "0%"
     if request.user.is_authenticated:

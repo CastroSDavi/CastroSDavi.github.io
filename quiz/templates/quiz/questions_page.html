@@ -6,7 +6,8 @@
 {% block content %}
     <section id="question-section" class="main-section">
         <aside class="score-panel u-is-hidden">
-            <div class="score-panel__timer">
+            <div class="score-panel__timer" aria-live="polite" role="status">
+                <span class="material-symbols-outlined score-panel__timer-icon" aria-hidden="true">schedule</span>
                 <span id="timer-display" class="score-panel__timer-value">00:00</span>
                 <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
                 <div id="score-panel-controls" class="score-panel__pause-control">

@@ -5095,6 +5095,14 @@
         border-radius: 0; border: none; box-shadow: none;
     }
 
+    .account-content:not(.is-mobile-content-visible) {
+        display: none;
+    }
+
+    .account-content.is-mobile-content-visible {
+        display: block;
+    }
+
     .account-content .card__title { font-size: 1.3rem; margin-bottom: var(--spacing-md, 20px); }
     .profile-info-table { display: block; overflow-x: auto; margin-bottom: var(--spacing-md, 20px); }
     .profile-info-table th, .profile-info-table td { font-size: 0.875rem; white-space: nowrap; }

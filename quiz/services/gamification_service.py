@@ -604,6 +604,10 @@ class GamificationService:
                 'xp_range_end': xp_limite,
                 'xp_to_next_level': xp_para_proximo,
             },
+            'levels_path': self._build_levels_path(
+                profile=profile,
+                current_level=current_level,
+            ),
             'daily_engagement': daily_engagement_payload,
             'achievements': {
                 'total_unlocked': total_desbloqueadas,
@@ -622,6 +626,88 @@ class GamificationService:
             'lifetime_stats': lifetime_stats,
             'activity_feed': activity_feed,
         }
+
+    def _build_levels_path(
+        self,
+        *,
+        profile: PerfilGamificacaoUsuario,
+        current_level: Optional[NivelGamificacao],
+    ) -> List[Dict[str, Any]]:
+        """Cria um resumo sequencial dos níveis disponíveis e do progresso atual."""
+
+        levels = list(
+            NivelGamificacao.objects.all().order_by('ordem', 'xp_minimo')
+        )
+        if not levels:
+            return []
+
+        total_xp = int(profile.xp_total or 0)
+        current_level_id = getattr(current_level, 'id', None)
+
+        path: List[Dict[str, Any]] = []
+        for index, level in enumerate(levels):
+            next_level = levels[index + 1] if index + 1 < len(levels) else None
+
+            xp_start = int(level.xp_minimo or 0)
+            xp_end_value: Optional[int] = None
+            if level.xp_maximo is not None:
+                xp_end_value = int(level.xp_maximo)
+            elif next_level is not None:
+                xp_end_value = int(next_level.xp_minimo)
+
+            is_current = current_level_id is not None and level.id == current_level_id
+            is_unlocked = total_xp >= xp_start
+            is_completed = False
+            if is_unlocked and not is_current:
+                if xp_end_value is None:
+                    is_completed = True
+                else:
+                    is_completed = total_xp >= xp_end_value
+
+            progress_percent = 0.0
+            if is_unlocked:
+                if xp_end_value is None:
+                    progress_percent = 100.0
+                else:
+                    intervalo = max(xp_end_value - xp_start, 1)
+                    progresso_atual = min(total_xp, xp_end_value) - xp_start
+                    progress_percent = max(
+                        0.0,
+                        min((progresso_atual / intervalo) * 100.0, 100.0),
+                    )
+
+            xp_to_unlock = 0
+            if not is_unlocked:
+                xp_to_unlock = max(xp_start - total_xp, 0)
+
+            if is_current:
+                status = 'current'
+            elif is_completed:
+                status = 'completed'
+            elif is_unlocked:
+                status = 'unlocked'
+            else:
+                status = 'locked'
+
+            path.append(
+                {
+                    'id': level.id,
+                    'identifier': level.identificador,
+                    'name': level.nome,
+                    'description': level.descricao,
+                    'order': index + 1,
+                    'xp_required': xp_start,
+                    'xp_max': xp_end_value,
+                    'xp_to_unlock': xp_to_unlock,
+                    'is_current': is_current,
+                    'is_completed': is_completed,
+                    'is_unlocked': is_unlocked,
+                    'status': status,
+                    'progress_percent': round(progress_percent, 1),
+                }
+            )
+
+        return path
 
     def _build_achievement_progress(
         self,

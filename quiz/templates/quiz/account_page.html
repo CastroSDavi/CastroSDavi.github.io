@@ -438,6 +438,38 @@
                                 <div class="account-progress__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ gamification.progress.percent|default_if_none:0 }}">
                                     <span class="account-progress__progress-fill" style="width: {{ gamification.progress.percent|default_if_none:0 }}%;"></span>
                                 </div>
+                                {% if gamification.levels_path %}
+                                <div class="account-progress__level-path" role="list" aria-label="Linha do tempo de níveis">
+                                    {% for level in gamification.levels_path %}
+                                    <article class="account-progress__level-node account-progress__level-node--{{ level.status }}{% if level.is_current %} is-current{% endif %}" role="listitem"{% if level.is_current %} aria-current="step"{% endif %}>
+                                        <div class="account-progress__level-marker" aria-hidden="true">
+                                            <span>{{ level.order }}</span>
+                                        </div>
+                                        <div class="account-progress__level-content">
+                                            <div class="account-progress__level-info">
+                                                <span class="account-progress__level-step">Nível {{ level.order }}</span>
+                                                <strong class="account-progress__level-name">{{ level.name }}</strong>
+                                            </div>
+                                            <p class="account-progress__level-xp">A partir de {{ level.xp_required }} XP{% if level.xp_max %} · até {{ level.xp_max }} XP{% endif %}</p>
+                                            <div class="account-progress__level-node-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ level.progress_percent|default_if_none:0 }}">
+                                                <span class="account-progress__level-node-fill" style="width: {{ level.progress_percent|default_if_none:0 }}%;"></span>
+                                            </div>
+                                            <span class="account-progress__level-status">
+                                                {% if level.is_current %}
+                                                    Nível atual
+                                                {% elif level.is_completed %}
+                                                    Concluído
+                                                {% elif level.is_unlocked %}
+                                                    Desbloqueado
+                                                {% else %}
+                                                    Faltam {{ level.xp_to_unlock }} XP
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </article>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
                                 <ul class="account-progress__level-details">
                                     <li>
                                         <span>XP total</span>

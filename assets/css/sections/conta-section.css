@@ -885,55 +885,103 @@
 }
 
 .account-progress__progress-bar {
+    --progress-value: 0%;
     position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
-    height: 10px;
+    height: 14px;
     border-radius: var(--border-radius-pill);
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.16);
-    overflow: hidden;
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.14);
+    box-shadow: inset 0 0 0 1px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.08);
+    overflow: visible;
 }
 
 .account-progress__progress-fill {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--progress-value, 0%);
     background: linear-gradient(90deg, var(--color-primary-medium), var(--color-secondary-green));
     border-radius: inherit;
     transition: width 0.4s ease;
+    box-shadow: 0 6px 14px rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.28);
+}
+
+.account-progress__progress-indicator {
+    position: absolute;
+    top: 50%;
+    left: clamp(0%, var(--progress-value, 0%), 100%);
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.account-progress__progress-indicator-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-secondary-green), var(--color-primary-medium));
+    box-shadow: 0 6px 12px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.24);
+    border: 3px solid #fff;
+}
+
+.account-progress__progress-label {
+    padding: 4px 10px;
+    border-radius: var(--border-radius-pill);
+    background: rgba(var(--color-primary-dark-rgb, 11, 44, 77), 0.82);
+    color: #fff;
+    font-size: var(--font-size-xxs, 0.75rem);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
 }
 
 .account-progress__level-path {
-    --account-progress-connector-gap: clamp(var(--spacing-sm, 16px), 2.8vw, var(--spacing-lg, 28px));
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(220px, 1fr);
-    gap: var(--account-progress-connector-gap);
+    --account-progress-gap: clamp(var(--spacing-md, 20px), 4vw, var(--spacing-lg, 32px));
+    display: flex;
+    gap: var(--account-progress-gap);
     margin-top: clamp(var(--spacing-sm, 16px), 2vw, var(--spacing-md, 24px));
-    padding-bottom: var(--spacing-sm, 16px);
+    padding: clamp(6px, 1vw, 12px) 0 clamp(var(--spacing-sm, 16px), 3vw, var(--spacing-lg, 28px));
     overflow-x: auto;
     position: relative;
+    scroll-snap-type: x mandatory;
+}
+
+.account-progress__level-path::-webkit-scrollbar {
+    height: 6px;
+}
+
+.account-progress__level-path::-webkit-scrollbar-thumb {
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.25);
+    border-radius: 999px;
 }
 
 .account-progress__level-node {
+    --node-progress: 0%;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs, 12px);
-    padding: clamp(var(--spacing-sm, 16px), 2.4vw, var(--spacing-md, 24px));
-    border-radius: var(--border-radius-lg);
-    background: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.55);
-    border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18);
-    box-shadow: var(--shadow-sm, 0 8px 16px rgba(15, 42, 81, 0.08));
-    min-height: 180px;
+    display: grid;
+    gap: var(--spacing-sm, 16px);
+    min-width: min(260px, 80vw);
+    padding: 0;
+    border: none;
+    background: none;
+    box-shadow: none;
+    scroll-snap-align: start;
 }
 
 .account-progress__level-node::before {
     content: "";
     position: absolute;
     top: 36px;
-    left: calc(-0.5 * var(--account-progress-connector-gap));
-    width: calc(100% + var(--account-progress-connector-gap));
+    left: calc(-0.5 * var(--account-progress-gap));
+    width: calc(100% + var(--account-progress-gap));
     height: 2px;
-    background: linear-gradient(90deg, rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.22), rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.22));
+    background: linear-gradient(90deg, rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.25), rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.25));
     z-index: 0;
 }
 
@@ -943,27 +991,39 @@
 
 .account-progress__level-marker {
     position: relative;
-    z-index: 1;
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 6vw, 56px);
+    height: clamp(46px, 6vw, 56px);
     border-radius: 50%;
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
-    color: var(--color-primary-dark);
+    background: linear-gradient(135deg, var(--color-primary-medium), var(--color-secondary-green));
+    color: #fff;
     font-weight: var(--font-weight-semibold);
     font-size: 1rem;
-    box-shadow: inset 0 0 0 2px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.28);
+    box-shadow: 0 10px 24px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.35);
+}
+
+.account-progress__level-marker::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    opacity: 0.7;
 }
 
 .account-progress__level-content {
     position: relative;
     z-index: 1;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--spacing-xs, 12px);
+    padding: clamp(var(--spacing-sm, 16px), 2.2vw, var(--spacing-md, 24px));
+    border-radius: var(--border-radius-xl);
+    background: linear-gradient(145deg, rgba(var(--color-white-rgb, 255, 255, 255), 0.92), rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.72));
+    border: 1px solid rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.9);
+    box-shadow: 0 16px 32px rgba(15, 42, 81, 0.08);
+    backdrop-filter: blur(8px);
 }
 
 .account-progress__level-info {
@@ -980,91 +1040,140 @@
 }
 
 .account-progress__level-name {
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-size: clamp(1.05rem, 2vw, 1.3rem);
     color: var(--color-primary-dark);
 }
 
 .account-progress__level-xp {
     margin: 0;
-    font-size: var(--font-size-sm, 0.9rem);
+    font-size: var(--font-size-xs, 0.85rem);
     color: var(--color-text-secondary);
 }
 
 .account-progress__level-node-progress {
     position: relative;
     width: 100%;
-    height: 6px;
+    height: 8px;
     border-radius: var(--border-radius-pill);
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.16);
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.14);
     overflow: hidden;
 }
 
 .account-progress__level-node-fill {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: var(--node-progress, 0%);
     background: linear-gradient(90deg, var(--color-primary-medium), var(--color-secondary-green));
+    border-radius: inherit;
     transition: width 0.4s ease;
 }
 
-.account-progress__level-status {
-    font-size: var(--font-size-xs, 0.82rem);
-    font-weight: var(--font-weight-medium, 500);
-    color: var(--color-primary-dark);
+.account-progress__level-node-percent {
+    justify-self: flex-end;
+    font-size: var(--font-size-xs, 0.8rem);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary-medium);
 }
 
-.account-progress__level-node--completed .account-progress__level-marker,
-.account-progress__level-node--completed .account-progress__level-node-fill {
-    background: rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.18);
-    color: var(--color-secondary-green, #219653);
+.account-progress__level-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 6px 14px;
+    border-radius: var(--border-radius-pill);
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
+    color: var(--color-primary-medium);
+    font-size: var(--font-size-xxs, 0.75rem);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.account-progress__level-node--completed .account-progress__level-marker {
+    background: linear-gradient(135deg, var(--color-secondary-green), var(--color-secondary-green-dark, #217667));
+    box-shadow: 0 10px 26px rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.4);
 }
 
 .account-progress__level-node--completed .account-progress__level-node-fill {
     background: linear-gradient(90deg, var(--color-secondary-green), var(--color-secondary-green));
 }
 
-.account-progress__level-node--locked {
-    opacity: 0.85;
+.account-progress__level-node--completed .account-progress__level-status {
+    background: rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.14);
+    color: var(--color-secondary-green);
+}
+
+.account-progress__level-node--completed .account-progress__level-node-percent {
+    color: var(--color-secondary-green);
 }
 
 .account-progress__level-node--locked .account-progress__level-marker {
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.08);
+    background: linear-gradient(135deg, rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.25), rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12));
     color: var(--color-text-secondary);
-    box-shadow: inset 0 0 0 2px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18);
+    box-shadow: none;
 }
 
 .account-progress__level-node--locked .account-progress__level-node-fill {
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18);
+    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.28);
 }
 
-.account-progress__level-node.is-current {
-    border-color: rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.45);
-    background: rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.12);
+.account-progress__level-node--locked .account-progress__level-status {
+    background: rgba(var(--color-text-muted-rgb, 110, 125, 142), 0.18);
+    color: var(--color-text-secondary);
+}
+
+.account-progress__level-node--locked .account-progress__level-node-percent {
+    color: var(--color-text-muted);
 }
 
 .account-progress__level-node.is-current .account-progress__level-marker {
-    background: var(--color-secondary-green, #219653);
-    color: #fff;
-    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.3);
-}
-
-.account-progress__level-node.is-current .account-progress__level-status {
-    color: var(--color-secondary-green, #219653);
-}
-
-.account-progress__level-node.is-current .account-progress__level-node-fill {
-    background: linear-gradient(90deg, var(--color-secondary-green), var(--color-secondary-green));
+    background: linear-gradient(135deg, var(--color-secondary-green), var(--color-primary-medium));
+    box-shadow: 0 12px 28px rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.4);
 }
 
 .account-progress__level-node.is-current .account-progress__level-marker span {
     font-weight: var(--font-weight-bold, 700);
 }
 
-.account-progress__level-node--completed .account-progress__level-status {
-    color: var(--color-secondary-green, #219653);
+.account-progress__level-node.is-current .account-progress__level-status {
+    background: rgba(var(--color-secondary-green-rgb, 33, 150, 83), 0.16);
+    color: var(--color-secondary-green);
 }
 
-.account-progress__level-node--locked .account-progress__level-status {
-    color: var(--color-text-muted);
+.account-progress__level-node.is-current .account-progress__level-node-percent {
+    color: var(--color-secondary-green);
+}
+
+.account-progress__level-node.is-current .account-progress__level-node-fill {
+    background: linear-gradient(90deg, var(--color-secondary-green), var(--color-secondary-green));
+}
+
+@media (max-width: 960px) {
+    .account-progress__level-path {
+        --account-progress-gap: clamp(var(--spacing-sm, 16px), 6vw, var(--spacing-md, 24px));
+    }
+
+    .account-progress__level-node {
+        min-width: min(220px, 90vw);
+    }
+}
+
+@media (max-width: 640px) {
+    .account-progress__progress-label {
+        font-size: 0.7rem;
+    }
+
+    .account-progress__level-path {
+        scroll-snap-type: x proximity;
+    }
+
+    .account-progress__level-node-percent {
+        font-size: 0.75rem;
+    }
 }
 
 .account-progress__level-details {

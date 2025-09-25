@@ -435,8 +435,14 @@
                                         {{ gamification.progress.percent|default_if_none:0|floatformat:0 }}%
                                     </span>
                                 </div>
-                                <div class="account-progress__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ gamification.progress.percent|default_if_none:0 }}">
-                                    <span class="account-progress__progress-fill" style="width: {{ gamification.progress.percent|default_if_none:0 }}%;"></span>
+                                <div class="account-progress__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ gamification.progress.percent|default_if_none:0 }}" style="--progress-value: {{ gamification.progress.percent|default_if_none:0 }}%;">
+                                    <span class="account-progress__progress-fill" aria-hidden="true"></span>
+                                    <span class="account-progress__progress-indicator" aria-hidden="true">
+                                        <span class="account-progress__progress-indicator-dot"></span>
+                                        <span class="account-progress__progress-label">
+                                            {{ gamification.progress.percent|default_if_none:0|floatformat:0 }}%
+                                        </span>
+                                    </span>
                                 </div>
                                 {% if gamification.levels_path %}
                                 <div class="account-progress__level-path" role="list" aria-label="Linha do tempo de níveis">
@@ -451,9 +457,12 @@
                                                 <strong class="account-progress__level-name">{{ level.name }}</strong>
                                             </div>
                                             <p class="account-progress__level-xp">A partir de {{ level.xp_required }} XP{% if level.xp_max %} · até {{ level.xp_max }} XP{% endif %}</p>
-                                            <div class="account-progress__level-node-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ level.progress_percent|default_if_none:0 }}">
-                                                <span class="account-progress__level-node-fill" style="width: {{ level.progress_percent|default_if_none:0 }}%;"></span>
+                                            {% with level.progress_percent|default_if_none:0 as level_percent %}
+                                            <div class="account-progress__level-node-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ level_percent }}" style="--node-progress: {{ level_percent }}%;">
+                                                <span class="account-progress__level-node-fill" aria-hidden="true"></span>
                                             </div>
+                                            <span class="account-progress__level-node-percent">{{ level_percent|floatformat:0 }}%</span>
+                                            {% endwith %}
                                             <span class="account-progress__level-status">
                                                 {% if level.is_current %}
                                                     Nível atual

@@ -471,7 +471,8 @@
                             </div>
                             {% endif %}
 
-                            {% if gamification and (gamification.achievements or gamification.rewards) %}
+                            {% if gamification %}
+                                {% if gamification.achievements or gamification.rewards %}
                             <div class="account-progress__insights-grid">
                                 {% if gamification.achievements %}
                                 <section class="account-progress__insight-card">
@@ -547,6 +548,7 @@
                                 </section>
                                 {% endif %}
                             </div>
+                                {% endif %}
                             {% endif %}
 
                             {% if gamification and gamification.daily_engagement %}

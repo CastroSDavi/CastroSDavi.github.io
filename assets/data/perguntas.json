@@ -1,1629 +1,222 @@
 [
-    {
-        "id_pergunta": 1,
-        "texto_pergunta": "Qual \u00e9 a principal fun\u00e7\u00e3o das c\u00e9lulas de Sertoli localizadas no epit\u00e9lio semin\u00edfero dos t\u00fabulos semin\u00edferos?",
-        "url_imagem": "https://histologyguide.com//slideview/MHS-259-testis/18-slide-1.jpg?x=42971&y=30404&z=2.9&page=1",
-        "referencia_bibliografica": "Gartner, 5\u00aa ed.",
-        "categoria_ids": [
-            1
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 2,
-        "texto_pergunta": "Quais s\u00e3o as c\u00e9lulas espermatog\u00eanicas localizadas mais pr\u00f3ximas ao l\u00famen do t\u00fabulo semin\u00edfero?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Gartner, 5\u00aa ed.",
-        "categoria_ids": [
-            1
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 3,
-        "texto_pergunta": "Que tipo de epit\u00e9lio reveste os d\u00factulos eferentes do sistema genital masculino?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Gartner, 5\u00aa ed.",
-        "categoria_ids": [
-            1
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 4,
-        "texto_pergunta": "Qual estrutura testicular cont\u00e9m as c\u00e9lulas de Leydig respons\u00e1veis pela produ\u00e7\u00e3o de testosterona?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Gartner, 5\u00aa ed.",
-        "categoria_ids": [
-            1
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 5,
-        "texto_pergunta": "Sobre o ducto deferente, \u00e9 correto afirmar que:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Gartner, 5\u00aa ed.",
-        "categoria_ids": [
-            1
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 6,
-        "texto_pergunta": "Qual organela celular \u00e9 a principal respons\u00e1vel pela respira\u00e7\u00e3o celular aer\u00f3bica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Biologia Celular B\u00e1sica",
-        "categoria_ids": [
-            2,
-            3
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 7,
-        "texto_pergunta": "O processo de glic\u00f3lise ocorre em qual compartimento celular?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Bioqu\u00edmica Ilustrada",
-        "categoria_ids": [
-            2
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 8,
-        "texto_pergunta": "Qual a principal fun\u00e7\u00e3o do tecido epitelial de revestimento?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Histologia B\u00e1sica",
-        "categoria_ids": [
-            3
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 9,
-        "texto_pergunta": "Os neur\u00f4nios s\u00e3o c\u00e9lulas especializadas na fun\u00e7\u00e3o de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neuroci\u00eancia Fundamental",
-        "categoria_ids": [
-            3
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 10,
-        "texto_pergunta": "Qual \u00e9 a fun\u00e7\u00e3o prim\u00e1ria das enzimas nas rea\u00e7\u00f5es bioqu\u00edmicas celulares?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Princ\u00edpios de Bioqu\u00edmica de Lehninger",
-        "categoria_ids": [
-            2,
-            3
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 11,
-        "texto_pergunta": "O processo de s\u00edntese de RNA a partir de um molde de DNA \u00e9 denominado:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Biologia Molecular da C\u00e9lula",
-        "categoria_ids": [
-            2
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 12,
-        "texto_pergunta": "Qual mol\u00e9cula \u00e9 frequentemente referida como a principal 'moeda energ\u00e9tica' utilizada pelas c\u00e9lulas para realizar trabalho?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Bioqu\u00edmica Ilustrada",
-        "categoria_ids": [
-            2,
-            3
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 13,
-        "texto_pergunta": "Quantos est\u00e1gios cl\u00ednicos principais s\u00e3o classicamente descritos no trabalho de parto?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Manual de Obstetr\u00edcia de Williams",
-        "categoria_ids": [
-            4
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 14,
-        "texto_pergunta": "Qual \u00e9 uma das fun\u00e7\u00f5es vitais da placenta durante a gesta\u00e7\u00e3o humana?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fisiologia M\u00e9dica de Guyton e Hall",
-        "categoria_ids": [
-            4,
-            3
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 15,
-        "texto_pergunta": "Qual horm\u00f4nio \u00e9 essencial primariamente para a *produ\u00e7\u00e3o* de leite (lactog\u00eanese) nas gl\u00e2ndulas mam\u00e1rias ap\u00f3s o parto?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Tratado de Ginecologia e Obstetr\u00edcia",
-        "categoria_ids": [
-            4,
-            3
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 16,
-        "texto_pergunta": "O Ciclo de Krebs (ou Ciclo do \u00c1cido C\u00edtrico), uma etapa crucial da respira\u00e7\u00e3o celular aer\u00f3bica, ocorre em qual compartimento celular?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Bioqu\u00edmica B\u00e1sica",
-        "categoria_ids": [
-            2
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 17,
-        "texto_pergunta": "A Regra de Naegele \u00e9 um m\u00e9todo comum em obstetr\u00edcia utilizado para estimar:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Obstetr\u00edcia Fundamental",
-        "categoria_ids": [
-            4
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 18,
-        "texto_pergunta": "Qual lobo cerebral \u00e9 primariamente respons\u00e1vel pelo processamento da informa\u00e7\u00e3o visual?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neuroci\u00eancia Fundamental",
-        "categoria_ids": [
-            5
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 19,
-        "texto_pergunta": "A capacidade do corpo de sentir a posi\u00e7\u00e3o e o movimento das suas partes (membros, articula\u00e7\u00f5es) \u00e9 chamada de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fisiologia Humana",
-        "categoria_ids": [
-            5,
-            6
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 20,
-        "texto_pergunta": "Qual estrutura do ouvido interno cont\u00e9m as c\u00e9lulas ciliadas respons\u00e1veis pela transdu\u00e7\u00e3o do est\u00edmulo sonoro em sinal neural?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neuroci\u00eancia: Desvendando o Sistema Nervoso",
-        "categoria_ids": [
-            5
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 21,
-        "texto_pergunta": "Receptores sensoriais na pele que detectam est\u00edmulos dolorosos s\u00e3o chamados de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Bases da Fisiologia",
-        "categoria_ids": [
-            5
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 22,
-        "texto_pergunta": "A via neural que transmite informa\u00e7\u00f5es t\u00e1teis finas e proprioceptivas da medula espinhal para o t\u00e1lamo \u00e9 conhecida como:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neuroanatomia Cl\u00ednica",
-        "categoria_ids": [
-            5
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 23,
-        "texto_pergunta": "A perda progressiva de massa e for\u00e7a muscular associada ao envelhecimento \u00e9 denominada:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Tratado de Geriatria",
-        "categoria_ids": [
-            50105,
-            6
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 24,
-        "texto_pergunta": "Qual das seguintes condi\u00e7\u00f5es \u00e9 uma s\u00edndrome geri\u00e1trica comum caracterizada por decl\u00ednio cognitivo agudo e flutuante, geralmente associado a uma causa m\u00e9dica subjacente?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Geriatria B\u00e1sica",
-        "categoria_ids": [
-            50105
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 25,
-        "texto_pergunta": "O processo de envelhecimento celular, onde as c\u00e9lulas param de se dividir, mas permanecem metabolicamente ativas, \u00e9 chamado de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Biologia Molecular do Envelhecimento",
-        "categoria_ids": [
-            50105,
-            303
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 26,
-        "texto_pergunta": "A diminui\u00e7\u00e3o da densidade mineral \u00f3ssea que aumenta o risco de fraturas em idosos \u00e9 conhecida como:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Endocrinologia e Metabologia",
-        "categoria_ids": [
-            50105,
-            6
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 27,
-        "texto_pergunta": "O uso concomitante de m\u00faltiplos medicamentos, comum em idosos e que aumenta o risco de intera\u00e7\u00f5es e efeitos adversos, \u00e9 conhecido como:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Farmacologia Cl\u00ednica",
-        "categoria_ids": [
-            50105
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 28,
-        "texto_pergunta": "Qual tipo de articula\u00e7\u00e3o \u00e9 caracterizado pela presen\u00e7a de uma cavidade articular preenchida por l\u00edquido sinovial, permitindo ampla mobilidade?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Anatomia Humana",
-        "categoria_ids": [
-            6
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 29,
-        "texto_pergunta": "Quais c\u00e9lulas s\u00e3o primariamente respons\u00e1veis pela reabsor\u00e7\u00e3o (degrada\u00e7\u00e3o) do tecido \u00f3sseo?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Histologia B\u00e1sica - Junqueira e Carneiro",
-        "categoria_ids": [
-            6,
-            3
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 30,
-        "texto_pergunta": "Estruturas de tecido conjuntivo denso que conectam ossos a outros ossos em uma articula\u00e7\u00e3o s\u00e3o chamadas de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Ortopedia Essencial",
-        "categoria_ids": [
-            6
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 31,
-        "texto_pergunta": "Uma fratura \u00f3ssea na qual o osso quebrado perfura a pele \u00e9 classificada como:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Princ\u00edpios de Cirurgia Ortop\u00e9dica",
-        "categoria_ids": [
-            6
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 32,
-        "texto_pergunta": "Qual condi\u00e7\u00e3o ortop\u00e9dica comum \u00e9 caracterizada pelo desgaste da cartilagem articular, levando a dor e rigidez nas articula\u00e7\u00f5es?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Reumatologia Cl\u00ednica",
-        "categoria_ids": [
-            6,
-            50105
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 33,
-        "texto_pergunta": "O processo pelo qual c\u00e9lulas cancer\u00edgenas se espalham do tumor prim\u00e1rio para outras partes do corpo, formando novos tumores, \u00e9 chamado de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Oncologia B\u00e1sica",
-        "categoria_ids": [
-            303
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 34,
-        "texto_pergunta": "Genes que, quando mutados ou superexpressos, podem promover o crescimento celular descontrolado e contribuir para o c\u00e2ncer s\u00e3o chamados de:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Biologia Molecular do C\u00e2ncer",
-        "categoria_ids": [
-            303,
-            30305
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 35,
-        "texto_pergunta": "Qual prote\u00edna, conhecida como 'guardi\u00e3 do genoma', atua como um gene supressor de tumor, induzindo parada do ciclo celular ou apoptose em resposta a danos no DNA?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Biologia Celular e Molecular",
-        "categoria_ids": [
-            303,
-            3
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 36,
-        "texto_pergunta": "O desenvolvimento de novos vasos sangu\u00edneos, um processo frequentemente explorado por tumores para obter nutrientes e oxig\u00eanio, \u00e9 denominado:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patologia Oncol\u00f3gica",
-        "categoria_ids": [
-            303
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 37,
-        "texto_pergunta": "Qual modalidade de tratamento do c\u00e2ncer utiliza medicamentos que circulam pelo corpo para destruir c\u00e9lulas cancer\u00edgenas de crescimento r\u00e1pido?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Oncologia Cl\u00ednica",
-        "categoria_ids": [
-            303
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 38,
-        "texto_pergunta": "Qual o principal mecanismo de a\u00e7\u00e3o dos inseticidas organofosforados e qual enzima \u00e9 primariamente inativada, levando \u00e0 hiperestimula\u00e7\u00e3o colin\u00e9rgica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 39,
-        "texto_pergunta": "O que \u00e9 o processo de 'aging' relacionado \u00e0 intoxica\u00e7\u00e3o por organofosforados e qual a sua consequ\u00eancia principal para a recupera\u00e7\u00e3o do organismo?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 40,
-        "texto_pergunta": "A S\u00edndrome Neurol\u00f3gica Intermedi\u00e1ria (SNI) pode ocorrer ap\u00f3s a exposi\u00e7\u00e3o a organofosforados. Quais s\u00e3o as principais caracter\u00edsticas cl\u00ednicas e o per\u00edodo t\u00edpico de manifesta\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 41,
-        "texto_pergunta": "Piretroides s\u00e3o classificados em Tipo I e Tipo II, com quadros cl\u00ednicos distintos. Qual caracter\u00edstica qu\u00edmica diferencia os piretroides Tipo II e qual sintoma \u00e9 proeminente em sua intoxica\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 42,
-        "texto_pergunta": "Qual o mecanismo de a\u00e7\u00e3o dos herbicidas compostos clorofenoxi e qual o principal efeito observado em plantas-alvo?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 43,
-        "texto_pergunta": "O paraquat \u00e9 um herbicida bipirid\u00edlico de alta toxicidade. Qual \u00f3rg\u00e3o \u00e9 particularmente afetado pelo ac\u00famulo de paraquat e qual a consequ\u00eancia histopatol\u00f3gica prim\u00e1ria nesse \u00f3rg\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 44,
-        "texto_pergunta": "Na intoxica\u00e7\u00e3o por glifosato, quais s\u00e3o os sintomas gastrintestinais iniciais mais comuns e como os casos mais graves podem evoluir?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 45,
-        "texto_pergunta": "A etilenotioureia (ETU) \u00e9 um metab\u00f3lito de qual classe de fungicidas e qual \u00e9 o principal efeito adverso cr\u00f4nico associado \u00e0 ETU em mam\u00edferos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604,
-            50601
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 46,
-        "texto_pergunta": "Qual o mecanismo de a\u00e7\u00e3o dos rodenticidas anticoagulantes e quais fatores de coagula\u00e7\u00e3o t\u00eam sua s\u00edntese afetada?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 47,
-        "texto_pergunta": "Na avalia\u00e7\u00e3o inicial de um paciente com suspeita de intoxica\u00e7\u00e3o por agrot\u00f3xico, qual o mnem\u00f4nico universalmente empregado para garantir a estabilidade e quais as primeiras medidas de suporte vital?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 48,
-        "texto_pergunta": "A lavagem g\u00e1strica \u00e9 um procedimento de descontamina\u00e7\u00e3o em casos de ingest\u00e3o de agrot\u00f3xicos. Em que situa\u00e7\u00e3o espec\u00edfica ela \u00e9 indicada e qual o crit\u00e9rio para considerar sua finaliza\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 49,
-        "texto_pergunta": "Qual o mecanismo de a\u00e7\u00e3o da Pralidoxima no tratamento da intoxica\u00e7\u00e3o por organofosforados e quais tipos de sintomas ela visa tratar?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 50,
-        "texto_pergunta": "Qual a principal via de contamina\u00e7\u00e3o por agrot\u00f3xicos notificada no Brasil entre janeiro de 2013 e junho de 2022, e qual o desfecho mais comum nesses casos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 51,
-        "texto_pergunta": "Qual \u00f3rg\u00e3o regulador no Brasil \u00e9 o principal respons\u00e1vel pela avalia\u00e7\u00e3o da efic\u00e1cia agron\u00f4mica e registro de agrot\u00f3xicos, e qual outro \u00f3rg\u00e3o avalia os riscos \u00e0 sa\u00fade humana?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 52,
-        "texto_pergunta": "Segundo a nova classifica\u00e7\u00e3o da OMS (GHS) para agrot\u00f3xicos, al\u00e9m da toxicidade aguda, quais outros aspectos s\u00e3o considerados na rotulagem dos produtos qu\u00edmicos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 53,
-        "texto_pergunta": "Qual a principal caracter\u00edstica da intoxica\u00e7\u00e3o por carbamatos em rela\u00e7\u00e3o \u00e0 sua reversibilidade e quais s\u00e3o os sintomas comuns?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 54,
-        "texto_pergunta": "A notifica\u00e7\u00e3o de casos de intoxica\u00e7\u00e3o por agrot\u00f3xicos \u00e9 obrigat\u00f3ria no Brasil. A partir de qual momento essa notifica\u00e7\u00e3o deve ser realizada e qual sistema \u00e9 utilizado?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 55,
-        "texto_pergunta": "Qual o crit\u00e9rio de tempo estabelecido em 2023 para a an\u00e1lise t\u00e9cnica de registro de agrot\u00f3xicos no Brasil e o que pode ocorrer em casos de produtos com ingredientes j\u00e1 aprovados em outros pa\u00edses?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 56,
-        "texto_pergunta": "Qual dos seguintes N\u00c3O \u00e9 um crit\u00e9rio para que rodenticidas sejam considerados eficazes e seguros?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 57,
-        "texto_pergunta": "A exposi\u00e7\u00e3o cr\u00f4nica a compostos organoclorados, mesmo que apresentem toxicidade aguda moderada, pode estar associada a efeitos adversos em quais sistemas org\u00e2nicos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604,
-            50601
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 58,
-        "texto_pergunta": "Qual o papel da enzima pseudocolinesterase (BuChE) no contexto da exposi\u00e7\u00e3o a organofosforados?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 59,
-        "texto_pergunta": "Qual dos seguintes N\u00c3O \u00e9 um fator de risco para intoxica\u00e7\u00e3o por agrot\u00f3xicos ?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 60,
-        "texto_pergunta": "A administra\u00e7\u00e3o de carv\u00e3o ativado \u00e9 uma medida de descontamina\u00e7\u00e3o. Em que janela de tempo ap\u00f3s a ingest\u00e3o ele \u00e9 mais eficaz e qual o seu mecanismo de a\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 61,
-        "texto_pergunta": "Qual o efeito da Atropina no tratamento da s\u00edndrome colin\u00e9rgica por organofosforados e quais sintomas ela visa neutralizar?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 62,
-        "texto_pergunta": "Qual o papel da Epinefrina no manejo da intoxica\u00e7\u00e3o por agrot\u00f3xicos, segundo o documento?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 63,
-        "texto_pergunta": "O documento menciona que a contamina\u00e7\u00e3o por agrot\u00f3xicos pode ocorrer por via d\u00e9rmica. Como essa via de exposi\u00e7\u00e3o pode afetar outros indiv\u00edduos al\u00e9m daquele que manuseou diretamente o produto?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 64,
-        "texto_pergunta": "Qual das seguintes \u00e9 uma medida de preven\u00e7\u00e3o prim\u00e1ria contra intoxica\u00e7\u00e3o por agrot\u00f3xicos em trabalhadores?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 65,
-        "texto_pergunta": "A Neuropatia Tardia Induzida por Organofosforados (OPIDN) manifesta-se semanas ap\u00f3s a exposi\u00e7\u00e3o. Qual o sintoma inicial caracter\u00edstico e como a condi\u00e7\u00e3o progride?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 66,
-        "texto_pergunta": "Qual o principal efeito agudo da intoxica\u00e7\u00e3o por piretroides do Tipo I, que n\u00e3o possuem o grupo a-ciano?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 67,
-        "texto_pergunta": "No caso de ingest\u00e3o de compostos clorofenoxi, quais sintomas agudos s\u00e3o tipicamente observados?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604,
-            50601
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 68,
-        "texto_pergunta": "Qual das seguintes op\u00e7\u00f5es descreve corretamente a toxicidade dos fungicidas ditiocarbamatos e um de seus efeitos cr\u00f4nicos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604,
-            50601
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 69,
-        "texto_pergunta": "O Sistema Harmonizado Globalmente de Classifica\u00e7\u00e3o e Rotulagem de Produtos Qu\u00edmicos (GHS) substituiu a antiga classifica\u00e7\u00e3o da OMS para agrot\u00f3xicos. Al\u00e9m da toxicidade aguda (categorias I a IV), que outros elementos s\u00e3o cruciais na nova abordagem do GHS para a rotulagem?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 70,
-        "texto_pergunta": "A Esterase Alvo Neurop\u00e1tica (NTE) \u00e9 inibida por alguns organofosforados espec\u00edficos. Qual \u00e9 a principal consequ\u00eancia cl\u00ednica associada \u00e0 inibi\u00e7\u00e3o da NTE?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 71,
-        "texto_pergunta": "Al\u00e9m da ingest\u00e3o intencional ou acidental de altas doses, de que outra forma a popula\u00e7\u00e3o geral pode ser cronicamente exposta a pequenas doses de agrot\u00f3xicos por via oral?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506,
-            50604
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 72,
-        "texto_pergunta": "No tratamento da intoxica\u00e7\u00e3o por agrot\u00f3xicos, qual a principal indica\u00e7\u00e3o para o uso de benzodiazep\u00ednicos e qual o seu mecanismo de a\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "P05 - Agrot\u00f3xicos.pdf",
-        "categoria_ids": [
-            506
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 73,
-        "texto_pergunta": "Um agricultor, que utiliza regularmente herbicidas contendo 2,4-D h\u00e1 v\u00e1rios anos, come\u00e7a a apresentar fraqueza muscular progressiva, formigamento persistente nas m\u00e3os e p\u00e9s, dificuldades de coordena\u00e7\u00e3o motora e epis\u00f3dios de irritabilidade notados pela fam\u00edlia. Investiga\u00e7\u00f5es cl\u00ednicas e neurol\u00f3gicas posteriores revelam m\u00faltiplos d\u00e9ficits. Considerando os potenciais efeitos neurol\u00f3gicos da exposi\u00e7\u00e3o cr\u00f4nica ao 2,4-D, qual das seguintes op\u00e7\u00f5es descreve o espectro MAIS completo e preciso de achados que poderiam estar contribuindo para o quadro cl\u00ednico complexo do agricultor, abrangendo danos estruturais e funcionais no sistema nervoso?",
-        "url_imagem": "image_198721.jpg",
-        "referencia_bibliografica": "image_198721.jpg",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 74,
-        "texto_pergunta": "Na intoxica\u00e7\u00e3o aguda por paraquat, a les\u00e3o pulmonar inicial \u00e9 desencadeada por um processo bioqu\u00edmico espec\u00edfico nas c\u00e9lulas alveolares. Qual \u00e9 este evento celular chave e qual sua consequ\u00eancia histopatol\u00f3gica inicial mais caracter\u00edstica em casos graves?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 75,
-        "texto_pergunta": "Em pacientes que sobrevivem \u00e0 fase aguda da pneumopatia por paraquat, uma segunda fase proliferativa pode se instalar. Qual altera\u00e7\u00e3o celular fundamental caracteriza esta fase tardia, resultando paradoxalmente em deteriora\u00e7\u00e3o funcional pulmonar cr\u00f4nica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 76,
-        "texto_pergunta": "Ap\u00f3s um indiv\u00edduo superar a fase inflamat\u00f3ria e destrutiva inicial da intoxica\u00e7\u00e3o pulmonar por paraquat, qual complica\u00e7\u00e3o tardia, decorrente da subsequente fase proliferativa, representa o maior risco de mortalidade semanas ou meses depois?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 77,
-        "texto_pergunta": "Herbicidas bipirid\u00edlicos como paraquat e diquat possuem diferentes perfis de toxicidade. Qual \u00e9 a distin\u00e7\u00e3o crucial entre eles no que tange \u00e0 sua tend\u00eancia de ac\u00famulo no tecido pulmonar e \u00e0 indu\u00e7\u00e3o de les\u00e3o pulmonar fibr\u00f3tica caracter\u00edstica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 78,
-        "texto_pergunta": "A letalidade na fase aguda da intoxica\u00e7\u00e3o por paraquat frequentemente se due \u00e0 an\u00f3xia grave. Qual conjunto de altera\u00e7\u00f5es patol\u00f3gicas pulmonares prim\u00e1rias \u00e9 o principal respons\u00e1vel pela falha catastr\u00f3fica das trocas gasosas nesse est\u00e1gio?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Fundamentos em Toxicologia de Casarett e Doull (Lange)",
-        "categoria_ids": [
-            50604
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 79,
-        "texto_pergunta": "Considerando as caracter\u00edsticas morfol\u00f3gicas distintivas entre Taenia solium e Taenia saginata adultas, qual das seguintes afirma\u00e7\u00f5es est\u00e1 CORRETA?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Parasitologia Humana: Cestoides",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 80,
-        "texto_pergunta": "No ciclo de vida do complexo ten\u00edase-cisticercose, a infec\u00e7\u00e3o humana pode ocorrer de duas formas principais, resultando em doen\u00e7as distintas. Qual alternativa descreve corretamente a forma de infec\u00e7\u00e3o e a doen\u00e7a resultante?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Parasitologia Humana: Cestoides",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 81,
-        "texto_pergunta": "Um paciente apresenta um quadro de convuls\u00f5es de in\u00edcio recente e cefaleia. A investiga\u00e7\u00e3o diagn\u00f3stica por neuroimagem (RM) revela m\u00faltiplas les\u00f5es c\u00edsticas intraparenquimatosas, algumas com edema perilesional e capta\u00e7\u00e3o de contraste anelar, e uma delas exibindo um ponto hiperdenso interior (esc\u00f3lex). Qual dos seguintes est\u00e1gios evolutivos dos cisticercos \u00e9 MAIS compat\u00edvel com essas les\u00f5es ativas e sintom\u00e1ticas?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Parasitologia e Neurologia Cl\u00ednica",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 82,
-        "texto_pergunta": "No diagn\u00f3stico laboratorial da ten\u00edase e da cisticercose, diferentes m\u00e9todos podem ser empregados. Assinale a alternativa que descreve CORRETAMENTE a utilidade e as limita\u00e7\u00f5es de um desses m\u00e9todos:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Diagn\u00f3stico Laboratorial em Parasitologia",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 83,
-        "texto_pergunta": "A neurocisticercose pode se manifestar de formas variadas dependendo da localiza\u00e7\u00e3o e do est\u00e1gio dos cisticercos no sistema nervoso central. Qual das seguintes apresenta\u00e7\u00f5es cl\u00ednicas \u00e9 MAIS caracter\u00edstica da neurocisticercose extrapar\u00eanquimatosa envolvendo os ventr\u00edculos cerebrais ou o espa\u00e7o subaracn\u00f3ideo?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Parasitologia e Neurologia Cl\u00ednica",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 84,
-        "texto_pergunta": "O tratamento da neurocisticercose ativa frequentemente envolve o uso de corticosteroides em conjunto com antiparasit\u00e1rios. Qual a principal justificativa para o uso de corticosteroides nesse contexto?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Terap\u00eautica em Neurologia e Parasitologia",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 85,
-        "texto_pergunta": "Sobre os mecanismos de a\u00e7\u00e3o dos f\u00e1rmacos utilizados no tratamento da ten\u00edase e cisticercose, qual das seguintes associa\u00e7\u00f5es est\u00e1 INCORRETA?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Farmacologia de Antiparasit\u00e1rios",
-        "categoria_ids": [
-            50607,
-            2
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 86,
-        "texto_pergunta": "A diferencia\u00e7\u00e3o entre neurocisticercose intraparenquimatosa e extrapar\u00eanquimatosa \u00e9 crucial para o manejo cl\u00ednico e progn\u00f3stico. Qual das seguintes caracter\u00edsticas \u00e9 mais associada \u00e0 forma intraparenquimatosa?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neurologia Cl\u00ednica e Parasitologia",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 87,
-        "texto_pergunta": "No contexto do ciclo de vida da Taenia solium, qual evento \u00e9 diretamente respons\u00e1vel pelo desenvolvimento da CISTICERCOSE no ser humano?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Ciclos Biol\u00f3gicos de Parasitas",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 88,
-        "texto_pergunta": "Durante a investiga\u00e7\u00e3o de um paciente com suspeita de neurocisticercose, a avalia\u00e7\u00e3o oftalmol\u00f3gica \u00e9 considerada obrigat\u00f3ria antes do in\u00edcio da terapia antiparasit\u00e1ria. Qual o principal motivo para esta recomenda\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Oftalmologia e Doen\u00e7as Infecciosas",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 89,
-        "texto_pergunta": "No ciclo de vida da Taenia solium, os su\u00ednos atuam como hospedeiros intermedi\u00e1rios ao ingerirem ovos ou progl\u00f3tides gr\u00e1vidas do parasita. O que ocorre ap\u00f3s a ingest\u00e3o desses ovos pelo su\u00edno?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Ciclos Biol\u00f3gicos de Parasitas",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 90,
-        "texto_pergunta": "A maioria dos portadores de ten\u00edase \u00e9 assintom\u00e1tica. No entanto, quando os sintomas ocorrem, quais s\u00e3o os mais comuns relacionados \u00e0 presen\u00e7a do verme adulto no intestino?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Parasitologia Cl\u00ednica",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 91,
-        "texto_pergunta": "Qual \u00e9 a principal raz\u00e3o pela qual a identifica\u00e7\u00e3o da esp\u00e9cie de Taenia (se T. solium ou T. saginata) em um paciente com ten\u00edase \u00e9 clinicamente importante do ponto de vista da sa\u00fade p\u00fablica e do paciente?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Epidemiologia de Doen\u00e7as Parasit\u00e1rias",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 92,
-        "texto_pergunta": "Para o diagn\u00f3stico da cisticercose muscular ou subcut\u00e2nea, qual achado em exames de imagem \u00e9 frequentemente descrito como caracter\u00edstico, especialmente em fases mais tardias da les\u00e3o tecidual?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Radiologia de Doen\u00e7as Infecciosas",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 93,
-        "texto_pergunta": "Considerando os est\u00e1gios evolutivos dos cisticercos no sistema nervoso central, em qual deles \u00e9 mais prov\u00e1vel que um cisto seja completamente assintom\u00e1tico e n\u00e3o apresente edema perilesional significativo na resson\u00e2ncia magn\u00e9tica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neuropatologia Parasit\u00e1ria",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 94,
-        "texto_pergunta": "Qual das seguintes op\u00e7\u00f5es representa uma limita\u00e7\u00e3o importante do teste ELISA para detec\u00e7\u00e3o de anticorpos no contexto diagn\u00f3stico da cisticercose humana?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Imunodiagn\u00f3stico de Parasitoses",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 95,
-        "texto_pergunta": "Um indiv\u00edduo que reside em uma \u00e1rea rural com saneamento b\u00e1sico prec\u00e1rio e cria\u00e7\u00e3o de su\u00ednos sem inspe\u00e7\u00e3o sanit\u00e1ria rigorosa, desenvolve ten\u00edase por Taenia solium. Qual \u00e9 o principal mecanismo pelo qual este mesmo indiv\u00edduo pode subsequentemente desenvolver neurocisticercose por autoinfec\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Parasitologia e Sa\u00fade P\u00fablica",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 96,
-        "texto_pergunta": "Qual das seguintes op\u00e7\u00f5es descreve mais acuradamente a fun\u00e7\u00e3o principal e o mecanismo de a\u00e7\u00e3o dos f\u00e1rmacos isoquinol\u00f4nicos, como o praziquantel, no tratamento de infec\u00e7\u00f5es por t\u00eanias?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Farmacologia de Antiparasit\u00e1rios",
-        "categoria_ids": [
-            50607,
-            2
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 97,
-        "texto_pergunta": "Considerando a epidemiologia e os ciclos de vida da Taenia solium e Taenia saginata, qual das seguintes afirma\u00e7\u00f5es sobre os hospedeiros e a transmiss\u00e3o \u00e9 VERDADEIRA?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Epidemiologia de Doen\u00e7as Parasit\u00e1rias",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 98,
-        "texto_pergunta": "Qual das seguintes situa\u00e7\u00f5es descreve o mecanismo mais prov\u00e1vel de um indiv\u00edduo desenvolver neurocisticercose a partir de um contato domiciliar com um portador de ten\u00edase por Taenia solium?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Sa\u00fade P\u00fablica e Doen\u00e7as Transmiss\u00edveis",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 99,
-        "texto_pergunta": "Em um paciente com neurocisticercose, a presen\u00e7a de um cisto intraventricular pode levar a complica\u00e7\u00f5es graves. Qual \u00e9 o principal mecanismo pelo qual um cisto nessa localiza\u00e7\u00e3o pode causar sintomatologia neurol\u00f3gica aguda?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Neurologia de Doen\u00e7as Infecciosas",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 100,
-        "texto_pergunta": "Durante o tratamento da neurocisticercose com agentes antiparasit\u00e1rios, qual dos seguintes achados nos exames de imagem e cl\u00ednicos sugeriria uma resposta inflamat\u00f3ria exacerbada \u00e0 morte do parasita, necessitando de manejo cuidadoso com corticosteroides?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Terap\u00eautica de Doen\u00e7as Parasit\u00e1rias",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 101,
-        "texto_pergunta": "Qual \u00e9 a principal diferen\u00e7a no ciclo de vida que explica por que a Taenia saginata causa apenas ten\u00edase em humanos, enquanto a Taenia solium pode causar tanto ten\u00edase quanto cisticercose em humanos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Biologia de Cestoides",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 102,
-        "texto_pergunta": "No diagn\u00f3stico diferencial da neurocisticercose, v\u00e1rias outras condi\u00e7\u00f5es podem apresentar manifesta\u00e7\u00f5es cl\u00ednicas e radiol\u00f3gicas semelhantes. Qual das seguintes N\u00c3O \u00e9 tipicamente considerada um diagn\u00f3stico diferencial prim\u00e1rio importante para neurocisticercose com les\u00f5es c\u00edsticas m\u00faltiplas e convuls\u00f5es?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Diagn\u00f3stico Diferencial em Neurologia",
-        "categoria_ids": [
-            50607,
-            5
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 103,
-        "texto_pergunta": "A preven\u00e7\u00e3o da ten\u00edase e da cisticercose humana envolve um conjunto de medidas de sa\u00fade p\u00fablica e higiene pessoal. Qual das seguintes medidas \u00e9 MAIS eficaz para prevenir a AQUISI\u00c7\u00c3O DA TEN\u00cdASE por Taenia solium?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Preven\u00e7\u00e3o de Doen\u00e7as Parasit\u00e1rias",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 104,
-        "texto_pergunta": "Qual das seguintes medidas \u00e9 crucial para a PREVEN\u00c7\u00c3O DA CISTICERCOSE HUMANA em comunidades onde a Taenia solium \u00e9 end\u00eamica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Sa\u00fade Comunit\u00e1ria e Parasitoses",
-        "categoria_ids": [
-            50607
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 105,
-        "texto_pergunta": "Em rela\u00e7\u00e3o ao tratamento da ten\u00edase intestinal (verme adulto), qual f\u00e1rmaco \u00e9 frequentemente utilizado e tem como mecanismo de a\u00e7\u00e3o a inibi\u00e7\u00e3o da fosforila\u00e7\u00e3o oxidativa mitocondrial do parasita?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Farmacologia Cl\u00ednica de Antiparasit\u00e1rios",
-        "categoria_ids": [
-            50607,
-            2
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 106,
-        "texto_pergunta": "Em rela\u00e7\u00e3o \u00e0 toxinfec\u00e7\u00e3o alimentar, \u00e9 correto afirmar:",
-        "url_imagem": "",
-        "referencia_bibliografica": "Toxiinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 107,
-        "texto_pergunta": "A E. coli Enterotoxig\u00eanica (ETEC) utiliza diferentes enterotoxinas para induzir diarreia. Qual o principal mecanismo de a\u00e7\u00e3o da toxina termoest\u00e1vel STa e qual o segundo mensageiro intracelular predominantemente envolvido nesse processo, conforme descrito no documento?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de E. coli - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 108,
-        "texto_pergunta": "A E. coli Enteropatog\u00eanica (EPEC) causa diarreia, especialmente em crian\u00e7as. Qual estrutura bacteriana, codificada pelo plasm\u00eddeo do fator de ader\u00eancia em cepas t\u00edpicas, \u00e9 crucial para a ades\u00e3o inicial da EPEC \u00e0s c\u00e9lulas epiteliais do intestino delgado?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de E. coli - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 109,
-        "texto_pergunta": "A E. coli Enteroagregativa (EAEC) \u00e9 assim denominada devido a um padr\u00e3o de ades\u00e3o caracter\u00edstico. Qual \u00e9 esse padr\u00e3o e qual manifesta\u00e7\u00e3o cl\u00ednica \u00e9 frequentemente associada \u00e0 infec\u00e7\u00e3o por EAEC em crian\u00e7as, especialmente em pa\u00edses em desenvolvimento?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de E. coli - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 110,
-        "texto_pergunta": "A toxina Shiga, produzida pela E. coli Produtora de Toxina Shiga (STEC), possui uma estrutura com subunidades A e B. Qual \u00e9 a fun\u00e7\u00e3o primordial da subunidade A ap\u00f3s a internaliza\u00e7\u00e3o da toxina na c\u00e9lula hospedeira?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de E. coli - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 111,
-        "texto_pergunta": "A S\u00edndrome Hemol\u00edtico-Ur\u00eamica (SHU) \u00e9 a complica\u00e7\u00e3o mais grave da infec\u00e7\u00e3o por STEC. Quais s\u00e3o os tr\u00eas componentes cardinais que definem esta s\u00edndrome?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de E. coli - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608,
-            305
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 112,
-        "texto_pergunta": "A E. coli Enteroinvasora (EIEC) causa um quadro cl\u00ednico semelhante \u00e0 shigelose. Qual o principal mecanismo patog\u00eanico utilizado pela EIEC para causar doen\u00e7a no epit\u00e9lio do c\u00f3lon?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de E. coli - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 113,
-        "texto_pergunta": "A infec\u00e7\u00e3o por Salmonella spp. envolve um processo complexo de invas\u00e3o da mucosa intestinal. Qual o papel da 'ilha de patogenicidade I' da Salmonella nesse processo infeccioso?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese de Salmonella - Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 114,
-        "texto_pergunta": "Apos invadir o epitelio do colon, qual mecanismo permite a Shigella disseminar-se diretamente para celulas adjacentes sem retornar ao lumen intestinal?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Shigella - Patogenese e Toxinas",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Medio"
-    },
-    {
-        "id_pergunta": 115,
-        "texto_pergunta": "No contexto das toxinas produzidas por Clostridium perfringens tipo A, qual o principal efeito mediado pela toxina alfa sobre os tecidos do hospedeiro?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Clostridium perfringens - Toxinas e Patogenese",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Medio"
-    },
-    {
-        "id_pergunta": 116,
-        "texto_pergunta": "A patog\u00eanese da infec\u00e7\u00e3o por Salmonella envolve a ades\u00e3o \u00e0 mucosa intestinal e a invas\u00e3o celular. Qual sistema de secre\u00e7\u00e3o bacteriana \u00e9 crucial para injetar prote\u00ednas efetoras na c\u00e9lula hospedeira, facilitando o engolfamento e a multiplica\u00e7\u00e3o intracelular da Salmonella?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Mecanismos de Virul\u00eancia de Salmonella",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 117,
-        "texto_pergunta": "A Shigella dysenteriae produz a toxina Shiga, que contribui significativamente para a patologia da shigelose. Al\u00e9m do dano intestinal direto, qual complica\u00e7\u00e3o sist\u00eamica grave pode ser causada por esta toxina devido \u00e0 sua a\u00e7\u00e3o em c\u00e9lulas endoteliais glomerulares?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Toxicologia da Toxina Shiga",
-        "categoria_ids": [
-            50608,
-            305
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 118,
-        "texto_pergunta": "O Clostridium perfringens tipo A \u00e9 uma causa comum de intoxica\u00e7\u00e3o alimentar, frequentemente associada a carnes mal refrigeradas. Qual \u00e9 o principal sintoma gastrointestinal caracter\u00edstico desta intoxica\u00e7\u00e3o e qual o per\u00edodo de incuba\u00e7\u00e3o t\u00edpico?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Toxinfec\u00e7\u00e3o por Clostridium perfringens",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 119,
-        "texto_pergunta": "A intoxica\u00e7\u00e3o alimentar por Staphylococcus aureus \u00e9 causada por enterotoxinas pr\u00e9-formadas. Qual caracter\u00edstica dessas toxinas e qual o principal ve\u00edculo de transmiss\u00e3o frequentemente implicado em surtos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Intoxica\u00e7\u00e3o Estafiloc\u00f3cica",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 120,
-        "texto_pergunta": "O Bacillus cereus pode causar duas formas distintas de doen\u00e7a transmitida por alimentos: a forma em\u00e9tica e a forma diarreica. Qual das seguintes op\u00e7\u00f5es compara corretamente as caracter\u00edsticas das toxinas envolvidas em cada forma?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Toxinas de Bacillus cereus",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 121,
-        "texto_pergunta": "Infec\u00e7\u00f5es oculares por Bacillus cereus podem ser devastadoras. Qual \u00e9 o principal modo de aquisi\u00e7\u00e3o dessas infec\u00e7\u00f5es e quais fatores de virul\u00eancia contribuem para a r\u00e1pida destrui\u00e7\u00e3o dos tecidos oculares?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Infec\u00e7\u00f5es Oculares por Bacillus cereus",
-        "categoria_ids": [
-            50608,
-            409
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 122,
-        "texto_pergunta": "Considerando os diferentes patotipos de Escherichia coli que causam diarreia, qual deles \u00e9 particularmente conhecido por sua capacidade de autoaglutina\u00e7\u00e3o, formando um biofilme denso sobre a mucosa intestinal, e est\u00e1 associado \u00e0 diarreia persistente e atraso de crescimento em crian\u00e7as de pa\u00edses em desenvolvimento?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patotipos Diarreicos de E. coli",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 123,
-        "texto_pergunta": "Qual dos seguintes pat\u00f3genos \u00e9 descrito no documento como respons\u00e1vel por aproximadamente 30% dos casos de diarreia em viajantes e tem um per\u00edodo de incuba\u00e7\u00e3o de 1 a 2 dias?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Epidemiologia de Toxinfec\u00e7\u00f5es Alimentares",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 124,
-        "texto_pergunta": "A E. coli Enteropatog\u00eanica (EPEC) afeta principalmente crian\u00e7as. Qual \u00e9 a principal altera\u00e7\u00e3o estrutural causada pela EPEC nas c\u00e9lulas epiteliais do intestino delgado, que \u00e9 fundamental para sua patog\u00eanese?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Patog\u00eanese da EPEC",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 125,
-        "texto_pergunta": "A E. coli Produtora de Toxina Shiga (STEC/EHEC) pode causar colite hemorr\u00e1gica. Qual das seguintes vias de transmiss\u00e3o N\u00c3O \u00e9 comumente associada \u00e0 infec\u00e7\u00e3o por STEC, de acordo com as informa\u00e7\u00f5es do documento?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Transmiss\u00e3o de STEC",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 126,
-        "texto_pergunta": "A Salmonella \u00e9 um pat\u00f3geno ent\u00e9rico invasivo. Qual \u00e9 o principal local de ades\u00e3o e invas\u00e3o inicial da Salmonella no trato gastrointestinal humano?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Invas\u00e3o por Salmonella",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 127,
-        "texto_pergunta": "A Shigella \u00e9 conhecida por sua alta infectividade e por causar disenteria. Qual \u00e9 o \u00fanico reservat\u00f3rio conhecido para a Shigella, o que tem implica\u00e7\u00f5es diretas para as vias de transmiss\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Epidemiologia da Shigella",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 128,
-        "texto_pergunta": "O Clostridium perfringens tipo A, habitante comum do trato intestinal, pode causar intoxica\u00e7\u00e3o alimentar. Al\u00e9m da toxina alfa, qual outra toxina produzida por algumas cepas de C. perfringens \u00e9 mencionada por causar estase intestinal e les\u00f5es necr\u00f3ticas, contribuindo para a enterite necrosante?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Toxinas de Clostridium perfringens",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 129,
-        "texto_pergunta": "A forma em\u00e9tica da intoxica\u00e7\u00e3o por Bacillus cereus \u00e9 causada por uma enterotoxina espec\u00edfica. Qual \u00e9 essa toxina e qual a sua principal caracter\u00edstica em rela\u00e7\u00e3o \u00e0 estabilidade t\u00e9rmica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Intoxica\u00e7\u00e3o por Bacillus cereus",
-        "categoria_ids": [
-            50608
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 171,
-        "texto_pergunta": "De acordo com a semiologia card\u00edaca, qual das seguintes afirma\u00e7\u00f5es sobre o deslocamento do ictus cordis \u00e9 CORRETA?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 172,
-        "texto_pergunta": "A posi\u00e7\u00e3o de c\u00f3coras, frequentemente adotada por portadores de cardiopatia cong\u00eanita cian\u00f3tica com fluxo sangu\u00edneo pulmonar diminu\u00eddo, tem qual principal efeito fisiol\u00f3gico que alivia a dispneia, segundo a teoria mais aceita?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704,
-            3,
-            304
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 173,
-        "texto_pergunta": "Qual \u00e9 a divis\u00e3o principal da aorta que se origina na raiz da aorta e se estende at\u00e9 a altura do \u00e2ngulo esternal, continuando-se com a crossa da aorta?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            2,
-            203,
-            20305
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 174,
-        "texto_pergunta": "Durante o exame f\u00edsico do prec\u00f3rdio em crian\u00e7as, o abaulamento desta regi\u00e3o \u00e9 mais frequentemente causado por quais condi\u00e7\u00f5es, devido \u00e0 maior flexibilidade da parede tor\u00e1cica infantil?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 175,
-        "texto_pergunta": "Ao detectar um fr\u00eamito cardiovascular, quais s\u00e3o as tr\u00eas caracter\u00edsticas semiol\u00f3gicas que precisam ser investigadas para uma correta avalia\u00e7\u00e3o cl\u00ednica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 176,
-        "texto_pergunta": "Quais s\u00e3o os tr\u00eas ramos arteriais principais que se originam diretamente da crossa da aorta?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            2,
-            203,
-            20301
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 177,
-        "texto_pergunta": "Em pacientes com insufici\u00eancia card\u00edaca, a astenia est\u00e1 primariamente relacionada a qual mecanismo fisiopatol\u00f3gico, desconsiderando os efeitos de terapia diur\u00e9tica ou desequil\u00edbrios eletrol\u00edticos secund\u00e1rios?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            401,
-            40104
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 178,
-        "texto_pergunta": "Considerando os focos ou \u00e1reas de ausculta card\u00edaca, qual das seguintes afirma\u00e7\u00f5es \u00e9 VERDADEIRA de acordo com o material de refer\u00eancia?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    },
-    {
-        "id_pergunta": 179,
-        "texto_pergunta": "Quais dos seguintes achados semiol\u00f3gicos, obtidos pela inspe\u00e7\u00e3o e palpa\u00e7\u00e3o do prec\u00f3rdio, s\u00e3o caracteristicamente observados na dilata\u00e7\u00e3o do ventr\u00edculo direito?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 180,
-        "texto_pergunta": "Qual das seguintes caracter\u00edsticas \u00e9 um elemento distintivo fundamental entre o estalido de abertura mitral e a terceira bulha card\u00edaca (B3)?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 181,
-        "texto_pergunta": "Segundo o texto, qual dos seguintes mecanismos N\u00c3O \u00e9 uma causa prim\u00e1ria para a forma\u00e7\u00e3o de sopros card\u00edacos por altera\u00e7\u00e3o do fluxo sangu\u00edneo?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704,
-            3,
-            304
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 182,
-        "texto_pergunta": "Em rela\u00e7\u00e3o \u00e0 sua ocorr\u00eancia no ciclo card\u00edaco, como se caracteriza tipicamente um sopro sist\u00f3lico de eje\u00e7\u00e3o?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 183,
-        "texto_pergunta": "A manobra de Rivero-Carvallo \u00e9 um procedimento semiol\u00f3gico \u00fatil para diferenciar sopros. Qual \u00e9 a interpreta\u00e7\u00e3o de um aumento da intensidade do sopro durante a inspira\u00e7\u00e3o profunda nesta manobra?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 184,
-        "texto_pergunta": "Quais s\u00e3o as caracter\u00edsticas semiol\u00f3gicas que, em conjunto, s\u00e3o t\u00edpicas de um sopro card\u00edaco classificado como 'inocente'?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 185,
-        "texto_pergunta": "Qual \u00e9 considerada a principal caracter\u00edstica semiol\u00f3gica que auxilia no diagn\u00f3stico diferencial do atrito peric\u00e1rdico em rela\u00e7\u00e3o a outros ru\u00eddos card\u00edacos como sopros e estalidos?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 186,
-        "texto_pergunta": "O rumor venoso \u00e9 um ru\u00eddo cont\u00ednuo que pode ser auscultado na base do pesco\u00e7o. Qual das seguintes manobras ou condi\u00e7\u00f5es tipicamente faz o rumor venoso DESAPARECER ou diminuir de intensidade?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 187,
-        "texto_pergunta": "Durante o exame f\u00edsico da aorta, a presen\u00e7a de um abaulamento puls\u00e1til projetado \u00e0 direita do esterno, no n\u00edvel do 2\u00ba e 3\u00ba espa\u00e7o intercostal, \u00e9 mais sugestiva de dilata\u00e7\u00e3o ou aneurisma de qual segmento a\u00f3rtico?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 188,
-        "texto_pergunta": "Ao examinar o pulso radial de um paciente, o examinador nota que a parede arterial \u00e9 endurecida, irregular e tortuosa, com uma sensa\u00e7\u00e3o t\u00e1til comparada \u00e0 \"traqueia de passarinho\". Segundo o texto de refer\u00eancia, esta altera\u00e7\u00e3o na art\u00e9ria radial \u00e9 mais indicativa de qual condi\u00e7\u00e3o espec\u00edfica?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 189,
-        "texto_pergunta": "O que define o \"d\u00e9ficit de pulso\" e qual o mecanismo fisiopatol\u00f3gico subjacente a este achado semiol\u00f3gico?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 190,
-        "texto_pergunta": "O estalido protossist\u00f3lico pulmonar, tamb\u00e9m chamado de ru\u00eddo de eje\u00e7\u00e3o pulmonar, possui caracter\u00edsticas espec\u00edficas de ausculta e causas associadas. Qual das seguintes op\u00e7\u00f5es descreve corretamente o local de melhor ausculta e uma condi\u00e7\u00e3o em que este estalido pode ser encontrado?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "Dif\u00edcil"
-    },
-    {
-        "id_pergunta": 191,
-        "texto_pergunta": "Quais s\u00e3o as caracter\u00edsticas estetoac\u00fasticas distintivas do sopro diast\u00f3lico da estenose mitral, incluindo seu timbre e momento de ocorr\u00eancia na di\u00e1stole?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 192,
-        "texto_pergunta": "Como se caracteriza o sopro diast\u00f3lico que surge devido \u00e0 insufici\u00eancia das valvas sigmoides (a\u00f3rtica ou pulmonar) em rela\u00e7\u00e3o ao seu in\u00edcio no ciclo card\u00edaco e sua qualidade sonora?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 193,
-        "texto_pergunta": "Qual das seguintes condi\u00e7\u00f5es \u00e9 citada no texto como uma causa cl\u00e1ssica para a ausculta de um sopro cont\u00ednuo, tamb\u00e9m conhecido como sopro 'em maquinaria'?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "M\u00e9dio"
-    },
-    {
-        "id_pergunta": 194,
-        "texto_pergunta": "No sistema de gradua\u00e7\u00e3o da intensidade dos sopros card\u00edacos utilizando cruzes, como \u00e9 definido um sopro classificado como de intensidade ++++ (quatro cruzes)?",
-        "url_imagem": "",
-        "referencia_bibliografica": "Porto & Porto, Semiologia M\u00e9dica, 8\u00aa Ed.",
-        "categoria_ids": [
-            4,
-            417,
-            41704
-        ],
-        "nivel_dificuldade": "F\u00e1cil"
-    }
+  {
+    "id_pergunta": 1,
+    "texto_pergunta": "Qual a diferença fundamental entre gastrite e gastropatia?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Facil",
+    "explicacao_resposta": "Gastrite exige inflamação histológica; gastropatia é dano/regeneração epitelial com mínima ou nenhuma inflamação.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 2,
+    "texto_pergunta": "Qual é a causa infecciosa mais frequentemente associada à gastrite crônica?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Facil",
+    "explicacao_resposta": "Helicobacter pylori é o agente infeccioso mais comum relacionado à gastrite crônica.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 3,
+    "texto_pergunta": "Qual exame é considerado o padrão para confirmar gastrite?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Facil",
+    "explicacao_resposta": "O diagnóstico definitivo requer histopatologia de biópsia obtida por endoscopia.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 4,
+    "texto_pergunta": "Quais são os três eixos do Sistema de Sydney atualizado para classificar gastrite?",
+    "referencia_bibliografica": "UpToDate: Updated Sydney System.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Morfologia, topografia e etiologia.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 5,
+    "texto_pergunta": "Quais células predominam no infiltrado inflamatório agudo e no crônico da gastrite, respectivamente?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Agudo: neutrófilos; Crônico: linfócitos, plasmócitos e macrófagos.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 6,
+    "texto_pergunta": "Por que as alterações endoscópicas têm baixa sensibilidade para diagnosticar gastrite?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Há fraca correlação macro–micro: achados endoscópicos não capturam a inflamação microscópica e há variabilidade interobservador.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 7,
+    "texto_pergunta": "Segundo o protocolo de mapeamento, quais são os cinco sítios padrão para biópsias gástricas?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis; Sydney protocol.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Grande e pequena curvatura do antro, incisura angularis, grande e pequena curvatura do corpo.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 8,
+    "texto_pergunta": "Explique a diferença central entre os sistemas OLGA e OLGIM na predição de risco de câncer gástrico.",
+    "referencia_bibliografica": "UpToDate: OLGA vs OLGIM.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Dificil",
+    "explicacao_resposta": "OLGA baseia-se em atrofia; OLGIM em metaplasia intestinal. OLGIM é mais reprodutível, mas pode perder sensibilidade em alto risco.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 9,
+    "texto_pergunta": "Paciente com metaplasia intestinal severa no antro e moderada no corpo. Qual estadiamento OLGIM provável e a implicação prognóstica?",
+    "referencia_bibliografica": "UpToDate: OLGIM staging.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Dificil",
+    "explicacao_resposta": "3 (antro) + 2 (corpo) → OLGIM IV, risco elevado de câncer gástrico.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 10,
+    "texto_pergunta": "Quais marcadores laboratoriais auxiliam no diagnóstico de gastrite atrófica autoimune?",
+    "referencia_bibliografica": "UpToDate: Autoimmune gastritis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Dificil",
+    "explicacao_resposta": "Anticorpos anti-parietais e anti-fator intrínseco + gastrina sérica elevada.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 11,
+    "texto_pergunta": "Qual é a principal limitação do Sistema de Sydney atualizado em termos de prognóstico de câncer gástrico?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Dificil",
+    "explicacao_resposta": "Não fornece informação prognóstica direta sobre risco de câncer em gastrite atrófica/metaplasia.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 12,
+    "texto_pergunta": "Qual condição caracteriza a gastropatia portal hipertensiva?",
+    "referencia_bibliografica": "UpToDate: Gastropathies.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Lesão vascular da mucosa gástrica em hipertensão portal, com aspecto em mosaico.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 13,
+    "texto_pergunta": "Entre as causas químicas de gastropatia, qual é o fármaco mais associado?",
+    "referencia_bibliografica": "UpToDate: Chemical/reactive gastropathy.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Facil",
+    "explicacao_resposta": "AINEs (anti-inflamatórios não esteroides).",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 14,
+    "texto_pergunta": "Quais são as entidades classificadas como gastrites de etiologia incerta?",
+    "referencia_bibliografica": "UpToDate: Classification table.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Linfocítica, colagenosa e eosinofílica.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 15,
+    "texto_pergunta": "Na histologia, qual achado é característico da gastrite crônica ativa por H. pylori?",
+    "referencia_bibliografica": "UpToDate: Histopathology of H. pylori gastritis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Infiltrado mononuclear na lâmina própria + neutrófilos invadindo criptas gástricas.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 16,
+    "texto_pergunta": "Por que o teste respiratório da ureia e o teste de antígeno fecal são preferidos para H. pylori?",
+    "referencia_bibliografica": "UpToDate: Diagnosis of H. pylori infection.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Facil",
+    "explicacao_resposta": "Alta sensibilidade/especificidade, não invasivos e detectam infecção ativa.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 17,
+    "texto_pergunta": "Qual combinação de anticorpos e achados laboratoriais sugere fortemente gastrite autoimune?",
+    "referencia_bibliografica": "UpToDate: Autoimmune gastritis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Anti-parietais ou anti-fator intrínseco + gastrina elevada.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 18,
+    "texto_pergunta": "Quais doenças granulomatosas sistêmicas podem se manifestar como gastrite granulomatosa?",
+    "referencia_bibliografica": "UpToDate: Granulomatous gastritis.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Medio",
+    "explicacao_resposta": "Doença de Crohn e sarcoidose.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 19,
+    "texto_pergunta": "Por que é recomendado coletar múltiplas biópsias mesmo em mucosa aparentemente normal?",
+    "referencia_bibliografica": "UpToDate: Gastritis – Biopsy protocol.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Dificil",
+    "explicacao_resposta": "Distribuição irregular do H. pylori e lesões pré-malignas podem estar em áreas normais à endoscopia.",
+    "ativa": true
+  },
+  {
+    "id_pergunta": 20,
+    "texto_pergunta": "Qual é a vantagem principal do sistema OLGIM sobre o OLGA em termos de reprodutibilidade?",
+    "referencia_bibliografica": "UpToDate: OLGA vs OLGIM.",
+    "categoria_ids": [
+      40609
+    ],
+    "nivel_dificuldade": "Dificil",
+    "explicacao_resposta": "Menor variabilidade interobservador, pois a metaplasia é mais fácil de identificar que a atrofia glandular.",
+    "ativa": true
+  }
 ]

@@ -1,0 +1,648 @@
+{
+  "metadata": {
+    "format": "question-bank",
+    "version": 1
+  },
+  "questions": [
+    {
+      "id": 1,
+      "code": "qual-a-diferenca-fundamental-entre-gastrite-e-gastropatia-1",
+      "texto": "Qual a diferença fundamental entre gastrite e gastropatia?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Facil",
+      "explicacao_resposta": "Gastrite exige inflamação histológica; gastropatia é dano/regeneração epitelial com mínima ou nenhuma inflamação.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 1,
+          "texto": "Gastrite é inflamação histológica; gastropatia é lesão com mínima/nenhuma inflamação.",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 2,
+          "texto": "Gastrite é sempre causada por H. pylori; gastropatia, por álcool.",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 3,
+          "texto": "Gastrite é endoscópica e gastropatia é apenas histológica.",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "code": "qual-e-a-causa-infecciosa-mais-frequentemente-associada-a-gastrite-cronica-2",
+      "texto": "Qual é a causa infecciosa mais frequentemente associada à gastrite crônica?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Facil",
+      "explicacao_resposta": "Helicobacter pylori é o agente infeccioso mais comum relacionado à gastrite crônica.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 4,
+          "texto": "Helicobacter pylori",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 5,
+          "texto": "Mycobacterium tuberculosis",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 6,
+          "texto": "Vírus Epstein-Barr",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "code": "qual-exame-e-considerado-o-padrao-para-confirmar-gastrite-3",
+      "texto": "Qual exame é considerado o padrão para confirmar gastrite?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Facil",
+      "explicacao_resposta": "O diagnóstico definitivo requer histopatologia de biópsia obtida por endoscopia.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 7,
+          "texto": "Biópsia gástrica obtida em endoscopia",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 8,
+          "texto": "Sorologia de anticorpos anti-H. pylori",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 9,
+          "texto": "Pesquisa de antígeno viral em fezes",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "code": "quais-sao-os-tres-eixos-do-sistema-de-sydney-atualizado-para-classificar-gastrite-4",
+      "texto": "Quais são os três eixos do Sistema de Sydney atualizado para classificar gastrite?",
+      "referencia_bibliografica": "UpToDate: Updated Sydney System.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Morfologia, topografia e etiologia.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 10,
+          "texto": "Morfologia, topografia e etiologia",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 11,
+          "texto": "Clínica, endoscopia e histologia",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 12,
+          "texto": "Genética, microbiologia e bioquímica",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "code": "quais-celulas-predominam-no-infiltrado-inflamatorio-agudo-e-no-cronico-da-gastrite-respectivamente-5",
+      "texto": "Quais células predominam no infiltrado inflamatório agudo e no crônico da gastrite, respectivamente?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Agudo: neutrófilos; Crônico: linfócitos, plasmócitos e macrófagos.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 13,
+          "texto": "Agudo: neutrófilos; Crônico: linfócitos/plasmócitos/macrófagos",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 14,
+          "texto": "Agudo: eosinófilos; Crônico: mastócitos",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 15,
+          "texto": "Agudo: linfócitos; Crônico: neutrófilos",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "code": "por-que-as-alteracoes-endoscopicas-tem-baixa-sensibilidade-para-diagnosticar-gastrite-6",
+      "texto": "Por que as alterações endoscópicas têm baixa sensibilidade para diagnosticar gastrite?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Há fraca correlação macro–micro: achados endoscópicos não capturam a inflamação microscópica e há variabilidade interobservador.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 16,
+          "texto": "Porque avalia apenas macroscopicamente, não detectando inflamação microscópica",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 17,
+          "texto": "Porque não visualiza pregas gástricas",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 18,
+          "texto": "Porque sempre erra o local de coleta",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "code": "segundo-o-protocolo-de-mapeamento-quais-sao-os-cinco-sitios-padrao-para-biopsias-gastricas-7",
+      "texto": "Segundo o protocolo de mapeamento, quais são os cinco sítios padrão para biópsias gástricas?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis; Sydney protocol.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Grande e pequena curvatura do antro, incisura angularis, grande e pequena curvatura do corpo.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 19,
+          "texto": "Grande e pequena curvatura do antro; incisura angularis; grande e pequena curvatura do corpo",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 20,
+          "texto": "Fundo, antro, duodeno, esôfago e incisura angularis",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 21,
+          "texto": "Apenas corpo e antro",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "code": "explique-a-diferenca-central-entre-os-sistemas-olga-e-olgim-na-predicao-de-risco-de-cancer-gastrico-8",
+      "texto": "Explique a diferença central entre os sistemas OLGA e OLGIM na predição de risco de câncer gástrico.",
+      "referencia_bibliografica": "UpToDate: OLGA vs OLGIM.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Dificil",
+      "explicacao_resposta": "OLGA baseia-se em atrofia; OLGIM em metaplasia intestinal. OLGIM é mais reprodutível, mas pode perder sensibilidade em alto risco.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 22,
+          "texto": "OLGA avalia atrofia; OLGIM avalia metaplasia intestinal",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 23,
+          "texto": "Ambos usam apenas achados endoscópicos",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 24,
+          "texto": "OLGA é mais objetivo e OLGIM mais subjetivo",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "code": "paciente-com-metaplasia-intestinal-severa-no-antro-e-moderada-no-corpo-qual-estadiamento-olgim-provavel-e-a-implicacao-prognostica-9",
+      "texto": "Paciente com metaplasia intestinal severa no antro e moderada no corpo. Qual estadiamento OLGIM provável e a implicação prognóstica?",
+      "referencia_bibliografica": "UpToDate: OLGIM staging.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Dificil",
+      "explicacao_resposta": "3 (antro) + 2 (corpo) → OLGIM IV, risco elevado de câncer gástrico.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 25,
+          "texto": "OLGIM IV – risco elevado de câncer gástrico",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 26,
+          "texto": "OLGIM II – risco baixo",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 27,
+          "texto": "OLGIM I – risco intermediário",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "code": "quais-marcadores-laboratoriais-auxiliam-no-diagnostico-de-gastrite-atrofica-autoimune-10",
+      "texto": "Quais marcadores laboratoriais auxiliam no diagnóstico de gastrite atrófica autoimune?",
+      "referencia_bibliografica": "UpToDate: Autoimmune gastritis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Dificil",
+      "explicacao_resposta": "Anticorpos anti-parietais e anti-fator intrínseco + gastrina sérica elevada.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 28,
+          "texto": "Anti-parietais, anti-fator intrínseco e gastrina elevada",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 29,
+          "texto": "Apenas teste respiratório da ureia",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 30,
+          "texto": "Antígeno de superfície viral",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "code": "qual-e-a-principal-limitacao-do-sistema-de-sydney-atualizado-em-termos-de-prognostico-de-cancer-gastrico-11",
+      "texto": "Qual é a principal limitação do Sistema de Sydney atualizado em termos de prognóstico de câncer gástrico?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Etiology and diagnosis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Dificil",
+      "explicacao_resposta": "Não fornece informação prognóstica direta sobre risco de câncer em gastrite atrófica/metaplasia.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 31,
+          "texto": "Não fornece prognóstico sobre risco de câncer gástrico",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 32,
+          "texto": "É exclusivamente endoscópico",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 33,
+          "texto": "Classifica apenas doenças autoimunes",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "code": "qual-condicao-caracteriza-a-gastropatia-portal-hipertensiva-12",
+      "texto": "Qual condição caracteriza a gastropatia portal hipertensiva?",
+      "referencia_bibliografica": "UpToDate: Gastropathies.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Lesão vascular da mucosa gástrica em hipertensão portal, com aspecto em mosaico.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 34,
+          "texto": "Lesão vascular gástrica em hipertensão portal",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 35,
+          "texto": "Lesão química por AINEs",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 36,
+          "texto": "Reação granulomatosa ao Crohn",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "code": "entre-as-causas-quimicas-de-gastropatia-qual-e-o-farmaco-mais-associado-13",
+      "texto": "Entre as causas químicas de gastropatia, qual é o fármaco mais associado?",
+      "referencia_bibliografica": "UpToDate: Chemical/reactive gastropathy.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Facil",
+      "explicacao_resposta": "AINEs (anti-inflamatórios não esteroides).",
+      "ativa": true,
+      "options": [
+        {
+          "id": 37,
+          "texto": "AINEs (anti-inflamatórios não esteroides)",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 38,
+          "texto": "Antibióticos betalactâmicos",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 39,
+          "texto": "Antiácidos de magnésio",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "code": "quais-sao-as-entidades-classificadas-como-gastrites-de-etiologia-incerta-14",
+      "texto": "Quais são as entidades classificadas como gastrites de etiologia incerta?",
+      "referencia_bibliografica": "UpToDate: Classification table.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Linfocítica, colagenosa e eosinofílica.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 40,
+          "texto": "Linfocítica, colagenosa e eosinofílica",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 41,
+          "texto": "Atrofica, metaplásica e hiperplásica",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 42,
+          "texto": "Portal, isquêmica e infecciosa",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "code": "na-histologia-qual-achado-e-caracteristico-da-gastrite-cronica-ativa-por-h-pylori-15",
+      "texto": "Na histologia, qual achado é característico da gastrite crônica ativa por H. pylori?",
+      "referencia_bibliografica": "UpToDate: Histopathology of H. pylori gastritis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Infiltrado mononuclear na lâmina própria + neutrófilos invadindo criptas gástricas.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 43,
+          "texto": "Mononucleares na lâmina própria + neutrófilos em criptas",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 44,
+          "texto": "Predomínio de eosinófilos difusos",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 45,
+          "texto": "Ausência de inflamação",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "code": "por-que-o-teste-respiratorio-da-ureia-e-o-teste-de-antigeno-fecal-sao-preferidos-para-h-pylori-16",
+      "texto": "Por que o teste respiratório da ureia e o teste de antígeno fecal são preferidos para H. pylori?",
+      "referencia_bibliografica": "UpToDate: Diagnosis of H. pylori infection.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Facil",
+      "explicacao_resposta": "Alta sensibilidade/especificidade, não invasivos e detectam infecção ativa.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 46,
+          "texto": "Porque são sensíveis, específicos e não invasivos",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 47,
+          "texto": "Porque são exames histológicos",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 48,
+          "texto": "Porque identificam autoanticorpos",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 17,
+      "code": "qual-combinacao-de-anticorpos-e-achados-laboratoriais-sugere-fortemente-gastrite-autoimune-17",
+      "texto": "Qual combinação de anticorpos e achados laboratoriais sugere fortemente gastrite autoimune?",
+      "referencia_bibliografica": "UpToDate: Autoimmune gastritis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Anti-parietais ou anti-fator intrínseco + gastrina elevada.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 49,
+          "texto": "Anti-parietais ou anti-fator intrínseco + gastrina elevada",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 50,
+          "texto": "Somente sorologia para H. pylori",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 51,
+          "texto": "Pesquisa de antígenos virais",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "code": "quais-doencas-granulomatosas-sistemicas-podem-se-manifestar-como-gastrite-granulomatosa-18",
+      "texto": "Quais doenças granulomatosas sistêmicas podem se manifestar como gastrite granulomatosa?",
+      "referencia_bibliografica": "UpToDate: Granulomatous gastritis.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Medio",
+      "explicacao_resposta": "Doença de Crohn e sarcoidose.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 52,
+          "texto": "Doença de Crohn e sarcoidose",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 53,
+          "texto": "Tuberculose e hanseníase",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 54,
+          "texto": "Doença celíaca e lúpus",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "code": "por-que-e-recomendado-coletar-multiplas-biopsias-mesmo-em-mucosa-aparentemente-normal-19",
+      "texto": "Por que é recomendado coletar múltiplas biópsias mesmo em mucosa aparentemente normal?",
+      "referencia_bibliografica": "UpToDate: Gastritis – Biopsy protocol.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Dificil",
+      "explicacao_resposta": "Distribuição irregular do H. pylori e lesões pré-malignas podem estar em áreas normais à endoscopia.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 55,
+          "texto": "Porque há má correlação macro-micro e H. pylori é distribuído irregularmente",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 56,
+          "texto": "Porque a endoscopia não funciona bem em jejum",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 57,
+          "texto": "Porque a histologia não identifica metaplasia",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "code": "qual-e-a-vantagem-principal-do-sistema-olgim-sobre-o-olga-em-termos-de-reprodutibilidade-20",
+      "texto": "Qual é a vantagem principal do sistema OLGIM sobre o OLGA em termos de reprodutibilidade?",
+      "referencia_bibliografica": "UpToDate: OLGA vs OLGIM.",
+      "categorias": [
+        "gastrite-cronica-e-helicobacter-pylori"
+      ],
+      "nivel_dificuldade": "Dificil",
+      "explicacao_resposta": "Menor variabilidade interobservador, pois a metaplasia é mais fácil de identificar que a atrofia glandular.",
+      "ativa": true,
+      "options": [
+        {
+          "id": 58,
+          "texto": "Menor variabilidade interobservador devido à metaplasia ser mais fácil de identificar",
+          "correta": true,
+          "ordem": 1
+        },
+        {
+          "id": 59,
+          "texto": "Porque depende apenas da endoscopia",
+          "correta": false,
+          "ordem": 2
+        },
+        {
+          "id": 60,
+          "texto": "Porque não exige biópsia",
+          "correta": false,
+          "ordem": 3
+        }
+      ]
+    }
+  ]
+}

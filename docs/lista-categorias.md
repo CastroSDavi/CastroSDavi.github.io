@@ -1,0 +1,355 @@
+# Lista de categorias do MedQuiz
+
+Total de categorias: 349
+
+Estrutura hierarquica (categoria > subcategorias).
+
+- [ID 1] Ciencias Biomedicas Fundamentais - Bases moleculares, celulares, bioquimicas e geneticas da medicina.
+  - [ID 101] Biologia Celular e Molecular - Estrutura, funcao, comunicacao e ciclo vital das celulas.
+    - [ID 10101] Ciclo Celular e Regulacao
+    - [ID 10102] Citoesqueleto e Movimento Celular
+    - [ID 10103] Matriz Extracelular e Adesao Celular
+    - [ID 10104] Organelas Celulares: Estrutura e Funcao
+    - [ID 10105] Transporte de Membrana
+    - [ID 10106] Vias de Sinalizacao Intracelular
+  - [ID 102] Bioquimica e Metabolismo - Estrutura e funcao de biomoleculas, vias metabolicas e bioenergetica.
+    - [ID 10201] Cadeia Respiratoria e Fosforilacao Oxidativa
+    - [ID 10202] Metabolismo de Aminoacidos e Ciclo da Ureia
+    - [ID 10203] Metabolismo de Carboidratos (Glicolise, Gliconeogenese, Via das Pentoses)
+    - [ID 10204] Metabolismo de Lipideos (Acidos Graxos, Colesterol)
+    - [ID 10205] Metabolismo de Nucleotideos
+    - [ID 10206] Vitaminas e Coenzimas
+  - [ID 103] Genetica Medica - Principios de hereditariedade, doencas geneticas e biologia molecular do gene.
+    - [ID 10301] Aconselhamento Genetico
+    - [ID 10302] Doencas Geneticas Comuns (Ex: Fibrose Cistica, Anemia Falciforme)
+    - [ID 10303] Farmacogenomica e Terapia Genica
+    - [ID 10304] Mutacoes Genicas e Cromossomicas
+    - [ID 10305] Padroes de Heranca Monogenica (Autossomica, Ligada ao X)
+  - [ID 104] Histologia e Biologia Tecidual - Estudo microscopico da estrutura, organizacao e funcao dos tecidos biologicos.
+    - [ID 10401] Tecido Conjuntivo (Propriamente Dito, Adiposo, Cartilaginoso, Osseo, Sanguineo)
+    - [ID 10402] Tecido Epitelial (Revestimento e Glandular)
+    - [ID 10403] Tecido Muscular (Estriado Esqueletico, Cardiaco, Liso)
+    - [ID 10404] Tecido Nervoso (Neuronios, Glia, Organizacao)
+    - [ID 10405] Tecnicas Histologicas e Microscopia
+- [ID 6] Ciencias Cirurgicas e Anestesiologia - Principios e praticas da cirurgia, suas especialidades e da anestesiologia.
+  - [ID 601] Anestesiologia - Principios e pratica da anestesia e manejo da dor.
+    - [ID 60101] Avaliacao Pre-anestesica
+    - [ID 60102] Complicacoes Anestesicas e Recuperacao Pos-anestesica
+    - [ID 60103] Farmacologia dos Anestesicos
+    - [ID 60104] Monitorizacao Anestesica
+    - [ID 60105] Tecnicas de Anestesia (Geral, Regional, Local)
+  - [ID 602] Cirurgia Cardiovascular - Tratamento cirurgico de doencas do coracao e grandes vasos.
+    - [ID 60202] Cirurgia de Aneurismas e Disseccoes da Aorta
+    - [ID 60203] Cirurgia de Cardiopatias Congenitas
+    - [ID 60204] Cirurgia de Revascularizacao Miocardica (CRM)
+    - [ID 60201] Cirurgia Valvar (Troca e Plastia de Valvas Cardiacas)
+    - [ID 60205] Transplante Cardiaco
+  - [ID 608] Cirurgia de Urgencia e Trauma - Abordagem cirurgica de pacientes com condicoes agudas e vitimas de trauma.
+    - [ID 60801] Abdome Agudo Cirurgico (Inflamatorio, Perfurativo, Obstrutivo, Vascular)
+    - [ID 60802] Atendimento Cirurgico ao Politraumatizado (Controle de Danos)
+    - [ID 60803] Trauma Abdominal: Laparotomia Exploradora e Lesoes Especificas
+    - [ID 60804] Trauma Toracico: Abordagem Cirurgica
+    - [ID 60805] Trauma Vascular Periferico
+  - [ID 603] Cirurgia Geral e do Aparelho Digestivo - Tratamento cirurgico de afeccoes abdominais e do trato digestorio.
+    - [ID 60301] Apendicite Aguda: Abordagem Cirurgica
+    - [ID 60302] Cirurgia Bariatrica e Metabolica: Tecnicas e Indicacoes
+    - [ID 60303] Doenca Diverticular dos Colons: Tratamento Cirurgico
+    - [ID 60304] Doencas da Vesicula Biliar e Vias Biliares
+    - [ID 60305] Hernias da Parede Abdominal
+  - [ID 604] Cirurgia Oncologica - Tratamento cirurgico de tumores malignos.
+    - [ID 60401] Abordagem Cirurgica dos Principais Tumores Solidos
+    - [ID 60402] Cirurgia Citorredutora e Quimioterapia Hipertermica Intraperitoneal (HIPEC)
+    - [ID 60403] Cirurgia Paliativa em Oncologia
+    - [ID 60404] Linfadenectomia e Biopsia de Linfonodo Sentinela
+    - [ID 60405] Principios da Resseccao Oncologica e Margens Cirurgicas
+  - [ID 605] Cirurgia Ortopedica e Traumatologia - Tratamento cirurgico de lesoes e doencas do sistema musculoesqueletico.
+    - [ID 60501] Artroplastias (Proteses de Quadril, Joelho, Ombro)
+    - [ID 60502] Cirurgia Artroscopica (Joelho, Ombro)
+    - [ID 60503] Cirurgia da Mao e Microcirurgia
+    - [ID 60504] Ortopedia Pediatrica: Deformidades Congenitas e Adquiridas
+    - [ID 60505] Tratamento Cirurgico de Fraturas e Luxacoes
+  - [ID 606] Cirurgia Pediatrica - Tratamento cirurgico de doencas em neonatos, criancas e adolescentes.
+    - [ID 60601] Cirurgia Neonatal
+    - [ID 60602] Cirurgia Urologica Pediatrica (Refluxo Vesicoureteral, Hipospadia)
+    - [ID 60603] Malformacoes Congenitas da Parede Abdominal (Onfalocele, Gastrosquise)
+    - [ID 60604] Malformacoes Congenitas do Trato Digestorio (Atresias, Estenoses)
+    - [ID 60605] Tumores Solidos na Infancia (Neuroblastoma, Tumor de Wilms)
+  - [ID 607] Cirurgia Plastica e Reparadora - Correcao cirurgica de deformidades congenitas ou adquiridas e procedimentos esteticos.
+    - [ID 60701] Cirurgia Craniomaxilofacial (Trauma e Deformidades)
+    - [ID 60702] Cirurgia Estetica (Mamoplastia, Lipoaspiracao, Rinoplastia)
+    - [ID 60703] Reconstrucao Mamaria Pos-Mastectomia
+    - [ID 60704] Retalhos Cutaneos e Microcirurgia Reconstrutiva
+    - [ID 60705] Tratamento Cirurgico de Queimaduras
+  - [ID 609] Neurocirurgia - Tratamento cirurgico de doencas do sistema nervoso central e periferico.
+    - [ID 60901] Cirurgia da Coluna Vertebral (Hernias Discais, Estenoses)
+    - [ID 60904] Neurocirurgia de Tumores Cerebrais e Medulares
+    - [ID 60902] Neurocirurgia Funcional e Estereotaxica (DBS, Epilepsia)
+    - [ID 60903] Neurocirurgia Vascular (Aneurismas, MAVs)
+    - [ID 60905] Neurotrauma: Tratamento Cirurgico do TCE e TRM
+  - [ID 610] Principios Gerais da Cirurgia - Fundamentos da pratica cirurgica, resposta ao trauma e cuidados perioperatorios.
+    - [ID 61001] Avaliacao Pre-operatoria e Risco Cirurgico
+    - [ID 61002] Cicatrizacao de Feridas e Fatores que a Afetam
+    - [ID 61003] Cirurgia Robotica e Minimamente Invasiva: Principios
+    - [ID 61004] Cuidados Pos-operatorios e Manejo de Complicacoes
+    - [ID 61005] Hemostasia Cirurgica e Terapia Transfusional
+    - [ID 61006] Infeccao em Cirurgia e Profilaxia Antimicrobiana
+    - [ID 61007] Instrumentacao Cirurgica, Incisoes e Suturas
+    - [ID 61008] Resposta Metabolica ao Trauma e Cirurgia
+    - [ID 61009] Tecnicas de Assepsia, Antissepsia e Esterilizacao
+- [ID 2] Fisiologia e Anatomia Sistemica - Estrutura e funcao normal dos orgaos e sistemas do corpo humano.
+  - [ID 201] Anatomia e Fisiologia da Pele - Estrutura e funcoes do sistema tegumentar.
+    - [ID 20101] Anexos Cutaneos (Pelos, Unhas, Glandulas)
+    - [ID 20102] Camadas da Pele (Epiderme, Derme, Hipoderme)
+    - [ID 20103] Cicatrizacao de Feridas Cutaneas
+    - [ID 20104] Funcoes da Pele (Protecao, Termorregulacao, Sensorial)
+    - [ID 20105] Pigmentacao e Resposta a Radiacao UV
+  - [ID 202] Embriologia e Sistema Reprodutor - Desenvolvimento embrionario e fetal, anatomia e fisiologia reprodutiva.
+    - [ID 20201] Ciclo Menstrual e Regulacao Hormonal Feminina
+    - [ID 20202] Fecundacao, Clivagem e Nidacao
+    - [ID 20203] Fisiologia da Gestacao e Parto
+    - [ID 20204] Gametogenese (Espermatogenese e Ovogenese)
+    - [ID 20205] Periodos Embrionario e Fetal: Principais Eventos
+  - [ID 203] Fisiologia Cardiovascular e Hematologica - Funcao normal do coracao, vasos, sangue e hemostasia.
+    - [ID 20301] Anatomia das Grandes Arterias Toracicas - Distribuicao e relacoes anatomicas dos ramos da crossa da aorta e vasos supraaorticos.
+    - [ID 20302] Eletrofisiologia Cardiaca e ECG
+    - [ID 20303] Eritropoiese, Leucopoiese e Plaquetopoiese
+    - [ID 20304] Fisiologia da Hemostasia e Coagulacao
+    - [ID 20305] Regulacao Cardiovascular e Pressao Arterial
+  - [ID 204] Fisiologia Digestoria e Nutricao - Processos de digestao, absorcao e metabolismo de nutrientes.
+    - [ID 20401] Absorcao de Vitaminas e Minerais
+    - [ID 20402] Digestao e Absorcao de Macronutrientes
+    - [ID 20403] Fisiologia Hepatica e Biliar
+    - [ID 20404] Motilidade Gastrointestinal
+    - [ID 20405] Secrecoes Digestivas (Salivar, Gastrica, Pancreatica, Biliar)
+  - [ID 208] Fisiologia e Anatomia Musculoesqueletica - Estrutura e funcao de ossos, musculos, articulacoes e tecido conjuntivo.
+    - [ID 20801] Biomecanica das Articulacoes
+    - [ID 20802] Contracao Muscular: Mecanismo Deslizante dos Filamentos
+    - [ID 20803] Fisiologia Ossea: Remodelacao e Crescimento
+    - [ID 20804] Metabolismo Energetico Muscular
+    - [ID 20805] Tipos de Tecido Muscular (Estriado, Liso, Cardiaco)
+  - [ID 205] Fisiologia Endocrina e Metabolica - Funcao dos hormonios, glandulas endocrinas e regulacao metabolica.
+    - [ID 20501] Eixo Hipotalamo-Hipofisario e Seus Hormonios
+    - [ID 20502] Fisiologia da Tireoide
+    - [ID 20503] Fisiologia das Glandulas Adrenais (Cortex e Medula)
+    - [ID 20504] Pancreas Endocrino (Insulina, Glucagon, Somatostatina)
+    - [ID 20505] Regulacao Hormonal do Metabolismo do Calcio e Fosfato
+  - [ID 206] Fisiologia Renal e do Meio Interno - Funcao renal, equilibrio hidroeletrolitico e acido-base.
+    - [ID 20601] Filtracao Glomerular e Depuracao Renal
+    - [ID 20602] Mecanismos de Concentracao e Diluicao Urinaria
+    - [ID 20603] Processos Tubulares: Reabsorcao e Secrecao
+    - [ID 20605] Regulacao Renal do Equilibrio Acido-Base
+    - [ID 20604] Regulacao Renal do Equilibrio Hidroeletrolitico
+  - [ID 207] Fisiologia Respiratoria - Mecanica ventilatoria, trocas gasosas e transporte de gases.
+    - [ID 20701] Adaptacoes Respiratorias (Altitude, Exercicio)
+    - [ID 20702] Controle Neural e Quimico da Respiracao
+    - [ID 20703] Difusao de Gases e Relacao Ventilacao/Perfusao (V/Q)
+    - [ID 20704] Mecanica Ventilatoria: Volumes e Capacidades Pulmonares
+    - [ID 20705] Transporte de Oxigenio e Dioxido de Carbono no Sangue
+  - [ID 209] Imunologia Basica - Componentes e mecanismos da resposta imune inata e adaptativa.
+    - [ID 20901] Celulas do Sistema Imune (Linfocitos, Fagocitos, Celulas Apresentadoras)
+    - [ID 20902] Imunidade Adaptativa: Resposta Celular (Linfocitos T)
+    - [ID 20903] Imunidade Adaptativa: Resposta Humoral (Anticorpos)
+    - [ID 20904] Imunidade Inata: Barreiras e Respostas Iniciais
+    - [ID 20905] Sistema Complemento e Citocinas
+  - [ID 210] Neurociencias Basicas - Anatomia e fisiologia do sistema nervoso central, periferico e autonomo.
+    - [ID 21001] Bases Neurobiologicas da Cognicao
+    - [ID 21002] Fisiologia Motora (Controle e Vias)
+    - [ID 21003] Fisiologia Sensorial (Visao, Audicao, Tato, etc.)
+    - [ID 21004] Neuroanatomia Funcional
+    - [ID 21005] Neurofisiologia: Potencial de Acao e Sinapse
+- [ID 3] Patologia e Fisiopatologia - Estudo das doencas: causas, mecanismos, alteracoes funcionais e estruturais.
+  - [ID 301] Imunopatologia - Doencas causadas por disfuncao do sistema imune (autoimunidade, hipersensibilidade, imunodeficiencia).
+    - [ID 30101] Doencas Autoimunes: Mecanismos e Exemplos (LES, Artrite Reumatoide)
+    - [ID 30102] Doencas Granulomatosas
+    - [ID 30103] Imunodeficiencias Primarias e Secundarias (Ex: HIV/AIDS)
+    - [ID 30104] Imunologia de Transplantes e Rejeicao
+    - [ID 30105] Patologia da Amiloidose
+    - [ID 30106] Reacoes de Hipersensibilidade (Tipos I, II, III, IV)
+  - [ID 302] Microbiologia Medica e Parasitologia - Estudo dos microrganismos (bacterias, virus, fungos, parasitas) e sua relacao com doencas.
+    - [ID 30201] Bacteriologia Medica: Principais Patogenos
+    - [ID 30202] Mecanismos de Patogenicidade Microbiana (Toxinas, Fatores de Virulencia)
+    - [ID 30203] Micologia Medica: Micoses Superficiais e Sistemicas
+    - [ID 30204] Parasitologia Medica: Protozooses e Helmintiases
+    - [ID 30205] Principios de Diagnostico Microbiologico (Cultura, Sorologia, Molecular)
+    - [ID 30206] Virologia Medica: Principais Virus Patogenicos
+  - [ID 303] Oncologia Basica (Biologia do Cancer) - Bases moleculares e celulares da carcinogenese e progressao tumoral.
+    - [ID 30301] Angiogenese Tumoral e Metastase
+    - [ID 30302] Caracteristicas Celulares da Neoplasia Maligna (Hallmarks of Cancer)
+    - [ID 30303] Carcinogenese Quimica, Fisica e Viral
+    - [ID 30304] Imunologia Tumoral
+    - [ID 30305] Oncogenes e Genes Supressores de Tumor
+  - [ID 304] Patologia Geral - Principios de lesao celular, inflamacao, reparo, neoplasia e disturbios hemodinamicos.
+    - [ID 30402] Disturbios do Crescimento e Diferenciacao Celular (Hiperplasia, Metaplasia, Displasia)
+    - [ID 30401] Disturbios Hemodinamicos e Trombose
+    - [ID 30403] Doencas Ambientais e Nutricionais (Bases Patologicas)
+    - [ID 30404] Inflamacao: Mediadores e Tipos
+    - [ID 30405] Lesao e Morte Celular (Necrose, Apoptose, Autofagia)
+    - [ID 30406] Reparo Tecidual: Regeneracao e Cicatrizacao
+  - [ID 305] Toxicologia Medica - Estudo dos efeitos adversos de substancias quimicas e fisicas nos organismos vivos.
+    - [ID 30501] Antidotos e Principios de Descontaminacao
+    - [ID 30502] Mecanismos de Toxicidade Celular
+    - [ID 30503] Principios Gerais da Toxicologia (Dose-Resposta, Toxicocinetica)
+    - [ID 30504] Toxicologia de Metais Pesados Especificos (Chumbo, Mercurio, Arsenio)
+    - [ID 30505] Toxicologia de Solventes Organicos e Gases Toxicos
+- [ID 4] Pratica Clinica e Terapeutica - Aplicacao do conhecimento medico: diagnostico, tratamento (nao cirurgico), farmacologia e especialidades clinicas.
+  - [ID 401] Cardiologia (Clinica) - Diagnostico e tratamento das doencas cardiovasculares.
+    - [ID 40101] Arritmias Cardiacas Comuns (FA, Extrassistoles)
+    - [ID 40102] Doenca Arterial Coronariana (Angina, Infarto)
+    - [ID 40103] Hipertensao Arterial Sistemica: Abordagem Clinica
+    - [ID 40104] Insuficiencia Cardiaca: Diagnostico e Tratamento
+    - [ID 40105] Valvopatias (Estenose e Insuficiencia Mitral/Aortica)
+  - [ID 402] Dermatologia (Clinica) - Diagnostico e tratamento das doencas da pele e anexos.
+    - [ID 40201] Acne Vulgar e Rosacea
+    - [ID 40202] Alopecias e Doencas do Couro Cabeludo
+    - [ID 40203] Canceres de Pele (Melanoma, CBC, CEC)
+    - [ID 40204] Dermatites (Eczemas): Atopica, Contato, Seborreica
+    - [ID 40205] Infeccoes Cutaneas (Bacterianas, Fungicas, Virais)
+    - [ID 40206] Psoriase
+  - [ID 403] Diagnostico Laboratorial e por Imagem - Interpretacao de exames laboratoriais e de imagem (radiologia, USG, TC, RM).
+    - [ID 40301] Bioquimica Clinica (Funcao Renal, Hepatica, Eletrolitos, Glicemia)
+    - [ID 40302] Hematologia Laboratorial (Hemograma, Coagulograma)
+    - [ID 40303] Medicina Nuclear e PET Scan
+    - [ID 40304] Principios de Radiografia, Ultrassonografia, Tomografia e Ressonancia
+    - [ID 40305] Urinalise e Exames Parasitologicos de Fezes
+  - [ID 404] Endocrinologia (Clinica) - Diagnostico e tratamento das doencas endocrinas e metabolicas.
+    - [ID 40401] Diabetes Mellitus: Tipos, Diagnostico e Tratamento
+    - [ID 40402] Disturbios do Metabolismo Osseo (Osteoporose, etc.)
+    - [ID 40403] Doencas da Adrenal e da Hipofise
+    - [ID 40404] Obesidade e Sindrome Metabolica: Manejo Clinico
+    - [ID 40405] Tireoidopatias: Hipo/Hipertireoidismo, Bocio, Cancer
+  - [ID 405] Farmacologia Geral e Clinica - Principios de acao dos farmacos (farmacocinetica, farmacodinamica) e seu uso terapeutico.
+    - [ID 40501] Alvos Farmacologicos e Mecanismos de Acao
+    - [ID 40502] Farmacocinetica Aplicada
+    - [ID 40503] Farmacologia do SNA e SNC
+    - [ID 40504] Farmacovigilancia e Reacoes Adversas
+    - [ID 40505] Fases do Desenvolvimento de Farmacos
+  - [ID 406] Gastroenterologia (Clinica) - Diagnostico e tratamento das doencas do aparelho digestivo.
+    - [ID 40601] Cirrose Hepatica e suas Complicacoes
+    - [ID 40602] Colelitiases e Colecistite Calculosa - Abordagem diagnostica e terapeutica das afeccoes calculosas do trato biliar.
+    - [ID 40603] Doenca Diverticular do Colon - Diagnostico diferencial, manejo clinico e indicacoes de intervencao na doenca diverticular.
+    - [ID 40606] Doenca do Refluxo Gastroesofagico (DRGE)
+    - [ID 40604] Doenca Hepatica Gordurosa Metabolica - Reconhecimento, estratificacao de risco e intervencoes na doenca hepatica gordurosa metabolica.
+    - [ID 40605] Doenca Ulcerosa Peptica
+    - [ID 40607] Doencas Inflamatorias Intestinais (Crohn, Retocolite Ulcerativa)
+    - [ID 40608] Gastrite Aguda e Lesoes Erosivas - Fatores precipitantes, diagnostico endoscopico e manejo inicial da gastrite aguda.
+    - [ID 40609] Gastrite Cronica e Helicobacter pylori - Estrategias diagnosticas, erradicacao do Helicobacter pylori e prevencao de complicacoes.
+    - [ID 40610] Hemorragia Digestiva Alta - Protocolos de estabilizacao, endoscopia terapeutica e prevencao de recidivas.
+    - [ID 40611] Hepatites Virais (A, B, C)
+    - [ID 40612] Pancreatite Aguda - Criterios diagnosticos, estratificacao de gravidade e condutas baseadas em evidencias.
+    - [ID 40613] Pancreatite Cronica - Etiologias, manejo da dor, insuficiencia pancreatica e seguimento a longo prazo.
+    - [ID 40614] Sindrome do Intestino Irritavel (SII)
+  - [ID 407] Ginecologia e Obstetricia (Clinica) - Cuidados da saude da mulher, gestacao e parto.
+    - [ID 40701] Ginecologia: Ciclo Menstrual e Disturbios Menstruais
+    - [ID 40702] Ginecologia: Endometriose e Miomas Uterinos
+    - [ID 40703] Ginecologia: Infeccoes Sexualmente Transmissiveis (ISTs) na Mulher
+    - [ID 40704] Ginecologia: Rastreamento de Canceres Ginecologicos
+    - [ID 40705] Obstetricia: Acompanhamento Pre-Natal
+    - [ID 40706] Obstetricia: Complicacoes da Gestacao
+    - [ID 40707] Obstetricia: Parto e Puerperio
+  - [ID 408] Hematologia (Clinica) - Diagnostico e tratamento das doencas do sangue e orgaos hematopoieticos.
+    - [ID 40801] Anemias: Diagnostico Diferencial e Tratamento
+    - [ID 40802] Disturbios da Hemostasia e Trombofilias
+    - [ID 40803] Leucemias Agudas e Cronicas: Classificacao e Abordagem
+    - [ID 40804] Linfomas (Hodgkin e Nao-Hodgkin): Diagnostico e Estadiamento
+    - [ID 40805] Mieloma Multiplo e Outras Gamopatias Monoclonais
+  - [ID 409] Infectologia (Clinica) - Diagnostico e tratamento das doencas infecciosas.
+    - [ID 40901] Arboviroses (Dengue, Zika, Chikungunya, Febre Amarela)
+    - [ID 40902] COVID-19: Atualizacoes Clinicas - Quadros leves a graves, terapias atualizadas e criterios de alta na COVID-19.
+    - [ID 40903] Infeccoes Hospitalares e Controle de Resistencia Antimicrobiana
+    - [ID 40904] Infeccoes Sexualmente Transmissiveis (ISTs): Abordagem Sindromica
+    - [ID 40905] Medicina Tropical e Doencas Infecciosas Endemicas
+    - [ID 40906] Profilaxia Pre e Pos Exposicao - Protocolos de profilaxia pre e pos exposicao para HIV, hepatites, raiva e outras infeccoes.
+    - [ID 40907] Sepse e Choque Septico: Reconhecimento e Tratamento
+    - [ID 40908] Sindrome da Imunodeficiencia Adquirida (HIV/AIDS): Manejo Clinico
+    - [ID 40909] Zoonoses e Doencas Emergentes - Abordagem clinica de zoonoses emergentes e reemergentes, incluindo mpox e hantavirus.
+  - [ID 410] Medicina de Emergencia - Abordagem e manejo de condicoes medicas e traumaticas agudas.
+    - [ID 41001] Atendimento Inicial ao Politraumatizado (ATLS)
+    - [ID 41002] Emergencias Cardiovasculares (SCA, Arritmias Graves, Choque)
+    - [ID 41003] Emergencias Neurologicas (AVC Agudo, Crise Convulsiva)
+    - [ID 41004] Emergencias Respiratorias (Insuficiencia Respiratoria Aguda, Asma Grave)
+    - [ID 41005] Suporte Basico e Avancado de Vida (BLS, ACLS)
+  - [ID 411] Nefrologia (Clinica) - Diagnostico e tratamento das doencas renais.
+    - [ID 41101] Disturbios Hidroeletroliticos e Acido-Base: Abordagem Clinica
+    - [ID 41102] Doenca Renal Cronica (DRC): Estadiamento e Progressao
+    - [ID 41103] Glomerulopatias (Sindrome Nefritica e Nefrotica)
+    - [ID 41104] Lesao Renal Aguda (LRA): Causas e Manejo
+    - [ID 41105] Terapia Renal Substitutiva (Dialise, Transplante)
+  - [ID 412] Neurologia (Clinica) - Diagnostico e tratamento das doencas do sistema nervoso.
+    - [ID 41201] Acidente Vascular Cerebral (AVC): Prevencao, Tratamento e Reabilitacao
+    - [ID 41202] Cefaleias Primarias e Secundarias
+    - [ID 41203] Doencas Neurodegenerativas (Alzheimer, Parkinson, ELA)
+    - [ID 41204] Doencas Neuromusculares (Miopatias, Neuropatias Perifericas, Miastenia Gravis)
+    - [ID 41205] Epilepsias e Transtornos Convulsivos: Classificacao e Manejo
+    - [ID 41206] Esclerose Multipla e Outras Doencas Desmielinizantes
+  - [ID 413] Oncologia (Clinica) - Diagnostico, estadiamento e tratamento do cancer.
+    - [ID 41302] Cancer de Mama: Abordagem Multidisciplinar
+    - [ID 41303] Cancer de Pulmao: Tipos e Tratamento
+    - [ID 41305] Canceres do Trato Gastrointestinal: Abordagens Especificas
+    - [ID 41304] Canceres Urologicos: Tipos e Tratamento
+    - [ID 41301] Cuidados Paliativos e Controle da Dor em Oncologia
+    - [ID 41306] Modalidades de Tratamento Oncologico (Quimio, Radio, Imuno, Hormonio)
+  - [ID 414] Pneumologia (Clinica) - Diagnostico e tratamento das doencas respiratorias.
+    - [ID 41401] Asma Bronquica: Diagnostico e Manejo
+    - [ID 41402] Doenca Pulmonar Obstrutiva Cronica (DPOC)
+    - [ID 41403] Doencas Pulmonares Intersticiais
+    - [ID 41404] Pneumonias Comunitarias e Hospitalares
+    - [ID 41405] Tuberculose Pulmonar
+  - [ID 415] Psiquiatria e Saude Mental - Diagnostico e tratamento dos transtornos mentais.
+    - [ID 41501] Esquizofrenia e Outros Transtornos Psicoticos
+    - [ID 41502] Psicofarmacologia Basica
+    - [ID 41504] Transtornos de Ansiedade (TAG, Panico, Fobias)
+    - [ID 41503] Transtornos Depressivos e Bipolar
+    - [ID 41505] Transtornos por Uso de Substancias
+  - [ID 416] Reumatologia (Clinica) - Diagnostico e tratamento das doencas reumaticas e do tecido conjuntivo.
+    - [ID 41601] Artrite Reumatoide: Diagnostico e Tratamento
+    - [ID 41602] Espondiloartrites (Ex: Espondilite Anquilosante)
+    - [ID 41603] Fibromialgia
+    - [ID 41604] Gota e Artropatias por Cristais
+    - [ID 41605] Lupus Eritematoso Sistemico (LES)
+    - [ID 41606] Osteoartrite (Artrose)
+  - [ID 417] Semiologia Medica - Tecnicas de anamnese e exame fisico para o diagnostico.
+    - [ID 41701] Anamnese: Tecnicas e Roteiro
+    - [ID 41702] Exame Fisico Geral (Ectoscopia, Sinais Vitais)
+    - [ID 41703] Semiologia Abdominal
+    - [ID 41704] Semiologia Cardiovascular (Inspecao, Palpacao, Ausculta Cardiaca)
+    - [ID 41705] Semiologia Neurologica Basica
+    - [ID 41706] Semiologia Respiratoria (Inspecao, Palpacao, Percussao, Ausculta Pulmonar)
+- [ID 5] Saude Publica e Humanidades Medicas - Dimensoes sociais, populacionais, eticas e preventivas da medicina.
+  - [ID 501] Ciclos da Vida (Pediatria e Geriatria) - Aspectos da saude relacionados a idade: infancia, adolescencia, vida adulta e envelhecimento.
+    - [ID 50101] Fisiologia do Envelhecimento e Avaliacao Geriatrica Ampla (AGA)
+    - [ID 50102] Imunizacoes na Infancia e Adolescencia
+    - [ID 50103] Principais Doencas Pediatricas
+    - [ID 50104] Puericultura e Desenvolvimento Infantil
+    - [ID 50105] Sindromes Geriatricas Comuns (Demencia, Incontinencia, Quedas)
+  - [ID 502] Determinantes Sociais da Saude e Equidade - Analise de determinantes sociais, saude global e desigualdades em saude.
+  - [ID 509] Etica Medica e Bioetica - Principios eticos e legais na pratica e pesquisa medica.
+    - [ID 50905] Etica em Pesquisa com Seres Humanos
+    - [ID 50901] Principios Fundamentais da Bioetica
+    - [ID 50902] Questoes Eticas no Inicio e Fim da Vida
+    - [ID 50903] Relacao Medico-Paciente e Consentimento Informado
+    - [ID 50904] Sigilo Profissional e Confidencialidade
+  - [ID 503] Medicina Preventiva e Comunitaria - Estrategias de prevencao primaria, secundaria e terciaria; saude da familia e comunidade.
+    - [ID 50301] Niveis de Prevencao em Saude
+    - [ID 50302] Promocao da Saude e Educacao em Saude
+    - [ID 50303] Rastreamento (Screening) de Doencas: Principios e Programas
+    - [ID 50304] Saude Ambiental e Ocupacional
+    - [ID 50305] Saude da Familia e Atencao Primaria a Saude (APS)
+  - [ID 504] Politicas de Saude e Gestao do SUS - Organizacao de sistemas de saude, financiamento e avaliacao de servicos no SUS.
+  - [ID 505] Programas de Imunizacao e Calendario Vacinal - Estrategias de cobertura vacinal, indicacoes e manejo de eventos adversos.
+  - [ID 506] Saude Ambiental e Ocupacional - Impacto de fatores ambientais e ocupacionais na saude individual e coletiva.
+    - [ID 50601] Agentes Quimicos Industriais e Domesticos - Avaliacoes de risco, intoxicacoes e estrategias de descontaminacao.
+    - [ID 50602] Exposicao Ocupacional ao Ruido (PAIR) - Prevencao, vigilancia audiologica e reabilitacao da perda auditiva induzida por ruido.
+    - [ID 50603] Metais Pesados e Contaminacao - Diagnostico e manejo da exposicao a chumbo, mercurio, arsenio e outros metais pesados.
+    - [ID 50604] Pesticidas e Agrotoxicos - Toxicidade aguda e cronica decorrente da exposicao ocupacional ou ambiental a agrotoxicos.
+    - [ID 50605] Poluicao Atmosferica e Saude - Efeitos respiratorios, cardiovasculares e sistemicos da exposicao a poluentes atmosfericos.
+    - [ID 50606] Radiacao Ionizante e Nao Ionizante - Mecanismos de dano, protecao radiologica e acompanhamento de exposicoes.
+    - [ID 50607] Riscos Biologicos Ocupacionais - Prevencao e condutas frente a exposicao a fluidos biologicos e agentes infecciosos.
+    - [ID 50608] Seguranca Alimentar e Toxinfecoes - Monitoramento, investigacao e controle de surtos de toxinfecoes alimentares.
+    - [ID 50609] Simulacoes e Preparacao para Desastres Ambientais - Protocolos de treino, resposta rapida e comunicacao em emergencias ambientais.
+  - [ID 507] Saude Publica e Epidemiologia - Estudo da distribuicao e determinantes da saude em populacoes, vigilancia e politicas.
+    - [ID 50701] Epidemiologia e Controle de Doencas Cronicas
+    - [ID 50702] Medidas de Frequencia e Associacao em Epidemiologia
+    - [ID 50703] Politicas e Sistemas de Saude Comparados
+    - [ID 50704] Tipos de Estudos Epidemiologicos (Coorte, Caso-Controle, etc.)
+    - [ID 50705] Vigilancia em Saude e Investigacao de Surtos
+  - [ID 508] Vigilancia Epidemiologica e Resposta a Surto - Metodologias de vigilancia, investigacao de surtos e comunicacao de risco.

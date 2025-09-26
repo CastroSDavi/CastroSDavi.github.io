@@ -4,6 +4,7 @@ from quiz.models import (
     Categoria,
     CategoriaHierarquia,
     ConfiguracoesGeraisQuiz,
+    SessoesQuizUsuario,
 )
 from quiz.views import (
     get_descendant_category_ids,
@@ -32,6 +33,24 @@ class QuizConfigCacheTests(TestCase):
         reloaded_config = get_quiz_config()
         self.assertEqual(reloaded_config.pontuacao_por_acerto, 42)
         self.assertEqual(reloaded_config.penalidade_por_erro, 3)
+
+    def test_score_panel_settings_resolve_per_mode(self):
+        config = get_quiz_config()
+        overrides = config.score_panel_config
+        overrides[SessoesQuizUsuario.ModoQuiz.RAPIDO]['show_timer'] = False
+        overrides[SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA]['allow_pause'] = False
+        config.score_panel_config = overrides
+        config.save(update_fields=['score_panel_config'])
+
+        default_settings = config.get_score_panel_settings_for_mode()
+        self.assertTrue(default_settings['show_timer'])
+        self.assertTrue(default_settings['allow_pause'])
+
+        fast_settings = config.get_score_panel_settings_for_mode(SessoesQuizUsuario.ModoQuiz.RAPIDO)
+        self.assertFalse(fast_settings['show_timer'])
+
+        category_settings = config.get_score_panel_settings_for_mode(SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA)
+        self.assertFalse(category_settings['allow_pause'])
 
 
 class CategoriaHierarchyTests(TestCase):

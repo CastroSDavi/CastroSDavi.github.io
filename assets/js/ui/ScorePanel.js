@@ -1,17 +1,46 @@
 // File: assets/js/ui/ScorePanel.js
 
+const DEFAULT_SCORE_PANEL_SETTINGS = {
+    show_points: true,
+    show_correct: true,
+    show_incorrect: true,
+    show_streak: true,
+    show_multiplier: true,
+    show_timer: true,
+    allow_pause: true,
+    allow_manual_finish: true,
+};
+
 export default class ScorePanel {
     constructor(quizUIInstance) {
         this.quizUI = quizUIInstance;
         this.elements = this.quizUI.elements;
-        
+
         // As dependências serão injetadas via setters pelo QuizUI
         this.store = null;
         this.actionOrchestrator = null;
         this.previousUserState = null; // Para comparar mudanças específicas
         this.previousTimerState = null;
         this.previousQuizState = null;
-        
+
+        this.currentSettings = { ...DEFAULT_SCORE_PANEL_SETTINGS };
+        this.currentSettingsKey = JSON.stringify(this.currentSettings);
+        this.latestRawSettings = null;
+
+        this.scorePanelRoot = this.elements.scorePanel || null;
+        this.timerContainer = this.scorePanelRoot?.querySelector('.score-panel__timer') || null;
+        this.statsGroupElement = this.scorePanelRoot?.querySelector('.score-panel__stats-group') || null;
+        this.statContainers = {
+            points: this.scorePanelRoot?.querySelector('.score-panel__stat--points') || null,
+            correct: this.scorePanelRoot?.querySelector('.score-panel__stat--correct') || null,
+            incorrect: this.scorePanelRoot?.querySelector('.score-panel__stat--incorrect') || null,
+            streak: this.scorePanelRoot?.querySelector('.score-panel__stat--streak') || null,
+        };
+        this.multiplierElement = this.elements.multiplicadorDisplay || null;
+
+        this.pauseControlElement = this.elements.scorePanelControls || null;
+        this.endSessionButton = this.elements.btnEncerrarSessao || null;
+
         this._setupEventListeners();
     }
 
@@ -30,6 +59,8 @@ export default class ScorePanel {
                 currentSessionId: initialState.quiz?.currentSessionId ?? null,
                 quizEnded: initialState.quiz?.quizEnded ?? false,
             };
+
+            this._applyScorePanelSettings(initialState.quiz?.scorePanelSettings, { force: true });
 
             this._render(
                 initialState.user?.pontos ?? 0,
@@ -59,10 +90,12 @@ export default class ScorePanel {
      */
     handleStateUpdate() {
         if (!this.store) return;
-        
+
         const currentState = this.store.getState();
         const currentUserState = currentState.user; // Supondo que os dados do usuário estejam em `state.user`
-        
+
+        this._applyScorePanelSettings(currentState.quiz?.scorePanelSettings);
+
         // Verifica se houve mudança nos dados do usuário para evitar re-renderizações desnecessárias
         const previousTimerState = this.previousTimerState ?? {};
         const previousQuizState = this.previousQuizState ?? {};
@@ -103,6 +136,9 @@ export default class ScorePanel {
 
     _setupEventListeners() {
         this.elements.btnEncerrarSessao?.addEventListener('click', () => {
+            if (this.currentSettings?.allow_manual_finish === false) {
+                return;
+            }
             // Em vez de um callback, chama o orquestrador diretamente
             // para lidar com a lógica de abrir o modal.
             if (this.quizUI.modalManager) {
@@ -111,6 +147,9 @@ export default class ScorePanel {
         });
 
         this.elements.btnTogglePause?.addEventListener('click', () => {
+            if (this.currentSettings?.allow_pause === false) {
+                return;
+            }
             if (!this.store || !this.actionOrchestrator) return;
 
             const state = this.store.getState();
@@ -159,27 +198,109 @@ export default class ScorePanel {
     // acontecerá reativamente quando o estado do usuário for resetado no store.
 
     show() {
-        if (this.elements.scorePanel) {
-            this.quizUI.showElement(this.elements.scorePanel);
-        }
-        if (this.elements.scorePanelControls) {
-            this.quizUI.showElement(this.elements.scorePanelControls);
-        }
-        if (this.elements.btnEncerrarSessao) {
-            this.quizUI.showElement(this.elements.btnEncerrarSessao);
-        }
+        this._applyScorePanelSettings(this.latestRawSettings, { force: true });
     }
 
     hide() {
         if (this.elements.scorePanel) {
             this.quizUI.hideElement(this.elements.scorePanel);
         }
-        if (this.elements.scorePanelControls) {
-            this.quizUI.hideElement(this.elements.scorePanelControls);
+        if (this.pauseControlElement) {
+            this.quizUI.hideElement(this.pauseControlElement);
         }
-        if (this.elements.btnEncerrarSessao) {
-            this.quizUI.hideElement(this.elements.btnEncerrarSessao);
+        if (this.endSessionButton) {
+            this.quizUI.hideElement(this.endSessionButton);
         }
+    }
+
+    _normalizeSettings(rawSettings = null) {
+        const normalized = { ...DEFAULT_SCORE_PANEL_SETTINGS };
+        if (!rawSettings || typeof rawSettings !== 'object') {
+            return normalized;
+        }
+
+        Object.keys(normalized).forEach(key => {
+            if (Object.prototype.hasOwnProperty.call(rawSettings, key)) {
+                const value = rawSettings[key];
+                if (typeof value === 'string') {
+                    const normalizedString = value.trim().toLowerCase();
+                    if (['false', '0', 'no', 'off', 'nao', 'não'].includes(normalizedString)) {
+                        normalized[key] = false;
+                    } else if (['true', '1', 'yes', 'on', 'sim'].includes(normalizedString)) {
+                        normalized[key] = true;
+                    } else {
+                        normalized[key] = Boolean(value);
+                    }
+                } else {
+                    normalized[key] = Boolean(value);
+                }
+            }
+        });
+
+        return normalized;
+    }
+
+    _toggleElement(element, shouldShow) {
+        if (!element) return;
+        if (shouldShow) this.quizUI.showElement(element);
+        else this.quizUI.hideElement(element);
+    }
+
+    _shouldDisplayPanel(settings) {
+        if (!settings) return true;
+        return Boolean(
+            settings.show_timer ||
+            settings.show_points ||
+            settings.show_correct ||
+            settings.show_incorrect ||
+            settings.show_streak ||
+            settings.allow_manual_finish
+        );
+    }
+
+    _applyScorePanelSettings(rawSettings, { force = false } = {}) {
+        this.latestRawSettings = rawSettings ?? null;
+        const normalized = this._normalizeSettings(rawSettings);
+        const serialized = JSON.stringify(normalized);
+
+        if (!force && serialized === this.currentSettingsKey) {
+            return false;
+        }
+
+        this.currentSettings = normalized;
+        this.currentSettingsKey = serialized;
+
+        const shouldDisplayPanel = this._shouldDisplayPanel(normalized);
+
+        this._toggleElement(this.elements.scorePanel, shouldDisplayPanel);
+        this._toggleElement(this.timerContainer, shouldDisplayPanel && normalized.show_timer);
+
+        const showPoints = shouldDisplayPanel && normalized.show_points;
+        const showCorrect = shouldDisplayPanel && normalized.show_correct;
+        const showIncorrect = shouldDisplayPanel && normalized.show_incorrect;
+        const showStreak = shouldDisplayPanel && normalized.show_streak;
+
+        this._toggleElement(this.statContainers.points, showPoints);
+        this._toggleElement(this.statContainers.correct, showCorrect);
+        this._toggleElement(this.statContainers.incorrect, showIncorrect);
+        this._toggleElement(this.statContainers.streak, showStreak);
+
+        const hasAnyStat = showPoints || showCorrect || showIncorrect || showStreak;
+        this._toggleElement(this.statsGroupElement, hasAnyStat);
+
+        const shouldShowMultiplier = showStreak && normalized.show_multiplier;
+        this._toggleElement(this.multiplierElement, shouldShowMultiplier);
+
+        const shouldShowPause = shouldDisplayPanel && normalized.allow_pause && normalized.show_timer;
+        this._toggleElement(this.pauseControlElement, shouldShowPause);
+
+        const shouldShowFinish = shouldDisplayPanel && normalized.allow_manual_finish;
+        this._toggleElement(this.endSessionButton, shouldShowFinish);
+        if (this.endSessionButton) {
+            this.endSessionButton.disabled = !shouldShowFinish;
+        }
+
+        return true;
     }
 
     _updatePauseButton(isRunning = false, quizState = {}) {
@@ -197,8 +318,16 @@ export default class ScorePanel {
         };
 
         const hasActiveSession = Boolean(quizState?.currentSessionId) && quizState?.quizEnded !== true;
+        const allowPause = this.currentSettings?.allow_pause !== false;
+        const shouldEnable = hasActiveSession && allowPause;
 
-        button.disabled = !hasActiveSession;
+        button.disabled = !shouldEnable;
+
+        if (!allowPause) {
+            button.setAttribute('aria-pressed', 'false');
+            setButtonContent('Pausar', 'pause');
+            return;
+        }
 
         if (!hasActiveSession) {
             button.setAttribute('aria-pressed', 'false');

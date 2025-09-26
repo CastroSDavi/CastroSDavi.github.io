@@ -129,7 +129,10 @@ class QuizApiTests(TestCase):
         }
         response = self.client.post(start_url, data=json.dumps(start_payload), content_type='application/json')
         self.assertEqual(response.status_code, 200)
-        session_id = response.json()['session_id']
+        start_response = response.json()
+        session_id = start_response['session_id']
+        self.assertIn('score_panel_settings', start_response)
+        self.assertTrue(start_response['score_panel_settings']['show_points'])
 
         register_url = reverse('quiz:quiz-register-answer')
         register_payload = {
@@ -148,6 +151,7 @@ class QuizApiTests(TestCase):
         resume_payload = response.json()
         self.assertEqual(resume_payload['session_id'], session_id)
         self.assertEqual(len(resume_payload['perguntas']), 1)
+        self.assertIn('score_panel_settings', resume_payload)
 
         end_url = reverse('quiz:quiz-end-session')
         end_payload = {'session_id': session_id, 'tempo_total_segundos': 90}

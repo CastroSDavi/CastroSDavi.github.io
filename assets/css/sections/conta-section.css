@@ -513,7 +513,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.18);
+    background: transparent;
     color: var(--color-secondary-green);
     font-size: 28px;
 }
@@ -588,7 +588,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
+    background: transparent;
     color: var(--color-primary-medium);
     font-size: 22px;
 }

@@ -40,6 +40,27 @@
         </div>
     {% endif %}
 
+    {% if system_message_broadcasts %}
+        <div id="broadcast-message-seed" data-message-seed class="u-is-hidden">
+            {% for message in system_message_broadcasts %}
+                <span
+                    data-django-message
+                    data-message-id="{{ message.dataset_id|default:'' }}"
+                    data-message-channel="{{ message.channel|default:'' }}"
+                    data-message-type="{{ message.type|default:'' }}"
+                    {% if message.title %}data-message-title="{{ message.title|escape }}"{% endif %}
+                    {% if message.body %}data-message-body="{{ message.body|escape }}"{% endif %}
+                    {% if message.supporting_text %}data-message-supporting="{{ message.supporting_text|escape }}"{% endif %}
+                    {% if message.detail %}data-message-detail="{{ message.detail|escape }}"{% endif %}
+                    {% if message.icon %}data-message-icon="{{ message.icon|escape }}"{% endif %}
+                    {% if message.tags %}data-message-tags="{{ message.tags|escape }}"{% endif %}
+                    data-message-autodismiss="{{ message.auto_dismiss|yesno:'true,false' }}"
+                    {% if message.dismiss_in %}data-message-dismiss-in="{{ message.dismiss_in }}"{% endif %}
+                ></span>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     {% include "quiz/includes/_header.html" %}
     {% include "quiz/includes/_main_nav.html" %}
 

@@ -82,7 +82,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'quiz.context_processors.avatar_context'
+                'quiz.context_processors.avatar_context',
+                'quiz.context_processors.system_message_broadcasts',
             ],
         },
     },

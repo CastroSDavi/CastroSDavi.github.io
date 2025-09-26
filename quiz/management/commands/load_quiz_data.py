@@ -1,7 +1,7 @@
 # quiz/management/commands/load_quiz_data.py
 import json
 import os
-from collections import Counter
+from collections import Counter, defaultdict
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -198,6 +198,8 @@ class Command(BaseCommand):
 
     def _importar_opcoes(self, opcoes_json, perguntas_por_codigo):
         status = {}
+        ordem_por_pergunta = defaultdict(lambda: 1)
+        ordens_utilizadas = defaultdict(set)
 
         for opcao_data in opcoes_json:
             codigo = self._obter_codigo(opcao_data, 'id_opcao_resposta', 'opção de resposta')
@@ -213,12 +215,38 @@ class Command(BaseCommand):
                     f"Opção de resposta '{codigo}' referencia pergunta inexistente '{pergunta_codigo}'."
                 )
 
-            ordem_exibicao = opcao_data.get('ordem_exibicao')
+            current_next_ordem = ordem_por_pergunta[pergunta_codigo]
+            raw_ordem = opcao_data.get('ordem_exibicao')
+            if isinstance(raw_ordem, bool):
+                raw_ordem = int(raw_ordem)
+
+            ordem_exibicao = None
+            if isinstance(raw_ordem, int):
+                if raw_ordem > 0:
+                    ordem_exibicao = raw_ordem
+            elif isinstance(raw_ordem, str):
+                raw_stripped = raw_ordem.strip()
+                if raw_stripped.isdigit():
+                    valor_ordem = int(raw_stripped)
+                    if valor_ordem > 0:
+                        ordem_exibicao = valor_ordem
+
+            if ordem_exibicao is None:
+                ordem_exibicao = current_next_ordem
+
+            used_orders = ordens_utilizadas[pergunta_codigo]
+            if ordem_exibicao in used_orders:
+                raise CommandError(
+                    f"Opcao de resposta '{codigo}' recebeu 'ordem_exibicao' duplicada '{ordem_exibicao}' para a pergunta '{pergunta_codigo}'."
+                )
+            used_orders.add(ordem_exibicao)
+            ordem_por_pergunta[pergunta_codigo] = max(current_next_ordem, ordem_exibicao + 1)
+
             defaults = {
                 'pergunta': pergunta_obj,
                 'texto_opcao': opcao_data.get('texto_opcao'),
                 'eh_correta': opcao_data.get('eh_correta', False),
-                'ordem_exibicao': 0 if ordem_exibicao is None else ordem_exibicao,
+                'ordem_exibicao': ordem_exibicao,
                 'feedback_opcao': opcao_data.get('feedback_opcao'),
             }
 

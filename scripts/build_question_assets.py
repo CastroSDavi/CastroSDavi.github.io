@@ -176,6 +176,43 @@ def ensure_option_ids(questions: Sequence[dict]) -> bool:
     return mutated
 
 
+def ensure_question_codes(questions: Sequence[dict]) -> bool:
+    seen_codes = set()
+    mutated = False
+
+    for question in questions:
+        qid = question.get("id")
+        if not isinstance(qid, int):
+            raise BuildError(f"Pergunta sem ID valido ao validar codigo: {qid!r}")
+
+        code_value = question.get("code")
+        if code_value is None:
+            code_value = ""
+        if not isinstance(code_value, str):
+            raise BuildError(f"Campo 'code' da pergunta ID {qid} precisa ser texto.")
+
+        normalized = code_value.strip()
+        if normalized and normalized != code_value:
+            question["code"] = normalized
+            code_value = normalized
+            mutated = True
+
+        if not normalized:
+            texto = question.get("texto") or question.get("texto_pergunta") or ""
+            base_slug = slugify(texto)
+            candidate = f"{base_slug}-{qid}" if base_slug else f"pergunta-{qid}"
+            question["code"] = candidate
+            normalized = candidate
+            mutated = True
+
+        if normalized in seen_codes:
+            raise BuildError(f"Codigo de pergunta duplicado detectado: '{normalized}' (ID {qid}).")
+
+        seen_codes.add(normalized)
+
+    return mutated
+
+
 def deduplicate(seq: Iterable[int]) -> List[int]:
     seen = set()
     result = []
@@ -193,6 +230,7 @@ def build_outputs(config: BuildConfig) -> None:
 
     mutated |= ensure_question_ids(questions)
     mutated |= ensure_option_ids(questions)
+    mutated |= ensure_question_codes(questions)
 
     mapping = load_category_mapping(config)
 

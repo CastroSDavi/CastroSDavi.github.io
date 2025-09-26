@@ -1,12 +1,15 @@
 # quiz/admin.py
 from django.contrib import admin
-from django.utils.html import format_html
 from django.urls import reverse
+from django.utils.html import format_html
+from django.db.models import Count
+from django.forms.models import BaseInlineFormSet
+from django.core.exceptions import ValidationError
 # from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 # from django.contrib.auth.models import User
 
 from .models import (
-    Categoria, Pergunta, OpcaoResposta,
+    Categoria, CategoriaHierarquia, Pergunta, OpcaoResposta,
     SessoesQuizUsuario, RespostasUsuarioPorSessao, EstatisticasDiariasUsuario,
     QuestaoFavorita, # Adicionado se não estiver lá
     QuizDefinicao, QuizDefinicaoPergunta, ConfiguracoesGeraisQuiz, # Novos modelos
@@ -15,12 +18,43 @@ from .models import (
     DesafioDinamico, ProgressoDesafioUsuario, RecompensaNivelResgatada,
 )
 
+admin.site.site_header = "MedQuiz Admin"
+admin.site.site_title = "MedQuiz Administracao"
+admin.site.index_title = "Gestao de Conteudo"
+
+
+class OpcaoRespostaInlineFormSet(BaseInlineFormSet):
+    """Forca validacao minima para opcoes de resposta."""
+
+    def clean(self):
+        super().clean()
+
+        non_deleted = []
+        for form in self.forms:
+            if not hasattr(form, "cleaned_data"):
+                continue
+            if form.cleaned_data.get("DELETE", False):
+                continue
+            if not form.cleaned_data or form.errors:
+                continue
+            non_deleted.append(form.cleaned_data)
+
+        if len(non_deleted) < 2:
+            raise ValidationError("Adicione pelo menos duas opcoes de resposta.")
+
+        if not any(data.get("eh_correta") for data in non_deleted):
+            raise ValidationError("Defina ao menos uma opcao como correta.")
+
+
 # Inline para OpcoesResposta dentro de PerguntaAdmin
 class OpcaoRespostaInline(admin.TabularInline):
     model = OpcaoResposta
-    extra = 1
+    extra = 0
+    min_num = 2
+    formset = OpcaoRespostaInlineFormSet
+    validate_min = True
+    show_change_link = True
     fields = ['texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao']
-    # classes = ['collapse'] # Para tornar o inline recolhível, se desejar
 
 
 @admin.register(Categoria)
@@ -59,21 +93,73 @@ class CategoriaAdmin(admin.ModelAdmin):
         return obj.data_atualizacao.strftime("%d/%m/%Y %H:%M") if obj.data_atualizacao else "-"
 
 
+
+
+class TopLevelCategoriaFilter(admin.SimpleListFilter):
+    title = "Categoria principal"
+    parameter_name = "categoria_raiz"
+
+    def lookups(self, request, model_admin):
+        categorias = Categoria.objects.filter(id_categoria_pai__isnull=True).order_by("nome_categoria")
+        return [(str(cat.pk), cat.nome_categoria) for cat in categorias]
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if not value:
+            return queryset
+
+        try:
+            categoria_id = int(value)
+        except (TypeError, ValueError):
+            return queryset
+
+        descendant_ids = list(
+            CategoriaHierarquia.objects
+            .filter(ancestor_id=categoria_id)
+            .values_list('descendant_id', flat=True)
+        )
+        if not descendant_ids:
+            return queryset.none()
+        return queryset.filter(categorias__in=descendant_ids).distinct()
+
 @admin.register(Pergunta)
 class PerguntaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'texto_curto', 'nivel_dificuldade', 'mostrar_categorias_formatado', 'ativa', 'link_usuario_criador', 'data_criacao_formatada')
+    list_display = (
+        'texto_curto',
+        'nivel_dificuldade',
+        'mostrar_categorias_formatado',
+        'ativa',
+        'numero_opcoes',
+        'link_usuario_criador',
+        'data_criacao_formatada',
+    )
+    list_display_links = ('texto_curto',)
+    list_editable = ('nivel_dificuldade', 'ativa')
     search_fields = ('texto_pergunta', 'referencia_bibliografica', 'explicacao_resposta', 'id_usuario_criador__username', 'categorias__nome_categoria')
-    list_filter = ('nivel_dificuldade', 'categorias', 'ativa', 'data_criacao', 'id_usuario_criador')
-    filter_horizontal = ('categorias',) # Melhor para ManyToManyField
+    search_help_text = "Busque por texto, categorias, criador ou referencia."
+    list_filter = (
+        'nivel_dificuldade',
+        TopLevelCategoriaFilter,
+        ('categorias', admin.RelatedOnlyFieldListFilter),
+        'ativa',
+        'data_criacao',
+        'id_usuario_criador',
+    )
+    filter_horizontal = ('categorias',)
     inlines = [OpcaoRespostaInline]
     readonly_fields = ('data_criacao', 'data_atualizacao')
-    autocomplete_fields = ['id_usuario_criador'] # 'categorias' é melhor com filter_horizontal
+    autocomplete_fields = ['id_usuario_criador']
     list_select_related = ('id_usuario_criador',)
+    date_hierarchy = 'data_criacao'
+    list_per_page = 30
+    save_as = True
+    radio_fields = {'nivel_dificuldade': admin.HORIZONTAL}
+    actions = ['marcar_como_ativas', 'marcar_como_inativas', 'duplicar_perguntas']
     fieldsets = (
         (None, {
             'fields': ('texto_pergunta', 'url_imagem', 'referencia_bibliografica', 'explicacao_resposta')
         }),
-        ('Configurações do Quiz', {
+        ('Configuracoes do Quiz', {
             'fields': ('categorias', 'nivel_dificuldade', 'ativa')
         }),
         ('Metadados', {
@@ -90,6 +176,10 @@ class PerguntaAdmin(admin.ModelAdmin):
     def mostrar_categorias_formatado(self, obj):
         return ", ".join([cat.nome_categoria for cat in obj.categorias.all()[:5]])
 
+    @admin.display(description='Opcoes', ordering='opcoes_count')
+    def numero_opcoes(self, obj):
+        return getattr(obj, 'opcoes_count', 0)
+
     @admin.display(description='Criador', ordering='id_usuario_criador__username')
     def link_usuario_criador(self, obj):
         if obj.id_usuario_criador:
@@ -97,10 +187,62 @@ class PerguntaAdmin(admin.ModelAdmin):
             return format_html('<a href="{}">{}</a>', link, obj.id_usuario_criador.username)
         return "N/A (Sistema)"
 
-    @admin.display(description='Criação', ordering='data_criacao')
+    @admin.display(description='Criacao', ordering='data_criacao')
     def data_criacao_formatada(self, obj):
         return obj.data_criacao.strftime("%d/%m/%Y %H:%M") if obj.data_criacao else "-"
 
+    @admin.display(description='Atualizacao', ordering='data_atualizacao')
+    def data_atualizacao_formatada(self, obj):
+        return obj.data_atualizacao.strftime("%d/%m/%Y %H:%M") if obj.data_atualizacao else "-"
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('id_usuario_criador').prefetch_related('categorias').annotate(opcoes_count=Count('opcoes'))
+
+    @admin.action(description='Marcar como ativas')
+    def marcar_como_ativas(self, request, queryset):
+        atualizadas = queryset.update(ativa=True)
+        self.message_user(request, f"{atualizadas} perguntas marcadas como ativas.")
+
+    @admin.action(description='Marcar como inativas')
+    def marcar_como_inativas(self, request, queryset):
+        atualizadas = queryset.update(ativa=False)
+        self.message_user(request, f"{atualizadas} perguntas marcadas como inativas.")
+
+    @admin.action(description='Duplicar perguntas selecionadas (com opcoes)')
+    def duplicar_perguntas(self, request, queryset):
+        criadas = 0
+        for pergunta in queryset:
+            nova_pergunta = Pergunta.objects.create(
+                texto_pergunta=pergunta.texto_pergunta,
+                url_imagem=pergunta.url_imagem,
+                referencia_bibliografica=pergunta.referencia_bibliografica,
+                nivel_dificuldade=pergunta.nivel_dificuldade,
+                explicacao_resposta=pergunta.explicacao_resposta,
+                ativa=False,
+                id_usuario_criador=request.user if request.user.is_authenticated else pergunta.id_usuario_criador,
+            )
+            categorias = list(pergunta.categorias.all())
+            if categorias:
+                nova_pergunta.categorias.set(categorias)
+
+            opcoes = pergunta.opcoes.all()
+            bulk = [
+                OpcaoResposta(
+                    pergunta=nova_pergunta,
+                    texto_opcao=opcao.texto_opcao,
+                    eh_correta=opcao.eh_correta,
+                    ordem_exibicao=opcao.ordem_exibicao,
+                    feedback_opcao=opcao.feedback_opcao,
+                )
+                for opcao in opcoes
+            ]
+            if bulk:
+                OpcaoResposta.objects.bulk_create(bulk)
+
+            criadas += 1
+
+        self.message_user(request, f"{criadas} perguntas duplicadas e marcadas como inativas para revisao.")
 
 @admin.register(OpcaoResposta)
 class OpcaoRespostaAdmin(admin.ModelAdmin):

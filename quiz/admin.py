@@ -1,5 +1,6 @@
 # quiz/admin.py
 from django.contrib import admin
+from django import forms
 from django.urls import reverse
 from django.utils.html import format_html
 from django.db.models import Count
@@ -17,6 +18,7 @@ from .models import (
     NivelGamificacao, Conquista, PerfilGamificacaoUsuario, ConquistaUsuario,
     DesafioDinamico, ProgressoDesafioUsuario, RecompensaNivelResgatada,
 )
+from .models import DEFAULT_SCORE_PANEL_SETTINGS
 
 admin.site.site_header = "MedQuiz Admin"
 admin.site.site_title = "MedQuiz Administracao"
@@ -498,8 +500,129 @@ class QuizDefinicaoAdmin(admin.ModelAdmin):
         return obj.data_atualizacao.strftime("%d/%m/%Y %H:%M") if obj.data_atualizacao else "-"
 
 
+class ConfiguracoesGeraisQuizForm(forms.ModelForm):
+    """ModelForm customizado para facilitar o gerenciamento do Score Panel."""
+
+    SCORE_PANEL_FIELDS = [
+        (
+            'show_timer',
+            'Exibir cronômetro',
+            'Controla a visibilidade do cronômetro do quiz.',
+        ),
+        (
+            'allow_pause',
+            'Permitir pausar cronômetro',
+            'Habilita o botão de pausa quando o cronômetro estiver visível.',
+        ),
+        (
+            'allow_manual_finish',
+            'Permitir encerramento manual',
+            'Mostra o botão "Encerrar" para finalizar a sessão manualmente.',
+        ),
+        (
+            'show_points',
+            'Mostrar pontos',
+            'Exibe a quantidade de pontos acumulados pelo usuário.',
+        ),
+        (
+            'show_correct',
+            'Mostrar acertos',
+            'Mostra o total de respostas corretas.',
+        ),
+        (
+            'show_incorrect',
+            'Mostrar erros',
+            'Mostra o total de respostas incorretas.',
+        ),
+        (
+            'show_streak',
+            'Mostrar sequência de acertos',
+            'Exibe a sequência atual de acertos do usuário.',
+        ),
+        (
+            'show_multiplier',
+            'Mostrar multiplicador',
+            'Mostra o multiplicador aplicado aos pontos (depende da sequência de acertos).',
+        ),
+    ]
+
+    SCORE_PANEL_MODES = [
+        ('default', 'Configuração padrão (todos os modos)'),
+        (SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA, 'Modo "Por Categoria"'),
+        (SessoesQuizUsuario.ModoQuiz.RAPIDO, 'Modo "Rápido"'),
+        (SessoesQuizUsuario.ModoQuiz.DEFINIDO, 'Modo "Pré-Definido"'),
+    ]
+
+    MODE_FIELD_PREFIXES = {
+        'default': 'default',
+        SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA: 'por_categoria',
+        SessoesQuizUsuario.ModoQuiz.RAPIDO: 'rapido',
+        SessoesQuizUsuario.ModoQuiz.DEFINIDO: 'definido',
+    }
+
+    class Meta:
+        model = ConfiguracoesGeraisQuiz
+        fields = '__all__'
+
+    @classmethod
+    def build_field_name(cls, mode_key, flag_key):
+        prefix = cls.MODE_FIELD_PREFIXES[mode_key]
+        return f"{prefix}_{flag_key}"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Esconde o JSON bruto do admin, pois ele será controlado pelos campos auxiliares.
+        if 'score_panel_config' in self.fields:
+            self.fields['score_panel_config'].widget = forms.HiddenInput()
+            self.fields['score_panel_config'].required = False
+
+        instance_for_sanitization = (
+            self.instance if isinstance(self.instance, ConfiguracoesGeraisQuiz) else ConfiguracoesGeraisQuiz()
+        )
+        sanitized = instance_for_sanitization._sanitize_score_panel_config(
+            getattr(self.instance, 'score_panel_config', None)
+        )
+
+        for mode_key, _mode_label in self.SCORE_PANEL_MODES:
+            prefix = self.MODE_FIELD_PREFIXES[mode_key]
+            mode_settings = (
+                sanitized.get(mode_key)
+                or sanitized.get('default')
+                or DEFAULT_SCORE_PANEL_SETTINGS
+            )
+
+            for flag_key, label, help_text in self.SCORE_PANEL_FIELDS:
+                field_name = f"{prefix}_{flag_key}"
+                self.fields[field_name] = forms.BooleanField(
+                    label=label,
+                    required=False,
+                    help_text=help_text,
+                    initial=bool(mode_settings.get(flag_key, DEFAULT_SCORE_PANEL_SETTINGS.get(flag_key, True))),
+                )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        config_payload = {}
+        for mode_key, _mode_label in self.SCORE_PANEL_MODES:
+            prefix = self.MODE_FIELD_PREFIXES[mode_key]
+            config_payload[mode_key] = {}
+            for flag_key, _label, _help_text in self.SCORE_PANEL_FIELDS:
+                field_name = f"{prefix}_{flag_key}"
+                config_payload[mode_key][flag_key] = bool(cleaned_data.get(field_name, False))
+
+        if isinstance(self.instance, ConfiguracoesGeraisQuiz):
+            cleaned_data['score_panel_config'] = self.instance._sanitize_score_panel_config(config_payload)
+        else:
+            cleaned_data['score_panel_config'] = ConfiguracoesGeraisQuiz()._sanitize_score_panel_config(config_payload)
+
+        return cleaned_data
+
+
 @admin.register(ConfiguracoesGeraisQuiz)
 class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
+    form = ConfiguracoesGeraisQuizForm
     list_display = (
         '__str__',
         'numero_perguntas_quiz_rapido',
@@ -529,6 +652,66 @@ class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
                 'Essas estruturas JSON permitem integrar regras avançadas sem alterar o código.'
             ),
         }),
+        (
+            'Painel de Pontuação - Configuração Padrão',
+            {
+                'fields': tuple(
+                    ConfiguracoesGeraisQuizForm.build_field_name('default', flag_key)
+                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
+                ),
+                'description': 'Definições básicas aplicadas a todos os modos de quiz por padrão.',
+            },
+        ),
+        (
+            'Painel de Pontuação - Modo "Por Categoria"',
+            {
+                'fields': tuple(
+                    ConfiguracoesGeraisQuizForm.build_field_name(
+                        SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA,
+                        flag_key,
+                    )
+                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
+                ),
+                'classes': ('collapse',),
+                'description': 'Personalize quais elementos ficam visíveis quando o usuário escolhe o modo "Por Categoria".',
+            },
+        ),
+        (
+            'Painel de Pontuação - Modo "Rápido"',
+            {
+                'fields': tuple(
+                    ConfiguracoesGeraisQuizForm.build_field_name(
+                        SessoesQuizUsuario.ModoQuiz.RAPIDO,
+                        flag_key,
+                    )
+                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
+                ),
+                'classes': ('collapse',),
+                'description': 'Controle a visibilidade do painel para quizzes rápidos.',
+            },
+        ),
+        (
+            'Painel de Pontuação - Modo "Pré-Definido"',
+            {
+                'fields': tuple(
+                    ConfiguracoesGeraisQuizForm.build_field_name(
+                        SessoesQuizUsuario.ModoQuiz.DEFINIDO,
+                        flag_key,
+                    )
+                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
+                ),
+                'classes': ('collapse',),
+                'description': 'Defina quais blocos ficam ativos em quizzes criados previamente.',
+            },
+        ),
+        (
+            'Painel de Pontuação - Dados Internos',
+            {
+                'fields': ('score_panel_config',),
+                'classes': ('collapse', 'wide'),
+                'description': 'Campo técnico utilizado para armazenar a configuração consolidada do painel.',
+            },
+        ),
         ('Datas de Auditoria', {
             'fields': ('data_modificacao',),
             'classes': ('collapse',),

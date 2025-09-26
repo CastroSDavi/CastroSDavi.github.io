@@ -63,9 +63,9 @@ export const ActionTypes = {
  * Action Creators: funções que retornam objetos de ação.
  */
 export const quizActions = {
-    initializeQuiz: (questions, mode, sessionId, quizDefId, quizDefinitionName) => ({
+    initializeQuiz: (questions, mode, sessionId, quizDefId, quizDefinitionName, scorePanelSettings = null) => ({
         type: ActionTypes.INITIALIZE_QUIZ,
-        payload: { questions, mode, sessionId, quizDefId, quizDefinitionName }
+        payload: { questions, mode, sessionId, quizDefId, quizDefinitionName, scorePanelSettings }
     }),
     
     rehydrateSession: (resumeData) => ({

@@ -26,6 +26,7 @@ from .models import (
     UserPreferences,
     default_difficulty_rewards,
     default_streak_bonus_rules,
+    default_score_panel_config,
 )
 from .forms import (
     CustomUserCreationForm,
@@ -69,12 +70,18 @@ def get_quiz_config():
                 'configuracao_pontuacao_dificuldade': default_difficulty_rewards(),
                 'bonus_sequencia_acertos': default_streak_bonus_rules(),
                 'multiplicador_bonus_maximo': 2.0,
+                'score_panel_config': default_score_panel_config(),
             }
         )
         if created:
             # Idealmente, logar isso ou ter um passo de setup inicial para criar essa entrada.
             print(
                 f"INFO: Instância de ConfiguracoesGeraisQuiz (pk=1) criada com valores padrão.")
+        else:
+            sanitized = config._sanitize_score_panel_config(config.score_panel_config)
+            if sanitized != config.score_panel_config:
+                config.score_panel_config = sanitized
+                config.save(update_fields=['score_panel_config'])
         _quiz_config_cache = config
     return _quiz_config_cache
 

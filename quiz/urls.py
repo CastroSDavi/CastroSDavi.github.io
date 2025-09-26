@@ -32,5 +32,10 @@ urlpatterns = [
     path('account/update-preferences/', views.update_preferences_view, name='update_preferences'),
     path('account/delete-account/', views.delete_account_view, name='delete_account'),
 
+    path(
+        'api/question/<int:pergunta_id>/toggle_favorite/',
+        QuestionViewSet.as_view({'post': 'toggle_favorite'}),
+        name='question-toggle_favorite',
+    ),
     path('', include(router.urls)),
 ]

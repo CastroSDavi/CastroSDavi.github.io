@@ -260,13 +260,15 @@ export default class ActionOrchestrator {
 
             const session = await this.apiService.startQuizSession(sessionPayload);
             if (session && session.status === 'success') {
+                const scorePanelSettings = session.score_panel_settings || null;
                 this.store.dispatch(
                     quizActions.initializeQuiz(
                         questionsArray,
                         requestParams.mode,
                         session.session_id,
                         requestParams.quiz_definicao_id,
-                        data.quiz_definition_name
+                        data.quiz_definition_name,
+                        scorePanelSettings
                     )
                 );
                 this.startTimer();
@@ -658,7 +660,8 @@ export default class ActionOrchestrator {
                     'Revisão',
                     null,
                     null,
-                    'Questão Favorita'
+                    'Questão Favorita',
+                    null
                 )
             );
             return true;

@@ -30,6 +30,7 @@ const initialState = {
             num_questions: null,
         },
         quizEnded: false,
+        scorePanelSettings: null,
     },
     timer: {
         isRunning: false,
@@ -329,7 +330,7 @@ export function quizReducer(state = initialState, action) {
             };
             
         case ActionTypes.INITIALIZE_QUIZ: {
-            const { questions, mode, sessionId, quizDefId, quizDefinitionName } = action.payload;
+            const { questions, mode, sessionId, quizDefId, quizDefinitionName, scorePanelSettings } = action.payload;
             
             let displayMode = 'challenge';
             let mainQuizTitle = 'Desafio Personalizado';
@@ -353,6 +354,7 @@ export function quizReducer(state = initialState, action) {
                 currentQuizDefinicaoId: quizDefId,
                 quizDisplayContext: { displayMode, mainQuizTitle },
                 resumableSession: null,
+                scorePanelSettings: scorePanelSettings || null,
             };
             return { ...state, user: { ...initialState.user }, timer: { ...initialState.timer }, quiz: newQuizState };
         }
@@ -378,6 +380,7 @@ export function quizReducer(state = initialState, action) {
                 isInitialQuestionLoad: false,
                 quizEnded: false,
                 resumableSession: null,
+                scorePanelSettings: resumeData.score_panel_settings || null,
             };
             return { ...state, quiz: rehydratedQuizState };
         }
@@ -387,7 +390,16 @@ export function quizReducer(state = initialState, action) {
         }
 
         case ActionTypes.QUIZ_ENDED: {
-            return { ...state, quiz: { ...state.quiz, quizEnded: true, currentSessionId: null, resumableSession: null } };
+            return {
+                ...state,
+                quiz: {
+                    ...state.quiz,
+                    quizEnded: true,
+                    currentSessionId: null,
+                    resumableSession: null,
+                    scorePanelSettings: null,
+                }
+            };
         }
 
         case ActionTypes.ANSWER_QUESTION: {

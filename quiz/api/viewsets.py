@@ -340,7 +340,14 @@ class QuizViewSet(viewsets.ViewSet):
             except ValueError:
                 pass
 
-        return Response({'status': 'success', 'session_id': nova_sessao.pk})
+        quiz_config = get_quiz_config()
+        score_panel_settings = quiz_config.get_score_panel_settings_for_mode(modo_quiz_frontend)
+
+        return Response({
+            'status': 'success',
+            'session_id': nova_sessao.pk,
+            'score_panel_settings': score_panel_settings,
+        })
 
 
 
@@ -667,6 +674,8 @@ class QuizViewSet(viewsets.ViewSet):
             if sessao_ativa.id_quiz_definicao:
                 quiz_definition_name = sessao_ativa.id_quiz_definicao.nome_quiz
 
+            quiz_config = get_quiz_config()
+
             return Response({
                 'status': 'success',
                 'session_id': sessao_ativa.pk,
@@ -684,6 +693,7 @@ class QuizViewSet(viewsets.ViewSet):
                 'sequencia_atual': sessao_ativa.sequencia_acertos_atual,
                 'melhor_sequencia': sessao_ativa.melhor_sequencia_acertos,
                 'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(),
+                'score_panel_settings': quiz_config.get_score_panel_settings_for_mode(sessao_ativa.modo_quiz),
             })
         except Exception:
             return Response(

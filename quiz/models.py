@@ -1,11 +1,13 @@
 # quiz/models.py
-from django.db import models, transaction
-from django.contrib.auth.models import User
-from django.utils import timezone
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
+from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
+
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
+from django.db import models, transaction
+from django.utils import timezone
 
 
 def default_difficulty_rewards() -> Dict[str, Dict[str, int]]:
@@ -25,6 +27,27 @@ def default_streak_bonus_rules() -> List[Dict[str, int]]:
         {"streak": 8, "bonus_percent": 18},
         {"streak": 12, "bonus_percent": 25},
     ]
+
+
+DEFAULT_SCORE_PANEL_SETTINGS: Dict[str, bool] = {
+    "show_points": True,
+    "show_correct": True,
+    "show_incorrect": True,
+    "show_streak": True,
+    "show_multiplier": True,
+    "show_timer": True,
+    "allow_pause": True,
+    "allow_manual_finish": True,
+}
+
+
+def default_score_panel_config() -> Dict[str, Dict[str, bool]]:
+    return {
+        "default": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
+        "Por Categoria": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
+        "Rápido": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
+        "Definido": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
+    }
 
 # --- Modelos de Conteúdo do Quiz ---
 
@@ -674,7 +697,7 @@ class RespostasUsuarioPorSessao(models.Model):
         verbose_name="Foi Correta?",
         help_text="True se correta, False se incorreta, Nulo se pulada/não respondida."
     )
-    data_resposta = models.DateTimeField(auto_now_add=True, verbose_name="Data da Resposta")
+    data_resposta = models.DateTimeField(default=timezone.now, verbose_name="Data da Resposta")
     pontos_obtidos = models.IntegerField(
         default=0,
         verbose_name="Pontos da Resposta",
@@ -838,6 +861,14 @@ class ConfiguracoesGeraisQuiz(models.Model):
         help_text="Limita o multiplicador total aplicado por bônus de sequência para evitar valores extremos.",
         validators=[MinValueValidator(1.0)],
     )
+    score_panel_config = models.JSONField(
+        default=default_score_panel_config,
+        verbose_name="Configurações do Painel de Pontuação",
+        help_text=(
+            "Mapa JSON que define a visibilidade e permissões do painel de pontuação "
+            "para cada modo de quiz (Por Categoria, Rápido e Definido)."
+        ),
+    )
     # Adicione outros campos de configuração global aqui conforme necessário
     # Ex: permitir_pular_questoes = models.BooleanField(default=True, ...)
     # Ex: tempo_limite_padrao_quiz_minutos = models.PositiveIntegerField(default=30, ...)
@@ -855,6 +886,7 @@ class ConfiguracoesGeraisQuiz(models.Model):
             raise ValidationError({'penalidade_por_erro': 'A penalidade por erro não pode ser negativa.'})
         self._validate_dificuldades()
         self._validate_bonus()
+        self.score_panel_config = self._sanitize_score_panel_config(self.score_panel_config)
         result = super().save(*args, **kwargs)
         try:
             from .views import invalidate_quiz_config_cache
@@ -915,6 +947,59 @@ class ConfiguracoesGeraisQuiz(models.Model):
             if not isinstance(bonus_value, (int, float)):
                 raise ValidationError({'bonus_sequencia_acertos': f"O bônus na posição {index} deve ser numérico."})
             last_streak = streak_value
+
+    @staticmethod
+    def _coerce_score_panel_flag(value: Any, default: bool) -> bool:
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, (int, float)):
+            return bool(value)
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {'true', '1', 'yes', 'on', 'sim'}:
+                return True
+            if normalized in {'false', '0', 'no', 'off', 'nao', 'não'}:
+                return False
+        return default
+
+    def _coerce_score_panel_settings(self, data: Optional[Dict[str, Any]]) -> Dict[str, bool]:
+        settings = deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)
+        if not isinstance(data, dict):
+            return settings
+        for key in settings.keys():
+            if key in data:
+                settings[key] = self._coerce_score_panel_flag(data[key], settings[key])
+        return settings
+
+    def _sanitize_score_panel_config(self, payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, bool]]:
+        payload = payload or {}
+        if not isinstance(payload, dict):
+            payload = {}
+
+        sanitized: Dict[str, Dict[str, bool]] = {}
+        sanitized['default'] = self._coerce_score_panel_settings(payload.get('default'))
+
+        for mode in (
+            SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA,
+            SessoesQuizUsuario.ModoQuiz.RAPIDO,
+            SessoesQuizUsuario.ModoQuiz.DEFINIDO,
+        ):
+            sanitized[mode] = self._coerce_score_panel_settings(payload.get(mode))
+
+        return sanitized
+
+    def get_score_panel_settings_for_mode(self, mode: Optional[str] = None) -> Dict[str, bool]:
+        sanitized = self._sanitize_score_panel_config(self.score_panel_config)
+        resolved = deepcopy(sanitized.get('default', DEFAULT_SCORE_PANEL_SETTINGS))
+
+        mode_key = str(mode) if mode else None
+        if mode_key and mode_key in sanitized:
+            mode_settings = sanitized.get(mode_key) or {}
+            for key in resolved.keys():
+                if key in mode_settings:
+                    resolved[key] = bool(mode_settings[key])
+
+        return resolved
 
     def get_difficulty_rule(self, difficulty: str) -> Dict[str, float]:
         payload = self.configuracao_pontuacao_dificuldade or {}

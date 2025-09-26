@@ -595,11 +595,11 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
 
             for flag_key, label, help_text in self.SCORE_PANEL_FIELDS:
                 field_name = f"{prefix}_{flag_key}"
-                self.fields[field_name] = forms.BooleanField(
-                    label=label,
-                    required=False,
-                    help_text=help_text,
-                    initial=bool(mode_settings.get(flag_key, DEFAULT_SCORE_PANEL_SETTINGS.get(flag_key, True))),
+                field = self.fields[field_name]
+                field.initial = bool(
+                    mode_settings.get(
+                        flag_key, DEFAULT_SCORE_PANEL_SETTINGS.get(flag_key, True)
+                    )
                 )
 
     def clean(self):
@@ -619,6 +619,19 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
             cleaned_data['score_panel_config'] = ConfiguracoesGeraisQuiz()._sanitize_score_panel_config(config_payload)
 
         return cleaned_data
+
+
+for _mode_key, _mode_label in ConfiguracoesGeraisQuizForm.SCORE_PANEL_MODES:
+    for _flag_key, _label, _help_text in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS:
+        _field_name = ConfiguracoesGeraisQuizForm.build_field_name(_mode_key, _flag_key)
+        if _field_name not in ConfiguracoesGeraisQuizForm.base_fields:
+            _field = forms.BooleanField(
+                label=_label,
+                required=False,
+                help_text=_help_text,
+            )
+            ConfiguracoesGeraisQuizForm.base_fields[_field_name] = _field
+            ConfiguracoesGeraisQuizForm.declared_fields[_field_name] = _field
 
 
 @admin.register(ConfiguracoesGeraisQuiz)

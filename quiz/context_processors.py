@@ -1,6 +1,6 @@
 # quiz/context_processors.py
 
-from .models import UserPreferences
+from .models import SystemMessageBroadcast, UserPreferences
 
 
 def avatar_context(request):
@@ -41,3 +41,20 @@ def avatar_context(request):
         }
 
     return {}
+
+
+def system_message_broadcasts(request):
+    """Inclui no contexto as mensagens globais configuradas via admin."""
+
+    if request is None:
+        return {'system_message_broadcasts': []}
+
+    user = getattr(request, 'user', None)
+    messages = []
+
+    for broadcast in SystemMessageBroadcast.objects.active():
+        if not broadcast.is_visible_for_user(user):
+            continue
+        messages.append(broadcast.as_seed_payload())
+
+    return {'system_message_broadcasts': messages}

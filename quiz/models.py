@@ -1436,3 +1436,193 @@ class RecompensaNivelResgatada(models.Model):
 
     def __str__(self):
         return f"{self.recompensa_id} - {self.perfil.user.get_username()}"
+
+
+class SystemMessageBroadcastQuerySet(models.QuerySet):
+    """QuerySet especializado para mensagens do sistema controladas via admin."""
+
+    def active(self, reference_time: Optional[datetime] = None):
+        """Retorna apenas mensagens ativas na janela configurada."""
+
+        now = reference_time or timezone.now()
+
+        return (
+            self.filter(is_active=True)
+            .filter(models.Q(start_at__isnull=True) | models.Q(start_at__lte=now))
+            .filter(models.Q(end_at__isnull=True) | models.Q(end_at__gte=now))
+            .order_by('-priority', '-start_at', '-created_at')
+        )
+
+
+class SystemMessageBroadcast(models.Model):
+    """Mensagens globais controladas pelo admin para o centro de mensagens do front-end."""
+
+    class MessageType(models.TextChoices):
+        SUCCESS = 'success', 'Sucesso'
+        INFO = 'info', 'Informação'
+        WARNING = 'warning', 'Aviso'
+        ERROR = 'error', 'Erro'
+
+    class Channel(models.TextChoices):
+        TOAST = 'toast', 'Toast (notificação)'
+        INLINE = 'inline', 'Inline (painel embutido)'
+
+    class Audience(models.TextChoices):
+        ALL = 'all', 'Todos os usuários'
+        AUTHENTICATED = 'auth', 'Somente usuários autenticados'
+        ANONYMOUS = 'anon', 'Somente visitantes anônimos'
+
+    slug = models.SlugField(
+        unique=True,
+        verbose_name='Identificador',
+        help_text='Usado como chave estável para a mensagem. Não use espaços nem caracteres especiais.',
+    )
+    title = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name='Título',
+    )
+    body = models.TextField(verbose_name='Mensagem principal')
+    supporting_text = models.TextField(
+        blank=True,
+        verbose_name='Texto complementar',
+        help_text='Opcional: complemento exibido abaixo do corpo principal.',
+    )
+    detail = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name='Detalhe adicional',
+        help_text='Valor passado como detail para renderizações personalizadas.',
+    )
+    message_type = models.CharField(
+        max_length=12,
+        choices=MessageType.choices,
+        default=MessageType.INFO,
+        verbose_name='Tipo',
+    )
+    icon = models.CharField(
+        max_length=40,
+        blank=True,
+        verbose_name='Ícone personalizado',
+        help_text='Nome do ícone do Google Material Symbols (opcional).',
+    )
+    channel = models.CharField(
+        max_length=10,
+        choices=Channel.choices,
+        default=Channel.TOAST,
+        verbose_name='Canal padrão',
+    )
+    extra_tags = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Tags extras',
+        help_text="Separadas por espaço. Use, por exemplo, 'sticky centered inline'.",
+    )
+    auto_dismiss = models.BooleanField(
+        default=True,
+        verbose_name='Fechar automaticamente',
+        help_text='Define se o toast deve sumir sozinho após alguns segundos.',
+    )
+    dismiss_in = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        verbose_name='Dispensar em (ms)',
+        help_text='Tempo em milissegundos para fechar automaticamente. Deixe em branco para usar o padrão.',
+    )
+    audience = models.CharField(
+        max_length=8,
+        choices=Audience.choices,
+        default=Audience.ALL,
+        verbose_name='Audiência',
+    )
+    priority = models.IntegerField(
+        default=0,
+        verbose_name='Prioridade',
+        help_text='Mensagens com prioridade mais alta aparecem primeiro.',
+    )
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name='Ativa',
+        help_text='Desative para ocultar sem apagar a mensagem.',
+    )
+    start_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Início da vigência',
+        help_text='Opcional: data/hora a partir da qual a mensagem é exibida.',
+    )
+    end_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name='Fim da vigência',
+        help_text='Opcional: data/hora após a qual a mensagem deixa de ser exibida.',
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Criada em')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Atualizada em')
+
+    objects = SystemMessageBroadcastQuerySet.as_manager()
+
+    class Meta:
+        verbose_name = 'Mensagem do Sistema'
+        verbose_name_plural = 'Mensagens do Sistema'
+        ordering = ['-priority', '-start_at', 'title']
+
+    def clean(self):
+        super().clean()
+
+        if not self.auto_dismiss and self.dismiss_in:
+            raise ValidationError(
+                "Defina 'Dispensar em' apenas quando a opção de fechar automaticamente estiver marcada."
+            )
+
+        if self.dismiss_in and self.dismiss_in < 1000:
+            raise ValidationError("O tempo mínimo para fechamento automático é de 1000 ms (1 segundo).")
+
+        if self.start_at and self.end_at and self.end_at <= self.start_at:
+            raise ValidationError('O fim da vigência deve ser posterior ao início.')
+
+    def save(self, *args, **kwargs):
+        if self.extra_tags:
+            normalized_tokens = []
+            for token in self.extra_tags.split():
+                token = token.strip()
+                if token and token not in normalized_tokens:
+                    normalized_tokens.append(token)
+            self.extra_tags = ' '.join(normalized_tokens)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title or self.slug
+
+    def is_visible_for_user(self, user: Optional[User]) -> bool:
+        """Determina se a mensagem deve aparecer para o usuário informado."""
+
+        is_authenticated = getattr(user, 'is_authenticated', False)
+
+        if self.audience == self.Audience.AUTHENTICATED:
+            return bool(is_authenticated)
+
+        if self.audience == self.Audience.ANONYMOUS:
+            return not bool(is_authenticated)
+
+        return True
+
+    def as_seed_payload(self) -> Dict[str, Any]:
+        """Monta os atributos esperados pelo SystemMessageCenter no front-end."""
+
+        payload: Dict[str, Any] = {
+            'dataset_id': f'broadcast-{self.slug}',
+            'channel': self.channel,
+            'type': self.message_type,
+            'title': self.title or '',
+            'body': self.body or '',
+            'supporting_text': self.supporting_text or '',
+            'detail': self.detail or '',
+            'icon': self.icon or '',
+            'tags': self.extra_tags or '',
+            'auto_dismiss': self.auto_dismiss,
+            'dismiss_in': self.dismiss_in,
+        }
+
+        return payload

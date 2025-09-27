@@ -63,51 +63,110 @@
         <div class="question-section__main-content">
             
             <div id="challenge-hub-container" class="challenge-hub">
-                <div class="challenge-hub__header">
-                    <h2 class="challenge-hub__title">Escolha seu Desafio</h2>
-                    <p class="challenge-hub__subtitle">Explore nosso banco de <span id="hub-total-questions-count">0</span> questões.</p>
-                </div>
+                <header class="challenge-hub__header">
+                    <span class="challenge-hub__badge">Challenge Hub 2.0</span>
+                    <h2 class="challenge-hub__title">Escolha o formato perfeito para treinar</h2>
+                    <p class="challenge-hub__subtitle">
+                        Construa seu plano de estudos com <span id="hub-total-questions-count">0</span> questões disponíveis e modos pensados para cada momento da sua jornada.
+                    </p>
+                    <div class="challenge-hub__pill-list" role="list">
+                        <span class="challenge-hub__pill" role="listitem">Curadoria inteligente</span>
+                        <span class="challenge-hub__pill" role="listitem">Relatórios instantâneos</span>
+                        <span class="challenge-hub__pill" role="listitem">Integração com favoritos</span>
+                    </div>
+                </header>
                 <div class="challenge-hub__options-grid">
-                    
-                    {# ========================================================================== #}
-                    {# ============ CARD DE RESUMO REFAFORADO (COM HTML MELHORADO) ============ #}
-                    {# ========================================================================== #}
-                    <div id="hub-resume-quiz-card" class="challenge-card challenge-card--resume u-is-hidden">
-                        <div class="challenge-card__icon-wrapper">
-                            <span class="material-symbols-outlined challenge-card__icon">play_arrow</span>
-                        </div>
-                        <div class="challenge-card__main">
-                            <div class="challenge-card__content">
-                                <h3 class="challenge-card__title">Continuar Desafio</h3>
+                    <div id="hub-resume-quiz-card" class="challenge-card challenge-card--resume u-is-hidden" aria-live="polite">
+                        <div class="challenge-card__headline">
+                            <div class="challenge-card__icon-wrapper challenge-card__icon-wrapper--solid">
+                                <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">play_circle</span>
+                            </div>
+                            <div class="challenge-card__body">
+                                <h3 class="challenge-card__title">Retomar sessão em andamento</h3>
                                 <p class="challenge-card__description" id="hub-resume-card-description">
                                     Você tem uma sessão em andamento.
                                 </p>
                             </div>
-                            <div class="challenge-card__actions">
-                                <button id="hub-discard-resume-btn" class="button button--text button--compact">Descartar</button>
-                                <button id="hub-confirm-resume-btn" class="button button--primary button--small">Continuar</button>
-                            </div>
+                        </div>
+                        <div class="challenge-card__resume-actions">
+                            <button id="hub-discard-resume-btn" class="button button--text button--compact">Descartar</button>
+                            <button id="hub-confirm-resume-btn" class="button button--primary button--small">Continuar</button>
                         </div>
                     </div>
-                    {# ======================= FIM DA REFAFORAÇÃO DO CARD ====================== #}
 
-                    <button id="hub-customize-quiz-btn" class="challenge-card">
+                    <button id="hub-customize-quiz-btn" class="challenge-card challenge-card--accent" type="button">
                         <div class="challenge-card__icon-wrapper">
-                            <span class="material-symbols-outlined challenge-card__icon">tune</span>
+                            <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">tune</span>
                         </div>
-                        <div class="challenge-card__content">
-                            <h3 class="challenge-card__title">Personalizar Quiz</h3>
-                            <p class="challenge-card__description">Escolha temas, dificuldade e modo de estudo.</p>
+                        <div class="challenge-card__body">
+                            <h3 class="challenge-card__title">Criar rota personalizada</h3>
+                            <p class="challenge-card__description">Combine categorias, níveis e duração para montar um treino sob medida.</p>
+                            <div class="challenge-card__meta">
+                                <span class="challenge-card__tag">Controle total</span>
+                                <span class="challenge-card__tag">Favoritos inclusos</span>
+                            </div>
                         </div>
+                        <span class="material-symbols-outlined challenge-card__chevron" aria-hidden="true">arrow_outward</span>
                     </button>
-                    <button id="hub-quick-quiz-btn" class="challenge-card">
+
+                    <button id="hub-quick-quiz-btn" class="challenge-card challenge-card--highlight" type="button">
                         <div class="challenge-card__icon-wrapper">
-                            <span class="material-symbols-outlined challenge-card__icon">bolt</span>
+                            <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">bolt</span>
                         </div>
-                        <div class="challenge-card__content">
-                            <h3 class="challenge-card__title">Quiz Rápido</h3>
-                            <p class="challenge-card__description">Um desafio de <span id="hub-quick-quiz-count">10</span> questões aleatórias para começar.</p>
+                        <div class="challenge-card__body">
+                            <h3 class="challenge-card__title">Sprint relâmpago</h3>
+                            <p class="challenge-card__description">Enfrente <span id="hub-quick-quiz-count">10</span> questões aleatórias para aquecer em minutos.</p>
+                            <div class="challenge-card__meta">
+                                <span class="challenge-card__tag">Tempo médio 5 min</span>
+                                <span class="challenge-card__tag">Pontuação rápida</span>
+                            </div>
                         </div>
+                        <span class="material-symbols-outlined challenge-card__chevron" aria-hidden="true">arrow_outward</span>
+                    </button>
+
+                    <button id="hub-timed-quiz-btn" class="challenge-card challenge-card--outline" type="button">
+                        <div class="challenge-card__icon-wrapper">
+                            <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">hourglass_top</span>
+                        </div>
+                        <div class="challenge-card__body">
+                            <h3 class="challenge-card__title">Modo Cronometrado</h3>
+                            <p class="challenge-card__description">Responda o máximo possível antes do tempo acabar e acompanhe seu ritmo.</p>
+                            <div class="challenge-card__meta">
+                                <span class="challenge-card__tag">Velocidade</span>
+                                <span class="challenge-card__tag">Multiplicador dinâmico</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined challenge-card__chevron" aria-hidden="true">schedule</span>
+                    </button>
+
+                    <button id="hub-study-journey-btn" class="challenge-card challenge-card--outline" type="button">
+                        <div class="challenge-card__icon-wrapper">
+                            <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">auto_stories</span>
+                        </div>
+                        <div class="challenge-card__body">
+                            <h3 class="challenge-card__title">Trilha Guiada</h3>
+                            <p class="challenge-card__description">Explore temas em sequência lógica com revisões programadas automaticamente.</p>
+                            <div class="challenge-card__meta">
+                                <span class="challenge-card__tag">Progressão assistida</span>
+                                <span class="challenge-card__tag">Revisões inteligentes</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined challenge-card__chevron" aria-hidden="true">map</span>
+                    </button>
+
+                    <button id="hub-endless-quiz-btn" class="challenge-card challenge-card--ghost" type="button">
+                        <div class="challenge-card__icon-wrapper">
+                            <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">all_inclusive</span>
+                        </div>
+                        <div class="challenge-card__body">
+                            <h3 class="challenge-card__title">Endless Challenge</h3>
+                            <p class="challenge-card__description">Uma sessão contínua para acumular streaks e XP sem limite de questões.</p>
+                            <div class="challenge-card__meta">
+                                <span class="challenge-card__tag">Streak ilimitado</span>
+                                <span class="challenge-card__tag">Ranking em breve</span>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined challenge-card__chevron" aria-hidden="true">trending_up</span>
                     </button>
                 </div>
             </div>

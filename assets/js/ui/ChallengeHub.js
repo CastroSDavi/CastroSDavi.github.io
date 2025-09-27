@@ -16,6 +16,10 @@ export default class ChallengeHub {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
             hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
             hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
+            hubMarathonModeBtn: this.quizUI.elements.hubMarathonModeBtn,
+            hubSmartReviewBtn: this.quizUI.elements.hubSmartReviewBtn,
+            hubSprintModeBtn: this.quizUI.elements.hubSprintModeBtn,
+            hubFocusModeBtn: this.quizUI.elements.hubFocusModeBtn,
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
@@ -143,7 +147,24 @@ export default class ChallengeHub {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
-        
+
+        const attachModeButton = (button, orchestratorMethodName) => {
+            if (!button) return;
+            button.addEventListener('click', () => {
+                if (!this.actionOrchestrator || typeof this.actionOrchestrator[orchestratorMethodName] !== 'function') {
+                    console.error(`ChallengeHub: actionOrchestrator indisponível para ${orchestratorMethodName}.`);
+                    return;
+                }
+                this.hideHub();
+                this.actionOrchestrator[orchestratorMethodName]();
+            });
+        };
+
+        attachModeButton(this.elements.hubMarathonModeBtn, 'startMarathonMode');
+        attachModeButton(this.elements.hubSmartReviewBtn, 'startSmartReviewMode');
+        attachModeButton(this.elements.hubSprintModeBtn, 'startSprintMode');
+        attachModeButton(this.elements.hubFocusModeBtn, 'startFocusMode');
+
         // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
         this.elements.confirmResumeBtn?.addEventListener('click', () => {
              if (this.actionOrchestrator) {

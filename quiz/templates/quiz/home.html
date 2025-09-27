@@ -1,169 +1,238 @@
-{# Arquivo: templates/quiz/home.html #} 
-{% extends "quiz/base.html" %} 
-{% load static %} 
-{% block title %}{{ page_title|default:"MedQuiz - Início" }}{%endblock title %} 
+{# Arquivo: templates/quiz/home.html #}
+{% extends "quiz/base.html" %}
+{% load static %}
+{% block title %}{{ page_title|default:"MedQuiz - Início" }}{%endblock title %}
 {% block content %}
-<section id="home-section" class="main-section">
-	<div class="hero-block">
-		<div class="hero-block__welcome">
-			{% if user.is_authenticated %}
-			<h1 class="hero-block__title">
-				Olá, {{ user.first_name|default:user.username }}!
-			</h1>
-			{% else %}
-			<h1 class="hero-block__title">Bem-vindo ao MedQuiz!</h1>
-			{% endif %}
-			<p class="hero-block__subtitle">
-				Pronto para expandir seus conhecimentos hoje?
-			</p>
-		</div>
+<section id="home-section" class="hub-hero">
+        <span class="hub-hero__orb hub-hero__orb--primary" aria-hidden="true"></span>
+        <span class="hub-hero__orb hub-hero__orb--secondary" aria-hidden="true"></span>
 
-		{% if user.is_authenticated and daily_stats %}
-		<div class="stats-deck">
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>checklist</span
-				>
-				<span class="stat-card__label">Respondidas Hoje</span>
-				<span class="stat-card__value" id="daily-questions"
-					>{{ daily_stats.perguntas_respondidas_dia }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>target</span
-				>
-				<span class="stat-card__label">Acertos Hoje</span>
-				<span class="stat-card__value" id="daily-accuracy"
-					>{{ accuracy_percentage }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>military_tech</span
-				>
-				<span class="stat-card__label">Pontos Hoje</span>
-				<span class="stat-card__value" id="daily-points"
-					>{{ daily_stats.pontos_dia }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>local_fire_department</span
-				>
-				<span class="stat-card__label">Sequência Dias</span>
-				<span class="stat-card__value" id="streak-value"
-					>{{ daily_stats.sequencia_dias_quiz }}</span
-				>
-			</div>
-		</div>
-		{% else %}
-		<div class="stats-deck">
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>quiz</span
-				>
-				<span class="stat-card__label">Muitas Questões</span>
-				{# Este span será preenchido pelo script.js após carregar os
-				dados da API #}
-				<span class="stat-card__value" id="hub-total-questions-count"
-					>...</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>school</span
-				>
-				<span class="stat-card__label">Aprenda Mais</span>
-				<span class="stat-card__value">Sempre!</span>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>military_tech</span
-				>
-				<span class="stat-card__label">Ganhe Pontos</span>
-				<span class="stat-card__value">Jogue!</span>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>person_add</span
-				>
-				<span class="stat-card__label">Crie Conta</span>
-				<span class="stat-card__value">Grátis!</span>
-			</div>
-		</div>
-		{% endif %}
+        <div class="hub-hero__content">
+                <div class="hub-hero__main">
+                        <span class="hub-hero__eyebrow">Challenge Hub</span>
+                        {% if user.is_authenticated %}
+                        <h1 class="hub-hero__title">
+                                Hora de evoluir, {{ user.first_name|default:user.username }}!
+                        </h1>
+                        <p class="hub-hero__subtitle">
+                                Combine modos de jogo, acompanhe seus indicadores em tempo real e mantenha sua sequência de vitórias.
+                        </p>
+                        {% else %}
+                        <h1 class="hub-hero__title">Bem-vindo ao Challenge Hub do MedQuiz</h1>
+                        <p class="hub-hero__subtitle">
+                                Escolha como quer jogar, conheça desafios especiais e salve seu progresso com experiências personalizadas.
+                        </p>
+                        {% endif %}
 
-		<div class="hero-block__cta">
-			{% if user.is_authenticated %}
-			<p class="hero-block__cta-text">
-				Pronto para testar seus conhecimentos?
-			</p>
-			<div class="hero-block__cta-actions">
-				<a
-					href="{% url 'quiz:questions' %}"
-					class="button button--fancy button--fancy-primary"
-					id="go-to-challenges-hub-link"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>rocket_launch</span
-					>
-					<span class="button__label">Iniciar Desafio</span>
-				</a>
-			</div>
-			{% else %}
-			<p class="hero-block__cta-text">
-				Crie sua conta ou faça login para salvar seu progresso e
-				competir!
-			</p>
-			<div
-				class="hero-block__cta-actions"
-				style="
-					display: flex;
-					gap: 15px;
-					flex-wrap: wrap;
-					justify-content: center;
-				"
-			>
-				<a
-					href="{% url 'quiz:register' %}"
-					class="button button--fancy button--fancy-primary"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>person_add</span
-					>
-					Cadastre-se Gratuitamente
-				</a>
-				<a
-					href="{% url 'login' %}"
-					class="button button--fancy button--fancy-secondary"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>login</span
-					>
-					Fazer Login
-				</a>
-			</div>
-			{% endif %}
-		</div>
-	</div>
-	<div class="home-section__additional-content">
-		<div class="card card--additional-content card--centered-content">
-			<h2 class="card__title">Explore Mais</h2>
-			<div class="card__body">
-				<p>
-					Ainda desenvolvendo esta área, mas aqui você poderá
-					encontrar artigos, dicas de estudo e outros recursos para
-					complementar seu aprendizado.
-				</p>
-				<a
-					href="{% url 'quiz:questions' %}"
-					class="button button--outline button--small"
-					id="view-all-questions-alt-link"
-					>Ver Banco de Questões</a
-				>
-			</div>
-		</div>
-	</div>
+                        <div class="hub-hero__chips" aria-label="Destaques do Challenge Hub">
+                                <span class="hub-hero__chip">
+                                        <span class="material-symbols-outlined hub-hero__chip-icon">leaderboard</span>
+                                        Rankings dinâmicos
+                                </span>
+                                <span class="hub-hero__chip">
+                                        <span class="material-symbols-outlined hub-hero__chip-icon">emoji_events</span>
+                                        Conquistas temáticas
+                                </span>
+                                <span class="hub-hero__chip">
+                                        <span class="material-symbols-outlined hub-hero__chip-icon">group</span>
+                                        Desafios colaborativos
+                                </span>
+                                <span class="hub-hero__chip">
+                                        <span class="material-symbols-outlined hub-hero__chip-icon">trending_up</span>
+                                        Insights inteligentes
+                                </span>
+                        </div>
+
+                        <div class="hub-hero__stats">
+                                {% if user.is_authenticated and daily_stats %}
+                                <div class="stats-deck stats-deck--compact" role="list">
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">checklist</span>
+                                                <span class="stat-card__label">Respondidas hoje</span>
+                                                <span class="stat-card__value" id="daily-questions">{{ daily_stats.perguntas_respondidas_dia }}</span>
+                                        </div>
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">target</span>
+                                                <span class="stat-card__label">Precisão diária</span>
+                                                <span class="stat-card__value" id="daily-accuracy">{{ accuracy_percentage }}</span>
+                                        </div>
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">military_tech</span>
+                                                <span class="stat-card__label">Pontos do dia</span>
+                                                <span class="stat-card__value" id="daily-points">{{ daily_stats.pontos_dia }}</span>
+                                        </div>
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">local_fire_department</span>
+                                                <span class="stat-card__label">Sequência ativa</span>
+                                                <span class="stat-card__value" id="streak-value">{{ daily_stats.sequencia_dias_quiz }}</span>
+                                        </div>
+                                </div>
+                                {% else %}
+                                <div class="stats-deck stats-deck--compact" role="list">
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">quiz</span>
+                                                <span class="stat-card__label">Banco disponível</span>
+                                                <span class="stat-card__value" id="hub-total-questions-count">...</span>
+                                        </div>
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">school</span>
+                                                <span class="stat-card__label">Trilhas personalizadas</span>
+                                                <span class="stat-card__value">Liberadas</span>
+                                        </div>
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">military_tech</span>
+                                                <span class="stat-card__label">Recompensas</span>
+                                                <span class="stat-card__value">Diárias</span>
+                                        </div>
+                                        <div class="stat-card" role="listitem">
+                                                <span class="material-symbols-outlined stat-card__icon">person_add</span>
+                                                <span class="stat-card__label">Conta gratuita</span>
+                                                <span class="stat-card__value">1 min</span>
+                                        </div>
+                                </div>
+                                {% endif %}
+                        </div>
+
+                        <div class="hub-hero__cta">
+                                {% if user.is_authenticated %}
+                                <p class="hub-hero__cta-text">
+                                        Combine um modo rápido com suas preferências salvas ou mergulhe direto em um novo desafio.
+                                </p>
+                                <div class="hub-hero__actions">
+                                        <a
+                                                href="{% url 'quiz:questions' %}"
+                                                class="button button--fancy button--fancy-primary"
+                                                id="go-to-challenges-hub-link"
+                                        >
+                                                <span class="material-symbols-outlined button__icon">rocket_launch</span>
+                                                <span class="button__label">Iniciar sessão rápida</span>
+                                        </a>
+                                        <a
+                                                href="{% url 'quiz:account' %}"
+                                                class="button button--fancy button--fancy-secondary"
+                                        >
+                                                <span class="material-symbols-outlined button__icon">tune</span>
+                                                <span class="button__label">Abrir painel pessoal</span>
+                                        </a>
+                                </div>
+                                {% else %}
+                                <p class="hub-hero__cta-text">
+                                        Crie sua conta gratuita para desbloquear progresso salvo, rankings ao vivo e modos personalizados.
+                                </p>
+                                <div class="hub-hero__actions">
+                                        <a
+                                                href="{% url 'quiz:register' %}"
+                                                class="button button--fancy button--fancy-primary"
+                                        >
+                                                <span class="material-symbols-outlined button__icon">person_add</span>
+                                                Cadastre-se gratuitamente
+                                        </a>
+                                        <a
+                                                href="{% url 'login' %}"
+                                                class="button button--fancy button--fancy-secondary"
+                                        >
+                                                <span class="material-symbols-outlined button__icon">login</span>
+                                                Fazer login
+                                        </a>
+                                </div>
+                                {% endif %}
+                        </div>
+                </div>
+
+                <aside class="hub-hero__aside" aria-labelledby="game-modes-heading">
+                        <header class="hub-hero__aside-header">
+                                <span class="hub-hero__aside-pill">Modos de jogo</span>
+                                <h2 class="hub-hero__aside-title" id="game-modes-heading">
+                                        Escolha como quer jogar hoje
+                                </h2>
+                                <p class="hub-hero__aside-subtitle">
+                                        Combine regras, limite de tempo e objetivos especiais para transformar seus estudos em missões épicas.
+                                </p>
+                        </header>
+                        <div class="game-modes-grid">
+                                <a
+                                        href="{% url 'quiz:questions' %}?modo=classico"
+                                        class="game-mode-card"
+                                        data-mode="classico"
+                                >
+                                        <span class="material-symbols-outlined game-mode-card__icon">auto_stories</span>
+                                        <div class="game-mode-card__body">
+                                                <div class="game-mode-card__header">
+                                                        <h3 class="game-mode-card__title">Clássico</h3>
+                                                        <span class="game-mode-card__chip">Recomendado</span>
+                                                </div>
+                                                <p class="game-mode-card__description">
+                                                        Responda no seu ritmo, com feedback completo e curadoria inteligente de questões.
+                                                </p>
+                                                <ul class="game-mode-card__meta">
+                                                        <li><span class="material-symbols-outlined">schedule</span>15 questões</li>
+                                                        <li><span class="material-symbols-outlined">workspace_premium</span>Multiplica pontos</li>
+                                                </ul>
+                                        </div>
+                                </a>
+                                <a
+                                        href="{% url 'quiz:questions' %}?modo=sprint"
+                                        class="game-mode-card"
+                                        data-mode="sprint"
+                                >
+                                        <span class="material-symbols-outlined game-mode-card__icon">speed</span>
+                                        <div class="game-mode-card__body">
+                                                <div class="game-mode-card__header">
+                                                        <h3 class="game-mode-card__title">Sprint</h3>
+                                                        <span class="game-mode-card__chip game-mode-card__chip--accent">Novo</span>
+                                                </div>
+                                                <p class="game-mode-card__description">
+                                                        Corridas contra o tempo com boosters de combo e checkpoints estratégicos.
+                                                </p>
+                                                <ul class="game-mode-card__meta">
+                                                        <li><span class="material-symbols-outlined">timer</span>2 min por questão</li>
+                                                        <li><span class="material-symbols-outlined">bolt</span>Power-ups em cadeia</li>
+                                                </ul>
+                                        </div>
+                                </a>
+                                <a
+                                        href="{% url 'quiz:questions' %}?modo=maratona"
+                                        class="game-mode-card"
+                                        data-mode="maratona"
+                                >
+                                        <span class="material-symbols-outlined game-mode-card__icon">track_changes</span>
+                                        <div class="game-mode-card__body">
+                                                <div class="game-mode-card__header">
+                                                        <h3 class="game-mode-card__title">Maratona</h3>
+                                                        <span class="game-mode-card__chip">Alta resistência</span>
+                                                </div>
+                                                <p class="game-mode-card__description">
+                                                        Sessões longas com checkpoints, metas intermediárias e resumo estratégico.
+                                                </p>
+                                                <ul class="game-mode-card__meta">
+                                                        <li><span class="material-symbols-outlined">flag</span>Objetivos personalizáveis</li>
+                                                        <li><span class="material-symbols-outlined">insights</span>Relatório avançado</li>
+                                                </ul>
+                                        </div>
+                                </a>
+                                <a
+                                        href="{% url 'quiz:questions' %}?modo=estudo"
+                                        class="game-mode-card game-mode-card--ghost"
+                                        data-mode="estudo"
+                                        id="view-all-questions-alt-link"
+                                >
+                                        <span class="material-symbols-outlined game-mode-card__icon">menu_book</span>
+                                        <div class="game-mode-card__body">
+                                                <div class="game-mode-card__header">
+                                                        <h3 class="game-mode-card__title">Estudo livre</h3>
+                                                        <span class="game-mode-card__chip">Catálogo completo</span>
+                                                </div>
+                                                <p class="game-mode-card__description">
+                                                        Explore todo o banco de questões, filtre por temas e acompanhe seus favoritos.
+                                                </p>
+                                                <ul class="game-mode-card__meta">
+                                                        <li><span class="material-symbols-outlined">filter_alt</span>Filtros avançados</li>
+                                                        <li><span class="material-symbols-outlined">bookmarks</span>Salvar coleções</li>
+                                                </ul>
+                                        </div>
+                                </a>
+                        </div>
+                </aside>
+        </div>
 </section>
-{% endblock content %} 
+{% endblock content %}

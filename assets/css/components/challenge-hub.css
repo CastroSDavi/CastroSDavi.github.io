@@ -5,10 +5,11 @@
 }
 
 .challenge-hub {
+    --challenge-hub-padding: clamp(32px, 4vw, 48px);
     width: 100%;
     max-width: 1120px;
     margin: auto;
-    padding: clamp(32px, 4vw, 48px);
+    padding: var(--challenge-hub-padding);
     display: flex;
     flex-direction: column;
     gap: clamp(24px, 3vw, 36px);
@@ -24,6 +25,9 @@
     flex-wrap: wrap;
     gap: clamp(20px, 3vw, 32px);
     padding: clamp(28px, 3vw, 36px);
+    margin-top: calc(-1 * var(--challenge-hub-padding, 0px));
+    margin-left: calc(-1 * var(--challenge-hub-padding, 0px));
+    margin-right: calc(-1 * var(--challenge-hub-padding, 0px));
     border-radius: var(--border-radius-lg);
     background: linear-gradient(140deg, rgba(13, 59, 102, 0.98), rgba(13, 59, 102, 0.8));
     color: var(--color-white);
@@ -314,7 +318,7 @@
 /* =============================== RESPONSIVIDADE =============================== */
 @media (max-width: 992px) {
     .challenge-hub {
-        padding: clamp(28px, 6vw, 40px);
+        --challenge-hub-padding: clamp(28px, 6vw, 40px);
     }
 
     .challenge-hub__hero-actions {
@@ -330,7 +334,7 @@
 
 @media (max-width: 720px) {
     .challenge-hub {
-        padding: clamp(24px, 6vw, 32px);
+        --challenge-hub-padding: clamp(24px, 6vw, 32px);
         gap: var(--spacing-lg, 24px);
     }
 

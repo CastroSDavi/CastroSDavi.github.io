@@ -80,25 +80,50 @@
 }
 
 .challenge-stat {
-    padding: var(--spacing-sm, 16px) var(--spacing-md, 20px);
-    border-radius: var(--border-radius-md);
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(4px);
+    position: relative;
+    z-index: 0;
+    padding: clamp(14px, 2.6vw, 18px) clamp(18px, 4vw, 22px);
+    border-radius: calc(var(--border-radius-md) + 4px);
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(6px);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xxs, 6px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)
+    box-shadow: 0 10px 25px rgba(16, 15, 41, 0.12);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+}
+
+.challenge-stat::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.22), transparent 55%);
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.challenge-stat:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(16, 15, 41, 0.18);
+}
+
+.challenge-stat > * {
+    position: relative;
+    z-index: 1;
 }
 
 .challenge-stat__label {
-    font-size: var(--font-size-xs, 0.75rem);
+    font-size: clamp(0.7rem, 2.2vw, 0.82rem);
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.7);
 }
 
 .challenge-stat__value {
-    font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+    font-size: clamp(1.15rem, 2.8vw, 1.45rem);
     font-weight: var(--font-weight-semibold);
     color: var(--color-white);
 }
@@ -389,10 +414,22 @@
         margin: 0 auto;
         align-items: center;
         text-align: center;
+        padding: clamp(12px, 6vw, 18px) clamp(16px, 8vw, 22px);
+        gap: var(--spacing-xs, 10px);
+    }
+
+    .challenge-stat::before {
+        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 60%);
+    }
+
+    .challenge-stat__label {
+        font-size: clamp(0.68rem, 3vw, 0.8rem);
+        letter-spacing: 0.08em;
     }
 
     .challenge-stat__value {
-        font-size: clamp(1.25rem, 6vw, 1.6rem);
+        font-size: clamp(1.1rem, 5.8vw, 1.55rem);
+        line-height: 1.1;
     }
 
     .challenge-card {

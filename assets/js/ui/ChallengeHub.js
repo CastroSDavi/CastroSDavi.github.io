@@ -16,6 +16,9 @@ export default class ChallengeHub {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
             hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
             hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
+            hubBalancedQuizBtn: this.quizUI.elements.hubBalancedQuizBtn,
+            hubMarathonQuizBtn: this.quizUI.elements.hubMarathonQuizBtn,
+            hubFocusQuizBtn: this.quizUI.elements.hubFocusQuizBtn,
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
@@ -141,6 +144,33 @@ export default class ChallengeHub {
                 this.actionOrchestrator.startQuickQuiz();
             } else {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
+            }
+        });
+
+        this.elements.hubBalancedQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startBalancedQuiz();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar treino equilibrado.");
+            }
+        });
+
+        this.elements.hubMarathonQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startMarathonQuiz();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar maratona.");
+            }
+        });
+
+        this.elements.hubFocusQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startFocusedChallenge();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar desafio focado.");
             }
         });
         

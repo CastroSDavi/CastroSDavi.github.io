@@ -530,8 +530,19 @@ def home_view(request):
 
 @login_required
 def questions_view(request):
+    hub_summary = {}
+    hub_summary_json = '{}'
+    try:
+        hub_summary = QuizDataService.build_quiz_summary()
+        hub_summary_json = json.dumps(hub_summary, ensure_ascii=False)
+    except Exception:
+        hub_summary = {}
+        hub_summary_json = '{}'
+
     context = {
         'page_title': 'MedQuiz - Questões',
+        'hub_summary': hub_summary,
+        'hub_summary_json': hub_summary_json,
     }
     return render(request, 'quiz/questions_page.html', context)
 
@@ -716,41 +727,9 @@ def delete_account_view(request):
 def api_get_quiz_summary_view(request):
     """Retorna estatísticas agregadas leves para inicialização da interface."""
     try:
-        perguntas_ativas = Pergunta.objects.filter(ativa=True)
-        total_questions = perguntas_ativas.count()
-
-        categorias_qs = Categoria.objects.annotate(
-            total_perguntas=Count(
-                'perguntas_associadas',
-                filter=Q(perguntas_associadas__ativa=True)
-            )
-        ).order_by('nome_categoria')
-
-        quiz_config = get_quiz_config()
-        quick_quiz_default = None
-        if quiz_config:
-            quick_quiz_default = getattr(quiz_config, 'numero_perguntas_quiz_rapido', None)
-
-        categorias_data = [
-            {
-                'id_categoria': categoria.pk,
-                'nome_categoria': categoria.nome_categoria,
-                'id_categoria_pai': categoria.id_categoria_pai_id,
-                'total_perguntas': categoria.total_perguntas or 0,
-            }
-            for categoria in categorias_qs
-        ]
-
-        predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()
-
-        return JsonResponse({
-            'status': 'success',
-            'total_questions': total_questions,
-            'total_categories': len(categorias_data),
-            'quick_quiz_default_count': quick_quiz_default,
-            'categories': categorias_data,
-            'predefined_quizzes': predefined_quizzes,
-        })
+        summary_payload = QuizDataService.build_quiz_summary()
+        summary_payload['status'] = 'success'
+        return JsonResponse(summary_payload)
     except Exception:
         return JsonResponse(
             {'status': 'error', 'message': 'Erro ao buscar resumo inicial.'},

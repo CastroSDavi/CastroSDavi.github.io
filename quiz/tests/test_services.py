@@ -16,6 +16,7 @@ from quiz.models import (
     OpcaoResposta,
     Pergunta,
     QuestaoFavorita,
+    QuizDefinicao,
     SessoesQuizUsuario,
     DesafioDinamico,
     RecompensaNivelResgatada,
@@ -98,6 +99,21 @@ class QuizDataServiceTests(TestCase):
         data_by_reference = service.get_quiz_data_dict(search_query='NEURO')
         self.assertEqual(len(data_by_reference['perguntas']), 1)
         self.assertEqual(data_by_reference['perguntas'][0]['id_pergunta'], other_question.pk)
+
+    def test_build_quiz_summary_includes_predefined_list(self):
+        quiz_def = QuizDefinicao.objects.create(
+            nome_quiz='Rotina Cardiologia',
+            descricao='Lista de revisão',
+            ativo=True,
+        )
+        quiz_def.perguntas.add(self.question, through_defaults={'ordem': 1})
+
+        summary = QuizDataService.build_quiz_summary()
+
+        self.assertEqual(summary['total_questions'], 1)
+        self.assertEqual(summary['total_categories'], 1)
+        self.assertIn('predefined_quizzes', summary)
+        self.assertTrue(any(item['id'] == quiz_def.pk for item in summary['predefined_quizzes']))
 
 
 class StatisticsServiceTests(TestCase):

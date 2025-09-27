@@ -9,6 +9,10 @@ const initialState = {
         totalQuestionsAvailable: 0,
         isInitialDataLoaded: false,
         lastFetchedQuizDefinitionName: null,
+        predefinedQuizzes: {
+            items: [],
+            lastUpdatedAt: null,
+        },
         homeSummary: {
             totalCategories: 0,
             quickQuizDefaultCount: QUICK_QUIZ_COUNT,
@@ -183,6 +187,7 @@ export function quizReducer(state = initialState, action) {
                 categories,
                 totalCategories,
                 quickQuizDefaultCount,
+                predefinedQuizzes,
             } = action.payload;
 
             const sanitizedCategories = Array.isArray(categories) ? categories : state.geral.allCategories;
@@ -195,6 +200,19 @@ export function quizReducer(state = initialState, action) {
             const sanitizedQuickQuiz = typeof quickQuizDefaultCount === 'number' && quickQuizDefaultCount > 0
                 ? quickQuizDefaultCount
                 : state.geral.homeSummary.quickQuizDefaultCount;
+            const sanitizedPredefined = Array.isArray(predefinedQuizzes)
+                ? predefinedQuizzes
+                    .filter(item => item && Object.prototype.hasOwnProperty.call(item, 'id'))
+                    .map(item => ({
+                        id: Number.parseInt(item.id, 10),
+                        nome: typeof item.nome === 'string' ? item.nome : String(item.nome ?? ''),
+                        descricao: typeof item.descricao === 'string' ? item.descricao : '',
+                        total_perguntas: Number.isFinite(Number(item.total_perguntas))
+                            ? Number(item.total_perguntas)
+                            : 0,
+                    }))
+                    .filter(item => Number.isInteger(item.id) && item.id > 0)
+                : state.geral.predefinedQuizzes.items;
 
             return {
                 ...state,
@@ -202,6 +220,10 @@ export function quizReducer(state = initialState, action) {
                     ...state.geral,
                     totalQuestionsAvailable: sanitizedTotalQuestions,
                     allCategories: sanitizedCategories,
+                    predefinedQuizzes: {
+                        items: sanitizedPredefined,
+                        lastUpdatedAt: Date.now(),
+                    },
                     homeSummary: {
                         totalCategories: sanitizedTotalCategories,
                         quickQuizDefaultCount: sanitizedQuickQuiz,
@@ -225,7 +247,7 @@ export function quizReducer(state = initialState, action) {
                         ...state.geral.homeSummary,
                         totalCategories: categorias?.length || state.geral.homeSummary.totalCategories,
                     },
-                    isHomeSummaryLoaded: true,
+                    isHomeSummaryLoaded: state.geral.isHomeSummaryLoaded,
                 }
             };
         }

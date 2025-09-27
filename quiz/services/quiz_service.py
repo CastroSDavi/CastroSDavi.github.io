@@ -6,7 +6,7 @@ import random
 from collections import defaultdict
 from typing import Iterable, List, Optional
 
-from django.db.models import Case, Prefetch, Q, When
+from django.db.models import Case, Count, Prefetch, Q, When
 
 from quiz.models import (
     Categoria,
@@ -219,6 +219,34 @@ class QuizDataService:
             "opcoesResposta": [opt for opts_list in opcoes_dict_por_pergunta.values() for opt in opts_list],
             "quiz_definition_name": quiz_definition_name,
         }
+
+    @staticmethod
+    def get_active_predefined_quizzes_summary():
+        """Retorna metadados resumidos dos quizzes pré-definidos ativos."""
+
+        quizzes_qs = (
+            QuizDefinicao.objects.filter(ativo=True)
+            .annotate(total_perguntas=Count('perguntas', distinct=True))
+            .order_by('nome_quiz')
+        )
+
+        quizzes_summary = []
+        for quiz in quizzes_qs:
+            question_count = quiz.total_perguntas
+            if question_count is None:
+                # Fallback defensivo caso a anotação não esteja disponível
+                question_count = quiz.perguntas.count()
+
+            quizzes_summary.append(
+                {
+                    'id': quiz.pk,
+                    'nome': quiz.nome_quiz,
+                    'descricao': quiz.descricao or '',
+                    'total_perguntas': question_count,
+                }
+            )
+
+        return quizzes_summary
 
     @staticmethod
     def get_descendant_category_ids(category_ids_str_list: Iterable[str]):

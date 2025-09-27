@@ -150,13 +150,14 @@ export const quizActions = {
         payload: { error }
     }),
 
-    setGeneralSummary: ({ totalQuestions, categories, totalCategories, quickQuizDefaultCount }) => ({
+    setGeneralSummary: ({ totalQuestions, categories, totalCategories, quickQuizDefaultCount, predefinedQuizzes }) => ({
         type: ActionTypes.SET_GENERAL_SUMMARY,
         payload: {
             totalQuestions,
             categories,
             totalCategories,
             quickQuizDefaultCount,
+            predefinedQuizzes,
         }
     }),
 };

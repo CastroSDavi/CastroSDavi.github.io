@@ -75,6 +75,7 @@ export default class ActionOrchestrator {
                     categories: summary.categories,
                     totalCategories: summary.total_categories,
                     quickQuizDefaultCount: summary.quick_quiz_default_count,
+                    predefinedQuizzes: summary.predefined_quizzes,
                 }));
                 return true;
             }

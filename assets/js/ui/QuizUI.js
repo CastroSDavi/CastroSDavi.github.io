@@ -103,6 +103,10 @@ export default class QuizUI {
         }
         
         const currentState = this.store.getState();
+
+        if (this.challengeHubInstance) {
+            this.challengeHubInstance.handleStateChange(currentState, this.previousState);
+        }
         const previousSessionId = this.previousState.quiz?.currentSessionId;
         const currentSessionId = currentState.quiz?.currentSessionId;
         const wasQuizActive = previousSessionId !== null && previousSessionId !== undefined;
@@ -127,19 +131,6 @@ export default class QuizUI {
             this.displayQuizLayout(false);
         }
     
-        // --- INÍCIO DA ALTERAÇÃO: Lógica reativa agora delega ao ChallengeHub ---
-        const hadResumableSession = !!this.previousState.quiz?.resumableSession;
-        const hasResumableSession = !!currentState.quiz.resumableSession;
-
-        if (this.challengeHubInstance) {
-            if (!hadResumableSession && hasResumableSession) {
-                this.challengeHubInstance.showResumeOption(currentState.quiz.resumableSession);
-            } else if (hadResumableSession && !hasResumableSession) {
-                this.challengeHubInstance.hideResumeOption();
-            }
-        }
-        // --- FIM DA ALTERAÇÃO ---
-
         const prevQuestionIndex = this.previousState.quiz?.currentQuestionIndex ?? -1;
         if (isQuizActive && currentState.quiz.currentQuestionIndex !== prevQuestionIndex) {
             this._handleQuestionChange(currentState);
@@ -234,6 +225,8 @@ export default class QuizUI {
             hubTimedQuizBtn: document.getElementById('hub-timed-quiz-btn'),
             hubFavoriteReviewBtn: document.getElementById('hub-favorite-review-btn'),
             hubRepeatLastBtn: document.getElementById('hub-repeat-last-btn'),
+            hubPredefinedSection: document.getElementById('hub-predefined-section'),
+            hubPredefinedList: document.getElementById('hub-predefined-list'),
             placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
             closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'),
             avisoContainer: document.getElementById('aviso-container'),

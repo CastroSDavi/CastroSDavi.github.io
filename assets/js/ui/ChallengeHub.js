@@ -2,15 +2,21 @@
 
 export default class ChallengeHub {
     constructor(quizUIInstance) {
-        this.quizUI = quizUIInstance; 
-        
+        this.quizUI = quizUIInstance;
+
         // A dependência do actionOrchestrator será injetada via setter
         this.actionOrchestrator = null;
 
         // Atalho para os elementos DOM relevantes gerenciados por QuizUI
         this._cacheElements();
+
+        this.lastTotalQuestions = null;
+        this.lastQuickQuizCount = null;
+        this.predefinedQuizzesCache = [];
+        this.lastResumableSessionId = null;
+        this.lastResumeQuestionCount = null;
     }
-    
+
     _cacheElements() {
         this.elements = {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
@@ -25,7 +31,9 @@ export default class ChallengeHub {
             challengeStatTotal: this.quizUI.elements.challengeStatTotal,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
-            
+            predefinedSection: this.quizUI.elements.hubPredefinedSection,
+            predefinedList: this.quizUI.elements.hubPredefinedList,
+
             // --- INÍCIO DA CORREÇÃO: Mapeando para os novos IDs e estrutura ---
             resumeCard: document.getElementById('hub-resume-quiz-card'),
             resumeCardDescription: document.getElementById('hub-resume-card-description'),
@@ -121,6 +129,8 @@ export default class ChallengeHub {
         this.elements.resumeCardDescription.innerHTML = `Você tem uma sessão em andamento de <strong>${questionCount}</strong> questões.`;
 
         this.quizUI.showElement(this.elements.resumeCard);
+        this.lastResumableSessionId = resumableSession.session_id ?? null;
+        this.lastResumeQuestionCount = questionCount;
     }
 
     /**
@@ -129,6 +139,45 @@ export default class ChallengeHub {
     hideResumeOption() {
         if (this.elements.resumeCard) {
             this.quizUI.hideElement(this.elements.resumeCard);
+        }
+        this.lastResumableSessionId = null;
+        this.lastResumeQuestionCount = null;
+    }
+
+    handleStateChange(currentState, previousState = {}) {
+        if (!currentState) {
+            return;
+        }
+
+        const totalQuestionsRaw = currentState?.geral?.totalQuestionsAvailable;
+        const normalizedTotal = this._normalizeCount(totalQuestionsRaw);
+        if (normalizedTotal !== null && normalizedTotal !== this.lastTotalQuestions) {
+            this.lastTotalQuestions = normalizedTotal;
+            this.updateTotalQuestionsCount(normalizedTotal);
+        }
+
+        const quickQuizRaw = currentState?.geral?.homeSummary?.quickQuizDefaultCount;
+        const normalizedQuickQuiz = this._normalizeCount(quickQuizRaw);
+        if (normalizedQuickQuiz !== null && normalizedQuickQuiz !== this.lastQuickQuizCount) {
+            this.lastQuickQuizCount = normalizedQuickQuiz;
+            this.updateQuickQuizCount(normalizedQuickQuiz);
+        }
+
+        const predefinedQuizzes = Array.isArray(currentState?.geral?.predefinedQuizzes?.items)
+            ? currentState.geral.predefinedQuizzes.items
+            : [];
+        if (this._predefinedQuizzesChanged(predefinedQuizzes)) {
+            this.renderPredefinedQuizzes(predefinedQuizzes);
+        }
+
+        const resumableSession = currentState?.quiz?.resumableSession || null;
+        const sessionId = resumableSession?.session_id ?? null;
+        const questionCount = resumableSession?.perguntas ? resumableSession.perguntas.length : null;
+
+        if (resumableSession && (this.lastResumableSessionId !== sessionId || this.lastResumeQuestionCount !== questionCount)) {
+            this.showResumeOption(resumableSession);
+        } else if (!resumableSession && this.lastResumableSessionId !== null) {
+            this.hideResumeOption();
         }
     }
 
@@ -201,5 +250,157 @@ export default class ChallengeHub {
             }
         });
         // --- FIM DA CORREÇÃO ---
+
+        this.elements.predefinedList?.addEventListener('click', (event) => {
+            const targetCard = event.target.closest('[data-quiz-def-id]');
+            if (!targetCard) {
+                return;
+            }
+            if (!this.actionOrchestrator) {
+                console.error('ChallengeHub: actionOrchestrator indisponível ao iniciar quiz pré-definido.');
+                return;
+            }
+
+            const quizId = Number.parseInt(targetCard.dataset.quizDefId, 10);
+            if (Number.isNaN(quizId)) {
+                return;
+            }
+
+            this.hideHub();
+            this.actionOrchestrator.startPredefinedQuiz(quizId);
+        });
+    }
+
+    _normalizeCount(value) {
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value;
+        }
+        if (typeof value === 'string') {
+            const sanitized = value.replace(/[^0-9]/g, '');
+            if (sanitized) {
+                const parsed = Number.parseInt(sanitized, 10);
+                if (!Number.isNaN(parsed)) {
+                    return parsed;
+                }
+            }
+        }
+        return null;
+    }
+
+    _formatCount(value) {
+        const normalized = this._normalizeCount(value);
+        if (normalized === null) {
+            return '0';
+        }
+        return normalized.toLocaleString('pt-BR');
+    }
+
+    _predefinedQuizzesChanged(newList) {
+        if (!Array.isArray(newList)) {
+            return this.predefinedQuizzesCache.length > 0;
+        }
+
+        if (newList.length !== this.predefinedQuizzesCache.length) {
+            return true;
+        }
+
+        for (let index = 0; index < newList.length; index += 1) {
+            const cached = this.predefinedQuizzesCache[index];
+            const current = newList[index];
+            if (!cached || !current) {
+                return true;
+            }
+            if (
+                cached.id !== current.id
+                || cached.total_perguntas !== current.total_perguntas
+                || cached.nome !== current.nome
+                || cached.descricao !== current.descricao
+            ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    renderPredefinedQuizzes(quizzes = []) {
+        if (!this.elements.predefinedList || !this.elements.predefinedSection) {
+            return;
+        }
+
+        const sanitizedList = Array.isArray(quizzes)
+            ? quizzes
+                .map((quiz) => ({
+                    id: Number.parseInt(quiz.id, 10),
+                    nome: typeof quiz.nome === 'string' ? quiz.nome : String(quiz.nome ?? ''),
+                    descricao: typeof quiz.descricao === 'string' ? quiz.descricao : '',
+                    total_perguntas: this._normalizeCount(quiz.total_perguntas) ?? 0,
+                }))
+                .filter((quiz) => Number.isInteger(quiz.id) && quiz.id > 0)
+            : [];
+
+        this.elements.predefinedList.innerHTML = '';
+
+        if (sanitizedList.length === 0) {
+            this.quizUI.hideElement(this.elements.predefinedSection);
+            this.predefinedQuizzesCache = [];
+            return;
+        }
+
+        sanitizedList.forEach((quiz) => {
+            const cardButton = document.createElement('button');
+            cardButton.type = 'button';
+            cardButton.classList.add('challenge-card');
+            cardButton.dataset.quizDefId = String(quiz.id);
+            cardButton.dataset.quizName = quiz.nome;
+            cardButton.title = `${quiz.nome} • ${this._formatCount(quiz.total_perguntas)} questões`;
+            cardButton.setAttribute('aria-label', `${quiz.nome} com ${this._formatCount(quiz.total_perguntas)} questões`);
+            cardButton.setAttribute('role', 'listitem');
+
+            const header = document.createElement('div');
+            header.classList.add('challenge-card__header');
+
+            const iconWrapper = document.createElement('div');
+            iconWrapper.classList.add('challenge-card__icon-wrapper');
+
+            const icon = document.createElement('span');
+            icon.classList.add('material-symbols-outlined', 'challenge-card__icon');
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = 'menu_book';
+
+            iconWrapper.appendChild(icon);
+
+            const content = document.createElement('div');
+            content.classList.add('challenge-card__content');
+
+            const title = document.createElement('h3');
+            title.classList.add('challenge-card__title');
+            title.textContent = quiz.nome;
+            content.appendChild(title);
+
+            if (quiz.descricao && quiz.descricao.trim().length > 0) {
+                const description = document.createElement('p');
+                description.classList.add('challenge-card__description');
+                description.textContent = quiz.descricao.trim();
+                content.appendChild(description);
+            }
+
+            header.append(iconWrapper, content);
+
+            const footer = document.createElement('div');
+            footer.classList.add('challenge-card__footer');
+
+            const meta = document.createElement('span');
+            meta.classList.add('challenge-card__meta');
+            meta.textContent = `${this._formatCount(quiz.total_perguntas)} questões`;
+            footer.appendChild(meta);
+
+            cardButton.append(header, footer);
+
+            this.elements.predefinedList.appendChild(cardButton);
+        });
+
+        this.quizUI.showElement(this.elements.predefinedSection);
+        this.predefinedQuizzesCache = sanitizedList;
     }
 }

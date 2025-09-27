@@ -120,12 +120,15 @@ class QuizViewSet(viewsets.ViewSet):
                 for categoria in categorias_qs
             ]
 
+            predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()
+
             return Response({
                 'status': 'success',
                 'total_questions': total_questions,
                 'total_categories': len(categorias_data),
                 'quick_quiz_default_count': quick_quiz_default,
                 'categories': categorias_data,
+                'predefined_quizzes': predefined_quizzes,
             })
         except Exception:
             return Response(

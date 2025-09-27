@@ -157,13 +157,19 @@ export default class App {
 
         if (initialSectionId === 'home') {
             const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
-            if (totalQuestionsSpanHome) {
+            const heroStatElement = document.getElementById('challenge-stat-total');
+            if (totalQuestionsSpanHome || heroStatElement) {
                 const state = this.store.getState();
                 const totalQuestions = state.geral.totalQuestionsAvailable;
                 const formattedTotal = typeof totalQuestions === 'number'
                     ? totalQuestions.toLocaleString('pt-BR')
                     : (totalQuestions || '0');
-                totalQuestionsSpanHome.textContent = formattedTotal;
+                if (totalQuestionsSpanHome) {
+                    totalQuestionsSpanHome.textContent = formattedTotal;
+                }
+                if (heroStatElement) {
+                    heroStatElement.textContent = formattedTotal;
+                }
             }
         }
     }

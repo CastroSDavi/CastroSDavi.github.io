@@ -11,6 +11,7 @@ from django.db.models import Case, Count, Prefetch, Q, When
 from quiz.models import (
     Categoria,
     CategoriaHierarquia,
+    ConfiguracoesGeraisQuiz,
     OpcaoResposta,
     Pergunta,
     QuestaoFavorita,
@@ -247,6 +248,45 @@ class QuizDataService:
             )
 
         return quizzes_summary
+
+    @staticmethod
+    def build_quiz_summary():
+        """Constrói o payload usado para popular o Challenge Hub."""
+
+        perguntas_ativas = Pergunta.objects.filter(ativa=True)
+        total_questions = perguntas_ativas.count()
+
+        categorias_qs = Categoria.objects.annotate(
+            total_perguntas=Count(
+                'perguntas_associadas',
+                filter=Q(perguntas_associadas__ativa=True)
+            )
+        ).order_by('nome_categoria')
+
+        quiz_config = ConfiguracoesGeraisQuiz.objects.first()
+        quick_quiz_default = None
+        if quiz_config and quiz_config.numero_perguntas_quiz_rapido is not None:
+            quick_quiz_default = quiz_config.numero_perguntas_quiz_rapido
+
+        categorias_data = [
+            {
+                'id_categoria': categoria.pk,
+                'nome_categoria': categoria.nome_categoria,
+                'id_categoria_pai': categoria.id_categoria_pai_id,
+                'total_perguntas': categoria.total_perguntas or 0,
+            }
+            for categoria in categorias_qs
+        ]
+
+        predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()
+
+        return {
+            'total_questions': total_questions,
+            'total_categories': len(categorias_data),
+            'quick_quiz_default_count': quick_quiz_default,
+            'categories': categorias_data,
+            'predefined_quizzes': predefined_quizzes,
+        }
 
     @staticmethod
     def get_descendant_category_ids(category_ids_str_list: Iterable[str]):

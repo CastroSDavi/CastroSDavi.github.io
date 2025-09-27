@@ -61,7 +61,11 @@
         </aside>
 
         <div class="question-section__main-content">
-            
+
+            {% if hub_summary_json %}
+            <script id="challenge-hub-initial-data" type="application/json">{{ hub_summary_json|safe }}</script>
+            {% endif %}
+
             <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__hero">
                     <div class="challenge-hub__hero-info">

@@ -342,6 +342,15 @@
         padding: clamp(24px, 6vw, 32px);
     }
 
+    body[data-page-id="questions"] .challenge-hub {
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    body[data-page-id="questions"] .challenge-hub__hero {
+        border-radius: 0;
+    }
+
     .challenge-hub__hero-actions {
         flex-direction: column;
     }

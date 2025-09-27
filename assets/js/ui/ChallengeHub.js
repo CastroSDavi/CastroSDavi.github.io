@@ -16,8 +16,13 @@ export default class ChallengeHub {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
             hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
             hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
+            hubSmartDrillBtn: this.quizUI.elements.hubSmartDrillBtn,
+            hubTimedQuizBtn: this.quizUI.elements.hubTimedQuizBtn,
+            hubFavoriteReviewBtn: this.quizUI.elements.hubFavoriteReviewBtn,
+            hubRepeatLastBtn: this.quizUI.elements.hubRepeatLastBtn,
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
+            challengeStatTotal: this.quizUI.elements.challengeStatTotal,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
             
@@ -77,13 +82,21 @@ export default class ChallengeHub {
      * @param {number|string} count - O número de questões.
      */
     updateTotalQuestionsCount(count) {
+        const formattedCount = typeof count === 'number'
+            ? count.toLocaleString('pt-BR')
+            : (count || '0');
+
         if (this.elements.hubTotalQuestionsCount) {
-            this.elements.hubTotalQuestionsCount.textContent = count || '0';
+            this.elements.hubTotalQuestionsCount.textContent = formattedCount;
         }
-        
+
+        if (this.elements.challengeStatTotal) {
+            this.elements.challengeStatTotal.textContent = formattedCount;
+        }
+
         const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
         if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) {
-            totalQuestionsSpanHome.textContent = count || '0';
+            totalQuestionsSpanHome.textContent = formattedCount;
         }
     }
 
@@ -123,8 +136,8 @@ export default class ChallengeHub {
      * Configura os event listeners para os botões dentro do hub de desafios.
      */
     setupEventListeners() {
-        this.elements.hubCustomizeQuizBtn?.addEventListener('click', () => {
-            if (!this.quizUI.modalManager) { 
+        const openCustomizationFlow = () => {
+            if (!this.quizUI.modalManager) {
                 console.error("ChallengeHub: modalManager não encontrado para abrir painel de filtros.");
                 return;
             }
@@ -133,7 +146,10 @@ export default class ChallengeHub {
                 this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
             }
             this.quizUI.modalManager.toggleFilterPanel(true);
-        });
+        };
+
+        this.elements.hubCustomizeQuizBtn?.addEventListener('click', openCustomizationFlow);
+        this.elements.hubSmartDrillBtn?.addEventListener('click', openCustomizationFlow);
 
         this.elements.hubQuickQuizBtn?.addEventListener('click', () => {
             if (this.actionOrchestrator) {
@@ -141,6 +157,34 @@ export default class ChallengeHub {
                 this.actionOrchestrator.startQuickQuiz();
             } else {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
+            }
+        });
+
+        this.elements.hubTimedQuizBtn?.addEventListener('click', async () => {
+            if (!this.actionOrchestrator) {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar simulado cronometrado.");
+                return;
+            }
+            this.hideHub();
+            await this.actionOrchestrator.startTimedSimulation();
+        });
+
+        this.elements.hubFavoriteReviewBtn?.addEventListener('click', async () => {
+            if (!this.actionOrchestrator) {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar revisão de favoritos.");
+                return;
+            }
+            await this.actionOrchestrator.startFavoritesReview();
+        });
+
+        this.elements.hubRepeatLastBtn?.addEventListener('click', async () => {
+            if (!this.actionOrchestrator) {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao repetir último desafio.");
+                return;
+            }
+            const executed = await this.actionOrchestrator.retryLastQuizRequest();
+            if (executed) {
+                this.hideHub();
             }
         });
         

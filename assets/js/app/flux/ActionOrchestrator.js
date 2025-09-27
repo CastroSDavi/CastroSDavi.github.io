@@ -339,6 +339,78 @@ export default class ActionOrchestrator {
         await this._fetchAndInitiateQuiz({ mode: 'Rápido' });
     }
 
+    async startTimedSimulation(questionCount = 40) {
+        const normalized = Number.parseInt(questionCount, 10);
+        const effectiveCount = Number.isInteger(normalized) && normalized > 0 ? normalized : 40;
+        await this._fetchAndInitiateQuiz({ mode: 'Rápido', count: effectiveCount, num_questions: effectiveCount });
+    }
+
+    async startFavoritesReview(limit = 12) {
+        if (!this.ui.userIsAuthenticated) {
+            this.ui.showWarning('Entre na sua conta para revisar suas questões favoritas.');
+            return false;
+        }
+
+        const normalizedLimit = Number.isInteger(limit) && limit > 0 ? limit : 12;
+
+        this.stopTimer();
+        this.ui.showSessionLoadingIndicator(true, 'Preparando revisão de favoritos...');
+
+        try {
+            const response = await this.apiService.getFavoriteQuestions();
+            const favoritesList = Array.isArray(response?.favorite_questions)
+                ? response.favorite_questions
+                : [];
+
+            if (favoritesList.length === 0) {
+                this.ui.showWarning('Você ainda não possui questões favoritas para revisar.');
+                return false;
+            }
+
+            const normalizedQuestions = favoritesList
+                .filter(question => question && Array.isArray(question.opcoes) && question.opcoes.length > 0)
+                .slice(0, normalizedLimit)
+                .map(question => ({
+                    ...question,
+                    is_favorited: true,
+                    opcoes: question.opcoes.map(option => ({
+                        id_opcao_resposta: option.id_opcao_resposta,
+                        id_pergunta: option.id_pergunta ?? question.id_pergunta,
+                        texto_opcao: option.texto_opcao,
+                        eh_correta: option.eh_correta,
+                        ordem_exibicao: option.ordem_exibicao,
+                        feedback_opcao: option.feedback_opcao,
+                    })),
+                }));
+
+            if (normalizedQuestions.length === 0) {
+                this.ui.showWarning('Não encontramos questões válidas na sua lista de favoritos.');
+                return false;
+            }
+
+            this.store.dispatch(quizActions.setActiveSection('questions'));
+            this.store.dispatch(
+                quizActions.initializeQuiz(
+                    normalizedQuestions,
+                    'Revisão',
+                    null,
+                    null,
+                    'Revisão de Favoritos',
+                    null
+                )
+            );
+
+            this.ui.challengeHubInstance?.hideHub();
+            return true;
+        } catch (error) {
+            const detail = getFriendlyErrorMessage(error, 'Não foi possível carregar seus favoritos agora.');
+            this.ui.showWarning(detail);
+            return false;
+        } finally {
+            this.ui.showSessionLoadingIndicator(false);
+        }
+    }
+
     async startPredefinedQuiz(quizDefinicaoId) {
         await this._fetchAndInitiateQuiz({ quiz_definicao_id: quizDefinicaoId, mode: 'Definido' });
     }

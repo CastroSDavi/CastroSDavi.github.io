@@ -29,9 +29,32 @@
     margin-left: calc(-1 * var(--challenge-hub-padding, 0px));
     margin-right: calc(-1 * var(--challenge-hub-padding, 0px));
     border-radius: var(--border-radius-lg);
-    background: linear-gradient(140deg, rgba(13, 59, 102, 0.98), rgba(13, 59, 102, 0.8));
+    background: linear-gradient(135deg, #0d3b66 0%, #0f4c81 42%, #1584a3 100%);
     color: var(--color-white);
     overflow: hidden;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.challenge-hub__hero::before,
+.challenge-hub__hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.challenge-hub__hero::before {
+    background: radial-gradient(ellipse at top right, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%),
+        radial-gradient(ellipse at bottom left, rgba(21, 132, 163, 0.75), rgba(21, 132, 163, 0) 60%);
+    mix-blend-mode: screen;
+}
+
+.challenge-hub__hero::after {
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 55%),
+        url("data:image/svg+xml,%3Csvg width='320' height='320' viewBox='0 0 320 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%%25' x2='100%%25' y1='0%%25' y2='100%%25'%3E%3Cstop stop-color='%23ffffff' stop-opacity='0.07'/%3E%3Cstop stop-color='%23ffffff' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 0h320v320H0z' fill='url(%23g)'/%3E%3C/svg%3E") repeat;
+    background-size: cover, 220px;
+    opacity: 0.55;
 }
 
 .challenge-hub__hero-info {
@@ -50,12 +73,14 @@
     gap: var(--spacing-xxs, 6px);
     padding: 6px 12px;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.18);
     color: var(--color-secondary-green);
     font-size: var(--font-size-xs, 0.75rem);
     font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    box-shadow: 0 8px 16px rgba(5, 28, 58, 0.16);
+    backdrop-filter: blur(8px);
 }
 
 .challenge-hub__title {
@@ -77,17 +102,27 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: var(--spacing-sm, 16px);
+    position: relative;
+    z-index: 1;
 }
 
 .challenge-stat {
     padding: var(--spacing-sm, 16px) var(--spacing-md, 20px);
     border-radius: var(--border-radius-md);
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(4px);
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(10px);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xxs, 6px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)
+    box-shadow: 0 12px 28px rgba(6, 35, 66, 0.18);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.challenge-stat:hover,
+.challenge-stat:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px rgba(6, 35, 66, 0.26);
 }
 
 .challenge-stat__label {
@@ -114,6 +149,33 @@
     border-radius: var(--border-radius-md);
     position: relative;
     z-index: 1;
+    background: rgba(7, 30, 58, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 22px 35px rgba(4, 25, 48, 0.34);
+    backdrop-filter: blur(14px);
+}
+
+.challenge-hub__action-note {
+    margin: 0;
+    font-size: var(--font-size-xs, 0.82rem);
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.5;
+    text-align: center;
+}
+
+.challenge-hub__hero-actions::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0));
+    -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    z-index: -1;
 }
 
 .challenge-hub__action-button {
@@ -125,14 +187,25 @@
 }
 
 .challenge-hub__hero-actions .button--secondary {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.14);
     color: var(--color-white);
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .challenge-hub__hero-actions .button--secondary:hover,
 .challenge-hub__hero-actions .button--secondary:focus-visible {
-    background: rgba(255, 255, 255, 0.24);
-    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 15px 25px rgba(4, 25, 48, 0.38);
+}
+
+.challenge-hub__hero-actions .button--primary {
+    box-shadow: 0 18px 34px rgba(11, 96, 122, 0.45);
+}
+
+.challenge-hub__hero-actions .button--primary:hover,
+.challenge-hub__hero-actions .button--primary:focus-visible {
+    box-shadow: 0 22px 40px rgba(12, 118, 150, 0.55);
 }
 
 .challenge-hub__hero-actions .button__icon {
@@ -195,19 +268,36 @@
     padding: clamp(22px, 2.6vw, 28px);
     border-radius: var(--border-radius-md);
     border: 1px solid rgba(13, 59, 102, 0.12);
-    background: var(--color-gray-100);
-    box-shadow: var(--shadow-sm);
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.96), rgba(236, 244, 249, 0.88));
+    box-shadow: 0 22px 42px rgba(13, 59, 102, 0.08);
     text-align: left;
     color: var(--color-text-primary);
     transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
     cursor: pointer;
+    overflow: hidden;
+}
+
+.challenge-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(21, 132, 163, 0.18), transparent 60%),
+        radial-gradient(circle at 80% 10%, rgba(21, 132, 163, 0.1), transparent 55%);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
 }
 
 .challenge-card:hover,
 .challenge-card:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-6px);
+    box-shadow: 0 28px 46px rgba(13, 59, 102, 0.14);
     border-color: rgba(13, 59, 102, 0.35);
+}
+
+.challenge-card:hover::before,
+.challenge-card:focus-visible::before {
+    opacity: 1;
 }
 
 .challenge-card:focus-visible {
@@ -229,8 +319,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(13, 59, 102, 0.1);
+    background: linear-gradient(140deg, rgba(13, 59, 102, 0.08), rgba(13, 59, 102, 0.18));
     color: var(--color-primary-dark);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), 0 16px 32px rgba(13, 59, 102, 0.18);
 }
 
 .challenge-card__icon {
@@ -254,14 +345,14 @@
 .challenge-card__description {
     margin: 0;
     font-size: var(--font-size-sm, 0.92rem);
-    color: var(--color-text-secondary);
-    line-height: 1.45;
+    color: rgba(13, 59, 102, 0.76);
+    line-height: 1.5;
 }
 
 .challenge-card__footer {
     margin-top: auto;
     font-size: var(--font-size-xs, 0.82rem);
-    color: var(--color-text-tertiary, #5f6c7b);
+    color: rgba(13, 59, 102, 0.62);
     display: flex;
     align-items: center;
     gap: var(--spacing-xxs, 8px);
@@ -275,6 +366,7 @@
     border-radius: 50%;
     background: var(--color-secondary-green);
     margin-right: var(--spacing-xxs, 6px);
+    box-shadow: 0 0 0 4px rgba(64, 192, 87, 0.12);
 }
 
 .challenge-card__actions {
@@ -295,18 +387,26 @@
     color: var(--color-primary-dark);
 }
 
-.challenge-card--accent .challenge-card__icon-wrapper {
-    background: rgba(13, 59, 102, 0.16);
+.challenge-card--accent {
+    background: linear-gradient(145deg, rgba(234, 248, 255, 0.95), rgba(207, 232, 255, 0.88));
+    border-color: rgba(13, 96, 150, 0.28);
 }
 
+.challenge-card--accent .challenge-card__icon-wrapper {
+    background: linear-gradient(140deg, rgba(21, 132, 163, 0.18), rgba(21, 132, 163, 0.32));
+    color: rgba(13, 59, 102, 0.95);
+}
+
+
 .challenge-card--ghost {
-    background: var(--color-white);
+    background: linear-gradient(140deg, rgba(255, 255, 255, 0.92), rgba(249, 252, 255, 0.86));
     border-style: dashed;
     border-color: rgba(13, 59, 102, 0.22);
 }
 
 .challenge-card--ghost .challenge-card__icon-wrapper {
     background: rgba(13, 59, 102, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .challenge-card--ghost:hover,

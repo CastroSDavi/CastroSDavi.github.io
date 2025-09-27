@@ -13,6 +13,8 @@ export default class ActionOrchestrator {
         this.timerIntervalId = null;
 
         this.lastQuizRequest = null;
+
+        this.preloadedHubSummary = null;
     }
 
     // --- MÉTODOS DE CONTROLE DO TIMER ---
@@ -61,9 +63,53 @@ export default class ActionOrchestrator {
     }
 
     // --- MÉTODOS DE INICIALIZAÇÃO E FLUXO ---
+    _getPreloadedHubSummary() {
+        if (this.preloadedHubSummary) {
+            return this.preloadedHubSummary;
+        }
+
+        if (typeof document === 'undefined') {
+            return null;
+        }
+
+        const scriptElement = document.getElementById('challenge-hub-initial-data');
+        if (!scriptElement) {
+            return null;
+        }
+
+        const rawContent = scriptElement.textContent || scriptElement.innerText || '';
+        if (!rawContent.trim()) {
+            return null;
+        }
+
+        try {
+            const parsed = JSON.parse(rawContent);
+            if (parsed && typeof parsed === 'object') {
+                this.preloadedHubSummary = parsed;
+                return this.preloadedHubSummary;
+            }
+        } catch (error) {
+            console.warn('ActionOrchestrator: falha ao interpretar dados iniciais do Challenge Hub.', error);
+        }
+
+        return null;
+    }
+
     async loadInitialSummary() {
         const state = this.store.getState();
         if (state.geral.isHomeSummaryLoaded) {
+            return true;
+        }
+
+        const preloadedSummary = this._getPreloadedHubSummary();
+        if (preloadedSummary) {
+            this.store.dispatch(quizActions.setGeneralSummary({
+                totalQuestions: preloadedSummary.total_questions,
+                categories: preloadedSummary.categories,
+                totalCategories: preloadedSummary.total_categories,
+                quickQuizDefaultCount: preloadedSummary.quick_quiz_default_count,
+                predefinedQuizzes: preloadedSummary.predefined_quizzes,
+            }));
             return true;
         }
 

@@ -97,39 +97,9 @@ class QuizViewSet(viewsets.ViewSet):
     @action(detail=False, methods=['get'], url_path='summary')
     def summary(self, request):
         try:
-            perguntas_ativas = Pergunta.objects.filter(ativa=True)
-            total_questions = perguntas_ativas.count()
-
-            categorias_qs = Categoria.objects.annotate(
-                total_perguntas=Count(
-                    'perguntas_associadas',
-                    filter=Q(perguntas_associadas__ativa=True)
-                )
-            ).order_by('nome_categoria')
-
-            quiz_config = get_quiz_config()
-            quick_quiz_default = getattr(quiz_config, 'numero_perguntas_quiz_rapido', None)
-
-            categorias_data = [
-                {
-                    'id_categoria': categoria.pk,
-                    'nome_categoria': categoria.nome_categoria,
-                    'id_categoria_pai': categoria.id_categoria_pai_id,
-                    'total_perguntas': categoria.total_perguntas or 0,
-                }
-                for categoria in categorias_qs
-            ]
-
-            predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()
-
-            return Response({
-                'status': 'success',
-                'total_questions': total_questions,
-                'total_categories': len(categorias_data),
-                'quick_quiz_default_count': quick_quiz_default,
-                'categories': categorias_data,
-                'predefined_quizzes': predefined_quizzes,
-            })
+            summary_payload = QuizDataService.build_quiz_summary()
+            summary_payload['status'] = 'success'
+            return Response(summary_payload)
         except Exception:
             return Response(
                 {'status': 'error', 'message': 'Erro ao buscar resumo inicial.'},

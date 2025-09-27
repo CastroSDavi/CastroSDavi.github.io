@@ -314,7 +314,10 @@ class QuizViewSet(viewsets.ViewSet):
                 pass
 
         quiz_config = get_quiz_config()
-        score_panel_settings = quiz_config.get_score_panel_settings_for_mode(modo_quiz_frontend)
+        score_panel_settings = quiz_config.get_score_panel_settings_for_mode(
+            modo_quiz_frontend,
+            quiz_definicao=quiz_definicao_obj,
+        )
 
         return Response({
             'status': 'success',
@@ -666,7 +669,10 @@ class QuizViewSet(viewsets.ViewSet):
                 'sequencia_atual': sessao_ativa.sequencia_acertos_atual,
                 'melhor_sequencia': sessao_ativa.melhor_sequencia_acertos,
                 'data_inicio_sessao_iso': sessao_ativa.data_inicio.isoformat(),
-                'score_panel_settings': quiz_config.get_score_panel_settings_for_mode(sessao_ativa.modo_quiz),
+                'score_panel_settings': quiz_config.get_score_panel_settings_for_mode(
+                    sessao_ativa.modo_quiz,
+                    quiz_definicao=sessao_ativa.id_quiz_definicao,
+                ),
             })
         except Exception:
             return Response(

@@ -16,11 +16,16 @@ export default class ChallengeHub {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
             hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
             hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
+            hubSimulatedQuizBtn: this.quizUI.elements.hubSimulatedQuizBtn,
+            hubSmartReviewBtn: this.quizUI.elements.hubSmartReviewBtn,
+            hubTimeAttackBtn: this.quizUI.elements.hubTimeAttackBtn,
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
+            hubTotalQuestionsCountMetric: this.quizUI.elements.hubTotalQuestionsCountMetric,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
+            hubQuickQuizCountCard: this.quizUI.elements.hubQuickQuizCountCard,
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
-            
+
             // --- INÍCIO DA CORREÇÃO: Mapeando para os novos IDs e estrutura ---
             resumeCard: document.getElementById('hub-resume-quiz-card'),
             resumeCardDescription: document.getElementById('hub-resume-card-description'),
@@ -80,7 +85,11 @@ export default class ChallengeHub {
         if (this.elements.hubTotalQuestionsCount) {
             this.elements.hubTotalQuestionsCount.textContent = count || '0';
         }
-        
+
+        if (this.elements.hubTotalQuestionsCountMetric) {
+            this.elements.hubTotalQuestionsCountMetric.textContent = count || '0';
+        }
+
         const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
         if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) {
             totalQuestionsSpanHome.textContent = count || '0';
@@ -94,6 +103,10 @@ export default class ChallengeHub {
     updateQuickQuizCount(count) {
         if (this.elements.hubQuickQuizCount) {
             this.elements.hubQuickQuizCount.textContent = count || '0';
+        }
+
+        if (this.elements.hubQuickQuizCountCard) {
+            this.elements.hubQuickQuizCountCard.textContent = count || '0';
         }
     }
 
@@ -143,7 +156,34 @@ export default class ChallengeHub {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
-        
+
+        this.elements.hubSimulatedQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startSimulatedExam();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Simulado avançado.");
+            }
+        });
+
+        this.elements.hubSmartReviewBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startSmartReview();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Revisão inteligente.");
+            }
+        });
+
+        this.elements.hubTimeAttackBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startTimeAttack();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Sprint de domínio.");
+            }
+        });
+
         // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
         this.elements.confirmResumeBtn?.addEventListener('click', () => {
              if (this.actionOrchestrator) {

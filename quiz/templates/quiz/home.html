@@ -3,44 +3,46 @@
 {% load static %}
 {% block title %}{{ page_title|default:"MedQuiz - Início" }}{%endblock title %}
 {% block content %}
-<section id="home-section" class="hub-hero">
+<section id="home-section" class="hub-hero hub-hero--revamped" aria-labelledby="challenge-hub-heading">
         <span class="hub-hero__orb hub-hero__orb--primary" aria-hidden="true"></span>
         <span class="hub-hero__orb hub-hero__orb--secondary" aria-hidden="true"></span>
 
-        <div class="hub-hero__content">
-                <div class="hub-hero__main">
-                        <span class="hub-hero__eyebrow">Challenge Hub</span>
-                        {% if user.is_authenticated %}
-                        <h1 class="hub-hero__title">
-                                Hora de evoluir, {{ user.first_name|default:user.username }}!
-                        </h1>
-                        <p class="hub-hero__subtitle">
-                                Combine modos de jogo, acompanhe seus indicadores em tempo real e mantenha sua sequência de vitórias.
-                        </p>
-                        {% else %}
-                        <h1 class="hub-hero__title">Bem-vindo ao Challenge Hub do MedQuiz</h1>
-                        <p class="hub-hero__subtitle">
-                                Escolha como quer jogar, conheça desafios especiais e salve seu progresso com experiências personalizadas.
-                        </p>
-                        {% endif %}
+        <div class="hub-hero__layout">
+                <div class="hub-hero__primary">
+                        <header class="hub-hero__header">
+                                <span class="hub-hero__eyebrow">Challenge Hub</span>
+                                {% if user.is_authenticated %}
+                                <h1 class="hub-hero__title" id="challenge-hub-heading">
+                                        Hora de evoluir, {{ user.first_name|default:user.username }}!
+                                </h1>
+                                <p class="hub-hero__subtitle">
+                                        Personalize a dificuldade, monitore seus indicadores ao vivo e escolha experiências que se adaptam ao seu ritmo.
+                                </p>
+                                {% else %}
+                                <h1 class="hub-hero__title" id="challenge-hub-heading">Bem-vindo ao Challenge Hub do MedQuiz</h1>
+                                <p class="hub-hero__subtitle">
+                                        Descubra uma central de modos inteligentes, jornadas guiadas e desafios colaborativos para acelerar sua evolução.
+                                </p>
+                                {% endif %}
+                        </header>
 
-                        <div class="hub-hero__chips" aria-label="Destaques do Challenge Hub">
-                                <span class="hub-hero__chip">
-                                        <span class="material-symbols-outlined hub-hero__chip-icon">leaderboard</span>
-                                        Rankings dinâmicos
-                                </span>
-                                <span class="hub-hero__chip">
-                                        <span class="material-symbols-outlined hub-hero__chip-icon">emoji_events</span>
-                                        Conquistas temáticas
-                                </span>
-                                <span class="hub-hero__chip">
-                                        <span class="material-symbols-outlined hub-hero__chip-icon">group</span>
-                                        Desafios colaborativos
-                                </span>
-                                <span class="hub-hero__chip">
-                                        <span class="material-symbols-outlined hub-hero__chip-icon">trending_up</span>
-                                        Insights inteligentes
-                                </span>
+                        <div class="hub-hero__badge-row" role="list" aria-label="Destaques da central de desafios">
+                                <div class="feature-pill" role="listitem">
+                                        <span class="material-symbols-outlined feature-pill__icon">dynamic_form</span>
+                                        Combinações de regras instantâneas
+                                </div>
+                                <div class="feature-pill" role="listitem">
+                                        <span class="material-symbols-outlined feature-pill__icon">query_stats</span>
+                                        Insights em tempo real
+                                </div>
+                                <div class="feature-pill" role="listitem">
+                                        <span class="material-symbols-outlined feature-pill__icon">stadium</span>
+                                        Temporadas temáticas mensais
+                                </div>
+                                <div class="feature-pill" role="listitem">
+                                        <span class="material-symbols-outlined feature-pill__icon">diversity_3</span>
+                                        Sessões solo, duo e squad
+                                </div>
                         </div>
 
                         <div class="hub-hero__stats">
@@ -95,9 +97,11 @@
 
                         <div class="hub-hero__cta">
                                 {% if user.is_authenticated %}
-                                <p class="hub-hero__cta-text">
-                                        Combine um modo rápido com suas preferências salvas ou mergulhe direto em um novo desafio.
-                                </p>
+                                <div class="hub-hero__cta-text">
+                                        <p>
+                                                Acesse um setup sugerido ou abra o painel pessoal para montar sua própria combinação de regras.
+                                        </p>
+                                </div>
                                 <div class="hub-hero__actions">
                                         <a
                                                 href="{% url 'quiz:questions' %}"
@@ -105,7 +109,7 @@
                                                 id="go-to-challenges-hub-link"
                                         >
                                                 <span class="material-symbols-outlined button__icon">rocket_launch</span>
-                                                <span class="button__label">Iniciar sessão rápida</span>
+                                                <span class="button__label">Iniciar sessão instantânea</span>
                                         </a>
                                         <a
                                                 href="{% url 'quiz:account' %}"
@@ -116,9 +120,11 @@
                                         </a>
                                 </div>
                                 {% else %}
-                                <p class="hub-hero__cta-text">
-                                        Crie sua conta gratuita para desbloquear progresso salvo, rankings ao vivo e modos personalizados.
-                                </p>
+                                <div class="hub-hero__cta-text">
+                                        <p>
+                                                Crie sua conta gratuita para desbloquear progresso salvo, rankings ao vivo e modos cooperativos exclusivos.
+                                        </p>
+                                </div>
                                 <div class="hub-hero__actions">
                                         <a
                                                 href="{% url 'quiz:register' %}"
@@ -137,100 +143,175 @@
                                 </div>
                                 {% endif %}
                         </div>
+
+                        <div class="hub-hero__quicklinks" role="list" aria-label="Atalhos rápidos de treino">
+                                <a class="quicklink" role="listitem" href="{% url 'quiz:questions' %}?modo=classico&foco=flashcards" data-mode="flash">
+                                        <span class="material-symbols-outlined quicklink__icon">bolt</span>
+                                        <span class="quicklink__content">
+                                                <strong>Flash rounds</strong>
+                                                <span>15 questões curtas para aquecer antes da prova.</span>
+                                        </span>
+                                </a>
+                                <a class="quicklink" role="listitem" href="{% url 'quiz:questions' %}?modo=estudo&playlist=revision" data-mode="revision">
+                                        <span class="material-symbols-outlined quicklink__icon">sync_saved_locally</span>
+                                        <span class="quicklink__content">
+                                                <strong>Revisão inteligente</strong>
+                                                <span>Retome automaticamente conteúdos pendentes.</span>
+                                        </span>
+                                </a>
+                                <a class="quicklink" role="listitem" href="{% url 'quiz:questions' %}?modo=maratona&evento=simulado" data-mode="simulado">
+                                        <span class="material-symbols-outlined quicklink__icon">assignment_turned_in</span>
+                                        <span class="quicklink__content">
+                                                <strong>Simulado guiado</strong>
+                                                <span>Estruture sessões longas com checkpoints.</span>
+                                        </span>
+                                </a>
+                        </div>
                 </div>
 
-                <aside class="hub-hero__aside" aria-labelledby="game-modes-heading">
-                        <header class="hub-hero__aside-header">
-                                <span class="hub-hero__aside-pill">Modos de jogo</span>
+                <aside class="hub-hero__modes" aria-labelledby="game-modes-heading">
+                        <header class="hub-hero__modes-header">
+                                <span class="hub-hero__aside-pill">Experiências de jogo</span>
                                 <h2 class="hub-hero__aside-title" id="game-modes-heading">
-                                        Escolha como quer jogar hoje
+                                        Escolha o formato ideal para hoje
                                 </h2>
                                 <p class="hub-hero__aside-subtitle">
-                                        Combine regras, limite de tempo e objetivos especiais para transformar seus estudos em missões épicas.
+                                        Combine ritmo, objetivos e interação para transformar seu estudo em missões épicas.
                                 </p>
+                                <div class="mode-pills" role="list" aria-label="Categorias de modo">
+                                        <span class="mode-pill" role="listitem">
+                                                <span class="material-symbols-outlined">auto_awesome</span>
+                                                Solo estratégico
+                                        </span>
+                                        <span class="mode-pill" role="listitem">
+                                                <span class="material-symbols-outlined">groups</span>
+                                                Colaborativo
+                                        </span>
+                                        <span class="mode-pill" role="listitem">
+                                                <span class="material-symbols-outlined">emoji_events</span>
+                                                Competitivo
+                                        </span>
+                                </div>
                         </header>
-                        <div class="game-modes-grid">
-                                <a
-                                        href="{% url 'quiz:questions' %}?modo=classico"
-                                        class="game-mode-card"
-                                        data-mode="classico"
-                                >
-                                        <span class="material-symbols-outlined game-mode-card__icon">auto_stories</span>
-                                        <div class="game-mode-card__body">
-                                                <div class="game-mode-card__header">
-                                                        <h3 class="game-mode-card__title">Clássico</h3>
-                                                        <span class="game-mode-card__chip">Recomendado</span>
-                                                </div>
-                                                <p class="game-mode-card__description">
-                                                        Responda no seu ritmo, com feedback completo e curadoria inteligente de questões.
-                                                </p>
-                                                <ul class="game-mode-card__meta">
-                                                        <li><span class="material-symbols-outlined">schedule</span>15 questões</li>
-                                                        <li><span class="material-symbols-outlined">workspace_premium</span>Multiplica pontos</li>
-                                                </ul>
+
+                        <div class="mode-area" aria-labelledby="solo-modes-heading">
+                                <div class="mode-area__header">
+                                        <span class="material-symbols-outlined mode-area__icon">person_play</span>
+                                        <div>
+                                                <h3 class="mode-area__title" id="solo-modes-heading">Sessões solo otimizadas</h3>
+                                                <p class="mode-area__description">Escolha o foco da sessão e deixe o algoritmo calibrar a curva de dificuldade.</p>
                                         </div>
-                                </a>
-                                <a
-                                        href="{% url 'quiz:questions' %}?modo=sprint"
-                                        class="game-mode-card"
-                                        data-mode="sprint"
-                                >
-                                        <span class="material-symbols-outlined game-mode-card__icon">speed</span>
-                                        <div class="game-mode-card__body">
-                                                <div class="game-mode-card__header">
-                                                        <h3 class="game-mode-card__title">Sprint</h3>
-                                                        <span class="game-mode-card__chip game-mode-card__chip--accent">Novo</span>
-                                                </div>
-                                                <p class="game-mode-card__description">
-                                                        Corridas contra o tempo com boosters de combo e checkpoints estratégicos.
-                                                </p>
-                                                <ul class="game-mode-card__meta">
-                                                        <li><span class="material-symbols-outlined">timer</span>2 min por questão</li>
-                                                        <li><span class="material-symbols-outlined">bolt</span>Power-ups em cadeia</li>
+                                </div>
+                                <div class="mode-area__grid">
+                                        <a href="{% url 'quiz:questions' %}?modo=classico" class="mode-card" data-mode="classico">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">auto_stories</span>
+                                                        <span class="mode-card__meta">Curadoria dinâmica</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Modo Clássico</h4>
+                                                <p class="mode-card__description">Feedback completo, ritmo flexível e reforço inteligente entre temas.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>15 questões</li>
+                                                        <li>Multiplicador de pontos</li>
                                                 </ul>
-                                        </div>
-                                </a>
-                                <a
-                                        href="{% url 'quiz:questions' %}?modo=maratona"
-                                        class="game-mode-card"
-                                        data-mode="maratona"
-                                >
-                                        <span class="material-symbols-outlined game-mode-card__icon">track_changes</span>
-                                        <div class="game-mode-card__body">
-                                                <div class="game-mode-card__header">
-                                                        <h3 class="game-mode-card__title">Maratona</h3>
-                                                        <span class="game-mode-card__chip">Alta resistência</span>
-                                                </div>
-                                                <p class="game-mode-card__description">
-                                                        Sessões longas com checkpoints, metas intermediárias e resumo estratégico.
-                                                </p>
-                                                <ul class="game-mode-card__meta">
-                                                        <li><span class="material-symbols-outlined">flag</span>Objetivos personalizáveis</li>
-                                                        <li><span class="material-symbols-outlined">insights</span>Relatório avançado</li>
+                                        </a>
+                                        <a href="{% url 'quiz:questions' %}?modo=sprint" class="mode-card mode-card--accent" data-mode="sprint">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">speed</span>
+                                                        <span class="mode-card__meta">Alta intensidade</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Sprint Relâmpago</h4>
+                                                <p class="mode-card__description">Corridas contra o tempo com boosters de combo e checkpoints estratégicos.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>2 min por questão</li>
+                                                        <li>Power-ups de streak</li>
                                                 </ul>
+                                        </a>
+                                </div>
+                        </div>
+
+                        <div class="mode-area" aria-labelledby="advanced-modes-heading">
+                                <div class="mode-area__header">
+                                        <span class="material-symbols-outlined mode-area__icon">hub</span>
+                                        <div>
+                                                <h3 class="mode-area__title" id="advanced-modes-heading">Experiências avançadas</h3>
+                                                <p class="mode-area__description">Ideal para aprofundar conhecimento com metas de longo prazo e relatórios detalhados.</p>
                                         </div>
-                                </a>
-                                <a
-                                        href="{% url 'quiz:questions' %}?modo=estudo"
-                                        class="game-mode-card game-mode-card--ghost"
-                                        data-mode="estudo"
-                                        id="view-all-questions-alt-link"
-                                >
-                                        <span class="material-symbols-outlined game-mode-card__icon">menu_book</span>
-                                        <div class="game-mode-card__body">
-                                                <div class="game-mode-card__header">
-                                                        <h3 class="game-mode-card__title">Estudo livre</h3>
-                                                        <span class="game-mode-card__chip">Catálogo completo</span>
-                                                </div>
-                                                <p class="game-mode-card__description">
-                                                        Explore todo o banco de questões, filtre por temas e acompanhe seus favoritos.
-                                                </p>
-                                                <ul class="game-mode-card__meta">
-                                                        <li><span class="material-symbols-outlined">filter_alt</span>Filtros avançados</li>
-                                                        <li><span class="material-symbols-outlined">bookmarks</span>Salvar coleções</li>
+                                </div>
+                                <div class="mode-area__grid">
+                                        <a href="{% url 'quiz:questions' %}?modo=maratona" class="mode-card" data-mode="maratona">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">track_changes</span>
+                                                        <span class="mode-card__meta">Resistência</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Maratona Estratégica</h4>
+                                                <p class="mode-card__description">Sessões longas com checkpoints configuráveis e resumo avançado de desempenho.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>Objetivos personalizáveis</li>
+                                                        <li>Insights pós-jogo</li>
                                                 </ul>
+                                        </a>
+                                        <a href="{% url 'quiz:questions' %}?modo=estudo" class="mode-card mode-card--ghost" data-mode="estudo" id="view-all-questions-alt-link">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">menu_book</span>
+                                                        <span class="mode-card__meta">Catálogo total</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Estudo Livre</h4>
+                                                <p class="mode-card__description">Explore todo o banco, use filtros avançados e salve coleções temáticas.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>Filtros avançados</li>
+                                                        <li>Favoritos &amp; marcadores</li>
+                                                </ul>
+                                        </a>
+                                </div>
+                        </div>
+
+                        <div class="mode-area" aria-labelledby="social-modes-heading">
+                                <div class="mode-area__header">
+                                        <span class="material-symbols-outlined mode-area__icon">groups_3</span>
+                                        <div>
+                                                <h3 class="mode-card__title mode-area__title" id="social-modes-heading">Jogos sociais e competitivos</h3>
+                                                <p class="mode-area__description">Perfeito para squad, desafios semanais e temporadas ranqueadas com recompensas.</p>
                                         </div>
-                                </a>
+                                </div>
+                                <div class="mode-area__grid mode-area__grid--stretch">
+                                        <a href="{% url 'quiz:questions' %}?modo=classico&partida=dupla" class="mode-card" data-mode="duo">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">diversity_2</span>
+                                                        <span class="mode-card__meta">Sincronização</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Dupla Tática</h4>
+                                                <p class="mode-card__description">Monte duplas, defina temas compartilhados e receba briefing conjunto ao final.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>Matchmaking amigo</li>
+                                                        <li>Resumo colaborativo</li>
+                                                </ul>
+                                        </a>
+                                        <a href="{% url 'quiz:questions' %}?modo=sprint&evento=arena" class="mode-card mode-card--accent" data-mode="arena">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">stadium</span>
+                                                        <span class="mode-card__meta">Rankeado</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Arena Competitiva</h4>
+                                                <p class="mode-card__description">Partidas rápidas com placar global, boosts sazonais e conquistas exclusivas.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>Temporadas mensais</li>
+                                                        <li>Recompensas lendárias</li>
+                                                </ul>
+                                        </a>
+                                        <a href="{% url 'quiz:questions' %}?modo=maratona&evento=raid" class="mode-card" data-mode="raid">
+                                                <span class="mode-card__header">
+                                                        <span class="material-symbols-outlined mode-card__icon">diversity_3</span>
+                                                        <span class="mode-card__meta">Coop Squad</span>
+                                                </span>
+                                                <h4 class="mode-card__title">Raid Colaborativo</h4>
+                                                <p class="mode-card__description">Monte squads, distribua roles e avance por fases progressivas para derrotar o boss clínico.</p>
+                                                <ul class="mode-card__tags">
+                                                        <li>Checkpoints por fase</li>
+                                                        <li>Liderança compartilhada</li>
+                                                </ul>
+                                        </a>
+                                </div>
                         </div>
                 </aside>
         </div>

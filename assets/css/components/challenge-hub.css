@@ -340,6 +340,37 @@
 
     .challenge-hub__hero {
         padding: clamp(24px, 6vw, 32px);
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .challenge-hub__hero-info,
+    .challenge-hub__hero-actions {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .challenge-hub__hero-info {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-md, 20px);
+    }
+
+    .challenge-hub__stats {
+        width: 100%;
+        justify-items: center;
+    }
+
+    .challenge-stat {
+        align-items: center;
+        text-align: center;
+        padding: var(--spacing-sm, 16px) clamp(18px, 6vw, 22px);
+    }
+
+    .challenge-stat__value {
+        font-size: clamp(1.05rem, 5vw, 1.3rem);
     }
 
     body[data-page-id="questions"] .challenge-hub {

@@ -18,9 +18,14 @@ export default class ChallengeHub {
             hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
+            hubTotalQuestionsCountSummary: document.getElementById('hub-total-questions-count-summary'),
+            hubWarmupQuizBtn: document.getElementById('hub-warmup-quiz-btn'),
+            hubFocusedQuizBtn: document.getElementById('hub-focused-quiz-btn'),
+            hubMarathonQuizBtn: document.getElementById('hub-marathon-quiz-btn'),
+            hubHardcoreQuizBtn: document.getElementById('hub-hardcore-quiz-btn'),
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
-            
+
             // --- INÍCIO DA CORREÇÃO: Mapeando para os novos IDs e estrutura ---
             resumeCard: document.getElementById('hub-resume-quiz-card'),
             resumeCardDescription: document.getElementById('hub-resume-card-description'),
@@ -77,13 +82,32 @@ export default class ChallengeHub {
      * @param {number|string} count - O número de questões.
      */
     updateTotalQuestionsCount(count) {
-        if (this.elements.hubTotalQuestionsCount) {
-            this.elements.hubTotalQuestionsCount.textContent = count || '0';
+        let formattedCount = '0';
+
+        if (typeof count === 'number' && Number.isFinite(count)) {
+            formattedCount = count.toLocaleString('pt-BR');
+        } else if (typeof count === 'string') {
+            const trimmed = count.trim();
+            if (trimmed.length > 0) {
+                const normalized = trimmed.replace(/\./g, '').replace(',', '.');
+                const numericCount = Number(normalized);
+                formattedCount = Number.isFinite(numericCount)
+                    ? numericCount.toLocaleString('pt-BR')
+                    : trimmed;
+            }
         }
-        
-        const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
+
+        if (this.elements.hubTotalQuestionsCount) {
+            this.elements.hubTotalQuestionsCount.textContent = formattedCount;
+        }
+
+        if (this.elements.hubTotalQuestionsCountSummary) {
+            this.elements.hubTotalQuestionsCountSummary.textContent = formattedCount;
+        }
+
+        const totalQuestionsSpanHome = document.querySelector('#home-section #hub-total-questions-count');
         if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) {
-            totalQuestionsSpanHome.textContent = count || '0';
+            totalQuestionsSpanHome.textContent = formattedCount;
         }
     }
 
@@ -143,7 +167,35 @@ export default class ChallengeHub {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
-        
+
+        this.elements.hubWarmupQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startWarmupQuiz();
+            }
+        });
+
+        this.elements.hubFocusedQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startFocusedQuiz();
+            }
+        });
+
+        this.elements.hubMarathonQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startMarathonQuiz();
+            }
+        });
+
+        this.elements.hubHardcoreQuizBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startHardcoreQuiz();
+            }
+        });
+
         // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
         this.elements.confirmResumeBtn?.addEventListener('click', () => {
              if (this.actionOrchestrator) {

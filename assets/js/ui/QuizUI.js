@@ -225,7 +225,8 @@ export default class QuizUI {
             btnTogglePauseLabel: document.getElementById('btn-toggle-pausa-label'),
             btnTogglePauseIcon: document.getElementById('btn-toggle-pausa-icon'),
             challengeHubContainer: document.getElementById('challenge-hub-container'),
-            hubTotalQuestionsCount: document.getElementById('hub-total-questions-count'),
+            hubTotalQuestionsCount: document.querySelector('#challenge-hub-container #hub-total-questions-count')
+                || document.getElementById('hub-total-questions-count'),
             hubQuickQuizCount: document.getElementById('hub-quick-quiz-count'),
             hubCustomizeQuizBtn: document.getElementById('hub-customize-quiz-btn'),
             hubQuickQuizBtn: document.getElementById('hub-quick-quiz-btn'),

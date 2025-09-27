@@ -339,6 +339,37 @@ export default class ActionOrchestrator {
         await this._fetchAndInitiateQuiz({ mode: 'Rápido' });
     }
 
+    async startWarmupQuiz() {
+        await this._fetchAndInitiateQuiz({
+            mode: 'Rápido',
+            count: 5,
+            difficulty_levels: ['fácil', 'médio'],
+        });
+    }
+
+    async startFocusedQuiz() {
+        await this._fetchAndInitiateQuiz({
+            mode: 'Rápido',
+            count: 15,
+            difficulty_levels: ['médio', 'difícil'],
+        });
+    }
+
+    async startMarathonQuiz() {
+        await this._fetchAndInitiateQuiz({
+            mode: 'Rápido',
+            count: 30,
+        });
+    }
+
+    async startHardcoreQuiz() {
+        await this._fetchAndInitiateQuiz({
+            mode: 'Rápido',
+            count: 12,
+            difficulty_levels: ['difícil'],
+        });
+    }
+
     async startPredefinedQuiz(quizDefinicaoId) {
         await this._fetchAndInitiateQuiz({ quiz_definicao_id: quizDefinicaoId, mode: 'Definido' });
     }

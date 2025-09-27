@@ -125,9 +125,7 @@ export default class App {
             const challengeHub = new ChallengeHub(this.quizUI);
             challengeHub.setActionOrchestrator(this.actionOrchestrator);
             this.quizUI.setChallengeHubInstance(challengeHub);
-            const totalQuestions = typeof state.geral.totalQuestionsAvailable === 'number'
-                ? state.geral.totalQuestionsAvailable.toLocaleString('pt-BR')
-                : state.geral.totalQuestionsAvailable;
+            const totalQuestions = state.geral.totalQuestionsAvailable;
             challengeHub.updateTotalQuestionsCount(totalQuestions);
             const quickQuizCount = state.geral.homeSummary?.quickQuizDefaultCount ?? QUICK_QUIZ_COUNT;
             challengeHub.updateQuickQuizCount(quickQuizCount);
@@ -156,7 +154,8 @@ export default class App {
         this._ensureActiveSection(initialSectionId);
 
         if (initialSectionId === 'home') {
-            const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
+            const totalQuestionsSpanHome = document.querySelector('#home-section #hub-total-questions-count')
+                || document.getElementById('hub-total-questions-count');
             if (totalQuestionsSpanHome) {
                 const state = this.store.getState();
                 const totalQuestions = state.geral.totalQuestionsAvailable;

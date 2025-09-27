@@ -1,8 +1,9 @@
 # quiz/models.py
 from copy import deepcopy
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple, Set
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
@@ -42,12 +43,117 @@ DEFAULT_SCORE_PANEL_SETTINGS: Dict[str, bool] = {
 
 
 def default_score_panel_config() -> Dict[str, Dict[str, bool]]:
-    return {
-        "default": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
-        "Por Categoria": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
-        "Rápido": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
-        "Definido": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS),
+    """Retorna um dicionário padrão para todos os modos de quiz disponíveis."""
+
+    config = {"default": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)}
+    for mode_value in get_available_quiz_mode_values():
+        config[mode_value] = deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)
+    return config
+
+
+def get_available_quiz_mode_values() -> List[str]:
+    """Lista os valores de todos os modos de quiz registrados."""
+
+    return [value for value, _label in get_registered_score_panel_modes()]
+
+
+def get_additional_score_panel_modes() -> List[Tuple[str, str]]:
+    """Normaliza a configuração de modos extras definidos nas settings."""
+
+    extra_modes = getattr(settings, "QUIZ_SCORE_PANEL_EXTRA_MODES", [])
+    normalized: List[Tuple[str, str]] = []
+
+    if isinstance(extra_modes, dict):
+        iterator = extra_modes.items()
+    else:
+        iterator = extra_modes
+
+    for entry in iterator:
+        value: Optional[str]
+        label: Optional[str]
+
+        if isinstance(entry, (list, tuple)):
+            if not entry:
+                continue
+            value = str(entry[0]) if entry[0] is not None else None
+            label = str(entry[1]) if len(entry) > 1 and entry[1] is not None else None
+        elif isinstance(entry, str):
+            value = entry
+            label = entry
+        else:
+            continue
+
+        if not value:
+            continue
+
+        normalized.append((value, label or value))
+
+    return normalized
+
+
+def get_registered_score_panel_modes() -> List[Tuple[str, str]]:
+    """Retorna todos os modos conhecidos para configuração do painel."""
+
+    modes: List[Tuple[str, str]] = []
+    seen: Set[str] = set()
+
+    try:
+        for choice in SessoesQuizUsuario.ModoQuiz:
+            value = str(choice.value)
+            if value and value not in seen:
+                modes.append((value, str(choice.label)))
+                seen.add(value)
+    except NameError:
+        # Durante migrações iniciais SessoesQuizUsuario pode não estar disponível ainda.
+        pass
+
+    for value, label in get_additional_score_panel_modes():
+        if value not in seen:
+            modes.append((value, label))
+            seen.add(value)
+
+    return modes
+
+
+def _coerce_score_panel_flag(value: Any, default: bool) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return bool(value)
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"true", "1", "yes", "on", "sim"}:
+            return True
+        if normalized in {"false", "0", "no", "off", "nao", "não"}:
+            return False
+    return default
+
+
+def _coerce_score_panel_settings(data: Optional[Dict[str, Any]]) -> Dict[str, bool]:
+    settings = deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)
+    if not isinstance(data, dict):
+        return settings
+    for key in settings.keys():
+        if key in data:
+            settings[key] = _coerce_score_panel_flag(data[key], settings[key])
+    return settings
+
+
+def sanitize_score_panel_config(payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, bool]]:
+    """Normaliza um payload bruto de configuração do painel de pontuação."""
+
+    payload = payload or {}
+    if not isinstance(payload, dict):
+        payload = {}
+
+    sanitized: Dict[str, Dict[str, bool]] = {
+        "default": _coerce_score_panel_settings(payload.get("default"))
     }
+
+    for mode in get_available_quiz_mode_values():
+        sanitized[mode] = _coerce_score_panel_settings(payload.get(mode))
+
+    return sanitized
 
 # --- Modelos de Conteúdo do Quiz ---
 
@@ -394,11 +500,27 @@ class QuizDefinicao(models.Model):
         verbose_name="Quiz Ativo",
         help_text="Se este quiz pode ser selecionado pelos usuários."
     )
+    score_panel_overrides = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Ajustes do Painel de Pontuação",
+        help_text=(
+            "Permite personalizar a visibilidade dos itens do painel lateral "
+            "para cada modo de quiz suportado."
+        ),
+    )
     data_criacao = models.DateTimeField(auto_now_add=True, verbose_name="Data de Criação")
     data_atualizacao = models.DateTimeField(auto_now=True, verbose_name="Data de Atualização")
 
     def __str__(self):
         return self.nome_quiz
+
+    def save(self, *args, **kwargs):
+        self.score_panel_overrides = sanitize_score_panel_config(self.score_panel_overrides)
+        super().save(*args, **kwargs)
+
+    def get_score_panel_overrides(self) -> Dict[str, Dict[str, bool]]:
+        return sanitize_score_panel_config(self.score_panel_overrides)
 
     class Meta:
         verbose_name = "Definição de Quiz"
@@ -886,7 +1008,7 @@ class ConfiguracoesGeraisQuiz(models.Model):
             raise ValidationError({'penalidade_por_erro': 'A penalidade por erro não pode ser negativa.'})
         self._validate_dificuldades()
         self._validate_bonus()
-        self.score_panel_config = self._sanitize_score_panel_config(self.score_panel_config)
+        self.score_panel_config = sanitize_score_panel_config(self.score_panel_config)
         result = super().save(*args, **kwargs)
         try:
             from .views import invalidate_quiz_config_cache
@@ -948,56 +1070,41 @@ class ConfiguracoesGeraisQuiz(models.Model):
                 raise ValidationError({'bonus_sequencia_acertos': f"O bônus na posição {index} deve ser numérico."})
             last_streak = streak_value
 
-    @staticmethod
-    def _coerce_score_panel_flag(value: Any, default: bool) -> bool:
-        if isinstance(value, bool):
-            return value
-        if isinstance(value, (int, float)):
-            return bool(value)
-        if isinstance(value, str):
-            normalized = value.strip().lower()
-            if normalized in {'true', '1', 'yes', 'on', 'sim'}:
-                return True
-            if normalized in {'false', '0', 'no', 'off', 'nao', 'não'}:
-                return False
-        return default
-
-    def _coerce_score_panel_settings(self, data: Optional[Dict[str, Any]]) -> Dict[str, bool]:
-        settings = deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)
-        if not isinstance(data, dict):
-            return settings
-        for key in settings.keys():
-            if key in data:
-                settings[key] = self._coerce_score_panel_flag(data[key], settings[key])
-        return settings
-
     def _sanitize_score_panel_config(self, payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, bool]]:
-        payload = payload or {}
-        if not isinstance(payload, dict):
-            payload = {}
+        """Mantido por compatibilidade retroativa com chamadas existentes."""
 
-        sanitized: Dict[str, Dict[str, bool]] = {}
-        sanitized['default'] = self._coerce_score_panel_settings(payload.get('default'))
+        return sanitize_score_panel_config(payload)
 
-        for mode in (
-            SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA,
-            SessoesQuizUsuario.ModoQuiz.RAPIDO,
-            SessoesQuizUsuario.ModoQuiz.DEFINIDO,
-        ):
-            sanitized[mode] = self._coerce_score_panel_settings(payload.get(mode))
+    @staticmethod
+    def _apply_score_panel_override(
+        base_settings: Dict[str, bool],
+        override_settings: Optional[Dict[str, Any]],
+    ) -> Dict[str, bool]:
+        if not isinstance(override_settings, dict):
+            return base_settings
 
-        return sanitized
+        for key in base_settings.keys():
+            if key in override_settings:
+                base_settings[key] = bool(override_settings[key])
+        return base_settings
 
-    def get_score_panel_settings_for_mode(self, mode: Optional[str] = None) -> Dict[str, bool]:
-        sanitized = self._sanitize_score_panel_config(self.score_panel_config)
+    def get_score_panel_settings_for_mode(
+        self,
+        mode: Optional[str] = None,
+        quiz_definicao: Optional['QuizDefinicao'] = None,
+    ) -> Dict[str, bool]:
+        sanitized = sanitize_score_panel_config(self.score_panel_config)
         resolved = deepcopy(sanitized.get('default', DEFAULT_SCORE_PANEL_SETTINGS))
 
         mode_key = str(mode) if mode else None
         if mode_key and mode_key in sanitized:
-            mode_settings = sanitized.get(mode_key) or {}
-            for key in resolved.keys():
-                if key in mode_settings:
-                    resolved[key] = bool(mode_settings[key])
+            resolved = self._apply_score_panel_override(resolved, sanitized.get(mode_key))
+
+        if quiz_definicao is not None:
+            overrides = quiz_definicao.get_score_panel_overrides()
+            resolved = self._apply_score_panel_override(resolved, overrides.get('default'))
+            if mode_key and mode_key in overrides:
+                resolved = self._apply_score_panel_override(resolved, overrides.get(mode_key))
 
         return resolved
 

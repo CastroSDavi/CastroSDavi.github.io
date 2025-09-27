@@ -1,9 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from quiz.models import (
     Categoria,
     CategoriaHierarquia,
     ConfiguracoesGeraisQuiz,
+    DEFAULT_SCORE_PANEL_SETTINGS,
+    QuizDefinicao,
     SessoesQuizUsuario,
 )
 from quiz.views import (
@@ -51,6 +53,35 @@ class QuizConfigCacheTests(TestCase):
 
         category_settings = config.get_score_panel_settings_for_mode(SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA)
         self.assertFalse(category_settings['allow_pause'])
+
+    def test_score_panel_overrides_from_quiz_definition(self):
+        config = get_quiz_config()
+        quiz_def = QuizDefinicao.objects.create(nome_quiz='Simulado Especial', ativo=True)
+
+        overrides = quiz_def.get_score_panel_overrides()
+        overrides['default']['show_timer'] = False
+        overrides[SessoesQuizUsuario.ModoQuiz.DEFINIDO]['show_points'] = False
+        quiz_def.score_panel_overrides = overrides
+        quiz_def.save(update_fields=['score_panel_overrides'])
+
+        inherited = config.get_score_panel_settings_for_mode(quiz_definicao=quiz_def)
+        self.assertFalse(inherited['show_timer'])
+
+        definido_settings = config.get_score_panel_settings_for_mode(
+            SessoesQuizUsuario.ModoQuiz.DEFINIDO,
+            quiz_definicao=quiz_def,
+        )
+        self.assertFalse(definido_settings['show_points'])
+
+    @override_settings(QUIZ_SCORE_PANEL_EXTRA_MODES=[('Revisão', 'Revisão de Favoritos')])
+    def test_extra_modes_inherit_default_score_panel_flags(self):
+        config = get_quiz_config()
+        # O modo adicional deve estar presente no JSON sanitizado e carregar todas as flags.
+        self.assertIn('Revisão', config.score_panel_config)
+
+        revision_settings = config.get_score_panel_settings_for_mode('Revisão')
+        for flag in DEFAULT_SCORE_PANEL_SETTINGS.keys():
+            self.assertIn(flag, revision_settings)
 
 
 class CategoriaHierarchyTests(TestCase):

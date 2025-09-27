@@ -3,6 +3,7 @@ from django.contrib import admin
 from django import forms
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.text import slugify
 from django.db.models import Count
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
@@ -19,11 +20,32 @@ from .models import (
     DesafioDinamico, ProgressoDesafioUsuario, RecompensaNivelResgatada,
     SystemMessageBroadcast,
 )
-from .models import DEFAULT_SCORE_PANEL_SETTINGS
+from .models import (
+    DEFAULT_SCORE_PANEL_SETTINGS,
+    sanitize_score_panel_config,
+    get_registered_score_panel_modes,
+)
 
 admin.site.site_header = "MedQuiz Admin"
 admin.site.site_title = "MedQuiz Administracao"
 admin.site.index_title = "Gestao de Conteudo"
+
+
+def get_score_panel_modes_with_labels():
+    modes = [('default', 'Configuração padrão (todos os modos)')]
+    for mode_value, mode_label in get_registered_score_panel_modes():
+        friendly_label = mode_label or mode_value
+        modes.append((mode_value, f'Modo "{friendly_label}"'))
+    return modes
+
+
+def get_score_panel_mode_prefix(mode_key: str) -> str:
+    if mode_key == 'default':
+        return 'default'
+    try:
+        return SessoesQuizUsuario.ModoQuiz(mode_key).name.lower()
+    except ValueError:
+        return slugify(mode_key, allow_unicode=False).replace('-', '_')
 
 
 class OpcaoRespostaInlineFormSet(BaseInlineFormSet):
@@ -476,31 +498,6 @@ class QuizDefinicaoPerguntaInline(admin.TabularInline):
     verbose_name_plural = "Perguntas do Quiz (com ordem)"
 
 
-@admin.register(QuizDefinicao)
-class QuizDefinicaoAdmin(admin.ModelAdmin):
-    list_display = ('nome_quiz', 'ativo', 'data_criacao_formatada', 'data_atualizacao_formatada', 'contagem_perguntas_definidas')
-    list_filter = ('ativo', 'data_criacao')
-    search_fields = ('nome_quiz', 'descricao')
-    inlines = [QuizDefinicaoPerguntaInline]
-    readonly_fields = ('data_criacao', 'data_atualizacao')
-    fieldsets = (
-        (None, {'fields': ('nome_quiz', 'descricao', 'ativo')}),
-        ('Datas de Auditoria', {'fields': ('data_criacao', 'data_atualizacao'), 'classes': ('collapse',)}),
-    )
-
-    @admin.display(description='Nº de Perguntas')
-    def contagem_perguntas_definidas(self, obj):
-        return obj.perguntas.count()
-
-    @admin.display(description='Criação', ordering='data_criacao')
-    def data_criacao_formatada(self, obj):
-        return obj.data_criacao.strftime("%d/%m/%Y %H:%M") if obj.data_criacao else "-"
-
-    @admin.display(description='Atualização', ordering='data_atualizacao')
-    def data_atualizacao_formatada(self, obj):
-        return obj.data_atualizacao.strftime("%d/%m/%Y %H:%M") if obj.data_atualizacao else "-"
-
-
 class ConfiguracoesGeraisQuizForm(forms.ModelForm):
     """ModelForm customizado para facilitar o gerenciamento do Score Panel."""
 
@@ -547,27 +544,17 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
         ),
     ]
 
-    SCORE_PANEL_MODES = [
-        ('default', 'Configuração padrão (todos os modos)'),
-        (SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA, 'Modo "Por Categoria"'),
-        (SessoesQuizUsuario.ModoQuiz.RAPIDO, 'Modo "Rápido"'),
-        (SessoesQuizUsuario.ModoQuiz.DEFINIDO, 'Modo "Pré-Definido"'),
-    ]
-
-    MODE_FIELD_PREFIXES = {
-        'default': 'default',
-        SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA: 'por_categoria',
-        SessoesQuizUsuario.ModoQuiz.RAPIDO: 'rapido',
-        SessoesQuizUsuario.ModoQuiz.DEFINIDO: 'definido',
-    }
-
     class Meta:
         model = ConfiguracoesGeraisQuiz
         fields = '__all__'
 
     @classmethod
+    def get_score_panel_modes(cls):
+        return get_score_panel_modes_with_labels()
+
+    @classmethod
     def build_field_name(cls, mode_key, flag_key):
-        prefix = cls.MODE_FIELD_PREFIXES[mode_key]
+        prefix = get_score_panel_mode_prefix(mode_key)
         return f"{prefix}_{flag_key}"
 
     def __init__(self, *args, **kwargs):
@@ -578,20 +565,13 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
             self.fields['score_panel_config'].widget = forms.HiddenInput()
             self.fields['score_panel_config'].required = False
 
-        instance_for_sanitization = (
-            self.instance if isinstance(self.instance, ConfiguracoesGeraisQuiz) else ConfiguracoesGeraisQuiz()
-        )
-        sanitized = instance_for_sanitization._sanitize_score_panel_config(
+        sanitized = sanitize_score_panel_config(
             getattr(self.instance, 'score_panel_config', None)
         )
 
-        for mode_key, _mode_label in self.SCORE_PANEL_MODES:
-            prefix = self.MODE_FIELD_PREFIXES[mode_key]
-            mode_settings = (
-                sanitized.get(mode_key)
-                or sanitized.get('default')
-                or DEFAULT_SCORE_PANEL_SETTINGS
-            )
+        for mode_key, _mode_label in self.get_score_panel_modes():
+            prefix = get_score_panel_mode_prefix(mode_key)
+            mode_settings = sanitized.get(mode_key) or sanitized.get('default') or DEFAULT_SCORE_PANEL_SETTINGS
 
             for flag_key, label, help_text in self.SCORE_PANEL_FIELDS:
                 field_name = f"{prefix}_{flag_key}"
@@ -606,32 +586,148 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
         cleaned_data = super().clean()
 
         config_payload = {}
-        for mode_key, _mode_label in self.SCORE_PANEL_MODES:
-            prefix = self.MODE_FIELD_PREFIXES[mode_key]
+        for mode_key, _mode_label in self.get_score_panel_modes():
+            prefix = get_score_panel_mode_prefix(mode_key)
             config_payload[mode_key] = {}
             for flag_key, _label, _help_text in self.SCORE_PANEL_FIELDS:
                 field_name = f"{prefix}_{flag_key}"
                 config_payload[mode_key][flag_key] = bool(cleaned_data.get(field_name, False))
 
-        if isinstance(self.instance, ConfiguracoesGeraisQuiz):
-            cleaned_data['score_panel_config'] = self.instance._sanitize_score_panel_config(config_payload)
-        else:
-            cleaned_data['score_panel_config'] = ConfiguracoesGeraisQuiz()._sanitize_score_panel_config(config_payload)
+        cleaned_data['score_panel_config'] = sanitize_score_panel_config(config_payload)
 
         return cleaned_data
 
 
-for _mode_key, _mode_label in ConfiguracoesGeraisQuizForm.SCORE_PANEL_MODES:
-    for _flag_key, _label, _help_text in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS:
-        _field_name = ConfiguracoesGeraisQuizForm.build_field_name(_mode_key, _flag_key)
-        if _field_name not in ConfiguracoesGeraisQuizForm.base_fields:
-            _field = forms.BooleanField(
-                label=_label,
-                required=False,
-                help_text=_help_text,
+def register_score_panel_boolean_fields(form_cls):
+    for mode_key, _mode_label in form_cls.get_score_panel_modes():
+        for flag_key, label, help_text in form_cls.SCORE_PANEL_FIELDS:
+            field_name = form_cls.build_field_name(mode_key, flag_key)
+            if field_name not in form_cls.base_fields:
+                field = forms.BooleanField(
+                    label=label,
+                    required=False,
+                    help_text=help_text,
+                )
+                form_cls.base_fields[field_name] = field
+                form_cls.declared_fields[field_name] = field
+
+
+register_score_panel_boolean_fields(ConfiguracoesGeraisQuizForm)
+
+
+
+
+
+class QuizDefinicaoAdminForm(forms.ModelForm):
+    SCORE_PANEL_FIELDS = ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
+
+    class Meta:
+        model = QuizDefinicao
+        fields = '__all__'
+
+    @classmethod
+    def get_score_panel_modes(cls):
+        return get_score_panel_modes_with_labels()
+
+    @classmethod
+    def build_field_name(cls, mode_key, flag_key):
+        return ConfiguracoesGeraisQuizForm.build_field_name(mode_key, flag_key)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if 'score_panel_overrides' in self.fields:
+            self.fields['score_panel_overrides'].widget = forms.HiddenInput()
+            self.fields['score_panel_overrides'].required = False
+
+        sanitized = sanitize_score_panel_config(
+            getattr(self.instance, 'score_panel_overrides', None)
+        )
+
+        for mode_key, _mode_label in self.get_score_panel_modes():
+            prefix = get_score_panel_mode_prefix(mode_key)
+            mode_settings = sanitized.get(mode_key) or sanitized.get('default') or DEFAULT_SCORE_PANEL_SETTINGS
+            for flag_key, label, help_text in self.SCORE_PANEL_FIELDS:
+                field_name = f"{prefix}_{flag_key}"
+                field = self.fields[field_name]
+                field.initial = bool(
+                    mode_settings.get(
+                        flag_key, DEFAULT_SCORE_PANEL_SETTINGS.get(flag_key, True)
+                    )
+                )
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        overrides_payload = {}
+        for mode_key, _mode_label in self.get_score_panel_modes():
+            prefix = get_score_panel_mode_prefix(mode_key)
+            overrides_payload[mode_key] = {}
+            for flag_key, _label, _help_text in self.SCORE_PANEL_FIELDS:
+                field_name = f"{prefix}_{flag_key}"
+                overrides_payload[mode_key][flag_key] = bool(cleaned_data.get(field_name, False))
+
+        cleaned_data['score_panel_overrides'] = sanitize_score_panel_config(overrides_payload)
+        return cleaned_data
+
+
+register_score_panel_boolean_fields(QuizDefinicaoAdminForm)
+
+
+@admin.register(QuizDefinicao)
+class QuizDefinicaoAdmin(admin.ModelAdmin):
+    form = QuizDefinicaoAdminForm
+    list_display = ('nome_quiz', 'ativo', 'data_criacao_formatada', 'data_atualizacao_formatada', 'contagem_perguntas_definidas')
+    list_filter = ('ativo', 'data_criacao')
+    search_fields = ('nome_quiz', 'descricao')
+    inlines = [QuizDefinicaoPerguntaInline]
+    readonly_fields = ('data_criacao', 'data_atualizacao')
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = [
+            (None, {'fields': ('nome_quiz', 'descricao', 'ativo')}),
+        ]
+
+        for mode_key, mode_label in self.form.get_score_panel_modes():
+            title = 'Painel de Pontuação - Configuração Padrão' if mode_key == 'default' else f'Painel de Pontuação - {mode_label}'
+            classes = () if mode_key == 'default' else ('collapse',)
+            description = (
+                'Definições básicas aplicadas a todos os modos quando nenhum ajuste específico estiver definido.'
+                if mode_key == 'default'
+                else 'Personalize os elementos do painel lateral para este modo de quiz nesta definição.'
             )
-            ConfiguracoesGeraisQuizForm.base_fields[_field_name] = _field
-            ConfiguracoesGeraisQuizForm.declared_fields[_field_name] = _field
+            fields = tuple(
+                self.form.build_field_name(mode_key, flag_key)
+                for flag_key, *_ in self.form.SCORE_PANEL_FIELDS
+            )
+            fieldsets.append((title, {'fields': fields, 'classes': classes, 'description': description}))
+
+        fieldsets.append((
+            'Painel de Pontuação - Dados Internos',
+            {
+                'fields': ('score_panel_overrides',),
+                'classes': ('collapse', 'wide'),
+                'description': 'Representação estruturada dos ajustes armazenados para esta definição.',
+            },
+        ))
+        fieldsets.append((
+            'Datas de Auditoria',
+            {'fields': ('data_criacao', 'data_atualizacao'), 'classes': ('collapse',)},
+        ))
+
+        return fieldsets
+
+    @admin.display(description='Nº de Perguntas')
+    def contagem_perguntas_definidas(self, obj):
+        return obj.perguntas.count()
+
+    @admin.display(description='Criação', ordering='data_criacao')
+    def data_criacao_formatada(self, obj):
+        return obj.data_criacao.strftime("%d/%m/%Y %H:%M") if obj.data_criacao else "-"
+
+    @admin.display(description='Atualização', ordering='data_atualizacao')
+    def data_atualizacao_formatada(self, obj):
+        return obj.data_atualizacao.strftime("%d/%m/%Y %H:%M") if obj.data_atualizacao else "-"
 
 
 @admin.register(ConfiguracoesGeraisQuiz)
@@ -646,91 +742,64 @@ class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
         'data_modificacao_formatada',
     )
     readonly_fields = ('data_modificacao',)
-    fieldsets = (
-        (None, {
-            'fields': (
-                'numero_perguntas_quiz_rapido',
-                'pontuacao_por_acerto',
-                'penalidade_por_erro',
-                'multiplicador_bonus_maximo',
+
+    def get_fieldsets(self, request, obj=None):
+        fieldsets = [
+            (
+                None,
+                {
+                    'fields': (
+                        'numero_perguntas_quiz_rapido',
+                        'pontuacao_por_acerto',
+                        'penalidade_por_erro',
+                        'multiplicador_bonus_maximo',
+                    )
+                },
+            ),
+            (
+                'Pontuação Dinâmica',
+                {
+                    'fields': (
+                        'configuracao_pontuacao_dificuldade',
+                        'bonus_sequencia_acertos',
+                    ),
+                    'classes': ('collapse',),
+                    'description': (
+                        'Configure recompensas específicas por dificuldade e os bônus aplicados a sequências de acertos. '
+                        'Essas estruturas JSON permitem integrar regras avançadas sem alterar o código.'
+                    ),
+                },
+            ),
+        ]
+
+        for mode_key, mode_label in self.form.get_score_panel_modes():
+            title = 'Painel de Pontuação - Configuração Padrão' if mode_key == 'default' else f'Painel de Pontuação - {mode_label}'
+            classes = () if mode_key == 'default' else ('collapse',)
+            description = (
+                'Definições básicas aplicadas a todos os modos de quiz por padrão.'
+                if mode_key == 'default'
+                else 'Personalize a visibilidade dos elementos do painel para este modo específico.'
             )
-        }),
-        ('Pontuação Dinâmica', {
-            'fields': (
-                'configuracao_pontuacao_dificuldade',
-                'bonus_sequencia_acertos',
-            ),
-            'classes': ('collapse',),
-            'description': (
-                'Configure recompensas específicas por dificuldade e os bônus aplicados a sequências de acertos. '
-                'Essas estruturas JSON permitem integrar regras avançadas sem alterar o código.'
-            ),
-        }),
-        (
-            'Painel de Pontuação - Configuração Padrão',
-            {
-                'fields': tuple(
-                    ConfiguracoesGeraisQuizForm.build_field_name('default', flag_key)
-                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
-                ),
-                'description': 'Definições básicas aplicadas a todos os modos de quiz por padrão.',
-            },
-        ),
-        (
-            'Painel de Pontuação - Modo "Por Categoria"',
-            {
-                'fields': tuple(
-                    ConfiguracoesGeraisQuizForm.build_field_name(
-                        SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA,
-                        flag_key,
-                    )
-                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
-                ),
-                'classes': ('collapse',),
-                'description': 'Personalize quais elementos ficam visíveis quando o usuário escolhe o modo "Por Categoria".',
-            },
-        ),
-        (
-            'Painel de Pontuação - Modo "Rápido"',
-            {
-                'fields': tuple(
-                    ConfiguracoesGeraisQuizForm.build_field_name(
-                        SessoesQuizUsuario.ModoQuiz.RAPIDO,
-                        flag_key,
-                    )
-                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
-                ),
-                'classes': ('collapse',),
-                'description': 'Controle a visibilidade do painel para quizzes rápidos.',
-            },
-        ),
-        (
-            'Painel de Pontuação - Modo "Pré-Definido"',
-            {
-                'fields': tuple(
-                    ConfiguracoesGeraisQuizForm.build_field_name(
-                        SessoesQuizUsuario.ModoQuiz.DEFINIDO,
-                        flag_key,
-                    )
-                    for flag_key, *_ in ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
-                ),
-                'classes': ('collapse',),
-                'description': 'Defina quais blocos ficam ativos em quizzes criados previamente.',
-            },
-        ),
-        (
+            fields = tuple(
+                self.form.build_field_name(mode_key, flag_key)
+                for flag_key, *_ in self.form.SCORE_PANEL_FIELDS
+            )
+            fieldsets.append((title, {'fields': fields, 'classes': classes, 'description': description}))
+
+        fieldsets.append((
             'Painel de Pontuação - Dados Internos',
             {
                 'fields': ('score_panel_config',),
                 'classes': ('collapse', 'wide'),
                 'description': 'Campo técnico utilizado para armazenar a configuração consolidada do painel.',
             },
-        ),
-        ('Datas de Auditoria', {
-            'fields': ('data_modificacao',),
-            'classes': ('collapse',),
-        }),
-    )
+        ))
+        fieldsets.append((
+            'Datas de Auditoria',
+            {'fields': ('data_modificacao',), 'classes': ('collapse',)},
+        ))
+
+        return fieldsets
 
     def has_add_permission(self, request):
         # Impede a adição de novas instâncias se uma já existir (padrão Singleton)

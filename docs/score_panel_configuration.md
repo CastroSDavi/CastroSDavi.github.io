@@ -22,15 +22,26 @@ O payload segue o formato abaixo:
   },
   "Por Categoria": { "allow_pause": false },
   "Rápido": { "show_timer": false },
-  "Definido": {}
+  "Definido": {},
+  "Revisão": { "show_timer": false, "allow_pause": false }
 }
 ```
 
 - A chave `default` serve como fallback para todos os modos.
-- As chaves `Por Categoria`, `Rápido` e `Definido` podem sobrescrever qualquer
+- As chaves `Por Categoria`, `Rápido`, `Definido` e `Revisão` podem sobrescrever qualquer
   flag individualmente.
 - Valores são coeridos para booleanos; strings como "sim"/"não" ou `1`/`0`
   também são aceitas.
+
+### Modos adicionais (frontend)
+
+Se existirem experiências de quiz que não criam uma sessão tradicional no
+backend, mas precisam de regras próprias de painel (por exemplo a revisão de
+favoritos), você pode cadastrá-las na configuração
+`QUIZ_SCORE_PANEL_EXTRA_MODES` em `settings.py`. Cada item pode ser uma tupla
+`("valor", "rótulo amigável")` ou apenas uma string. Esses modos adicionais
+passam a aparecer automaticamente no Django Admin tanto nas configurações
+globais quanto nas definições específicas de quiz.
 
 ## Flags disponíveis
 
@@ -52,6 +63,9 @@ O payload segue o formato abaixo:
      conjunto final de flags por modo, fundindo `default` com as sobrescritas.
    - Os endpoints `start_session` e `resume_session` retornam `score_panel_settings`
      junto com os demais dados da sessão.
+   - Quando a sessão é baseada em uma `QuizDefinicao`, os ajustes armazenados em
+     `QuizDefinicao.score_panel_overrides` são mesclados sobre a configuração
+     global, permitindo personalizar o painel para cada quiz definido.
 
 2. **Front-end**
    - O reducer armazena `quiz.scorePanelSettings` durante a inicialização ou
@@ -65,5 +79,7 @@ O payload segue o formato abaixo:
 - `0013_alter_respostasusuarioporsessao_data_resposta` atualiza o campo
   `data_resposta` para `DateTimeField` com `timezone.now` como default, permitindo
   granularidade de horário nas respostas.
+- `0015_quizdefinicao_score_panel_overrides` adiciona ajustes específicos por
+  definição de quiz para o painel lateral.
 
 Certifique-se de rodar `python manage.py migrate` após atualizar o código.

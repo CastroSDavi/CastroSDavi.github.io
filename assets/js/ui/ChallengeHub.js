@@ -16,8 +16,13 @@ export default class ChallengeHub {
             challengeHubContainer: this.quizUI.elements.challengeHubContainer,
             hubCustomizeQuizBtn: this.quizUI.elements.hubCustomizeQuizBtn,
             hubQuickQuizBtn: this.quizUI.elements.hubQuickQuizBtn,
+            hubFocusModeBtn: this.quizUI.elements.hubFocusModeBtn,
+            hubReviewModeBtn: this.quizUI.elements.hubReviewModeBtn,
+            hubMarathonModeBtn: this.quizUI.elements.hubMarathonModeBtn,
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
+            totalQuestionsCountMirrors: document.querySelectorAll('[data-role="total-questions-count"]'),
+            quickQuizCountMirrors: document.querySelectorAll('[data-role="quick-quiz-count"]'),
             placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
             closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
             
@@ -80,7 +85,13 @@ export default class ChallengeHub {
         if (this.elements.hubTotalQuestionsCount) {
             this.elements.hubTotalQuestionsCount.textContent = count || '0';
         }
-        
+
+        if (this.elements.totalQuestionsCountMirrors?.length) {
+            this.elements.totalQuestionsCountMirrors.forEach((node) => {
+                node.textContent = count || '0';
+            });
+        }
+
         const totalQuestionsSpanHome = document.getElementById('hub-total-questions-count');
         if (totalQuestionsSpanHome && totalQuestionsSpanHome !== this.elements.hubTotalQuestionsCount) {
             totalQuestionsSpanHome.textContent = count || '0';
@@ -94,6 +105,12 @@ export default class ChallengeHub {
     updateQuickQuizCount(count) {
         if (this.elements.hubQuickQuizCount) {
             this.elements.hubQuickQuizCount.textContent = count || '0';
+        }
+
+        if (this.elements.quickQuizCountMirrors?.length) {
+            this.elements.quickQuizCountMirrors.forEach((node) => {
+                node.textContent = count || '0';
+            });
         }
     }
 
@@ -143,7 +160,34 @@ export default class ChallengeHub {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao clicar em Quiz Rápido.");
             }
         });
-        
+
+        this.elements.hubFocusModeBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startFocusMode();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar modo de foco.");
+            }
+        });
+
+        this.elements.hubReviewModeBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startReviewMode();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar revisão inteligente.");
+            }
+        });
+
+        this.elements.hubMarathonModeBtn?.addEventListener('click', () => {
+            if (this.actionOrchestrator) {
+                this.hideHub();
+                this.actionOrchestrator.startMarathonMode();
+            } else {
+                console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar maratona.");
+            }
+        });
+
         // --- INÍCIO DA CORREÇÃO: Listeners agora nos botões corretos e separados ---
         this.elements.confirmResumeBtn?.addEventListener('click', () => {
              if (this.actionOrchestrator) {

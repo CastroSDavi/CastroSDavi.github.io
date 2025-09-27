@@ -7,7 +7,7 @@
 .challenge-hub {
     width: 100%;
     max-width: 1120px;
-    margin: clamp(24px, 4vw, 48px) auto;
+    margin: auto;
     padding: clamp(32px, 4vw, 48px);
     display: flex;
     flex-direction: column;

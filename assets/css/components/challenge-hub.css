@@ -30,30 +30,6 @@
     overflow: hidden;
 }
 
-.challenge-hub__hero::after,
-.challenge-hub__hero::before {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    pointer-events: none;
-}
-
-.challenge-hub__hero::before {
-    width: 280px;
-    height: 280px;
-    right: -120px;
-    top: -80px;
-    background: radial-gradient(circle at center, rgba(42, 157, 143, 0.45), transparent 70%);
-}
-
-.challenge-hub__hero::after {
-    width: 220px;
-    height: 220px;
-    right: -60px;
-    bottom: -80px;
-    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.18), transparent 70%);
-}
-
 .challenge-hub__hero-info {
     flex: 1 1 360px;
     min-width: 280px;
@@ -102,12 +78,12 @@
 .challenge-stat {
     padding: var(--spacing-sm, 16px) var(--spacing-md, 20px);
     border-radius: var(--border-radius-md);
-    border: 1px solid rgba(255, 255, 255, 0.25);
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(4px);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xxs, 6px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05)
 }
 
 .challenge-stat__label {
@@ -128,11 +104,10 @@
     min-width: 240px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: var(--spacing-md, 20px);
     padding: clamp(18px, 2.5vw, 24px);
     border-radius: var(--border-radius-md);
-    background: rgba(255, 255, 255, 0.08);
     position: relative;
     z-index: 1;
 }
@@ -147,7 +122,6 @@
 
 .challenge-hub__hero-actions .button--secondary {
     background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
     color: var(--color-white);
 }
 
@@ -179,7 +153,7 @@
     padding: clamp(22px, 2.6vw, 28px);
     border-radius: var(--border-radius-md);
     border: 1px solid rgba(13, 59, 102, 0.12);
-    background: var(--color-gray-050, #f7f9fc);
+    background: var(--color-gray-100);
     box-shadow: var(--shadow-sm);
     text-align: left;
     color: var(--color-text-primary);
@@ -268,24 +242,15 @@
 }
 
 .challenge-card__actions .button {
-    flex: 1 1 140px;
     justify-content: center;
 }
 
 .challenge-card--resume {
     grid-column: 1 / -1;
-    background: linear-gradient(135deg, rgba(42, 157, 143, 0.12), rgba(13, 59, 102, 0.08));
-    border-color: rgba(42, 157, 143, 0.35);
 }
 
 .challenge-card--resume .challenge-card__icon-wrapper {
-    background: rgba(42, 157, 143, 0.18);
     color: var(--color-primary-dark);
-}
-
-.challenge-card--accent {
-    background: linear-gradient(140deg, rgba(13, 59, 102, 0.08), rgba(42, 157, 143, 0.18));
-    border-color: rgba(13, 59, 102, 0.18);
 }
 
 .challenge-card--accent .challenge-card__icon-wrapper {

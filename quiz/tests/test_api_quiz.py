@@ -109,6 +109,8 @@ class QuizApiTests(TestCase):
         payload = response.json()
         self.assertEqual(payload['total_questions'], 1)
         self.assertEqual(payload['total_categories'], 1)
+        self.assertIn('predefined_quizzes', payload)
+        self.assertIsInstance(payload['predefined_quizzes'], list)
 
     def test_quiz_data_endpoint_returns_question_payload(self):
         url = reverse('quiz:quiz-alldata')

@@ -56,9 +56,9 @@ export default class App {
         try {
             if (initialSectionId === 'questions') {
                 await this.actionOrchestrator.initializeAppData();
-            } else if (initialSectionId === 'home') {
-                await this.actionOrchestrator.loadInitialSummary();
             }
+
+            await this.actionOrchestrator.loadInitialSummary();
 
             this._setupUIComponents();
             this._determineInitialSection(initialSectionId);
@@ -125,13 +125,8 @@ export default class App {
             const challengeHub = new ChallengeHub(this.quizUI);
             challengeHub.setActionOrchestrator(this.actionOrchestrator);
             this.quizUI.setChallengeHubInstance(challengeHub);
-            const totalQuestions = typeof state.geral.totalQuestionsAvailable === 'number'
-                ? state.geral.totalQuestionsAvailable.toLocaleString('pt-BR')
-                : state.geral.totalQuestionsAvailable;
-            challengeHub.updateTotalQuestionsCount(totalQuestions);
-            const quickQuizCount = state.geral.homeSummary?.quickQuizDefaultCount ?? QUICK_QUIZ_COUNT;
-            challengeHub.updateQuickQuizCount(quickQuizCount);
             challengeHub.setupEventListeners();
+            challengeHub.handleStateChange(state);
         }
 
         const resultDisplay = new ResultDisplay(this.quizUI, this.quizUI.timer);

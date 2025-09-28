@@ -1,10 +1,13 @@
 # quiz/admin.py
+from typing import Iterable, Optional
+from uuid import uuid4
+
 from django.contrib import admin
 from django import forms
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.text import slugify
-from django.db.models import Count
+from django.db.models import Count, Max
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
 # from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -49,6 +52,88 @@ def get_score_panel_mode_prefix(mode_key: str) -> str:
         return slugify(mode_key, allow_unicode=False).replace('-', '_')
 
 
+def assign_auto_import_code(
+    instance,
+    *,
+    prefix: str,
+    source_text: Optional[str] = None,
+    field_name: str = 'codigo_importacao',
+    max_length: int = 64,
+) -> Optional[str]:
+    """Preenche o campo de código de importação se estiver vazio."""
+
+    if not hasattr(instance, field_name):
+        return None
+
+    current_value = getattr(instance, field_name)
+    if current_value:
+        return current_value
+
+    normalized_source = (source_text or '').strip()
+    base_slug = slugify(normalized_source, allow_unicode=False)
+    base_slug = base_slug.strip('-')
+
+    suffix_length = 9  # hífen + 8 caracteres do UUID
+    available = max_length - suffix_length
+    if available < 1:
+        available = max_length
+
+    if base_slug and available:
+        base_core = base_slug[:available]
+    else:
+        base_core = prefix[:available] if available else prefix
+
+    if not base_core:
+        base_core = prefix or 'item'
+
+    model = type(instance)
+    exclude_pk = getattr(instance, 'pk', None)
+
+    for _ in range(8):
+        suffix = uuid4().hex[:8]
+        candidate = f"{base_core}-{suffix}" if base_core else suffix
+        candidate = candidate[:max_length]
+        queryset = model.objects.filter(**{field_name: candidate})
+        if exclude_pk:
+            queryset = queryset.exclude(pk=exclude_pk)
+        if not queryset.exists():
+            setattr(instance, field_name, candidate)
+            return candidate
+
+    fallback = uuid4().hex[:max_length]
+    setattr(instance, field_name, fallback)
+    return fallback
+
+
+class AdminAutoImportCodeMixin:
+    """Mixin que garante códigos de importação coerentes e automáticos."""
+
+    import_code_field: str = 'codigo_importacao'
+    import_code_prefix: str = 'item'
+    import_code_source_fields: Iterable[str] = ()
+
+    def get_import_code_source_value(self, instance) -> Optional[str]:
+        for field_name in self.import_code_source_fields:
+            value = getattr(instance, field_name, None)
+            if value:
+                if isinstance(value, str):
+                    return value[:150]
+                return str(value)
+        return None
+
+    def ensure_import_code(self, instance) -> Optional[str]:
+        return assign_auto_import_code(
+            instance,
+            prefix=self.import_code_prefix,
+            source_text=self.get_import_code_source_value(instance),
+            field_name=self.import_code_field,
+        )
+
+    def save_model(self, request, obj, form, change):
+        self.ensure_import_code(obj)
+        super().save_model(request, obj, form, change)
+
+
 class OpcaoRespostaInlineFormSet(BaseInlineFormSet):
     """Forca validacao minima para opcoes de resposta."""
 
@@ -80,19 +165,31 @@ class OpcaoRespostaInline(admin.TabularInline):
     formset = OpcaoRespostaInlineFormSet
     validate_min = True
     show_change_link = True
-    fields = ['texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao']
+    fields = ['codigo_importacao', 'texto_opcao', 'eh_correta', 'ordem_exibicao', 'feedback_opcao']
 
 
 @admin.register(Categoria)
-class CategoriaAdmin(admin.ModelAdmin):
-    list_display = ('nome_categoria', 'get_nome_categoria_pai_display', 'id', 'contagem_perguntas', 'data_criacao_formatada', 'data_atualizacao_formatada')
-    search_fields = ('nome_categoria', 'descricao_categoria', 'id_categoria_pai__nome_categoria')
+class CategoriaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
+    import_code_prefix = 'cat'
+    import_code_source_fields = ('nome_categoria',)
+
+    list_display = (
+        'nome_categoria',
+        'codigo_importacao',
+        'get_nome_categoria_pai_display',
+        'id',
+        'contagem_perguntas',
+        'data_criacao_formatada',
+        'data_atualizacao_formatada',
+    )
+    search_fields = ('nome_categoria', 'descricao_categoria', 'codigo_importacao', 'id_categoria_pai__nome_categoria')
     list_filter = ('id_categoria_pai', 'data_criacao')
     autocomplete_fields = ['id_categoria_pai']
     readonly_fields = ('data_criacao', 'data_atualizacao')
     fieldsets = (
         (None, {
-            'fields': ('nome_categoria', 'id_categoria_pai', 'descricao_categoria')
+            'fields': ('nome_categoria', 'codigo_importacao', 'id_categoria_pai', 'descricao_categoria'),
+            'classes': ('wide',),
         }),
         ('Datas de Auditoria', {
             'fields': ('data_criacao', 'data_atualizacao'),
@@ -149,9 +246,13 @@ class TopLevelCategoriaFilter(admin.SimpleListFilter):
         return queryset.filter(categorias__in=descendant_ids).distinct()
 
 @admin.register(Pergunta)
-class PerguntaAdmin(admin.ModelAdmin):
+class PerguntaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
+    import_code_prefix = 'pergunta'
+    import_code_source_fields = ('texto_pergunta',)
+
     list_display = (
         'texto_curto',
+        'codigo_importacao',
         'nivel_dificuldade',
         'mostrar_categorias_formatado',
         'ativa',
@@ -161,7 +262,14 @@ class PerguntaAdmin(admin.ModelAdmin):
     )
     list_display_links = ('texto_curto',)
     list_editable = ('nivel_dificuldade', 'ativa')
-    search_fields = ('texto_pergunta', 'referencia_bibliografica', 'explicacao_resposta', 'id_usuario_criador__username', 'categorias__nome_categoria')
+    search_fields = (
+        'texto_pergunta',
+        'codigo_importacao',
+        'referencia_bibliografica',
+        'explicacao_resposta',
+        'id_usuario_criador__username',
+        'categorias__nome_categoria',
+    )
     search_help_text = "Busque por texto, categorias, criador ou referencia."
     list_filter = (
         'nivel_dificuldade',
@@ -183,10 +291,12 @@ class PerguntaAdmin(admin.ModelAdmin):
     actions = ['marcar_como_ativas', 'marcar_como_inativas', 'duplicar_perguntas']
     fieldsets = (
         (None, {
-            'fields': ('texto_pergunta', 'url_imagem', 'referencia_bibliografica', 'explicacao_resposta')
+            'fields': ('texto_pergunta', 'codigo_importacao', 'url_imagem', 'referencia_bibliografica', 'explicacao_resposta'),
+            'classes': ('wide',),
         }),
         ('Configuracoes do Quiz', {
-            'fields': ('categorias', 'nivel_dificuldade', 'ativa')
+            'fields': ('categorias', 'nivel_dificuldade', 'ativa'),
+            'classes': ('wide',),
         }),
         ('Metadados', {
             'fields': ('id_usuario_criador', 'data_criacao', 'data_atualizacao'),
@@ -224,6 +334,34 @@ class PerguntaAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.select_related('id_usuario_criador').prefetch_related('categorias').annotate(opcoes_count=Count('opcoes'))
+
+    def save_model(self, request, obj, form, change):
+        if not obj.id_usuario_criador and request.user.is_authenticated:
+            obj.id_usuario_criador = request.user
+        super().save_model(request, obj, form, change)
+
+    def save_formset(self, request, form, formset, change):
+        instances = formset.save(commit=False)
+        for deleted in formset.deleted_objects:
+            deleted.delete()
+
+        for instance in instances:
+            if isinstance(instance, OpcaoResposta):
+                assign_auto_import_code(
+                    instance,
+                    prefix='opcao',
+                    source_text=getattr(instance, 'texto_opcao', None),
+                )
+                if instance.pk is None and (instance.ordem_exibicao is None or instance.ordem_exibicao == 0):
+                    max_ordem = (
+                        instance.pergunta.opcoes.exclude(pk=instance.pk)
+                        .aggregate(max_ordem=Max('ordem_exibicao'))
+                        .get('max_ordem')
+                    )
+                    instance.ordem_exibicao = (max_ordem or 0) + 1
+            instance.save()
+
+        formset.save_m2m()
 
     @admin.action(description='Marcar como ativas')
     def marcar_como_ativas(self, request, queryset):
@@ -271,9 +409,20 @@ class PerguntaAdmin(admin.ModelAdmin):
         self.message_user(request, f"{criadas} perguntas duplicadas e marcadas como inativas para revisao.")
 
 @admin.register(OpcaoResposta)
-class OpcaoRespostaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'texto_opcao_curto', 'link_pergunta_associada', 'eh_correta', 'ordem_exibicao', 'data_criacao_formatada')
-    search_fields = ('texto_opcao', 'feedback_opcao', 'pergunta__texto_pergunta')
+class OpcaoRespostaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
+    import_code_prefix = 'opcao'
+    import_code_source_fields = ('texto_opcao',)
+
+    list_display = (
+        'id',
+        'codigo_importacao',
+        'texto_opcao_curto',
+        'link_pergunta_associada',
+        'eh_correta',
+        'ordem_exibicao',
+        'data_criacao_formatada',
+    )
+    search_fields = ('texto_opcao', 'codigo_importacao', 'feedback_opcao', 'pergunta__texto_pergunta')
     list_filter = ('eh_correta', 'pergunta__nivel_dificuldade', 'data_criacao', 'pergunta__categorias')
     autocomplete_fields = ['pergunta']
     readonly_fields = ('data_criacao', 'data_atualizacao')

@@ -9,12 +9,14 @@ from django.utils import timezone
 from datetime import timedelta  # Mantido, pode ser útil
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch,
-    Max,
+    Max, IntegerField, F,
 )
 from django.contrib import messages
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from collections import defaultdict
+
+from typing import Optional
 
 from .models import (
     Pergunta, Categoria, CategoriaHierarquia, OpcaoResposta,
@@ -153,6 +155,230 @@ def _get_theme_options_metadata():
 
 def _filter_queryset_by_period(queryset, period_str: str, date_field_name: str = "data_estatistica"):
     return StatisticsService.filter_queryset_by_period(queryset, period_str, date_field_name)
+
+# endregion
+
+# region Auxiliares da Home
+
+
+def _format_duration_from_seconds(total_seconds: int) -> str:
+    """Converte segundos em uma string legível (ex.: ``1h 20m``)."""
+    if not total_seconds:
+        return "0m"
+
+    total_seconds = int(total_seconds)
+    hours, remainder = divmod(max(total_seconds, 0), 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    parts = []
+    if hours:
+        parts.append(f"{hours}h")
+    if minutes:
+        parts.append(f"{minutes}m")
+    if not parts:
+        parts.append(f"{seconds}s")
+    return " ".join(parts)
+
+
+def _get_top_categories_for_user(user: User, *, period_days: int = 30, limit: int = 3):
+    """Retorna as principais categorias do usuário em um período específico."""
+    time_threshold = timezone.now() - timedelta(days=period_days)
+    categories_qs = (
+        Categoria.objects.filter(
+            perguntas_associadas__respostas_dadas_em_sessoes__id_sessao_quiz__id_usuario=user,
+            perguntas_associadas__respostas_dadas_em_sessoes__id_sessao_quiz__status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            perguntas_associadas__respostas_dadas_em_sessoes__foi_correta__isnull=False,
+            perguntas_associadas__respostas_dadas_em_sessoes__data_resposta__gte=time_threshold,
+        )
+        .annotate(
+            total_respostas=Count('perguntas_associadas__respostas_dadas_em_sessoes'),
+            acertos=Sum(
+                Case(
+                    When(
+                        perguntas_associadas__respostas_dadas_em_sessoes__foi_correta=True,
+                        then=1,
+                    ),
+                    default=0,
+                    output_field=IntegerField(),
+                )
+            ),
+        )
+        .filter(total_respostas__gt=0)
+        .order_by('-acertos', '-total_respostas')
+    )
+
+    top_categories = []
+    for category in categories_qs[:limit]:
+        accuracy = 0
+        if category.total_respostas:
+            accuracy = (category.acertos or 0) / category.total_respostas * 100
+        top_categories.append({
+            'name': category.nome_categoria,
+            'accuracy': f"{accuracy:.0f}%",
+            'total': category.total_respostas,
+        })
+    return top_categories
+
+
+# region Novos auxiliares da Home remodelada
+
+
+def _build_focus_area_tip(accuracy_value: float) -> str:
+    """Gera uma orientação textual baseada no desempenho da categoria."""
+    if accuracy_value < 40:
+        return (
+            "Reserve um bloco guiado de revisão e resolva 10 questões comentadas para recuperar a base."
+        )
+    if accuracy_value < 60:
+        return (
+            "Reveja suas anotações e refaça um mini simulado focado nesta categoria ainda hoje."
+        )
+    if accuracy_value < 75:
+        return (
+            "Faça uma sessão concentrada com 5 questões de dificuldade média e revise cada explicação."
+        )
+    return "Mantenha revisões leves para consolidar o que já foi aprendido."
+
+
+def _get_focus_areas_for_user(user: User, *, period_days: int = 30, limit: int = 3):
+    """Retorna as categorias com menor desempenho para orientar revisões."""
+    time_threshold = timezone.now() - timedelta(days=period_days)
+    categories_qs = (
+        Categoria.objects.filter(
+            perguntas_associadas__respostas_dadas_em_sessoes__id_sessao_quiz__id_usuario=user,
+            perguntas_associadas__respostas_dadas_em_sessoes__id_sessao_quiz__status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            perguntas_associadas__respostas_dadas_em_sessoes__foi_correta__isnull=False,
+            perguntas_associadas__respostas_dadas_em_sessoes__data_resposta__gte=time_threshold,
+        )
+        .annotate(
+            total_respostas=Count('perguntas_associadas__respostas_dadas_em_sessoes'),
+            acertos=Sum(
+                Case(
+                    When(
+                        perguntas_associadas__respostas_dadas_em_sessoes__foi_correta=True,
+                        then=1,
+                    ),
+                    default=0,
+                    output_field=IntegerField(),
+                )
+            ),
+        )
+        .annotate(
+            accuracy=ExpressionWrapper(
+                Case(
+                    When(total_respostas__gt=0, then=F('acertos') * 100.0 / F('total_respostas')),
+                    default=Value(0.0),
+                    output_field=FloatField(),
+                ),
+                output_field=FloatField(),
+            )
+        )
+        .filter(total_respostas__gte=3)
+        .order_by('accuracy', '-total_respostas')
+    )
+
+    focus_areas = []
+    for category in categories_qs[:limit]:
+        accuracy_value = float(category.accuracy or 0)
+        if accuracy_value >= 85:
+            continue
+        priority = 'alta' if accuracy_value < 50 else 'moderada'
+        focus_areas.append({
+            'name': category.nome_categoria,
+            'accuracy_display': f"{accuracy_value:.0f}%",
+            'accuracy_value': accuracy_value,
+            'total_questions': category.total_respostas,
+            'priority': priority,
+            'tip': _build_focus_area_tip(accuracy_value),
+        })
+
+    return focus_areas
+
+
+def _build_daily_plan(
+    daily_goal_context: dict,
+    ongoing_session_data: Optional[dict],
+    focus_areas: list,
+    favorites_count: int,
+    *,
+    questions_url: str,
+    favorites_url: str,
+):
+    """Monta o plano do dia exibido no hub principal."""
+    plan_items = []
+
+    if ongoing_session_data:
+        plan_items.append({
+            'icon': 'play_circle',
+            'title': 'Retomar sessão em andamento',
+            'description': (
+                f"{ongoing_session_data['answered']} de {ongoing_session_data['total']} questões concluídas."
+            ),
+            'status': 'priority',
+            'progress': ongoing_session_data['progress'],
+            'action_url': questions_url,
+            'action_label': 'Continuar',
+        })
+
+    if daily_goal_context['progress'] < 100:
+        plan_items.append({
+            'icon': 'flag',
+            'title': 'Completar meta diária',
+            'description': daily_goal_context['message'],
+            'status': 'active',
+            'progress': daily_goal_context['progress'],
+            'action_url': questions_url,
+            'action_label': 'Responder agora',
+        })
+    else:
+        plan_items.append({
+            'icon': 'emoji_events',
+            'title': 'Meta diária batida',
+            'description': 'Ótimo ritmo! Escolha um próximo desafio para manter a constância.',
+            'status': 'completed',
+            'progress': daily_goal_context['progress'],
+            'action_url': questions_url,
+            'action_label': 'Explorar desafios',
+        })
+
+    if focus_areas:
+        focus_area = focus_areas[0]
+        plan_items.append({
+            'icon': 'lightbulb',
+            'title': f"Reforçar {focus_area['name']}",
+            'description': focus_area['tip'],
+            'status': 'suggestion' if focus_area['priority'] == 'moderada' else 'priority',
+            'progress': None,
+            'action_url': None,
+            'action_label': None,
+        })
+
+    if favorites_count:
+        plan_items.append({
+            'icon': 'bookmark_added',
+            'title': 'Revisar questões favoritas',
+            'description': (
+                'Consolide os aprendizados revisitando as questões marcadas como favoritas.'
+            ),
+            'status': 'active' if favorites_count > 5 else 'suggestion',
+            'progress': None,
+            'action_url': favorites_url,
+            'action_label': 'Abrir lista',
+        })
+
+    if not plan_items:
+        plan_items.append({
+            'icon': 'celebration',
+            'title': 'Tudo em dia!',
+            'description': 'Você está com o plano atualizado. Experimente um novo modo de estudo.',
+            'status': 'completed',
+            'progress': None,
+            'action_url': questions_url,
+            'action_label': 'Criar sessão',
+        })
+
+    return plan_items
+
 
 # endregion
 
@@ -508,22 +734,315 @@ def _get_difficulty_performance_data(user_sessions_period_qs):
 
 @login_required
 def home_view(request):
-    daily_stats = None
-    accuracy_percentage_str = "0%"
-    if request.user.is_authenticated:
-        # **** CHAMADA CORRIGIDA ****
-        daily_stats = get_or_create_daily_stats(request.user)
-        if daily_stats and daily_stats.perguntas_respondidas_dia > 0:
-            accuracy = (daily_stats.acertos_dia /
-                        daily_stats.perguntas_respondidas_dia) * 100
-            accuracy_percentage_str = f"{accuracy:.0f}%"
-        elif daily_stats:
-            accuracy_percentage_str = "0%"
+    user = request.user
+    daily_stats = get_or_create_daily_stats(user)
+
+    accuracy_percentage_value = 0.0
+    if daily_stats.perguntas_respondidas_dia > 0:
+        accuracy_percentage_value = (
+            daily_stats.acertos_dia / daily_stats.perguntas_respondidas_dia
+        ) * 100
+    accuracy_percentage_str = f"{accuracy_percentage_value:.0f}%" if accuracy_percentage_value else "0%"
+
+    today_stat_cards = [
+        {
+            'icon': 'checklist',
+            'label': 'Respondidas hoje',
+            'value': daily_stats.perguntas_respondidas_dia,
+        },
+        {
+            'icon': 'target',
+            'label': 'Taxa de acerto',
+            'value': accuracy_percentage_str,
+        },
+        {
+            'icon': 'stars',
+            'label': 'XP no dia',
+            'value': daily_stats.xp_ganho_dia,
+        },
+        {
+            'icon': 'local_fire_department',
+            'label': 'Sequência ativa',
+            'value': daily_stats.sequencia_dias_quiz,
+        },
+    ]
+
+    daily_goal_questions = 20
+    answered_today = daily_stats.perguntas_respondidas_dia
+    remaining_questions = max(daily_goal_questions - answered_today, 0)
+    daily_progress_percentage = 0
+    if daily_goal_questions > 0:
+        daily_progress_percentage = min(
+            100, round((answered_today / daily_goal_questions) * 100)
+        )
+    if remaining_questions:
+        daily_goal_message = (
+            f"Faltam {remaining_questions} questão"
+            f"{'s' if remaining_questions != 1 else ''} para bater a meta."
+        )
+    else:
+        daily_goal_message = "Meta diária concluída! Excelente ritmo."
+
+    weekly_stats_qs = _filter_queryset_by_period(
+        EstatisticasDiariasUsuario.objects.filter(id_usuario=user),
+        "7d",
+    )
+    weekly_totals = weekly_stats_qs.aggregate(
+        total_questions=Sum('perguntas_respondidas_dia'),
+        total_correct=Sum('acertos_dia'),
+        total_points=Sum('pontos_dia'),
+        total_xp=Sum('xp_ganho_dia'),
+        total_time=Sum('tempo_estudo_segundos_dia'),
+    )
+    weekly_total_questions = weekly_totals.get('total_questions') or 0
+    weekly_total_correct = weekly_totals.get('total_correct') or 0
+    weekly_accuracy_value = 0.0
+    if weekly_total_questions:
+        weekly_accuracy_value = (
+            weekly_total_correct / weekly_total_questions
+        ) * 100
+
+    if weekly_total_questions == 0:
+        weekly_insight = (
+            "Comece um novo quiz para gerar seus indicadores desta semana."
+        )
+    elif weekly_accuracy_value >= 85:
+        weekly_insight = "Excelente consistência! Continue acumulando vitórias."
+    elif weekly_accuracy_value >= 60:
+        weekly_insight = "Bom ritmo. Revise os tópicos que ficaram abaixo da média para evoluir ainda mais."
+    else:
+        weekly_insight = "Hora de revisar as anotações e reforçar os pontos desafiadores."
+
+    weekly_summary = {
+        'total_questions': weekly_total_questions,
+        'total_points': weekly_totals.get('total_points') or 0,
+        'total_xp': weekly_totals.get('total_xp') or 0,
+        'study_time': _format_duration_from_seconds(weekly_totals.get('total_time') or 0),
+        'accuracy_value': weekly_accuracy_value,
+        'accuracy': f"{weekly_accuracy_value:.0f}%" if weekly_total_questions else "--",
+        'insight': weekly_insight,
+        'has_activity': weekly_total_questions > 0,
+    }
+
+    monthly_stats_qs = _filter_queryset_by_period(
+        EstatisticasDiariasUsuario.objects.filter(id_usuario=user),
+        "30d",
+    )
+    key_metrics = _get_key_metrics(user, monthly_stats_qs)
+    lifetime_overview = {
+        'total_score': key_metrics.get('total_score_all_time', 0),
+        'total_xp': key_metrics.get('total_xp_all_time', 0),
+        'max_streak': key_metrics.get('max_streak', 0),
+        'total_questions': key_metrics.get('total_questions_answered', 0),
+        'study_time': _format_duration_from_seconds(key_metrics.get('total_study_time_seconds', 0)),
+    }
+
+    top_categories = _get_top_categories_for_user(user)
+    focus_areas = _get_focus_areas_for_user(user)
+
+    ongoing_session_data = None
+    ongoing_session = (
+        SessoesQuizUsuario.objects.filter(
+            id_usuario=user,
+            status_sessao=SessoesQuizUsuario.StatusSessao.EM_ANDAMENTO,
+        )
+        .order_by('-data_inicio')
+        .first()
+    )
+    if ongoing_session:
+        total_questions_session = ongoing_session.total_perguntas_sessao
+        if not total_questions_session and isinstance(ongoing_session.ids_perguntas_json, list):
+            total_questions_session = len(ongoing_session.ids_perguntas_json)
+        answered_session = (ongoing_session.total_acertos or 0) + (ongoing_session.total_erros or 0)
+        session_progress = 0
+        if total_questions_session:
+            session_progress = min(
+                100,
+                int((answered_session / total_questions_session) * 100),
+            )
+        ongoing_session_data = {
+            'mode': getattr(ongoing_session, 'get_modo_quiz_display', lambda: ongoing_session.modo_quiz)(),
+            'answered': answered_session,
+            'total': total_questions_session,
+            'progress': session_progress,
+        }
+
+    recent_sessions = []
+    recent_sessions_qs = (
+        SessoesQuizUsuario.objects.filter(
+            id_usuario=user,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+        )
+        .order_by('-data_inicio')[:3]
+    )
+    for session in recent_sessions_qs:
+        recent_sessions.append({
+            'id': session.pk,
+            'mode': getattr(session, 'get_modo_quiz_display', lambda: session.modo_quiz)(),
+            'score': session.pontuacao_final,
+            'accuracy': f"{session.percentual_acertos:.0f}%" if session.percentual_acertos else "0%",
+            'questions': session.total_perguntas_sessao,
+            'date': session.data_inicio,
+        })
+
+    favorite_questions_count = QuestaoFavorita.objects.filter(usuario=user).count()
+
+    questions_url = reverse('quiz:questions')
+    favorites_url = f"{reverse('quiz:account')}#favorite-questions"
+    preferences_url = reverse('quiz:update_preferences')
+    progression_url = f"{reverse('quiz:account')}#progression"
+
+    daily_goal_context = {
+        'target': daily_goal_questions,
+        'answered': answered_today,
+        'progress': daily_progress_percentage,
+        'message': daily_goal_message,
+        'study_time': daily_stats.tempo_estudo_formatado,
+    }
+
+    daily_plan = _build_daily_plan(
+        daily_goal_context,
+        ongoing_session_data,
+        focus_areas,
+        favorite_questions_count,
+        questions_url=questions_url,
+        favorites_url=favorites_url,
+    )
+
+    today_momentum = []
+    for stat in today_stat_cards:
+        hint = ''
+        if stat['label'] == 'Respondidas hoje':
+            hint = daily_goal_message
+        elif stat['label'] == 'Taxa de acerto':
+            hint = 'Busque manter acima de 75% para evoluir com consistência.'
+        elif stat['label'] == 'XP no dia':
+            hint = 'Somatório considerando bônus aplicados hoje.'
+        elif stat['label'] == 'Sequência ativa':
+            hint = 'Tente alcançar uma sequência de 7 dias ou mais.'
+
+        today_momentum.append({
+            'icon': stat['icon'],
+            'label': stat['label'],
+            'value': stat['value'],
+            'hint': hint,
+        })
+
+    weekly_metrics = [
+        {
+            'icon': 'quiz',
+            'label': 'Questões na semana',
+            'value': weekly_summary['total_questions'],
+        },
+        {
+            'icon': 'military_tech',
+            'label': 'Pontos conquistados',
+            'value': weekly_summary['total_points'],
+        },
+        {
+            'icon': 'workspace_premium',
+            'label': 'XP acumulado',
+            'value': weekly_summary['total_xp'],
+        },
+        {
+            'icon': 'schedule',
+            'label': 'Tempo de estudo',
+            'value': weekly_summary['study_time'],
+        },
+    ]
+
+    lifetime_overview_items = [
+        {
+            'icon': 'scoreboard',
+            'label': 'Pontuação acumulada',
+            'value': lifetime_overview['total_score'],
+        },
+        {
+            'icon': 'workspace_premium',
+            'label': 'XP total',
+            'value': lifetime_overview['total_xp'],
+        },
+        {
+            'icon': 'local_fire_department',
+            'label': 'Maior sequência',
+            'value': f"{lifetime_overview['max_streak']} dia{'s' if lifetime_overview['max_streak'] != 1 else ''}",
+        },
+        {
+            'icon': 'task',
+            'label': 'Questões respondidas',
+            'value': lifetime_overview['total_questions'],
+        },
+        {
+            'icon': 'hourglass_bottom',
+            'label': 'Tempo dedicado (30 dias)',
+            'value': lifetime_overview['study_time'],
+        },
+    ]
+
+    strengths = [
+        {
+            'name': category['name'],
+            'accuracy': category['accuracy'],
+            'total': category['total'],
+        }
+        for category in top_categories
+    ]
+
+    if favorite_questions_count == 0:
+        favorites_action_description = 'Comece a favoritar questões para montar uma lista de revisão personalizada.'
+    elif favorite_questions_count == 1:
+        favorites_action_description = 'Você tem 1 questão favorita pronta para revisar.'
+    else:
+        favorites_action_description = (
+            f"Você possui {favorite_questions_count} questões favoritas aguardando revisão."
+        )
+
+    quick_actions = [
+        {
+            'icon': 'rocket_launch',
+            'title': 'Montar novo desafio',
+            'description': 'Personalize tempo e dificuldade para um treino objetivo.',
+            'url': questions_url,
+            'cta_label': 'Configurar',
+        },
+        {
+            'icon': 'star',
+            'title': 'Revisar favoritos',
+            'description': favorites_action_description,
+            'url': favorites_url,
+            'cta_label': 'Abrir',
+        },
+        {
+            'icon': 'tune',
+            'title': 'Ajustar preferências',
+            'description': 'Defina notificações, temas e ritmo de estudo ideais.',
+            'url': preferences_url,
+            'cta_label': 'Personalizar',
+        },
+        {
+            'icon': 'insights',
+            'title': 'Painel completo',
+            'description': 'Visualize gráficos e histórico detalhado da sua evolução.',
+            'url': progression_url,
+            'cta_label': 'Abrir painel',
+        },
+    ]
 
     context = {
         'page_title': 'MedQuiz - Início',
-        'daily_stats': daily_stats,
-        'accuracy_percentage': accuracy_percentage_str,
+        'daily_goal': daily_goal_context,
+        'weekly_summary': weekly_summary,
+        'weekly_metrics': weekly_metrics,
+        'weekly_insight': weekly_summary['insight'],
+        'weekly_accuracy': weekly_summary['accuracy'],
+        'lifetime_overview_items': lifetime_overview_items,
+        'strengths': strengths,
+        'focus_areas': focus_areas,
+        'ongoing_session': ongoing_session_data,
+        'recent_sessions': recent_sessions,
+        'quick_actions': quick_actions,
+        'daily_plan': daily_plan,
+        'today_momentum': today_momentum,
     }
     return render(request, 'quiz/home.html', context)
 

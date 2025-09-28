@@ -1,169 +1,262 @@
-{# Arquivo: templates/quiz/home.html #} 
-{% extends "quiz/base.html" %} 
-{% load static %} 
-{% block title %}{{ page_title|default:"MedQuiz - Início" }}{%endblock title %} 
+{% extends "quiz/base.html" %}
+{% load static %}
+{% block title %}{{ page_title|default:"MedQuiz - Início" }}{% endblock title %}
 {% block content %}
-<section id="home-section" class="main-section">
-	<div class="hero-block">
-		<div class="hero-block__welcome">
-			{% if user.is_authenticated %}
-			<h1 class="hero-block__title">
-				Olá, {{ user.first_name|default:user.username }}!
-			</h1>
-			{% else %}
-			<h1 class="hero-block__title">Bem-vindo ao MedQuiz!</h1>
-			{% endif %}
-			<p class="hero-block__subtitle">
-				Pronto para expandir seus conhecimentos hoje?
-			</p>
-		</div>
+<section id="home-section" class="home-shell">
+    <div class="home-shell__container">
+        <div class="home-shell__layout">
+            <div class="home-shell__primary">
+                <section class="card home-hero">
+                    <div class="home-hero__intro">
+                        <p class="home-hero__eyebrow">Seu hub estratégico</p>
+                        <h1 class="home-hero__title">Olá, {{ user.first_name|default:user.username }}!</h1>
+                        <p class="home-hero__subtitle">{{ weekly_insight }}</p>
+                        <div class="home-hero__cta">
+                            {% if ongoing_session %}
+                                <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-primary">
+                                    <span class="material-symbols-outlined button__icon">play_arrow</span>
+                                    <span class="button__label">Retomar sessão</span>
+                                </a>
+                                <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-secondary">
+                                    <span class="material-symbols-outlined button__icon">auto_awesome</span>
+                                    <span class="button__label">Novo desafio</span>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-primary">
+                                    <span class="material-symbols-outlined button__icon">rocket_launch</span>
+                                    <span class="button__label">Iniciar agora</span>
+                                </a>
+                                <a href="{% url 'quiz:questions' %}" class="button button--ghost">
+                                    <span class="material-symbols-outlined button__icon">grid_view</span>
+                                    <span class="button__label">Explorar modos</span>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="home-hero__summary">
+                        <div class="home-progress">
+                            <header class="home-progress__header">
+                                <span class="home-progress__title">Meta diária</span>
+                                <span class="home-progress__counter">{{ daily_goal.answered }}/{{ daily_goal.target }} questões</span>
+                            </header>
+                            <div class="home-progress__bar" role="progressbar" aria-valuenow="{{ daily_goal.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                <span style="width: {{ daily_goal.progress }}%;"></span>
+                            </div>
+                            <p class="home-progress__message">{{ daily_goal.message }}</p>
+                            <p class="home-progress__meta">Tempo de estudo hoje: {{ daily_goal.study_time }}</p>
+                            {% if ongoing_session %}
+                                <p class="home-progress__session">
+                                    Sessão em andamento: {{ ongoing_session.answered }}/{{ ongoing_session.total }} questões • {{ ongoing_session.progress }}% concluído.
+                                </p>
+                            {% endif %}
+                        </div>
+                        <div class="home-hero__callout">
+                            <span class="home-hero__callout-label">Precisão semanal</span>
+                            <span class="home-hero__callout-value">{{ weekly_accuracy }}</span>
+                            <p class="home-hero__callout-text">{{ weekly_insight }}</p>
+                        </div>
+                    </div>
+                </section>
 
-		{% if user.is_authenticated and daily_stats %}
-		<div class="stats-deck">
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>checklist</span
-				>
-				<span class="stat-card__label">Respondidas Hoje</span>
-				<span class="stat-card__value" id="daily-questions"
-					>{{ daily_stats.perguntas_respondidas_dia }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>target</span
-				>
-				<span class="stat-card__label">Acertos Hoje</span>
-				<span class="stat-card__value" id="daily-accuracy"
-					>{{ accuracy_percentage }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>military_tech</span
-				>
-				<span class="stat-card__label">Pontos Hoje</span>
-				<span class="stat-card__value" id="daily-points"
-					>{{ daily_stats.pontos_dia }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>local_fire_department</span
-				>
-				<span class="stat-card__label">Sequência Dias</span>
-				<span class="stat-card__value" id="streak-value"
-					>{{ daily_stats.sequencia_dias_quiz }}</span
-				>
-			</div>
-		</div>
-		{% else %}
-		<div class="stats-deck">
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>quiz</span
-				>
-				<span class="stat-card__label">Muitas Questões</span>
-				{# Este span será preenchido pelo script.js após carregar os
-				dados da API #}
-				<span class="stat-card__value" id="hub-total-questions-count"
-					>...</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>school</span
-				>
-				<span class="stat-card__label">Aprenda Mais</span>
-				<span class="stat-card__value">Sempre!</span>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>military_tech</span
-				>
-				<span class="stat-card__label">Ganhe Pontos</span>
-				<span class="stat-card__value">Jogue!</span>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>person_add</span
-				>
-				<span class="stat-card__label">Crie Conta</span>
-				<span class="stat-card__value">Grátis!</span>
-			</div>
-		</div>
-		{% endif %}
+                <section class="card home-plan">
+                    <header class="home-plan__header">
+                        <div>
+                            <h2 class="home-plan__title">Plano do dia</h2>
+                            <p class="home-plan__subtitle">Atualize seu ritmo com as próximas ações prioritárias.</p>
+                        </div>
+                    </header>
+                    <ol class="plan-list" role="list">
+                        {% for item in daily_plan %}
+                            <li class="plan-list__item plan-list__item--{{ item.status }}">
+                                <div class="plan-list__icon">
+                                    <span class="material-symbols-outlined">{{ item.icon }}</span>
+                                </div>
+                                <div class="plan-list__content">
+                                    <div class="plan-list__header">
+                                        <span class="plan-list__title">{{ item.title }}</span>
+                                        <span class="plan-list__badge plan-list__badge--{{ item.status }}">
+                                            {% if item.status == 'priority' %}Prioridade{% elif item.status == 'active' %}Em andamento{% elif item.status == 'completed' %}Concluído{% else %}Sugestão{% endif %}
+                                        </span>
+                                    </div>
+                                    <p class="plan-list__description">{{ item.description }}</p>
+                                    {% if item.progress is not None %}
+                                        <div class="plan-list__progress" role="progressbar" aria-valuenow="{{ item.progress }}" aria-valuemin="0" aria-valuemax="100">
+                                            <span style="width: {{ item.progress }}%;"></span>
+                                        </div>
+                                        <span class="plan-list__progress-hint">{{ item.progress }}% concluído</span>
+                                    {% endif %}
+                                </div>
+                                {% if item.action_url and item.action_label %}
+                                    <a href="{{ item.action_url }}" class="plan-list__action">{{ item.action_label }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </section>
 
-		<div class="hero-block__cta">
-			{% if user.is_authenticated %}
-			<p class="hero-block__cta-text">
-				Pronto para testar seus conhecimentos?
-			</p>
-			<div class="hero-block__cta-actions">
-				<a
-					href="{% url 'quiz:questions' %}"
-					class="button button--fancy button--fancy-primary"
-					id="go-to-challenges-hub-link"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>rocket_launch</span
-					>
-					<span class="button__label">Iniciar Desafio</span>
-				</a>
-			</div>
-			{% else %}
-			<p class="hero-block__cta-text">
-				Crie sua conta ou faça login para salvar seu progresso e
-				competir!
-			</p>
-			<div
-				class="hero-block__cta-actions"
-				style="
-					display: flex;
-					gap: 15px;
-					flex-wrap: wrap;
-					justify-content: center;
-				"
-			>
-				<a
-					href="{% url 'quiz:register' %}"
-					class="button button--fancy button--fancy-primary"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>person_add</span
-					>
-					Cadastre-se Gratuitamente
-				</a>
-				<a
-					href="{% url 'login' %}"
-					class="button button--fancy button--fancy-secondary"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>login</span
-					>
-					Fazer Login
-				</a>
-			</div>
-			{% endif %}
-		</div>
-	</div>
-	<div class="home-section__additional-content">
-		<div class="card card--additional-content card--centered-content">
-			<h2 class="card__title">Explore Mais</h2>
-			<div class="card__body">
-				<p>
-					Ainda desenvolvendo esta área, mas aqui você poderá
-					encontrar artigos, dicas de estudo e outros recursos para
-					complementar seu aprendizado.
-				</p>
-				<a
-					href="{% url 'quiz:questions' %}"
-					class="button button--outline button--small"
-					id="view-all-questions-alt-link"
-					>Ver Banco de Questões</a
-				>
-			</div>
-		</div>
-	</div>
+                <section class="card home-focus">
+                    <header class="home-focus__header">
+                        <div>
+                            <h2 class="home-focus__title">Áreas que pedem atenção</h2>
+                            <p class="home-focus__subtitle">Baseado no desempenho dos últimos 30 dias.</p>
+                        </div>
+                    </header>
+                    {% if focus_areas %}
+                        <ul class="focus-list" role="list">
+                            {% for area in focus_areas %}
+                                <li class="focus-list__item focus-list__item--{{ area.priority }}">
+                                    <div class="focus-list__head">
+                                        <span class="focus-list__name">{{ area.name }}</span>
+                                        <span class="focus-list__accuracy">{{ area.accuracy_display }}</span>
+                                    </div>
+                                    <p class="focus-list__tip">{{ area.tip }}</p>
+                                    <span class="focus-list__meta">{{ area.total_questions }} questões analisadas</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="focus-list__empty">Nenhuma lacuna relevante detectada. Continue respondendo quizzes para identificar novas oportunidades.</p>
+                    {% endif %}
+                </section>
+
+                <section class="card home-strengths">
+                    <header class="home-strengths__header">
+                        <div>
+                            <h2 class="home-strengths__title">Seus pontos fortes</h2>
+                            <p class="home-strengths__subtitle">Categorias nas quais você mantém alta consistência.</p>
+                        </div>
+                    </header>
+                    {% if strengths %}
+                        <ul class="strengths-list" role="list">
+                            {% for category in strengths %}
+                                <li class="strengths-list__item">
+                                    <span class="strengths-list__name">{{ category.name }}</span>
+                                    <span class="strengths-list__accuracy">{{ category.accuracy }}</span>
+                                    <span class="strengths-list__meta">{{ category.total }} questões</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="strengths-list__empty">Responda mais quizzes para revelar suas especialidades.</p>
+                    {% endif %}
+                </section>
+            </div>
+
+            <aside class="home-shell__sidebar">
+                <section class="card home-momentum">
+                    <header class="home-momentum__header">
+                        <h2 class="home-momentum__title">Ritmo de hoje</h2>
+                    </header>
+                    <div class="momentum-grid">
+                        {% for stat in today_momentum %}
+                            <article class="momentum-grid__item">
+                                <span class="material-symbols-outlined momentum-grid__icon">{{ stat.icon }}</span>
+                                <span class="momentum-grid__value">{{ stat.value }}</span>
+                                <span class="momentum-grid__label">{{ stat.label }}</span>
+                                {% if stat.hint %}
+                                    <p class="momentum-grid__hint">{{ stat.hint }}</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="card home-weekly">
+                    <header class="home-weekly__header">
+                        <h2 class="home-weekly__title">Resumo da semana</h2>
+                        <span class="home-weekly__accuracy">Precisão média: {{ weekly_accuracy }}</span>
+                    </header>
+                    <div class="home-weekly__grid">
+                        {% for metric in weekly_metrics %}
+                            <div class="home-weekly__item">
+                                <span class="material-symbols-outlined home-weekly__icon">{{ metric.icon }}</span>
+                                <span class="home-weekly__value">{{ metric.value }}</span>
+                                <span class="home-weekly__label">{{ metric.label }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <p class="home-weekly__insight">{{ weekly_insight }}</p>
+                </section>
+
+                <section class="card home-sessions">
+                    <header class="home-sessions__header">
+                        <h2 class="home-sessions__title">Progresso recente</h2>
+                        <p class="home-sessions__subtitle">Últimas sessões concluídas</p>
+                    </header>
+                    {% if recent_sessions %}
+                        <ul class="sessions-timeline" role="list">
+                            {% for session in recent_sessions %}
+                                <li class="sessions-timeline__item">
+                                    <div class="sessions-timeline__marker">
+                                        <span class="material-symbols-outlined" aria-hidden="true">radio_button_checked</span>
+                                    </div>
+                                    <div class="sessions-timeline__content">
+                                        <div class="sessions-timeline__header">
+                                            <span class="sessions-timeline__mode">{{ session.mode }}</span>
+                                            <time class="sessions-timeline__date" datetime="{{ session.date|date:'Y-m-d' }}">{{ session.date|date:"d 'de' M" }}</time>
+                                        </div>
+                                        <div class="sessions-timeline__stats">
+                                            <span class="sessions-timeline__metric">
+                                                <span class="material-symbols-outlined" aria-hidden="true">target</span>
+                                                {{ session.accuracy }}
+                                            </span>
+                                            <span class="sessions-timeline__metric">
+                                                <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
+                                                {{ session.score }} pts
+                                            </span>
+                                            <span class="sessions-timeline__metric">
+                                                <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+                                                {{ session.questions }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="sessions-timeline__empty">Finalize um desafio para começar a construir seu histórico por aqui.</p>
+                    {% endif %}
+                </section>
+
+                <section class="card home-actions">
+                    <header class="home-actions__header">
+                        <h2 class="home-actions__title">Atalhos estratégicos</h2>
+                    </header>
+                    <ul class="quick-links" role="list">
+                        {% for action in quick_actions %}
+                            <li class="quick-links__item">
+                                <a href="{{ action.url }}" class="quick-links__link">
+                                    <span class="quick-links__icon material-symbols-outlined">{{ action.icon }}</span>
+                                    <span class="quick-links__content">
+                                        <span class="quick-links__title">{{ action.title }}</span>
+                                        <span class="quick-links__description">{{ action.description }}</span>
+                                    </span>
+                                    <span class="quick-links__cta">{{ action.cta_label }}</span>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            </aside>
+        </div>
+
+        <section class="card home-lifetime">
+            <header class="home-lifetime__header">
+                <h2 class="home-lifetime__title">Panorama geral</h2>
+                <p class="home-lifetime__subtitle">Indicadores acumulados da sua jornada.</p>
+            </header>
+            <div class="home-lifetime__grid">
+                {% for item in lifetime_overview_items %}
+                    <div class="home-lifetime__item">
+                        <span class="material-symbols-outlined home-lifetime__icon">{{ item.icon }}</span>
+                        <div class="home-lifetime__content">
+                            <span class="home-lifetime__value">{{ item.value }}</span>
+                            <span class="home-lifetime__label">{{ item.label }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
 </section>
-{% endblock content %} 
+{% endblock content %}

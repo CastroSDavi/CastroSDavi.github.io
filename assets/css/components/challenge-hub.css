@@ -335,19 +335,29 @@
 
 @media (max-width: 720px) {
     .challenge-hub {
-        --challenge-hub-padding: clamp(24px, 6vw, 32px);
-        gap: var(--spacing-lg, 24px);
+        --challenge-hub-padding: clamp(20px, 5vw, 28px);
+        gap: clamp(24px, 6vw, 32px);
+        background: transparent;
+        box-shadow: none;
     }
 
     .challenge-hub__hero {
-        padding: clamp(24px, 6vw, 32px);
+        padding: clamp(22px, 6vw, 30px);
         flex-direction: column;
         align-items: center;
         text-align: center;
+        margin: 0;
+        border-radius: var(--border-radius-lg);
     }
 
     .challenge-hub__hero-info {
         align-items: center;
+    }
+
+    .challenge-hub__hero-actions {
+        background: rgba(255, 255, 255, 0.12);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(8px);
     }
 
     body[data-page-id="questions"] .challenge-hub {
@@ -373,6 +383,8 @@
 
     .challenge-hub__predefined {
         padding: clamp(20px, 6vw, 26px);
+        background: var(--color-white);
+        border-radius: var(--border-radius-lg);
     }
 
     .challenge-hub__predefined-grid {
@@ -381,23 +393,34 @@
 
     .challenge-hub__stats {
         width: 100%;
-        grid-template-columns: 1fr;
-        justify-items: center;
+        display: flex;
+        overflow-x: auto;
+        gap: var(--spacing-sm, 16px);
+        padding: 4px 12px 12px;
+        margin: 0 -12px;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+    }
+
+    .challenge-hub__stats::-webkit-scrollbar {
+        display: none;
     }
 
     .challenge-stat {
-        width: min(100%, 320px);
-        margin: 0 auto;
-        align-items: center;
-        text-align: center;
+        min-width: 210px;
+        margin: 0;
+        align-items: flex-start;
+        text-align: left;
+        scroll-snap-align: center;
     }
 
     .challenge-stat__value {
-        font-size: clamp(1.25rem, 6vw, 1.6rem);
+        font-size: clamp(1.2rem, 5.2vw, 1.5rem);
     }
 
     .challenge-card {
         padding: var(--spacing-lg, 24px);
+        border-radius: var(--border-radius-lg);
     }
 
     .challenge-card__actions {
@@ -406,5 +429,37 @@
 
     .challenge-card__actions .button {
         width: 100%;
+    }
+}
+
+@media (max-width: 520px) {
+    .challenge-hub__hero {
+        align-items: stretch;
+        text-align: left;
+        gap: var(--spacing-md, 20px);
+    }
+
+    .challenge-hub__hero-info {
+        align-items: flex-start;
+    }
+
+    .challenge-hub__hero-actions {
+        background: rgba(255, 255, 255, 0.18);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        padding: clamp(18px, 6vw, 22px);
+    }
+
+    .challenge-hub__stats {
+        padding-inline: 4px;
+        gap: var(--spacing-xs, 12px);
+    }
+
+    .challenge-stat {
+        min-width: 190px;
+        padding: var(--spacing-sm, 16px);
+    }
+
+    .challenge-hub__predefined {
+        padding: clamp(18px, 6vw, 22px);
     }
 }

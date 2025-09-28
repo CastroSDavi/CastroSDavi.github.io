@@ -168,7 +168,7 @@ class Categoria(models.Model):
         blank=True,
         null=True,
         verbose_name="Código de Importação",
-        help_text="Identificador externo usado durante processos de importação.",
+        help_text="Identificador externo usado durante processos de importação. Deixe em branco para gerar automaticamente.",
     )
     nome_categoria = models.CharField(
         max_length=150,
@@ -359,7 +359,7 @@ class Pergunta(models.Model):
         blank=True,
         null=True,
         verbose_name="Código de Importação",
-        help_text="Identificador externo usado durante processos de importação.",
+        help_text="Identificador externo usado durante processos de importação. Deixe em branco para gerar automaticamente.",
     )
     texto_pergunta = models.TextField(verbose_name="Texto da Pergunta")
     url_imagem = models.URLField(
@@ -434,7 +434,7 @@ class OpcaoResposta(models.Model):
         blank=True,
         null=True,
         verbose_name="Código de Importação",
-        help_text="Identificador externo usado durante processos de importação.",
+        help_text="Identificador externo usado durante processos de importação. Deixe em branco para gerar automaticamente.",
     )
     pergunta = models.ForeignKey(
         Pergunta,

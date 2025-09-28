@@ -1,169 +1,234 @@
-{# Arquivo: templates/quiz/home.html #} 
-{% extends "quiz/base.html" %} 
-{% load static %} 
-{% block title %}{{ page_title|default:"MedQuiz - Início" }}{%endblock title %} 
+{% extends "quiz/base.html" %}
+{% load static %}
+{% block title %}{{ page_title|default:"MedQuiz - Início" }}{% endblock title %}
 {% block content %}
 <section id="home-section" class="main-section">
-	<div class="hero-block">
-		<div class="hero-block__welcome">
-			{% if user.is_authenticated %}
-			<h1 class="hero-block__title">
-				Olá, {{ user.first_name|default:user.username }}!
-			</h1>
-			{% else %}
-			<h1 class="hero-block__title">Bem-vindo ao MedQuiz!</h1>
-			{% endif %}
-			<p class="hero-block__subtitle">
-				Pronto para expandir seus conhecimentos hoje?
-			</p>
-		</div>
+    <div class="home-intro card">
+        <div class="home-intro__content">
+            <span class="home-intro__eyebrow">Painel inicial</span>
+            <h1 class="home-intro__title">Olá, {{ user.first_name|default:user.username }}!</h1>
+            <p class="home-intro__description">
+                Organize o seu próximo passo, acompanhe os resultados essenciais e entre em ação com um clique.
+            </p>
+            <div class="home-intro__actions">
+                <a href="{{ primary_cta.url }}" class="button button--primary home-intro__action">
+                    <span class="material-symbols-outlined button__icon">{{ primary_cta.icon }}</span>
+                    <span class="home-intro__action-copy">
+                        <span class="button__label">{{ primary_cta.label }}</span>
+                        <span class="home-intro__action-description">{{ primary_cta.description }}</span>
+                    </span>
+                </a>
+                <a href="{{ secondary_cta.url }}" class="button button--outline home-intro__action">
+                    <span class="material-symbols-outlined button__icon">{{ secondary_cta.icon }}</span>
+                    <span class="home-intro__action-copy">
+                        <span class="button__label">{{ secondary_cta.label }}</span>
+                        <span class="home-intro__action-description">{{ secondary_cta.description }}</span>
+                    </span>
+                </a>
+            </div>
+        </div>
 
-		{% if user.is_authenticated and daily_stats %}
-		<div class="stats-deck">
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>checklist</span
-				>
-				<span class="stat-card__label">Respondidas Hoje</span>
-				<span class="stat-card__value" id="daily-questions"
-					>{{ daily_stats.perguntas_respondidas_dia }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>target</span
-				>
-				<span class="stat-card__label">Acertos Hoje</span>
-				<span class="stat-card__value" id="daily-accuracy"
-					>{{ accuracy_percentage }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>military_tech</span
-				>
-				<span class="stat-card__label">Pontos Hoje</span>
-				<span class="stat-card__value" id="daily-points"
-					>{{ daily_stats.pontos_dia }}</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>local_fire_department</span
-				>
-				<span class="stat-card__label">Sequência Dias</span>
-				<span class="stat-card__value" id="streak-value"
-					>{{ daily_stats.sequencia_dias_quiz }}</span
-				>
-			</div>
-		</div>
-		{% else %}
-		<div class="stats-deck">
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>quiz</span
-				>
-				<span class="stat-card__label">Muitas Questões</span>
-				{# Este span será preenchido pelo script.js após carregar os
-				dados da API #}
-				<span class="stat-card__value" id="hub-total-questions-count"
-					>...</span
-				>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>school</span
-				>
-				<span class="stat-card__label">Aprenda Mais</span>
-				<span class="stat-card__value">Sempre!</span>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>military_tech</span
-				>
-				<span class="stat-card__label">Ganhe Pontos</span>
-				<span class="stat-card__value">Jogue!</span>
-			</div>
-			<div class="stat-card">
-				<span class="material-symbols-outlined stat-card__icon"
-					>person_add</span
-				>
-				<span class="stat-card__label">Crie Conta</span>
-				<span class="stat-card__value">Grátis!</span>
-			</div>
-		</div>
-		{% endif %}
+        <div class="home-intro__summary">
+            <div class="home-progress-card" role="group" aria-labelledby="daily-goal-heading">
+                <div class="progress-meter__header">
+                    <span id="daily-goal-heading" class="progress-meter__label">Meta diária</span>
+                    <span class="progress-meter__value">{{ daily_goal.answered }}/{{ daily_goal.target }}</span>
+                </div>
+                <div class="progress-meter__bar" role="progressbar" aria-valuenow="{{ daily_goal.progress }}" aria-valuemin="0" aria-valuemax="100">
+                    <span style="width: {{ daily_goal.progress }}%;"></span>
+                </div>
+                <p class="progress-meter__details">{{ daily_goal.message }}</p>
+                <p class="progress-meter__meta">Tempo de estudo hoje: {{ daily_goal.study_time }}</p>
+                {% if ongoing_session %}
+                    <p class="progress-meter__session">
+                        Sessão em andamento: {{ ongoing_session.answered }}/{{ ongoing_session.total }} questões • {{ ongoing_session.progress }}% concluído.
+                    </p>
+                {% endif %}
+            </div>
 
-		<div class="hero-block__cta">
-			{% if user.is_authenticated %}
-			<p class="hero-block__cta-text">
-				Pronto para testar seus conhecimentos?
-			</p>
-			<div class="hero-block__cta-actions">
-				<a
-					href="{% url 'quiz:questions' %}"
-					class="button button--fancy button--fancy-primary"
-					id="go-to-challenges-hub-link"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>rocket_launch</span
-					>
-					<span class="button__label">Iniciar Desafio</span>
-				</a>
-			</div>
-			{% else %}
-			<p class="hero-block__cta-text">
-				Crie sua conta ou faça login para salvar seu progresso e
-				competir!
-			</p>
-			<div
-				class="hero-block__cta-actions"
-				style="
-					display: flex;
-					gap: 15px;
-					flex-wrap: wrap;
-					justify-content: center;
-				"
-			>
-				<a
-					href="{% url 'quiz:register' %}"
-					class="button button--fancy button--fancy-primary"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>person_add</span
-					>
-					Cadastre-se Gratuitamente
-				</a>
-				<a
-					href="{% url 'login' %}"
-					class="button button--fancy button--fancy-secondary"
-				>
-					<span class="material-symbols-outlined button__icon"
-						>login</span
-					>
-					Fazer Login
-				</a>
-			</div>
-			{% endif %}
-		</div>
-	</div>
-	<div class="home-section__additional-content">
-		<div class="card card--additional-content card--centered-content">
-			<h2 class="card__title">Explore Mais</h2>
-			<div class="card__body">
-				<p>
-					Ainda desenvolvendo esta área, mas aqui você poderá
-					encontrar artigos, dicas de estudo e outros recursos para
-					complementar seu aprendizado.
-				</p>
-				<a
-					href="{% url 'quiz:questions' %}"
-					class="button button--outline button--small"
-					id="view-all-questions-alt-link"
-					>Ver Banco de Questões</a
-				>
-			</div>
-		</div>
-	</div>
+            <div class="home-intro__stats" aria-label="Indicadores do dia">
+                {% for stat in today_stat_cards %}
+                    <article class="metric-card">
+                        <span class="material-symbols-outlined metric-card__icon">{{ stat.icon }}</span>
+                        <span class="metric-card__value">{{ stat.value }}</span>
+                        <span class="metric-card__label">{{ stat.label }}</span>
+                    </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="home-grid">
+        <article class="card home-grid__card home-grid__card--wide">
+            <div class="card__header">
+                <h2 class="card__title">Plano de hoje</h2>
+                <p class="plan-card__subtitle">Veja onde concentrar sua energia para aproveitar melhor o estudo.</p>
+            </div>
+            <div class="card__body">
+                <ol class="plan-steps" role="list">
+                    {% for step in plan_steps %}
+                        <li class="plan-step">
+                            <div class="plan-step__body">
+                                <span class="material-symbols-outlined plan-step__icon">{{ step.icon }}</span>
+                                <div class="plan-step__content">
+                                    <h3 class="plan-step__title">{{ step.title }}</h3>
+                                    <p class="plan-step__description">{{ step.description }}</p>
+                                    {% if step.meta %}
+                                        <span class="plan-step__meta">{{ step.meta }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if step.url %}
+                                <a class="plan-step__link" href="{{ step.url }}">
+                                    Ir agora
+                                    <span class="material-symbols-outlined" aria-hidden="true">arrow_outward</span>
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% empty %}
+                        <li class="plan-step">
+                            <div class="plan-step__body">
+                                <span class="material-symbols-outlined plan-step__icon">check_circle</span>
+                                <div class="plan-step__content">
+                                    <h3 class="plan-step__title">Tudo organizado</h3>
+                                    <p class="plan-step__description">Sem pendências por enquanto. Explore um novo desafio quando quiser.</p>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </article>
+
+        <article class="card home-grid__card">
+            <div class="card__header">
+                <h2 class="card__title">Resumo da semana</h2>
+            </div>
+            <div class="card__body">
+                <p class="weekly-summary__insight">{{ weekly_summary.insight }}</p>
+                <div class="weekly-summary__stats">
+                    <div class="weekly-summary__stat">
+                        <span class="weekly-summary__label">Questões</span>
+                        <span class="weekly-summary__value">{{ weekly_summary.total_questions }}</span>
+                    </div>
+                    <div class="weekly-summary__stat">
+                        <span class="weekly-summary__label">Pontuação</span>
+                        <span class="weekly-summary__value">{{ weekly_summary.total_points }}</span>
+                    </div>
+                    <div class="weekly-summary__stat">
+                        <span class="weekly-summary__label">XP</span>
+                        <span class="weekly-summary__value">{{ weekly_summary.total_xp }}</span>
+                    </div>
+                    <div class="weekly-summary__stat">
+                        <span class="weekly-summary__label">Tempo de estudo</span>
+                        <span class="weekly-summary__value">{{ weekly_summary.study_time }}</span>
+                    </div>
+                    <div class="weekly-summary__stat">
+                        <span class="weekly-summary__label">Precisão média</span>
+                        <span class="weekly-summary__value">{{ weekly_summary.accuracy }}</span>
+                    </div>
+                </div>
+                {% if weekly_summary.top_category %}
+                    <div class="weekly-summary__highlight">
+                        <span class="material-symbols-outlined" aria-hidden="true">auto_awesome</span>
+                        Melhor desempenho em <strong>{{ weekly_summary.top_category.name }}</strong> • {{ weekly_summary.top_category.accuracy }} de acerto.
+                    </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <article class="card home-grid__card">
+            <div class="card__header">
+                <h2 class="card__title">Oportunidades de reforço</h2>
+            </div>
+            <div class="card__body">
+                {% if focus_categories %}
+                    <p class="focus-card__description">Priorize os temas com menor precisão para equilibrar o seu desempenho.</p>
+                    <ul class="focus-list" role="list">
+                        {% for category in focus_categories %}
+                            <li class="focus-list__item">
+                                <span class="focus-list__label">
+                                    <span class="focus-list__name">{{ category.name }}</span>
+                                    <span class="focus-list__meta">{{ category.total }} questões analisadas</span>
+                                </span>
+                                <span class="focus-list__value">{{ category.accuracy }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif top_categories %}
+                    <p class="focus-card__description">Sem pontos de atenção imediatos. Continue avançando nas áreas em destaque:</p>
+                    <ul class="focus-list" role="list">
+                        {% for category in top_categories %}
+                            <li class="focus-list__item">
+                                <span class="focus-list__label">
+                                    <span class="focus-list__name">{{ category.name }}</span>
+                                    <span class="focus-list__meta">{{ category.total }} questões recentes</span>
+                                </span>
+                                <span class="focus-list__value">{{ category.accuracy }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="focus-card__empty">Complete mais quizzes para identificarmos onde concentrar a sua revisão.</p>
+                {% endif %}
+            </div>
+        </article>
+
+        <article class="card home-grid__card">
+            <div class="card__header">
+                <h2 class="card__title">Últimas sessões</h2>
+            </div>
+            <div class="card__body">
+                {% if recent_sessions %}
+                    <ul class="activity-timeline" role="list">
+                        {% for session in recent_sessions %}
+                            <li class="activity-timeline__item">
+                                <span class="activity-timeline__title">
+                                    <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+                                    {{ session.mode }}
+                                </span>
+                                <span class="activity-timeline__date">{{ session.date|date:"d 'de' M" }}</span>
+                                <div class="activity-timeline__metrics">
+                                    <span class="activity-timeline__metric" aria-label="Precisão">
+                                        <span class="material-symbols-outlined" aria-hidden="true">target</span>
+                                        {{ session.accuracy }}
+                                    </span>
+                                    <span class="activity-timeline__metric" aria-label="Pontuação">
+                                        <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
+                                        {{ session.score }} pts
+                                    </span>
+                                    <span class="activity-timeline__metric" aria-label="Questões respondidas">
+                                        <span class="material-symbols-outlined" aria-hidden="true">task_alt</span>
+                                        {{ session.questions }}
+                                    </span>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="activity-timeline__empty">Nenhum quiz concluído recentemente. Inicie um desafio para montar seu histórico.</p>
+                {% endif %}
+            </div>
+        </article>
+
+        <article class="card home-grid__card home-grid__card--wide">
+            <div class="card__header">
+                <h2 class="card__title">Marcos da jornada</h2>
+            </div>
+            <div class="card__body">
+                <ul class="milestones-list" role="list">
+                    {% for milestone in journey_milestones %}
+                        <li class="milestones-list__item">
+                            <span class="material-symbols-outlined milestones-list__icon">{{ milestone.icon }}</span>
+                            <span class="milestones-list__content">
+                                <span class="milestones-list__label">{{ milestone.label }}</span>
+                                <span class="milestones-list__value">{{ milestone.value }}</span>
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </article>
+    </div>
 </section>
-{% endblock content %} 
+{% endblock content %}

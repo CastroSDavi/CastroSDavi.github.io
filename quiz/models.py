@@ -674,6 +674,14 @@ class SessoesQuizUsuario(models.Model):
         choices=ModoQuiz.choices,
         verbose_name="Modo do Quiz"
     )
+    metodo_estudo = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        default='random',
+        verbose_name="Método de Estudo",
+        help_text="Identificador do algoritmo utilizado para selecionar as perguntas da sessão.",
+    )
 
     class StatusSessao(models.TextChoices):
         EM_ANDAMENTO = 'Em Andamento', 'Em Andamento'
@@ -851,6 +859,88 @@ class RespostasUsuarioPorSessao(models.Model):
         verbose_name_plural = "Respostas dos Usuários por Sessão"
         unique_together = ('id_sessao_quiz', 'id_pergunta')
         ordering = ['id_sessao_quiz', 'data_resposta']
+
+
+class UserQuestionStudyState(models.Model):
+    """Rastreia o desempenho individual por pergunta para apoiar métodos adaptativos."""
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='question_study_states',
+        verbose_name="Usuário",
+    )
+    pergunta = models.ForeignKey(
+        Pergunta,
+        on_delete=models.CASCADE,
+        related_name='study_states',
+        verbose_name="Pergunta",
+    )
+    last_reviewed_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Última Revisão",
+    )
+    due_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name="Próxima Revisão",
+    )
+    repetitions = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Repetições",
+    )
+    interval_days = models.PositiveIntegerField(
+        default=1,
+        verbose_name="Intervalo (dias)",
+    )
+    easiness_factor = models.FloatField(
+        default=2.5,
+        verbose_name="Fator de Facilidade",
+        help_text="Parâmetro do algoritmo SM-2 usado para revisão espaçada.",
+    )
+    correct_streak = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Sequência de Acertos",
+    )
+    incorrect_streak = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Sequência de Erros",
+    )
+    total_correct = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Total de Acertos",
+    )
+    total_incorrect = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Total de Erros",
+    )
+    last_outcome = models.BooleanField(
+        null=True,
+        blank=True,
+        verbose_name="Último Resultado",
+        help_text="True para acerto, False para erro, None para não respondida.",
+    )
+    last_session = models.ForeignKey(
+        'SessoesQuizUsuario',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='study_state_entries',
+        verbose_name="Última Sessão",
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
+
+    class Meta:
+        verbose_name = "Estado de Estudo da Pergunta"
+        verbose_name_plural = "Estados de Estudo das Perguntas"
+        unique_together = ('user', 'pergunta')
+        ordering = ['user', 'pergunta']
+
+    def __str__(self):
+        username = self.user.get_username()
+        return f"{username} • P{self.pergunta_id}"
 
 
 class EstatisticasDiariasUsuario(models.Model):

@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-import random
 from collections import defaultdict
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Tuple
 
 from django.db.models import Case, Count, Prefetch, Q, When
 
@@ -18,6 +17,8 @@ from quiz.models import (
     QuizDefinicao,
     SessoesQuizUsuario,
 )
+
+from .study_methods import StudyMethodContext, StudyMethodRegistry
 
 
 def _normalize_int_list(values: Optional[Iterable[str]]) -> List[int]:
@@ -35,9 +36,10 @@ def _normalize_int_list(values: Optional[Iterable[str]]) -> List[int]:
 class QuizDataService:
     """Builds the payload consumed by the quiz front-end."""
 
-    def __init__(self, *, quiz_config, user=None) -> None:
+    def __init__(self, *, quiz_config, user=None, study_method_key: Optional[str] = None) -> None:
         self.quiz_config = quiz_config
         self.user = user
+        self._study_method_key = StudyMethodRegistry.resolve_key(study_method_key)
 
     def _build_perguntas_queryset(
         self,
@@ -48,26 +50,28 @@ class QuizDataService:
         num_questions_custom_str: Optional[str] = None,
         quiz_definicao_id: Optional[int] = None,
         search_query: Optional[str] = None,
-    ):
+        study_method_key: Optional[str] = None,
+    ) -> Tuple[Iterable[Pergunta], Optional[str], str]:
+        resolved_method = StudyMethodRegistry.resolve_key(study_method_key or self._study_method_key)
         perguntas_qs = Pergunta.objects.filter(ativa=True)
 
         if quiz_definicao_id:
             try:
                 quiz_def = QuizDefinicao.objects.get(pk=quiz_definicao_id, ativo=True)
             except QuizDefinicao.DoesNotExist:
-                return Pergunta.objects.none(), None
+                return Pergunta.objects.none(), None, resolved_method
 
             perguntas_ordenadas_ids = list(
                 quiz_def.quizdefinicaopergunta_set.order_by("ordem").values_list("pergunta_id", flat=True)
             )
             if not perguntas_ordenadas_ids:
-                return Pergunta.objects.none(), quiz_def.nome_quiz
+                return Pergunta.objects.none(), quiz_def.nome_quiz, resolved_method
 
             preserved_order = Case(
                 *[When(pk=pk, then=pos) for pos, pk in enumerate(perguntas_ordenadas_ids)]
             )
             perguntas_qs = Pergunta.objects.filter(pk__in=perguntas_ordenadas_ids, ativa=True).order_by(preserved_order)
-            return perguntas_qs, quiz_def.nome_quiz
+            return perguntas_qs, quiz_def.nome_quiz, resolved_method
 
         if search_query and str(search_query).strip():
             term = str(search_query).strip()
@@ -89,7 +93,7 @@ class QuizDataService:
             if q_difficulty_objects:
                 perguntas_qs = perguntas_qs.filter(q_difficulty_objects)
             else:
-                return Pergunta.objects.none(), None
+                return Pergunta.objects.none(), None, resolved_method
 
         if category_ids_filter:
             valid_category_ids = [cid for cid in category_ids_filter if str(cid).strip().isdigit()]
@@ -98,9 +102,9 @@ class QuizDataService:
                 if descendant_ids:
                     perguntas_qs = perguntas_qs.filter(categorias__pk__in=descendant_ids).distinct()
                 else:
-                    return Pergunta.objects.none(), None
+                    return Pergunta.objects.none(), None, resolved_method
             else:
-                return Pergunta.objects.none(), None
+                return Pergunta.objects.none(), None, resolved_method
 
         num_perguntas_a_selecionar = 0
         if quiz_mode == SessoesQuizUsuario.ModoQuiz.RAPIDO:
@@ -121,11 +125,29 @@ class QuizDataService:
 
         if num_perguntas_a_selecionar > 0:
             all_matching_question_ids = list(perguntas_qs.values_list("pk", flat=True))
-            if len(all_matching_question_ids) > num_perguntas_a_selecionar:
-                selected_ids = random.sample(all_matching_question_ids, num_perguntas_a_selecionar)
-                perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids).order_by("?")
+            if all_matching_question_ids:
+                method = StudyMethodRegistry.get_strategy(resolved_method)
+                context = StudyMethodContext(
+                    quiz_mode=quiz_mode,
+                    category_ids=category_ids_filter,
+                    difficulty_levels=difficulty_levels_filter,
+                    search_query=search_query,
+                )
+                selected_ids = method.select_question_ids(
+                    user=self.user,
+                    base_queryset=Pergunta.objects.filter(pk__in=all_matching_question_ids),
+                    limit=num_perguntas_a_selecionar,
+                    context=context,
+                )
+                if selected_ids:
+                    preserved_order = Case(
+                        *[When(pk=pk, then=pos) for pos, pk in enumerate(selected_ids)]
+                    )
+                    perguntas_qs = Pergunta.objects.filter(pk__in=selected_ids, ativa=True).order_by(preserved_order)
+                else:
+                    perguntas_qs = Pergunta.objects.filter(pk__in=all_matching_question_ids)
 
-        return perguntas_qs, None
+        return perguntas_qs, None, resolved_method
 
     def get_quiz_data_dict(
         self,
@@ -137,8 +159,9 @@ class QuizDataService:
         num_questions_custom_str: Optional[str] = None,
         quiz_definicao_id: Optional[int] = None,
         search_query: Optional[str] = None,
+        study_method_key: Optional[str] = None,
     ):
-        perguntas_qs, quiz_definition_name = self._build_perguntas_queryset(
+        perguntas_qs, quiz_definition_name, resolved_method = self._build_perguntas_queryset(
             category_ids_filter=category_ids_filter,
             difficulty_levels_filter=difficulty_levels_filter,
             quiz_mode=quiz_mode,
@@ -146,6 +169,7 @@ class QuizDataService:
             num_questions_custom_str=num_questions_custom_str,
             quiz_definicao_id=quiz_definicao_id,
             search_query=search_query,
+            study_method_key=study_method_key,
         )
 
         todas_categorias_qs = Categoria.objects.all().order_by("nome_categoria")
@@ -219,6 +243,8 @@ class QuizDataService:
             "categorias": categorias_data_list,
             "opcoesResposta": [opt for opts_list in opcoes_dict_por_pergunta.values() for opt in opts_list],
             "quiz_definition_name": quiz_definition_name,
+            "study_methods": StudyMethodRegistry.list_metadata(),
+            "selected_study_method": resolved_method,
         }
 
     @staticmethod

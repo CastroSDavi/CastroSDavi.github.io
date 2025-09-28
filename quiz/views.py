@@ -40,6 +40,8 @@ from .services.quiz_service import QuizDataService
 from .services.statistics_service import StatisticsService
 from .services.scoring_service import ScoringService
 from .services.gamification_service import GamificationService
+from .services.study_methods import StudyMethodRegistry
+from .services.study_progress import StudyProgressService
 
 # region Lógica de Negócio e Utilitários de Dados
 
@@ -100,8 +102,13 @@ def get_quiz_data_dict(
     user: User = None,
     quiz_definicao_id=None,
     search_query=None,
+    study_method_key=None,
 ):
-    service = QuizDataService(quiz_config=get_quiz_config(), user=user)
+    service = QuizDataService(
+        quiz_config=get_quiz_config(),
+        user=user,
+        study_method_key=study_method_key,
+    )
     return service.get_quiz_data_dict(
         category_ids_filter=category_ids_filter,
         difficulty_levels_filter=difficulty_levels_filter,
@@ -110,6 +117,7 @@ def get_quiz_data_dict(
         num_questions_custom_str=num_questions_custom_str,
         quiz_definicao_id=quiz_definicao_id,
         search_query=search_query,
+        study_method_key=study_method_key,
     )
 
 # **** FUNÇÃO ADICIONADA AQUI ****
@@ -746,6 +754,7 @@ def api_get_quiz_data_view(request):
     num_questions_custom_str = request.GET.get('num_questions')
     quiz_definicao_id_str = request.GET.get('quiz_definicao_id')
     search_query = request.GET.get('search_query')
+    study_method = request.GET.get('study_method')
 
     category_ids_filter = [cid.strip() for cid in category_ids_str.split(
         ',') if cid.strip()] if category_ids_str else None
@@ -769,6 +778,7 @@ def api_get_quiz_data_view(request):
             user=user_for_favorites,
             quiz_definicao_id=quiz_definicao_id,
             search_query=search_query,
+            study_method_key=study_method,
         )
         return JsonResponse(quiz_data)
     except Exception as e:
@@ -834,6 +844,12 @@ def start_quiz_session_view(request):
         categoria_ids_str_list = data.get('categoria_ids', [])
         question_ids_in_session = data.get('question_ids_in_session', [])
         quiz_definicao_id = data.get('quiz_definicao_id')
+        study_method_raw = data.get('study_method')
+        study_method = (
+            StudyMethodRegistry.resolve_key(study_method_raw)
+            if study_method_raw
+            else StudyMethodRegistry.get_default_key()
+        )
 
         if not isinstance(question_ids_in_session, list) or not all(isinstance(qid, int) for qid in question_ids_in_session):
             return JsonResponse({'status': 'error', 'message': 'IDs de perguntas da sessão inválidos.'}, status=400)
@@ -866,7 +882,8 @@ def start_quiz_session_view(request):
             indice_ultima_pergunta_vista=0 if total_perguntas_sessao > 0 else None,
             dificuldades_selecionadas_json=data.get(
                 'dificuldades_selecionadas'),
-            num_questoes_solicitadas=data.get('num_questoes_solicitadas')
+            num_questoes_solicitadas=data.get('num_questoes_solicitadas'),
+            metodo_estudo=study_method,
         )
 
         if modo_quiz_frontend == SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA and categoria_ids_str_list:
@@ -932,6 +949,13 @@ def register_answer_view(request):
                 'foi_correta': foi_correta_calculada,
                 'data_resposta': timezone.now()
             }
+        )
+
+        StudyProgressService.register_answer(
+            user=request.user,
+            pergunta=pergunta,
+            was_correct=foi_correta_calculada,
+            session=sessao_quiz,
         )
 
         respostas_da_sessao = list(

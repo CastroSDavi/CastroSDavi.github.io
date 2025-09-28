@@ -3,6 +3,9 @@
 from rest_framework import serializers
 
 
+from quiz.services.study_methods import StudyMethodRegistry
+
+
 class QuizDataQuerySerializer(serializers.Serializer):
     category_ids = serializers.CharField(required=False, allow_blank=True)
     difficulty_levels = serializers.CharField(required=False, allow_blank=True)
@@ -11,6 +14,12 @@ class QuizDataQuerySerializer(serializers.Serializer):
     num_questions = serializers.CharField(required=False, allow_blank=True)
     quiz_definicao_id = serializers.IntegerField(required=False)
     search_query = serializers.CharField(required=False, allow_blank=True)
+    study_method = serializers.CharField(required=False, allow_blank=True)
+
+    def validate_study_method(self, value):
+        if not value:
+            return None
+        return StudyMethodRegistry.resolve_key(value)
 
 
 class FilteredQuestionCountSerializer(serializers.Serializer):
@@ -41,6 +50,7 @@ class StartQuizSessionSerializer(serializers.Serializer):
         allow_null=True,
     )
     num_questoes_solicitadas = serializers.IntegerField(required=False, allow_null=True)
+    study_method = serializers.CharField(required=False, allow_blank=True)
 
     def validate_categoria_ids(self, value):
         if value in (None, ''):
@@ -58,6 +68,11 @@ class StartQuizSessionSerializer(serializers.Serializer):
         if value in (None, ''):
             return None
         return value
+
+    def validate_study_method(self, value):
+        if not value:
+            return StudyMethodRegistry.get_default_key()
+        return StudyMethodRegistry.resolve_key(value)
 
 
 class RegisterAnswerSerializer(serializers.Serializer):

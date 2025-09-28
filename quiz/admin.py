@@ -19,6 +19,7 @@ from .models import (
     NivelGamificacao, Conquista, PerfilGamificacaoUsuario, ConquistaUsuario,
     DesafioDinamico, ProgressoDesafioUsuario, RecompensaNivelResgatada,
     SystemMessageBroadcast,
+    UserQuestionStudyState,
 )
 from .models import (
     DEFAULT_SCORE_PANEL_SETTINGS,
@@ -328,12 +329,12 @@ class RespostasUsuarioPorSessaoInline(admin.TabularInline):
 class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
     list_display = (
         'id', 'link_usuario', 'data_inicio_formatada', 'duracao_sessao_formatada',
-        'modo_quiz', 'status_sessao', 'pontuacao_final', 'xp_total_sessao',
+        'modo_quiz', 'metodo_estudo', 'status_sessao', 'pontuacao_final', 'xp_total_sessao',
         'total_acertos', 'percentual_acertos', 'total_erros',
         'sequencia_acertos_atual', 'melhor_sequencia_acertos',
         'total_perguntas_sessao', 'link_quiz_definicao'
     )
-    list_filter = ('modo_quiz', 'status_sessao', 'data_inicio', 'id_usuario__username', 'id_quiz_definicao')
+    list_filter = ('modo_quiz', 'metodo_estudo', 'status_sessao', 'data_inicio', 'id_usuario__username', 'id_quiz_definicao')
     search_fields = ('id_usuario__username', 'id_usuario__email', 'id', 'id_quiz_definicao__nome_quiz')
     readonly_fields = (
         'data_inicio', 'data_fim', 'tempo_total_segundos', 'pontuacao_final', 'xp_total_sessao',
@@ -349,7 +350,7 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Informações da Sessão', {
-            'fields': ('id_usuario', 'modo_quiz', 'status_sessao', 'id_quiz_definicao', 'categorias_selecionadas',
+            'fields': ('id_usuario', 'modo_quiz', 'metodo_estudo', 'status_sessao', 'id_quiz_definicao', 'categorias_selecionadas',
                        'dificuldades_selecionadas_json', 'num_questoes_solicitadas')
         }),
         ('Progresso e Estado da Sessão', {
@@ -424,6 +425,17 @@ class RespostasUsuarioPorSessaoAdmin(admin.ModelAdmin):
     @admin.display(description='Data Resposta', ordering='data_resposta')
     def data_resposta_formatada(self, obj):
         return obj.data_resposta.strftime("%d/%m/%Y %H:%M:%S") if obj.data_resposta else "-"
+
+
+@admin.register(UserQuestionStudyState)
+class UserQuestionStudyStateAdmin(admin.ModelAdmin):
+    list_display = (
+        'user', 'pergunta', 'due_at', 'repetitions', 'interval_days', 'easiness_factor', 'last_outcome'
+    )
+    list_filter = ('last_outcome', 'user')
+    search_fields = ('user__username', 'pergunta__texto_pergunta')
+    autocomplete_fields = ['user', 'pergunta', 'last_session']
+    readonly_fields = ('created_at', 'updated_at')
 
 
 @admin.register(EstatisticasDiariasUsuario)

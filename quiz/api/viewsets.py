@@ -31,6 +31,8 @@ from quiz.services.quiz_service import QuizDataService
 from quiz.services.statistics_service import StatisticsService
 from quiz.services.scoring_service import ScoringService
 from quiz.services.gamification_service import GamificationService
+from quiz.services.study_methods import StudyMethodRegistry
+from quiz.services.study_progress import StudyProgressService
 from quiz.views import (
     _get_category_performance_data,
     _get_difficulty_performance_data,
@@ -123,13 +125,19 @@ class QuizViewSet(viewsets.ViewSet):
         quiz_definicao_id = data.get('quiz_definicao_id')
         search_query = data.get('search_query')
 
+        study_method = data.get('study_method')
+
         if quiz_definicao_id:
             quiz_mode = SessoesQuizUsuario.ModoQuiz.DEFINIDO
 
         user_for_favorites = request.user if request.user.is_authenticated else None
 
         try:
-            service = QuizDataService(quiz_config=get_quiz_config(), user=user_for_favorites)
+            service = QuizDataService(
+                quiz_config=get_quiz_config(),
+                user=user_for_favorites,
+                study_method_key=study_method,
+            )
             quiz_data = service.get_quiz_data_dict(
                 category_ids_filter=category_ids_filter,
                 difficulty_levels_filter=difficulty_levels_filter,
@@ -138,6 +146,7 @@ class QuizViewSet(viewsets.ViewSet):
                 num_questions_custom_str=num_questions_custom_str,
                 quiz_definicao_id=quiz_definicao_id,
                 search_query=search_query,
+                study_method_key=study_method,
             )
             return Response(quiz_data)
         except Exception:
@@ -262,6 +271,7 @@ class QuizViewSet(viewsets.ViewSet):
         categoria_ids_str_list = data.get('categoria_ids', [])
         question_ids_in_session = data.get('question_ids_in_session')
         quiz_definicao_id = data.get('quiz_definicao_id')
+        study_method = data.get('study_method') or StudyMethodRegistry.get_default_key()
 
         total_perguntas_sessao = len(question_ids_in_session)
         if not modo_quiz_frontend or total_perguntas_sessao <= 0:
@@ -302,6 +312,7 @@ class QuizViewSet(viewsets.ViewSet):
             indice_ultima_pergunta_vista=0 if total_perguntas_sessao > 0 else None,
             dificuldades_selecionadas_json=data.get('dificuldades_selecionadas'),
             num_questoes_solicitadas=data.get('num_questoes_solicitadas'),
+            metodo_estudo=study_method,
         )
 
         if modo_quiz_frontend == SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA and categoria_ids_str_list:
@@ -380,6 +391,13 @@ class QuizViewSet(viewsets.ViewSet):
                     'foi_correta': foi_correta_calculada,
                     'data_resposta': timezone.now(),
                 },
+            )
+
+            StudyProgressService.register_answer(
+                user=request.user,
+                pergunta=pergunta,
+                was_correct=foi_correta_calculada,
+                session=sessao_quiz,
             )
 
             score_result = self._recalculate_session_metrics(sessao_quiz, quiz_config)

@@ -18,6 +18,7 @@ from quiz.models import (
     QuestaoFavorita,
     QuizDefinicao,
     SessoesQuizUsuario,
+    UserQuestionStudyState,
     DesafioDinamico,
     RecompensaNivelResgatada,
 )
@@ -25,6 +26,8 @@ from quiz.services.gamification_service import GamificationService
 from quiz.services.quiz_service import QuizDataService
 from quiz.services.scoring_service import ScoringService, SessionScoreResult
 from quiz.services.statistics_service import StatisticsService
+from quiz.services.study_methods import StudyMethodRegistry
+from quiz.services.study_progress import StudyProgressService
 from quiz.views import get_quiz_config, invalidate_quiz_config_cache
 
 
@@ -65,6 +68,10 @@ class QuizDataServiceTests(TestCase):
         self.assertTrue(question_payload['is_favorited'])
         self.assertEqual(question_payload['opcoes'][0]['texto_opcao'], 'Coração')
         self.assertEqual(data['categorias'][0]['nome_categoria'], 'Cardiologia')
+        self.assertIn('study_methods', data)
+        self.assertIn('selected_study_method', data)
+        self.assertTrue(any(method['key'] == StudyMethodRegistry.get_default_key() for method in data['study_methods']))
+        self.assertEqual(data['selected_study_method'], StudyMethodRegistry.get_default_key())
 
     def test_descendant_category_lookup_filters_questions(self):
         sub_category = Categoria.objects.create(nome_categoria='Pediatria', id_categoria_pai=self.category)
@@ -114,6 +121,76 @@ class QuizDataServiceTests(TestCase):
         self.assertEqual(summary['total_categories'], 1)
         self.assertIn('predefined_quizzes', summary)
         self.assertTrue(any(item['id'] == quiz_def.pk for item in summary['predefined_quizzes']))
+
+
+class StudyAdaptiveEngineTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user('adaptive', 'adaptive@example.com', 'secret')
+        invalidate_quiz_config_cache()
+        ConfiguracoesGeraisQuiz.objects.all().delete()
+        get_quiz_config()
+
+        self.question_due = Pergunta.objects.create(
+            texto_pergunta='Card marcapasso?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.FACIL,
+        )
+        self.question_future = Pergunta.objects.create(
+            texto_pergunta='Anatomia venosa?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.MEDIO,
+        )
+        self.question_new = Pergunta.objects.create(
+            texto_pergunta='Fisiologia renal?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.DIFICIL,
+        )
+
+    def test_register_answer_updates_state(self):
+        StudyProgressService.register_answer(
+            user=self.user,
+            pergunta=self.question_future,
+            was_correct=True,
+            session=None,
+        )
+
+        state = UserQuestionStudyState.objects.get(user=self.user, pergunta=self.question_future)
+        self.assertEqual(state.total_correct, 1)
+        self.assertEqual(state.total_incorrect, 0)
+        self.assertIsNotNone(state.due_at)
+        self.assertGreater(state.due_at, timezone.now())
+
+    def test_spaced_repetition_prioritizes_due_questions(self):
+        StudyProgressService.register_answer(
+            user=self.user,
+            pergunta=self.question_due,
+            was_correct=False,
+            session=None,
+        )
+        due_state = UserQuestionStudyState.objects.get(user=self.user, pergunta=self.question_due)
+        due_state.due_at = timezone.now() - timedelta(hours=1)
+        due_state.save()
+
+        StudyProgressService.register_answer(
+            user=self.user,
+            pergunta=self.question_future,
+            was_correct=True,
+            session=None,
+        )
+
+        method = StudyMethodRegistry.get_strategy('spaced_repetition')
+        base_queryset = Pergunta.objects.filter(pk__in=[
+            self.question_due.pk,
+            self.question_future.pk,
+            self.question_new.pk,
+        ])
+        selected_ids = method.select_question_ids(
+            user=self.user,
+            base_queryset=base_queryset,
+            limit=3,
+            context=None,
+        )
+
+        self.assertEqual(selected_ids[0], self.question_due.pk)
+        self.assertEqual(len(selected_ids), 3)
+        self.assertIn(self.question_new.pk, selected_ids)
 
 
 class StatisticsServiceTests(TestCase):

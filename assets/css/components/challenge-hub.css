@@ -32,10 +32,11 @@
     background: linear-gradient(140deg, rgba(13, 59, 102, 0.98), rgba(13, 59, 102, 0.8));
     color: var(--color-white);
     overflow: hidden;
+    justify-content: center
 }
 
 .challenge-hub__hero-info {
-    flex: 1 1 360px;
+    justify-content: center;
     min-width: 280px;
     display: flex;
     flex-direction: column;

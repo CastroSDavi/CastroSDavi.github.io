@@ -1,0 +1,73 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block title %}Painel Administrativo | {{ site_title|default:_('MedQuiz Admin') }}{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'admin/css/custom-admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div class="custom-admin__brand">
+    <div class="custom-admin__brand-icon">🎯</div>
+    <div>
+        <h1 class="custom-admin__brand-title">MedQuiz • Área Administrativa</h1>
+        <p class="custom-admin__brand-subtitle">Gerencie perguntas, usuários e estatísticas com agilidade.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+<nav class="custom-admin__quick-actions" aria-label="Ações rápidas do painel">
+    <a href="{% url 'admin:index' %}" class="custom-admin__quick-link">🏠 Início</a>
+    <a href="{% url 'admin:quiz_pergunta_changelist' %}" class="custom-admin__quick-link">❓ Perguntas</a>
+    <a href="{% url 'admin:quiz_categoria_changelist' %}" class="custom-admin__quick-link">🗂️ Categorias</a>
+    <a href="{% url 'admin:quiz_estatisticasdiariasusuario_changelist' %}" class="custom-admin__quick-link">📊 Estatísticas</a>
+    <a href="{% url 'admin:quiz_userquestionstudystate_changelist' %}" class="custom-admin__quick-link">🎯 Revisão Inteligente</a>
+</nav>
+{% endblock %}
+
+{% block usertools %}
+<div class="custom-admin__usertools">
+    {% if user.is_anonymous %}
+        <a href="{% url 'admin:login' %}">{% translate 'Log in' %}</a>
+    {% else %}
+        <div class="custom-admin__greeting">
+            <span class="custom-admin__avatar" aria-hidden="true">{{ user.get_short_name|default:user.username|first|upper }}</span>
+            <div>
+                <span class="custom-admin__hello">Olá,</span>
+                <strong>{{ user.get_short_name|default:user.username }}</strong>
+            </div>
+        </div>
+        <a href="{% url 'admin:password_change' %}" class="custom-admin__usertools-link">{% translate 'Change password' %}</a>
+        <a href="{% url 'admin:logout' %}" class="custom-admin__usertools-link">{% translate 'Log out' %}</a>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block messages %}
+    <div class="custom-admin__messages">
+        {{ block.super }}
+    </div>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav class="custom-admin__breadcrumb" aria-label="Caminho de navegação">
+        {{ block.super }}
+    </nav>
+{% endblock %}
+
+{% block footer %}
+<footer class="custom-admin__footer">
+    <p>MedQuiz Admin &bull; Sistema interno de gestão. {% now "Y" %}</p>
+    <p class="custom-admin__footer-links">
+        <a href="/" target="_blank" rel="noopener">Ir para o site público</a>
+        <span aria-hidden="true">•</span>
+        <a href="mailto:suporte@medquiz.com">Contato do suporte</a>
+    </p>
+</footer>
+{% endblock %}

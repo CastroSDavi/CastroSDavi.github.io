@@ -343,12 +343,13 @@
         background: linear-gradient(180deg, rgba(13, 59, 102, 0.12) 0%, rgba(13, 59, 102, 0) 45%), var(--color-surface, #ffffff);
         border-radius: clamp(22px, 7vw, 32px);
         box-shadow: none;
+        overflow-x: hidden;
     }
 
     .challenge-hub::before {
         content: '';
         position: absolute;
-        inset: -42% -48% auto;
+        inset: -42% 0 auto;
         height: clamp(200px, 60vw, 260px);
         background: radial-gradient(80% 80% at 50% 18%, rgba(13, 59, 102, 0.28), rgba(13, 59, 102, 0));
         z-index: -1;

@@ -514,27 +514,266 @@ def _get_difficulty_performance_data(user_sessions_period_qs):
 # region Views Principais (Páginas HTML)
 
 
-@login_required
+
+
+
 def home_view(request):
+    def safe_int(value, default=0):
+        try:
+            return int(round(float(value)))
+        except (TypeError, ValueError):
+            return default
+
+    def format_number(value):
+        return f"{safe_int(value):,}".replace(',', '.')
+
+    def format_duration(seconds):
+        total_seconds = safe_int(seconds, default=0)
+        if total_seconds <= 0:
+            return '0 min'
+        minutes, sec = divmod(total_seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
+        parts = []
+        if days:
+            parts.append(f"{days}d")
+        if hours and len(parts) < 2:
+            parts.append(f"{hours}h")
+        if minutes and len(parts) < 2:
+            parts.append(f"{minutes}min")
+        if not parts:
+            parts.append(f"{sec}s")
+        return ' '.join(parts[:2])
+
+    def format_percent(value, digits=0):
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            number = 0.0
+        return f"{number:.{digits}f}%"
+
+    def clamp_percent(value):
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            number = 0.0
+        return max(0.0, min(number, 100.0))
+
+    def humanize_time_remaining(seconds):
+        if seconds is None:
+            return None
+        total_seconds = safe_int(seconds, default=0)
+        if total_seconds <= 0:
+            return 'encerra hoje'
+        minutes, sec = divmod(total_seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
+        if days:
+            return f"{days}d {hours}h"
+        if hours:
+            return f"{hours}h {minutes}min"
+        if minutes:
+            return f"{minutes}min"
+        return f"{sec}s"
+
     daily_stats = None
-    accuracy_percentage_str = "0%"
-    if request.user.is_authenticated:
-        # **** CHAMADA CORRIGIDA ****
+    accuracy_percentage_str = '0%'
+    hero_stats = []
+    level_summary = None
+    next_achievement = None
+    active_challenge = None
+    recent_session = None
+
+    show_progress = request.user.is_authenticated
+
+    platform_summary = QuizDataService.build_quiz_summary()
+    predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()[:3]
+    study_methods_metadata = StudyMethodRegistry.list_metadata()[:3]
+
+    if show_progress:
         daily_stats = get_or_create_daily_stats(request.user)
-        if daily_stats and daily_stats.perguntas_respondidas_dia > 0:
-            accuracy = (daily_stats.acertos_dia /
-                        daily_stats.perguntas_respondidas_dia) * 100
+        responded_today = safe_int(getattr(daily_stats, 'perguntas_respondidas_dia', 0))
+        if responded_today:
+            accuracy = (getattr(daily_stats, 'acertos_dia', 0) / responded_today) * 100 if responded_today else 0
             accuracy_percentage_str = f"{accuracy:.0f}%"
         elif daily_stats:
-            accuracy_percentage_str = "0%"
+            accuracy_percentage_str = '0%'
+
+        gamification_snapshot = GamificationService().get_profile_snapshot(request.user, include_catalog=False)
+        xp_total_value = format_number(gamification_snapshot.get('xp_total')) if gamification_snapshot else '0'
+
+        hero_stats = [
+            {
+                'icon': 'checklist',
+                'label': 'Respondidas hoje',
+                'value': format_number(responded_today),
+            },
+            {
+                'icon': 'target',
+                'label': 'Precisão diária',
+                'value': accuracy_percentage_str,
+            },
+            {
+                'icon': 'local_fire_department',
+                'label': 'Sequência ativa',
+                'value': f"{format_number(getattr(daily_stats, 'sequencia_dias_quiz', 0))} dias",
+            },
+        ]
+
+        progress_payload = (gamification_snapshot or {}).get('progress') or {}
+        level_payload = (gamification_snapshot or {}).get('level') or {}
+        next_level_payload = (gamification_snapshot or {}).get('next_level') or {}
+        progress_percent = clamp_percent(progress_payload.get('percent'))
+        level_summary = {
+            'name': level_payload.get('nome') or 'Nível inicial',
+            'identifier': level_payload.get('identificador'),
+            'progress_percent': progress_percent,
+            'progress_display': format_percent(progress_percent),
+            'xp_total': xp_total_value,
+            'xp_into_level': format_number(progress_payload.get('xp_into_level')),
+            'xp_to_next': format_number(progress_payload.get('xp_to_next_level')) if progress_payload.get('xp_to_next_level') is not None else None,
+            'next_level_name': next_level_payload.get('nome'),
+        }
+
+        achievements_payload = (gamification_snapshot or {}).get('achievements') or {}
+        upcoming = achievements_payload.get('upcoming') or []
+        if upcoming:
+            first = upcoming[0]
+            progress = first.get('progress') or {}
+            next_achievement = {
+                'name': first.get('nome'),
+                'description': first.get('descricao'),
+                'icon': first.get('icone') or 'emoji_events',
+                'progress_percent': clamp_percent(progress.get('percent')),
+                'progress_label': progress.get('label'),
+            }
+
+        challenges_payload = (gamification_snapshot or {}).get('challenges') or {}
+        active_list = challenges_payload.get('active') or []
+        if active_list:
+            primary = active_list[0]
+            progress = primary.get('progress') or {}
+            reward_payload = primary.get('reward') or {}
+            active_challenge = {
+                'name': primary.get('nome'),
+                'description': primary.get('descricao'),
+                'progress_percent': clamp_percent(progress.get('percent')),
+                'progress_label': progress.get('label'),
+                'reward': reward_payload.get('nome') or reward_payload.get('descricao'),
+                'time_remaining': humanize_time_remaining(primary.get('time_remaining_seconds')),
+            }
+
+        last_session = (
+            SessoesQuizUsuario.objects.filter(id_usuario=request.user)
+            .select_related('id_quiz_definicao')
+            .order_by('-data_inicio')
+            .first()
+        )
+        if last_session:
+            session_title = last_session.get_modo_quiz_display()
+            if last_session.modo_quiz == SessoesQuizUsuario.ModoQuiz.DEFINIDO and last_session.id_quiz_definicao:
+                session_title = last_session.id_quiz_definicao.nome_quiz
+
+            accuracy_value = None
+            if last_session.total_perguntas_sessao:
+                accuracy_value = round((last_session.total_acertos / last_session.total_perguntas_sessao) * 100)
+
+            try:
+                session_date = timezone.localtime(last_session.data_inicio)
+            except (TypeError, ValueError):
+                session_date = last_session.data_inicio
+
+            study_method_name = None
+            if last_session.metodo_estudo:
+                try:
+                    study_method_name = StudyMethodRegistry.get_strategy(last_session.metodo_estudo).display_name
+                except KeyError:
+                    study_method_name = last_session.metodo_estudo
+
+            recent_session = {
+                'title': session_title,
+                'mode': last_session.get_modo_quiz_display(),
+                'study_method': study_method_name,
+                'questions': format_number(last_session.total_perguntas_sessao),
+                'accuracy': f"{accuracy_value}%" if accuracy_value is not None else None,
+                'xp': format_number(last_session.xp_total_sessao),
+                'score': format_number(last_session.pontuacao_final),
+                'duration': format_duration(last_session.tempo_total_segundos),
+                'date_display': session_date.strftime('%d/%m/%Y %H:%M') if session_date else None,
+            }
+    else:
+        hero_stats = [
+            {
+                'icon': 'quiz',
+                'label': 'Questões disponíveis',
+                'value': format_number(platform_summary.get('total_questions')),
+                'dom_id': 'challenge-stat-total',
+            },
+            {
+                'icon': 'category',
+                'label': 'Categorias de estudo',
+                'value': format_number(platform_summary.get('total_categories')),
+            },
+            {
+                'icon': 'hub',
+                'label': 'Curadorias ativas',
+                'value': format_number(len(predefined_quizzes)),
+            },
+        ]
+
+    curated_quizzes = [
+        {
+            'id': item.get('id'),
+            'name': item.get('nome'),
+            'description': item.get('descricao'),
+            'questions': format_number(item.get('total_perguntas')),
+        }
+        for item in predefined_quizzes
+    ]
+
+    study_methods = [
+        {
+            'key': method.get('key'),
+            'name': method.get('display_name'),
+            'description': method.get('description'),
+        }
+        for method in study_methods_metadata
+    ]
+
+    platform_cards = [
+        {
+            'icon': 'quiz',
+            'label': 'Questões disponíveis',
+            'value': format_number(platform_summary.get('total_questions')),
+        },
+        {
+            'icon': 'category',
+            'label': 'Categorias',
+            'value': format_number(platform_summary.get('total_categories')),
+        },
+        {
+            'icon': 'play_arrow',
+            'label': 'Padrão do quiz rápido',
+            'value': format_number(platform_summary.get('quick_quiz_default_count')),
+        },
+    ]
 
     context = {
         'page_title': 'MedQuiz - Início',
         'daily_stats': daily_stats,
         'accuracy_percentage': accuracy_percentage_str,
+        'show_progress': show_progress,
+        'hero_stats': hero_stats,
+        'level_summary': level_summary,
+        'next_achievement': next_achievement,
+        'active_challenge': active_challenge,
+        'recent_session': recent_session,
+        'curated_quizzes': curated_quizzes,
+        'study_methods': study_methods,
+        'platform_cards': platform_cards,
     }
-    return render(request, 'quiz/home.html', context)
 
+    return render(request, 'quiz/home.html', context)
 
 @login_required
 def questions_view(request):
@@ -1354,3 +1593,7 @@ def api_get_user_statistics_view(request):
         return JsonResponse({'status': 'error', 'message': 'Ocorreu um erro ao processar suas estatísticas.'}, status=500)
 
 # endregion
+
+
+
+

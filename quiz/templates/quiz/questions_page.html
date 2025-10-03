@@ -69,17 +69,28 @@
             <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__hero">
                     <div class="challenge-hub__hero-info">
+                        <span class="challenge-hub__eyebrow">Hub de desafios MedQuiz</span>
                         <h2 class="challenge-hub__title">Escolha seu próximo desafio</h2>
                         <p class="challenge-hub__subtitle">
                             Combine modos inteligentes de estudo e aproveite as <span id="hub-total-questions-count">0</span> questões disponíveis.
                         </p>
+                        <ul class="challenge-hub__stats" role="list">
+                            <li class="challenge-stat" role="listitem">
+                                <span class="challenge-stat__label">Questões no banco</span>
+                                <span class="challenge-stat__value" id="challenge-stat-total">0</span>
+                            </li>
+                            <li class="challenge-stat" role="listitem">
+                                <span class="challenge-stat__label">Quiz rápido sugerido</span>
+                                <span class="challenge-stat__value" id="hub-quick-quiz-count">0</span>
+                            </li>
+                        </ul>
                     </div>
                     <div class="challenge-hub__hero-actions">
-                        <button id="hub-customize-quiz-btn" type="button" class="button button--secondary challenge-hub__action-button">
+                        <button id="hub-customize-quiz-btn" type="button" class="button button--fancy button--fancy-secondary challenge-hub__action-button">
                             <span class="material-symbols-outlined button__icon" aria-hidden="true">tune</span>
                             <span class="button__label">Personalizar</span>
                         </button>
-                        <button id="hub-quick-quiz-btn" type="button" class="button button--primary challenge-hub__action-button">
+                        <button id="hub-quick-quiz-btn" type="button" class="button button--fancy button--fancy-primary challenge-hub__action-button">
                             <span class="material-symbols-outlined button__icon" aria-hidden="true">play_arrow</span>
                             <span class="button__label">Começar agora</span>
                         </button>

@@ -85,7 +85,7 @@ body {
 
     body[data-page-id="home"],
     body[data-page-id="questions"] {
-        --layout-bottom-offset: calc(var(--bottom-nav-height, 68px) + var(--spacing-sm, 12px));
+        --layout-bottom-offset: calc(var(--bottom-nav-height, 68px) + var(--spacing-sm, 12px) + env(safe-area-inset-bottom, 0px));
     }
 
     #question-section.main-section {

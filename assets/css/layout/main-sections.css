@@ -39,10 +39,16 @@ body {
     flex-grow: 1;
     overflow-y: auto;
     min-height: 0;
-    padding: var(--question-section-main-padding, var(--spacing-xl, 40px));
+    padding: var(--question-section-main-padding-block, var(--spacing-xl, 40px)) var(--question-section-main-padding-inline, var(--layout-section-padding-inline, clamp(32px, 4vw, 48px)));
     background-color: var(--question-section-main-bg, var(--color-gray-200));
     display: flex;
     flex-direction: column;
+}
+
+.question-section__main-content > :not(script) {
+    width: min(var(--layout-section-max-width, 1260px), 100%);
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* ==========================================================================
@@ -64,7 +70,7 @@ body {
         --account-sidebar-sticky-top: 0px;
     }
     .question-section__main-content {
-      padding: var(--question-section-main-padding-tablet, var(--spacing-lg, 35px));
+      padding: var(--question-section-main-padding-tablet, var(--spacing-lg, 35px)) var(--question-section-main-padding-inline, var(--layout-section-padding-inline, clamp(32px, 4vw, 48px)));
     }
 }
 

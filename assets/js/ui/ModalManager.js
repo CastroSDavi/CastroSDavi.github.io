@@ -272,6 +272,18 @@ export default class ModalManager {
     toggleConfirmModal(show) {
         const overlay = this.elements.confirmEncerrarOverlay;
         const dialog = this.elements.confirmEncerrarModal;
+        if (!overlay || !dialog) {
+            return;
+        }
+
+        if (
+            show &&
+            this.elements.filterPanel &&
+            this.elements.filterPanel.classList.contains('filter-panel--visible')
+        ) {
+            this.toggleFilterPanel(false);
+        }
+
         this._toggleGenericModal(overlay, dialog, show, this.elements.cancelEncerrarBtn);
     }
     

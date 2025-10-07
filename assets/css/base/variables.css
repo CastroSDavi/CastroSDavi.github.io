@@ -158,6 +158,8 @@
     --bottom-nav-height: 68px;
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
+    --layout-section-max-width: 1260px;
+    --layout-section-padding-inline: clamp(32px, 4vw, 48px);
 }
 
 :root[data-theme='dark'] {

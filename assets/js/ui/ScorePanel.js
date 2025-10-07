@@ -40,6 +40,7 @@ export default class ScorePanel {
 
         this.pauseControlElement = this.elements.scorePanelControls || null;
         this.endSessionButton = this.elements.btnEncerrarSessao || null;
+        this.lastShouldDisplayPanel = false;
 
         this._setupEventListeners();
     }
@@ -135,7 +136,11 @@ export default class ScorePanel {
     }
 
     _setupEventListeners() {
-        this.elements.btnEncerrarSessao?.addEventListener('click', () => {
+        this.elements.btnEncerrarSessao?.addEventListener('click', (event) => {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
             if (this.currentSettings?.allow_manual_finish === false) {
                 return;
             }
@@ -202,6 +207,7 @@ export default class ScorePanel {
     }
 
     hide() {
+        this.lastShouldDisplayPanel = false;
         if (this.elements.scorePanel) {
             this.quizUI.hideElement(this.elements.scorePanel);
         }
@@ -258,19 +264,40 @@ export default class ScorePanel {
         );
     }
 
+    _resolveQuizState() {
+        if (!this.store || typeof this.store.getState !== 'function') {
+            return null;
+        }
+        const state = this.store.getState();
+        return state?.quiz || null;
+    }
+
+    _shouldDisplayForContext(quizState) {
+        if (!quizState) return false;
+        const hasSessionId = quizState.currentSessionId !== null && quizState.currentSessionId !== undefined;
+        if (!hasSessionId) return false;
+        if (quizState.quizEnded === true) return false;
+        const displayMode = quizState.quizDisplayContext?.displayMode || 'challenge';
+        return displayMode !== 'review';
+    }
+
     _applyScorePanelSettings(rawSettings, { force = false } = {}) {
         this.latestRawSettings = rawSettings ?? null;
         const normalized = this._normalizeSettings(rawSettings);
         const serialized = JSON.stringify(normalized);
 
-        if (!force && serialized === this.currentSettingsKey) {
+        const quizState = this._resolveQuizState();
+        const allowByContext = this._shouldDisplayForContext(quizState);
+        const shouldDisplayPanel = allowByContext && this._shouldDisplayPanel(normalized);
+        const visibilityChanged = shouldDisplayPanel !== this.lastShouldDisplayPanel;
+
+        if (!force && serialized === this.currentSettingsKey && !visibilityChanged) {
             return false;
         }
 
         this.currentSettings = normalized;
         this.currentSettingsKey = serialized;
-
-        const shouldDisplayPanel = this._shouldDisplayPanel(normalized);
+        this.lastShouldDisplayPanel = shouldDisplayPanel;
 
         this._toggleElement(this.elements.scorePanel, shouldDisplayPanel);
         this._toggleElement(this.timerContainer, shouldDisplayPanel && normalized.show_timer);

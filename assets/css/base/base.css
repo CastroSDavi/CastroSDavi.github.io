@@ -18,8 +18,7 @@ body {
     flex-direction: column;
     min-height: 100vh; /* Garante que o corpo ocupe pelo menos a altura total da viewport */
     overflow-y: auto; /* Permite rolagem vertical no corpo por padrão */
-    padding-bottom: 0; /* Padding inferior padrão, será ajustado para mobile com bottom-nav */
-    transition: padding-bottom 0.25s ease-out; /* Transição suave para o padding-bottom */
+    padding-bottom: 0;
 }
 
 /* Classe aplicada via JavaScript para desabilitar a rolagem principal do body,

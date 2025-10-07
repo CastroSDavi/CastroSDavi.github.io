@@ -11,7 +11,6 @@ import LayoutManager from '../ui/LayoutManager.js';
 import FilterPanel from '../ui/FilterPanel.js';
 import ResultDisplay from '../ui/ResultDisplay.js';
 import AccountPageManager from '../ui/AccountPageManager.js';
-import BottomNavManager from '../ui/BottomNavManager.js';
 import StatisticsChartManager from '../ui/StatisticsChartManager.js';
 import FavoriteManager, { FAVORITE_REVIEW_QUERY_PARAM } from '../ui/FavoriteManager.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
@@ -22,7 +21,6 @@ export default class App {
         this.apiService = new ApiService();
         this.store = createStore(quizReducer);
         this.layoutManager = new LayoutManager();
-        this.bottomNavManager = new BottomNavManager();
         this.messageCenter = new SystemMessageCenter({
             toastContainerSelector: '#global-toast-stack',
         });
@@ -100,7 +98,6 @@ export default class App {
     
     _connectManagersToFlux() {
         this.layoutManager.setStore(this.store);
-        this.bottomNavManager.setStore(this.store);
         this.quizUI.setStore(this.store);
         this.accountPageManager.setStore(this.store);
         this.favoriteManager.setStore(this.store);
@@ -143,7 +140,6 @@ export default class App {
             this.accountPageManager.setFavoriteManager(this.favoriteManager);
         }
         
-        this.bottomNavManager.init();
     }
     
     _determineInitialSection(providedSectionId = null) {

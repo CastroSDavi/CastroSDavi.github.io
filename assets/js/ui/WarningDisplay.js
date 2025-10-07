@@ -27,6 +27,7 @@ export default class WarningDisplay {
             features = [],
             isTextCentered = false,
             role = 'alert',
+            icon = null,
         } = messageConfig;
 
         const {
@@ -54,6 +55,13 @@ export default class WarningDisplay {
         }
         avisoContainer.className = baseClasses.join(' ');
         avisoContainer.setAttribute('role', role || 'alert');
+
+        if (icon) {
+            avisoContainer.dataset.icon = icon;
+        } else {
+            delete avisoContainer.dataset.icon;
+            avisoContainer.removeAttribute('data-icon');
+        }
 
         if (avisoTitle) {
             if (title) {
@@ -174,6 +182,8 @@ export default class WarningDisplay {
             avisoContainer.removeAttribute('role');
             const baseClasses = ['form-message', this.quizUI.hiddenClassName];
             avisoContainer.className = baseClasses.join(' ');
+            delete avisoContainer.dataset.icon;
+            avisoContainer.removeAttribute('data-icon');
         }
 
         if (this.quizUI) {

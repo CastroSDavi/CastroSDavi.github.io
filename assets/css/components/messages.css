@@ -1,196 +1,276 @@
-/* assets/css/components/messages.css - REFINADO com texto centralizado/justificado */
+/* assets/css/components/messages.css */
 
-/* Base para todas as mensagens de formulário/sistema */
+/*
+ * Mensagens inline com visual alinhado aos toasts.
+ */
+
 .form-message {
-    padding: var(--spacing-sm, 14px) var(--spacing-md, 18px);
-    margin-bottom: var(--spacing-md, 20px);
-    border-radius: var(--border-radius-md, 8px);
-    font-size: var(--font-size-sm, 0.9rem);
-    line-height: 1.6;
-    border-width: 1px;
-    border-style: solid;
-    box-shadow: var(--shadow-sm);
+    --message-accent: var(--color-primary-medium, #1a5f9e);
+    --message-accent-rgb: var(--color-primary-medium-rgb, 26, 95, 158);
+    --message-text: var(--color-text-primary, #1c1c1c);
+    --message-muted: var(--color-text-muted, rgba(0, 0, 0, 0.65));
 
-    /* Alterações para alinhamento do conteúdo da mensagem */
-    display: flex; /* Mantém flex para alinhar ícone e texto */
-    /* align-items: center; */ /* Comentado ou removido se o texto justificado precisar de mais espaço vertical e o ícone ficar no topo */
-    align-items: flex-start; /* Ícone alinhado ao topo se o texto tiver múltiplas linhas */
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: flex-start;
     gap: var(--spacing-sm, 12px);
+    padding: clamp(16px, 2vw, 24px) clamp(18px, 3vw, 28px);
+    margin: 0 auto var(--spacing-lg, 28px);
+    border-radius: var(--border-radius-lg, 10px);
+    border: 1px solid rgba(var(--message-accent-rgb), 0.18);
+    border-left-width: 4px;
+    background: var(--color-white, #ffffff);
+    box-shadow: var(--shadow-lg, 0 8px 16px rgba(0, 0, 0, 0.07));
+    color: var(--message-text);
+    line-height: 1.5;
 }
 
-.form-message p {
-    margin: 0;
-    flex-grow: 1;
-    /* ALTERAÇÕES AQUI para o parágrafo dentro da mensagem */
-    text-align: justify; /* Justifica o texto principal da mensagem */
-}
-.form-message p:not(:last-child) {
-    margin-bottom: var(--spacing-xs, 8px);
-}
-
-/* Ícone Padrão (será colorido por tipo) */
 .form-message::before {
+    content: attr(data-icon);
+    grid-row: 1 / -1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(36px, 6vw, 48px);
+    height: clamp(36px, 6vw, 48px);
+    border-radius: var(--border-radius-md, 12px);
     font-family: 'Material Symbols Outlined';
-    font-variation-settings: 'FILL' 0, 'wght' 400;
-    font-size: 1.4em;
-    line-height: 1.3; /* Ajustado para o texto justificado */
-    flex-shrink: 0;
-    margin-top: 1px; /* Pode precisar de ajuste fino com text-align: justify */
+    font-variation-settings: 'FILL' 0, 'wght' 500;
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    color: var(--message-accent);
+    background: rgba(var(--message-accent-rgb), 0.14);
 }
 
 .form-message__content {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm, 14px);
-    flex: 1;
-}
-
-.form-message__title {
-    margin: 0;
-    font-size: var(--font-size-md, 1.05rem);
-    font-weight: 700;
-    color: inherit;
-}
-
-.form-message__body {
-    margin: 0;
-    text-align: justify;
-}
-
-.form-message__supporting {
-    margin: 0;
-    font-size: var(--font-size-xs, 0.85rem);
-    color: var(--color-text-muted, rgba(0, 0, 0, 0.6));
-    text-align: justify;
-}
-
-.form-message__feature-list {
-    margin: 0;
-    padding-left: 1.1rem;
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xxs, 6px);
 }
 
+.form-message__title {
+    margin: 0;
+    font-size: clamp(1.02rem, 1.8vw, 1.2rem);
+    font-weight: var(--font-weight-semibold, 600);
+    color: inherit;
+    letter-spacing: -0.01em;
+}
+
+.form-message__body {
+    margin: 0;
+    font-size: var(--font-size-sm, 0.95rem);
+}
+
+.form-message__supporting {
+    margin: 0;
+    font-size: var(--font-size-xs, 0.85rem);
+    color: var(--message-muted);
+}
+
+.form-message > p {
+    margin: 0;
+    font-size: var(--font-size-sm, 0.95rem);
+}
+
+.form-message > p + p {
+    margin-top: var(--spacing-xxs, 6px);
+}
+
+.form-message__feature-list {
+    margin: 0;
+    padding-left: 1rem;
+    display: grid;
+    gap: var(--spacing-xxs, 6px);
+}
+
 .form-message__feature-item {
     font-size: var(--font-size-sm, 0.95rem);
-    line-height: 1.45;
+    color: inherit;
+}
+
+.form-message__feature-item::marker {
+    color: var(--message-accent);
 }
 
 .form-message__actions {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--spacing-sm, 12px);
+    gap: var(--spacing-xs, 8px);
+    margin-top: var(--spacing-xs, 8px);
 }
 
 .form-message__action-button {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xxs, 6px);
+    padding: 0.55rem 1.05rem;
+    border-radius: var(--border-radius-pill, 999px);
+    border: 1px solid rgba(var(--message-accent-rgb), 0.35);
+    background: rgba(var(--message-accent-rgb), 0.1);
+    color: var(--message-accent);
+    font-weight: var(--font-weight-medium, 500);
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.form-message__action-button:hover,
+.form-message__action-button:focus-visible {
+    background: rgba(var(--message-accent-rgb), 0.18);
+    border-color: rgba(var(--message-accent-rgb), 0.45);
 }
 
 .form-message__action-icon {
     font-size: 1.2em;
 }
 
-.form-message__action-label {
-    font-weight: 600;
+.form-message.text-centered {
+    text-align: center;
+    justify-items: center;
+}
+
+.form-message.text-centered::before {
+    margin-inline: auto;
+}
+
+.form-message.text-centered .form-message__content {
+    align-items: center;
 }
 
 .form-message.text-centered .form-message__actions {
     justify-content: center;
 }
 
-/* Para centralizar TODO o bloco da mensagem (incluindo ícone e texto como um todo)
-   você aplicaria text-align: center ao container PAI da .form-message,
-   ou se a .form-message for ela mesma o container principal, você pode
-   adicionar 'justify-content: center;' se o display do pai for flex,
-   ou 'margin-left: auto; margin-right: auto;' se for um bloco.
+/* Estados de cor --------------------------------------------------------- */
 
-   Se você quer APENAS O TEXTO DENTRO da mensagem centralizado, e não o bloco inteiro,
-   e manter o ícone à esquerda:
-*/
-.form-message.text-centered p { /* Adicione a classe 'text-centered' à .form-message via HTML/JS */
-    text-align: center; /* Centraliza apenas o parágrafo */
-}
-
-
-/* --- MENSAGEM DE ERRO --- */
-.form-message--error {
-    background-color: var(--color-incorrect-bg, #fff0f1);
-    color: var(--color-incorrect-text, #c12634);
-    border-color: var(--color-incorrect-border, #f1aeb5);
-}
-.form-message--error::before {
-    content: 'error';
-    color: var(--color-accent-red);
-}
-
-/* --- MENSAGEM INFORMATIVA (Azul) --- */
 .form-message--info {
-    background-color: var(--color-primary-light, #eef3f8);
-    color: var(--color-primary-dark, #0d3b66);
-    border-color: var(--color-primary-medium, #1a5f9e);
-}
-.form-message--info::before {
-    content: 'info';
-    color: var(--color-primary-medium);
+    --message-accent: var(--color-primary-medium, #1a5f9e);
+    --message-accent-rgb: var(--color-primary-medium-rgb, 26, 95, 158);
 }
 
-/* --- MENSAGEM DE SUCESSO (Verde) --- */
 .form-message--success {
-    background-color: var(--color-correct-bg, #e6fcf5);
-    color: var(--color-correct-text, #1e7f74);
-    border-color: var(--color-correct-border, #a3e9c1);
-}
-.form-message--success::before {
-    content: 'check_circle';
-    color: var(--color-secondary-green);
+    --message-accent: var(--color-secondary-green, #2a9d8f);
+    --message-accent-rgb: var(--color-secondary-green-rgb, 42, 157, 143);
+    --message-text: var(--color-secondary-green, #2a9d8f);
+    --message-muted: rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.6);
 }
 
-/* --- MENSAGEM DE AVISO (Amarelo/Laranja) --- */
+.form-message--error {
+    --message-accent: var(--color-accent-red, #e63946);
+    --message-accent-rgb: var(--color-accent-red-rgb, 230, 57, 70);
+    --message-text: var(--color-incorrect-text, #c12634);
+    --message-muted: rgba(var(--color-incorrect-text-rgb, 193, 38, 52), 0.6);
+}
+
 .form-message--warning {
-    background-color: var(--color-accent-yellow-bg, #fffbea);
-    color: var(--color-accent-yellow-text, #7a5b00);
-    border-color: var(--color-accent-yellow-border, #ffe58f);
-}
-.form-message--warning::before {
-    content: 'warning';
-    color: var(--color-accent-yellow-text, #7a5b00);
+    --message-accent: var(--color-accent-yellow, #fbbf24);
+    --message-accent-rgb: var(--color-accent-yellow-rgb, 251, 191, 36);
+    --message-text: #7a5b00;
+    --message-muted: rgba(var(--color-accent-yellow-rgb, 251, 191, 36), 0.6);
 }
 
+/* Ícones padrão no mesmo padrão dos toasts */
 
-/* --- MENSAGEM DE ERRO ESPECÍFICA DE CAMPO --- */
+.form-message--info::before { content: 'info'; }
+.form-message--success::before { content: 'check_circle'; }
+.form-message--error::before { content: 'error'; }
+.form-message--warning::before { content: 'warning'; }
+
+.form-message[data-icon]::before {
+    content: attr(data-icon);
+}
+
+/* Mensagens de campo ----------------------------------------------------- */
+
 .form-message--field-error {
     color: var(--color-accent-red);
     font-size: var(--font-size-xs, 0.8rem);
     margin-top: var(--spacing-xxs, 5px);
-    padding-left: 0;
+    padding: 0;
     display: block;
-    background-color: transparent;
+    background: transparent;
     border: none;
+    border-left: none;
     box-shadow: none;
-    text-align: left; /* Geralmente erros de campo são alinhados à esquerda */
+    text-align: left;
+    position: static;
 }
+
 .form-message--field-error::before {
     content: 'arrow_right_alt';
     font-family: 'Material Symbols Outlined';
     font-size: 1em;
+    display: inline-block;
+    width: auto;
+    height: auto;
     margin-right: 4px;
+    margin-bottom: 0;
     position: relative;
     top: 1px;
     color: var(--color-accent-red);
-    margin-top: 0;
+    background: none;
+    border-radius: 0;
 }
 
-/* --- ESTILIZAÇÃO PARA O CONTAINER DE AVISO GLOBAL (#aviso-container) --- */
-#aviso-container.form-message {
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: var(--spacing-md, 20px);
+.form-message--field-error::after {
+    content: none;
 }
-/* Se você quiser que o texto no #aviso-container também seja justificado/centralizado: */
-#aviso-container.form-message p {
-    text-align: justify; /* Ou 'center' se preferir centralizado para o aviso global */
+
+/* Container global ------------------------------------------------------- */
+
+#aviso-container.form-message {
+    max-width: clamp(320px, 78vw, 720px);
+    margin: var(--spacing-lg, 28px) auto;
+}
+
+/* Dark mode -------------------------------------------------------------- */
+
+:root[data-theme='dark'] .form-message {
+    background: rgba(var(--color-gray-100-rgb, 15, 23, 42), 0.92);
+    color: var(--color-gray-900, #eef2ff);
+    border-color: rgba(var(--message-accent-rgb), 0.4);
+    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme='dark'] .form-message::before {
+    background: rgba(var(--message-accent-rgb), 0.24);
+}
+
+:root[data-theme='dark'] .form-message__supporting {
+    color: rgba(var(--message-accent-rgb), 0.75);
+}
+
+:root[data-theme='dark'] .form-message__action-button {
+    color: var(--color-white, #ffffff);
+    background: rgba(var(--message-accent-rgb), 0.24);
+    border-color: rgba(var(--message-accent-rgb), 0.5);
+}
+
+:root[data-theme='dark'] .form-message__action-button:hover,
+:root[data-theme='dark'] .form-message__action-button:focus-visible {
+    background: rgba(var(--message-accent-rgb), 0.34);
+    border-color: rgba(var(--message-accent-rgb), 0.65);
+}
+
+/* Responsividade --------------------------------------------------------- */
+
+@media (max-width: 640px) {
+    .form-message {
+        grid-template-columns: 1fr;
+        text-align: left;
+        padding: var(--spacing-md, 20px);
+    }
+
+    .form-message::before {
+        grid-row: auto;
+        margin-bottom: var(--spacing-sm, 12px);
+    }
+
+    .form-message.text-centered {
+        justify-items: stretch;
+        text-align: left;
+    }
+
+    .form-message.text-centered .form-message__content {
+        align-items: flex-start;
+    }
 }

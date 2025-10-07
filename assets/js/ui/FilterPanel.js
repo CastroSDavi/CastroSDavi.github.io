@@ -603,23 +603,39 @@ export default class FilterPanel {
 
     _buildSavedCollectionItem(collection) {
         const listItem = document.createElement('li');
-        listItem.className = 'saved-collections-list__item';
+        listItem.className = 'saved-collections-list__item saved-collection-card';
         listItem.dataset.collectionId = collection.id;
 
         const header = document.createElement('div');
-        header.className = 'saved-collections-list__header';
+        header.className = 'saved-collection-card__header';
+
+        const badge = document.createElement('span');
+        badge.className = 'saved-collection-card__badge';
+        const badgeIcon = document.createElement('span');
+        badgeIcon.className = 'material-symbols-outlined';
+        badgeIcon.setAttribute('aria-hidden', 'true');
+        badgeIcon.textContent = 'bookmark';
+        badge.appendChild(badgeIcon);
+
+        const info = document.createElement('div');
+        info.className = 'saved-collection-card__info';
 
         const title = document.createElement('h4');
-        title.className = 'saved-collections-list__title';
+        title.className = 'saved-collections-list__title saved-collection-card__title';
         title.textContent = collection.name;
-        header.appendChild(title);
+
+        const timestamp = document.createElement('span');
+        timestamp.className = 'saved-collection-card__timestamp';
+        timestamp.textContent = this._formatSavedCollectionTimestamp(collection);
+
+        info.append(title, timestamp);
 
         const actions = document.createElement('div');
-        actions.className = 'saved-collections-list__actions';
+        actions.className = 'saved-collections-list__actions saved-collection-card__actions';
 
         const applyButton = document.createElement('button');
         applyButton.type = 'button';
-        applyButton.className = 'button button--primary button--small';
+        applyButton.className = 'button button--surface button--small saved-collection-card__apply';
         applyButton.dataset.role = 'apply-collection';
 
         const applyIcon = document.createElement('span');
@@ -633,7 +649,7 @@ export default class FilterPanel {
 
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
-        removeButton.className = 'button button--icon-only saved-collections-list__remove';
+        removeButton.className = 'button button--icon-only saved-collections-list__remove saved-collection-card__remove';
         removeButton.dataset.role = 'remove-collection';
         removeButton.setAttribute('aria-label', `Remover coleção ${collection.name}`);
         const removeIcon = document.createElement('span');
@@ -643,15 +659,66 @@ export default class FilterPanel {
         removeButton.appendChild(removeIcon);
 
         actions.append(applyButton, removeButton);
-        header.appendChild(actions);
+        header.append(badge, info, actions);
 
         const meta = document.createElement('p');
-        meta.className = 'saved-collections-list__meta';
+        meta.className = 'saved-collections-list__meta saved-collection-card__summary';
         meta.textContent = this._describeFilters(collection.filters);
 
         listItem.append(header, meta);
 
         return listItem;
+    }
+
+    _formatSavedCollectionTimestamp(collection) {
+        const rawTimestamp = Number.isFinite(Number(collection?.updatedAt))
+            ? Number(collection.updatedAt)
+            : Number(collection?.createdAt);
+
+        if (!Number.isFinite(rawTimestamp) || rawTimestamp <= 0) {
+            return 'Coleção personalizada';
+        }
+
+        const now = Date.now();
+        const delta = Math.max(0, now - rawTimestamp);
+
+        const minute = 60 * 1000;
+        const hour = 60 * minute;
+        const day = 24 * hour;
+        const week = 7 * day;
+
+        if (delta < minute) {
+            return 'Atualizado agora';
+        }
+
+        if (delta < hour) {
+            const minutes = Math.round(delta / minute);
+            return `Atualizado há ${minutes} min`;
+        }
+
+        if (delta < day) {
+            const hours = Math.round(delta / hour);
+            return `Atualizado há ${hours} h`;
+        }
+
+        if (delta < week) {
+            const days = Math.round(delta / day);
+            return `Atualizado há ${days} ${days === 1 ? 'dia' : 'dias'}`;
+        }
+
+        try {
+            const date = new Date(rawTimestamp);
+            if (!Number.isFinite(date.getTime())) {
+                throw new Error('Invalid date');
+            }
+
+            return `Atualizado em ${date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'short',
+            })}`;
+        } catch (_error) {
+            return 'Atualizado recentemente';
+        }
     }
 
     _handleSaveCurrentFilters() {
@@ -852,35 +919,55 @@ export default class FilterPanel {
         card.className = 'filter-predefined-card';
         card.dataset.predefinedId = item.id;
 
+        const header = document.createElement('div');
+        header.className = 'filter-predefined-card__header';
+
+        const iconWrapper = document.createElement('span');
+        iconWrapper.className = 'filter-predefined-card__icon material-symbols-outlined';
+        iconWrapper.setAttribute('aria-hidden', 'true');
+        iconWrapper.textContent = 'auto_awesome';
+
+        const content = document.createElement('div');
+        content.className = 'filter-predefined-card__content';
+
         const title = document.createElement('h4');
         title.className = 'filter-predefined-card__title';
         title.textContent = item.nome;
-        card.appendChild(title);
+        content.appendChild(title);
 
         if (item.descricao) {
             const description = document.createElement('p');
             description.className = 'filter-predefined-card__description';
             description.textContent = item.descricao;
-            card.appendChild(description);
+            content.appendChild(description);
         }
+
+        header.append(iconWrapper, content);
+        card.appendChild(header);
+
+        const footer = document.createElement('div');
+        footer.className = 'filter-predefined-card__footer';
 
         const meta = document.createElement('div');
         meta.className = 'filter-predefined-card__meta';
-        const icon = document.createElement('span');
-        icon.className = 'material-symbols-outlined';
-        icon.setAttribute('aria-hidden', 'true');
-        icon.textContent = 'quiz';
+
+        const metaIcon = document.createElement('span');
+        metaIcon.className = 'material-symbols-outlined';
+        metaIcon.setAttribute('aria-hidden', 'true');
+        metaIcon.textContent = 'quiz';
+
         const metaText = document.createElement('span');
+        metaText.className = 'filter-predefined-card__meta-text';
         metaText.textContent = `${this._formatNumber(item.total_perguntas)} questões`;
-        meta.append(icon, metaText);
-        card.appendChild(meta);
+
+        meta.append(metaIcon, metaText);
 
         const actions = document.createElement('div');
         actions.className = 'filter-predefined-card__actions';
 
         const startButton = document.createElement('button');
         startButton.type = 'button';
-        startButton.className = 'button button--primary button--small';
+        startButton.className = 'button button--surface button--small';
         startButton.dataset.role = 'start-predefined';
 
         const startIcon = document.createElement('span');
@@ -893,7 +980,8 @@ export default class FilterPanel {
         startButton.append(startIcon, startLabel);
 
         actions.appendChild(startButton);
-        card.appendChild(actions);
+        footer.append(meta, actions);
+        card.appendChild(footer);
 
         return card;
     }

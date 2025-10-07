@@ -110,6 +110,28 @@
     opacity: 0.6;
 }
 
+/* --- BOTÃO SURFACE (SUBTLE GRADIENT) --- */
+.button--surface {
+    background: rgba(var(--color-white-rgb), 0.95);
+    color: var(--color-primary-dark);
+    border-color: rgba(var(--color-primary-medium-rgb), 0.35);
+    box-shadow: inset 0 0 0 1px rgba(var(--color-primary-light-rgb), 0.5);
+}
+
+.button--surface:not(:disabled):hover,
+.button--surface:not(:disabled):focus-visible {
+    background: rgba(var(--color-white-rgb), 1);
+    border-color: rgba(var(--color-primary-medium-rgb), 0.45);
+    box-shadow: 0 8px 18px -14px rgba(var(--color-primary-dark-rgb), 0.35);
+    filter: none;
+}
+
+.button--surface:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: inset 0 0 0 1px rgba(var(--color-primary-medium-rgb), 0.45);
+    filter: none;
+}
+
 /* --- BOTÃO APENAS COM ÍCONE --- */
 .button--icon-only {
     padding: var(--spacing-xs, 8px);

@@ -650,15 +650,6 @@
         justify-items: stretch;
     }
 
-    .challenge-stat {
-        background: linear-gradient(165deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.1) 100%);
-        color: var(--color-primary-dark);
-        box-shadow: 0 16px 30px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.16);
-        border: 1px solid rgba(255, 255, 255, 0.32);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-    }
-
     .challenge-stat__label,
     .challenge-stat__value {
         color: inherit;

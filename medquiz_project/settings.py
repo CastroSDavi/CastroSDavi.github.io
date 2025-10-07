@@ -27,14 +27,16 @@ SECRET_KEY = 'django-insecure-66aois=68ij*lt^k%liy0v@w-omj&z+0-1$w=13n-akp*+9n*z
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "192.168.1.3",
     'localhost',
     '127.0.0.1',
     '.ngrok-free.app',  # Mantém isso para cobrir o acesso geral
-    '7ea944ff518d.ngrok-free.app', # Adicione o host específico também
+    '16ca196a52a5.ngrok-free.app', # Adicione o host específico também
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://7ea944ff518d.ngrok-free.app"
+    "https://16ca196a52a5.ngrok-free.app",
+    "http://192.168.1.3:8000",
     # Se o ngrok gerar uma nova URL na próxima vez, você precisará atualizá-la aqui também
     # ou, se o ngrok sempre usar o mesmo domínio base (ex: .ngrok-free.app) e você confia nele,
     # algumas versões mais recentes do Django podem permitir wildcards aqui com cuidado,

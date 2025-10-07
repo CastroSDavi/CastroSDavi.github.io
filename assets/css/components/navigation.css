@@ -73,7 +73,7 @@
 .bottom-nav {
   display: none; /* Regra padrão: a barra está OCULTA. */
   position: fixed;
-  bottom: calc(var(--spacing-sm, 12px) + env(safe-area-inset-bottom, 0px));
+  bottom: env(safe-area-inset-bottom, 0px);
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - var(--spacing-lg, 28px));
@@ -185,7 +185,7 @@
 
   /* 3. Aplica o padding inferior SOMENTE na página 'home' para evitar que o conteúdo seja coberto */
   body[data-page-id="home"] {
-    padding-bottom: calc(var(--bottom-nav-height, 68px) + var(--spacing-sm, 12px));
+    padding-bottom: calc(var(--bottom-nav-height, 68px) + env(safe-area-inset-bottom, 0px));
   }
 }
 

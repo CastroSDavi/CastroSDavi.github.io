@@ -22,14 +22,20 @@ export default class FilterPanel {
         this.searchQuery = '';
 
         this.storageKey = 'medquiz.filterPanelState';
+        this.savedCollectionsStorageKey = 'medquiz.filterPanelCollections';
         this.hasInitialized = false;
         this.hasGeneratedTree = false;
         this.cachedCategoriesSignature = null;
         this.lastPersistedFilters = null;
+        this.predefinedListSignature = null;
+        this.savedCollections = [];
+        this.maxSavedCollections = 12;
 
         this.debouncedTriggerCountFetch = debounce(this._triggerCountFetch.bind(this), 400);
 
         this._cacheOwnElements();
+        this.savedCollections = this._loadSavedCollections();
+        this._renderSavedCollections();
     }
 
     setActionOrchestrator(orchestrator) {
@@ -59,6 +65,12 @@ export default class FilterPanel {
             numQuestionsFeedbackText: this.panelElement.querySelector('#num-questions-feedback'),
             btnLimparFiltrosPainel: this.panelElement.querySelector('#btn-limpar-filtros-painel'),
             btnAplicarFiltrosPainel: this.panelElement.querySelector('#btn-aplicar-filtros-painel'),
+            predefinedList: this.panelElement.querySelector('#filter-predefined-list'),
+            predefinedEmptyState: this.panelElement.querySelector('#filter-predefined-empty'),
+            savedCollectionsList: this.panelElement.querySelector('#saved-collections-list'),
+            savedCollectionsEmptyState: this.panelElement.querySelector('#saved-collections-empty'),
+            savedCollectionNameInput: this.panelElement.querySelector('#saved-collection-name'),
+            btnSaveCollection: this.panelElement.querySelector('#btn-save-filter-collection'),
         };
         this._updateSearchVisualState();
     }
@@ -117,6 +129,28 @@ export default class FilterPanel {
         this.elements.numQuestionsInput?.addEventListener('input', (e) => this._validateAndProcessNumQuestionsInput(e.target));
         this.elements.btnNumDecrement?.addEventListener('click', () => this._handleStepper(-1));
         this.elements.btnNumIncrement?.addEventListener('click', () => this._handleStepper(1));
+
+        this.elements.predefinedList?.addEventListener('click', (event) => this._handlePredefinedListInteraction(event));
+
+        this.elements.btnSaveCollection?.addEventListener('click', (event) => {
+            event.preventDefault();
+            this._handleSaveCurrentFilters();
+        });
+
+        this.elements.savedCollectionNameInput?.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                this._handleSaveCurrentFilters();
+            }
+        });
+
+        this.elements.savedCollectionNameInput?.addEventListener('input', () => {
+            this._clearSavedCollectionInputError();
+        });
+
+        this.elements.savedCollectionsList?.addEventListener('click', (event) => {
+            this._handleSavedCollectionsClick(event);
+        });
     }
     
     _handleDifficultyChange(clickedInput) {
@@ -226,6 +260,12 @@ export default class FilterPanel {
         const categories = Array.isArray(rootState?.geral?.allCategories)
             ? rootState.geral.allCategories
             : [];
+        const predefinedQuizzes = Array.isArray(rootState?.geral?.predefinedQuizzes?.items)
+            ? rootState.geral.predefinedQuizzes.items
+            : [];
+
+        this._renderPredefinedQuizzes(predefinedQuizzes);
+        this._renderSavedCollections();
 
         let initialFilters = null;
         if (!this.hasInitialized) {
@@ -375,6 +415,520 @@ export default class FilterPanel {
             console.warn('FilterPanel: não foi possível recuperar os filtros salvos.', storageError);
             return null;
         }
+    }
+
+    _persistSavedCollections(collections = this.savedCollections) {
+        if (typeof window === 'undefined' || !window.localStorage) {
+            return;
+        }
+
+        try {
+            const payload = JSON.stringify(
+                (collections || []).map(collection => ({
+                    id: collection.id,
+                    name: collection.name,
+                    filters: collection.filters,
+                    createdAt: collection.createdAt,
+                    updatedAt: collection.updatedAt,
+                }))
+            );
+            window.localStorage.setItem(this.savedCollectionsStorageKey, payload);
+        } catch (storageError) {
+            console.warn('FilterPanel: não foi possível salvar as coleções de filtros.', storageError);
+        }
+    }
+
+    _loadSavedCollections() {
+        if (typeof window === 'undefined' || !window.localStorage) {
+            return [];
+        }
+
+        try {
+            const rawValue = window.localStorage.getItem(this.savedCollectionsStorageKey);
+            if (!rawValue) {
+                return [];
+            }
+            const parsed = JSON.parse(rawValue);
+            if (!Array.isArray(parsed)) {
+                return [];
+            }
+
+            const sanitized = parsed
+                .map(entry => this._sanitizeSavedCollectionEntry(entry))
+                .filter(Boolean);
+
+            return this._sortSavedCollections(sanitized);
+        } catch (storageError) {
+            console.warn('FilterPanel: não foi possível recuperar coleções salvas.', storageError);
+            return [];
+        }
+    }
+
+    _sanitizeSavedCollectionEntry(rawEntry) {
+        if (!rawEntry || typeof rawEntry !== 'object') {
+            return null;
+        }
+
+        const fallbackId = `collection-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+        const id = typeof rawEntry.id === 'string' && rawEntry.id.trim() ? rawEntry.id.trim() : fallbackId;
+        const name = typeof rawEntry.name === 'string' && rawEntry.name.trim()
+            ? rawEntry.name.trim()
+            : 'Coleção sem título';
+
+        const createdAtRaw = Number.parseInt(rawEntry.createdAt, 10);
+        const updatedAtRaw = Number.parseInt(rawEntry.updatedAt, 10);
+        const now = Date.now();
+
+        const filters = this._sanitizeFilterObject(rawEntry.filters || {});
+
+        return {
+            id,
+            name,
+            filters,
+            createdAt: Number.isFinite(createdAtRaw) ? createdAtRaw : now,
+            updatedAt: Number.isFinite(updatedAtRaw) ? updatedAtRaw : now,
+        };
+    }
+
+    _sortSavedCollections(collections = []) {
+        return [...collections].sort((a, b) => {
+            const referenceA = Number.isFinite(a?.updatedAt) ? a.updatedAt : a?.createdAt ?? 0;
+            const referenceB = Number.isFinite(b?.updatedAt) ? b.updatedAt : b?.createdAt ?? 0;
+            return referenceB - referenceA;
+        });
+    }
+
+    _areFiltersEqual(firstFilters, secondFilters) {
+        const first = this._sanitizeFilterObject(firstFilters || {});
+        const second = this._sanitizeFilterObject(secondFilters || {});
+
+        const normalizeArray = (array) => [...(array || [])].map(String).sort();
+        const firstCategories = normalizeArray(first.categoryIds);
+        const secondCategories = normalizeArray(second.categoryIds);
+        if (firstCategories.length !== secondCategories.length) {
+            return false;
+        }
+        for (let i = 0; i < firstCategories.length; i += 1) {
+            if (firstCategories[i] !== secondCategories[i]) {
+                return false;
+            }
+        }
+
+        const firstDifficulties = normalizeArray(first.difficultyLevels);
+        const secondDifficulties = normalizeArray(second.difficultyLevels);
+        if (firstDifficulties.length !== secondDifficulties.length) {
+            return false;
+        }
+        for (let j = 0; j < firstDifficulties.length; j += 1) {
+            if (firstDifficulties[j] !== secondDifficulties[j]) {
+                return false;
+            }
+        }
+
+        const normalizedFirstNum = Number.isFinite(first.numQuestions) ? first.numQuestions : null;
+        const normalizedSecondNum = Number.isFinite(second.numQuestions) ? second.numQuestions : null;
+        if (normalizedFirstNum !== normalizedSecondNum) {
+            return false;
+        }
+
+        const normalizedFirstSearch = (first.searchQuery || '').trim();
+        const normalizedSecondSearch = (second.searchQuery || '').trim();
+        return normalizedFirstSearch === normalizedSecondSearch;
+    }
+
+    _formatDifficultyLabel(label) {
+        if (typeof label !== 'string' || !label) {
+            return '';
+        }
+        return label.charAt(0).toUpperCase() + label.slice(1);
+    }
+
+    _formatNumber(value) {
+        if (typeof value === 'number' && Number.isFinite(value)) {
+            return value.toLocaleString('pt-BR');
+        }
+        const parsed = Number.parseInt(value, 10);
+        if (Number.isFinite(parsed)) {
+            return parsed.toLocaleString('pt-BR');
+        }
+        return '0';
+    }
+
+    _describeFilters(filters) {
+        const snapshot = this._sanitizeFilterObject(filters || {});
+        const categoryCount = snapshot.categoryIds?.length || 0;
+        const hasSearch = snapshot.searchQuery && snapshot.searchQuery.trim().length > 0;
+
+        const categoryLabel = categoryCount > 0
+            ? `${categoryCount} ${categoryCount === 1 ? 'categoria selecionada' : 'categorias selecionadas'}`
+            : 'Todas as categorias';
+
+        const difficulties = snapshot.difficultyLevels || [];
+        const hasAll = difficulties.includes('all');
+        const difficultyLabel = hasAll
+            ? 'Todas as dificuldades'
+            : `Dificuldade: ${difficulties.map(level => this._formatDifficultyLabel(level)).join(', ')}`;
+
+        const numQuestionsLabel = snapshot.numQuestions
+            ? `${this._formatNumber(snapshot.numQuestions)} questões`
+            : 'Quantidade flexível';
+
+        const parts = [categoryLabel, difficultyLabel, numQuestionsLabel];
+        if (hasSearch) {
+            parts.push(`Busca: "${snapshot.searchQuery.trim()}"`);
+        }
+
+        return parts.join(' • ');
+    }
+
+    _renderSavedCollections() {
+        const listElement = this.elements.savedCollectionsList;
+        if (!listElement) {
+            return;
+        }
+
+        const collections = Array.isArray(this.savedCollections) ? this._sortSavedCollections(this.savedCollections) : [];
+        listElement.innerHTML = '';
+
+        if (!collections.length) {
+            this.elements.savedCollectionsEmptyState?.classList.remove('u-is-hidden');
+            return;
+        }
+
+        collections.forEach(collection => {
+            listElement.appendChild(this._buildSavedCollectionItem(collection));
+        });
+        this.elements.savedCollectionsEmptyState?.classList.add('u-is-hidden');
+    }
+
+    _buildSavedCollectionItem(collection) {
+        const listItem = document.createElement('li');
+        listItem.className = 'saved-collections-list__item';
+        listItem.dataset.collectionId = collection.id;
+
+        const header = document.createElement('div');
+        header.className = 'saved-collections-list__header';
+
+        const title = document.createElement('h4');
+        title.className = 'saved-collections-list__title';
+        title.textContent = collection.name;
+        header.appendChild(title);
+
+        const actions = document.createElement('div');
+        actions.className = 'saved-collections-list__actions';
+
+        const applyButton = document.createElement('button');
+        applyButton.type = 'button';
+        applyButton.className = 'button button--primary button--small';
+        applyButton.dataset.role = 'apply-collection';
+
+        const applyIcon = document.createElement('span');
+        applyIcon.className = 'material-symbols-outlined';
+        applyIcon.setAttribute('aria-hidden', 'true');
+        applyIcon.textContent = 'check_circle';
+        const applyLabel = document.createElement('span');
+        applyLabel.className = 'button__label';
+        applyLabel.textContent = 'Aplicar filtros';
+        applyButton.append(applyIcon, applyLabel);
+
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'button button--icon-only saved-collections-list__remove';
+        removeButton.dataset.role = 'remove-collection';
+        removeButton.setAttribute('aria-label', `Remover coleção ${collection.name}`);
+        const removeIcon = document.createElement('span');
+        removeIcon.className = 'material-symbols-outlined';
+        removeIcon.setAttribute('aria-hidden', 'true');
+        removeIcon.textContent = 'delete';
+        removeButton.appendChild(removeIcon);
+
+        actions.append(applyButton, removeButton);
+        header.appendChild(actions);
+
+        const meta = document.createElement('p');
+        meta.className = 'saved-collections-list__meta';
+        meta.textContent = this._describeFilters(collection.filters);
+
+        listItem.append(header, meta);
+
+        return listItem;
+    }
+
+    _handleSaveCurrentFilters() {
+        const input = this.elements.savedCollectionNameInput;
+        const rawName = input?.value?.trim() ?? '';
+
+        if (!rawName) {
+            this._markSavedCollectionInputError();
+            if (input) {
+                try {
+                    input.focus({ preventScroll: true });
+                } catch (_focusError) {
+                    input.focus();
+                }
+            }
+            return;
+        }
+
+        const filtersSnapshot = this._captureCurrentFilters();
+        const normalizedName = rawName.toLowerCase();
+        const timestamp = Date.now();
+
+        let updatedCollections = Array.isArray(this.savedCollections) ? [...this.savedCollections] : [];
+
+        const existingByNameIndex = updatedCollections.findIndex(collection => (collection.name || '').toLowerCase() === normalizedName);
+        if (existingByNameIndex >= 0) {
+            const existing = updatedCollections[existingByNameIndex];
+            updatedCollections[existingByNameIndex] = {
+                ...existing,
+                name: rawName,
+                filters: filtersSnapshot,
+                updatedAt: timestamp,
+            };
+        } else {
+            const existingByFiltersIndex = updatedCollections.findIndex(collection => this._areFiltersEqual(collection.filters, filtersSnapshot));
+            if (existingByFiltersIndex >= 0) {
+                const existing = updatedCollections[existingByFiltersIndex];
+                updatedCollections[existingByFiltersIndex] = {
+                    ...existing,
+                    name: rawName,
+                    filters: filtersSnapshot,
+                    updatedAt: timestamp,
+                };
+            } else {
+                const newCollection = {
+                    id: `collection-${timestamp}-${Math.random().toString(36).slice(2, 7)}`,
+                    name: rawName,
+                    filters: filtersSnapshot,
+                    createdAt: timestamp,
+                    updatedAt: timestamp,
+                };
+                updatedCollections.unshift(newCollection);
+                if (updatedCollections.length > this.maxSavedCollections) {
+                    updatedCollections = updatedCollections.slice(0, this.maxSavedCollections);
+                }
+            }
+        }
+
+        this.savedCollections = this._sortSavedCollections(updatedCollections);
+        this._persistSavedCollections();
+        this._renderSavedCollections();
+
+        if (input) {
+            input.value = '';
+            this._clearSavedCollectionInputError();
+        }
+    }
+
+    _markSavedCollectionInputError() {
+        const input = this.elements.savedCollectionNameInput;
+        if (!input) {
+            return;
+        }
+        input.classList.add('has-error');
+        input.setAttribute('aria-invalid', 'true');
+    }
+
+    _clearSavedCollectionInputError() {
+        const input = this.elements.savedCollectionNameInput;
+        if (!input) {
+            return;
+        }
+        input.classList.remove('has-error');
+        input.removeAttribute('aria-invalid');
+    }
+
+    _handleSavedCollectionsClick(event) {
+        const target = event.target;
+        if (!target) {
+            return;
+        }
+
+        const removeButton = target.closest('[data-role="remove-collection"]');
+        const applyButton = target.closest('[data-role="apply-collection"]');
+        if (!removeButton && !applyButton) {
+            return;
+        }
+
+        const listItem = target.closest('[data-collection-id]');
+        if (!listItem) {
+            return;
+        }
+
+        const collectionId = listItem.dataset.collectionId;
+        const collection = (this.savedCollections || []).find(item => item.id === collectionId);
+
+        if (removeButton) {
+            event.preventDefault();
+            this._deleteSavedCollection(collectionId);
+            return;
+        }
+
+        if (applyButton && collection) {
+            event.preventDefault();
+            this._applySavedCollection(collection);
+        }
+    }
+
+    _deleteSavedCollection(collectionId) {
+        if (!collectionId) {
+            return;
+        }
+        const updated = (this.savedCollections || []).filter(item => item.id !== collectionId);
+        if (updated.length === (this.savedCollections || []).length) {
+            return;
+        }
+        this.savedCollections = this._sortSavedCollections(updated);
+        this._persistSavedCollections();
+        this._renderSavedCollections();
+    }
+
+    _applySavedCollection(collection) {
+        if (!collection || !collection.filters) {
+            return;
+        }
+        const snapshot = this._sanitizeFilterObject(collection.filters);
+        this.persistedCategorySelection = new Set((snapshot.categoryIds || []).map(id => id.toString()));
+        this.setSearchQuery(snapshot.searchQuery || '');
+        this.generateCategoryTree(this.allCategories || []);
+        this.setCategoryTreeState(snapshot.categoryIds || []);
+        this.setDifficultyState(snapshot.difficultyLevels || ['all']);
+        this.setNumberOfQuestionsState(snapshot.numQuestions);
+        this._persistFilters();
+        this.debouncedTriggerCountFetch();
+        this._renderFeedback();
+
+        const timestamp = Date.now();
+        this.savedCollections = this._sortSavedCollections(
+            (this.savedCollections || []).map(item => item.id === collection.id
+                ? { ...item, updatedAt: timestamp }
+                : item)
+        );
+        this._persistSavedCollections();
+        this._renderSavedCollections();
+    }
+
+    _renderPredefinedQuizzes(predefinedList = []) {
+        const listElement = this.elements.predefinedList;
+        if (!listElement) {
+            return;
+        }
+
+        const sanitizedList = Array.isArray(predefinedList)
+            ? predefinedList
+                .filter(item => item && Object.prototype.hasOwnProperty.call(item, 'id'))
+                .map(item => ({
+                    id: Number.parseInt(item.id, 10),
+                    nome: typeof item.nome === 'string' ? item.nome : String(item.nome ?? ''),
+                    descricao: typeof item.descricao === 'string' ? item.descricao : '',
+                    total_perguntas: Number.isFinite(Number(item.total_perguntas))
+                        ? Number(item.total_perguntas)
+                        : 0,
+                }))
+                .filter(item => Number.isInteger(item.id) && item.id > 0)
+            : [];
+
+        const signature = JSON.stringify(sanitizedList.map(item => [item.id, item.nome, item.descricao, item.total_perguntas]));
+        if (signature === this.predefinedListSignature && listElement.childElementCount === sanitizedList.length) {
+            return;
+        }
+        this.predefinedListSignature = signature;
+
+        listElement.innerHTML = '';
+
+        if (!sanitizedList.length) {
+            this.elements.predefinedEmptyState?.classList.remove('u-is-hidden');
+            return;
+        }
+
+        sanitizedList.forEach(item => {
+            listElement.appendChild(this._buildPredefinedCard(item));
+        });
+        this.elements.predefinedEmptyState?.classList.add('u-is-hidden');
+    }
+
+    _buildPredefinedCard(item) {
+        const card = document.createElement('article');
+        card.className = 'filter-predefined-card';
+        card.dataset.predefinedId = item.id;
+
+        const title = document.createElement('h4');
+        title.className = 'filter-predefined-card__title';
+        title.textContent = item.nome;
+        card.appendChild(title);
+
+        if (item.descricao) {
+            const description = document.createElement('p');
+            description.className = 'filter-predefined-card__description';
+            description.textContent = item.descricao;
+            card.appendChild(description);
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'filter-predefined-card__meta';
+        const icon = document.createElement('span');
+        icon.className = 'material-symbols-outlined';
+        icon.setAttribute('aria-hidden', 'true');
+        icon.textContent = 'quiz';
+        const metaText = document.createElement('span');
+        metaText.textContent = `${this._formatNumber(item.total_perguntas)} questões`;
+        meta.append(icon, metaText);
+        card.appendChild(meta);
+
+        const actions = document.createElement('div');
+        actions.className = 'filter-predefined-card__actions';
+
+        const startButton = document.createElement('button');
+        startButton.type = 'button';
+        startButton.className = 'button button--primary button--small';
+        startButton.dataset.role = 'start-predefined';
+
+        const startIcon = document.createElement('span');
+        startIcon.className = 'material-symbols-outlined';
+        startIcon.setAttribute('aria-hidden', 'true');
+        startIcon.textContent = 'play_arrow';
+        const startLabel = document.createElement('span');
+        startLabel.className = 'button__label';
+        startLabel.textContent = 'Começar agora';
+        startButton.append(startIcon, startLabel);
+
+        actions.appendChild(startButton);
+        card.appendChild(actions);
+
+        return card;
+    }
+
+    _handlePredefinedListInteraction(event) {
+        const target = event.target;
+        if (!target) {
+            return;
+        }
+
+        const actionButton = target.closest('[data-role="start-predefined"]');
+        if (!actionButton) {
+            return;
+        }
+
+        const card = actionButton.closest('[data-predefined-id]');
+        if (!card) {
+            return;
+        }
+
+        const quizId = Number.parseInt(card.dataset.predefinedId, 10);
+        if (Number.isNaN(quizId)) {
+            return;
+        }
+
+        if (!this.actionOrchestrator || typeof this.actionOrchestrator.startPredefinedQuiz !== 'function') {
+            console.error('FilterPanel: actionOrchestrator indisponível para iniciar quiz pré-definido.');
+            return;
+        }
+
+        if (this.quizUI?.modalManager) {
+            this.quizUI.modalManager.toggleFilterPanel(false);
+        }
+
+        this.actionOrchestrator.startPredefinedQuiz(quizId);
     }
 
     _computeCategoriesSignature(categories) {

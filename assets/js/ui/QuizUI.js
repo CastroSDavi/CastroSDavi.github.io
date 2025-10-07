@@ -328,7 +328,6 @@ export default class QuizUI {
             btnCancelDeleteAccountModal: document.getElementById('cancel-delete-account-btn'),
             deleteAccountForm: document.getElementById('deleteAccountForm'),
             passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'),
-            bottomNavElement: document.querySelector('.bottom-nav'),
             sessionLoadingIndicator: document.getElementById('session-loading-indicator'),
             sessionLoadingMessage: document.getElementById('session-loading-message'),
             
@@ -386,7 +385,7 @@ export default class QuizUI {
     }
     
     displayQuizLayout(showQuizLayout = true) {
-        const { placeholderFiltrosContainer, quizSectionContent, bottomNavElement } = this.elements;
+        const { placeholderFiltrosContainer, quizSectionContent } = this.elements;
         const displayMode = this.store?.getState()?.quiz?.quizDisplayContext?.displayMode || 'challenge';
 
         if (showQuizLayout) {
@@ -399,7 +398,6 @@ export default class QuizUI {
             this.clearInlineMessages();
             this.hideElement(placeholderFiltrosContainer);
             if (this.resultDisplay) this.resultDisplay.hide();
-            if (bottomNavElement) this.hideElement(bottomNavElement);
             // --- INÍCIO DA ALTERAÇÃO: Remoção da chamada ao banner antigo ---
             // this.hideElement(this.elements.resumeBannerContainer);
             // --- FIM DA ALTERAÇÃO ---
@@ -407,11 +405,9 @@ export default class QuizUI {
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
             if (this.resultDisplay) this.resultDisplay.hide();
-            
+
             if (this.challengeHubInstance) this.challengeHubInstance.showHub();
             this.hideElement(placeholderFiltrosContainer);
-            
-            if (bottomNavElement) this.showElement(bottomNavElement);
         }
     }
 

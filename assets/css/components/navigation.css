@@ -73,17 +73,20 @@
 .bottom-nav {
   display: none; /* Regra padrão: a barra está OCULTA. */
   position: fixed;
-  bottom: calc(var(--spacing-sm, 12px) + env(safe-area-inset-bottom, 0px));
-  left: 50%;
-  transform: translateX(-50%);
-  width: calc(100% - var(--spacing-lg, 28px));
-  max-width: 420px;
-  height: var(--bottom-nav-height, 68px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: none;
+  min-height: calc(var(--bottom-nav-height, 68px) + env(safe-area-inset-bottom, 0px));
+  padding: 0 var(--spacing-lg, 28px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  box-sizing: border-box;
   z-index: var(--z-index-bottom-nav, 100);
 }
 
 .bottom-nav__list {
-  height: 100%;
+  min-height: var(--bottom-nav-height, 68px);
   width: 100%;
   list-style: none;
   margin: 0;
@@ -185,7 +188,7 @@
 
   /* 3. Aplica o padding inferior SOMENTE na página 'home' para evitar que o conteúdo seja coberto */
   body[data-page-id="home"] {
-    padding-bottom: calc(var(--bottom-nav-height, 68px) + var(--spacing-sm, 12px));
+    padding-bottom: calc(var(--bottom-nav-height, 68px) + var(--spacing-sm, 12px) + env(safe-area-inset-bottom, 0px));
   }
 }
 

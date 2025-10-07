@@ -121,11 +121,3 @@
         justify-content: flex-end;
     }
 }
-
-/* 3. SEMPRE esconde o footer em telas mobile (quando a bottom-navbar deve aparecer) */
-/* Esta regra tem alta prioridade para mobile. */
-@media (max-width: 768px) {
-    .site-footer {
-        display: none !important;
-    }
-}

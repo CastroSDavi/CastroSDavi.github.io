@@ -142,7 +142,6 @@
     --z-index-filter-panel: 800; /* Painel de filtro */
     --z-index-modal-backdrop: 900;
     --z-index-modal-content: 901;
-    --z-index-bottom-nav: 100; /* Abaixo do header, mas acima do conteúdo */
 
     /* Acessibilidade */
     --focus-outline-color: var(--color-primary-medium);
@@ -155,7 +154,6 @@
     --header-height-tablet: 70px;
     --header-height-mobile: 65px;
     --main-nav-height: 50px; /* Altura base da navegação principal */
-    --bottom-nav-height: 68px;
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
     --layout-section-max-width: 1260px;

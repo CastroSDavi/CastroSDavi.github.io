@@ -687,13 +687,6 @@
     }
 }
 
-@media (max-width: 768px) {
-    /* Evita que a bottom-nav cubra os cards quando o Hub está visível na aba de questões */
-    body[data-page-id="questions"] .challenge-hub {
-        margin-bottom: calc(var(--bottom-nav-height, 68px) + var(--spacing-sm, 12px) + env(safe-area-inset-bottom, 0px));
-    }
-}
-
 @media (min-width: 960px) {
     .challenge-card--resume {
         grid-column: 1 / span 2;

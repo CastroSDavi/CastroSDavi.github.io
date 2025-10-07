@@ -140,6 +140,24 @@
     border-radius: var(--border-radius-pill);
 }
 
+.filter-group__header--with-action {
+    justify-content: space-between;
+    gap: var(--spacing-sm, 12px);
+}
+
+.filter-group__description {
+    margin: 0 0 var(--spacing-sm, 12px);
+    color: var(--color-gray-600);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.filter-group__empty {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-gray-500);
+}
+
 /* Controles dentro de um grupo (ex: Selecionar Todas/Limpar Todas para categorias) */
 .filter-group__toolbar {
     display: flex;
@@ -206,6 +224,157 @@
     box-shadow:
         0 20px 42px -18px rgba(var(--color-primary-dark-rgb), 0.42),
         0 0 0 1px rgba(var(--color-primary-medium-rgb), 0.18);
+}
+
+.filter-predefined-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm, 12px);
+}
+
+.filter-predefined-card {
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg, 12px);
+    padding: var(--spacing-md, 20px);
+    background: linear-gradient(135deg, rgba(var(--color-white-rgb), 0.98), rgba(var(--color-primary-light-rgb), 0.08));
+    box-shadow: 0 10px 28px -24px rgba(var(--color-primary-dark-rgb), 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm, 12px);
+}
+
+.filter-predefined-card__title {
+    font-size: 1rem;
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--color-primary-dark);
+    margin: 0;
+}
+
+.filter-predefined-card__description {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-gray-600);
+}
+
+.filter-predefined-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs, 8px);
+    font-size: 0.85rem;
+    color: var(--color-gray-500);
+}
+
+.filter-predefined-card__actions {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.filter-predefined-card__actions .button {
+    width: auto;
+}
+
+.filter-saved__form {
+    display: flex;
+    gap: var(--spacing-xs, 8px);
+    margin-bottom: var(--spacing-sm, 12px);
+}
+
+.filter-saved__form .form-control--filter-panel {
+    flex: 1;
+}
+
+.filter-saved__save-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.filter-saved__save-button .material-symbols-outlined {
+    font-size: 20px;
+}
+
+.saved-collections-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 8px);
+}
+
+.saved-collections-list__item {
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--border-radius-lg, 12px);
+    padding: var(--spacing-sm, 12px) var(--spacing-md, 20px);
+    background-color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 8px);
+    box-shadow: 0 6px 18px -16px rgba(var(--color-primary-dark-rgb), 0.4);
+}
+
+.saved-collections-list__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-xs, 8px);
+}
+
+.saved-collections-list__title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: var(--font-weight-semibold, 600);
+    color: var(--color-primary-dark);
+}
+
+.saved-collections-list__meta {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-gray-600);
+    line-height: 1.4;
+}
+
+.saved-collections-list__actions {
+    display: flex;
+    gap: var(--spacing-xs, 8px);
+}
+
+.saved-collections-list__actions .button {
+    flex: none;
+}
+
+.saved-collections-list__remove {
+    color: var(--color-gray-500);
+}
+
+.saved-collections-list__remove:hover,
+.saved-collections-list__remove:focus-visible {
+    color: var(--color-accent-red);
+    background-color: rgba(var(--color-accent-red-rgb), 0.1);
+}
+
+.form-control--filter-panel.has-error {
+    border-color: var(--color-accent-red);
+    box-shadow: 0 0 0 1px rgba(var(--color-accent-red-rgb), 0.25);
+}
+
+.form-control--filter-panel.has-error::placeholder {
+    color: rgba(var(--color-accent-red-rgb), 0.65);
+}
+
+@media (max-width: 520px) {
+    .filter-predefined-card {
+        padding: var(--spacing-sm, 12px) var(--spacing-md, 20px);
+    }
+
+    .saved-collections-list__item {
+        padding: var(--spacing-sm, 12px);
+    }
+
+    .saved-collections-list__actions {
+        flex-wrap: wrap;
+    }
 }
 
 .filter-search__icon {

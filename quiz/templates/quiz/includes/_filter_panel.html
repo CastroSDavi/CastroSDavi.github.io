@@ -60,6 +60,17 @@
             </div>
         </div>
 
+        <div class="filter-group" id="filter-group-predefined">
+            <div class="filter-group__header filter-group__header--with-action">
+                <h3 class="filter-group__title" id="filter-group-predefined-title">Listas curadas</h3>
+            </div>
+            <p class="filter-group__description">Inicie rapidamente com combinações preparadas pela nossa equipe.</p>
+            <div id="filter-predefined-list" class="filter-predefined-list" role="list"
+                aria-labelledby="filter-group-predefined-title"></div>
+            <p id="filter-predefined-empty" class="filter-group__empty u-is-hidden">Nenhuma lista curada disponível no
+                momento.</p>
+        </div>
+
         {# ========================================================================== #}
         {# ============ CAMPO NÚMERO DE QUESTÕES COM BOTÕES STEPPER ============ #}
         {# ========================================================================== #}
@@ -89,6 +100,27 @@
             </div>
         </div>
         {# =================== FIM DO CAMPO NÚMERO DE QUESTÕES =================== #}
+
+        <div class="filter-group" id="filter-group-saved">
+            <div class="filter-group__header filter-group__header--with-action">
+                <h3 class="filter-group__title" id="filter-group-saved-title">Coleções salvas</h3>
+                <button type="button" class="button button--text button--small filter-saved__save-button"
+                    id="btn-save-filter-collection">
+                    <span class="material-symbols-outlined" aria-hidden="true">bookmark_add</span>
+                    <span class="button__label">Salvar atual</span>
+                </button>
+            </div>
+            <p class="filter-group__description">Guarde suas combinações favoritas para reutilizar quando quiser.</p>
+            <div class="filter-saved__form">
+                <label for="saved-collection-name" class="u-sr-only">Nome da coleção</label>
+                <input type="text" id="saved-collection-name" class="form-control--filter-panel"
+                    placeholder="Nome da coleção" maxlength="60" autocomplete="off">
+            </div>
+            <ul id="saved-collections-list" class="saved-collections-list" role="list"
+                aria-labelledby="filter-group-saved-title"></ul>
+            <p id="saved-collections-empty" class="filter-group__empty u-is-hidden">Nenhuma coleção salva ainda. Crie uma
+                combinação e toque em “Salvar atual”.</p>
+        </div>
 
     </div>
     <div class="filter-panel__footer">

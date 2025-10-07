@@ -10,6 +10,8 @@ export default class ChallengeHub {
         // Atalho para os elementos DOM relevantes gerenciados por QuizUI
         this._cacheElements();
 
+        this._setHubActiveClass(this._isHubVisible());
+
         this.lastTotalQuestions = null;
         this.lastQuickQuizCount = null;
         this.predefinedQuizzesCache = [];
@@ -43,6 +45,28 @@ export default class ChallengeHub {
         };
     }
 
+    _isHubVisible() {
+        if (!this.elements.challengeHubContainer) {
+            return false;
+        }
+
+        const hiddenClass = this.quizUI?.hiddenClassName || 'u-is-hidden';
+        return !this.elements.challengeHubContainer.classList.contains(hiddenClass);
+    }
+
+    _setHubActiveClass(isActive) {
+        const bodyElement = document.body;
+        if (!bodyElement) {
+            return;
+        }
+
+        bodyElement.classList.toggle('is-challenge-hub-active', Boolean(isActive));
+
+        if (isActive) {
+            bodyElement.classList.remove('is-quiz-active');
+        }
+    }
+
     /**
      * Define a instância do ActionOrchestrator.
      * @param {ActionOrchestrator} orchestrator - A instância do orquestrador.
@@ -58,11 +82,13 @@ export default class ChallengeHub {
         if (this.elements.challengeHubContainer) {
             this.quizUI.showElement(this.elements.challengeHubContainer);
         }
-        
+
+        this._setHubActiveClass(true);
+
         this.quizUI.hideElement(this.elements.placeholderFiltrosContainer);
         this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
         this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
-        
+
         if (this.quizUI.scorePanel) {
             this.quizUI.scorePanel.hide();
         } else {
@@ -83,6 +109,8 @@ export default class ChallengeHub {
         if (this.elements.challengeHubContainer) {
             this.quizUI.hideElement(this.elements.challengeHubContainer);
         }
+
+        this._setHubActiveClass(false);
     }
 
     /**

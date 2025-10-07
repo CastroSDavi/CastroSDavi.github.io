@@ -388,6 +388,18 @@ export default class QuizUI {
         const { placeholderFiltrosContainer, quizSectionContent } = this.elements;
         const displayMode = this.store?.getState()?.quiz?.quizDisplayContext?.displayMode || 'challenge';
 
+        const bodyElement = document.body;
+
+        if (bodyElement) {
+            if (showQuizLayout) {
+                bodyElement.classList.add('is-quiz-active');
+                bodyElement.classList.remove('is-challenge-hub-active');
+            } else {
+                bodyElement.classList.remove('is-quiz-active');
+                bodyElement.classList.add('is-challenge-hub-active');
+            }
+        }
+
         if (showQuizLayout) {
             if (this.scorePanel) {
                 if (displayMode === 'review') this.scorePanel.hide();

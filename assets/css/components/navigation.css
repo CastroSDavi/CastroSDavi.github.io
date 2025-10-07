@@ -64,3 +64,23 @@
   text-decoration: none;
 }
 
+/* ===== Visibility Rules ===== */
+body[data-page-id="account"] .main-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .main-nav {
+    display: none;
+  }
+
+  body[data-page-id="home"] .main-nav,
+  body[data-page-id="questions"].is-challenge-hub-active .main-nav {
+    display: flex;
+  }
+
+  body[data-page-id="questions"].is-quiz-active .main-nav {
+    display: none;
+  }
+}
+

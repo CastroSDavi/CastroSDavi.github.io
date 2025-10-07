@@ -97,6 +97,27 @@
 --------------------------------------------------------------------------
 */
 
+/* 0. Regras para mobile */
+@media (max-width: 768px) {
+    /* Exibe o footer apenas na Home quando estiver em telas pequenas */
+    body:not([data-page-id="home"]) .site-footer {
+        display: none;
+    }
+
+    /* Alinha o conteúdo ao centro no mobile */
+    .site-footer__container {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .site-footer__right {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* 1. Esconde o footer em páginas específicas (Questões, Minha Conta) em DESKTOP */
 /* Esta regra se aplica quando a tela é MAIOR que 768px (mobile breakpoint) */
 @media (min-width: 769px) {

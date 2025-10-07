@@ -258,12 +258,29 @@ export default class ModalManager {
                 this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
             }
         } else {
-            if (this.elements.quizSectionContent?.classList.contains(this.quizUI.hiddenClassName) &&
-                this.elements.resultadoCard?.classList.contains(this.quizUI.hiddenClassName) &&
-                !this.elements.placeholderFiltrosContainer?.classList.contains(this.quizUI.hiddenClassName)
-                ) {
-                this.quizUI.hideElement(this.elements.placeholderFiltrosContainer);
-                if(this.elements.challengeHubContainer) this.quizUI.showElement(this.elements.challengeHubContainer);
+            const {
+                quizSectionContent,
+                resultadoCard,
+                placeholderFiltrosContainer,
+                challengeHubContainer,
+            } = this.elements;
+
+            const shouldReturnToHub = quizSectionContent?.classList.contains(this.quizUI.hiddenClassName)
+                && resultadoCard?.classList.contains(this.quizUI.hiddenClassName)
+                && !placeholderFiltrosContainer?.classList.contains(this.quizUI.hiddenClassName);
+
+            if (shouldReturnToHub) {
+                this.quizUI.hideElement(placeholderFiltrosContainer);
+
+                if (this.quizUI.challengeHubInstance && typeof this.quizUI.challengeHubInstance.showHub === 'function') {
+                    this.quizUI.challengeHubInstance.showHub();
+                } else if (challengeHubContainer) {
+                    this.quizUI.showElement(challengeHubContainer);
+                    if (typeof document !== 'undefined' && document.body) {
+                        document.body.classList.add('is-challenge-hub-active');
+                        document.body.classList.remove('is-quiz-active');
+                    }
+                }
             }
         }
         this._toggleGenericModal(overlay, panel, show, panel);

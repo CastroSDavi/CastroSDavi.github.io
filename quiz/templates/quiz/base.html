@@ -16,7 +16,9 @@
 </head>
 {# ===== MODIFICAÇÃO AQUI para adicionar data-page-id e os novos data attributes ===== #}
 {% with view_name=request.resolver_match.view_name|default:'' %}
-<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
+<body
+      {% block body_attrs %}{% endblock body_attrs %}
+      data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
       data-page-id="{% if view_name == 'quiz:home' %}home{% elif view_name == 'quiz:questions' %}questions{% elif view_name == 'quiz:account' %}account{% elif view_name == 'quiz:update_profile' %}account{% elif view_name == 'quiz:update_preferences' %}account{% elif view_name == 'quiz:delete_account' %}account{% else %}unknown{% endif %}"
       data-active-tab-on-error="{{ active_tab_on_error|default_if_none:'' }}"
       data-show-delete-modal-on-error="{{ show_delete_account_modal_on_error|yesno:'true,false' }}"

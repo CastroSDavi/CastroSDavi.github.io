@@ -65,7 +65,8 @@
         </div>
     </div>
 
-    {% if show_progress and (home_progress_cards or home_progress_section.show_when_empty) %}
+    {% if show_progress %}
+        {% if home_progress_cards or home_progress_section.show_when_empty %}
     <section class="home-overview" aria-label="{{ home_progress_section.title }}">
         <div class="home-section__header">
             <h2>{{ home_progress_section.title }}</h2>
@@ -191,6 +192,7 @@
         </div>
         {% endif %}
     </section>
+        {% endif %}
     {% endif %}
 
     {% if show_progress %}

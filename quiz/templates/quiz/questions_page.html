@@ -71,31 +71,27 @@
             <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__hero">
                     <div class="challenge-hub__hero-info">
-                        <span class="challenge-hub__eyebrow">Hub de desafios MedQuiz</span>
-                        <h2 class="challenge-hub__title">Escolha seu próximo desafio</h2>
-                        <p class="challenge-hub__subtitle">
-                            Combine modos inteligentes de estudo e aproveite as <span id="hub-total-questions-count">0</span> questões disponíveis.
-                        </p>
+                        <span class="challenge-hub__eyebrow">{{ challenge_hero.eyebrow }}</span>
+                        <h2 class="challenge-hub__title">{{ challenge_hero.title }}</h2>
+                        <p class="challenge-hub__subtitle">{{ challenge_hero.subtitle|safe }}</p>
                         <ul class="challenge-hub__stats" role="list">
+                            {% for stat in challenge_hero_stats %}
                             <li class="challenge-stat" role="listitem">
-                                <span class="challenge-stat__label">Questões no banco</span>
-                                <span class="challenge-stat__value" id="challenge-stat-total">0</span>
+                                <span class="challenge-stat__label">{{ stat.label }}</span>
+                                <span class="challenge-stat__value"{% if stat.dom_id %} id="{{ stat.dom_id }}"{% endif %}>{{ stat.value }}</span>
                             </li>
-                            <li class="challenge-stat" role="listitem">
-                                <span class="challenge-stat__label">Quiz rápido sugerido</span>
-                                <span class="challenge-stat__value" id="hub-quick-quiz-count">0</span>
-                            </li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="challenge-hub__hero-actions">
-                        <button id="hub-customize-quiz-btn" type="button" class="button button--fancy button--fancy-secondary challenge-hub__action-button">
-                            <span class="material-symbols-outlined button__icon" aria-hidden="true">tune</span>
-                            <span class="button__label">Personalizar</span>
+                        {% for action in challenge_hero_actions %}
+                        <button id="{{ action.dom_id }}" type="button" class="{{ action.css_class }}{% if 'challenge-hub__action-button' not in action.css_class %} challenge-hub__action-button{% endif %}">
+                            {% if action.icon %}
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">{{ action.icon }}</span>
+                            {% endif %}
+                            <span class="button__label">{{ action.label }}</span>
                         </button>
-                        <button id="hub-quick-quiz-btn" type="button" class="button button--fancy button--fancy-primary challenge-hub__action-button">
-                            <span class="material-symbols-outlined button__icon" aria-hidden="true">play_arrow</span>
-                            <span class="button__label">Começar agora</span>
-                        </button>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -103,86 +99,45 @@
                     <div id="hub-resume-quiz-card" class="challenge-card challenge-card--resume u-is-hidden">
                         <div class="challenge-card__header">
                             <div class="challenge-card__icon-wrapper">
-                                <span class="material-symbols-outlined challenge-card__icon">autorenew</span>
+                                <span class="material-symbols-outlined challenge-card__icon">{{ challenge_resume_card.icon }}</span>
                             </div>
                             <div class="challenge-card__content">
-                                <h3 class="challenge-card__title">Retomar sessão</h3>
-                                <p class="challenge-card__description" id="hub-resume-card-description">
-                                    Você tem uma sessão em andamento.
-                                </p>
+                                <h3 class="challenge-card__title">{{ challenge_resume_card.title }}</h3>
+                                <p class="challenge-card__description" id="hub-resume-card-description">{{ challenge_resume_card.description|safe }}</p>
                             </div>
                         </div>
                         <div class="challenge-card__actions">
-                            <button id="hub-discard-resume-btn" class="button button--text button--compact">Descartar</button>
-                            <button id="hub-confirm-resume-btn" class="button button--primary button--small">Continuar</button>
+                            <button id="hub-discard-resume-btn" class="button button--text button--compact">{{ challenge_resume_card.discard_label }}</button>
+                            <button id="hub-confirm-resume-btn" class="button button--primary button--small">{{ challenge_resume_card.continue_label }}</button>
                         </div>
                     </div>
 
-                    <button id="hub-smart-drill-btn" type="button" class="challenge-card challenge-card--accent">
+                    {% for card in challenge_cards %}
+                    <button id="{{ card.dom_id }}" type="button" class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}">
                         <div class="challenge-card__header">
                             <div class="challenge-card__icon-wrapper">
-                                <span class="material-symbols-outlined challenge-card__icon">insights</span>
+                                {% if card.icon %}
+                                <span class="material-symbols-outlined challenge-card__icon">{{ card.icon }}</span>
+                                {% endif %}
                             </div>
                             <div class="challenge-card__content">
-                                <h3 class="challenge-card__title">Foco guiado</h3>
-                                <p class="challenge-card__description">Use os filtros avançados para criar o treino perfeito.</p>
+                                <h3 class="challenge-card__title">{{ card.title }}</h3>
+                                <p class="challenge-card__description">{{ card.description }}</p>
                             </div>
                         </div>
+                        {% if card.meta %}
                         <div class="challenge-card__footer">
-                            <span class="challenge-card__meta">Personalize categorias, dificuldade e número de questões.</span>
+                            <span class="challenge-card__meta">{{ card.meta }}</span>
                         </div>
+                        {% endif %}
                     </button>
-
-                    <button id="hub-timed-quiz-btn" type="button" class="challenge-card">
-                        <div class="challenge-card__header">
-                            <div class="challenge-card__icon-wrapper">
-                                <span class="material-symbols-outlined challenge-card__icon">timer</span>
-                            </div>
-                            <div class="challenge-card__content">
-                                <h3 class="challenge-card__title">Simulado cronometrado</h3>
-                                <p class="challenge-card__description">Bloco intenso de 40 questões para testar seu ritmo.</p>
-                            </div>
-                        </div>
-                        <div class="challenge-card__footer">
-                            <span class="challenge-card__meta">Ideal para treinar provas completas.</span>
-                        </div>
-                    </button>
-
-                    <button id="hub-favorite-review-btn" type="button" class="challenge-card">
-                        <div class="challenge-card__header">
-                            <div class="challenge-card__icon-wrapper">
-                                <span class="material-symbols-outlined challenge-card__icon">star</span>
-                            </div>
-                            <div class="challenge-card__content">
-                                <h3 class="challenge-card__title">Revisão de favoritos</h3>
-                                <p class="challenge-card__description">Revise rapidamente as questões marcadas com estrela.</p>
-                            </div>
-                        </div>
-                        <div class="challenge-card__footer">
-                            <span class="challenge-card__meta">Perfeito para revisões direcionadas.</span>
-                        </div>
-                    </button>
-
-                    <button id="hub-repeat-last-btn" type="button" class="challenge-card challenge-card--ghost">
-                        <div class="challenge-card__header">
-                            <div class="challenge-card__icon-wrapper">
-                                <span class="material-symbols-outlined challenge-card__icon">refresh</span>
-                            </div>
-                            <div class="challenge-card__content">
-                                <h3 class="challenge-card__title">Repetir último desafio</h3>
-                                <p class="challenge-card__description">Refaça instantaneamente o último conjunto de questões.</p>
-                            </div>
-                        </div>
-                        <div class="challenge-card__footer">
-                            <span class="challenge-card__meta">Mantém filtros e sequência anteriores.</span>
-                        </div>
-                    </button>
+                    {% endfor %}
                 </div>
 
                 <div id="hub-predefined-section" class="challenge-hub__predefined u-is-hidden">
                     <div class="challenge-hub__section-header">
-                        <h3 class="challenge-hub__section-title">Listas especiais</h3>
-                        <p class="challenge-hub__section-subtitle">Explore quizzes prontos com curadoria da equipe MedQuiz.</p>
+                        <h3 class="challenge-hub__section-title">{{ challenge_predefined_section.title }}</h3>
+                        <p class="challenge-hub__section-subtitle">{{ challenge_predefined_section.subtitle }}</p>
                     </div>
                     <div id="hub-predefined-list" class="challenge-hub__predefined-grid" role="list"></div>
                 </div>
@@ -191,12 +146,16 @@
             <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
                 <div class="card__body">
                     <span class="material-symbols-outlined placeholder-icon">fact_check</span>
-                    <h3>Ajuste seus Filtros</h3>
-                    <p>O painel de filtros está aberto. Selecione as categorias e a dificuldade das questões que deseja praticar.</p>
-                    <p>Após ajustar suas preferências, clique em "Aplicar Filtros" no painel lateral para começar!</p>
-                     <button class="button button--secondary button--small" id="close-filters-and-show-hub-btn">
-                        <span class="material-symbols-outlined button__icon">arrow_back</span>
-                        Voltar para Modos de Jogo
+                    <h3>{{ challenge_placeholders.filters_title }}</h3>
+                    <p>{{ challenge_placeholders.filters_body }}</p>
+                    {% if challenge_placeholders.filters_supporting %}
+                    <p>{{ challenge_placeholders.filters_supporting }}</p>
+                    {% endif %}
+                     <button class="{{ challenge_placeholders.filters_cta_css_class }}" id="{{ challenge_placeholders.filters_cta_dom_id }}">
+                        {% if challenge_placeholders.filters_cta_icon %}
+                        <span class="material-symbols-outlined button__icon">{{ challenge_placeholders.filters_cta_icon }}</span>
+                        {% endif %}
+                        {{ challenge_placeholders.filters_cta_label }}
                     </button>
                 </div>
             </div>

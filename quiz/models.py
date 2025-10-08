@@ -157,6 +157,26 @@ def sanitize_score_panel_config(payload: Optional[Dict[str, Any]]) -> Dict[str, 
 
 # --- Modelos de Conteúdo do Quiz ---
 
+
+class SingletonModel(models.Model):
+    """Base simples para modelos tratados como singleton via admin."""
+
+    singleton_instance_id: int = 1
+
+    id = models.PositiveSmallIntegerField(primary_key=True, default=singleton_instance_id, editable=False)
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):  # type: ignore[override]
+        self.id = self.singleton_instance_id
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def load(cls):
+        instance, _created = cls.objects.get_or_create(pk=cls.singleton_instance_id)
+        return instance
+
 class Categoria(models.Model):
     """
     Categoriza as perguntas. Pode ter uma estrutura hierárquica (pai/filho).
@@ -1823,3 +1843,609 @@ class SystemMessageBroadcast(models.Model):
         }
 
         return payload
+
+
+# --- Configurações dinâmicas de conteúdo para Home e Challenge Hub ---
+
+
+class HomeContentAudience(models.TextChoices):
+    AUTHENTICATED = "authenticated", "Usuários autenticados"
+    ANONYMOUS = "anonymous", "Visitantes"
+
+
+class ValueSourceType(models.TextChoices):
+    STATIC = "static", "Valor definido manualmente"
+    DAILY_RESPONDED = "daily_responded", "Perguntas respondidas no dia"
+    DAILY_ACCURACY = "daily_accuracy", "Precisão diária"
+    STREAK_DAYS = "streak_days", "Dias de sequência ativa"
+    PLATFORM_TOTAL_QUESTIONS = "platform_total_questions", "Total de questões do banco"
+    PLATFORM_TOTAL_CATEGORIES = "platform_total_categories", "Total de categorias"
+    PLATFORM_CURATED_COUNT = "platform_curated_count", "Curadorias ativas"
+    QUICK_QUIZ_DEFAULT = "quick_quiz_default", "Quantidade padrão do quiz rápido"
+    PREDEFINED_COLLECTIONS = "predefined_collections", "Total de coleções pré-definidas"
+
+
+class HomePageSettings(SingletonModel):
+    """Configurações gerenciáveis da página inicial."""
+
+    hero_authenticated_eyebrow = models.CharField(
+        max_length=120,
+        default="Hub de estudos MedQuiz",
+        help_text="Texto curto acima do título para usuários autenticados.",
+    )
+    hero_authenticated_title = models.CharField(
+        max_length=200,
+        default="Bem-vindo de volta, {first_name}.",
+        help_text="Use {first_name} para inserir automaticamente o primeiro nome do usuário logado.",
+    )
+    hero_authenticated_subtitle = models.CharField(
+        max_length=300,
+        default="Veja seu progresso em uma linha, foque no que rende agora e retome a prática com atalhos pensados para o seu ritmo.",
+        help_text="Subtítulo exibido quando o usuário está autenticado.",
+    )
+    hero_anonymous_eyebrow = models.CharField(
+        max_length=120,
+        default="Hub de estudos MedQuiz",
+        help_text="Texto curto acima do título para visitantes.",
+    )
+    hero_anonymous_title = models.CharField(
+        max_length=200,
+        default="Domine medicina com treinos guiados e métricas em tempo real.",
+        help_text="Título da hero section para visitantes.",
+    )
+    hero_anonymous_subtitle = models.CharField(
+        max_length=320,
+        default="Estude em blocos inteligentes, acompanhe evolução e mantenha constância com feedback imediato.",
+        help_text="Subtítulo exibido para visitantes.",
+    )
+    quick_section_title = models.CharField(
+        max_length=200,
+        default="Continue de onde parou",
+        help_text="Título da seção de atalhos rápidos para usuários autenticados.",
+    )
+    quick_section_subtitle = models.CharField(
+        max_length=250,
+        default="Entre direto nos modos que mantêm sua evolução em alta.",
+        help_text="Descrição curta da seção de atalhos.",
+    )
+    intro_section_title = models.CharField(
+        max_length=200,
+        default="Por que começar pelo MedQuiz?",
+        help_text="Título da seção introdutória para visitantes.",
+    )
+    intro_section_subtitle = models.CharField(
+        max_length=250,
+        default="Um ecossistema completo para criar constância nos estudos.",
+        help_text="Descrição curta da seção introdutória para visitantes.",
+    )
+    intro_highlight_eyebrow = models.CharField(
+        max_length=120,
+        default="Resultados comprovados",
+        help_text="Eyebrow card da coluna de destaques na home pública.",
+    )
+    intro_highlight_title = models.CharField(
+        max_length=200,
+        default="Métricas e conteúdos sempre atualizados",
+        help_text="Título do card de destaques na home pública.",
+    )
+    intro_steps_eyebrow = models.CharField(
+        max_length=120,
+        default="Comece agora",
+        help_text="Eyebrow do card de passos iniciais para visitantes.",
+    )
+    intro_steps_title = models.CharField(
+        max_length=200,
+        default="Três passos para entrar no ritmo",
+        help_text="Título do card de passos para visitantes.",
+    )
+    intro_primary_cta_label = models.CharField(
+        max_length=120,
+        default="Criar conta",
+        help_text="Rótulo do botão principal do card de passos.",
+    )
+    intro_primary_cta_url = models.CharField(
+        max_length=255,
+        default="/register/",
+        help_text="URL relativa ou absoluta para o CTA principal do card de passos.",
+    )
+    intro_secondary_cta_label = models.CharField(
+        max_length=120,
+        default="Experimentar um quiz",
+        help_text="Rótulo do botão secundário do card de passos.",
+    )
+    intro_secondary_cta_url = models.CharField(
+        max_length=255,
+        default="/questions/",
+        help_text="URL relativa ou absoluta para o CTA secundário do card de passos.",
+    )
+    collections_section_title = models.CharField(
+        max_length=200,
+        default="Coleções em destaque",
+        help_text="Título da seção de coleções.",
+    )
+    collections_section_subtitle = models.CharField(
+        max_length=250,
+        default="Seleções diretas para revisar rapidamente os temas mais cobrados.",
+        help_text="Descrição da seção de coleções.",
+    )
+    methods_section_title = models.CharField(
+        max_length=200,
+        default="Métodos de estudo disponíveis",
+        help_text="Título da seção de métodos de estudo.",
+    )
+    methods_section_subtitle = models.CharField(
+        max_length=250,
+        default="Ajuste a abordagem conforme o objetivo da semana.",
+        help_text="Descrição da seção de métodos.",
+    )
+
+    @classmethod
+    def load(cls):  # type: ignore[override]
+        instance = super().load()
+        instance.ensure_related_defaults()
+        return instance
+
+    def ensure_related_defaults(self):
+        HomeProgressSectionSettings.objects.get_or_create(settings=self)
+        HomeRecentSessionCardSettings.objects.get_or_create(settings=self)
+        HomeActiveChallengeCardSettings.objects.get_or_create(settings=self)
+        HomeAchievementCardSettings.objects.get_or_create(settings=self)
+
+    class Meta:
+        verbose_name = "Configurações da Home"
+
+    def __str__(self):
+        return "Configurações da Home"
+
+
+class HomeHeroCTA(models.Model):
+    """Botões configuráveis exibidos na hero da home."""
+
+    class Position(models.TextChoices):
+        PRIMARY = "primary", "Principal"
+        SECONDARY = "secondary", "Secundário"
+
+    settings = models.ForeignKey(HomePageSettings, related_name="hero_ctas", on_delete=models.CASCADE)
+    audience = models.CharField(max_length=20, choices=HomeContentAudience.choices, default=HomeContentAudience.AUTHENTICATED)
+    position = models.CharField(max_length=20, choices=Position.choices, default=Position.PRIMARY)
+    label = models.CharField(max_length=120)
+    url = models.CharField(max_length=255, help_text="Use URLs relativas (ex: /questions/) ou absolutas.")
+    icon = models.CharField(max_length=80, blank=True, help_text="Nome do ícone Material Symbols a exibir.")
+    css_class = models.CharField(
+        max_length=200,
+        default="button button--fancy button--fancy-primary",
+        help_text="Classes CSS completas aplicadas ao botão.",
+    )
+    anchor_id = models.CharField(
+        max_length=120,
+        blank=True,
+        help_text="ID opcional usado para tracking ou integrações front-end.",
+    )
+    open_in_new_tab = models.BooleanField(default=False, help_text="Abrir link em nova aba.")
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "CTA da Home"
+        verbose_name_plural = "CTAs da Home"
+        unique_together = ("settings", "audience", "position")
+        ordering = ("audience", "position")
+
+    def __str__(self):
+        return f"CTA {self.get_position_display()} ({self.get_audience_display()})"
+
+
+class HomeHeroStatTemplate(models.Model):
+    settings = models.ForeignKey(HomePageSettings, related_name="hero_stat_templates", on_delete=models.CASCADE)
+    audience = models.CharField(max_length=20, choices=HomeContentAudience.choices, default=HomeContentAudience.AUTHENTICATED)
+    order = models.PositiveIntegerField(default=0)
+    icon = models.CharField(max_length=80, default="quiz")
+    label = models.CharField(max_length=120)
+    data_source = models.CharField(max_length=60, choices=ValueSourceType.choices, default=ValueSourceType.STATIC)
+    prefix = models.CharField(max_length=40, blank=True)
+    suffix = models.CharField(max_length=40, blank=True)
+    static_value = models.CharField(max_length=120, blank=True)
+    dom_id = models.CharField(max_length=120, blank=True, help_text="ID opcional aplicado ao valor para integrações JS.")
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Métrica da Hero"
+        verbose_name_plural = "Métricas da Hero"
+        ordering = ("audience", "order", "pk")
+
+    def __str__(self):
+        return f"{self.label} ({self.get_audience_display()})"
+
+
+class HomeQuickLink(models.Model):
+    settings = models.ForeignKey(HomePageSettings, related_name="quick_links", on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)
+    title = models.CharField(max_length=150)
+    description = models.CharField(max_length=250, blank=True)
+    icon = models.CharField(max_length=80, default="rocket_launch")
+    url = models.CharField(max_length=255)
+    extra_css_class = models.CharField(max_length=150, blank=True)
+    anchor_id = models.CharField(max_length=120, blank=True)
+    open_in_new_tab = models.BooleanField(default=False)
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Atalho Rápido"
+        verbose_name_plural = "Atalhos Rápidos"
+        ordering = ("order", "pk")
+
+    def __str__(self):
+        return self.title
+
+
+class HomeIntroHighlight(models.Model):
+    settings = models.ForeignKey(HomePageSettings, related_name="intro_highlights", on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)
+    icon = models.CharField(max_length=80, default="quiz")
+    label = models.CharField(max_length=150)
+    data_source = models.CharField(max_length=60, choices=ValueSourceType.choices, default=ValueSourceType.STATIC)
+    static_value = models.CharField(max_length=120, blank=True)
+    dom_id = models.CharField(max_length=120, blank=True)
+    prefix = models.CharField(max_length=40, blank=True)
+    suffix = models.CharField(max_length=40, blank=True)
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Indicador Introdutório"
+        verbose_name_plural = "Indicadores Introdutórios"
+        ordering = ("order", "pk")
+
+    def __str__(self):
+        return self.label
+
+
+class HomeIntroStep(models.Model):
+    settings = models.ForeignKey(HomePageSettings, related_name="intro_steps", on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)
+    text = models.CharField(max_length=200)
+
+    class Meta:
+        verbose_name = "Passo Inicial"
+        verbose_name_plural = "Passos Iniciais"
+        ordering = ("order", "pk")
+
+    def __str__(self):
+        return f"Passo {self.order}: {self.text}"
+
+
+class HomeProgressSectionSettings(models.Model):
+    settings = models.OneToOneField(
+        HomePageSettings,
+        related_name="progress_section",
+        on_delete=models.CASCADE,
+    )
+    title = models.CharField(
+        max_length=200,
+        default="Resumo rápido do seu estudo",
+        help_text="Título exibido quando o aluno está autenticado.",
+    )
+    subtitle = models.CharField(
+        max_length=250,
+        blank=True,
+        default="Entre direto nos modos que mantêm sua evolução em alta.",
+        help_text="Descrição auxiliar da seção de progresso.",
+    )
+    show_when_empty = models.BooleanField(
+        default=False,
+        help_text="Mantém a seção visível mesmo quando nenhum card tem dados.",
+    )
+    empty_state_title = models.CharField(
+        max_length=200,
+        default="Comece um treino para ver estatísticas aqui",
+    )
+    empty_state_description = models.CharField(
+        max_length=300,
+        blank=True,
+        default="Assim que você concluir uma sessão ou desafio, os destaques aparecem automaticamente.",
+    )
+
+    class Meta:
+        verbose_name = "Seção de progresso da home"
+
+    def __str__(self):
+        return "Seção de progresso"
+
+
+class HomeRecentSessionCardSettings(models.Model):
+    settings = models.OneToOneField(
+        HomePageSettings,
+        related_name="recent_session_card",
+        on_delete=models.CASCADE,
+    )
+    icon = models.CharField(max_length=80, default="history")
+    eyebrow = models.CharField(max_length=150, default="Última sessão")
+    fallback_title = models.CharField(
+        max_length=200,
+        default="Sessão mais recente",
+        help_text="Título usado quando não há sessão registrada.",
+    )
+    fallback_description = models.CharField(
+        max_length=250,
+        blank=True,
+        default="Inicie um quiz para destravar análises detalhadas da sua sessão.",
+    )
+    badge_label_template = models.CharField(
+        max_length=160,
+        blank=True,
+        default="{date_display}",
+        help_text="Use {date_display} para inserir a data da sessão.",
+    )
+    stat_mode_label = models.CharField(max_length=80, default="Modo")
+    stat_method_label = models.CharField(max_length=80, default="Método")
+    stat_questions_label = models.CharField(max_length=80, default="Questões")
+    stat_accuracy_label = models.CharField(max_length=80, default="Precisão")
+    stat_duration_label = models.CharField(max_length=80, default="Duração")
+    stat_mode_placeholder = models.CharField(max_length=80, default="—")
+    stat_method_placeholder = models.CharField(max_length=80, default="—")
+    stat_questions_placeholder = models.CharField(max_length=80, default="0")
+    stat_accuracy_placeholder = models.CharField(max_length=80, default="0%")
+    stat_duration_placeholder = models.CharField(max_length=80, default="0 min")
+    cta_label = models.CharField(max_length=120, default="Retomar treino")
+    cta_url = models.CharField(max_length=255, default="/questions/")
+    cta_icon = models.CharField(max_length=80, blank=True, default="play_arrow")
+    cta_css_class = models.CharField(max_length=200, default="button button--text")
+    show_when_empty = models.BooleanField(
+        default=False,
+        help_text="Mantém o card visível mesmo sem sessão recente.",
+    )
+
+    class Meta:
+        verbose_name = "Card de sessão recente"
+
+    def __str__(self):
+        return "Card de sessão recente"
+
+
+class HomeActiveChallengeCardSettings(models.Model):
+    settings = models.OneToOneField(
+        HomePageSettings,
+        related_name="active_challenge_card",
+        on_delete=models.CASCADE,
+    )
+    icon = models.CharField(max_length=80, default="flag")
+    eyebrow = models.CharField(max_length=150, default="Desafio em andamento")
+    fallback_title = models.CharField(max_length=200, default="Nenhum desafio ativo")
+    fallback_description = models.CharField(
+        max_length=300,
+        blank=True,
+        default="Personalize o hub para iniciar um novo desafio em segundos.",
+    )
+    badge_label_template = models.CharField(
+        max_length=160,
+        blank=True,
+        default="Termina em {time_remaining}",
+        help_text="Use {time_remaining} para inserir a contagem restante.",
+    )
+    progress_label = models.CharField(max_length=120, default="Progresso")
+    progress_placeholder = models.CharField(max_length=120, default="0%")
+    reward_label_template = models.CharField(
+        max_length=160,
+        blank=True,
+        default="Recompensa: {reward}",
+        help_text="Use {reward} para exibir a recompensa.",
+    )
+    reward_placeholder = models.CharField(max_length=160, blank=True, default="")
+    show_when_empty = models.BooleanField(
+        default=True,
+        help_text="Mantém o card visível para incentivar a criação de desafios.",
+    )
+
+    class Meta:
+        verbose_name = "Card de desafio ativo"
+
+    def __str__(self):
+        return "Card de desafio ativo"
+
+
+class HomeAchievementCardSettings(models.Model):
+    settings = models.OneToOneField(
+        HomePageSettings,
+        related_name="achievement_card",
+        on_delete=models.CASCADE,
+    )
+    icon = models.CharField(max_length=80, default="emoji_events")
+    eyebrow = models.CharField(max_length=150, default="Próxima conquista")
+    fallback_title = models.CharField(max_length=200, default="Acompanhe suas conquistas")
+    fallback_description = models.CharField(
+        max_length=300,
+        blank=True,
+        default="Complete desafios para desbloquear medalhas e acompanhar o progresso.",
+    )
+    progress_label = models.CharField(max_length=120, default="Status")
+    progress_placeholder = models.CharField(max_length=120, default="0%")
+    show_when_empty = models.BooleanField(
+        default=True,
+        help_text="Exibe o card mesmo sem conquista pendente.",
+    )
+
+    class Meta:
+        verbose_name = "Card de conquista"
+
+    def __str__(self):
+        return "Card de conquista"
+
+
+class ChallengeHubValueSource(models.TextChoices):
+    TOTAL_QUESTIONS = "total_questions", "Total de questões"
+    QUICK_QUIZ_DEFAULT = "quick_quiz_default", "Total sugerido para quiz rápido"
+    PREDEFINED_TOTAL = "predefined_total", "Quantidade de coleções prontas"
+
+
+class ChallengeHubSettings(SingletonModel):
+    hero_eyebrow = models.CharField(
+        max_length=120,
+        default="Hub de desafios MedQuiz",
+        help_text="Texto curto acima do título do Challenge Hub.",
+    )
+    hero_title = models.CharField(
+        max_length=200,
+        default="Escolha seu próximo desafio",
+        help_text="Título principal do Challenge Hub.",
+    )
+    hero_subtitle_template = models.CharField(
+        max_length=320,
+        default="Combine modos inteligentes de estudo e aproveite as {total_questions} questões disponíveis.",
+        help_text="Use {total_questions} para inserir automaticamente o contador principal.",
+    )
+
+    @classmethod
+    def load(cls):  # type: ignore[override]
+        instance = super().load()
+        instance.ensure_related_defaults()
+        return instance
+
+    def ensure_related_defaults(self):
+        ChallengeHubResumeCardSettings.objects.get_or_create(settings=self)
+        ChallengeHubPredefinedSection.objects.get_or_create(settings=self)
+        ChallengeHubPlaceholderSettings.objects.get_or_create(settings=self)
+
+    class Meta:
+        verbose_name = "Configurações do Challenge Hub"
+
+    def __str__(self):
+        return "Configurações do Challenge Hub"
+
+
+class ChallengeHubHeroAction(models.Model):
+    settings = models.ForeignKey(ChallengeHubSettings, related_name="hero_actions", on_delete=models.CASCADE)
+
+    class ActionKey(models.TextChoices):
+        CUSTOMIZE = "customize", "Botão Personalizar"
+        QUICK_START = "quick_start", "Botão Começar Agora"
+
+    key = models.CharField(max_length=20, choices=ActionKey.choices, unique=True)
+    label = models.CharField(max_length=120)
+    icon = models.CharField(max_length=80, default="play_arrow")
+    css_class = models.CharField(
+        max_length=200,
+        default="button button--fancy button--fancy-primary challenge-hub__action-button",
+    )
+    dom_id = models.CharField(max_length=120, unique=True)
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Ação do Challenge Hub"
+        verbose_name_plural = "Ações do Challenge Hub"
+        ordering = ("key",)
+
+    def __str__(self):
+        return self.get_key_display()
+
+
+class ChallengeHubHeroStat(models.Model):
+    settings = models.ForeignKey(ChallengeHubSettings, related_name="hero_stats", on_delete=models.CASCADE)
+    order = models.PositiveIntegerField(default=0)
+    label = models.CharField(max_length=150)
+    data_source = models.CharField(max_length=30, choices=ChallengeHubValueSource.choices)
+    dom_id = models.CharField(max_length=120, blank=True)
+    prefix = models.CharField(max_length=40, blank=True)
+    suffix = models.CharField(max_length=40, blank=True)
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Métrica do Challenge Hub"
+        verbose_name_plural = "Métricas do Challenge Hub"
+        ordering = ("order", "pk")
+
+    def __str__(self):
+        return self.label
+
+
+class ChallengeHubActionCard(models.Model):
+    settings = models.ForeignKey(ChallengeHubSettings, related_name="action_cards", on_delete=models.CASCADE)
+
+    class CardKey(models.TextChoices):
+        SMART_DRILL = "smart_drill", "Foco guiado"
+        TIMED_QUIZ = "timed_quiz", "Simulado cronometrado"
+        FAVORITE_REVIEW = "favorite_review", "Revisão de favoritos"
+        REPEAT_LAST = "repeat_last", "Repetir último desafio"
+
+    key = models.CharField(max_length=40, choices=CardKey.choices, unique=True)
+    title = models.CharField(max_length=150)
+    description = models.CharField(max_length=250, blank=True)
+    meta = models.CharField(max_length=250, blank=True)
+    icon = models.CharField(max_length=80, default="quiz")
+    dom_id = models.CharField(max_length=120, unique=True)
+    extra_css_class = models.CharField(max_length=150, blank=True)
+    is_enabled = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Card do Challenge Hub"
+        verbose_name_plural = "Cards do Challenge Hub"
+        ordering = ("key",)
+
+    def __str__(self):
+        return self.get_key_display()
+
+
+class ChallengeHubResumeCardSettings(models.Model):
+    settings = models.OneToOneField(ChallengeHubSettings, related_name="resume_card", on_delete=models.CASCADE)
+    title = models.CharField(max_length=150, default="Retomar sessão")
+    description_template = models.CharField(
+        max_length=300,
+        default="Você tem uma sessão em andamento de <strong>{question_count}</strong> questões.",
+        help_text="Use {question_count} para inserir a contagem dinâmica.",
+    )
+    icon = models.CharField(max_length=80, default="autorenew")
+    discard_label = models.CharField(max_length=120, default="Descartar")
+    continue_label = models.CharField(max_length=120, default="Continuar")
+
+    class Meta:
+        verbose_name = "Configuração do card de retomada"
+
+    def __str__(self):
+        return "Card de retomada"
+
+
+class ChallengeHubPredefinedSection(models.Model):
+    settings = models.OneToOneField(ChallengeHubSettings, related_name="predefined_section", on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, default="Listas especiais")
+    subtitle = models.CharField(
+        max_length=250,
+        default="Explore quizzes prontos com curadoria da equipe MedQuiz.",
+    )
+
+    class Meta:
+        verbose_name = "Seção de coleções do Challenge Hub"
+
+    def __str__(self):
+        return "Seção de coleções"
+
+
+class ChallengeHubPlaceholderSettings(models.Model):
+    settings = models.OneToOneField(
+        ChallengeHubSettings,
+        related_name="placeholders",
+        on_delete=models.CASCADE,
+    )
+    filters_title = models.CharField(max_length=200, default="Ajuste seus filtros")
+    filters_body = models.CharField(
+        max_length=300,
+        default="O painel lateral está aberto. Escolha categorias e dificuldade para liberar novos desafios.",
+    )
+    filters_supporting = models.CharField(
+        max_length=300,
+        blank=True,
+        default="Após aplicar os filtros, clique em \"Aplicar\" para atualizar o hub.",
+    )
+    filters_cta_label = models.CharField(max_length=150, default="Voltar para Modos de Jogo")
+    filters_cta_icon = models.CharField(max_length=80, default="arrow_back")
+    filters_cta_css_class = models.CharField(
+        max_length=200,
+        default="button button--secondary button--small",
+    )
+    filters_cta_dom_id = models.CharField(
+        max_length=120,
+        default="close-filters-and-show-hub-btn",
+        help_text="ID aplicado ao botão que fecha os filtros.",
+    )
+
+    class Meta:
+        verbose_name = "Mensagens auxiliares do Challenge Hub"
+
+    def __str__(self):
+        return "Mensagens auxiliares do hub"

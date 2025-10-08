@@ -6,14 +6,9 @@
 <section id="home-section" class="home-landing">
     <div class="home-hero">
         <div class="home-hero__content">
-            <span class="home-hero__eyebrow">Hub de estudos MedQuiz</span>
-            {% if show_progress %}
-                <h1 class="home-hero__title">Bem-vindo de volta, {{ user.first_name|default:user.username }}.</h1>
-                <p class="home-hero__subtitle">Veja seu progresso em uma linha, foque no que rende agora e retome a prática com atalhos pensados para o seu ritmo.</p>
-            {% else %}
-                <h1 class="home-hero__title">Domine medicina com treinos guiados e métricas em tempo real.</h1>
-                <p class="home-hero__subtitle">Estude em blocos inteligentes, acompanhe evolução e mantenha constância com feedback imediato.</p>
-            {% endif %}
+            <span class="home-hero__eyebrow">{{ home_hero.eyebrow }}</span>
+            <h1 class="home-hero__title">{{ home_hero.title }}</h1>
+            <p class="home-hero__subtitle">{{ home_hero.subtitle }}</p>
 
             {% if level_summary %}
             <div class="home-progress" role="group" aria-labelledby="home-progress-title">
@@ -39,11 +34,13 @@
             </div>
             {% endif %}
 
-            {% if hero_stats %}
+            {% if home_hero_stats %}
             <ul class="home-metrics" role="list">
-                {% for stat in hero_stats %}
+                {% for stat in home_hero_stats %}
                 <li class="home-metrics__item" role="listitem">
+                    {% if stat.icon %}
                     <span class="material-symbols-outlined home-metrics__icon" aria-hidden="true">{{ stat.icon }}</span>
+                    {% endif %}
                     <div class="home-metrics__info">
                         <span class="home-metrics__value"{% if stat.dom_id %} id="{{ stat.dom_id }}"{% endif %}>{{ stat.value }}</span>
                         <span class="home-metrics__label">{{ stat.label }}</span>
@@ -53,133 +50,147 @@
             </ul>
             {% endif %}
 
+            {% if home_hero_ctas %}
             <div class="home-hero__actions">
-                {% if show_progress %}
-                    <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-primary" id="go-to-challenges-hub-link">
-                        <span class="material-symbols-outlined button__icon" aria-hidden="true">rocket_launch</span>
-                        <span class="button__label">Iniciar novo quiz</span>
+                {% for cta in home_hero_ctas %}
+                    <a href="{{ cta.url }}" class="{{ cta.css_class }}"{% if cta.anchor_id %} id="{{ cta.anchor_id }}"{% endif %}{% if cta.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>
+                        {% if cta.icon %}
+                        <span class="material-symbols-outlined button__icon" aria-hidden="true">{{ cta.icon }}</span>
+                        {% endif %}
+                        <span class="button__label">{{ cta.label }}</span>
                     </a>
-                    <a href="{% url 'quiz:account' %}" class="button button--outline">
-                        <span class="material-symbols-outlined button__icon" aria-hidden="true">insights</span>
-                        <span class="button__label">Abrir painel completo</span>
-                    </a>
-                {% else %}
-                    <a href="{% url 'quiz:register' %}" class="button button--fancy button--fancy-primary">
-                        <span class="material-symbols-outlined button__icon" aria-hidden="true">person_add</span>
-                        <span class="button__label">Criar conta gratuita</span>
-                    </a>
-                    <a href="{% url 'quiz:questions' %}" class="button button--fancy button--fancy-secondary">
-                        <span class="material-symbols-outlined button__icon" aria-hidden="true">quiz</span>
-                        <span class="button__label">Explorar banco de questões</span>
-                    </a>
-                {% endif %}
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
     </div>
 
     {% if show_progress %}
-        {% if recent_session or active_challenge or next_achievement %}
-    <section class="home-overview" aria-label="Resumo rápido do seu estudo">
-        <div class="home-overview__grid" role="list">
-            {% if recent_session %}
-            <article class="home-card home-card--session" role="listitem">
-                <header class="home-card__header">
-                    <span class="material-symbols-outlined home-card__icon" aria-hidden="true">history</span>
-                    <div class="home-card__headline">
-                        <span class="home-card__eyebrow">Última sessão</span>
-                        <h3 class="home-card__title">{{ recent_session.title }}</h3>
-                    </div>
-                    {% if recent_session.date_display %}
-                    <span class="home-card__badge">{{ recent_session.date_display }}</span>
-                    {% endif %}
-                </header>
-                <dl class="home-card__stats">
-                    <div class="home-card__stat">
-                        <dt>Modo</dt>
-                        <dd>{{ recent_session.title }}</dd>
-                    </div>
-                    {% if recent_session.study_method %}
-                    <div class="home-card__stat">
-                        <dt>Método</dt>
-                        <dd>{{ recent_session.study_method }}</dd>
-                    </div>
-                    {% endif %}
-                    <div class="home-card__stat">
-                        <dt>Questões</dt>
-                        <dd>{{ recent_session.questions }}</dd>
-                    </div>
-                    {% if recent_session.accuracy %}
-                    <div class="home-card__stat">
-                        <dt>Precisão</dt>
-                        <dd>{{ recent_session.accuracy }}</dd>
-                    </div>
-                    {% endif %}
-                    <div class="home-card__stat">
-                        <dt>Duração</dt>
-                        <dd>{{ recent_session.duration }}</dd>
-                    </div>
-                </dl>
-                <footer class="home-card__footer home-card__footer--actions">
-                    <a href="{% url 'quiz:questions' %}" class="button button--text">
-                        <span class="material-symbols-outlined button__icon" aria-hidden="true">play_arrow</span>
-                        Retomar treino
-                    </a>
-                </footer>
-            </article>
-            {% endif %}
-
-            {% if active_challenge %}
-            <article class="home-card home-card--challenge" role="listitem">
-                <header class="home-card__header">
-                    <span class="material-symbols-outlined home-card__icon" aria-hidden="true">flag</span>
-                    <div class="home-card__headline">
-                        <span class="home-card__eyebrow">Desafio em andamento</span>
-                        <h3 class="home-card__title">{{ active_challenge.name }}</h3>
-                    </div>
-                    {% if active_challenge.time_remaining %}
-                    <span class="home-card__badge home-card__badge--soft">Termina em {{ active_challenge.time_remaining }}</span>
-                    {% endif %}
-                </header>
-                <p class="home-card__description">{{ active_challenge.description }}</p>
-                <div class="home-card__progress" role="group" aria-label="Progresso do desafio">
-                    <div class="home-card__progress-header">
-                        <span>Progresso</span>
-                        <span class="home-card__progress-value">{{ active_challenge.progress_label }}</span>
-                    </div>
-                    <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ active_challenge.progress_percent|default:0|floatformat:'0' }}">
-                        <span class="home-card__progress-fill" style="width: {{ active_challenge.progress_percent|default:0 }}%;"></span>
-                    </div>
-                </div>
-                {% if active_challenge.reward %}
-                <footer class="home-card__footer">
-                    <span class="home-card__chip">Recompensa: {{ active_challenge.reward }}</span>
-                </footer>
-                {% endif %}
-            </article>
-            {% endif %}
-
-            {% if next_achievement %}
-            <article class="home-card home-card--achievement" role="listitem">
-                <header class="home-card__header">
-                    <span class="material-symbols-outlined home-card__icon" aria-hidden="true">emoji_events</span>
-                    <div class="home-card__headline">
-                        <span class="home-card__eyebrow">Próxima conquista</span>
-                        <h3 class="home-card__title">{{ next_achievement.name }}</h3>
-                    </div>
-                </header>
-                <p class="home-card__description">{{ next_achievement.description }}</p>
-                <div class="home-card__progress" role="group" aria-label="Progresso da conquista">
-                    <div class="home-card__progress-header">
-                        <span>Status</span>
-                        <span class="home-card__progress-value">{{ next_achievement.progress_label }}</span>
-                    </div>
-                    <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ next_achievement.progress_percent|default:0|floatformat:'0' }}">
-                        <span class="home-card__progress-fill" style="width: {{ next_achievement.progress_percent|default:0 }}%;"></span>
-                    </div>
-                </div>
-            </article>
-            {% endif %}
+        {% if home_progress_cards or home_progress_section.show_when_empty %}
+    <section class="home-overview" aria-label="{{ home_progress_section.title }}">
+        <div class="home-section__header">
+            <h2>{{ home_progress_section.title }}</h2>
+            {% if home_progress_section.subtitle %}<p>{{ home_progress_section.subtitle }}</p>{% endif %}
         </div>
+        {% if home_progress_cards %}
+        <div class="home-overview__grid" role="list">
+            {% for card in home_progress_cards %}
+                {% if card.key == 'recent_session' %}
+                <article class="home-card home-card--session" role="listitem">
+                    <header class="home-card__header">
+                        {% if card.icon %}
+                        <span class="material-symbols-outlined home-card__icon" aria-hidden="true">{{ card.icon }}</span>
+                        {% endif %}
+                        <div class="home-card__headline">
+                            <span class="home-card__eyebrow">{{ card.eyebrow }}</span>
+                            <h3 class="home-card__title">{{ card.title }}</h3>
+                        </div>
+                        {% if card.badge %}
+                        <span class="home-card__badge">{{ card.badge }}</span>
+                        {% endif %}
+                    </header>
+                    {% if card.description %}
+                    <p class="home-card__description">{{ card.description }}</p>
+                    {% endif %}
+                    {% if card.stats %}
+                    <dl class="home-card__stats">
+                        {% for stat in card.stats %}
+                        <div class="home-card__stat">
+                            <dt>{{ stat.label }}</dt>
+                            <dd>{{ stat.value }}</dd>
+                        </div>
+                        {% endfor %}
+                    </dl>
+                    {% endif %}
+                    {% if card.cta %}
+                    <footer class="home-card__footer home-card__footer--actions">
+                        <a href="{{ card.cta.url }}" class="{{ card.cta.css_class }}">
+                            {% if card.cta.icon %}
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">{{ card.cta.icon }}</span>
+                            {% endif %}
+                            <span class="button__label">{{ card.cta.label }}</span>
+                        </a>
+                    </footer>
+                    {% endif %}
+                </article>
+                {% elif card.key == 'active_challenge' %}
+                <article class="home-card home-card--challenge" role="listitem">
+                    <header class="home-card__header">
+                        {% if card.icon %}
+                        <span class="material-symbols-outlined home-card__icon" aria-hidden="true">{{ card.icon }}</span>
+                        {% endif %}
+                        <div class="home-card__headline">
+                            <span class="home-card__eyebrow">{{ card.eyebrow }}</span>
+                            <h3 class="home-card__title">{{ card.title }}</h3>
+                        </div>
+                        {% if card.badge %}
+                        <span class="home-card__badge home-card__badge--soft">{{ card.badge }}</span>
+                        {% endif %}
+                    </header>
+                    {% if card.description %}
+                    <p class="home-card__description">{{ card.description }}</p>
+                    {% endif %}
+                    <div class="home-card__progress" role="group" aria-label="{{ card.progress.label }}">
+                        <div class="home-card__progress-header">
+                            <span>{{ card.progress.label }}</span>
+                            {% if card.progress.value %}
+                            <span class="home-card__progress-value">{{ card.progress.value }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ card.progress.percent|default:0|floatformat:'0' }}">
+                            <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default:0 }}%;"></span>
+                        </div>
+                    </div>
+                    {% if card.reward %}
+                    <footer class="home-card__footer">
+                        <span class="home-card__chip">{{ card.reward }}</span>
+                    </footer>
+                    {% endif %}
+                </article>
+                {% elif card.key == 'next_achievement' %}
+                <article class="home-card home-card--achievement" role="listitem">
+                    <header class="home-card__header">
+                        {% if card.icon %}
+                        <span class="material-symbols-outlined home-card__icon" aria-hidden="true">{{ card.icon }}</span>
+                        {% endif %}
+                        <div class="home-card__headline">
+                            <span class="home-card__eyebrow">{{ card.eyebrow }}</span>
+                            <h3 class="home-card__title">{{ card.title }}</h3>
+                        </div>
+                    </header>
+                    {% if card.description %}
+                    <p class="home-card__description">{{ card.description }}</p>
+                    {% endif %}
+                    <div class="home-card__progress" role="group" aria-label="{{ card.progress.label }}">
+                        <div class="home-card__progress-header">
+                            <span>{{ card.progress.label }}</span>
+                            {% if card.progress.value %}
+                            <span class="home-card__progress-value">{{ card.progress.value }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ card.progress.percent|default:0|floatformat:'0' }}">
+                            <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default:0 }}%;"></span>
+                        </div>
+                    </div>
+                </article>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% elif home_progress_section.show_when_empty %}
+        <div class="home-overview__empty" role="status">
+            <article class="home-card home-card--empty">
+                <header class="home-card__header">
+                    <span class="material-symbols-outlined home-card__icon" aria-hidden="true">insights</span>
+                    <div class="home-card__headline">
+                        <h3 class="home-card__title">{{ home_progress_section.empty_state_title }}</h3>
+                        {% if home_progress_section.empty_state_description %}
+                        <p class="home-card__description">{{ home_progress_section.empty_state_description }}</p>
+                        {% endif %}
+                    </div>
+                </header>
+            </article>
+        </div>
+        {% endif %}
     </section>
         {% endif %}
     {% endif %}
@@ -187,52 +198,42 @@
     {% if show_progress %}
     <section class="home-quick" aria-label="Atalhos para continuar estudando">
         <div class="home-section__header">
-            <h2>Continue de onde parou</h2>
-            <p>Entre direto nos modos que mantêm sua evolução em alta.</p>
+            <h2>{{ home_quick_section.title }}</h2>
+            <p>{{ home_quick_section.subtitle }}</p>
         </div>
         <div class="home-quick__grid" role="list">
-            <a href="{% url 'quiz:questions' %}" class="home-card home-card--shortcut" role="listitem" id="quick-link-start">
-                <span class="material-symbols-outlined home-card__icon" aria-hidden="true">rocket_launch</span>
+            {% for link in home_quick_links %}
+            <a href="{{ link.url }}" class="home-card home-card--shortcut{% if link.extra_css_class %} {{ link.extra_css_class }}{% endif %}" role="listitem"{% if link.anchor_id %} id="{{ link.anchor_id }}"{% endif %}{% if link.open_in_new_tab %} target="_blank" rel="noopener"{% endif %}>
+                {% if link.icon %}
+                <span class="material-symbols-outlined home-card__icon" aria-hidden="true">{{ link.icon }}</span>
+                {% endif %}
                 <div class="home-card__headline">
-                    <h3 class="home-card__title">Iniciar desafio rápido</h3>
-                    <p class="home-card__description">Abra o hub de desafios configurado para você.</p>
+                    <h3 class="home-card__title">{{ link.title }}</h3>
+                    <p class="home-card__description">{{ link.description }}</p>
                 </div>
                 <span class="material-symbols-outlined home-card__arrow" aria-hidden="true">north_east</span>
             </a>
-            <a href="{% url 'quiz:account' %}#painel-favoritos" class="home-card home-card--shortcut" role="listitem">
-                <span class="material-symbols-outlined home-card__icon" aria-hidden="true">star</span>
-                <div class="home-card__headline">
-                    <h3 class="home-card__title">Revisar favoritos</h3>
-                    <p class="home-card__description">Volte às questões salvas e organize seus estudos.</p>
-                </div>
-                <span class="material-symbols-outlined home-card__arrow" aria-hidden="true">north_east</span>
-            </a>
-            <a href="{% url 'quiz:questions' %}#hub-predefined-section" class="home-card home-card--shortcut" role="listitem">
-                <span class="material-symbols-outlined home-card__icon" aria-hidden="true">playlist_add_check</span>
-                <div class="home-card__headline">
-                    <h3 class="home-card__title">Explorar coleções prontas</h3>
-                    <p class="home-card__description">Seleções temáticas com tempo estimado e foco claro.</p>
-                </div>
-                <span class="material-symbols-outlined home-card__arrow" aria-hidden="true">north_east</span>
-            </a>
+            {% endfor %}
         </div>
     </section>
     {% else %}
     <section class="home-intro" aria-label="Comece pelo básico">
         <div class="home-section__header">
-            <h2>Por que começar pelo MedQuiz?</h2>
-            <p>Um ecossistema completo para criar constância nos estudos.</p>
+            <h2>{{ home_intro_section.title }}</h2>
+            <p>{{ home_intro_section.subtitle }}</p>
         </div>
         <div class="home-intro__grid" role="list">
             <article class="home-card home-card--intro" role="listitem">
                 <div class="home-card__headline">
-                    <span class="home-card__eyebrow">Resultados comprovados</span>
-                    <h3 class="home-card__title">Métricas e conteúdos sempre atualizados</h3>
+                    <span class="home-card__eyebrow">{{ home_intro_section.highlight_eyebrow }}</span>
+                    <h3 class="home-card__title">{{ home_intro_section.highlight_title }}</h3>
                 </div>
                 <ul class="home-card__bullets" role="list">
-                    {% for card in platform_cards %}
+                    {% for card in home_intro_highlights %}
                     <li class="home-card__bullet">
+                        {% if card.icon %}
                         <span class="material-symbols-outlined" aria-hidden="true">{{ card.icon }}</span>
+                        {% endif %}
                         <div>
                             <strong{% if card.dom_id %} id="{{ card.dom_id }}"{% endif %}>{{ card.value }}</strong>
                             <span>{{ card.label }}</span>
@@ -243,26 +244,20 @@
             </article>
             <article class="home-card home-card--steps" role="listitem">
                 <div class="home-card__headline">
-                    <span class="home-card__eyebrow">Comece agora</span>
-                    <h3 class="home-card__title">Três passos para entrar no ritmo</h3>
+                    <span class="home-card__eyebrow">{{ home_intro_section.steps_eyebrow }}</span>
+                    <h3 class="home-card__title">{{ home_intro_section.steps_title }}</h3>
                 </div>
                 <ol class="home-card__steps" role="list">
+                    {% for step in home_intro_steps %}
                     <li>
-                        <span class="home-card__step-index">1</span>
-                        <p>Crie uma conta gratuita</p>
+                        <span class="home-card__step-index">{{ step.index }}</span>
+                        <p>{{ step.text }}</p>
                     </li>
-                    <li>
-                        <span class="home-card__step-index">2</span>
-                        <p>Escolha um modo ou coleção</p>
-                    </li>
-                    <li>
-                        <span class="home-card__step-index">3</span>
-                        <p>Acompanhe desempenho em tempo real</p>
-                    </li>
+                    {% endfor %}
                 </ol>
                 <div class="home-card__footer home-card__footer--stacked">
-                    <a href="{% url 'quiz:register' %}" class="button button--fancy button--fancy-primary">Criar conta</a>
-                    <a href="{% url 'quiz:questions' %}" class="button button--text">Experimentar um quiz</a>
+                    <a href="{{ home_intro_ctas.primary.url }}" class="button button--fancy button--fancy-primary">{{ home_intro_ctas.primary.label }}</a>
+                    <a href="{{ home_intro_ctas.secondary.url }}" class="button button--text">{{ home_intro_ctas.secondary.label }}</a>
                 </div>
             </article>
         </div>
@@ -272,8 +267,8 @@
     {% if curated_quizzes %}
     <section class="home-panel" aria-labelledby="home-collections-heading">
         <div class="home-section__header">
-            <h2 id="home-collections-heading">Coleções em destaque</h2>
-            <p>Seleções diretas para revisar rapidamente os temas mais cobrados.</p>
+            <h2 id="home-collections-heading">{{ home_collections_section.title }}</h2>
+            <p>{{ home_collections_section.subtitle }}</p>
         </div>
         <div class="card-grid card-grid--compact" role="list">
             {% for quiz in curated_quizzes %}
@@ -301,8 +296,8 @@
     {% if study_methods and show_progress %}
     <section class="home-panel home-panel--methods" aria-labelledby="home-methods-heading">
         <div class="home-section__header">
-            <h2 id="home-methods-heading">Métodos de estudo disponíveis</h2>
-            <p>Ajuste a abordagem conforme o objetivo da semana.</p>
+            <h2 id="home-methods-heading">{{ home_methods_section.title }}</h2>
+            <p>{{ home_methods_section.subtitle }}</p>
         </div>
         <div class="card-grid card-grid--methods" role="list">
             {% for method in study_methods %}

@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.decorators.http import require_POST, require_GET
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from datetime import timedelta  # Mantido, pode ser útil
+from typing import Optional
 from django.db.models import (
     Q, Sum, Count, Case, When, Value, FloatField, ExpressionWrapper, Prefetch,
     Max,
@@ -24,6 +26,11 @@ from .models import (
     QuizDefinicaoPergunta,  # NOVO MODELO
     ConfiguracoesGeraisQuiz,  # NOVO MODELO
     UserPreferences,
+    HomePageSettings,
+    HomeContentAudience,
+    ValueSourceType,
+    ChallengeHubSettings,
+    ChallengeHubValueSource,
     default_difficulty_rewards,
     default_streak_bonus_rules,
     default_score_panel_config,
@@ -53,6 +60,62 @@ def invalidate_quiz_config_cache():
     """Limpa o cache em memória da configuração geral do quiz."""
     global _quiz_config_cache
     _quiz_config_cache = None
+
+
+def _get_home_page_settings():
+    settings = (
+        HomePageSettings.objects.prefetch_related(
+            "hero_ctas",
+            "hero_stat_templates",
+            "quick_links",
+            "intro_highlights",
+            "intro_steps",
+        )
+        .all()
+        .first()
+    )
+    if not settings:
+        base = HomePageSettings.load()
+        settings = (
+            HomePageSettings.objects.prefetch_related(
+                "hero_ctas",
+                "hero_stat_templates",
+                "quick_links",
+                "intro_highlights",
+                "intro_steps",
+            )
+            .filter(pk=base.pk)
+            .first()
+        )
+    return settings
+
+
+def _get_challenge_hub_settings():
+    settings = (
+        ChallengeHubSettings.objects.prefetch_related(
+            "hero_actions",
+            "hero_stats",
+            "action_cards",
+            "resume_card",
+            "predefined_section",
+        )
+        .all()
+        .first()
+    )
+    if not settings:
+        base = ChallengeHubSettings.load()
+        settings = (
+            ChallengeHubSettings.objects.prefetch_related(
+                "hero_actions",
+                "hero_stats",
+                "action_cards",
+                "resume_card",
+                "predefined_section",
+            )
+            .filter(pk=base.pk)
+            .first()
+        )
+    return settings
 
 
 def get_quiz_config():
@@ -578,7 +641,7 @@ def home_view(request):
 
     daily_stats = None
     accuracy_percentage_str = '0%'
-    hero_stats = []
+    home_hero_stats = []
     level_summary = None
     next_achievement = None
     active_challenge = None
@@ -589,10 +652,32 @@ def home_view(request):
     platform_summary = QuizDataService.build_quiz_summary()
     predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()[:3]
     study_methods_metadata = StudyMethodRegistry.list_metadata()[:3]
+    home_settings = _get_home_page_settings()
+
+    home_quick_links = []
+    home_intro_highlights = []
+    home_intro_steps = []
+    home_hero_ctas = []
+    home_hero = {}
+    home_quick_section = {}
+    home_intro_section = {}
+    home_intro_ctas = {}
+    home_progress_section = {
+        'title': 'Resumo rápido do seu estudo',
+        'subtitle': 'Entre direto nos modos que mantêm sua evolução em alta.',
+        'show_when_empty': False,
+        'empty_state_title': 'Comece um treino para ver estatísticas aqui',
+        'empty_state_description': 'Assim que você concluir uma sessão ou desafio, os destaques aparecem automaticamente.',
+    }
+    home_progress_cards = []
+
+    responded_today = 0
+    streak_days_value = 0
 
     if show_progress:
         daily_stats = get_or_create_daily_stats(request.user)
         responded_today = safe_int(getattr(daily_stats, 'perguntas_respondidas_dia', 0))
+        streak_days_value = safe_int(getattr(daily_stats, 'sequencia_dias_quiz', 0))
         if responded_today:
             accuracy = (getattr(daily_stats, 'acertos_dia', 0) / responded_today) * 100 if responded_today else 0
             accuracy_percentage_str = f"{accuracy:.0f}%"
@@ -601,24 +686,6 @@ def home_view(request):
 
         gamification_snapshot = GamificationService().get_profile_snapshot(request.user, include_catalog=False)
         xp_total_value = format_number(gamification_snapshot.get('xp_total')) if gamification_snapshot else '0'
-
-        hero_stats = [
-            {
-                'icon': 'checklist',
-                'label': 'Respondidas hoje',
-                'value': format_number(responded_today),
-            },
-            {
-                'icon': 'target',
-                'label': 'Precisão diária',
-                'value': accuracy_percentage_str,
-            },
-            {
-                'icon': 'local_fire_department',
-                'label': 'Sequência ativa',
-                'value': f"{format_number(getattr(daily_stats, 'sequencia_dias_quiz', 0))} dias",
-            },
-        ]
 
         progress_payload = (gamification_snapshot or {}).get('progress') or {}
         level_payload = (gamification_snapshot or {}).get('level') or {}
@@ -702,24 +769,10 @@ def home_view(request):
                 'date_display': session_date.strftime('%d/%m/%Y %H:%M') if session_date else None,
             }
     else:
-        hero_stats = [
-            {
-                'icon': 'quiz',
-                'label': 'Questões disponíveis',
-                'value': format_number(platform_summary.get('total_questions')),
-                'dom_id': 'challenge-stat-total',
-            },
-            {
-                'icon': 'category',
-                'label': 'Categorias de estudo',
-                'value': format_number(platform_summary.get('total_categories')),
-            },
-            {
-                'icon': 'hub',
-                'label': 'Curadorias ativas',
-                'value': format_number(len(predefined_quizzes)),
-            },
-        ]
+        responded_today = 0
+        streak_days_value = 0
+
+    predefined_count = len(predefined_quizzes)
 
     curated_quizzes = [
         {
@@ -740,43 +793,578 @@ def home_view(request):
         for method in study_methods_metadata
     ]
 
-    platform_cards = [
-        {
-            'icon': 'quiz',
-            'label': 'Questões disponíveis',
-            'value': format_number(platform_summary.get('total_questions')),
-        },
-        {
-            'icon': 'category',
-            'label': 'Categorias',
-            'value': format_number(platform_summary.get('total_categories')),
-        },
-        {
-            'icon': 'play_arrow',
-            'label': 'Padrão do quiz rápido',
-            'value': format_number(platform_summary.get('quick_quiz_default_count')),
-        },
-    ]
+    total_questions_value = platform_summary.get('total_questions')
+    total_categories_value = platform_summary.get('total_categories')
+    quick_quiz_default_value = platform_summary.get('quick_quiz_default_count')
+
+    home_value_map = {
+        ValueSourceType.DAILY_RESPONDED: format_number(responded_today),
+        ValueSourceType.DAILY_ACCURACY: accuracy_percentage_str,
+        ValueSourceType.STREAK_DAYS: format_number(streak_days_value),
+        ValueSourceType.PLATFORM_TOTAL_QUESTIONS: format_number(total_questions_value),
+        ValueSourceType.PLATFORM_TOTAL_CATEGORIES: format_number(total_categories_value),
+        ValueSourceType.PLATFORM_CURATED_COUNT: format_number(predefined_count),
+        ValueSourceType.QUICK_QUIZ_DEFAULT: format_number(quick_quiz_default_value),
+        ValueSourceType.PREDEFINED_COLLECTIONS: format_number(predefined_count),
+    }
+
+    def safe_template_format(template: Optional[str], **kwargs):
+        if not template:
+            return ''
+        try:
+            return template.format(**kwargs)
+        except (KeyError, ValueError):
+            return template
+
+    def compose_recent_session_card(config, payload):
+        show_when_empty = getattr(config, 'show_when_empty', False)
+        is_empty = not bool(payload)
+        if is_empty and not show_when_empty:
+            return None
+
+        icon = getattr(config, 'icon', 'history')
+        eyebrow = getattr(config, 'eyebrow', 'Última sessão')
+        fallback_title = getattr(config, 'fallback_title', 'Sessão mais recente')
+        fallback_description = getattr(config, 'fallback_description', '')
+        badge_template = getattr(config, 'badge_label_template', '{date_display}') or ''
+
+        title = payload.get('title') if payload else fallback_title
+        description = payload.get('description') if payload else fallback_description
+
+        badge = None
+        if payload and badge_template:
+            badge = safe_template_format(badge_template, **payload)
+        if badge == '':
+            badge = None
+
+        stats = []
+        stat_fields = [
+            ('stat_mode_label', 'stat_mode_placeholder', 'mode'),
+            ('stat_method_label', 'stat_method_placeholder', 'study_method'),
+            ('stat_questions_label', 'stat_questions_placeholder', 'questions'),
+            ('stat_accuracy_label', 'stat_accuracy_placeholder', 'accuracy'),
+            ('stat_duration_label', 'stat_duration_placeholder', 'duration'),
+        ]
+        for label_attr, placeholder_attr, key in stat_fields:
+            label = getattr(config, label_attr, '')
+            placeholder = getattr(config, placeholder_attr, '')
+            value = payload.get(key) if payload else None
+            display_value = value if value not in (None, '') else None
+            if display_value is None and show_when_empty and placeholder:
+                display_value = placeholder
+            is_visible = display_value not in (None, '')
+            if is_visible:
+                stats.append({'label': label, 'value': display_value})
+
+        cta_label = getattr(config, 'cta_label', '')
+        cta = None
+        if cta_label:
+            cta = {
+                'label': cta_label,
+                'url': getattr(config, 'cta_url', '/questions/'),
+                'icon': getattr(config, 'cta_icon', ''),
+                'css_class': getattr(config, 'cta_css_class', 'button button--text'),
+            }
+
+        return {
+            'key': 'recent_session',
+            'icon': icon,
+            'eyebrow': eyebrow,
+            'title': title,
+            'description': description,
+            'badge': badge,
+            'stats': stats,
+            'cta': cta,
+            'is_empty': is_empty,
+        }
+
+    def compose_active_challenge_card(config, payload):
+        show_when_empty = getattr(config, 'show_when_empty', False)
+        is_empty = not bool(payload)
+        if is_empty and not show_when_empty:
+            return None
+
+        icon = getattr(config, 'icon', 'flag')
+        eyebrow = getattr(config, 'eyebrow', 'Desafio em andamento')
+        fallback_title = getattr(config, 'fallback_title', 'Nenhum desafio ativo')
+        fallback_description = getattr(config, 'fallback_description', '')
+        badge_template = getattr(config, 'badge_label_template', 'Termina em {time_remaining}') or ''
+        progress_label = getattr(config, 'progress_label', 'Progresso')
+        progress_placeholder = getattr(config, 'progress_placeholder', '0%')
+        reward_template = getattr(config, 'reward_label_template', 'Recompensa: {reward}') or ''
+        reward_placeholder = getattr(config, 'reward_placeholder', '')
+
+        title = payload.get('name') if payload else fallback_title
+        description = payload.get('description') if payload else fallback_description
+
+        badge = None
+        if payload and badge_template:
+            badge = safe_template_format(badge_template, time_remaining=payload.get('time_remaining'))
+        if badge == '':
+            badge = None
+
+        progress_value = None
+        if payload and payload.get('progress_label'):
+            progress_value = payload.get('progress_label')
+        elif show_when_empty and progress_placeholder:
+            progress_value = progress_placeholder
+
+        reward_value = None
+        if payload and payload.get('reward'):
+            reward_value = safe_template_format(reward_template, reward=payload.get('reward')) if reward_template else payload.get('reward')
+        elif show_when_empty and reward_placeholder:
+            reward_value = reward_placeholder
+
+        progress_percent = payload.get('progress_percent') if payload else 0
+
+        return {
+            'key': 'active_challenge',
+            'icon': icon,
+            'eyebrow': eyebrow,
+            'title': title,
+            'description': description,
+            'badge': badge,
+            'progress': {
+                'label': progress_label,
+                'value': progress_value,
+                'percent': progress_percent or 0,
+            },
+            'reward': reward_value,
+            'is_empty': is_empty,
+        }
+
+    def compose_achievement_card(config, payload):
+        show_when_empty = getattr(config, 'show_when_empty', False)
+        is_empty = not bool(payload)
+        if is_empty and not show_when_empty:
+            return None
+
+        icon = getattr(config, 'icon', 'emoji_events')
+        eyebrow = getattr(config, 'eyebrow', 'Próxima conquista')
+        fallback_title = getattr(config, 'fallback_title', 'Acompanhe suas conquistas')
+        fallback_description = getattr(config, 'fallback_description', '')
+        progress_label = getattr(config, 'progress_label', 'Status')
+        progress_placeholder = getattr(config, 'progress_placeholder', '0%')
+
+        title = payload.get('name') if payload else fallback_title
+        description = payload.get('description') if payload else fallback_description
+
+        progress_value = None
+        if payload and payload.get('progress_label'):
+            progress_value = payload.get('progress_label')
+        elif show_when_empty and progress_placeholder:
+            progress_value = progress_placeholder
+
+        progress_percent = payload.get('progress_percent') if payload else 0
+
+        return {
+            'key': 'next_achievement',
+            'icon': icon,
+            'eyebrow': eyebrow,
+            'title': title,
+            'description': description,
+            'progress': {
+                'label': progress_label,
+                'value': progress_value,
+                'percent': progress_percent or 0,
+            },
+            'is_empty': is_empty,
+        }
+
+    home_collections_section = {
+        'title': 'Coleções em destaque',
+        'subtitle': 'Seleções diretas para revisar rapidamente os temas mais cobrados.',
+    }
+    home_methods_section = {
+        'title': 'Métodos de estudo disponíveis',
+        'subtitle': 'Ajuste a abordagem conforme o objetivo da semana.',
+    }
+
+    if home_settings:
+        home_collections_section = {
+            'title': home_settings.collections_section_title,
+            'subtitle': home_settings.collections_section_subtitle,
+        }
+        home_methods_section = {
+            'title': home_settings.methods_section_title,
+            'subtitle': home_settings.methods_section_subtitle,
+        }
+
+        current_audience = HomeContentAudience.AUTHENTICATED if show_progress else HomeContentAudience.ANONYMOUS
+        if show_progress:
+            display_name = (request.user.first_name or '').strip() or request.user.get_username()
+            home_hero = {
+                'eyebrow': home_settings.hero_authenticated_eyebrow,
+                'title': safe_template_format(home_settings.hero_authenticated_title, first_name=display_name),
+                'subtitle': home_settings.hero_authenticated_subtitle,
+            }
+        else:
+            home_hero = {
+                'eyebrow': home_settings.hero_anonymous_eyebrow,
+                'title': home_settings.hero_anonymous_title,
+                'subtitle': home_settings.hero_anonymous_subtitle,
+            }
+
+        quick_section = {
+            'title': home_settings.quick_section_title,
+            'subtitle': home_settings.quick_section_subtitle,
+        }
+        home_quick_section = quick_section
+
+        intro_section = {
+            'title': home_settings.intro_section_title,
+            'subtitle': home_settings.intro_section_subtitle,
+            'highlight_eyebrow': home_settings.intro_highlight_eyebrow,
+            'highlight_title': home_settings.intro_highlight_title,
+            'steps_eyebrow': home_settings.intro_steps_eyebrow,
+            'steps_title': home_settings.intro_steps_title,
+        }
+        home_intro_section = intro_section
+
+        home_intro_ctas = {
+            'primary': {
+                'label': home_settings.intro_primary_cta_label,
+                'url': home_settings.intro_primary_cta_url,
+            },
+            'secondary': {
+                'label': home_settings.intro_secondary_cta_label,
+                'url': home_settings.intro_secondary_cta_url,
+            },
+        }
+
+        hero_ctas_queryset = [
+            cta
+            for cta in home_settings.hero_ctas.all()
+            if cta.audience == current_audience and cta.is_enabled
+        ]
+        home_hero_ctas = [
+            {
+                'label': cta.label,
+                'url': cta.url or '#',
+                'icon': cta.icon,
+                'css_class': cta.css_class or 'button',
+                'anchor_id': cta.anchor_id,
+                'open_in_new_tab': cta.open_in_new_tab,
+            }
+            for cta in sorted(hero_ctas_queryset, key=lambda item: (item.position, item.pk))
+        ]
+
+        hero_stat_templates = [
+            stat
+            for stat in home_settings.hero_stat_templates.all()
+            if stat.audience == current_audience and stat.is_enabled
+        ]
+        home_hero_stats = []
+        for template in sorted(hero_stat_templates, key=lambda item: (item.order, item.pk)):
+            value = home_value_map.get(template.data_source)
+            if template.data_source == ValueSourceType.STATIC:
+                value = template.static_value or ''
+            elif value is None or value == '':
+                value = template.static_value or ''
+
+            value_str = str(value) if value is not None else ''
+            if template.prefix:
+                value_str = f"{template.prefix}{value_str}"
+            if template.suffix:
+                value_str = f"{value_str}{template.suffix}"
+
+            home_hero_stats.append(
+                {
+                    'icon': template.icon,
+                    'label': template.label,
+                    'value': value_str,
+                    'dom_id': template.dom_id,
+                }
+            )
+
+        quick_links_queryset = [
+            link for link in home_settings.quick_links.all() if link.is_enabled
+        ]
+        home_quick_links = [
+            {
+                'title': link.title,
+                'description': link.description,
+                'icon': link.icon,
+                'url': link.url,
+                'extra_css_class': link.extra_css_class,
+                'anchor_id': link.anchor_id,
+                'open_in_new_tab': link.open_in_new_tab,
+            }
+            for link in sorted(quick_links_queryset, key=lambda item: (item.order, item.pk))
+        ]
+
+        intro_highlights_queryset = [
+            highlight
+            for highlight in home_settings.intro_highlights.all()
+            if highlight.is_enabled
+        ]
+        home_intro_highlights = []
+        for highlight in sorted(intro_highlights_queryset, key=lambda item: (item.order, item.pk)):
+            value = home_value_map.get(highlight.data_source)
+            if highlight.data_source == ValueSourceType.STATIC:
+                value = highlight.static_value or ''
+            elif value is None or value == '':
+                value = highlight.static_value or ''
+
+            value_str = str(value) if value is not None else ''
+            if highlight.prefix:
+                value_str = f"{highlight.prefix}{value_str}"
+            if highlight.suffix:
+                value_str = f"{value_str}{highlight.suffix}"
+
+            home_intro_highlights.append(
+                {
+                    'icon': highlight.icon,
+                    'label': highlight.label,
+                    'value': value_str,
+                    'dom_id': highlight.dom_id,
+                }
+            )
+
+        home_intro_steps = [
+            {
+                'index': idx + 1,
+                'text': step.text,
+            }
+            for idx, step in enumerate(
+                sorted(home_settings.intro_steps.all(), key=lambda item: (item.order, item.pk))
+            )
+        ]
+
+        progress_config = getattr(home_settings, 'progress_section', None)
+        home_progress_section = {
+            'title': getattr(progress_config, 'title', home_progress_section['title']),
+            'subtitle': getattr(progress_config, 'subtitle', home_progress_section['subtitle']),
+            'show_when_empty': getattr(progress_config, 'show_when_empty', home_progress_section['show_when_empty']),
+            'empty_state_title': getattr(progress_config, 'empty_state_title', home_progress_section['empty_state_title']),
+            'empty_state_description': getattr(
+                progress_config,
+                'empty_state_description',
+                home_progress_section['empty_state_description'],
+            ),
+        }
+
+        recent_card_config = getattr(home_settings, 'recent_session_card', None)
+        active_card_config = getattr(home_settings, 'active_challenge_card', None)
+        achievement_card_config = getattr(home_settings, 'achievement_card', None)
+
+        recent_session_card = compose_recent_session_card(recent_card_config, recent_session or {})
+        active_challenge_card = compose_active_challenge_card(active_card_config, active_challenge or {})
+        achievement_card = compose_achievement_card(achievement_card_config, next_achievement or {})
+
+        home_progress_cards = [
+            card
+            for card in (
+                recent_session_card,
+                active_challenge_card,
+                achievement_card,
+            )
+            if card
+        ]
+    else:
+        default_name = (request.user.first_name or '').strip() or request.user.get_username()
+        home_hero = {
+            'eyebrow': 'Hub de estudos MedQuiz',
+            'title': safe_template_format('Bem-vindo de volta, {first_name}.', first_name=default_name) if show_progress else 'Domine medicina com treinos guiados e métricas em tempo real.',
+            'subtitle': (
+                'Veja seu progresso em uma linha, foque no que rende agora e retome a prática com atalhos pensados para o seu ritmo.'
+                if show_progress
+                else 'Estude em blocos inteligentes, acompanhe evolução e mantenha constância com feedback imediato.'
+            ),
+        }
+        if show_progress:
+            home_hero_ctas = [
+                {
+                    'label': 'Iniciar novo quiz',
+                    'url': '/questions/',
+                    'icon': 'rocket_launch',
+                    'css_class': 'button button--fancy button--fancy-primary',
+                    'anchor_id': 'go-to-challenges-hub-link',
+                    'open_in_new_tab': False,
+                },
+                {
+                    'label': 'Abrir painel completo',
+                    'url': '/account/',
+                    'icon': 'insights',
+                    'css_class': 'button button--outline',
+                    'anchor_id': '',
+                    'open_in_new_tab': False,
+                },
+            ]
+        else:
+            home_hero_ctas = [
+                {
+                    'label': 'Criar conta gratuita',
+                    'url': '/register/',
+                    'icon': 'person_add',
+                    'css_class': 'button button--fancy button--fancy-primary',
+                    'anchor_id': '',
+                    'open_in_new_tab': False,
+                },
+                {
+                    'label': 'Explorar banco de questões',
+                    'url': '/questions/',
+                    'icon': 'quiz',
+                    'css_class': 'button button--fancy button--fancy-secondary',
+                    'anchor_id': '',
+                    'open_in_new_tab': False,
+                },
+            ]
+        home_hero_stats = [
+            {
+                'icon': 'quiz' if not show_progress else 'checklist',
+                'label': 'Questões disponíveis' if not show_progress else 'Respondidas hoje',
+                'value': format_number(total_questions_value if not show_progress else responded_today),
+                'dom_id': 'challenge-stat-total' if not show_progress else None,
+            },
+            {
+                'icon': 'category' if not show_progress else 'target',
+                'label': 'Categorias de estudo' if not show_progress else 'Precisão diária',
+                'value': format_number(total_categories_value) if not show_progress else accuracy_percentage_str,
+                'dom_id': None,
+            },
+            {
+                'icon': 'hub' if not show_progress else 'local_fire_department',
+                'label': 'Curadorias ativas' if not show_progress else 'Sequência ativa',
+                'value': format_number(predefined_count) if not show_progress else f"{format_number(streak_days_value)} dias",
+                'dom_id': None,
+            },
+        ]
+        home_quick_section = {
+            'title': 'Continue de onde parou',
+            'subtitle': 'Entre direto nos modos que mantêm sua evolução em alta.',
+        }
+        home_intro_section = {
+            'title': 'Por que começar pelo MedQuiz?',
+            'subtitle': 'Um ecossistema completo para criar constância nos estudos.',
+            'highlight_eyebrow': 'Resultados comprovados',
+            'highlight_title': 'Métricas e conteúdos sempre atualizados',
+            'steps_eyebrow': 'Comece agora',
+            'steps_title': 'Três passos para entrar no ritmo',
+        }
+        home_intro_ctas = {
+            'primary': {'label': 'Criar conta', 'url': '/register/'},
+            'secondary': {'label': 'Experimentar um quiz', 'url': '/questions/'},
+        }
+        home_quick_links = [
+            {
+                'title': 'Iniciar desafio rápido',
+                'description': 'Abra o hub de desafios configurado para você.',
+                'icon': 'rocket_launch',
+                'url': '/questions/',
+                'extra_css_class': '',
+                'anchor_id': 'quick-link-start',
+                'open_in_new_tab': False,
+            },
+            {
+                'title': 'Revisar favoritos',
+                'description': 'Volte às questões salvas e organize seus estudos.',
+                'icon': 'star',
+                'url': '/account/#painel-favoritos',
+                'extra_css_class': '',
+                'anchor_id': '',
+                'open_in_new_tab': False,
+            },
+            {
+                'title': 'Explorar coleções prontas',
+                'description': 'Seleções temáticas com tempo estimado e foco claro.',
+                'icon': 'playlist_add_check',
+                'url': '/questions/#hub-predefined-section',
+                'extra_css_class': '',
+                'anchor_id': '',
+                'open_in_new_tab': False,
+            },
+        ]
+        home_intro_highlights = [
+            {
+                'icon': 'quiz',
+                'label': 'Questões disponíveis',
+                'value': format_number(total_questions_value),
+                'dom_id': 'challenge-stat-total',
+            },
+            {
+                'icon': 'category',
+                'label': 'Categorias',
+                'value': format_number(total_categories_value),
+                'dom_id': None,
+            },
+            {
+                'icon': 'play_arrow',
+                'label': 'Padrão do quiz rápido',
+                'value': format_number(quick_quiz_default_value),
+                'dom_id': None,
+            },
+        ]
+        home_intro_steps = [
+            {'index': 1, 'text': 'Crie uma conta gratuita'},
+            {'index': 2, 'text': 'Escolha um modo ou coleção'},
+            {'index': 3, 'text': 'Acompanhe desempenho em tempo real'},
+        ]
+        home_collections_section = {
+            'title': 'Coleções em destaque',
+            'subtitle': 'Seleções diretas para revisar rapidamente os temas mais cobrados.',
+        }
+        home_methods_section = {
+            'title': 'Métodos de estudo disponíveis',
+            'subtitle': 'Ajuste a abordagem conforme o objetivo da semana.',
+        }
+
+        recent_session_card = compose_recent_session_card(None, recent_session or {})
+        active_challenge_card = compose_active_challenge_card(None, active_challenge or {})
+        achievement_card = compose_achievement_card(None, next_achievement or {})
+
+        home_progress_cards = [
+            card
+            for card in (
+                recent_session_card,
+                active_challenge_card,
+                achievement_card,
+            )
+            if card
+        ]
 
     context = {
         'page_title': 'MedQuiz - Início',
         'daily_stats': daily_stats,
         'accuracy_percentage': accuracy_percentage_str,
         'show_progress': show_progress,
-        'hero_stats': hero_stats,
+        'home_hero': home_hero,
+        'home_hero_ctas': home_hero_ctas,
+        'home_hero_stats': home_hero_stats,
+        'hero_stats': home_hero_stats,
         'level_summary': level_summary,
-        'next_achievement': next_achievement,
-        'active_challenge': active_challenge,
-        'recent_session': recent_session,
+        'home_progress_section': home_progress_section,
+        'home_progress_cards': home_progress_cards,
         'curated_quizzes': curated_quizzes,
         'study_methods': study_methods,
-        'platform_cards': platform_cards,
+        'home_quick_links': home_quick_links,
+        'home_quick_section': home_quick_section,
+        'home_intro_section': home_intro_section,
+        'home_intro_highlights': home_intro_highlights,
+        'home_intro_steps': home_intro_steps,
+        'home_intro_ctas': home_intro_ctas,
+        'home_collections_section': home_collections_section,
+        'home_methods_section': home_methods_section,
     }
 
     return render(request, 'quiz/home.html', context)
 
 @login_required
 def questions_view(request):
+    def format_count(value):
+        try:
+            return f"{int(value):,}".replace(',', '.')
+        except (TypeError, ValueError):
+            return '0'
+
+    def safe_template_format(template: Optional[str], **kwargs):
+        if not template:
+            return ''
+        try:
+            return template.format(**kwargs)
+        except (KeyError, ValueError):
+            return template
+
     hub_summary = {}
     hub_summary_json = '{}'
     try:
@@ -786,10 +1374,152 @@ def questions_view(request):
         hub_summary = {}
         hub_summary_json = '{}'
 
+    challenge_settings = _get_challenge_hub_settings()
+
+    total_questions = hub_summary.get('total_questions')
+    quick_quiz_default = hub_summary.get('quick_quiz_default_count')
+    predefined_items = hub_summary.get('predefined_quizzes') or []
+
+    challenge_value_map = {
+        ChallengeHubValueSource.TOTAL_QUESTIONS: format_count(total_questions),
+        ChallengeHubValueSource.QUICK_QUIZ_DEFAULT: format_count(quick_quiz_default),
+        ChallengeHubValueSource.PREDEFINED_TOTAL: format_count(len(predefined_items)),
+    }
+
+    challenge_hero = {
+        'eyebrow': 'Hub de desafios MedQuiz',
+        'title': 'Escolha seu próximo desafio',
+        'subtitle': mark_safe(
+            safe_template_format(
+                'Combine modos inteligentes de estudo e aproveite as {total_questions} questões disponíveis.',
+                total_questions="<span id='hub-total-questions-count'>0</span>",
+            )
+        ),
+    }
+    challenge_hero_actions = []
+    challenge_hero_stats = []
+    challenge_cards = []
+    challenge_resume_card = {
+        'title': 'Retomar sessão',
+        'description': mark_safe('Você tem uma sessão em andamento.'),
+        'icon': 'autorenew',
+        'discard_label': 'Descartar',
+        'continue_label': 'Continuar',
+    }
+    challenge_predefined_section = {
+        'title': 'Listas especiais',
+        'subtitle': 'Explore quizzes prontos com curadoria da equipe MedQuiz.',
+    }
+    challenge_placeholders = {
+        'filters_title': 'Ajuste seus Filtros',
+        'filters_body': 'O painel de filtros está aberto. Selecione as categorias e a dificuldade das questões que deseja praticar.',
+        'filters_supporting': 'Após ajustar suas preferências, clique em "Aplicar Filtros" no painel lateral para começar!',
+        'filters_cta_label': 'Voltar para Modos de Jogo',
+        'filters_cta_icon': 'arrow_back',
+        'filters_cta_css_class': 'button button--secondary button--small',
+        'filters_cta_dom_id': 'close-filters-and-show-hub-btn',
+    }
+
+    if challenge_settings:
+        hero_subtitle_html = safe_template_format(
+            challenge_settings.hero_subtitle_template,
+            total_questions=f"<span id='hub-total-questions-count'>{challenge_value_map.get(ChallengeHubValueSource.TOTAL_QUESTIONS, '0')}</span>",
+        )
+        challenge_hero = {
+            'eyebrow': challenge_settings.hero_eyebrow,
+            'title': challenge_settings.hero_title,
+            'subtitle': mark_safe(hero_subtitle_html),
+        }
+
+        challenge_hero_actions = [
+            {
+                'key': action.key,
+                'label': action.label,
+                'icon': action.icon,
+                'css_class': action.css_class,
+                'dom_id': action.dom_id,
+            }
+            for action in sorted(
+                [a for a in challenge_settings.hero_actions.all() if a.is_enabled],
+                key=lambda item: item.key,
+            )
+        ]
+
+        stats_queryset = [s for s in challenge_settings.hero_stats.all() if s.is_enabled]
+        challenge_hero_stats = []
+        for stat in sorted(stats_queryset, key=lambda item: (item.order, item.pk)):
+            value = challenge_value_map.get(stat.data_source, '')
+            value_str = str(value) if value is not None else ''
+            if stat.prefix:
+                value_str = f"{stat.prefix}{value_str}"
+            if stat.suffix:
+                value_str = f"{value_str}{stat.suffix}"
+            challenge_hero_stats.append(
+                {
+                    'label': stat.label,
+                    'value': value_str,
+                    'dom_id': stat.dom_id,
+                }
+            )
+
+        cards_queryset = [card for card in challenge_settings.action_cards.all() if card.is_enabled]
+        challenge_cards = [
+            {
+                'key': card.key,
+                'title': card.title,
+                'description': card.description,
+                'meta': card.meta,
+                'icon': card.icon,
+                'dom_id': card.dom_id,
+                'extra_css_class': card.extra_css_class,
+            }
+            for card in sorted(cards_queryset, key=lambda item: item.key)
+        ]
+
+        if challenge_settings.resume_card:
+            resume = challenge_settings.resume_card
+            challenge_resume_card = {
+                'title': resume.title,
+                'description': mark_safe(
+                    safe_template_format(
+                        resume.description_template,
+                        question_count="<span class='resume-question-count'>0</span>",
+                    )
+                ),
+                'icon': resume.icon,
+                'discard_label': resume.discard_label,
+                'continue_label': resume.continue_label,
+            }
+
+        if challenge_settings.predefined_section:
+            challenge_predefined_section = {
+                'title': challenge_settings.predefined_section.title,
+                'subtitle': challenge_settings.predefined_section.subtitle,
+            }
+
+        if challenge_settings.placeholders:
+            placeholder = challenge_settings.placeholders
+            challenge_placeholders = {
+                'filters_title': placeholder.filters_title,
+                'filters_body': placeholder.filters_body,
+                'filters_supporting': placeholder.filters_supporting,
+                'filters_cta_label': placeholder.filters_cta_label,
+                'filters_cta_icon': placeholder.filters_cta_icon,
+                'filters_cta_css_class': placeholder.filters_cta_css_class,
+                'filters_cta_dom_id': placeholder.filters_cta_dom_id,
+            }
+
     context = {
         'page_title': 'MedQuiz - Questões',
         'hub_summary': hub_summary,
         'hub_summary_json': hub_summary_json,
+        'challenge_hero': challenge_hero,
+        'challenge_hero_actions': challenge_hero_actions,
+        'challenge_hero_stats': challenge_hero_stats,
+        'challenge_cards': challenge_cards,
+        'challenge_resume_card': challenge_resume_card,
+        'challenge_predefined_section': challenge_predefined_section,
+        'challenge_placeholders': challenge_placeholders,
     }
     return render(request, 'quiz/questions_page.html', context)
 

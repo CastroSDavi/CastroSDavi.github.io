@@ -1,0 +1,104 @@
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_head %}
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <link rel="canonical" href="{{ canonical_url }}">
+{% endblock extra_head %}
+
+{% block body_attrs %}class="is-challenge-detail"{% endblock %}
+
+{% block content %}
+<section class="main-section main-section--narrow challenge-detail">
+    <div class="breadcrumb">
+        <a href="{{ hub_url }}" class="button button--text button--compact">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            <span class="button__label">Voltar para o hub de desafios</span>
+        </a>
+    </div>
+
+    <article class="card challenge-detail__card">
+        <header class="card__header challenge-detail__header">
+            <div class="challenge-detail__heading">
+                <span class="challenge-detail__eyebrow">Desafio dinâmico</span>
+                <h1 class="challenge-detail__title">{{ challenge.nome }}</h1>
+                {% if challenge_payload.is_active %}
+                <span class="challenge-detail__status challenge-detail__status--active">Ativo</span>
+                {% else %}
+                <span class="challenge-detail__status">Encerrado</span>
+                {% endif %}
+            </div>
+            {% if challenge.descricao %}
+            <p class="challenge-detail__description">{{ challenge.descricao }}</p>
+            {% endif %}
+        </header>
+
+        <div class="card__body challenge-detail__body">
+            <section class="challenge-detail__summary" aria-label="Informações principais">
+                <ul class="challenge-detail__summary-list">
+                    <li>
+                        <span class="challenge-detail__meta-label">Tipo</span>
+                        <span class="challenge-detail__meta-value">{{ challenge.get_tipo_display }}</span>
+                    </li>
+                    <li>
+                        <span class="challenge-detail__meta-label">Período</span>
+                        <span class="challenge-detail__meta-value">
+                            {% if start_display %}{{ start_display|date:"d \d\e F" }}{% else %}Início flexível{% endif %}
+                            {% if end_display %} a {{ end_display|date:"d \d\e F" }}{% else %} • Sem data limite{% endif %}
+                        </span>
+                    </li>
+                    {% if time_remaining_text %}
+                    <li>
+                        <span class="challenge-detail__meta-label">Tempo restante</span>
+                        <span class="challenge-detail__meta-value">{{ time_remaining_text }}</span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </section>
+
+            <section class="challenge-detail__progress" aria-label="Progresso atual">
+                <h2 class="challenge-detail__section-title">Progresso</h2>
+                <div class="challenge-detail__progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ progress_payload.percent|default:0|floatformat:'0' }}">
+                    <span style="width: {{ progress_payload.percent|default:0 }}%;"></span>
+                </div>
+                <div class="challenge-detail__progress-meta">
+                    <span>{{ progress_payload.label }}</span>
+                    {% if remaining_display is not None and challenge_payload.target %}
+                    <span>Faltam {{ remaining_display|floatformat:'0' }} de {{ challenge_payload.target|floatformat:'0' }}</span>
+                    {% endif %}
+                </div>
+                {% if challenge_payload.is_completed %}
+                <p class="challenge-detail__completion">Você concluiu este desafio {% if challenge_payload.completed_at %}em {{ challenge_payload.completed_at|date:"d/m/Y H:i" }}{% endif %}.</p>
+                {% endif %}
+            </section>
+
+            {% if reward_payload %}
+            <section class="challenge-detail__reward" aria-label="Recompensa">
+                <h2 class="challenge-detail__section-title">Recompensa</h2>
+                <div class="challenge-detail__reward-card">
+                    <span class="material-symbols-outlined" aria-hidden="true">redeem</span>
+                    <div>
+                        <p class="challenge-detail__reward-title">{{ reward_payload.nome|default:"Recompensa especial" }}</p>
+                        {% if reward_payload.descricao %}
+                        <p class="challenge-detail__reward-description">{{ reward_payload.descricao }}</p>
+                        {% endif %}
+                        {% if reward_payload.valor %}
+                        <p class="challenge-detail__reward-meta">Valor: {{ reward_payload.valor }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        </div>
+
+        <footer class="card__footer challenge-detail__footer">
+            <a href="{{ hub_url }}" class="button button--primary">
+                <span class="material-symbols-outlined button__icon" aria-hidden="true">flag</span>
+                <span class="button__label">Escolher outro desafio</span>
+            </a>
+        </footer>
+    </article>
+</section>
+{% endblock content %}

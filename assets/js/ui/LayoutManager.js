@@ -8,6 +8,7 @@ export default class LayoutManager {
 
         this.sectionIds = {
             home: 'home-section',
+            hub: 'question-section',
             questions: 'question-section',
             account: 'account-section-page',
         };

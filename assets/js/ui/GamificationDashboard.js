@@ -796,6 +796,7 @@ export default class GamificationDashboard {
                         </div>
                     </dl>
                 </div>
+                ${item?.detail_url ? `<footer class="challenge-card__footer"><a class="button button--text button--small" href="${item.detail_url}">Ver detalhes</a></footer>` : ''}
             </article>
         `;
     }

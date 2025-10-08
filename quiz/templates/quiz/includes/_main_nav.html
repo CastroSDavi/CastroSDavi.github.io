@@ -4,9 +4,9 @@
         <li class="main-nav__item"><a href="{% url 'quiz:home' %}"
                 class="main-nav__link {% if request.resolver_match.view_name == 'quiz:home' %}main-nav__link--active{% endif %}"
                 data-section-target-django="home">Início</a></li>
-        <li class="main-nav__item"><a href="{% url 'quiz:questions' %}"
-                class="main-nav__link {% if request.resolver_match.view_name == 'quiz:questions' %}main-nav__link--active{% endif %}"
-                data-section-target-django="questions">Questões</a></li>
+        <li class="main-nav__item"><a href="{% url 'quiz:challenge_hub' %}"
+                class="main-nav__link {% if request.resolver_match.view_name == 'quiz:challenge_hub' or request.resolver_match.view_name == 'quiz:question_detail' or request.resolver_match.view_name == 'quiz:challenge_detail' %}main-nav__link--active{% endif %}"
+                data-section-target-django="hub">Hub de desafios</a></li>
         {# Adicionar link para 'Minha Conta' se o usuário estiver logado, opcional aqui se já estiver no header #}
     </ul>
 </nav>

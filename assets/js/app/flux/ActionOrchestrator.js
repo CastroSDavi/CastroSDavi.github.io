@@ -435,7 +435,7 @@ export default class ActionOrchestrator {
                 return false;
             }
 
-            this.store.dispatch(quizActions.setActiveSection('questions'));
+            this.store.dispatch(quizActions.setActiveSection('hub'));
             this.store.dispatch(
                 quizActions.initializeQuiz(
                     normalizedQuestions,
@@ -772,7 +772,7 @@ export default class ActionOrchestrator {
                 questionPayload.is_favorited = true;
             }
 
-            this.store.dispatch(quizActions.setActiveSection('questions'));
+            this.store.dispatch(quizActions.setActiveSection('hub'));
             this.store.dispatch(
                 quizActions.initializeQuiz(
                     [questionPayload],

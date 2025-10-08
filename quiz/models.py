@@ -8,7 +8,9 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import slugify
 
 
 def default_difficulty_rewards() -> Dict[str, Dict[str, int]]:
@@ -394,6 +396,13 @@ class Pergunta(models.Model):
         null=True,
         verbose_name="Referência Bibliográfica"
     )
+    slug = models.SlugField(
+        max_length=255,
+        unique=True,
+        blank=True,
+        verbose_name="Slug da Pergunta",
+        help_text="Identificador único e legível usado para construir URLs públicas da questão.",
+    )
     categorias = models.ManyToManyField(
         Categoria,
         related_name='perguntas_associadas',
@@ -436,6 +445,23 @@ class Pergunta(models.Model):
 
     def __str__(self):
         return f"P{self.pk}: {self.texto_pergunta[:70]}..."
+
+    def save(self, *args, **kwargs):  # type: ignore[override]
+        if not self.slug:
+            base_slug = slugify(self.texto_pergunta) or "pergunta"
+            base_slug = base_slug[:200].strip("-") or "pergunta"
+            slug_candidate = base_slug
+            suffix = 2
+            while Pergunta.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
+                suffix_fragment = f"-{suffix}"
+                available_length = 255 - len(suffix_fragment)
+                slug_candidate = f"{base_slug[:available_length]}{suffix_fragment}"
+                suffix += 1
+            self.slug = slug_candidate
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self) -> str:
+        return reverse('quiz:question_detail', kwargs={'slug': self.slug})
 
     class Meta:
         verbose_name = "Pergunta do Quiz"
@@ -1555,6 +1581,9 @@ class DesafioDinamico(models.Model):
         reference = reference_time or timezone.now()
         return DesafioDinamico.objects.ativos(reference).filter(pk=self.pk).exists()
 
+    def get_absolute_url(self) -> str:
+        return reverse('quiz:challenge_detail', kwargs={'slug': self.slug})
+
     def get_target_value(self) -> float:
         criterio = self.criterio_json or {}
         try:
@@ -1955,7 +1984,7 @@ class HomePageSettings(SingletonModel):
     )
     intro_secondary_cta_url = models.CharField(
         max_length=255,
-        default="/questions/",
+        default="/hub/",
         help_text="URL relativa ou absoluta para o CTA secundário do card de passos.",
     )
     collections_section_title = models.CharField(
@@ -2009,7 +2038,7 @@ class HomeHeroCTA(models.Model):
     audience = models.CharField(max_length=20, choices=HomeContentAudience.choices, default=HomeContentAudience.AUTHENTICATED)
     position = models.CharField(max_length=20, choices=Position.choices, default=Position.PRIMARY)
     label = models.CharField(max_length=120)
-    url = models.CharField(max_length=255, help_text="Use URLs relativas (ex: /questions/) ou absolutas.")
+    url = models.CharField(max_length=255, help_text="Use URLs relativas (ex: /hub/) ou absolutas.")
     icon = models.CharField(max_length=80, blank=True, help_text="Nome do ícone Material Symbols a exibir.")
     css_class = models.CharField(
         max_length=200,
@@ -2185,7 +2214,7 @@ class HomeRecentSessionCardSettings(models.Model):
     stat_accuracy_placeholder = models.CharField(max_length=80, default="0%")
     stat_duration_placeholder = models.CharField(max_length=80, default="0 min")
     cta_label = models.CharField(max_length=120, default="Retomar treino")
-    cta_url = models.CharField(max_length=255, default="/questions/")
+    cta_url = models.CharField(max_length=255, default="/hub/")
     cta_icon = models.CharField(max_length=80, blank=True, default="play_arrow")
     cta_css_class = models.CharField(max_length=200, default="button button--text")
     show_when_empty = models.BooleanField(

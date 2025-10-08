@@ -404,6 +404,20 @@ export default class FavoriteManager {
                 actionsContainer.appendChild(explanationButton);
             }
 
+            if (fav.detail_url) {
+                const detailLink = document.createElement('a');
+                detailLink.href = fav.detail_url;
+                detailLink.className = 'button button--text button--compact favorite-question-card__action';
+                detailLink.setAttribute('role', 'link');
+
+                const detailLabel = document.createElement('span');
+                detailLabel.className = 'button__label';
+                detailLabel.textContent = 'Abrir detalhes';
+                detailLink.appendChild(detailLabel);
+
+                actionsContainer.appendChild(detailLink);
+            }
+
             const unfavoriteButton = this._createUnfavoriteButton(fav);
             if (unfavoriteButton) {
                 actionsContainer.appendChild(unfavoriteButton);
@@ -563,7 +577,9 @@ export default class FavoriteManager {
         }
 
         const baseUrl = this._getQuestionsPageUrl();
-        const destinationUrl = this._buildQuestionReviewLink(baseUrl, favoriteQuestion.id_pergunta) || baseUrl;
+        const destinationUrl = favoriteQuestion?.detail_url
+            || this._buildQuestionReviewLink(baseUrl, favoriteQuestion.id_pergunta)
+            || baseUrl;
 
         if (typeof window !== 'undefined' && window.sessionStorage) {
             try {
@@ -637,6 +653,8 @@ export default class FavoriteManager {
 
         const sanitizedQuestion = {
             id_pergunta: favoriteQuestion.id_pergunta,
+            slug: favoriteQuestion.slug || null,
+            detail_url: favoriteQuestion.detail_url || null,
             texto_pergunta: favoriteQuestion.texto_pergunta || '',
             url_imagem: favoriteQuestion.url_imagem || null,
             referencia_bibliografica: favoriteQuestion.referencia_bibliografica || null,
@@ -807,16 +825,17 @@ export default class FavoriteManager {
 
     _getQuestionsPageUrl() {
         const bottomNav = this.quizUI?.elements?.bottomNavElement;
-        const questionsLink = bottomNav?.querySelector('[data-section-target-django="questions"]');
-        if (questionsLink && questionsLink.href) {
-            return questionsLink.href;
+        const hubLink = bottomNav?.querySelector('[data-section-target-django="hub"]')
+            || bottomNav?.querySelector('[data-section-target-django="questions"]');
+        if (hubLink && hubLink.href) {
+            return hubLink.href;
         }
 
         if (typeof window !== 'undefined' && window.location) {
-            return `${window.location.origin}/questions/`;
+            return `${window.location.origin}/hub/`;
         }
 
-        return '/questions/';
+        return '/hub/';
     }
 
     _formatFavoriteDate(isoDateString) {

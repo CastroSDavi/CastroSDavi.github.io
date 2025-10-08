@@ -1040,6 +1040,8 @@ class QuestionViewSet(viewsets.ViewSet):
 
         question_payload = {
             'id_pergunta': pergunta.pk,
+            'slug': pergunta.slug,
+            'detail_url': pergunta.get_absolute_url(),
             'texto_pergunta': pergunta.texto_pergunta,
             'url_imagem': pergunta.url_imagem,
             'referencia_bibliografica': pergunta.referencia_bibliografica,

@@ -141,9 +141,14 @@
                             <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default:0 }}%;"></span>
                         </div>
                     </div>
-                    {% if card.reward %}
-                    <footer class="home-card__footer">
+                    {% if card.reward or card.detail_url %}
+                    <footer class="home-card__footer{% if card.detail_url %} home-card__footer--actions{% endif %}">
+                        {% if card.reward %}
                         <span class="home-card__chip">{{ card.reward }}</span>
+                        {% endif %}
+                        {% if card.detail_url %}
+                        <a href="{{ card.detail_url }}" class="button button--text button--compact">Ver detalhes</a>
+                        {% endif %}
                     </footer>
                     {% endif %}
                 </article>
@@ -282,7 +287,7 @@
                 </header>
                 <p class="home-card__description">{{ quiz.description|default:"Coleção com casos clínicos selecionados para acelerar sua revisão." }}</p>
                 <footer class="home-card__footer home-card__footer--actions">
-                    <a href="{% url 'quiz:questions' %}?predefined_id={{ quiz.id }}" class="button button--text">
+                    <a href="{% url 'quiz:challenge_hub' %}?predefined_id={{ quiz.id }}" class="button button--text">
                         <span class="material-symbols-outlined button__icon" aria-hidden="true">chevron_right</span>
                         Abrir coleção
                     </a>

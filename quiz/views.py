@@ -31,6 +31,7 @@ from .models import (
     ValueSourceType,
     ChallengeHubSettings,
     ChallengeHubValueSource,
+    DesafioDinamico,
     default_difficulty_rewards,
     default_streak_bonus_rules,
     default_score_panel_config,
@@ -653,6 +654,7 @@ def home_view(request):
     predefined_quizzes = QuizDataService.get_active_predefined_quizzes_summary()[:3]
     study_methods_metadata = StudyMethodRegistry.list_metadata()[:3]
     home_settings = _get_home_page_settings()
+    challenge_hub_url = reverse('quiz:challenge_hub')
 
     home_quick_links = []
     home_intro_highlights = []
@@ -728,6 +730,7 @@ def home_view(request):
                 'progress_label': progress.get('label'),
                 'reward': reward_payload.get('nome') or reward_payload.get('descricao'),
                 'time_remaining': humanize_time_remaining(primary.get('time_remaining_seconds')),
+                'detail_url': primary.get('detail_url'),
             }
 
         last_session = (
@@ -861,7 +864,7 @@ def home_view(request):
         if cta_label:
             cta = {
                 'label': cta_label,
-                'url': getattr(config, 'cta_url', '/questions/'),
+                'url': getattr(config, 'cta_url', challenge_hub_url),
                 'icon': getattr(config, 'cta_icon', ''),
                 'css_class': getattr(config, 'cta_css_class', 'button button--text'),
             }
@@ -916,6 +919,7 @@ def home_view(request):
             reward_value = reward_placeholder
 
         progress_percent = payload.get('progress_percent') if payload else 0
+        detail_url = payload.get('detail_url') if payload else None
 
         return {
             'key': 'active_challenge',
@@ -930,6 +934,7 @@ def home_view(request):
                 'percent': progress_percent or 0,
             },
             'reward': reward_value,
+            'detail_url': detail_url,
             'is_empty': is_empty,
         }
 
@@ -1176,7 +1181,7 @@ def home_view(request):
             home_hero_ctas = [
                 {
                     'label': 'Iniciar novo quiz',
-                    'url': '/questions/',
+                    'url': challenge_hub_url,
                     'icon': 'rocket_launch',
                     'css_class': 'button button--fancy button--fancy-primary',
                     'anchor_id': 'go-to-challenges-hub-link',
@@ -1203,7 +1208,7 @@ def home_view(request):
                 },
                 {
                     'label': 'Explorar banco de questões',
-                    'url': '/questions/',
+                    'url': challenge_hub_url,
                     'icon': 'quiz',
                     'css_class': 'button button--fancy button--fancy-secondary',
                     'anchor_id': '',
@@ -1244,14 +1249,14 @@ def home_view(request):
         }
         home_intro_ctas = {
             'primary': {'label': 'Criar conta', 'url': '/register/'},
-            'secondary': {'label': 'Experimentar um quiz', 'url': '/questions/'},
+            'secondary': {'label': 'Experimentar um quiz', 'url': challenge_hub_url},
         }
         home_quick_links = [
             {
                 'title': 'Iniciar desafio rápido',
                 'description': 'Abra o hub de desafios configurado para você.',
                 'icon': 'rocket_launch',
-                'url': '/questions/',
+                'url': challenge_hub_url,
                 'extra_css_class': '',
                 'anchor_id': 'quick-link-start',
                 'open_in_new_tab': False,
@@ -1269,7 +1274,7 @@ def home_view(request):
                 'title': 'Explorar coleções prontas',
                 'description': 'Seleções temáticas com tempo estimado e foco claro.',
                 'icon': 'playlist_add_check',
-                'url': '/questions/#hub-predefined-section',
+                'url': f"{challenge_hub_url}#hub-predefined-section",
                 'extra_css_class': '',
                 'anchor_id': '',
                 'open_in_new_tab': False,
@@ -1350,7 +1355,7 @@ def home_view(request):
     return render(request, 'quiz/home.html', context)
 
 @login_required
-def questions_view(request):
+def challenge_hub_view(request):
     def format_count(value):
         try:
             return f"{int(value):,}".replace(',', '.')
@@ -1522,6 +1527,106 @@ def questions_view(request):
         'challenge_placeholders': challenge_placeholders,
     }
     return render(request, 'quiz/questions_page.html', context)
+
+
+def question_detail_view(request, slug):
+    question_queryset = Pergunta.objects.prefetch_related(
+        Prefetch(
+            'categorias',
+            queryset=Categoria.objects.all().only('pk', 'nome_categoria').order_by('nome_categoria'),
+        ),
+        Prefetch(
+            'opcoes',
+            queryset=OpcaoResposta.objects.all().order_by('ordem_exibicao', 'pk'),
+        ),
+    )
+
+    pergunta = get_object_or_404(question_queryset, slug=slug)
+
+    categorias_relacionadas = list(pergunta.categorias.all())
+    opcoes_ordenadas = list(pergunta.opcoes.all())
+
+    canonical_url = request.build_absolute_uri(pergunta.get_absolute_url())
+    meta_description_raw = (pergunta.texto_pergunta or '').strip()
+    meta_description = ' '.join(meta_description_raw.split())
+    if not meta_description:
+        meta_description = f"Questão do MedQuiz disponível no hub de desafios."
+    if len(meta_description) > 155:
+        meta_description = f"{meta_description[:152].rstrip()}..."
+
+    context = {
+        'page_title': f"Questão: {pergunta.texto_pergunta[:60]} - MedQuiz",
+        'question': pergunta,
+        'question_categories': categorias_relacionadas,
+        'question_options': opcoes_ordenadas,
+        'canonical_url': canonical_url,
+        'meta_description': meta_description,
+        'hub_url': reverse('quiz:challenge_hub'),
+    }
+
+    return render(request, 'quiz/question_detail.html', context)
+
+
+def challenge_detail_view(request, slug):
+    challenge = get_object_or_404(DesafioDinamico.objects.all(), slug=slug)
+    gamification_service = GamificationService()
+    challenge_payload = gamification_service.serialize_challenge_for_user(
+        challenge,
+        user=request.user,
+    )
+
+    reward_payload = challenge_payload.get('reward') or {}
+    progress_payload = challenge_payload.get('progress') or {}
+
+    def format_time_remaining(seconds: Optional[int]) -> Optional[str]:
+        if seconds is None:
+            return None
+        try:
+            total_seconds = int(seconds)
+        except (TypeError, ValueError):
+            return None
+        if total_seconds <= 0:
+            return 'Encerrado'
+        minutes, sec = divmod(total_seconds, 60)
+        hours, minutes = divmod(minutes, 60)
+        days, hours = divmod(hours, 24)
+        if days:
+            return f"{days}d {hours}h"
+        if hours:
+            return f"{hours}h {minutes}min"
+        if minutes:
+            return f"{minutes}min"
+        return f"{sec}s"
+
+    time_remaining_text = format_time_remaining(challenge_payload.get('time_remaining_seconds'))
+    canonical_url = request.build_absolute_uri(challenge.get_absolute_url())
+    start_display = timezone.localtime(challenge.data_inicio) if challenge.data_inicio else None
+    end_display = timezone.localtime(challenge.data_fim) if challenge.data_fim else None
+    remaining_display = None
+    try:
+        remaining_display = int(progress_payload.get('remaining')) if progress_payload.get('remaining') is not None else None
+    except (TypeError, ValueError):
+        remaining_display = progress_payload.get('remaining')
+    meta_description = challenge.descricao or f"Detalhes do desafio {challenge.nome} no MedQuiz."
+    if len(meta_description) > 155:
+        meta_description = f"{meta_description[:152].rstrip()}..."
+
+    context = {
+        'page_title': f"Desafio: {challenge.nome} - MedQuiz",
+        'challenge': challenge,
+        'challenge_payload': challenge_payload,
+        'reward_payload': reward_payload,
+        'progress_payload': progress_payload,
+        'time_remaining_text': time_remaining_text,
+        'canonical_url': canonical_url,
+        'hub_url': reverse('quiz:challenge_hub'),
+        'start_display': start_display,
+        'end_display': end_display,
+        'remaining_display': remaining_display,
+        'meta_description': meta_description,
+    }
+
+    return render(request, 'quiz/challenge_detail.html', context)
 
 
 def register_view(request):
@@ -2240,6 +2345,8 @@ def get_favorite_questions_view(request):
 
         perguntas_favoritas_data.append({
             'id_pergunta': p.pk,
+            'slug': p.slug,
+            'detail_url': p.get_absolute_url(),
             'texto_pergunta': p.texto_pergunta,
             'url_imagem': p.url_imagem,
             'referencia_bibliografica': p.referencia_bibliografica,
@@ -2254,7 +2361,8 @@ def get_favorite_questions_view(request):
             'nivel_dificuldade': p.nivel_dificuldade,
             'explicacao_resposta': p.explicacao_resposta,
             'opcoes': opcoes_data,
-            'data_favoritada': fav.data_favoritada.isoformat()
+            'data_favoritada': fav.data_favoritada.isoformat(),
+            'esta_ativa': p.ativa,
         })
 
     all_categories_list_for_mapping = [

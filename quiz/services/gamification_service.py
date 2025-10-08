@@ -849,12 +849,12 @@ class GamificationService:
         self,
         *,
         challenge: DesafioDinamico,
-        progress: ProgressoDesafioUsuario,
+        progress: Optional[ProgressoDesafioUsuario],
         reference_time: datetime,
     ) -> Dict[str, Any]:
         target_value = challenge.get_target_value()
-        current_value = float(progress.valor_atual or 0.0)
-        percent = progress.progress_percent(target_value) if target_value else 0.0
+        current_value = float(progress.valor_atual or 0.0) if progress else 0.0
+        percent = progress.progress_percent(target_value) if progress and target_value else 0.0
         remaining = None
         if target_value:
             remaining = max(int(round(target_value - current_value)), 0)
@@ -884,11 +884,42 @@ class GamificationService:
                 'remaining': remaining,
             },
             'reward': challenge.recompensa_json or {},
-            'is_completed': bool(progress.concluido),
-            'completed_at': progress.data_conclusao.isoformat() if progress.data_conclusao else None,
+            'is_completed': bool(progress.concluido) if progress else False,
+            'completed_at': progress.data_conclusao.isoformat() if progress and progress.data_conclusao else None,
             'time_remaining_seconds': time_remaining_seconds,
-            'metadata': progress.metadata or {},
+            'metadata': progress.metadata or {} if progress else {},
+            'detail_url': challenge.get_absolute_url(),
         }
+
+    def serialize_challenge_for_user(
+        self,
+        challenge: DesafioDinamico,
+        *,
+        user=None,
+    ) -> Dict[str, Any]:
+        profile: Optional[PerfilGamificacaoUsuario] = None
+        progress: Optional[ProgressoDesafioUsuario] = None
+
+        if user and getattr(user, 'is_authenticated', False):
+            profile = getattr(user, 'gamification_profile', None)
+            if profile is None:
+                profile = (
+                    PerfilGamificacaoUsuario.objects.filter(user=user).first()
+                )
+            if profile:
+                progress = ProgressoDesafioUsuario.objects.filter(
+                    desafio=challenge,
+                    perfil=profile,
+                ).first()
+
+        reference_time = timezone.now()
+        payload = self._serialize_single_challenge(
+            challenge=challenge,
+            progress=progress,
+            reference_time=reference_time,
+        )
+        payload['is_active'] = challenge.is_active(reference_time)
+        return payload
 
     def _serialize_rewards(
         self,

@@ -52,7 +52,7 @@ export default class App {
         this._ensureActiveSection(initialSectionId);
 
         try {
-            if (initialSectionId === 'questions') {
+            if (initialSectionId === 'hub') {
                 await this.actionOrchestrator.initializeAppData();
             }
 
@@ -66,7 +66,7 @@ export default class App {
             const isQuizActive = this.store.getState().quiz.currentSessionId !== null;
             this.quizUI.displayQuizLayout(isQuizActive);
 
-            if (initialSectionId === 'questions') {
+            if (initialSectionId === 'hub') {
                 await this.actionOrchestrator.initializeQuizPage();
                 await this._handlePendingFavoriteReview();
             } else if (initialSectionId === 'account') {
@@ -171,8 +171,9 @@ export default class App {
         }
 
         const bodyPageId = document.body?.dataset?.pageId || 'home';
-        const validSections = ['home', 'questions', 'account'];
-        return validSections.includes(bodyPageId) ? bodyPageId : 'home';
+        const normalizedId = bodyPageId === 'questions' ? 'hub' : bodyPageId;
+        const validSections = ['home', 'hub', 'account'];
+        return validSections.includes(normalizedId) ? normalizedId : 'home';
     }
 
     _ensureActiveSection(targetSection) {

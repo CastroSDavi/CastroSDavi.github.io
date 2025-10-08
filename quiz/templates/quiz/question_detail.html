@@ -1,0 +1,107 @@
+{% extends "quiz/base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_head %}
+    {% if meta_description %}<meta name="description" content="{{ meta_description }}">{% endif %}
+    <link rel="canonical" href="{{ canonical_url }}">
+{% endblock extra_head %}
+
+{% block body_attrs %}class="is-question-detail"{% endblock %}
+
+{% block content %}
+<section class="main-section main-section--narrow question-detail">
+    <div class="breadcrumb">
+        <a href="{{ hub_url }}" class="button button--text button--compact">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            <span class="button__label">Voltar para o hub de desafios</span>
+        </a>
+    </div>
+
+    <article class="card card--question-wrap question-detail__card">
+        <header class="card__header question-detail__header">
+            <div class="question-detail__heading">
+                <span class="question-detail__eyebrow">Questão do banco MedQuiz</span>
+                <h1 class="question-detail__title">{{ question.texto_pergunta }}</h1>
+            </div>
+            {% if not question.ativa %}
+            <span class="question-detail__badge">Indisponível no treino automático</span>
+            {% endif %}
+        </header>
+
+        <div class="card__body question-detail__body">
+            <section class="question-detail__meta" aria-label="Resumo da questão">
+                <ul class="question-detail__meta-list">
+                    <li>
+                        <span class="question-detail__meta-label">ID interno</span>
+                        <span class="question-detail__meta-value">#{{ question.id }}</span>
+                    </li>
+                    <li>
+                        <span class="question-detail__meta-label">Dificuldade</span>
+                        <span class="question-detail__meta-value">{{ question.get_nivel_dificuldade_display }}</span>
+                    </li>
+                    {% if question_categories %}
+                    <li>
+                        <span class="question-detail__meta-label">Categorias</span>
+                        <span class="question-detail__meta-value">
+                            {% for category in question_categories %}
+                                <span class="question-detail__tag">{{ category.nome_categoria }}</span>{% if not forloop.last %} {% endif %}
+                            {% endfor %}
+                        </span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </section>
+
+            {% if question.url_imagem %}
+            <figure class="question-detail__media">
+                <img src="{{ question.url_imagem }}" alt="Ilustração complementar da questão" loading="lazy">
+            </figure>
+            {% endif %}
+
+            <section class="question-detail__statement" aria-label="Enunciado">
+                <h2 class="question-detail__section-title">Enunciado</h2>
+                <p class="question-detail__text">{{ question.texto_pergunta|linebreaksbr }}</p>
+            </section>
+
+            {% if question_options %}
+            <section class="question-detail__options" aria-label="Alternativas">
+                <h2 class="question-detail__section-title">Alternativas</h2>
+                <ol class="question-detail__option-list">
+                    {% for option in question_options %}
+                    <li class="question-detail__option{% if option.eh_correta %} question-detail__option--correct{% endif %}">
+                        <span class="question-detail__option-text">{{ option.texto_opcao|linebreaksbr }}</span>
+                        {% if option.feedback_opcao %}
+                        <p class="question-detail__option-feedback">{{ option.feedback_opcao|linebreaksbr }}</p>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ol>
+            </section>
+            {% endif %}
+
+            {% if question.explicacao_resposta %}
+            <section class="question-detail__explanation" aria-label="Comentário da resposta">
+                <h2 class="question-detail__section-title">Comentário da resposta</h2>
+                <p>{{ question.explicacao_resposta|linebreaksbr }}</p>
+            </section>
+            {% endif %}
+
+            {% if question.referencia_bibliografica %}
+            <section class="question-detail__reference" aria-label="Referência bibliográfica">
+                <h2 class="question-detail__section-title">Referência</h2>
+                <p>{{ question.referencia_bibliografica|linebreaksbr }}</p>
+            </section>
+            {% endif %}
+        </div>
+
+        <footer class="card__footer question-detail__footer">
+            <a href="{{ hub_url }}" class="button button--primary">
+                <span class="material-symbols-outlined button__icon" aria-hidden="true">play_circle</span>
+                <span class="button__label">Explorar mais desafios</span>
+            </a>
+        </footer>
+    </article>
+</section>
+{% endblock content %}

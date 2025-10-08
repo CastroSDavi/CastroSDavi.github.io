@@ -13,3 +13,10 @@
 - A opcao de duplicacao copia categorias e opcoes existentes e marca a copia como inativa para revisao rapida.
 - O inline de opcoes exige pelo menos duas alternativas e uma correta, evitando salvar perguntas incompletas.
 - O campo de dificuldade usa botoes horizontais e o status ativo pode ser ajustado direto na lista, acelerando cadastros grandes.
+
+## Documentação da API
+
+- Execute `pip install drf-spectacular` (ou adicione o pacote ao gerenciador de dependências do projeto) para habilitar os recursos de documentação.
+- Acesse `GET /api/schema/` para baixar o arquivo OpenAPI gerado automaticamente.
+- Utilize `GET /api/docs/` para a interface interativa do Swagger UI e `GET /api/redoc/` para visualizar a documentação no formato ReDoc.
+- Opcionalmente, gere um arquivo estático com `python manage.py spectacular --file schema.yml` caso precise versionar o esquema ou publicá-lo em outro local.

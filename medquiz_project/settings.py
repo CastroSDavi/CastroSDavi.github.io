@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'drf_spectacular',
     'quiz.apps.QuizConfig',
     # 'quiz',  # Adicione esta linha para registrar o aplicativo quiz
 ]
@@ -160,3 +161,14 @@ LOGOUT_REDIRECT_URL = 'quiz:home' # Para onde ir após o logout
 QUIZ_SCORE_PANEL_EXTRA_MODES = [
     ('Revisão', 'Revisão de Favoritos'),
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'MedQuiz API',
+    'DESCRIPTION': 'Esquema OpenAPI para os endpoints da plataforma MedQuiz.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+}

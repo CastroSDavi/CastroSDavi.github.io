@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views # Importe as views de autenticação
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from quiz.forms import CustomAuthenticationForm # Importe seu formulário personalizado
 
 urlpatterns = [
@@ -15,4 +16,7 @@ urlpatterns = [
     ), name='login'),
 
     path('accounts/', include('django.contrib.auth.urls')), # Mantenha as outras URLs de autenticação
+    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
+    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 ]

@@ -246,19 +246,42 @@ export default class ChallengeHub {
             await this.actionOrchestrator.startTimedSimulation();
         });
 
-        this.elements.hubFavoriteReviewBtn?.addEventListener('click', async () => {
+        this.elements.hubFavoriteReviewBtn?.addEventListener('click', async (event) => {
             if (!this.actionOrchestrator) {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao iniciar revisão de favoritos.");
                 return;
             }
-            await this.actionOrchestrator.startFavoritesReview();
+            const target = event?.currentTarget;
+            const quizDefinitionId = target && target.dataset
+                ? Number.parseInt(target.dataset.quizDefinitionId ?? '', 10)
+                : Number.NaN;
+            if (Number.isInteger(quizDefinitionId) && quizDefinitionId > 0) {
+                this.hideHub();
+                await this.actionOrchestrator.startPredefinedQuiz(quizDefinitionId);
+                return;
+            }
+
+            const executed = await this.actionOrchestrator.startFavoritesReview();
+            if (executed) {
+                this.hideHub();
+            }
         });
 
-        this.elements.hubRepeatLastBtn?.addEventListener('click', async () => {
+        this.elements.hubRepeatLastBtn?.addEventListener('click', async (event) => {
             if (!this.actionOrchestrator) {
                 console.error("ChallengeHub: actionOrchestrator indisponível ao repetir último desafio.");
                 return;
             }
+            const target = event?.currentTarget;
+            const quizDefinitionId = target && target.dataset
+                ? Number.parseInt(target.dataset.quizDefinitionId ?? '', 10)
+                : Number.NaN;
+            if (Number.isInteger(quizDefinitionId) && quizDefinitionId > 0) {
+                this.hideHub();
+                await this.actionOrchestrator.startPredefinedQuiz(quizDefinitionId);
+                return;
+            }
+
             const executed = await this.actionOrchestrator.retryLastQuizRequest();
             if (executed) {
                 this.hideHub();
@@ -343,6 +366,10 @@ export default class ChallengeHub {
                 || cached.total_perguntas !== current.total_perguntas
                 || cached.nome !== current.nome
                 || cached.descricao !== current.descricao
+                || cached.generation_type !== current.generation_type
+                || cached.generation_label !== current.generation_label
+                || cached.study_method !== current.study_method
+                || cached.study_method_label !== current.study_method_label
             ) {
                 return true;
             }
@@ -363,6 +390,12 @@ export default class ChallengeHub {
                     nome: typeof quiz.nome === 'string' ? quiz.nome : String(quiz.nome ?? ''),
                     descricao: typeof quiz.descricao === 'string' ? quiz.descricao : '',
                     total_perguntas: this._normalizeCount(quiz.total_perguntas) ?? 0,
+                    generation_type: typeof quiz.generation_type === 'string' ? quiz.generation_type : null,
+                    generation_label: typeof quiz.generation_label === 'string' ? quiz.generation_label : '',
+                    study_method: typeof quiz.study_method === 'string' ? quiz.study_method : null,
+                    study_method_label: typeof quiz.study_method_label === 'string'
+                        ? quiz.study_method_label
+                        : '',
                 }))
                 .filter((quiz) => Number.isInteger(quiz.id) && quiz.id > 0)
             : [];
@@ -381,8 +414,39 @@ export default class ChallengeHub {
             cardButton.classList.add('challenge-card');
             cardButton.dataset.quizDefId = String(quiz.id);
             cardButton.dataset.quizName = quiz.nome;
-            cardButton.title = `${quiz.nome} • ${this._formatCount(quiz.total_perguntas)} questões`;
-            cardButton.setAttribute('aria-label', `${quiz.nome} com ${this._formatCount(quiz.total_perguntas)} questões`);
+            if (quiz.generation_type) {
+                cardButton.dataset.generationType = quiz.generation_type;
+            }
+            if (quiz.generation_label) {
+                cardButton.dataset.generationLabel = quiz.generation_label;
+            }
+            if (quiz.study_method) {
+                cardButton.dataset.studyMethod = quiz.study_method;
+            }
+            if (quiz.study_method_label) {
+                cardButton.dataset.studyMethodLabel = quiz.study_method_label;
+            }
+
+            const formattedCount = this._formatCount(quiz.total_perguntas);
+            const tooltipParts = [quiz.nome, `${formattedCount} questões`];
+            if (quiz.study_method_label) {
+                tooltipParts.push(quiz.study_method_label);
+            } else if (quiz.generation_label) {
+                tooltipParts.push(quiz.generation_label);
+            }
+            cardButton.title = tooltipParts.join(' • ');
+
+            const ariaDetails = [];
+            if (quiz.study_method_label) {
+                ariaDetails.push(quiz.study_method_label);
+            }
+            if (quiz.generation_label) {
+                ariaDetails.push(quiz.generation_label);
+            }
+            const ariaMeta = ariaDetails.length > 0
+                ? `${formattedCount} questões • ${ariaDetails.join(' • ')}`
+                : `${formattedCount} questões`;
+            cardButton.setAttribute('aria-label', `${quiz.nome} com ${ariaMeta}`);
             cardButton.setAttribute('role', 'listitem');
 
             const header = document.createElement('div');
@@ -420,7 +484,13 @@ export default class ChallengeHub {
 
             const meta = document.createElement('span');
             meta.classList.add('challenge-card__meta');
-            meta.textContent = `${this._formatCount(quiz.total_perguntas)} questões`;
+            const metaParts = [`${formattedCount} questões`];
+            if (quiz.study_method_label) {
+                metaParts.push(quiz.study_method_label);
+            } else if (quiz.generation_label) {
+                metaParts.push(quiz.generation_label);
+            }
+            meta.textContent = metaParts.join(' • ');
             footer.appendChild(meta);
 
             cardButton.append(header, footer);

@@ -34,6 +34,7 @@ class QuizDefinicaoAdmin(admin.ModelAdmin):
     inlines = [QuizDefinicaoPerguntaInline]
     list_display = (
         "nome_quiz",
+        "generation_type",
         "ativo",
         "data_criacao_formatada",
         "data_atualizacao_formatada",
@@ -45,7 +46,68 @@ class QuizDefinicaoAdmin(admin.ModelAdmin):
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = [
-            (None, {"fields": ("nome_quiz", "descricao", "ativo")}),
+            (
+                None,
+                {
+                    "fields": (
+                        "nome_quiz",
+                        "descricao",
+                        "ativo",
+                        "generation_type",
+                        "study_method_override",
+                    )
+                },
+            ),
+            (
+                "Opções para lista fixa",
+                {
+                    "fields": ("config_manual_shuffle", "config_manual_limit"),
+                    "classes": ("collapse",),
+                    "description": "Ajustes válidos quando o tipo de geração é 'Lista fixa de perguntas'.",
+                },
+            ),
+            (
+                "Opções para revisão de favoritos",
+                {
+                    "fields": (
+                        "config_favorites_limit",
+                        "config_favorites_sort",
+                        "config_favorites_include_inactive",
+                    ),
+                    "classes": ("collapse",),
+                    "description": "Configurações aplicadas ao gerar quizzes a partir dos favoritos do usuário.",
+                },
+            ),
+            (
+                "Opções para filtros dinâmicos",
+                {
+                    "fields": (
+                        "config_filters_categories",
+                        "config_filters_difficulties",
+                        "config_filters_limit",
+                        "config_filters_search",
+                        "config_filters_only_favorites",
+                        "config_filters_shuffle",
+                        "config_filters_study_method",
+                    ),
+                    "classes": ("collapse",),
+                    "description": "Permite definir filtros pré-configurados que serão aplicados a cada execução.",
+                },
+            ),
+            (
+                "Opções para repetir último modo",
+                {
+                    "fields": (
+                        "config_repeat_limit",
+                        "config_repeat_include_incomplete",
+                        "config_repeat_use_same_questions",
+                        "config_repeat_include_inactive",
+                        "config_repeat_shuffle",
+                    ),
+                    "classes": ("collapse",),
+                    "description": "Personalize como a sessão anterior do usuário será reaproveitada.",
+                },
+            ),
         ]
 
         for mode_key, mode_label in self.form.get_score_panel_modes():
@@ -75,6 +137,16 @@ class QuizDefinicaoAdmin(admin.ModelAdmin):
                     "fields": ("score_panel_overrides",),
                     "classes": ("collapse", "wide"),
                     "description": "Representação estruturada dos ajustes armazenados para esta definição.",
+                },
+            )
+        )
+        fieldsets.append(
+            (
+                "Configuração dinâmica (dados internos)",
+                {
+                    "fields": ("generation_config",),
+                    "classes": ("collapse", "wide"),
+                    "description": "Representação bruta das opções avançadas utilizadas por esta definição.",
                 },
             )
         )
@@ -484,7 +556,17 @@ class ChallengeHubHeroStatInline(admin.TabularInline):
 class ChallengeHubActionCardInline(admin.TabularInline):
     model = ChallengeHubActionCard
     extra = 0
-    fields = ("key", "title", "description", "meta", "icon", "dom_id", "extra_css_class", "is_enabled")
+    fields = (
+        "key",
+        "title",
+        "description",
+        "meta",
+        "icon",
+        "dom_id",
+        "extra_css_class",
+        "quiz_definition",
+        "is_enabled",
+    )
     ordering = ("key",)
 
 

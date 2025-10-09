@@ -113,7 +113,15 @@
                     </div>
 
                     {% for card in challenge_cards %}
-                    <button id="{{ card.dom_id }}" type="button" class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}">
+                    <button
+                        id="{{ card.dom_id }}"
+                        type="button"
+                        class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}"
+                        {% if card.quiz_definition_id %}data-quiz-definition-id="{{ card.quiz_definition_id }}"{% endif %}
+                        {% if card.quiz_definition_generation_type %}data-quiz-generation-type="{{ card.quiz_definition_generation_type }}"{% endif %}
+                        {% if card.quiz_definition_name %}data-quiz-definition-name="{{ card.quiz_definition_name }}"{% endif %}
+                        {% if card.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ card.quiz_definition_study_method_label }}"{% endif %}
+                    >
                         <div class="challenge-card__header">
                             <div class="challenge-card__icon-wrapper">
                                 {% if card.icon %}

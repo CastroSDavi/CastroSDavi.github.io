@@ -202,6 +202,21 @@ class StudyMethodRegistry:
     def list_metadata(cls) -> List[Dict[str, object]]:
         return [strategy.serialize_metadata() for strategy in cls._strategies.values()]
 
+    @classmethod
+    def get_display_name(cls, key: Optional[str]) -> Optional[str]:
+        if not key:
+            return None
+
+        strategy = cls._strategies.get(key)
+        if strategy:
+            return strategy.display_name
+
+        normalized = str(key).strip().lower()
+        for registered_key, strategy_instance in cls._strategies.items():
+            if registered_key.lower() == normalized:
+                return strategy_instance.display_name
+        return None
+
 
 # Registro padrão dos métodos disponíveis.
 StudyMethodRegistry.register(RandomStudyMethod)

@@ -13,6 +13,7 @@ export default class ActionOrchestrator {
         this.timerIntervalId = null;
 
         this.lastQuizRequest = null;
+        this._restoreLastQuizRequest();
 
         this.preloadedHubSummary = null;
     }
@@ -252,12 +253,65 @@ export default class ActionOrchestrator {
         return cloned;
     }
 
+    _getPredefinedQuizzesFromState() {
+        const state = this.store.getState();
+        const items = state?.geral?.predefinedQuizzes?.items;
+        return Array.isArray(items) ? items : [];
+    }
+
+    _findPredefinedQuizByGenerationType(generationType) {
+        if (!generationType) {
+            return null;
+        }
+
+        const normalized = generationType.toString().trim().toLowerCase();
+        if (!normalized) {
+            return null;
+        }
+
+        const predefined = this._getPredefinedQuizzesFromState();
+        return predefined.find((item) => (
+            typeof item.generation_type === 'string'
+            && item.generation_type.toLowerCase() === normalized
+        )) || null;
+    }
+
     _storeLastQuizRequest(filterParams) {
         this.lastQuizRequest = this._cloneQuizRequest(filterParams);
+        if (typeof window !== 'undefined' && window.sessionStorage) {
+            try {
+                window.sessionStorage.setItem('medquiz:lastQuizRequest', JSON.stringify(this.lastQuizRequest));
+            } catch (error) {
+                console.warn('ActionOrchestrator: falha ao persistir último pedido de quiz.', error);
+            }
+        }
+    }
+
+    _restoreLastQuizRequest() {
+        if (typeof window === 'undefined' || !window.sessionStorage) {
+            return;
+        }
+        try {
+            const stored = window.sessionStorage.getItem('medquiz:lastQuizRequest');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (parsed && typeof parsed === 'object') {
+                    this.lastQuizRequest = this._cloneQuizRequest(parsed);
+                }
+            }
+        } catch (error) {
+            console.warn('ActionOrchestrator: não foi possível restaurar o último pedido de quiz.', error);
+        }
     }
 
     async retryLastQuizRequest() {
         if (!this.lastQuizRequest) {
+            const repeatDefinition = this._findPredefinedQuizByGenerationType('repeat_last');
+            if (repeatDefinition?.id) {
+                await this.startPredefinedQuiz(repeatDefinition.id);
+                return true;
+            }
+
             this.ui.showWarning({
                 body: 'Nenhum quiz anterior disponível para tentar novamente.',
                 type: 'info',
@@ -303,6 +357,7 @@ export default class ActionOrchestrator {
                 categoria_ids: requestParams.category_ids,
                 dificuldades_selecionadas: requestParams.difficulty_levels,
                 num_questoes_solicitadas: requestParams.num_questions,
+                study_method: data?.selected_study_method || null,
             };
 
             const session = await this.apiService.startQuizSession(sessionPayload);
@@ -398,9 +453,16 @@ export default class ActionOrchestrator {
             return false;
         }
 
-        const normalizedLimit = Number.isInteger(limit) && limit > 0 ? limit : 12;
-
         this.stopTimer();
+
+        const favoritesDefinition = this._findPredefinedQuizByGenerationType('favorites');
+        if (favoritesDefinition?.id) {
+            this.ui.challengeHubInstance?.hideHub();
+            await this.startPredefinedQuiz(favoritesDefinition.id);
+            return true;
+        }
+
+        const normalizedLimit = Number.isInteger(limit) && limit > 0 ? limit : 12;
         this.ui.showSessionLoadingIndicator(true, 'Preparando revisão de favoritos...');
 
         try {

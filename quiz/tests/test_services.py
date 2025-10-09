@@ -120,7 +120,134 @@ class QuizDataServiceTests(TestCase):
         self.assertEqual(summary['total_questions'], 1)
         self.assertEqual(summary['total_categories'], 1)
         self.assertIn('predefined_quizzes', summary)
-        self.assertTrue(any(item['id'] == quiz_def.pk for item in summary['predefined_quizzes']))
+        matched = next((item for item in summary['predefined_quizzes'] if item['id'] == quiz_def.pk), None)
+        self.assertIsNotNone(matched)
+        self.assertEqual(matched['generation_type'], QuizDefinicao.GenerationType.MANUAL)
+
+    def test_predefined_manual_definition_respects_override(self):
+        extra_question = Pergunta.objects.create(
+            texto_pergunta='Qual órgão filtra impurezas?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.FACIL,
+        )
+        quiz_def = QuizDefinicao.objects.create(
+            nome_quiz='Manual Dinâmico',
+            ativo=True,
+            generation_type=QuizDefinicao.GenerationType.MANUAL,
+            generation_config={'shuffle': True, 'limit': 1},
+            study_method_override='spaced_repetition',
+        )
+        quiz_def.perguntas.add(self.question, through_defaults={'ordem': 1})
+        quiz_def.perguntas.add(extra_question, through_defaults={'ordem': 2})
+
+        service = QuizDataService(quiz_config=self.quiz_config, user=self.user)
+        data = service.get_quiz_data_dict(quiz_definicao_id=quiz_def.pk)
+
+        self.assertEqual(len(data['perguntas']), 1)
+        self.assertIn(
+            data['perguntas'][0]['id_pergunta'],
+            {self.question.pk, extra_question.pk},
+        )
+        self.assertEqual(data['selected_study_method'], 'spaced_repetition')
+
+    def test_predefined_favorites_definition_uses_recent_favorite(self):
+        other_question = Pergunta.objects.create(
+            texto_pergunta='Qual a função dos glóbulos brancos?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.MEDIO,
+        )
+        QuestaoFavorita.objects.create(usuario=self.user, pergunta=other_question)
+
+        quiz_def = QuizDefinicao.objects.create(
+            nome_quiz='Favoritos',
+            ativo=True,
+            generation_type=QuizDefinicao.GenerationType.FAVORITES,
+            generation_config={'limit': 1, 'sort': 'recent'},
+        )
+
+        service = QuizDataService(quiz_config=self.quiz_config, user=self.user)
+        data = service.get_quiz_data_dict(quiz_definicao_id=quiz_def.pk)
+
+        self.assertEqual(len(data['perguntas']), 1)
+        self.assertEqual(data['perguntas'][0]['id_pergunta'], other_question.pk)
+
+    def test_predefined_repeat_last_reuses_previous_session(self):
+        second_question = Pergunta.objects.create(
+            texto_pergunta='Como regular a pressão arterial?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.MEDIO,
+        )
+
+        SessoesQuizUsuario.objects.create(
+            id_usuario=self.user,
+            modo_quiz=SessoesQuizUsuario.ModoQuiz.RAPIDO,
+            total_perguntas_sessao=2,
+            status_sessao=SessoesQuizUsuario.StatusSessao.COMPLETA,
+            ids_perguntas_json=[self.question.pk, second_question.pk],
+        )
+
+        quiz_def = QuizDefinicao.objects.create(
+            nome_quiz='Repetir',
+            ativo=True,
+            generation_type=QuizDefinicao.GenerationType.REPEAT_LAST,
+            generation_config={'use_same_questions': True},
+        )
+
+        service = QuizDataService(quiz_config=self.quiz_config, user=self.user)
+        data = service.get_quiz_data_dict(quiz_definicao_id=quiz_def.pk)
+
+        returned_ids = {item['id_pergunta'] for item in data['perguntas']}
+        self.assertEqual(returned_ids, {self.question.pk, second_question.pk})
+
+    def test_predefined_filters_definition_applies_config(self):
+        other_category = Categoria.objects.create(nome_categoria='Endocrinologia')
+        filtered_question = Pergunta.objects.create(
+            texto_pergunta='Qual hormônio regula a glicemia?',
+            nivel_dificuldade=Pergunta.NivelDificuldade.MEDIO,
+        )
+        filtered_question.categorias.add(other_category)
+        OpcaoResposta.objects.create(
+            pergunta=filtered_question,
+            texto_opcao='Insulina',
+            eh_correta=True,
+            ordem_exibicao=1,
+        )
+
+        quiz_def = QuizDefinicao.objects.create(
+            nome_quiz='Filtro Personalizado',
+            ativo=True,
+            generation_type=QuizDefinicao.GenerationType.FILTERS,
+            generation_config={
+                'category_ids': [str(other_category.pk)],
+                'difficulty_levels': [Pergunta.NivelDificuldade.MEDIO],
+                'limit': 1,
+                'study_method': 'random',
+            },
+        )
+
+        service = QuizDataService(quiz_config=self.quiz_config, user=self.user)
+        data = service.get_quiz_data_dict(quiz_definicao_id=quiz_def.pk)
+
+        self.assertEqual(len(data['perguntas']), 1)
+        self.assertEqual(data['perguntas'][0]['id_pergunta'], filtered_question.pk)
+        self.assertEqual(data['selected_study_method'], 'random')
+
+    def test_summary_includes_generation_and_method_labels(self):
+        quiz_def = QuizDefinicao.objects.create(
+            nome_quiz='Resumo Manual',
+            ativo=True,
+            generation_type=QuizDefinicao.GenerationType.MANUAL,
+            study_method_override='spaced_repetition',
+        )
+
+        summary = QuizDataService.get_active_predefined_quizzes_summary()
+        matched = next((item for item in summary if item['id'] == quiz_def.pk), None)
+
+        self.assertIsNotNone(matched)
+        self.assertEqual(matched['generation_type'], QuizDefinicao.GenerationType.MANUAL)
+        self.assertEqual(
+            matched['generation_label'],
+            QuizDefinicao.GenerationType.MANUAL.label,
+        )
+        self.assertEqual(matched['study_method'], 'spaced_repetition')
+        self.assertEqual(matched['study_method_label'], 'Revisão Espaçada (SM-2)')
 
 
 class StudyAdaptiveEngineTests(TestCase):

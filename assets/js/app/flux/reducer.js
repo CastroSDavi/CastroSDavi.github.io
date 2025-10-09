@@ -210,6 +210,18 @@ export function quizReducer(state = initialState, action) {
                         total_perguntas: Number.isFinite(Number(item.total_perguntas))
                             ? Number(item.total_perguntas)
                             : 0,
+                        generation_type: typeof item.generation_type === 'string'
+                            ? item.generation_type
+                            : null,
+                        generation_label: typeof item.generation_label === 'string'
+                            ? item.generation_label
+                            : '',
+                        study_method: typeof item.study_method === 'string'
+                            ? item.study_method
+                            : null,
+                        study_method_label: typeof item.study_method_label === 'string'
+                            ? item.study_method_label
+                            : '',
                     }))
                     .filter(item => Number.isInteger(item.id) && item.id > 0)
                 : state.geral.predefinedQuizzes.items;

@@ -495,10 +495,14 @@ class OpcaoResposta(models.Model):
 # --- Modelos de Configuração e Definição de Quizzes ---
 
 class QuizDefinicao(models.Model):
-    """
-    Modelo para definir um quiz pré-configurado com um conjunto específico e ordenado de perguntas.
-    Permite criar "provas" ou "listas de estudo" com conteúdo e sequência fixos.
-    """
+    """Modelo para definir quizzes pré-configurados com estratégias flexíveis."""
+
+    class GenerationType(models.TextChoices):
+        MANUAL = "manual", "Lista fixa de perguntas"
+        FAVORITES = "favorites", "Revisão de favoritos do usuário"
+        REPEAT_LAST = "repeat_last", "Repetir último modo executado"
+        FILTERS = "filters", "Gerado a partir de filtros dinâmicos"
+
     nome_quiz = models.CharField(
         max_length=200,
         unique=True,
@@ -512,13 +516,33 @@ class QuizDefinicao(models.Model):
     perguntas = models.ManyToManyField(
         Pergunta,
         through='QuizDefinicaoPergunta',
-        related_name='definicoes_quiz_associadas', # Alterado para evitar conflito com Pergunta.definicoes_quiz
+        related_name='definicoes_quiz_associadas',
         verbose_name="Perguntas do Quiz"
     )
     ativo = models.BooleanField(
         default=True,
         verbose_name="Quiz Ativo",
         help_text="Se este quiz pode ser selecionado pelos usuários."
+    )
+    generation_type = models.CharField(
+        max_length=40,
+        choices=GenerationType.choices,
+        default=GenerationType.MANUAL,
+        verbose_name="Estratégia de geração",
+        help_text="Define como as perguntas serão selecionadas ao iniciar este quiz.",
+    )
+    generation_config = models.JSONField(
+        default=dict,
+        blank=True,
+        verbose_name="Configurações dinâmicas",
+        help_text="Parâmetros extras utilizados pelas estratégias dinâmicas (limites, filtros, ordenação, etc).",
+    )
+    study_method_override = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name="Método de estudo preferencial",
+        help_text="Se definido, aplica automaticamente este método de estudo ao iniciar o quiz.",
     )
     score_panel_overrides = models.JSONField(
         default=dict,
@@ -535,8 +559,43 @@ class QuizDefinicao(models.Model):
     def __str__(self):
         return self.nome_quiz
 
+    def _sanitize_generation_config(self) -> Dict[str, object]:
+        if isinstance(self.generation_config, dict):
+            return self.generation_config
+        return {}
+
+    def get_generation_config(self) -> Dict[str, object]:
+        """Retorna a configuração dinâmica sanitizada."""
+
+        return self._sanitize_generation_config()
+
+    def get_estimated_question_count(self) -> Optional[int]:
+        """Estimativa amigável da quantidade de perguntas desta definição."""
+
+        if self.generation_type == self.GenerationType.MANUAL:
+            return self.perguntas.count()
+
+        config = self.get_generation_config()
+        limit = config.get("limit") or config.get("question_limit")
+        if isinstance(limit, int) and limit > 0:
+            return limit
+
+        if self.generation_type == self.GenerationType.REPEAT_LAST:
+            ids = config.get("question_ids")
+            if isinstance(ids, list):
+                return len(ids)
+
+        minimum_expected = config.get("minimum_expected")
+        if isinstance(minimum_expected, int):
+            return minimum_expected
+        try:
+            return int(minimum_expected)
+        except (TypeError, ValueError):
+            return None
+
     def save(self, *args, **kwargs):
         self.score_panel_overrides = sanitize_score_panel_config(self.score_panel_overrides)
+        self.generation_config = self._sanitize_generation_config()
         super().save(*args, **kwargs)
 
     def get_score_panel_overrides(self) -> Dict[str, Dict[str, bool]]:
@@ -2372,6 +2431,18 @@ class ChallengeHubActionCard(models.Model):
     dom_id = models.CharField(max_length=120, unique=True)
     extra_css_class = models.CharField(max_length=150, blank=True)
     is_enabled = models.BooleanField(default=True)
+    quiz_definition = models.ForeignKey(
+        'QuizDefinicao',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='linked_action_cards',
+        verbose_name='Quiz definido vinculado',
+        help_text=(
+            "Quando preenchido, este card inicia diretamente a definição selecionada, "
+            "permitindo acionar experiências personalizadas sem alterar o código."
+        ),
+    )
 
     class Meta:
         verbose_name = "Card do Challenge Hub"

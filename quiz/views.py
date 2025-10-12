@@ -1462,7 +1462,11 @@ def questions_view(request):
                 }
             )
 
-        cards_queryset = [card for card in challenge_settings.action_cards.all() if card.is_enabled]
+        cards_queryset = [
+            card
+            for card in challenge_settings.action_cards.select_related("quiz_definition").all()
+            if card.is_enabled
+        ]
         challenge_cards = [
             {
                 'key': card.key,
@@ -1472,6 +1476,25 @@ def questions_view(request):
                 'icon': card.icon,
                 'dom_id': card.dom_id,
                 'extra_css_class': card.extra_css_class,
+                'quiz_definition_id': card.quiz_definition_id,
+                'quiz_definition_generation_type': (
+                    card.quiz_definition.generation_type
+                    if card.quiz_definition
+                    else None
+                ),
+                'quiz_definition_generation_label': (
+                    card.quiz_definition.get_generation_type_display()
+                    if card.quiz_definition
+                    else None
+                ),
+                'quiz_definition_name': (
+                    card.quiz_definition.nome_quiz if card.quiz_definition else ''
+                ),
+                'quiz_definition_study_method_label': (
+                    StudyMethodRegistry.get_display_name(card.quiz_definition.study_method_override)
+                    if card.quiz_definition and card.quiz_definition.study_method_override
+                    else None
+                ),
             }
             for card in sorted(cards_queryset, key=lambda item: item.key)
         ]

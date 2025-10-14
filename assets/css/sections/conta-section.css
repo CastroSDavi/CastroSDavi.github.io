@@ -1515,6 +1515,111 @@
     border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
 }
 
+.account-progress__metric-list {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--spacing-sm, 16px);
+}
+
+.account-progress__metric {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-sm, 16px);
+    padding: clamp(var(--spacing-sm, 16px), 2.3vw, var(--spacing-md, 24px));
+    border-radius: var(--border-radius-lg);
+    background: rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.55);
+    border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.16);
+}
+
+.account-progress__metric dt {
+    margin: 0;
+    font-size: var(--font-size-xxs, 0.75rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.account-progress__metric dd {
+    margin: 0;
+    font-size: clamp(1rem, 2.1vw, 1.25rem);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+    text-align: right;
+}
+
+.account-progress__stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-sm, 16px);
+}
+
+.account-progress__stat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 12px);
+    padding: clamp(var(--spacing-sm, 16px), 2.6vw, var(--spacing-md, 24px));
+    border-radius: var(--border-radius-lg);
+    background: linear-gradient(135deg, rgba(var(--color-primary-light-rgb, 238, 243, 248), 0.85), rgba(var(--color-white-rgb, 255, 255, 255), 0.95));
+    border: 1px solid rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18);
+    box-shadow: 0 8px 24px rgba(var(--color-primary-dark-rgb, 15, 58, 105), 0.06);
+}
+
+.account-progress__stat-label {
+    font-size: var(--font-size-xs, 0.8rem);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.account-progress__stat-value {
+    font-size: clamp(1.4rem, 2.6vw, 1.8rem);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.account-progress__stat-hint {
+    font-size: var(--font-size-xxs, 0.75rem);
+    color: var(--color-text-muted);
+}
+
+.account-progress__trend-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-sm, 16px);
+}
+
+.account-progress__trend {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs, 12px);
+    padding: clamp(var(--spacing-sm, 16px), 2.5vw, var(--spacing-md, 24px));
+    border-radius: var(--border-radius-lg);
+    background: linear-gradient(140deg, rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.14), rgba(var(--color-white-rgb, 255, 255, 255), 0.92));
+    border: 1px solid rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.18);
+}
+
+.account-progress__trend-label {
+    font-size: var(--font-size-xs, 0.8rem);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-secondary-green-dark, #217667);
+}
+
+.account-progress__trend-value {
+    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.account-progress__trend-hint {
+    font-size: var(--font-size-xxs, 0.75rem);
+    color: var(--color-text-muted);
+}
+
 .account-progress__insight-info strong {
     font-weight: var(--font-weight-semibold);
     color: var(--color-text-primary);

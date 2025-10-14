@@ -7,9 +7,11 @@ from django.utils.html import format_html
 
 from quiz.models import SupportRequest, SystemMessageBroadcast, UserPreferences
 
+from .base import EnhancedModelAdmin
+
 
 @admin.register(SystemMessageBroadcast)
-class SystemMessageBroadcastAdmin(admin.ModelAdmin):
+class SystemMessageBroadcastAdmin(EnhancedModelAdmin):
     list_display = (
         "admin_title",
         "message_type",
@@ -86,7 +88,7 @@ class SystemMessageBroadcastAdmin(admin.ModelAdmin):
 
 
 @admin.register(UserPreferences)
-class UserPreferencesAdmin(admin.ModelAdmin):
+class UserPreferencesAdmin(EnhancedModelAdmin):
     list_display = (
         "user",
         "theme_preference",
@@ -106,10 +108,11 @@ class UserPreferencesAdmin(admin.ModelAdmin):
         "user__last_name",
     )
     readonly_fields = ("created_at", "updated_at")
+    select_related_fields = ("user",)
 
 
 @admin.register(SupportRequest)
-class SupportRequestAdmin(admin.ModelAdmin):
+class SupportRequestAdmin(EnhancedModelAdmin):
     list_display = (
         "criado_em",
         "status_badge",
@@ -129,6 +132,7 @@ class SupportRequestAdmin(admin.ModelAdmin):
     )
     readonly_fields = ("mensagem", "contexto_pretty", "criado_em", "atualizado_em")
     ordering = ("-criado_em",)
+    select_related_fields = ("usuario",)
     fieldsets = (
         (
             "Identificação",

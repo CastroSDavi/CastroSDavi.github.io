@@ -10,10 +10,11 @@ from quiz.models import Categoria, OpcaoResposta, Pergunta, QuestaoFavorita
 from .filters import TopLevelCategoriaFilter
 from .inlines import OpcaoRespostaInline
 from .mixins import AdminAutoImportCodeMixin, assign_auto_import_code
+from .base import EnhancedModelAdmin
 
 
 @admin.register(Categoria)
-class CategoriaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
+class CategoriaAdmin(AdminAutoImportCodeMixin, EnhancedModelAdmin):
     import_code_prefix = "cat"
     import_code_source_fields = ("nome_categoria",)
 
@@ -86,7 +87,7 @@ class CategoriaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
 
 
 @admin.register(Pergunta)
-class PerguntaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
+class PerguntaAdmin(AdminAutoImportCodeMixin, EnhancedModelAdmin):
     import_code_prefix = "pergunta"
     import_code_source_fields = ("texto_pergunta",)
 
@@ -123,7 +124,7 @@ class PerguntaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
     inlines = [OpcaoRespostaInline]
     readonly_fields = ("data_criacao", "data_atualizacao")
     autocomplete_fields = ["id_usuario_criador"]
-    list_select_related = ("id_usuario_criador",)
+    select_related_fields = ("id_usuario_criador",)
     date_hierarchy = "data_criacao"
     list_per_page = 30
     save_as = True
@@ -295,7 +296,7 @@ class PerguntaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
 
 
 @admin.register(OpcaoResposta)
-class OpcaoRespostaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
+class OpcaoRespostaAdmin(AdminAutoImportCodeMixin, EnhancedModelAdmin):
     import_code_prefix = "opcao"
     import_code_source_fields = ("texto_opcao",)
 
@@ -322,7 +323,7 @@ class OpcaoRespostaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
     )
     autocomplete_fields = ["pergunta"]
     readonly_fields = ("data_criacao", "data_atualizacao")
-    list_select_related = ("pergunta",)
+    select_related_fields = ("pergunta",)
 
     @admin.display(description="Texto da Opção")
     def texto_opcao_curto(self, obj):
@@ -353,7 +354,7 @@ class OpcaoRespostaAdmin(AdminAutoImportCodeMixin, admin.ModelAdmin):
 
 
 @admin.register(QuestaoFavorita)
-class QuestaoFavoritaAdmin(admin.ModelAdmin):
+class QuestaoFavoritaAdmin(EnhancedModelAdmin):
     list_display = (
         "id",
         "link_usuario_favorito",
@@ -364,7 +365,7 @@ class QuestaoFavoritaAdmin(admin.ModelAdmin):
     search_fields = ("usuario__username", "pergunta__texto_pergunta")
     autocomplete_fields = ["usuario", "pergunta"]
     readonly_fields = ("data_favoritada",)
-    list_select_related = ("usuario", "pergunta")
+    select_related_fields = ("usuario", "pergunta")
     date_hierarchy = "data_favoritada"
 
     @admin.display(description="Usuário", ordering="usuario__username")

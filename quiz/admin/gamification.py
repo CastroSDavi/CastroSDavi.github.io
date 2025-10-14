@@ -12,9 +12,10 @@ from quiz.models import (
     RecompensaNivelResgatada,
 )
 
+from .base import EnhancedModelAdmin
 
 @admin.register(NivelGamificacao)
-class NivelGamificacaoAdmin(admin.ModelAdmin):
+class NivelGamificacaoAdmin(EnhancedModelAdmin):
     list_display = ("nome", "ordem", "xp_minimo", "xp_maximo")
     search_fields = ("nome", "identificador")
     list_editable = ("ordem",)
@@ -22,7 +23,7 @@ class NivelGamificacaoAdmin(admin.ModelAdmin):
 
 
 @admin.register(Conquista)
-class ConquistaAdmin(admin.ModelAdmin):
+class ConquistaAdmin(EnhancedModelAdmin):
     list_display = ("nome", "slug", "ordem_exibicao")
     search_fields = ("nome", "slug")
     list_editable = ("ordem_exibicao",)
@@ -30,7 +31,7 @@ class ConquistaAdmin(admin.ModelAdmin):
 
 
 @admin.register(PerfilGamificacaoUsuario)
-class PerfilGamificacaoUsuarioAdmin(admin.ModelAdmin):
+class PerfilGamificacaoUsuarioAdmin(EnhancedModelAdmin):
     list_display = (
         "user",
         "xp_total",
@@ -40,21 +41,22 @@ class PerfilGamificacaoUsuarioAdmin(admin.ModelAdmin):
         "ultima_atualizacao",
     )
     search_fields = ("user__username", "user__email")
-    list_select_related = ("user", "nivel_atual")
+    select_related_fields = ("user", "nivel_atual")
     readonly_fields = ("ultima_atualizacao",)
     autocomplete_fields = ("user", "nivel_atual", "conquistas")
 
 
 @admin.register(ConquistaUsuario)
-class ConquistaUsuarioAdmin(admin.ModelAdmin):
+class ConquistaUsuarioAdmin(EnhancedModelAdmin):
     list_display = ("perfil", "conquista", "data_conquista")
     search_fields = ("perfil__user__username", "conquista__nome")
     list_filter = ("conquista", "data_conquista")
     autocomplete_fields = ("perfil", "conquista")
+    select_related_fields = ("perfil", "perfil__user", "conquista")
 
 
 @admin.register(DesafioDinamico)
-class DesafioDinamicoAdmin(admin.ModelAdmin):
+class DesafioDinamicoAdmin(EnhancedModelAdmin):
     list_display = (
         "nome",
         "slug",
@@ -106,7 +108,7 @@ class DesafioDinamicoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ProgressoDesafioUsuario)
-class ProgressoDesafioUsuarioAdmin(admin.ModelAdmin):
+class ProgressoDesafioUsuarioAdmin(EnhancedModelAdmin):
     list_display = (
         "perfil",
         "desafio",
@@ -123,10 +125,11 @@ class ProgressoDesafioUsuarioAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ("perfil", "desafio")
     readonly_fields = ("criado_em", "atualizado_em")
+    select_related_fields = ("perfil", "perfil__user", "desafio")
 
 
 @admin.register(RecompensaNivelResgatada)
-class RecompensaNivelResgatadaAdmin(admin.ModelAdmin):
+class RecompensaNivelResgatadaAdmin(EnhancedModelAdmin):
     list_display = ("perfil", "nivel", "recompensa_id", "data_resgate")
     list_filter = ("nivel",)
     search_fields = (
@@ -137,3 +140,4 @@ class RecompensaNivelResgatadaAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ("perfil", "nivel")
     readonly_fields = ("data_resgate",)
+    select_related_fields = ("perfil", "perfil__user", "nivel")

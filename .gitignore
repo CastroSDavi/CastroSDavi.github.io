@@ -1,2 +1,46 @@
-venv/__pycache__/
-*.pyc
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment variables & local settings
+.env
+.env.*
+
+# Django / SQLite databases
+*.sqlite3
+db.sqlite3
+
+# Static & media artifacts
+staticfiles/
+collected_static/
+media/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage/
+htmlcov/
+
+# IDE & editor settings
+.vscode/
+.idea/
+
+# Logs & misc
+*.log
+*.pot
+*.py,cover
+*.tgz
+.DS_Store
+Thumbs.db
+
+# Node / frontend
+node_modules/
+dist/

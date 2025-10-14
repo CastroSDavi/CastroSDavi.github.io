@@ -205,6 +205,7 @@ export function quizReducer(state = initialState, action) {
                     .filter(item => item && Object.prototype.hasOwnProperty.call(item, 'id'))
                     .map(item => ({
                         id: Number.parseInt(item.id, 10),
+                        slug: typeof item.slug === 'string' ? item.slug : '',
                         nome: typeof item.nome === 'string' ? item.nome : String(item.nome ?? ''),
                         descricao: typeof item.descricao === 'string' ? item.descricao : '',
                         total_perguntas: Number.isFinite(Number(item.total_perguntas))
@@ -376,6 +377,9 @@ export function quizReducer(state = initialState, action) {
             } else if (mode === 'Revisão') {
                 displayMode = 'review';
                 mainQuizTitle = quizDefinitionName || 'Questão Favorita';
+            } else if (mode === 'Standalone') {
+                displayMode = 'standalone';
+                mainQuizTitle = quizDefinitionName || 'Questão Avulsa';
             }
 
             const newQuizState = {

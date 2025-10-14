@@ -2,13 +2,53 @@
 from copy import deepcopy
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Set
+from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import slugify
+
+
+def _generate_unique_slug(instance, value: str, *, slug_field: str = 'slug', max_length: int = 128, default_prefix: str = 'item') -> str:
+    """
+    Generate a slug for ``instance`` based on ``value`` ensuring uniqueness.
+
+    Parameters
+    ----------
+    instance: models.Model
+        Model instance that will receive the slug.
+    value: str
+        Base string used to generate the slug.
+    slug_field: str
+        Attribute name that stores the slug. Defaults to ``slug``.
+    max_length: int
+        Max length allowed for the slug. Defaults to 128.
+    default_prefix: str
+        Prefix used when ``value`` does not yield a valid slug.
+    """
+    base_slug = slugify(value or '')[:max_length].strip('-')
+    if not base_slug:
+        random_suffix = uuid4().hex[:6]
+        base_slug = f"{slugify(default_prefix) or default_prefix}-{random_suffix}"
+
+    ModelClass = instance.__class__
+    queryset = ModelClass.objects.all()
+    if instance.pk:
+        queryset = queryset.exclude(pk=instance.pk)
+
+    slug_candidate = base_slug
+    counter = 2
+    while queryset.filter(**{slug_field: slug_candidate}).exists():
+        suffix = f"-{counter}"
+        slug_candidate = f"{base_slug[: max_length - len(suffix)]}{suffix}"
+        counter += 1
+
+    return slug_candidate
 
 
 def default_difficulty_rewards() -> Dict[str, Dict[str, int]]:
@@ -382,6 +422,13 @@ class Pergunta(models.Model):
         help_text="Identificador externo usado durante processos de importação. Deixe em branco para gerar automaticamente.",
     )
     texto_pergunta = models.TextField(verbose_name="Texto da Pergunta")
+    slug = models.SlugField(
+        max_length=220,
+        unique=True,
+        blank=True,
+        verbose_name="Slug legível",
+        help_text="Identificador amigável usado nas URLs públicas da pergunta.",
+    )
     url_imagem = models.URLField(
         max_length=512,
         blank=True,
@@ -436,6 +483,16 @@ class Pergunta(models.Model):
 
     def __str__(self):
         return f"P{self.pk}: {self.texto_pergunta[:70]}..."
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_value = self.texto_pergunta[:140] if self.texto_pergunta else self.codigo_importacao or ''
+            self.slug = _generate_unique_slug(self, base_value, max_length=220, default_prefix='pergunta')
+        super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        base_url = reverse('quiz:questions')
+        return f"{base_url}?question_id={self.pk}"
 
     class Meta:
         verbose_name = "Pergunta do Quiz"
@@ -507,6 +564,13 @@ class QuizDefinicao(models.Model):
         max_length=200,
         unique=True,
         verbose_name="Nome do Quiz Definido"
+    )
+    slug = models.SlugField(
+        max_length=180,
+        unique=True,
+        blank=True,
+        verbose_name="Slug legível",
+        help_text="Identificador amigável usado nas URLs públicas do desafio/quiz.",
     )
     descricao = models.TextField(
         blank=True,
@@ -594,12 +658,20 @@ class QuizDefinicao(models.Model):
             return None
 
     def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = _generate_unique_slug(self, self.nome_quiz, max_length=180, default_prefix='quiz')
         self.score_panel_overrides = sanitize_score_panel_config(self.score_panel_overrides)
         self.generation_config = self._sanitize_generation_config()
         super().save(*args, **kwargs)
 
     def get_score_panel_overrides(self) -> Dict[str, Dict[str, bool]]:
         return sanitize_score_panel_config(self.score_panel_overrides)
+
+    def get_absolute_url(self):
+        base_url = reverse('quiz:questions')
+        if not self.slug:
+            return base_url
+        return f"{base_url}?predefined_slug={self.slug}#challenge-hub-container"
 
     class Meta:
         verbose_name = "Definição de Quiz"
@@ -1108,6 +1180,159 @@ class QuestaoFavorita(models.Model):
 
     def __str__(self):
         return f"'{self.pergunta.texto_pergunta[:30]}...' favorita de {self.usuario.username}"
+
+
+class QuestionIssueReport(models.Model):
+    """Armazena relatos de problemas enviados pelos usuários para perguntas específicas."""
+
+    ORIGEM_SESSAO = 'quiz_session'
+    ORIGEM_REVIEW = 'review'
+    ORIGEM_OUTRA = 'other'
+
+    ORIGEM_CHOICES = (
+        (ORIGEM_SESSAO, 'Sessão de Quiz'),
+        (ORIGEM_REVIEW, 'Revisão de Questões'),
+        (ORIGEM_OUTRA, 'Outra'),
+    )
+
+    class Categoria(models.TextChoices):
+        GABARITO = 'answer_key', 'Gabarito incorreto'
+        ENUNCIADO = 'statement', 'Enunciado confuso ou incompleto'
+        OPCAO = 'option_issue', 'Alternativa ambígua ou incorreta'
+        REFERENCIA = 'reference_issue', 'Explicação ou referência desatualizada'
+        OUTRO = 'other', 'Outro problema no conteúdo'
+
+    pergunta = models.ForeignKey(
+        Pergunta,
+        on_delete=models.CASCADE,
+        related_name='issue_reports',
+        verbose_name='Pergunta relatada',
+    )
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='question_issue_reports',
+        verbose_name='Usuário (opcional)',
+    )
+    descricao = models.TextField(verbose_name='Descrição do problema')
+    origem = models.CharField(
+        max_length=24,
+        choices=ORIGEM_CHOICES,
+        default=ORIGEM_SESSAO,
+        verbose_name='Origem do relato',
+    )
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Data de criação')
+    categoria = models.CharField(
+        max_length=32,
+        choices=Categoria.choices,
+        default=Categoria.GABARITO,
+        verbose_name='Categoria do relato',
+        help_text='Classificação rápida do tipo de problema apontado.',
+    )
+
+    class Meta:
+        verbose_name = 'Relato de Problema da Questão'
+        verbose_name_plural = 'Relatos de Problemas das Questões'
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        identificador = f'#{self.pergunta_id}'
+        if self.pergunta and self.pergunta.slug:
+            identificador = f'{identificador} ({self.pergunta.slug})'
+        usuario = (
+            self.usuario.get_full_name()
+            or self.usuario.username
+            if self.usuario
+            else 'anônimo'
+        )
+        categoria_display = dict(self.Categoria.choices).get(self.categoria, self.categoria)
+        return f'Relato {identificador} [{categoria_display}] por {usuario} em {self.criado_em:%d/%m/%Y}'
+
+
+class SupportRequest(models.Model):
+    """Centraliza reclamações e dúvidas enviadas diretamente pelo site."""
+
+    ORIGEM_GERAL = 'general'
+    ORIGEM_MENSAGEM = 'inline_message'
+
+    ORIGEM_CHOICES = (
+        (ORIGEM_GERAL, 'Formulário geral'),
+        (ORIGEM_MENSAGEM, 'Ação do sistema'),
+    )
+
+    class TipoContato(models.TextChoices):
+        SUPORTE_GERAL = 'general', 'Dúvida ou orientação'
+        PROBLEMA_TECNICO = 'technical_issue', 'Problema técnico'
+        CONTEUDO = 'content_error', 'Erro em conteúdo'
+        SUGESTAO = 'improvement', 'Sugestão de melhoria'
+
+    class Status(models.TextChoices):
+        ABERTO = 'open', 'Aberto'
+        EM_ANALISE = 'in_progress', 'Em análise'
+        RESOLVIDO = 'resolved', 'Resolvido'
+        ARQUIVADO = 'archived', 'Arquivado'
+
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='support_requests',
+        verbose_name='Usuário',
+    )
+    nome = models.CharField(
+        max_length=150,
+        blank=True,
+        verbose_name='Nome de contato',
+    )
+    email = models.EmailField(
+        blank=True,
+        verbose_name='E-mail de contato',
+    )
+    mensagem = models.TextField(verbose_name='Mensagem')
+    origem = models.CharField(
+        max_length=32,
+        choices=ORIGEM_CHOICES,
+        default=ORIGEM_GERAL,
+        verbose_name='Origem do relato',
+    )
+    tipo_contato = models.CharField(
+        max_length=32,
+        choices=TipoContato.choices,
+        default=TipoContato.SUPORTE_GERAL,
+        verbose_name='Tipo de contato',
+        help_text='Ajuda a classificar rapidamente o motivo principal do contato.',
+    )
+    status = models.CharField(
+        max_length=24,
+        choices=Status.choices,
+        default=Status.ABERTO,
+        verbose_name='Status',
+    )
+    contexto = models.JSONField(
+        blank=True,
+        null=True,
+        verbose_name='Contexto adicional',
+        help_text='Informações auxiliares como página, rota ou mensagem que gerou o contato.',
+    )
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name='Criado em')
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name='Atualizado em')
+
+    class Meta:
+        verbose_name = 'Contato de Suporte'
+        verbose_name_plural = 'Contatos de Suporte'
+        ordering = ['-criado_em']
+
+    def __str__(self):
+        if self.usuario:
+            remetente = self.nome or self.usuario.get_full_name() or self.usuario.username
+        else:
+            remetente = self.nome or 'visitante'
+        origem_display = dict(self.ORIGEM_CHOICES).get(self.origem, self.origem)
+        tipo_display = dict(self.TipoContato.choices).get(self.tipo_contato, self.tipo_contato)
+        return f'{origem_display} · {tipo_display} · {remetente} ({self.criado_em:%d/%m/%Y})'
 
 
 class ConfiguracoesGeraisQuiz(models.Model):
@@ -1624,6 +1849,12 @@ class DesafioDinamico(models.Model):
     def get_metric_type(self) -> str:
         criterio = self.criterio_json or {}
         return str(criterio.get('tipo', '')).lower()
+
+    def get_absolute_url(self):
+        base_url = reverse('quiz:questions')
+        if not self.slug:
+            return base_url
+        return f"{base_url}?challenge_slug={self.slug}#challenge-hub-container"
 
 
 class ProgressoDesafioUsuario(models.Model):
@@ -2451,6 +2682,67 @@ class ChallengeHubActionCard(models.Model):
 
     def __str__(self):
         return self.get_key_display()
+
+
+class TrainingMode(models.Model):
+    """Define modos de treino adicionais configuráveis via admin."""
+
+    name = models.CharField(max_length=120, verbose_name="Nome do modo")
+    slug = models.SlugField(
+        max_length=180,
+        unique=True,
+        verbose_name="Slug",
+        help_text="Identificador utilizado em URLs internas e scripts.",
+    )
+    description = models.TextField(blank=True, verbose_name="Descrição")
+    meta = models.CharField(
+        max_length=160,
+        blank=True,
+        verbose_name="Etiqueta auxiliar",
+        help_text="Texto exibido no rodapé do card (ex.: número de questões ou dica rápida).",
+    )
+    icon = models.CharField(
+        max_length=80,
+        default="sports_esports",
+        verbose_name="Ícone",
+        help_text="Nome do ícone Material Symbols (ex.: 'flag', 'auto_stories').",
+    )
+    accent_color = models.CharField(
+        max_length=40,
+        blank=True,
+        verbose_name="Cor de destaque",
+        help_text="Opcional: cor CSS (ex.: #4caf50) aplicada a detalhes visuais do card.",
+    )
+    quiz_definition = models.ForeignKey(
+        "QuizDefinicao",
+        on_delete=models.CASCADE,
+        related_name="training_modes",
+        verbose_name="Quiz associado",
+        help_text="Definição que será executada ao iniciar este modo.",
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="Ordem de exibição")
+    is_active = models.BooleanField(default=True, verbose_name="Ativo")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Modo de Treino"
+        verbose_name_plural = "Modos de Treino"
+        ordering = ("order", "name")
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = _generate_unique_slug(
+                self,
+                self.name,
+                slug_field="slug",
+                max_length=180,
+                default_prefix="training-mode",
+            )
+        super().save(*args, **kwargs)
 
 
 class ChallengeHubResumeCardSettings(models.Model):

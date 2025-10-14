@@ -16,6 +16,49 @@ export default class ModalManager {
         this.actionOrchestrator = null;
     }
 
+    _calculateScrollbarWidth() {
+        if (typeof window === 'undefined' || typeof document === 'undefined') {
+            return 0;
+        }
+        return Math.max(0, window.innerWidth - document.documentElement.clientWidth);
+    }
+
+    _applyScrollLock() {
+        if (!this.bodyElement) return;
+        const compensation = this._calculateScrollbarWidth();
+        if (compensation > 0) {
+            this.bodyElement.style.setProperty('--scroll-lock-compensation', `${compensation}px`);
+        } else {
+            this.bodyElement.style.removeProperty('--scroll-lock-compensation');
+        }
+        if (!this.bodyElement.classList.contains('no-scroll')) {
+            this.bodyElement.classList.add('no-scroll');
+        }
+    }
+
+    _releaseScrollLock() {
+        if (!this.bodyElement) return;
+        this.bodyElement.classList.remove('no-scroll');
+        this.bodyElement.style.removeProperty('--scroll-lock-compensation');
+    }
+
+    ensureScrollLock() {
+        this._applyScrollLock();
+    }
+
+    releaseScrollLock({ force = false } = {}) {
+        const keepLocked =
+            !force &&
+            (this.activeModalCount > 0 ||
+                (this.bodyElement?.classList?.contains('session-loading') ?? false));
+
+        if (keepLocked) {
+            return;
+        }
+
+        this._releaseScrollLock();
+    }
+
     // --- MÉTODOS DE INJEÇÃO ---
     setStore(storeInstance) {
         this.store = storeInstance;
@@ -64,6 +107,24 @@ export default class ModalManager {
             if (event.target === this.elements.deleteAccountModalOverlay) this.toggleDeleteAccountModal(false);
         });
         
+        this.elements.reportIssueCancelBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.toggleReportIssueModal(false);
+        });
+        this.elements.reportIssueOverlay?.addEventListener('click', (event) => {
+            if (event.target === this.elements.reportIssueOverlay) this.toggleReportIssueModal(false);
+        });
+
+        this.elements.supportRequestCancelBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.toggleSupportRequestModal(false);
+        });
+        this.elements.supportRequestOverlay?.addEventListener('click', (event) => {
+            if (event.target === this.elements.supportRequestOverlay) {
+                this.toggleSupportRequestModal(false);
+            }
+        });
+
         // Listener global para a tecla 'Escape'
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
@@ -92,9 +153,7 @@ export default class ModalManager {
             if (dialogElement) dialogElement.scrollTop = 0;
 
             this.activeModalCount++;
-            if (this.activeModalCount === 1) {
-                this.bodyElement.classList.add('no-scroll');
-            }
+            this.ensureScrollLock();
 
             requestAnimationFrame(() => {
                 overlayElement.classList.add(overlayVisibleClass);
@@ -125,9 +184,7 @@ export default class ModalManager {
                 dialogElement.removeAttribute('aria-modal');
 
                 this.activeModalCount = Math.max(0, this.activeModalCount - 1);
-                if (this.activeModalCount === 0 && !document.body.classList.contains('session-loading')) {
-                    this.bodyElement.classList.remove('no-scroll');
-                }
+                this.releaseScrollLock();
                 if (this.focusedElementBeforeModal && typeof this.focusedElementBeforeModal.focus === 'function') {
                     this.focusedElementBeforeModal.focus({ preventScroll: true });
                 }
@@ -342,6 +399,26 @@ export default class ModalManager {
              passwordInputDeleteAccount.value = '';
         }
     }
+
+    toggleReportIssueModal(show) {
+        const { reportIssueOverlay, reportIssueDialog, reportIssueTextarea } = this.quizUI.elements;
+        const elementToFocusOnOpen = show ? reportIssueTextarea : null;
+        this._toggleGenericModal(reportIssueOverlay, reportIssueDialog, show, elementToFocusOnOpen);
+    }
+
+    toggleSupportRequestModal(show) {
+        const {
+            supportRequestOverlay,
+            supportRequestDialog,
+            supportRequestTextarea,
+            supportRequestEmailInput,
+        } = this.quizUI.elements;
+        let elementToFocusOnOpen = null;
+        if (show) {
+            elementToFocusOnOpen = supportRequestTextarea || supportRequestEmailInput || null;
+        }
+        this._toggleGenericModal(supportRequestOverlay, supportRequestDialog, show, elementToFocusOnOpen);
+    }
     
     getActiveModalInfo() {
         // Implementação mantida, pois é uma lógica interna de verificação de estado do DOM
@@ -359,6 +436,12 @@ export default class ModalManager {
         }
         if (this.quizUI.elements.resumeDecisionOverlay?.classList.contains('modal--visible')) {
             return { isVisible: true, type: 'resumeDecision', closeHandler: null };
+        }
+        if (this.quizUI.elements.reportIssueOverlay?.classList.contains('modal--visible')) {
+            return { isVisible: true, type: 'reportIssue', closeHandler: () => this.toggleReportIssueModal(false) };
+        }
+        if (this.quizUI.elements.supportRequestOverlay?.classList.contains('modal--visible')) {
+            return { isVisible: true, type: 'supportRequest', closeHandler: () => this.toggleSupportRequestModal(false) };
         }
         return { isVisible: false, type: null, closeHandler: null };
     }

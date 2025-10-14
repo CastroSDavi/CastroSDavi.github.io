@@ -14,7 +14,8 @@
 @import 'components/user-pill-button.css';
 @import 'components/question-display.css';
 @import 'components/modal.css';
-@import 'components/explanation-modal.css'; 
+@import 'components/explanation-modal.css';
+@import 'components/report-issue-modal.css';
 @import 'components/statistics-dashboard.css';
 @import 'components/category-tags.css';
 @import 'components/challenge-hub.css';
@@ -29,8 +30,12 @@
 @import 'components/toast.css';
 @import 'components/loading-indicator.css';
 @import 'components/stats-heatmap.css';
+
 /* 4. SECTIONS */
 @import 'sections/home-section.css';
 @import 'sections/question-section.css';
 @import 'sections/conta-section.css';
 @import 'sections/cadastro-section.css';
+
+
+

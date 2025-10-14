@@ -7,7 +7,7 @@ from collections import defaultdict
 from datetime import datetime, time
 
 from django.core.exceptions import ValidationError
-from django.db.models import Case, Count, Q, When
+from django.db.models import Case, Count, Q, When, Prefetch
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.http import QueryDict, RawPostDataException
@@ -42,6 +42,7 @@ from quiz.views import (
     _get_study_time_detail_data,
     get_quiz_config,
     get_or_create_daily_stats,
+    _serialize_question_for_frontend,
 )
 
 from .serializers import (
@@ -998,65 +999,31 @@ class QuestionViewSet(viewsets.ViewSet):
     lookup_value_regex = r'\d+'
 
     def retrieve(self, request, pergunta_id=None):
-        if not request.user.is_authenticated:
-            return Response(
-                {'status': 'error', 'message': 'Autenticação necessária.'},
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
+        pergunta = get_object_or_404(
+            Pergunta.objects.prefetch_related(
+                Prefetch('categorias', queryset=Categoria.objects.only('pk', 'nome_categoria')),
+                Prefetch('opcoes', queryset=OpcaoResposta.objects.all().order_by('ordem_exibicao', 'pk')),
+            ),
+            pk=pergunta_id,
+            ativa=True,
+        )
 
-        pergunta = get_object_or_404(Pergunta, pk=pergunta_id)
+        quiz_config = get_quiz_config()
+        question_payload = _serialize_question_for_frontend(pergunta, user=request.user, request=request)
+        score_panel_settings = quiz_config.get_score_panel_settings_for_mode()
 
-        is_favorited = QuestaoFavorita.objects.filter(usuario=request.user, pergunta=pergunta).exists()
+        quiz_title = question_payload.get('texto_pergunta') or 'Questão Avulsa'
+        if isinstance(quiz_title, str) and len(quiz_title.strip()) > 70:
+            quiz_title = quiz_title.strip()[:67].rstrip() + '...'
 
-        if not pergunta.ativa and not is_favorited:
-            return Response(
-                {
-                    'status': 'error',
-                    'message': 'Esta questão não está mais disponível no banco de questões.',
-                },
-                status=status.HTTP_404_NOT_FOUND,
-            )
-
-        warning_message = None
-        warning_type = 'info'
-        if not pergunta.ativa and is_favorited:
-            warning_message = (
-                'Esta questão não está mais disponível no banco atual. Exibindo a versão salva '
-                'na sua lista de favoritos.'
-            )
-            warning_type = 'warning'
-
-        opcoes_data = [
+        return Response(
             {
-                'id_opcao_resposta': opcao.pk,
-                'id_pergunta': opcao.pergunta_id,
-                'texto_opcao': opcao.texto_opcao,
-                'eh_correta': opcao.eh_correta,
-                'ordem_exibicao': opcao.ordem_exibicao,
-                'feedback_opcao': opcao.feedback_opcao,
+                'status': 'success',
+                'question': question_payload,
+                'score_panel_settings': score_panel_settings,
+                'quiz_title': quiz_title,
             }
-            for opcao in pergunta.opcoes.order_by('ordem_exibicao', 'pk')
-        ]
-
-        question_payload = {
-            'id_pergunta': pergunta.pk,
-            'texto_pergunta': pergunta.texto_pergunta,
-            'url_imagem': pergunta.url_imagem,
-            'referencia_bibliografica': pergunta.referencia_bibliografica,
-            'categoria_ids': list(pergunta.categorias.values_list('pk', flat=True)),
-            'nivel_dificuldade': pergunta.nivel_dificuldade,
-            'explicacao_resposta': pergunta.explicacao_resposta,
-            'opcoes': opcoes_data,
-            'is_favorited': is_favorited,
-            'esta_ativa': pergunta.ativa,
-        }
-
-        response_payload = {'status': 'success', 'question': question_payload}
-        if warning_message:
-            response_payload['message'] = warning_message
-            response_payload['message_type'] = warning_type
-
-        return Response(response_payload)
+        )
 
     @action(detail=True, methods=['post'], url_path='toggle_favorite')
     def toggle_favorite(self, request, pergunta_id=None):

@@ -7,6 +7,9 @@ export default class QuestionDisplay {
         this.elements = this.quizUI.elements;
         this.actionOrchestrator = null; 
         this.store = null; 
+        this.currentQuestionId = null;
+        this.currentQuestionData = null;
+        this.questionsBasePath = this._resolveQuestionsBasePath();
     }
     
     // --- MÉTODOS DE INJEÇÃO (CHAMADOS PELO QUIZUI) ---
@@ -36,6 +39,7 @@ export default class QuestionDisplay {
     
     _renderQuestionContent(question, qNum, totalQ) {
         const options = question.opcoes || [];
+        this.currentQuestionData = question;
 
         if (this.elements.idQuestao) {
             this.elements.idQuestao.innerText = qNum;
@@ -45,11 +49,16 @@ export default class QuestionDisplay {
              this.elements.perguntaTexto.textContent = question.texto_pergunta || "Texto da pergunta indisponível.";
         }
 
+        const questionIdRaw = question.id_pergunta ?? question.id;
+        const questionId = Number.parseInt(questionIdRaw, 10);
+        this._updateBrowserUrlForQuestion(questionId);
+
         this._displayQuestionImage(question.url_imagem, qNum);
         this.updateProgressBar(qNum, totalQ);
         
         // --- INÍCIO DA MODIFICAÇÃO ---
         this._updateFavoriteButton(question);
+        this._updateReportProblemButton(question, questionId);
         // --- FIM DA MODIFICAÇÃO ---
 
         this.generateAnswerButtons(question.id_pergunta, options, question.respostaDadaId);
@@ -95,6 +104,35 @@ export default class QuestionDisplay {
     }
     // --- FIM DO NOVO MÉTODO ---
 
+    _updateReportProblemButton(question, questionId) {
+        const reportButton = this.elements.questionReportButton;
+        if (!reportButton) {
+            return;
+        }
+
+        const hasValidId = Number.isInteger(questionId) && questionId > 0;
+        if (!hasValidId) {
+            this.quizUI.hideElement(reportButton);
+            reportButton.removeAttribute('data-question-id');
+            reportButton.removeAttribute('data-question-slug');
+            reportButton.disabled = true;
+            return;
+        }
+
+        this.quizUI.showElement(reportButton);
+        reportButton.disabled = false;
+        reportButton.setAttribute('data-question-id', String(questionId));
+
+        if (question && typeof question.slug === 'string' && question.slug.trim()) {
+            reportButton.setAttribute('data-question-slug', question.slug.trim());
+        } else {
+            reportButton.removeAttribute('data-question-slug');
+        }
+
+        const identifierSuffix = questionId > 0 ? ` ${questionId}` : '';
+        reportButton.setAttribute('aria-label', `Relatar um problema na quest�o${identifierSuffix}`);
+        reportButton.title = 'Relatar problema';
+    }
 
     updateExplanationButtonVisibility(question) {
         if (!question) return;
@@ -317,6 +355,9 @@ export default class QuestionDisplay {
         this.elements.btnToggleFavorite?.addEventListener('click', () => {
             this.actionOrchestrator?.toggleFavoriteCurrentQuestion();
         });
+        this.elements.questionReportButton?.addEventListener('click', () => {
+            this.quizUI.openReportIssueModal(this.currentQuestionData, this.currentQuestionId);
+        });
     }
 
     _createGridArrow(direction, isDisabled, callback, ariaLabel, extraClasses = []) {
@@ -337,6 +378,64 @@ export default class QuestionDisplay {
         return button;
     }
 
+    _resolveQuestionsBasePath() {
+        if (typeof window === 'undefined' || !window.location || typeof window.location.pathname !== 'string') {
+            return '/questions/';
+        }
+
+        const marker = '/questions/';
+        const pathname = window.location.pathname || '/';
+        const index = pathname.indexOf(marker);
+        if (index === -1) {
+            return marker;
+        }
+        const resolved = pathname.slice(0, index + marker.length);
+        return resolved.endsWith('/') ? resolved : `${resolved}/`;
+    }
+
+    _updateBrowserUrlForQuestion(questionId) {
+        if (typeof window === 'undefined') {
+            return;
+        }
+
+        const { history, location } = window;
+        if (!history || typeof history.replaceState !== 'function' || !location) {
+            return;
+        }
+
+        const normalizedId = Number.parseInt(questionId, 10);
+        const hasValidId = Number.isInteger(normalizedId) && normalizedId > 0;
+        const basePath = this.questionsBasePath || '/questions/';
+        const desiredPath = hasValidId ? `${basePath}${normalizedId}/` : basePath;
+        const search = location.search || '';
+        const hash = location.hash || '';
+        const targetUrl = `${desiredPath}${search}${hash}`;
+        const currentUrl = `${location.pathname}${search}${hash}`;
+        const nextStoredId = hasValidId ? normalizedId : null;
+
+        if (currentUrl === targetUrl) {
+            this.currentQuestionId = nextStoredId;
+            return;
+        }
+
+        if (this.currentQuestionId === nextStoredId && location.pathname === desiredPath) {
+            return;
+        }
+
+        try {
+            history.replaceState(history.state, document.title, targetUrl);
+            this.currentQuestionId = nextStoredId;
+        } catch (error) {
+            console.warn('QuestionDisplay: nao foi possivel atualizar a URL da questao.', error);
+        }
+    }
+
+    resetBrowserUrl() {
+        if (this.currentQuestionId !== null) {
+            this._updateBrowserUrlForQuestion(null);
+        }
+    }
+
     scrollToQuestionStart() {
         const titleElement = this.elements.questionTitle;
         if (this.elements.questionSection && !this.elements.questionSection.classList.contains(this.quizUI.hiddenClassName) && titleElement) {
@@ -352,3 +451,8 @@ export default class QuestionDisplay {
         this.elements.navigationButtons?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 }
+
+
+
+
+

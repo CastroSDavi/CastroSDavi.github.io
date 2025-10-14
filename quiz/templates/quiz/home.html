@@ -282,7 +282,7 @@
                 </header>
                 <p class="home-card__description">{{ quiz.description|default:"Coleção com casos clínicos selecionados para acelerar sua revisão." }}</p>
                 <footer class="home-card__footer home-card__footer--actions">
-                    <a href="{% url 'quiz:questions' %}?predefined_id={{ quiz.id }}" class="button button--text">
+                    <a href="{% url 'quiz:questions' %}?predefined_slug={{ quiz.slug|urlencode }}#challenge-hub-container" class="button button--text">
                         <span class="material-symbols-outlined button__icon" aria-hidden="true">chevron_right</span>
                         Abrir coleção
                     </a>

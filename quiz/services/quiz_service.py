@@ -428,7 +428,7 @@ class QuizDataService:
                     "pk", "pergunta_id", "texto_opcao", "eh_correta", "ordem_exibicao", "feedback_opcao"
                 ),
             ),
-        ).distinct()
+        )
 
         filtered_pergunta_ids = [p.pk for p in perguntas_data_qs]
 
@@ -470,6 +470,7 @@ class QuizDataService:
             perguntas_data_list.append(
                 {
                     "id_pergunta": pergunta.pk,
+                    "slug": pergunta.slug,
                     "texto_pergunta": pergunta.texto_pergunta,
                     "url_imagem": pergunta.url_imagem,
                     "referencia_bibliografica": pergunta.referencia_bibliografica,
@@ -519,6 +520,7 @@ class QuizDataService:
             quizzes_summary.append(
                 {
                     'id': quiz.pk,
+                    'slug': quiz.slug,
                     'nome': quiz.nome_quiz,
                     'descricao': quiz.descricao or '',
                     'total_perguntas': question_count,

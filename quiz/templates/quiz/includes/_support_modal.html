@@ -1,0 +1,98 @@
+<div id="support-request-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="supportRequestTitle" aria-modal="true">
+    <div id="support-request-dialog" class="card modal__dialog">
+        <form id="support-request-form">
+            <div class="modal__header">
+                <h3 id="supportRequestTitle" class="modal__title card__title">Falar com o suporte</h3>
+                <p id="support-request-context-label" class="modal__subtitle u-is-hidden"></p>
+            </div>
+            <div class="modal__body">
+                <p class="modal__supporting-text">Descreva o que aconteceu para que possamos ajudar com mais agilidade.</p>
+                <div class="support-request-tip" role="note">
+                    <strong>Antes de enviar:</strong>
+                    <span>Escolha o tipo de contato e compartilhe detalhes como etapa do quiz, mensagem exibida ou dispositivo utilizado.</span>
+                </div>
+                <fieldset class="support-request-types">
+                    <legend class="support-request-legend">Como podemos ajudar?</legend>
+                    <div class="support-request-type-list">
+                        <label class="support-request-type-option" data-selected="true">
+                            <input
+                                type="radio"
+                                name="support-request-type"
+                                value="general"
+                                checked
+                            >
+                            <span class="support-request-type-option__text">
+                                <strong>Dúvida ou orientação</strong>
+                                <small>Suporte geral sobre recursos, plano de estudos ou configurações.</small>
+                            </span>
+                        </label>
+                        <label class="support-request-type-option">
+                            <input
+                                type="radio"
+                                name="support-request-type"
+                                value="technical_issue"
+                            >
+                            <span class="support-request-type-option__text">
+                                <strong>Problema técnico</strong>
+                                <small>Erros na plataforma, lentidão ou algo que parou de funcionar.</small>
+                            </span>
+                        </label>
+                        <label class="support-request-type-option">
+                            <input
+                                type="radio"
+                                name="support-request-type"
+                                value="content_error"
+                            >
+                            <span class="support-request-type-option__text">
+                                <strong>Erro em conteúdo</strong>
+                                <small>Questões com alternativas incorretas ou explicações desatualizadas.</small>
+                            </span>
+                        </label>
+                        <label class="support-request-type-option">
+                            <input
+                                type="radio"
+                                name="support-request-type"
+                                value="improvement"
+                            >
+                            <span class="support-request-type-option__text">
+                                <strong>Sugestão de melhoria</strong>
+                                <small>Ideias para aprimorar funcionalidades, visual ou novas trilhas.</small>
+                            </span>
+                        </label>
+                    </div>
+                </fieldset>
+                <p id="support-request-type-summary" class="support-request-type-summary"></p>
+                <label for="support-request-email">E-mail de contato (opcional)</label>
+                <input
+                    id="support-request-email"
+                    name="email"
+                    type="email"
+                    inputmode="email"
+                    value="{{ user.email|default_if_none:'' }}"
+                    placeholder="voce@exemplo.com"
+                    autocomplete="email"
+                    class="input"
+                >
+                <label for="support-request-message">O que aconteceu?</label>
+                <textarea
+                    id="support-request-message"
+                    name="mensagem"
+                    rows="6"
+                    maxlength="800"
+                    required
+                    placeholder="Explique com detalhes o problema ou sugestão."
+                ></textarea>
+                <div class="support-request-meta">
+                    <span id="support-request-error" class="support-request-error" aria-live="polite"></span>
+                    <span id="support-request-counter" class="support-request-counter">0/800</span>
+                </div>
+            </div>
+            <div class="modal__footer modal__footer--stacked">
+                <button type="button" id="support-request-cancel" class="button button--secondary button--modal-action">Cancelar</button>
+                <button type="submit" id="support-request-submit" class="button button--primary button--modal-action">
+                    <span class="button__label">Enviar</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

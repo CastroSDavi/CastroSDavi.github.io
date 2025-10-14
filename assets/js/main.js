@@ -5,6 +5,48 @@ import App from './app/App.js'; // Importa a classe principal da aplicação
 document.addEventListener('DOMContentLoaded', () => {
     // Garante que o DOM esteja totalmente carregado antes de executar o script.
 
+    const setupCopyLinkButtons = () => {
+        const copyButtons = document.querySelectorAll('[data-copy-link]');
+        if (!copyButtons.length) {
+            return;
+        }
+
+        copyButtons.forEach((button) => {
+            button.addEventListener('click', async () => {
+                const link = button.dataset.copyLink;
+                if (!link) {
+                    return;
+                }
+
+                try {
+                    if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+                        await navigator.clipboard.writeText(link);
+                    } else {
+                        const fallbackTextarea = document.createElement('textarea');
+                        fallbackTextarea.value = link;
+                        fallbackTextarea.setAttribute('readonly', 'readonly');
+                        fallbackTextarea.style.position = 'absolute';
+                        fallbackTextarea.style.left = '-9999px';
+                        document.body.appendChild(fallbackTextarea);
+                        fallbackTextarea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(fallbackTextarea);
+                    }
+                    button.dataset.copyState = 'copied';
+                } catch (copyError) {
+                    console.error('main.js: falha ao copiar link para a área de transferência.', copyError);
+                    button.dataset.copyState = 'error';
+                } finally {
+                    window.setTimeout(() => {
+                        delete button.dataset.copyState;
+                    }, 2000);
+                }
+            });
+        });
+    };
+
+    setupCopyLinkButtons();
+
     const app = new App(); // Cria uma instância da sua aplicação.
 
     // Inicializa a aplicação.

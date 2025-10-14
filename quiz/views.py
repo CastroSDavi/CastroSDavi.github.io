@@ -24,13 +24,17 @@ from .models import (
     QuestaoFavorita,
     QuizDefinicao,  # NOVO MODELO
     QuizDefinicaoPergunta,  # NOVO MODELO
+    DesafioDinamico,
     ConfiguracoesGeraisQuiz,  # NOVO MODELO
+    QuestionIssueReport,
+    SupportRequest,
     UserPreferences,
     HomePageSettings,
     HomeContentAudience,
     ValueSourceType,
     ChallengeHubSettings,
     ChallengeHubValueSource,
+    TrainingMode,
     default_difficulty_rewards,
     default_streak_bonus_rules,
     default_score_panel_config,
@@ -182,6 +186,54 @@ def get_quiz_data_dict(
         search_query=search_query,
         study_method_key=study_method_key,
     )
+
+def _serialize_question_for_frontend(pergunta, *, user=None, request=None):
+    """
+    Constrói o payload esperado pelo frontend para renderizar uma pergunta isolada.
+    """
+    categorias_relacionadas = list(pergunta.categorias.all())
+    opcoes_queryset = pergunta.opcoes.all().order_by('ordem_exibicao', 'pk')
+
+    is_favorited = False
+    if user and getattr(user, 'is_authenticated', False):
+        is_favorited = QuestaoFavorita.objects.filter(usuario=user, pergunta=pergunta).exists()
+
+    question_payload = {
+        'id_pergunta': pergunta.pk,
+        'slug': pergunta.slug,
+        'texto_pergunta': pergunta.texto_pergunta,
+        'url_imagem': pergunta.url_imagem,
+        'referencia_bibliografica': pergunta.referencia_bibliografica,
+        'categoria_ids': [cat.pk for cat in categorias_relacionadas],
+        'categorias': [
+            {
+                'id_categoria': cat.pk,
+                'nome_categoria': cat.nome_categoria,
+            }
+            for cat in categorias_relacionadas
+        ],
+        'nivel_dificuldade': pergunta.nivel_dificuldade,
+        'explicacao_resposta': pergunta.explicacao_resposta,
+        'is_favorited': is_favorited,
+        'esta_ativa': pergunta.ativa,
+        'opcoes': [
+            {
+                'id_opcao_resposta': opcao.pk,
+                'id_pergunta': opcao.pergunta_id,
+                'texto_opcao': opcao.texto_opcao,
+                'eh_correta': opcao.eh_correta,
+                'ordem_exibicao': opcao.ordem_exibicao,
+                'feedback_opcao': opcao.feedback_opcao,
+            }
+            for opcao in opcoes_queryset
+        ],
+    }
+
+    if request is not None:
+        detail_url = reverse('quiz:question-detail-page', kwargs={'pergunta_id': pergunta.pk})
+        question_payload['share_url'] = request.build_absolute_uri(detail_url)
+
+    return question_payload
 
 # **** FUNÇÃO ADICIONADA AQUI ****
 
@@ -777,6 +829,7 @@ def home_view(request):
     curated_quizzes = [
         {
             'id': item.get('id'),
+            'slug': item.get('slug'),
             'name': item.get('nome'),
             'description': item.get('descricao'),
             'questions': format_number(item.get('total_perguntas')),
@@ -1172,11 +1225,13 @@ def home_view(request):
                 else 'Estude em blocos inteligentes, acompanhe evolução e mantenha constância com feedback imediato.'
             ),
         }
+        questions_url = reverse('quiz:questions')
+        challenge_hub_url = f"{questions_url}#challenge-hub-container"
         if show_progress:
             home_hero_ctas = [
                 {
                     'label': 'Iniciar novo quiz',
-                    'url': '/questions/',
+                    'url': challenge_hub_url,
                     'icon': 'rocket_launch',
                     'css_class': 'button button--fancy button--fancy-primary',
                     'anchor_id': 'go-to-challenges-hub-link',
@@ -1203,7 +1258,7 @@ def home_view(request):
                 },
                 {
                     'label': 'Explorar banco de questões',
-                    'url': '/questions/',
+                    'url': questions_url,
                     'icon': 'quiz',
                     'css_class': 'button button--fancy button--fancy-secondary',
                     'anchor_id': '',
@@ -1251,7 +1306,7 @@ def home_view(request):
                 'title': 'Iniciar desafio rápido',
                 'description': 'Abra o hub de desafios configurado para você.',
                 'icon': 'rocket_launch',
-                'url': '/questions/',
+                'url': challenge_hub_url,
                 'extra_css_class': '',
                 'anchor_id': 'quick-link-start',
                 'open_in_new_tab': False,
@@ -1269,7 +1324,7 @@ def home_view(request):
                 'title': 'Explorar coleções prontas',
                 'description': 'Seleções temáticas com tempo estimado e foco claro.',
                 'icon': 'playlist_add_check',
-                'url': '/questions/#hub-predefined-section',
+                'url': f'{questions_url}#hub-predefined-section',
                 'extra_css_class': '',
                 'anchor_id': '',
                 'open_in_new_tab': False,
@@ -1350,7 +1405,7 @@ def home_view(request):
     return render(request, 'quiz/home.html', context)
 
 @login_required
-def questions_view(request):
+def _build_challenge_hub_context(request):
     def format_count(value):
         try:
             return f"{int(value):,}".replace(',', '.')
@@ -1419,6 +1474,8 @@ def questions_view(request):
         'filters_cta_css_class': 'button button--secondary button--small',
         'filters_cta_dom_id': 'close-filters-and-show-hub-btn',
     }
+
+    training_modes = []
 
     if challenge_settings:
         hero_subtitle_html = safe_template_format(
@@ -1490,6 +1547,9 @@ def questions_view(request):
                 'quiz_definition_name': (
                     card.quiz_definition.nome_quiz if card.quiz_definition else ''
                 ),
+                'quiz_definition_slug': (
+                    card.quiz_definition.slug if card.quiz_definition else ''
+                ),
                 'quiz_definition_study_method_label': (
                     StudyMethodRegistry.get_display_name(card.quiz_definition.study_method_override)
                     if card.quiz_definition and card.quiz_definition.study_method_override
@@ -1498,6 +1558,53 @@ def questions_view(request):
             }
             for card in sorted(cards_queryset, key=lambda item: item.key)
         ]
+
+        training_modes_queryset = (
+            TrainingMode.objects.filter(is_active=True)
+            .select_related("quiz_definition")
+            .order_by("order", "name")
+        )
+        training_modes = []
+        for mode in training_modes_queryset:
+            quiz_def = mode.quiz_definition
+            if not quiz_def:
+                continue
+
+            study_label = StudyMethodRegistry.get_display_name(quiz_def.study_method_override)
+            estimated_count = (
+                quiz_def.get_estimated_question_count()
+                if hasattr(quiz_def, "get_estimated_question_count")
+                else None
+            )
+
+            meta_text = (mode.meta or "").strip()
+            if not meta_text:
+                meta_parts = []
+                if isinstance(estimated_count, int) and estimated_count > 0:
+                    meta_parts.append(f"{estimated_count} questões")
+                generation_label = quiz_def.get_generation_type_display()
+                if generation_label:
+                    meta_parts.append(generation_label)
+                if study_label:
+                    meta_parts.append(study_label)
+                meta_text = " • ".join(part for part in meta_parts if part)
+
+            training_modes.append(
+                {
+                    'id': mode.pk,
+                    'slug': mode.slug,
+                    'title': mode.name,
+                    'description': mode.description,
+                    'meta': meta_text,
+                    'icon': mode.icon,
+                    'accent_color': mode.accent_color,
+                    'quiz_definition_id': quiz_def.pk,
+                    'quiz_definition_name': quiz_def.nome_quiz,
+                    'quiz_definition_generation_type': quiz_def.generation_type,
+                    'quiz_definition_generation_label': quiz_def.get_generation_type_display(),
+                    'quiz_definition_study_method_label': study_label,
+                }
+            )
 
         if challenge_settings.resume_card:
             resume = challenge_settings.resume_card
@@ -1532,8 +1639,7 @@ def questions_view(request):
                 'filters_cta_dom_id': placeholder.filters_cta_dom_id,
             }
 
-    context = {
-        'page_title': 'MedQuiz - Questões',
+    return {
         'hub_summary': hub_summary,
         'hub_summary_json': hub_summary_json,
         'challenge_hero': challenge_hero,
@@ -1543,7 +1649,61 @@ def questions_view(request):
         'challenge_resume_card': challenge_resume_card,
         'challenge_predefined_section': challenge_predefined_section,
         'challenge_placeholders': challenge_placeholders,
+        'training_modes': training_modes,
     }
+
+
+def questions_view(request, pergunta_id=None):
+    context = _build_challenge_hub_context(request)
+
+    page_title = 'MedQuiz - Questões'
+    initial_question_payload = None
+    initial_question_id = None
+
+    if pergunta_id is not None:
+        pergunta = get_object_or_404(
+            Pergunta.objects.prefetch_related(
+                Prefetch('categorias', queryset=Categoria.objects.only('pk', 'nome_categoria')),
+                Prefetch('opcoes', queryset=OpcaoResposta.objects.all().order_by('ordem_exibicao', 'pk')),
+            ),
+            pk=pergunta_id,
+            ativa=True,
+        )
+
+        quiz_config = get_quiz_config()
+        question_payload = _serialize_question_for_frontend(pergunta, user=request.user, request=request)
+
+        quiz_title = 'Questão Avulsa'
+        if pergunta.texto_pergunta:
+            truncated_text = pergunta.texto_pergunta.strip()
+            if len(truncated_text) > 70:
+                truncated_text = truncated_text[:67].rstrip() + '...'
+            if truncated_text:
+                quiz_title = truncated_text
+                page_title = f'{truncated_text} • MedQuiz'
+
+        default_score_panel = quiz_config.get_score_panel_settings_for_mode()
+
+        initial_question_id = pergunta.pk
+        initial_question_payload = json.dumps(
+            {
+                'question_id': pergunta.pk,
+                'question': question_payload,
+                'mode': 'Standalone',
+                'quiz_title': quiz_title,
+                'score_panel_settings': default_score_panel,
+                'auto_resume_if_session': True,
+            },
+            ensure_ascii=False,
+        )
+
+    context.update({
+        'page_title': page_title,
+        'show_challenge_hub': True,
+        'show_question_interface': True,
+        'initial_question_id': initial_question_id,
+        'initial_question_payload': initial_question_payload,
+    })
     return render(request, 'quiz/questions_page.html', context)
 
 
@@ -2229,6 +2389,188 @@ def toggle_favorite_status_view(request, pergunta_id):
         is_favorited_now = True
         message = "Questão adicionada aos favoritos."
     return JsonResponse({'status': 'success', 'is_favorited': is_favorited_now, 'message': message})
+
+
+@require_POST
+def report_question_issue_view(request, pergunta_id):
+    pergunta = get_object_or_404(Pergunta, pk=pergunta_id, ativa=True)
+
+    try:
+        payload = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {'status': 'error', 'message': 'Formato de dados inválido.'},
+            status=400,
+        )
+
+    descricao = (payload.get('descricao') or '').strip()
+    if len(descricao) < 10:
+        return JsonResponse(
+            {
+                'status': 'error',
+                'message': 'Descreva o problema com pelo menos 10 caracteres.',
+            },
+            status=400,
+        )
+
+    origem = payload.get('origem') or QuestionIssueReport.ORIGEM_SESSAO
+    origem_values = {choice[0] for choice in QuestionIssueReport.ORIGEM_CHOICES}
+    if origem not in origem_values:
+        origem = QuestionIssueReport.ORIGEM_SESSAO
+
+    categoria_input = (
+        payload.get('categoria')
+        or payload.get('issue_category')
+        or QuestionIssueReport.Categoria.GABARITO
+    )
+    categoria_values = {choice[0] for choice in QuestionIssueReport.Categoria.choices}
+    if categoria_input not in categoria_values:
+        categoria_input = QuestionIssueReport.Categoria.GABARITO
+
+    usuario = request.user if request.user.is_authenticated else None
+
+    issue_report = QuestionIssueReport.objects.create(
+        pergunta=pergunta,
+        usuario=usuario,
+        descricao=descricao,
+        origem=origem,
+        categoria=categoria_input,
+    )
+
+    support_request_context = {
+        'question_issue_report_id': issue_report.pk,
+        'question_id': pergunta.pk,
+        'question_slug': pergunta.slug or None,
+        'question_code': pergunta.codigo_importacao or None,
+        'question_title': (pergunta.texto_pergunta or '')[:180] or None,
+        'question_difficulty': pergunta.nivel_dificuldade,
+        'report_origin': origem,
+        'report_origin_display': dict(QuestionIssueReport.ORIGEM_CHOICES).get(origem, origem),
+        'source_endpoint': request.path,
+        'user_agent': request.META.get('HTTP_USER_AGENT', ''),
+    }
+    if request.META.get('HTTP_REFERER'):
+        support_request_context['page_url'] = request.META['HTTP_REFERER']
+    support_request_context['issue_category'] = categoria_input
+    support_request_context['issue_category_display'] = dict(
+        QuestionIssueReport.Categoria.choices
+    ).get(categoria_input, categoria_input)
+    categorias_relato = list(pergunta.categorias.values_list('nome_categoria', flat=True))
+    if categorias_relato:
+        support_request_context['question_categories'] = categorias_relato
+
+    nome_contato = ''
+    email_contato = ''
+    if usuario:
+        nome_contato = usuario.get_full_name() or usuario.username or ''
+        email_contato = usuario.email or ''
+
+    SupportRequest.objects.create(
+        usuario=usuario,
+        nome=nome_contato,
+        email=email_contato,
+        mensagem=descricao,
+        origem=SupportRequest.ORIGEM_MENSAGEM,
+        tipo_contato=SupportRequest.TipoContato.CONTEUDO,
+        contexto={key: value for key, value in support_request_context.items() if value not in (None, '')},
+    )
+
+    return JsonResponse(
+        {
+            'status': 'success',
+            'message': 'Relato registrado. Obrigado por contribuir!',
+        },
+        status=201,
+    )
+
+
+@require_POST
+def submit_support_request_view(request):
+    try:
+        payload = json.loads(request.body or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {'status': 'error', 'message': 'Formato de dados inválido.'},
+            status=400,
+        )
+
+    mensagem = (payload.get('mensagem') or payload.get('descricao') or '').strip()
+    if len(mensagem) < 10:
+        return JsonResponse(
+            {
+                'status': 'error',
+                'message': 'Descreva sua reclamação com pelo menos 10 caracteres.',
+            },
+            status=400,
+        )
+
+    origem = (payload.get('origem') or SupportRequest.ORIGEM_GERAL)
+    origem_values = {choice[0] for choice in SupportRequest.ORIGEM_CHOICES}
+    if origem not in origem_values:
+        origem = SupportRequest.ORIGEM_GERAL
+
+    tipo_input = (
+        payload.get('tipo')
+        or payload.get('categoria')
+        or payload.get('tipo_contato')
+        or SupportRequest.TipoContato.SUPORTE_GERAL
+    )
+    tipo_values = {choice[0] for choice in SupportRequest.TipoContato.choices}
+    if tipo_input not in tipo_values:
+        tipo_input = SupportRequest.TipoContato.SUPORTE_GERAL
+
+    nome = (payload.get('nome') or '').strip()
+    email = (payload.get('email') or '').strip()
+    usuario = request.user if request.user.is_authenticated else None
+
+    if usuario:
+        if not nome:
+            nome = usuario.get_full_name() or usuario.username
+        if not email:
+            email = usuario.email or ''
+
+    contexto_payload = payload.get('contexto')
+    contexto = None
+    if isinstance(contexto_payload, dict):
+        contexto = {}
+        for key, value in contexto_payload.items():
+            if not isinstance(key, str):
+                continue
+            if isinstance(value, (str, int, float, bool)) or value is None:
+                contexto[key] = value
+            elif isinstance(value, (list, dict)):
+                contexto[key] = value
+            else:
+                contexto[key] = str(value)
+    elif isinstance(contexto_payload, list):
+        contexto = contexto_payload
+
+    if contexto is None:
+        contexto = {}
+
+    if isinstance(contexto, dict):
+        contexto.setdefault('current_path', request.path)
+        contexto.setdefault('user_agent', request.META.get('HTTP_USER_AGENT', ''))
+        if 'page_url' not in contexto and request.META.get('HTTP_REFERER'):
+            contexto['page_url'] = request.META['HTTP_REFERER']
+
+    SupportRequest.objects.create(
+        usuario=usuario,
+        nome=nome,
+        email=email,
+        mensagem=mensagem,
+        origem=origem,
+        tipo_contato=tipo_input,
+        contexto=contexto or None,
+    )
+
+    return JsonResponse(
+        {
+            'status': 'success',
+            'message': 'Recebemos sua mensagem. Obrigado por compartilhar!',
+        },
+        status=201,
+    )
 
 
 @login_required

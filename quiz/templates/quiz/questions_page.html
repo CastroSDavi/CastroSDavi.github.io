@@ -1,12 +1,22 @@
 {% extends "quiz/base.html" %}
 {% load static %}
 
-{% block body_attrs %}class="is-challenge-hub-active"{% endblock %}
+{% block body_attrs %}
+{% if show_challenge_hub %}
+class="is-challenge-hub-active"
+{% elif show_question_interface %}
+class="is-quiz-active"
+{% endif %}
+{% if initial_question_id %}
+data-initial-question-id="{{ initial_question_id }}"
+{% endif %}
+{% endblock %}
 
-{% block title %}MedQuiz - Questões{% endblock title %}
+{% block title %}{{ page_title|default:"MedQuiz - Questões" }}{% endblock title %}
 
 {% block content %}
     <section id="question-section" class="main-section">
+        {% if show_question_interface %}
         <aside class="score-panel u-is-hidden">
             <div class="score-panel__timer">
                 <span id="timer-display" class="score-panel__timer-value">00:00</span>
@@ -61,13 +71,19 @@
                 <span class="score-panel__action-button-label">Encerrar</span>
             </button>
         </aside>
+        {% endif %}
 
         <div class="question-section__main-content">
 
-            {% if hub_summary_json %}
+            {% if initial_question_payload %}
+            <script id="initial-question-data" type="application/json">{{ initial_question_payload|safe }}</script>
+            {% endif %}
+
+            {% if show_challenge_hub and hub_summary_json %}
             <script id="challenge-hub-initial-data" type="application/json">{{ hub_summary_json|safe }}</script>
             {% endif %}
 
+            {% if show_challenge_hub %}
             <div id="challenge-hub-container" class="challenge-hub">
                 <div class="challenge-hub__hero">
                     <div class="challenge-hub__hero-info">
@@ -113,15 +129,30 @@
                     </div>
 
                     {% for card in challenge_cards %}
+                    {% if card.quiz_definition_slug %}
+                    <a
+                        id="{{ card.dom_id }}"
+                        class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}"
+                        href="{% url 'quiz:questions' %}?predefined_slug={{ card.quiz_definition_slug|urlencode }}#challenge-hub-container"
+                        data-card-key="{{ card.key }}"
+                        {% if card.quiz_definition_id %}data-quiz-definition-id="{{ card.quiz_definition_id }}"{% endif %}
+                        {% if card.quiz_definition_generation_type %}data-quiz-generation-type="{{ card.quiz_definition_generation_type }}"{% endif %}
+                        {% if card.quiz_definition_name %}data-quiz-definition-name="{{ card.quiz_definition_name }}"{% endif %}
+                        {% if card.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ card.quiz_definition_study_method_label }}"{% endif %}
+                        data-quiz-definition-slug="{{ card.quiz_definition_slug }}"
+                    >
+                    {% else %}
                     <button
                         id="{{ card.dom_id }}"
                         type="button"
                         class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}"
+                        data-card-key="{{ card.key }}"
                         {% if card.quiz_definition_id %}data-quiz-definition-id="{{ card.quiz_definition_id }}"{% endif %}
                         {% if card.quiz_definition_generation_type %}data-quiz-generation-type="{{ card.quiz_definition_generation_type }}"{% endif %}
                         {% if card.quiz_definition_name %}data-quiz-definition-name="{{ card.quiz_definition_name }}"{% endif %}
                         {% if card.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ card.quiz_definition_study_method_label }}"{% endif %}
                     >
+                    {% endif %}
                         <div class="challenge-card__header">
                             <div class="challenge-card__icon-wrapper">
                                 {% if card.icon %}
@@ -137,9 +168,51 @@
                         <div class="challenge-card__footer">
                             <span class="challenge-card__meta">{{ card.meta }}</span>
                         </div>
-                        {% endif %}
+                    {% endif %}
+                    {% if card.quiz_definition_slug %}
+                    </a>
+                    {% else %}
                     </button>
+                    {% endif %}
                     {% endfor %}
+
+                    {% if training_modes %}
+                    <div class="challenge-hub__training-section">
+                        <h3 class="challenge-hub__section-title">Modos de treino</h3>
+                        <div class="challenge-hub__training-grid">
+                            {% for mode in training_modes %}
+                            <button
+                                type="button"
+                                class="challenge-card challenge-card--training{% if mode.accent_color %} challenge-card--has-accent{% endif %}"
+                                data-training-mode="{{ mode.slug }}"
+                                data-card-key="training_mode"
+                                data-quiz-definition-id="{{ mode.quiz_definition_id }}"
+                                {% if mode.quiz_definition_generation_type %}data-quiz-generation-type="{{ mode.quiz_definition_generation_type }}"{% endif %}
+                                {% if mode.quiz_definition_name %}data-quiz-definition-name="{{ mode.quiz_definition_name }}"{% endif %}
+                                {% if mode.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ mode.quiz_definition_study_method_label }}"{% endif %}
+                                {% if mode.accent_color %}style="--training-mode-accent: {{ mode.accent_color }};"{% endif %}
+                            >
+                                <div class="challenge-card__header">
+                                    <div class="challenge-card__icon-wrapper">
+                                        <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">{{ mode.icon }}</span>
+                                    </div>
+                                    <div class="challenge-card__content">
+                                        <h3 class="challenge-card__title">{{ mode.title }}</h3>
+                                        {% if mode.description %}
+                                        <p class="challenge-card__description">{{ mode.description }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if mode.meta %}
+                                <div class="challenge-card__footer">
+                                    <span class="challenge-card__meta">{{ mode.meta }}</span>
+                                </div>
+                                {% endif %}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div id="hub-predefined-section" class="challenge-hub__predefined u-is-hidden">
@@ -150,7 +223,9 @@
                     <div id="hub-predefined-list" class="challenge-hub__predefined-grid" role="list"></div>
                 </div>
             </div>
+            {% endif %}
 
+            {% if show_challenge_hub %}
             <div id="placeholder-filtros-container" class="card card--placeholder-filtros u-is-hidden">
                 <div class="card__body">
                     <span class="material-symbols-outlined placeholder-icon">fact_check</span>
@@ -167,7 +242,9 @@
                     </button>
                 </div>
             </div>
+            {% endif %}
 
+            {% if show_question_interface %}
             <div id="aviso-container" class="form-message u-is-hidden" role="alert">
                 <div class="form-message__content">
                     <h3 class="form-message__title u-is-hidden" data-role="message-title"></h3>
@@ -192,6 +269,15 @@
                             aria-label="Adicionar aos Favoritos" title="Adicionar aos Favoritos">
                         <span class="material-symbols-outlined">star_outline</span>
                     </button>
+                    <button id="question-report-button"
+                            class="button button--text button--compact question-report-button u-is-hidden"
+                            type="button"
+                            aria-label="Relatar um problema nesta questão"
+                            title="Relatar problema">
+                        <span class="material-symbols-outlined button__icon" aria-hidden="true">flag</span>
+                        <span class="button__label">Relatar problema</span>
+                    </button>
+
                 </div>
                 
                 <div class="card card--question-wrap">
@@ -331,8 +417,10 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
          </div>{# Fim de .question-section__main-content #}
 
+        {% if show_question_interface %}
         {# Modal de Confirmação para Encerrar Sessão (EXISTENTE) #}
         <div id="confirm-encerrar-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="modalConfirmTitle" aria-modal="true">
             <div id="confirm-encerrar-modal" class="card modal__dialog">
@@ -348,8 +436,100 @@
                 </div>
             </div>
         </div>
-    </section> {# Fim de #question-section #}
 
+        <div id="report-issue-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="reportIssueTitle" aria-modal="true">
+            <div id="report-issue-dialog" class="card modal__dialog">
+                <form id="report-issue-form">
+                    <div class="modal__header report-issue-header">
+                        <span class="material-symbols-outlined report-issue-header__icon" aria-hidden="true">flag_circle</span>
+                        <div class="report-issue-header__text">
+                            <h3 id="reportIssueTitle" class="modal__title card__title report-issue-title">Relatar problema</h3>
+                            <p class="report-issue-intro">Descreva o que encontrou para que possamos revisar com agilidade.</p>
+                        </div>
+                    </div>
+                    <div class="modal__body report-issue-content">
+                        <div class="report-issue-context" aria-live="polite">
+                            <span class="material-symbols-outlined report-issue-context__icon" aria-hidden="true">quiz</span>
+                            <span id="report-issue-question-label" class="report-issue-context__label"></span>
+                        </div>
+                        <fieldset class="report-issue-category" aria-describedby="report-issue-type-summary">
+                            <legend class="report-issue-section-title">Motivo</legend>
+                            <div class="report-issue-chip-list">
+                                <label class="report-issue-chip" data-summary="Informe a alternativa correta esperada e cite a justificativa ou fonte utilizada." data-icon="fact_check">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="answer_key"
+                                        checked
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">fact_check</span>
+                                    <span class="report-issue-chip__label">Gabarito</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Explique qual trecho do enunciado está confuso, incorreto ou incompleto." data-icon="segment">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="statement"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">segment</span>
+                                    <span class="report-issue-chip__label">Enunciado</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Aponte quais alternativas apresentam o problema e descreva o ajuste sugerido." data-icon="splitscreen">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="option_issue"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">splitscreen</span>
+                                    <span class="report-issue-chip__label">Alternativas</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Indique a referência correta ou detalhe por que a explicação está desatualizada." data-icon="library_books">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="reference_issue"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">library_books</span>
+                                    <span class="report-issue-chip__label">Referência</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Descreva o que encontrou e, se possível, indique o trecho ou contexto exato." data-icon="lightbulb">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="other"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">lightbulb</span>
+                                    <span class="report-issue-chip__label">Outro</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                        <label for="report-issue-text" class="report-issue-section-title">Descrição</label>
+                        <textarea
+                            id="report-issue-text"
+                            name="descricao"
+                            rows="4"
+                            maxlength="800"
+                            required
+                            placeholder="Explique o que encontrou. Cite trechos, alternativas ou referências relevantes."
+                        ></textarea>
+                        <div class="report-issue-meta">
+                            <span id="report-issue-error" class="report-issue-error" aria-live="polite"></span>
+                            <span id="report-issue-counter" class="report-issue-counter">0/800</span>
+                        </div>
+                    </div>
+                    <div class="modal__footer report-issue-footer">
+                        <button type="button" id="report-issue-cancel" class="button button--secondary button--modal-action">Cancelar</button>
+                        <button type="submit" id="report-issue-submit" class="button button--primary button--modal-action">
+                            <span class="button__label">Enviar</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+        </section> {# Fim de #question-section #}
+
+    {% if show_question_interface %}
     <div id="session-loading-indicator" class="session-loading-indicator-overlay u-is-hidden">
         <div class="session-loading-indicator-content card">
             <span class="material-symbols-outlined session-loading-indicator-spinner">
@@ -360,5 +540,9 @@
             </p>
         </div>
     </div>
+    {% endif %}
 
 {% endblock content %}
+
+
+

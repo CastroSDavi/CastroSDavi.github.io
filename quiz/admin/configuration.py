@@ -22,6 +22,7 @@ from quiz.models import (
     HomeActiveChallengeCardSettings,
     HomeAchievementCardSettings,
     QuizDefinicao,
+    TrainingMode,
 )
 
 from .inlines import QuizDefinicaoPerguntaInline
@@ -461,6 +462,54 @@ class HomeIntroStepInline(admin.TabularInline):
     extra = 0
     ordering = ("order",)
     fields = ("order", "text")
+
+
+@admin.register(TrainingMode)
+class TrainingModeAdmin(admin.ModelAdmin):
+    list_display = ("name", "quiz_definition", "is_active", "order", "updated_at")
+    list_filter = ("is_active",)
+    search_fields = ("name", "slug", "description", "meta", "quiz_definition__nome_quiz")
+    prepopulated_fields = {"slug": ("name",)}
+    ordering = ("order", "name")
+    readonly_fields = ("created_at", "updated_at")
+
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "name",
+                    "slug",
+                    "is_active",
+                    "order",
+                )
+            },
+        ),
+        (
+            "Apresentação",
+            {
+                "fields": (
+                    "icon",
+                    "accent_color",
+                    "description",
+                    "meta",
+                )
+            },
+        ),
+        (
+            "Comportamento",
+            {
+                "fields": ("quiz_definition",),
+            },
+        ),
+        (
+            "Metadados",
+            {
+                "fields": ("created_at", "updated_at"),
+                "classes": ("collapse",),
+            },
+        ),
+    )
 
 
 @admin.register(HomePageSettings)

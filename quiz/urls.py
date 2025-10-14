@@ -24,6 +24,7 @@ router.register('api/question-history', UserQuestionHistoryViewSet, basename='us
 urlpatterns = [
     path('', views.home_view, name='home'),
     path('questions/', views.questions_view, name='questions'),
+    path('questions/<int:pergunta_id>/', views.questions_view, name='question-detail-page'),
     path('account/', views.account_view, name='account'),
     path('register/', views.register_view, name='register'),
 
@@ -36,6 +37,16 @@ urlpatterns = [
         'api/question/<int:pergunta_id>/toggle_favorite/',
         QuestionViewSet.as_view({'post': 'toggle_favorite'}),
         name='question-toggle_favorite',
+    ),
+    path(
+        'api/question/<int:pergunta_id>/report/',
+        views.report_question_issue_view,
+        name='question-report-issue',
+    ),
+    path(
+        'api/support/requests/',
+        views.submit_support_request_view,
+        name='support-request',
     ),
     path('', include(router.urls)),
 ]

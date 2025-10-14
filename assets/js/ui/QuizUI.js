@@ -35,6 +35,8 @@ export default class QuizUI {
         this.filterPanelInstance = null;
         this.challengeHubInstance = null;
         this.resultDisplay = null;
+        this.currentReportQuestionId = null;
+        this.currentSupportMessageMeta = null;
     }
 
     // --- MÉTODOS DE INJEÇÃO DE DEPENDÊNCIA ---
@@ -119,9 +121,11 @@ export default class QuizUI {
         const currentDisplayMode = currentState.quiz?.quizDisplayContext?.displayMode;
         const wasInReviewMode = previousDisplayMode === 'review';
         const isInReviewMode = currentDisplayMode === 'review';
+        const wasInStandaloneMode = previousDisplayMode === 'standalone';
+        const isInStandaloneMode = currentDisplayMode === 'standalone';
 
-        const wasQuizVisible = wasQuizActive || wasInReviewMode;
-        const isQuizVisible = isQuizActive || isInReviewMode;
+        const wasQuizVisible = wasQuizActive || wasInReviewMode || wasInStandaloneMode;
+        const isQuizVisible = isQuizActive || isInReviewMode || isInStandaloneMode;
 
         if (!wasQuizVisible && isQuizVisible) {
             this.displayQuizLayout(true);
@@ -132,7 +136,7 @@ export default class QuizUI {
         }
     
         const prevQuestionIndex = this.previousState.quiz?.currentQuestionIndex ?? -1;
-        if (isQuizActive && currentState.quiz.currentQuestionIndex !== prevQuestionIndex) {
+        if ((isQuizActive || isInStandaloneMode) && currentState.quiz.currentQuestionIndex !== prevQuestionIndex) {
             this._handleQuestionChange(currentState);
         }
     
@@ -144,6 +148,7 @@ export default class QuizUI {
         }
     
         if (!wasQuizEnded && isQuizEnded) {
+            this.questionDisplay?.resetBrowserUrl();
             if (this.resultDisplay) {
                 this.resultDisplay.render(currentState.user, currentState);
             }
@@ -247,6 +252,7 @@ export default class QuizUI {
             idQuestao: document.getElementById('id-questao'),
             perguntaTexto: document.getElementById('pergunta-texto'),
             perguntaImagem: document.getElementById('pergunta-imagem'),
+            questionReportButton: document.getElementById('question-report-button'),
             respostasContainer: document.getElementById('respostas-container'),
             referenciaQuestao: document.getElementById('referencia-questao'),
             feedbackAcessivel: document.getElementById('feedback-acessivel'),
@@ -330,7 +336,27 @@ export default class QuizUI {
             passwordInputDeleteAccount: document.querySelector('#deleteAccountForm input[name="password"]'),
             sessionLoadingIndicator: document.getElementById('session-loading-indicator'),
             sessionLoadingMessage: document.getElementById('session-loading-message'),
-            
+            reportIssueOverlay: document.getElementById('report-issue-overlay'),
+            reportIssueDialog: document.getElementById('report-issue-dialog'),
+            reportIssueForm: document.getElementById('report-issue-form'),
+            reportIssueTextarea: document.getElementById('report-issue-text'),
+            reportIssueCancelBtn: document.getElementById('report-issue-cancel'),
+            reportIssueSubmitBtn: document.getElementById('report-issue-submit'),
+            reportIssueQuestionLabel: document.getElementById('report-issue-question-label'),
+            reportIssueError: document.getElementById('report-issue-error'),
+            reportIssueCounter: document.getElementById('report-issue-counter'),
+            reportIssueTypeSummary: document.getElementById('report-issue-type-summary'),
+            supportRequestOverlay: document.getElementById('support-request-overlay'),
+            supportRequestDialog: document.getElementById('support-request-dialog'),
+            supportRequestForm: document.getElementById('support-request-form'),
+            supportRequestEmailInput: document.getElementById('support-request-email'),
+            supportRequestTextarea: document.getElementById('support-request-message'),
+            supportRequestCancelBtn: document.getElementById('support-request-cancel'),
+            supportRequestSubmitBtn: document.getElementById('support-request-submit'),
+            supportRequestError: document.getElementById('support-request-error'),
+            supportRequestCounter: document.getElementById('support-request-counter'),
+            supportRequestContextLabel: document.getElementById('support-request-context-label'),
+
             // --- INÍCIO DA ALTERAÇÃO: Remoção dos elementos do banner antigo ---
             // resumeBannerContainer: document.getElementById('resume-banner-container'),
             // resumeBannerQuestionCount: document.getElementById('resume-banner-question-count'),
@@ -338,6 +364,14 @@ export default class QuizUI {
             // btnBannerDiscardResume: document.getElementById('btn-banner-discard-resume'),
             // --- FIM DA ALTERAÇÃO ---
         };
+
+        this.elements.supportRequestTypeSummary = document.getElementById('support-request-type-summary');
+        this.elements.supportRequestTypeInputs = Array.from(
+            document.querySelectorAll('input[name="support-request-type"]'),
+        );
+        this.elements.reportIssueTypeInputs = Array.from(
+            document.querySelectorAll('input[name="report-issue-category"]'),
+        );
     }
     
     // --- INÍCIO DA ALTERAÇÃO: Métodos do banner antigo removidos ---
@@ -414,6 +448,7 @@ export default class QuizUI {
             // this.hideElement(this.elements.resumeBannerContainer);
             // --- FIM DA ALTERAÇÃO ---
         } else {
+            this.questionDisplay?.resetBrowserUrl();
             if (this.scorePanel) this.scorePanel.hide();
             this.hideElement(quizSectionContent);
             if (this.resultDisplay) this.resultDisplay.hide();
@@ -467,7 +502,18 @@ export default class QuizUI {
 
                 if (this.scorePanel) this.scorePanel.hide();
                 this.clearInlineMessages();
-                document.body.classList.add('no-scroll');
+                document.body.classList.add('session-loading');
+                if (this.modalManager && typeof this.modalManager.ensureScrollLock === 'function') {
+                    this.modalManager.ensureScrollLock();
+                } else if (typeof document !== 'undefined') {
+                    const scrollbarWidth = typeof window !== 'undefined'
+                        ? Math.max(0, window.innerWidth - document.documentElement.clientWidth)
+                        : 0;
+                    if (scrollbarWidth > 0) {
+                        document.body.style.setProperty('--scroll-lock-compensation', `${scrollbarWidth}px`);
+                    }
+                    document.body.classList.add('no-scroll');
+                }
             } else {
                 this.elements.sessionLoadingIndicator.classList.remove('modal--visible');
                 setTimeout(() => {
@@ -475,8 +521,12 @@ export default class QuizUI {
                         this.hideElement(this.elements.sessionLoadingIndicator);
                      }
                 }, 300);
-                if (this.modalManager && this.modalManager.activeModalCount === 0) {
-                     document.body.classList.remove('no-scroll');
+                document.body.classList.remove('session-loading');
+                if (this.modalManager && typeof this.modalManager.releaseScrollLock === 'function') {
+                    this.modalManager.releaseScrollLock();
+                } else if (typeof document !== 'undefined') {
+                    document.body.classList.remove('no-scroll');
+                    document.body.style.removeProperty('--scroll-lock-compensation');
                 }
             }
         }
@@ -492,8 +542,497 @@ export default class QuizUI {
         this.elements.btnToggleExplanation?.addEventListener('click', () => {
              if (this.modalManager) this.modalManager.toggleExplanationModal(true);
         });
+
+        this.elements.reportIssueForm?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!this.actionOrchestrator) return;
+            const textarea = this.elements.reportIssueTextarea;
+            const description = textarea ? textarea.value.trim() : '';
+            if (description.length < 10) {
+                this.handleReportIssueError('Descreva o problema com pelo menos 10 caracteres.');
+                return;
+            }
+            if (!Number.isInteger(this.currentReportQuestionId) || this.currentReportQuestionId <= 0) {
+                this.handleReportIssueError('Nao foi possivel identificar a questao selecionada.');
+                return;
+            }
+            this.handleReportIssueError('');
+            const selectedCategory = this.getSelectedReportIssueCategory();
+            this.actionOrchestrator.submitIssueReport(
+                this.currentReportQuestionId,
+                description,
+                selectedCategory,
+            );
+        });
+
+        this.elements.reportIssueCancelBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.closeReportIssueModal();
+        });
+
+        this.elements.reportIssueTextarea?.addEventListener('input', () => {
+            this.updateReportIssueCounter();
+            if (this.elements.reportIssueError) {
+                this.elements.reportIssueError.textContent = '';
+            }
+            if (this.elements.reportIssueTextarea) {
+                this.elements.reportIssueTextarea.removeAttribute('aria-invalid');
+            }
+        });
+
+        if (Array.isArray(this.elements.reportIssueTypeInputs) && this.elements.reportIssueTypeInputs.length) {
+            this.elements.reportIssueTypeInputs.forEach((input) => {
+                input.addEventListener('change', () => {
+                    this.updateReportIssueTypeSummary();
+                });
+            });
+        }
+        this.updateReportIssueTypeSummary();
+
+        this.elements.supportRequestForm?.addEventListener('submit', (event) => {
+            event.preventDefault();
+            if (!this.actionOrchestrator) return;
+
+            const messageField = this.elements.supportRequestTextarea;
+            const emailField = this.elements.supportRequestEmailInput;
+
+            const messageValue = messageField ? messageField.value.trim() : '';
+            if (messageValue.length < 10) {
+                this.handleSupportRequestError('Descreva sua reclamação com pelo menos 10 caracteres.');
+                return;
+            }
+
+            const emailValue = emailField ? emailField.value.trim() : '';
+            const context = this.buildSupportRequestContext();
+            const origin = this.currentSupportMessageMeta ? 'inline_message' : null;
+            const selectedType = this.getSelectedSupportRequestType();
+
+            this.handleSupportRequestError('');
+            this.actionOrchestrator.submitSupportRequest({
+                message: messageValue,
+                email: emailValue,
+                origin,
+                context,
+                tipo: selectedType,
+            });
+        });
+
+        this.elements.supportRequestCancelBtn?.addEventListener('click', (event) => {
+            event.preventDefault();
+            this.closeSupportRequestModal();
+        });
+
+        this.elements.supportRequestTextarea?.addEventListener('input', () => {
+            this.updateSupportRequestCounter();
+            this.handleSupportRequestError('');
+        });
+
+        this.elements.supportRequestEmailInput?.addEventListener('input', () => {
+            if (this.elements.supportRequestError) {
+                this.elements.supportRequestError.textContent = '';
+            }
+        });
+
+        if (Array.isArray(this.elements.supportRequestTypeInputs) && this.elements.supportRequestTypeInputs.length) {
+            this.elements.supportRequestTypeInputs.forEach((input) => {
+                input.addEventListener('change', () => {
+                    this.updateSupportRequestTypeSummary();
+                });
+            });
+        }
+        this.updateSupportRequestTypeSummary();
     }
-    
+
+    openReportIssueModal(questionData, fallbackId = null) {
+        const candidateId = (questionData && (questionData.id_pergunta ?? questionData.id)) ?? fallbackId;
+        const normalizedId = Number.parseInt(candidateId, 10);
+        if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+            this.showWarning('Nao foi possivel identificar a questao para relatar.', 'warning');
+            return;
+        }
+
+        this.currentReportQuestionId = normalizedId;
+
+        if (this.elements.reportIssueForm) {
+            this.elements.reportIssueForm.reset();
+        }
+
+        const textarea = this.elements.reportIssueTextarea;
+        if (textarea) {
+            textarea.value = '';
+            textarea.disabled = false;
+            textarea.removeAttribute('aria-invalid');
+        }
+
+        const errorLabel = this.elements.reportIssueError;
+        if (errorLabel) {
+            errorLabel.textContent = '';
+        }
+
+        const questionLabel = this.elements.reportIssueQuestionLabel;
+        if (questionLabel) {
+            let label = `Questao #${normalizedId}`;
+            if (questionData && typeof questionData.texto_pergunta === 'string') {
+                const preview = questionData.texto_pergunta.replace(/\s+/g, ' ').trim();
+                if (preview) {
+                    const shortened = preview.length > 120 ? `${preview.slice(0, 117)}...` : preview;
+                    label = `${label} - ${shortened}`;
+                }
+            }
+            questionLabel.textContent = label;
+        }
+
+        this.updateReportIssueTypeSummary();
+        this.updateReportIssueCounter();
+        this.setReportIssueLoading(false);
+        if (this.modalManager && typeof this.modalManager.toggleFilterPanel === 'function') {
+            this.modalManager.toggleFilterPanel(false);
+        }
+        this.modalManager?.toggleReportIssueModal(true);
+    }
+
+    closeReportIssueModal() {
+        this.modalManager?.toggleReportIssueModal(false);
+        this.setReportIssueLoading(false);
+        this.currentReportQuestionId = null;
+        if (this.elements.reportIssueForm) {
+            this.elements.reportIssueForm.reset();
+        }
+        if (this.elements.reportIssueTextarea) {
+            this.elements.reportIssueTextarea.disabled = false;
+            this.elements.reportIssueTextarea.removeAttribute('aria-invalid');
+        }
+        if (this.elements.reportIssueCancelBtn) {
+            this.elements.reportIssueCancelBtn.disabled = false;
+        }
+
+        this.updateReportIssueTypeSummary();
+    }
+
+    setReportIssueLoading(isLoading) {
+        this.setButtonLoading(this.elements.reportIssueSubmitBtn, isLoading);
+        if (this.elements.reportIssueTextarea) {
+            this.elements.reportIssueTextarea.disabled = Boolean(isLoading);
+        }
+        if (this.elements.reportIssueCancelBtn) {
+            this.elements.reportIssueCancelBtn.disabled = Boolean(isLoading);
+        }
+        if (Array.isArray(this.elements.reportIssueTypeInputs)) {
+            this.elements.reportIssueTypeInputs.forEach((input) => {
+                input.disabled = Boolean(isLoading);
+            });
+        }
+    }
+
+    handleReportIssueError(message) {
+        if (this.elements.reportIssueError) {
+            this.elements.reportIssueError.textContent = message || '';
+        }
+        if (this.elements.reportIssueTextarea) {
+            if (message) {
+                this.elements.reportIssueTextarea.setAttribute('aria-invalid', 'true');
+            } else {
+                this.elements.reportIssueTextarea.removeAttribute('aria-invalid');
+            }
+        }
+    }
+
+    handleReportIssueSuccess() {
+        this.handleReportIssueError('');
+        this.closeReportIssueModal();
+        if (typeof this.showToast === 'function') {
+            this.showToast('Relato enviado com sucesso. Obrigado!', 'success', { dismissIn: 4000 });
+        }
+    }
+
+    updateReportIssueCounter() {
+        if (!this.elements.reportIssueTextarea || !this.elements.reportIssueCounter) {
+            return;
+        }
+        const value = this.elements.reportIssueTextarea.value || '';
+        const maxLength = this.elements.reportIssueTextarea.getAttribute('maxlength');
+        if (maxLength) {
+            this.elements.reportIssueCounter.textContent = `${value.length}/${maxLength}`;
+        } else {
+            this.elements.reportIssueCounter.textContent = `${value.length} caracteres`;
+        }
+    }
+
+    getSelectedReportIssueCategory() {
+        if (!Array.isArray(this.elements.reportIssueTypeInputs)) {
+            return null;
+        }
+        const selectedInput = this.elements.reportIssueTypeInputs.find((input) => input.checked);
+        return selectedInput ? selectedInput.value : null;
+    }
+
+    updateReportIssueTypeSummary() {
+        const inputs = this.elements.reportIssueTypeInputs;
+        const summaryElement = this.elements.reportIssueTypeSummary;
+        if (!Array.isArray(inputs)) {
+            return;
+        }
+
+        let selectedValue = null;
+        let selectedChip = null;
+        inputs.forEach((input) => {
+            const isSelected = Boolean(input.checked);
+            if (isSelected) {
+                selectedValue = input.value;
+                selectedChip = input.closest('.report-issue-chip') || null;
+            }
+            const container = input.closest('.report-issue-chip');
+            if (container) {
+                container.dataset.selected = isSelected ? 'true' : 'false';
+            }
+        });
+
+        if (summaryElement) {
+            const summaryText = selectedChip?.dataset.summary || this._resolveReportIssueTypeSummary(selectedValue);
+            const summaryIcon = selectedChip?.dataset.icon || this._resolveReportIssueTypeIcon(selectedValue);
+
+            summaryElement.innerHTML = '';
+            if (summaryIcon) {
+                const iconSpan = document.createElement('span');
+                iconSpan.className = 'material-symbols-outlined report-issue-summary__icon';
+                iconSpan.textContent = summaryIcon;
+                summaryElement.appendChild(iconSpan);
+            }
+            if (summaryText) {
+                const textSpan = document.createElement('span');
+                textSpan.className = 'report-issue-summary__text';
+                textSpan.textContent = summaryText;
+                summaryElement.appendChild(textSpan);
+            }
+        }
+    }
+
+    _resolveReportIssueTypeSummary(value) {
+        switch (value) {
+            case 'statement':
+                return 'Detalhe qual trecho do enunciado deve ser revisado.';
+            case 'option_issue':
+                return 'Identifique as alternativas afetadas e o ajuste sugerido.';
+            case 'reference_issue':
+                return 'Informe a referência correta ou motivo da divergência.';
+            case 'other':
+                return 'Descreva, com exemplos, o que encontrou de diferente.';
+            case 'answer_key':
+            default:
+                return 'Informe a alternativa correta esperada e a evidência utilizada.';
+        }
+    }
+
+    _resolveReportIssueTypeIcon(value) {
+        switch (value) {
+            case 'statement':
+                return 'segment';
+            case 'option_issue':
+                return 'splitscreen';
+            case 'reference_issue':
+                return 'library_books';
+            case 'other':
+                return 'lightbulb';
+            case 'answer_key':
+            default:
+                return 'fact_check';
+        }
+    }
+
+    buildSupportRequestContext() {
+        const context = {};
+        const bodyElement = document.body;
+
+        if (bodyElement?.dataset?.pageId) {
+            context.page_id = bodyElement.dataset.pageId;
+        }
+
+        if (typeof window !== 'undefined' && window.location) {
+            context.page_url = window.location.href;
+        }
+
+        if (this.currentSupportMessageMeta) {
+            const { key, title, body, detail } = this.currentSupportMessageMeta;
+            if (key) context.message_key = key;
+            if (title) context.message_title = title;
+            if (body) context.message_body = body;
+            if (detail) context.message_detail = detail;
+        }
+
+        return Object.keys(context).length > 0 ? context : null;
+    }
+
+    openSupportRequestModal(triggerMeta = null) {
+        this.currentSupportMessageMeta = triggerMeta;
+
+        if (this.elements.supportRequestForm) {
+            this.elements.supportRequestForm.reset();
+        }
+
+        const textarea = this.elements.supportRequestTextarea;
+        if (textarea) {
+            textarea.disabled = false;
+            textarea.removeAttribute('aria-invalid');
+        }
+
+        const emailInput = this.elements.supportRequestEmailInput;
+        if (emailInput) {
+            emailInput.disabled = false;
+        }
+
+        const label = this.elements.supportRequestContextLabel;
+        if (label) {
+            const labelText = this._resolveSupportRequestContextLabel(triggerMeta);
+            label.textContent = labelText;
+            label.classList.toggle('u-is-hidden', !labelText);
+        }
+        this.handleSupportRequestError('');
+        this.setSupportRequestLoading(false);
+        this.updateSupportRequestCounter();
+        this.updateSupportRequestTypeSummary();
+
+        if (this.modalManager && typeof this.modalManager.toggleSupportRequestModal === 'function') {
+            this.modalManager.toggleSupportRequestModal(true);
+        }
+    }
+
+    closeSupportRequestModal() {
+        this.handleSupportRequestError('');
+        if (this.modalManager && typeof this.modalManager.toggleSupportRequestModal === 'function') {
+            this.modalManager.toggleSupportRequestModal(false);
+        }
+
+        this.setSupportRequestLoading(false);
+
+        if (this.elements.supportRequestForm) {
+            this.elements.supportRequestForm.reset();
+        }
+
+        if (this.elements.supportRequestTextarea) {
+            this.elements.supportRequestTextarea.disabled = false;
+            this.elements.supportRequestTextarea.removeAttribute('aria-invalid');
+        }
+        if (this.elements.supportRequestEmailInput) {
+            this.elements.supportRequestEmailInput.disabled = false;
+        }
+        this.updateSupportRequestCounter();
+        this.updateSupportRequestTypeSummary();
+
+        this.currentSupportMessageMeta = null;
+    }
+
+    setSupportRequestLoading(isLoading) {
+        this.setButtonLoading(this.elements.supportRequestSubmitBtn, isLoading);
+        if (this.elements.supportRequestTextarea) {
+            this.elements.supportRequestTextarea.disabled = Boolean(isLoading);
+        }
+        if (this.elements.supportRequestEmailInput) {
+            this.elements.supportRequestEmailInput.disabled = Boolean(isLoading);
+        }
+        if (this.elements.supportRequestCancelBtn) {
+            this.elements.supportRequestCancelBtn.disabled = Boolean(isLoading);
+        }
+        if (Array.isArray(this.elements.supportRequestTypeInputs)) {
+            this.elements.supportRequestTypeInputs.forEach((input) => {
+                input.disabled = Boolean(isLoading);
+            });
+        }
+    }
+
+    handleSupportRequestError(message) {
+        if (this.elements.supportRequestError) {
+            this.elements.supportRequestError.textContent = message || '';
+        }
+        if (this.elements.supportRequestTextarea) {
+            if (message) {
+                this.elements.supportRequestTextarea.setAttribute('aria-invalid', 'true');
+            } else {
+                this.elements.supportRequestTextarea.removeAttribute('aria-invalid');
+            }
+        }
+    }
+
+    handleSupportRequestSuccess(message = null) {
+        this.handleSupportRequestError('');
+        this.closeSupportRequestModal();
+        const toastMessage = message || 'Mensagem enviada com sucesso. Obrigado!';
+        if (typeof this.showToast === 'function') {
+            this.showToast(toastMessage, 'success', { dismissIn: 4000 });
+        }
+    }
+
+    updateSupportRequestCounter() {
+        if (!this.elements.supportRequestTextarea || !this.elements.supportRequestCounter) {
+            return;
+        }
+        const value = this.elements.supportRequestTextarea.value || '';
+        const maxLength = this.elements.supportRequestTextarea.getAttribute('maxlength');
+        if (maxLength) {
+            this.elements.supportRequestCounter.textContent = `${value.length}/${maxLength}`;
+        } else {
+            this.elements.supportRequestCounter.textContent = `${value.length} caracteres`;
+        }
+    }
+
+    getSelectedSupportRequestType() {
+        if (!Array.isArray(this.elements.supportRequestTypeInputs)) {
+            return null;
+        }
+        const selectedInput = this.elements.supportRequestTypeInputs.find((input) => input.checked);
+        return selectedInput ? selectedInput.value : null;
+    }
+
+    updateSupportRequestTypeSummary() {
+        const inputs = this.elements.supportRequestTypeInputs;
+        const summaryElement = this.elements.supportRequestTypeSummary;
+        if (!Array.isArray(inputs) || !summaryElement) {
+            return;
+        }
+
+        let selectedValue = null;
+        inputs.forEach((input) => {
+            const isSelected = Boolean(input.checked);
+            if (isSelected) {
+                selectedValue = input.value;
+            }
+            const optionContainer = input.closest('.support-request-type-option');
+            if (optionContainer) {
+                optionContainer.dataset.selected = isSelected ? 'true' : 'false';
+            }
+        });
+
+        summaryElement.textContent = this._resolveSupportRequestTypeSummary(selectedValue);
+    }
+
+    _resolveSupportRequestTypeSummary(value) {
+        switch (value) {
+            case 'technical_issue':
+                return 'Nossa equipe técnica vai investigar travamentos, lentidões ou mensagens de erro inesperadas.';
+            case 'content_error':
+                return 'Inclua o título da questão, alternativa e motivação para facilitar a correção do conteúdo.';
+            case 'improvement':
+                return 'Compartilhe ideias de novas funcionalidades, ajustes visuais ou experiências desejadas.';
+            case 'general':
+            default:
+                return 'Use este canal para tirar dúvidas gerais sobre o MedQuiz ou receber orientação personalizada.';
+        }
+    }
+
+    _resolveSupportRequestContextLabel(meta) {
+        if (!meta) {
+            return '';
+        }
+        const { title, body, key, detail } = meta;
+        const primary = title || body || key || '';
+        if (!primary) {
+            return '';
+        }
+        if (detail && detail !== primary) {
+            return `Referência: ${primary} — ${detail}`;
+        }
+        return `Referência: ${primary}`;
+    }
+
     showWarning(messageInput, type = 'warning', isTextCentered = false) {
         const resolveOptions = {
             defaultType: type,
@@ -607,9 +1146,16 @@ export default class QuizUI {
                 }
                 break;
             case 'contactSupport':
-                if (typeof window !== 'undefined') {
-                    window.open('mailto:suporte@medquiz.app?subject=Ajuda%20no%20MedQuiz');
-                }
+                this.openSupportRequestModal(
+                    this.lastSystemMessage
+                        ? {
+                            key: this.lastSystemMessage.key || null,
+                            title: this.lastSystemMessage.title || null,
+                            body: this.lastSystemMessage.body || null,
+                            detail: this.lastSystemMessage.detail || null,
+                        }
+                        : null,
+                );
                 break;
             case 'goToLogin':
                 if (typeof window !== 'undefined') {

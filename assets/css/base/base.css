@@ -26,6 +26,7 @@ body {
    Especificamente usada na página da conta em mobile. */
 body.no-scroll {
     overflow-y: hidden;
+    padding-right: var(--scroll-lock-compensation, 0px);
 }
 
 /* Estilos de foco globais (resetados em reset.css, definidos aqui para visibilidade) */

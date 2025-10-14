@@ -218,6 +218,62 @@ export default class ActionOrchestrator {
         this.startTimer(elapsedSeconds);
     }
 
+    launchStandaloneQuestion(questionPayload, options = {}) {
+        if (!questionPayload || typeof questionPayload !== 'object') {
+            console.warn('ActionOrchestrator: payload inválido para question standalone.', questionPayload);
+            return false;
+        }
+
+        const sanitizedQuestion = { ...questionPayload };
+        if (Array.isArray(sanitizedQuestion.opcoes)) {
+            sanitizedQuestion.opcoes = [...sanitizedQuestion.opcoes].sort((a, b) => {
+                const ordemA = typeof a?.ordem_exibicao === 'number' ? a.ordem_exibicao : 0;
+                const ordemB = typeof b?.ordem_exibicao === 'number' ? b.ordem_exibicao : 0;
+                return ordemA - ordemB || (a?.id_opcao_resposta ?? 0) - (b?.id_opcao_resposta ?? 0);
+            });
+        } else {
+            sanitizedQuestion.opcoes = [];
+        }
+
+        const mode = typeof options.mode === 'string' && options.mode.trim()
+            ? options.mode.trim()
+            : 'Standalone';
+        const quizTitle =
+            typeof options.quizTitle === 'string' && options.quizTitle.trim()
+                ? options.quizTitle.trim()
+                : (typeof sanitizedQuestion.texto_pergunta === 'string' && sanitizedQuestion.texto_pergunta.trim()
+                    ? sanitizedQuestion.texto_pergunta.trim()
+                    : 'Questão Avulsa');
+        const scorePanelSettings = options.scorePanelSettings || null;
+
+        this.stopTimer();
+        this.lastQuizRequest = null;
+
+        this.store.dispatch(
+            quizActions.initializeQuiz(
+                [sanitizedQuestion],
+                mode,
+                null,
+                null,
+                quizTitle,
+                scorePanelSettings
+            )
+        );
+        this.store.dispatch(quizActions.setActiveSection('questions'));
+        this.ui.showSessionLoadingIndicator(false);
+
+        const shouldStartTimer = !scorePanelSettings || scorePanelSettings.show_timer !== false;
+        if (shouldStartTimer) {
+            this.startTimer();
+        } else {
+            this.store.dispatch({ type: ActionTypes.RESET_TIMER });
+        }
+
+        this.ui.displayQuizLayout(true);
+        this.ui.challengeHubInstance?.hideHub();
+        return true;
+    }
+
     async _discardAndGoToHub() {
         const { resumableSession } = this.store.getState().quiz;
         if (!resumableSession) return;
@@ -463,6 +519,8 @@ export default class ActionOrchestrator {
         }
 
         const normalizedLimit = Number.isInteger(limit) && limit > 0 ? limit : 12;
+        let success = false;
+
         this.ui.showSessionLoadingIndicator(true, 'Preparando revisão de favoritos...');
 
         try {
@@ -473,55 +531,86 @@ export default class ActionOrchestrator {
 
             if (favoritesList.length === 0) {
                 this.ui.showWarning('Você ainda não possui questões favoritas para revisar.');
-                return false;
+            } else {
+                const normalizedQuestions = favoritesList
+                    .filter(question => question && Array.isArray(question.opcoes) && question.opcoes.length > 0)
+                    .slice(0, normalizedLimit)
+                    .map(question => ({
+                        ...question,
+                        is_favorited: true,
+                        opcoes: question.opcoes.map(option => ({
+                            id_opcao_resposta: option.id_opcao_resposta,
+                            id_pergunta: option.id_pergunta ?? question.id_pergunta,
+                            texto_opcao: option.texto_opcao,
+                            eh_correta: option.eh_correta,
+                            ordem_exibicao: option.ordem_exibicao,
+                            feedback_opcao: option.feedback_opcao,
+                        })),
+                    }));
+
+                if (normalizedQuestions.length === 0) {
+                    this.ui.showWarning('Não encontramos questões válidas na sua lista de favoritos.');
+                } else {
+                    this.store.dispatch(quizActions.setActiveSection('questions'));
+                    this.store.dispatch(
+                        quizActions.initializeQuiz(
+                            normalizedQuestions,
+                            'Revisão',
+                            null,
+                            null,
+                            'Revisão de Favoritos',
+                            null
+                        )
+                    );
+
+                    this.ui.challengeHubInstance?.hideHub();
+                    success = true;
+                }
             }
-
-            const normalizedQuestions = favoritesList
-                .filter(question => question && Array.isArray(question.opcoes) && question.opcoes.length > 0)
-                .slice(0, normalizedLimit)
-                .map(question => ({
-                    ...question,
-                    is_favorited: true,
-                    opcoes: question.opcoes.map(option => ({
-                        id_opcao_resposta: option.id_opcao_resposta,
-                        id_pergunta: option.id_pergunta ?? question.id_pergunta,
-                        texto_opcao: option.texto_opcao,
-                        eh_correta: option.eh_correta,
-                        ordem_exibicao: option.ordem_exibicao,
-                        feedback_opcao: option.feedback_opcao,
-                    })),
-                }));
-
-            if (normalizedQuestions.length === 0) {
-                this.ui.showWarning('Não encontramos questões válidas na sua lista de favoritos.');
-                return false;
-            }
-
-            this.store.dispatch(quizActions.setActiveSection('questions'));
-            this.store.dispatch(
-                quizActions.initializeQuiz(
-                    normalizedQuestions,
-                    'Revisão',
-                    null,
-                    null,
-                    'Revisão de Favoritos',
-                    null
-                )
-            );
-
-            this.ui.challengeHubInstance?.hideHub();
-            return true;
         } catch (error) {
             const detail = getFriendlyErrorMessage(error, 'Não foi possível carregar seus favoritos agora.');
             this.ui.showWarning(detail);
-            return false;
         } finally {
             this.ui.showSessionLoadingIndicator(false);
+            if (!success) {
+                if (this.ui.challengeHubInstance && typeof this.ui.challengeHubInstance.showHub === 'function') {
+                    this.ui.challengeHubInstance.showHub();
+                } else {
+                    this.ui.displayQuizLayout(false);
+                }
+            }
         }
+
+        return success;
     }
 
     async startPredefinedQuiz(quizDefinicaoId) {
         await this._fetchAndInitiateQuiz({ quiz_definicao_id: quizDefinicaoId, mode: 'Definido' });
+    }
+
+    async startPredefinedQuizBySlug(slug) {
+        if (!slug || typeof slug !== 'string') {
+            return false;
+        }
+
+        const normalizedSlug = slug.trim().toLowerCase();
+        if (!normalizedSlug) {
+            return false;
+        }
+
+        await this.loadInitialSummary();
+        const predefined = this._getPredefinedQuizzesFromState();
+        const match = predefined.find((item) => (
+            typeof item.slug === 'string' && item.slug.trim().toLowerCase() === normalizedSlug
+        ));
+
+        if (match && Number.isInteger(match.id) && match.id > 0) {
+            await this.startPredefinedQuiz(match.id);
+            return true;
+        }
+
+        console.warn(`ActionOrchestrator: nenhum quiz pré-definido encontrado para o slug "${slug}".`);
+        return false;
     }
 
     async answerQuestion(selectedOptionId) {
@@ -612,13 +701,17 @@ export default class ActionOrchestrator {
     }
 
     async endQuiz(forceByUser = false) {
+        this.stopTimer();
         const state = this.store.getState();
         const sessionId = state.quiz.currentSessionId;
-        if (!sessionId) return;
 
-        this.stopTimer();
-        if (forceByUser) {
+        if (forceByUser && this.ui?.modalManager) {
             this.ui.modalManager.toggleConfirmModal(false);
+        }
+
+        if (!sessionId) {
+            this._finalizeStandaloneQuiz(state);
+            return;
         }
 
         try {
@@ -644,12 +737,66 @@ export default class ActionOrchestrator {
                 )
             );
         } catch (error) {
-             console.error("ActionOrchestrator: ERRO ao finalizar sessão:", error);
-             const detail = getFriendlyErrorMessage(error, "Erro ao finalizar sessão.");
-             this.ui.showWarning({ key: 'quiz.finalizeSessionError', detail });
+            console.error("ActionOrchestrator: ERRO ao finalizar sess�o:", error);
+            const detail = getFriendlyErrorMessage(error, "Erro ao finalizar sess�o.");
+            this.ui.showWarning({ key: 'quiz.finalizeSessionError', detail });
         } finally {
             this.store.dispatch({ type: ActionTypes.QUIZ_ENDED });
         }
+    }
+
+    _finalizeStandaloneQuiz(stateSnapshot) {
+        const quizState = stateSnapshot?.quiz;
+        if (!quizState || quizState.quizEnded) {
+            return;
+        }
+
+        const userState = stateSnapshot?.user || {};
+        const questions = Array.isArray(quizState.currentQuestionsSet)
+            ? quizState.currentQuestionsSet
+            : [];
+
+        let correctCount = 0;
+        let incorrectCount = 0;
+
+        questions.forEach((question) => {
+            if (!question) return;
+            if (typeof question.respostaDadaId === 'undefined') return;
+
+            if (question.foiPulada) {
+                incorrectCount += 1;
+                return;
+            }
+
+            if (question.foiCorretaNaSessao === true) {
+                correctCount += 1;
+            } else if (question.foiCorretaNaSessao === false || question.respostaDadaId !== null) {
+                incorrectCount += 1;
+            }
+        });
+
+        const estimatedPoints = correctCount * 15;
+
+        this.store.dispatch(
+            quizActions.updateUserStats(
+                estimatedPoints,
+                correctCount,
+                incorrectCount,
+                {
+                    xp: userState?.xp ?? 0,
+                    currentStreak: correctCount,
+                    bestStreak: Math.max(userState?.bestStreak ?? 0, correctCount),
+                    multiplier: 1,
+                    achievementsUnlocked: userState?.achievementsUnlocked ?? 0,
+                    recentAchievements: Array.isArray(userState?.recentAchievements)
+                        ? [...userState.recentAchievements]
+                        : [],
+                    gamification: userState?.gamification ?? null,
+                },
+            ),
+        );
+
+        this.store.dispatch({ type: ActionTypes.QUIZ_ENDED });
     }
 
     restartQuiz() {
@@ -699,6 +846,100 @@ export default class ActionOrchestrator {
                 btnFav.disabled = false;
                 btnFav.removeAttribute('aria-disabled');
             }
+        }
+    }
+
+
+
+
+
+    async submitIssueReport(questionId, description, categoria = null, origem = 'quiz_session') {
+        const normalizedId = Number.parseInt(questionId, 10);
+        if (!Number.isInteger(normalizedId) || normalizedId <= 0) {
+            this.ui.handleReportIssueError('Nao foi possivel identificar a questao selecionada.');
+            return false;
+        }
+
+        const trimmedDescription = typeof description === 'string' ? description.trim() : '';
+        if (trimmedDescription.length < 10) {
+            this.ui.handleReportIssueError('Descreva o problema com pelo menos 10 caracteres.');
+            return false;
+        }
+
+        this.ui.setReportIssueLoading(true);
+
+        try {
+            const payload = {
+                descricao: trimmedDescription,
+                origem,
+            };
+            if (typeof categoria === 'string' && categoria.trim()) {
+                payload.categoria = categoria.trim();
+            }
+            const response = await this.apiService.submitQuestionIssueReport(normalizedId, payload);
+
+            if (response && response.status === 'success') {
+                this.ui.handleReportIssueSuccess();
+                return true;
+            }
+
+            const detail = response?.message || 'Nao foi possivel registrar o relato.';
+            this.ui.handleReportIssueError(detail);
+            return false;
+        } catch (error) {
+            const detail = getFriendlyErrorMessage(error, 'Erro ao enviar o relato.');
+            this.ui.handleReportIssueError(detail);
+            return false;
+        } finally {
+            this.ui.setReportIssueLoading(false);
+        }
+    }
+
+    async submitSupportRequest({ message, email = '', origin = null, context = null, tipo = null } = {}) {
+        const trimmedMessage = typeof message === 'string' ? message.trim() : '';
+        if (trimmedMessage.length < 10) {
+            this.ui.handleSupportRequestError('Descreva sua reclamação com pelo menos 10 caracteres.');
+            return false;
+        }
+
+        const payload = {
+            mensagem: trimmedMessage,
+        };
+
+        if (typeof email === 'string' && email.trim()) {
+            payload.email = email.trim();
+        }
+
+        if (typeof origin === 'string' && origin.trim()) {
+            payload.origem = origin.trim();
+        }
+
+        if (context && typeof context === 'object') {
+            payload.contexto = context;
+        }
+
+        if (typeof tipo === 'string' && tipo.trim()) {
+            payload.tipo = tipo.trim();
+        }
+
+        this.ui.setSupportRequestLoading(true);
+
+        try {
+            const response = await this.apiService.submitSupportRequest(payload);
+            if (response && response.status === 'success') {
+                this.ui.handleSupportRequestSuccess(response.message);
+                return true;
+            }
+
+            const detail = response?.message || 'Não foi possível enviar sua mensagem.';
+            this.ui.handleSupportRequestError(detail);
+            return false;
+        } catch (error) {
+            const detail = getFriendlyErrorMessage(error, 'Erro ao enviar sua mensagem.');
+            this.ui.handleSupportRequestError(detail);
+            return false;
+        } finally {
+            this.ui.setSupportRequestLoading(false);
         }
     }
 
@@ -905,3 +1146,8 @@ export default class ActionOrchestrator {
         }
     }
 }
+
+
+
+
+

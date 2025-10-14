@@ -19,14 +19,16 @@ p {
   a:focus-visible {
     color: var(--color-text-link-hover, var(--color-primary-dark));
   }
-  /* Exemplo: Adicionar sublinhado apenas em links dentro do conteúdo principal */
-  main a:not(.button):not(.main-nav__link):not(.site-header__action-link) { /* Exclui botões e links de navegação */
+  /* Exemplo: Adicionar sublinhado apenas em links dentro do conteúdo textual */
+  main :where(p, li, blockquote, .rich-text, .text-content, .formatted-text, .card__description, .form-message__body, .u-inline-link-area)
+      a:not(.button):not(.main-nav__link):not(.site-header__action-link) {
       text-decoration: underline;
       text-decoration-color: var(--color-gray-400); /* Cor sutil para o sublinhado */
       text-underline-offset: 2px; /* Distância do sublinhado */
       transition: text-decoration-color var(--transition-fast);
   }
-  main a:not(.button):not(.main-nav__link):not(.site-header__action-link):hover {
+  main :where(p, li, blockquote, .rich-text, .text-content, .formatted-text, .card__description, .form-message__body, .u-inline-link-area)
+      a:not(.button):not(.main-nav__link):not(.site-header__action-link):hover {
       text-decoration-color: var(--color-text-link-hover, var(--color-primary-dark)); /* Cor do sublinhado no hover */
   }
   

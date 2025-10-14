@@ -67,6 +67,101 @@ export default class ChallengeHub {
         }
     }
 
+    _openCustomizationFlow() {
+        if (!this.quizUI.modalManager) {
+            console.error("ChallengeHub: modalManager não encontrado para abrir painel de filtros.");
+            return;
+        }
+        this.hideHub();
+        if (this.elements.placeholderFiltrosContainer) {
+            this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
+        }
+        this.quizUI.modalManager.toggleFilterPanel(true);
+    }
+
+    async _handleChallengeCardClick(cardElement, originatingEvent = null) {
+        if (!this.actionOrchestrator) {
+            console.error('ChallengeHub: actionOrchestrator indisponível ao processar o card selecionado.');
+            return;
+        }
+
+        if (cardElement?.id === 'hub-resume-quiz-card') {
+            return;
+        }
+
+        const dataset = cardElement.dataset || {};
+        const rawDefinitionId = dataset.quizDefinitionId ?? dataset.quizDefId;
+        const quizDefinitionId = rawDefinitionId ? Number.parseInt(rawDefinitionId, 10) : Number.NaN;
+        const quizSlug = dataset.quizSlug;
+        const cardKey = (dataset.cardKey || '').toLowerCase();
+        const hasPredefinedId = Number.isInteger(quizDefinitionId) && quizDefinitionId > 0;
+
+        if (originatingEvent && typeof originatingEvent.preventDefault === 'function') {
+            originatingEvent.preventDefault();
+        }
+
+        if (hasPredefinedId) {
+            this.hideHub();
+            await this.actionOrchestrator.startPredefinedQuiz(quizDefinitionId);
+            return;
+        }
+
+        if (quizSlug && typeof this.actionOrchestrator.startPredefinedQuizBySlug === 'function') {
+            this.hideHub();
+            const executed = await this.actionOrchestrator.startPredefinedQuizBySlug(quizSlug);
+            if (!executed) {
+                this.quizUI.showWarning('Não foi possível iniciar este modo. Tente novamente.');
+            }
+            return;
+        }
+
+        switch (cardKey) {
+            case 'smart_drill':
+            case 'customize':
+                this._openCustomizationFlow();
+                return;
+            case 'quick_quiz':
+            case 'quick_start':
+                this.hideHub();
+                this.actionOrchestrator.startQuickQuiz();
+                return;
+            case 'timed_quiz':
+                this.hideHub();
+                await this.actionOrchestrator.startTimedSimulation();
+                return;
+            case 'favorite_review': {
+                const executed = await this.actionOrchestrator.startFavoritesReview();
+                if (executed) {
+                    this.hideHub();
+                }
+                return;
+            }
+            case 'repeat_last': {
+                const executed = await this.actionOrchestrator.retryLastQuizRequest();
+                if (executed) {
+                    this.hideHub();
+                }
+                return;
+            }
+            case 'training_mode': {
+                const trainingId = dataset.quizDefinitionId ?? dataset.quizDefId;
+                if (trainingId) {
+                    const parsedId = Number.parseInt(trainingId, 10);
+                    if (Number.isInteger(parsedId) && parsedId > 0) {
+                        this.hideHub();
+                        await this.actionOrchestrator.startPredefinedQuiz(parsedId);
+                        return;
+                    }
+                }
+                break;
+            }
+            default:
+                break;
+        }
+
+        console.warn('ChallengeHub: nenhum manipulador configurado para o card selecionado.', cardElement);
+    }
+
     /**
      * Define a instância do ActionOrchestrator.
      * @param {ActionOrchestrator} orchestrator - A instância do orquestrador.
@@ -213,20 +308,12 @@ export default class ChallengeHub {
      * Configura os event listeners para os botões dentro do hub de desafios.
      */
     setupEventListeners() {
-        const openCustomizationFlow = () => {
-            if (!this.quizUI.modalManager) {
-                console.error("ChallengeHub: modalManager não encontrado para abrir painel de filtros.");
-                return;
-            }
-            this.hideHub();
-            if (this.elements.placeholderFiltrosContainer) {
-                this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
-            }
-            this.quizUI.modalManager.toggleFilterPanel(true);
-        };
-
-        this.elements.hubCustomizeQuizBtn?.addEventListener('click', openCustomizationFlow);
-        this.elements.hubSmartDrillBtn?.addEventListener('click', openCustomizationFlow);
+        this.elements.hubCustomizeQuizBtn?.addEventListener('click', () => {
+            this._openCustomizationFlow();
+        });
+        this.elements.hubSmartDrillBtn?.addEventListener('click', () => {
+            this._openCustomizationFlow();
+        });
 
         this.elements.hubQuickQuizBtn?.addEventListener('click', () => {
             if (this.actionOrchestrator) {
@@ -302,7 +389,21 @@ export default class ChallengeHub {
         });
         // --- FIM DA CORREÇÃO ---
 
-        this.elements.predefinedList?.addEventListener('click', (event) => {
+        this.elements.challengeHubContainer?.addEventListener('click', async (event) => {
+            const cardElement = event.target.closest('.challenge-card');
+            if (!cardElement || !this.elements.challengeHubContainer.contains(cardElement)) {
+                return;
+            }
+            if (this.elements.predefinedList && this.elements.predefinedList.contains(cardElement)) {
+                return;
+            }
+            if (cardElement.tagName === 'A') {
+                event.preventDefault();
+            }
+            await this._handleChallengeCardClick(cardElement, event);
+        });
+
+        this.elements.predefinedList?.addEventListener('click', async (event) => {
             const targetCard = event.target.closest('[data-quiz-def-id]');
             if (!targetCard) {
                 return;
@@ -311,14 +412,14 @@ export default class ChallengeHub {
                 console.error('ChallengeHub: actionOrchestrator indisponível ao iniciar quiz pré-definido.');
                 return;
             }
-
-            const quizId = Number.parseInt(targetCard.dataset.quizDefId, 10);
-            if (Number.isNaN(quizId)) {
+            if (event.defaultPrevented) {
+                return;
+            }
+            if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
                 return;
             }
 
-            this.hideHub();
-            this.actionOrchestrator.startPredefinedQuiz(quizId);
+            await this._handleChallengeCardClick(targetCard, event);
         });
     }
 
@@ -363,6 +464,7 @@ export default class ChallengeHub {
             }
             if (
                 cached.id !== current.id
+                || cached.slug !== current.slug
                 || cached.total_perguntas !== current.total_perguntas
                 || cached.nome !== current.nome
                 || cached.descricao !== current.descricao
@@ -387,6 +489,7 @@ export default class ChallengeHub {
             ? quizzes
                 .map((quiz) => ({
                     id: Number.parseInt(quiz.id, 10),
+                    slug: typeof quiz.slug === 'string' ? quiz.slug : '',
                     nome: typeof quiz.nome === 'string' ? quiz.nome : String(quiz.nome ?? ''),
                     descricao: typeof quiz.descricao === 'string' ? quiz.descricao : '',
                     total_perguntas: this._normalizeCount(quiz.total_perguntas) ?? 0,
@@ -409,23 +512,29 @@ export default class ChallengeHub {
         }
 
         sanitizedList.forEach((quiz) => {
-            const cardButton = document.createElement('button');
-            cardButton.type = 'button';
-            cardButton.classList.add('challenge-card');
-            cardButton.dataset.quizDefId = String(quiz.id);
-            cardButton.dataset.quizName = quiz.nome;
+            const cardLink = document.createElement('a');
+            cardLink.classList.add('challenge-card', 'challenge-card--predefined');
+            cardLink.dataset.quizDefId = String(quiz.id);
+            cardLink.dataset.quizName = quiz.nome;
+            if (quiz.slug) {
+                cardLink.dataset.quizSlug = quiz.slug;
+                cardLink.href = `/questions/?predefined_slug=${quiz.slug}#challenge-hub-container`;
+            } else {
+                cardLink.href = '#';
+            }
             if (quiz.generation_type) {
-                cardButton.dataset.generationType = quiz.generation_type;
+                cardLink.dataset.generationType = quiz.generation_type;
             }
             if (quiz.generation_label) {
-                cardButton.dataset.generationLabel = quiz.generation_label;
+                cardLink.dataset.generationLabel = quiz.generation_label;
             }
             if (quiz.study_method) {
-                cardButton.dataset.studyMethod = quiz.study_method;
+                cardLink.dataset.studyMethod = quiz.study_method;
             }
             if (quiz.study_method_label) {
-                cardButton.dataset.studyMethodLabel = quiz.study_method_label;
+                cardLink.dataset.studyMethodLabel = quiz.study_method_label;
             }
+            cardLink.setAttribute('role', 'listitem');
 
             const formattedCount = this._formatCount(quiz.total_perguntas);
             const tooltipParts = [quiz.nome, `${formattedCount} questões`];
@@ -434,7 +543,7 @@ export default class ChallengeHub {
             } else if (quiz.generation_label) {
                 tooltipParts.push(quiz.generation_label);
             }
-            cardButton.title = tooltipParts.join(' • ');
+            cardLink.title = tooltipParts.join(' • ');
 
             const ariaDetails = [];
             if (quiz.study_method_label) {
@@ -446,9 +555,7 @@ export default class ChallengeHub {
             const ariaMeta = ariaDetails.length > 0
                 ? `${formattedCount} questões • ${ariaDetails.join(' • ')}`
                 : `${formattedCount} questões`;
-            cardButton.setAttribute('aria-label', `${quiz.nome} com ${ariaMeta}`);
-            cardButton.setAttribute('role', 'listitem');
-
+            cardLink.setAttribute('aria-label', `${quiz.nome} com ${ariaMeta}`);
             const header = document.createElement('div');
             header.classList.add('challenge-card__header');
 
@@ -493,9 +600,9 @@ export default class ChallengeHub {
             meta.textContent = metaParts.join(' • ');
             footer.appendChild(meta);
 
-            cardButton.append(header, footer);
+            cardLink.append(header, footer);
 
-            this.elements.predefinedList.appendChild(cardButton);
+            this.elements.predefinedList.appendChild(cardLink);
         });
 
         this.quizUI.showElement(this.elements.predefinedSection);

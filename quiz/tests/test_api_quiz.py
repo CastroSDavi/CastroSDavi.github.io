@@ -12,7 +12,9 @@ from quiz.models import (
     EstatisticasDiariasUsuario,
     OpcaoResposta,
     Pergunta,
-    QuestaoFavorita,
+    QuizDefinicao,
+    QuestionIssueReport,
+    SupportRequest,
     RespostasUsuarioPorSessao,
     SessoesQuizUsuario,
 )
@@ -44,6 +46,12 @@ class QuizApiTests(TestCase):
             eh_correta=False,
             ordem_exibicao=2,
         )
+
+        self.quiz_definition = QuizDefinicao.objects.create(
+            nome_quiz='Coleção Inicial',
+            ativo=True,
+        )
+        self.quiz_definition.perguntas.add(self.question, through_defaults={'ordem': 1})
 
     def _auth_client(self):
         self.client.login(username='apiuser', password='testpass')
@@ -111,6 +119,8 @@ class QuizApiTests(TestCase):
         self.assertEqual(payload['total_categories'], 1)
         self.assertIn('predefined_quizzes', payload)
         self.assertIsInstance(payload['predefined_quizzes'], list)
+        if payload['predefined_quizzes']:
+            self.assertEqual(payload['predefined_quizzes'][0]['slug'], self.quiz_definition.slug)
 
     def test_quiz_data_endpoint_returns_question_payload(self):
         url = reverse('quiz:quiz-alldata')
@@ -120,6 +130,7 @@ class QuizApiTests(TestCase):
         self.assertEqual(len(payload['perguntas']), 1)
         self.assertEqual(payload['perguntas'][0]['id_pergunta'], self.question.pk)
         self.assertEqual(payload['perguntas'][0]['opcoes'][0]['texto_opcao'], 'Três')
+        self.assertEqual(payload['perguntas'][0]['slug'], self.question.slug)
 
     def test_start_register_and_end_session_flow(self):
         self._auth_client()
@@ -182,44 +193,119 @@ class QuizApiTests(TestCase):
             any(cat.get('nome_categoria') == self.category.nome_categoria for cat in favorite_question['categorias'])
         )
 
-    def test_question_detail_requires_authentication(self):
-        url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 401)
+    def test_report_question_issue_requires_description(self):
+        url = reverse('quiz:question-report-issue', kwargs={'pergunta_id': self.question.pk})
+        payload = {'descricao': 'curta'}
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(QuestionIssueReport.objects.count(), 0)
 
-    def test_question_detail_returns_payload(self):
-        self._auth_client()
-        QuestaoFavorita.objects.create(usuario=self.user, pergunta=self.question)
-
-        url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200)
-
-        payload = response.json()
-        self.assertEqual(payload['status'], 'success')
-        self.assertEqual(payload['question']['id_pergunta'], self.question.pk)
-        self.assertTrue(payload['question']['is_favorited'])
-
-    def test_question_detail_returns_warning_for_inactive_favorite(self):
-        self._auth_client()
-        self.question.ativa = False
-        self.question.save(update_fields=['ativa'])
-
-        QuestaoFavorita.objects.create(usuario=self.user, pergunta=self.question)
-
-        url = reverse('quiz:question-detail', kwargs={'pergunta_id': self.question.pk})
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        payload = response.json()
-        self.assertEqual(payload['status'], 'success')
-        self.assertEqual(payload['question']['id_pergunta'], self.question.pk)
-        self.assertFalse(payload['question']['esta_ativa'])
+    def test_report_question_issue_creates_record(self):
+        url = reverse('quiz:question-report-issue', kwargs={'pergunta_id': self.question.pk})
+        payload = {
+            'descricao': 'Texto detalhando o problema encontrado na questao.',
+            'categoria': QuestionIssueReport.Categoria.GABARITO,
+        }
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(QuestionIssueReport.objects.count(), 1)
+        self.assertEqual(SupportRequest.objects.count(), 1)
+        report = QuestionIssueReport.objects.first()
+        self.assertEqual(report.pergunta_id, self.question.pk)
+        self.assertIsNone(report.usuario)
+        self.assertEqual(report.descricao, payload['descricao'])
+        self.assertEqual(report.categoria, QuestionIssueReport.Categoria.GABARITO)
+        support_ticket = SupportRequest.objects.first()
+        self.assertIsNone(support_ticket.usuario)
+        self.assertEqual(support_ticket.mensagem, payload['descricao'])
+        self.assertEqual(support_ticket.tipo_contato, SupportRequest.TipoContato.CONTEUDO)
+        self.assertEqual(support_ticket.origem, SupportRequest.ORIGEM_MENSAGEM)
         self.assertEqual(
-            payload['message'],
-            'Esta questão não está mais disponível no banco atual. Exibindo a versão salva na sua lista de favoritos.'
+            support_ticket.contexto.get('question_issue_report_id'),
+            report.pk,
         )
-        self.assertEqual(payload['message_type'], 'warning')
+        self.assertEqual(
+            support_ticket.contexto.get('question_id'),
+            self.question.pk,
+        )
+        self.assertEqual(
+            support_ticket.contexto.get('report_origin'),
+            QuestionIssueReport.ORIGEM_SESSAO,
+        )
+        self.assertEqual(
+            support_ticket.contexto.get('issue_category'),
+            QuestionIssueReport.Categoria.GABARITO,
+        )
+        self.assertEqual(
+            support_ticket.contexto.get('issue_category_display'),
+            dict(QuestionIssueReport.Categoria.choices)[QuestionIssueReport.Categoria.GABARITO],
+        )
+
+    def test_report_question_issue_invalid_category_defaults(self):
+        url = reverse('quiz:question-report-issue', kwargs={'pergunta_id': self.question.pk})
+        payload = {
+            'descricao': 'Outra descricao para validar categoria padrao.',
+            'categoria': 'categoria-inexistente',
+        }
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        report = QuestionIssueReport.objects.first()
+        self.assertEqual(report.categoria, QuestionIssueReport.Categoria.GABARITO)
+        support_ticket = SupportRequest.objects.first()
+        self.assertEqual(
+            support_ticket.contexto.get('issue_category'),
+            QuestionIssueReport.Categoria.GABARITO,
+        )
+
+    def test_support_request_requires_message(self):
+        url = reverse('quiz:support-request')
+        payload = {'mensagem': 'Curta'}
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(SupportRequest.objects.count(), 0)
+
+    def test_support_request_creates_record(self):
+        url = reverse('quiz:support-request')
+        payload = {
+            'mensagem': 'Estou enfrentando lentidão ao carregar o painel de desafios.',
+            'email': 'visitante@example.com',
+            'contexto': {'page_id': 'questions', 'message_key': 'quiz.startSessionFailed'},
+        }
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(SupportRequest.objects.count(), 1)
+        ticket = SupportRequest.objects.first()
+        self.assertIsNone(ticket.usuario)
+        self.assertEqual(ticket.mensagem, payload['mensagem'])
+        self.assertEqual(ticket.email, payload['email'])
+        self.assertEqual(ticket.contexto.get('page_id'), 'questions')
+        self.assertEqual(ticket.origem, SupportRequest.ORIGEM_GERAL)
+        self.assertEqual(ticket.tipo_contato, SupportRequest.TipoContato.SUPORTE_GERAL)
+        self.assertEqual(ticket.status, SupportRequest.Status.ABERTO)
+
+    def test_support_request_accepts_tipo(self):
+        url = reverse('quiz:support-request')
+        payload = {
+            'mensagem': 'A plataforma travou durante a correção.',
+            'tipo': SupportRequest.TipoContato.PROBLEMA_TECNICO,
+        }
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(SupportRequest.objects.count(), 1)
+        ticket = SupportRequest.objects.first()
+        self.assertEqual(ticket.tipo_contato, SupportRequest.TipoContato.PROBLEMA_TECNICO)
+        self.assertEqual(ticket.status, SupportRequest.Status.ABERTO)
+
+    def test_support_request_invalid_tipo_defaults_to_general(self):
+        url = reverse('quiz:support-request')
+        payload = {
+            'mensagem': 'Texto longo o bastante para registro.',
+            'tipo': 'tipo_inexistente',
+        }
+        response = self.client.post(url, data=json.dumps(payload), content_type='application/json')
+        self.assertEqual(response.status_code, 201)
+        ticket = SupportRequest.objects.first()
+        self.assertEqual(ticket.tipo_contato, SupportRequest.TipoContato.SUPORTE_GERAL)
 
     def test_user_statistics_endpoint(self):
         self._auth_client()

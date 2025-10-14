@@ -12,7 +12,7 @@ import FilterPanel from '../ui/FilterPanel.js';
 import ResultDisplay from '../ui/ResultDisplay.js';
 import AccountPageManager from '../ui/AccountPageManager.js';
 import StatisticsChartManager from '../ui/StatisticsChartManager.js';
-import FavoriteManager, { FAVORITE_REVIEW_QUERY_PARAM } from '../ui/FavoriteManager.js';
+import FavoriteManager from '../ui/FavoriteManager.js';
 import { QUICK_QUIZ_COUNT } from '../utils/constants.js';
 import SystemMessageCenter from '../ui/messages/SystemMessageCenter.js';
 
@@ -33,6 +33,10 @@ export default class App {
             this.quizUI,
             this.apiService
         );
+
+        this.initialQuestionSeed = null;
+        this.initialQuestionIdHint = null;
+        this._captureStandaloneQuestionSeed();
 
         this._applyUserThemePreference();
     }
@@ -68,8 +72,14 @@ export default class App {
 
             if (initialSectionId === 'questions') {
                 await this.actionOrchestrator.initializeQuizPage();
-                await this._handlePendingFavoriteReview();
-            } else if (initialSectionId === 'account') {
+            }
+            await this._handleDeepLinkParams(initialSectionId);
+
+            if (initialSectionId === 'questions') {
+                await this._processStandaloneQuestionSeed();
+            }
+
+            if (initialSectionId === 'account') {
                 this.accountPageManager.init();
             }
         } catch (error) {
@@ -186,75 +196,218 @@ export default class App {
         }
     }
 
-    async _handlePendingFavoriteReview() {
-        if (!this.favoriteManager || typeof this.favoriteManager.consumePendingReviewRequest !== 'function') {
+    async _handleDeepLinkParams(initialSectionId) {
+        if (typeof window === 'undefined') {
             return;
         }
 
-        const pendingReviewFromUrl = this._consumeFavoriteReviewFromUrl();
-        const pendingReviewFromStorage = this.favoriteManager.consumePendingReviewRequest();
-
-        const effectiveQuestionId = pendingReviewFromUrl?.questionId
-            ?? pendingReviewFromStorage?.questionId;
-
-        if (!effectiveQuestionId) {
+        const search = window.location.search;
+        if (!search || typeof search !== 'string') {
             return;
         }
 
-        let questionData = null;
-        let forceUseCache = false;
+        const params = new URLSearchParams(search);
+        let paramsUpdated = false;
 
-        if (pendingReviewFromStorage && pendingReviewFromStorage.questionId === effectiveQuestionId) {
-            questionData = pendingReviewFromStorage.questionData || null;
-            forceUseCache = pendingReviewFromStorage.forceUseCache === true;
+        if (initialSectionId === 'questions') {
+            const predefinedSlug = params.get('predefined_slug') || params.get('challenge_slug');
+            if (predefinedSlug) {
+                try {
+                    const handled = await this.actionOrchestrator.startPredefinedQuizBySlug(predefinedSlug);
+                    if (handled) {
+                        params.delete('predefined_slug');
+                        params.delete('challenge_slug');
+                        paramsUpdated = true;
+                    }
+                } catch (error) {
+                    console.error('App.js: falha ao processar slug de desafio.', error);
+                }
+            }
         }
 
-        await this.actionOrchestrator.reviewFavoriteQuestion(
-            effectiveQuestionId,
-            questionData,
-            { forceUseCache }
-        );
+        const supportParam = params.get('support') || params.get('support_contact') || params.get('open_support');
+        if (supportParam) {
+            const normalized = String(supportParam).trim().toLowerCase();
+            if (['1', 'true', 'yes', 'sim'].includes(normalized)) {
+                if (this.quizUI && typeof this.quizUI.openSupportRequestModal === 'function') {
+                    this.quizUI.openSupportRequestModal();
+                }
+                params.delete('support');
+                params.delete('support_contact');
+                params.delete('open_support');
+                paramsUpdated = true;
+            }
+        }
+
+        if (paramsUpdated) {
+            const hash = window.location.hash || '';
+            const newSearch = params.toString();
+            const newUrl = window.location.pathname + (newSearch ? '?' + newSearch : '') + hash;
+            window.history.replaceState({}, document.title, newUrl);
+        }
     }
 
-    _consumeFavoriteReviewFromUrl() {
-        if (typeof window === 'undefined' || !window.location) {
-            return null;
+    _captureStandaloneQuestionSeed() {
+        this.initialQuestionSeed = null;
+        this.initialQuestionIdHint = null;
+
+        if (typeof document === 'undefined') {
+            return;
         }
 
-        const { search, pathname, hash } = window.location;
-        if (!search || (typeof search === 'string' && !search.includes(`${FAVORITE_REVIEW_QUERY_PARAM}=`))) {
-            return null;
+        const bodyIdRaw = document.body?.dataset?.initialQuestionId;
+        const normalizedBodyId = this._normalizeQuestionId(bodyIdRaw);
+        if (normalizedBodyId) {
+            this.initialQuestionIdHint = normalizedBodyId;
+        }
+
+        const scriptElement = document.getElementById('initial-question-data');
+        if (!scriptElement) {
+            if (normalizedBodyId) {
+                this.initialQuestionSeed = { question_id: normalizedBodyId };
+            }
+            return;
+        }
+
+        const rawContent = scriptElement.textContent || scriptElement.innerText || '';
+        scriptElement.remove();
+
+        if (!rawContent.trim()) {
+            if (normalizedBodyId) {
+                this.initialQuestionSeed = { question_id: normalizedBodyId };
+            }
+            return;
         }
 
         try {
-            const searchParams = new URLSearchParams(search);
-            const questionIdValue = searchParams.get(FAVORITE_REVIEW_QUERY_PARAM);
-
-            if (questionIdValue === null) {
-                return null;
-            }
-
-            searchParams.delete(FAVORITE_REVIEW_QUERY_PARAM);
-
-            if (typeof window.history !== 'undefined' && typeof window.history.replaceState === 'function') {
-                const newSearch = searchParams.toString();
-                const newUrl = `${pathname}${newSearch ? `?${newSearch}` : ''}${hash || ''}`;
-                try {
-                    window.history.replaceState(window.history.state, document.title, newUrl);
-                } catch (historyError) {
-                    console.warn('App: falha ao atualizar a URL após processar favorito pendente.', historyError);
+            const parsed = JSON.parse(rawContent);
+            if (parsed && typeof parsed === 'object') {
+                const seed = { ...parsed };
+                const parsedId = this._normalizeQuestionId(seed.question_id);
+                if (parsedId) {
+                    seed.question_id = parsedId;
+                } else if (normalizedBodyId) {
+                    seed.question_id = normalizedBodyId;
                 }
+                this.initialQuestionSeed = seed;
+                return;
             }
+        } catch (error) {
+            console.warn('App.js: falha ao interpretar payload de questão inicial.', error);
+        }
 
-            const questionId = Number.parseInt(questionIdValue, 10);
-            if (!Number.isInteger(questionId) || questionId <= 0) {
-                return null;
-            }
+        if (normalizedBodyId) {
+            this.initialQuestionSeed = { question_id: normalizedBodyId };
+        }
+    }
 
-            return { questionId };
-        } catch (urlError) {
-            console.warn('App: não foi possível ler o parâmetro de revisão de favorito da URL.', urlError);
+    _normalizeQuestionId(value) {
+        if (value === undefined || value === null) {
             return null;
+        }
+        const parsed = Number.parseInt(String(value).trim(), 10);
+        return Number.isNaN(parsed) || parsed <= 0 ? null : parsed;
+    }
+
+    _resolveStandaloneQuestionId(seed = null) {
+        if (seed && seed.question_id) {
+            return this._normalizeQuestionId(seed.question_id);
+        }
+        return this.initialQuestionIdHint ?? null;
+    }
+
+    async _processStandaloneQuestionSeed() {
+        const seed = this.initialQuestionSeed;
+        const state = this.store.getState();
+
+        if (!seed) {
+            return;
+        }
+
+        const hasActiveSession = state.quiz.currentSessionId !== null;
+        if (hasActiveSession) {
+            this.initialQuestionSeed = null;
+            return;
+        }
+
+        const hasResumableSession = !!state.quiz.resumableSession;
+        if (hasResumableSession && seed.auto_resume_if_session !== false) {
+            this.actionOrchestrator._proceedWithResumedSession();
+            this.initialQuestionSeed = null;
+            return;
+        }
+
+        const questionId = this._resolveStandaloneQuestionId(seed);
+        let questionPayload = seed.question || null;
+        let scorePanelSettings = seed.score_panel_settings || null;
+        let quizTitle = typeof seed.quiz_title === 'string' ? seed.quiz_title : null;
+        const mode = typeof seed.mode === 'string' && seed.mode.trim() ? seed.mode.trim() : 'Standalone';
+
+        let loadingShown = false;
+        const showLoading = () => {
+            if (!loadingShown) {
+                const message =
+                    typeof seed.loading_message === 'string' && seed.loading_message.trim()
+                        ? seed.loading_message.trim()
+                        : 'Carregando questão...';
+                this.quizUI.showSessionLoadingIndicator(true, message);
+                loadingShown = true;
+            }
+        };
+        const hideLoading = () => {
+            if (loadingShown) {
+                this.quizUI.showSessionLoadingIndicator(false);
+                loadingShown = false;
+            }
+        };
+
+        const shouldFetchRemote = Number.isInteger(questionId) && questionId > 0;
+
+        if (shouldFetchRemote) {
+            showLoading();
+        }
+
+        if (!questionPayload && (!Number.isInteger(questionId) || questionId <= 0)) {
+            hideLoading();
+            this.initialQuestionSeed = null;
+            return;
+        }
+
+        if (shouldFetchRemote) {
+            try {
+                const response = await this.apiService.getQuestionDetail(questionId);
+                if (response && response.status === 'success' && response.question) {
+                    questionPayload = response.question;
+                    if (response.score_panel_settings) {
+                        scorePanelSettings = response.score_panel_settings;
+                    }
+                    if (!quizTitle && typeof response.quiz_title === 'string') {
+                        quizTitle = response.quiz_title;
+                    }
+                } else if (!questionPayload) {
+                    console.warn('App.js: resposta inesperada ao tentar carregar a questão.', response);
+                }
+            } catch (error) {
+                console.warn('App.js: falha ao buscar detalhes atualizados da questão.', error);
+            }
+        }
+
+        if (!questionPayload) {
+            hideLoading();
+            this.initialQuestionSeed = null;
+            return;
+        }
+
+        const launched = this.actionOrchestrator.launchStandaloneQuestion(questionPayload, {
+            quizTitle,
+            scorePanelSettings,
+            mode,
+        });
+
+        hideLoading();
+
+        if (launched) {
+            this.initialQuestionSeed = null;
         }
     }
 

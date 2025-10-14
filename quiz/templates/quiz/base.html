@@ -19,7 +19,7 @@
 <body
       {% block body_attrs %}{% endblock body_attrs %}
       data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}"
-      data-page-id="{% if view_name == 'quiz:home' %}home{% elif view_name == 'quiz:questions' %}questions{% elif view_name == 'quiz:account' %}account{% elif view_name == 'quiz:update_profile' %}account{% elif view_name == 'quiz:update_preferences' %}account{% elif view_name == 'quiz:delete_account' %}account{% else %}unknown{% endif %}"
+      data-page-id="{% if view_name == 'quiz:home' %}home{% elif view_name == 'quiz:questions' or view_name == 'quiz:question-detail-page' %}questions{% elif view_name == 'quiz:account' or view_name == 'quiz:update_profile' or view_name == 'quiz:update_preferences' or view_name == 'quiz:delete_account' %}account{% else %}unknown{% endif %}"
       data-active-tab-on-error="{{ active_tab_on_error|default_if_none:'' }}"
       data-show-delete-modal-on-error="{{ show_delete_account_modal_on_error|yesno:'true,false' }}"
       data-user-theme="{{ user_theme_preference|default:'' }}"
@@ -73,6 +73,7 @@
 
     {% include "quiz/includes/_filter_panel.html" %}
     {% include "quiz/includes/_explanation_modal.html" %}
+    {% include "quiz/includes/_support_modal.html" %}
     {% block site_footer_wrapper %}
         {% include "quiz/includes/_site_footer.html" %}
     {% endblock site_footer_wrapper %}

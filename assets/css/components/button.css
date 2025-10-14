@@ -168,7 +168,7 @@
     color: var(--color-text-link-hover);
     box-shadow: none;
     filter: none;
-    text-decoration: underline;
+    text-decoration: none;
 }
 .button--text:not(:disabled):active {
     background-color: var(--color-gray-200);

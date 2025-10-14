@@ -1,6 +1,6 @@
 """Score panel helpers shared by admin forms."""
 
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Iterable, List, Tuple
 
 from django import forms
 from django.utils.text import slugify

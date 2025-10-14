@@ -68,6 +68,7 @@ class QuizDataServiceTests(TestCase):
         self.assertTrue(question_payload['is_favorited'])
         self.assertEqual(question_payload['opcoes'][0]['texto_opcao'], 'Coração')
         self.assertEqual(data['categorias'][0]['nome_categoria'], 'Cardiologia')
+        self.assertEqual(question_payload['slug'], self.question.slug)
         self.assertIn('study_methods', data)
         self.assertIn('selected_study_method', data)
         self.assertTrue(any(method['key'] == StudyMethodRegistry.get_default_key() for method in data['study_methods']))
@@ -122,6 +123,7 @@ class QuizDataServiceTests(TestCase):
         self.assertIn('predefined_quizzes', summary)
         matched = next((item for item in summary['predefined_quizzes'] if item['id'] == quiz_def.pk), None)
         self.assertIsNotNone(matched)
+        self.assertEqual(matched['slug'], quiz_def.slug)
         self.assertEqual(matched['generation_type'], QuizDefinicao.GenerationType.MANUAL)
 
     def test_predefined_manual_definition_respects_override(self):
@@ -248,6 +250,7 @@ class QuizDataServiceTests(TestCase):
         )
         self.assertEqual(matched['study_method'], 'spaced_repetition')
         self.assertEqual(matched['study_method_label'], 'Revisão Espaçada (SM-2)')
+        self.assertEqual(matched['slug'], quiz_def.slug)
 
 
 class StudyAdaptiveEngineTests(TestCase):

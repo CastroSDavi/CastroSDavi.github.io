@@ -123,13 +123,22 @@ export default class ApiService {
         return _request(endpoint, 'POST', {});
     }
 
-    async getFavoriteQuestions() {
-        return _request(API_URLS.get_favorite_questions, 'GET');
+    async submitQuestionIssueReport(perguntaId, body) {
+        const endpoint = API_URLS.report_question_issue(perguntaId);
+        return _request(endpoint, 'POST', body);
     }
 
     async getQuestionDetail(perguntaId) {
-        const endpoint = API_URLS.get_question_detail(perguntaId);
+        const endpoint = API_URLS.question_detail(perguntaId);
         return _request(endpoint, 'GET');
+    }
+
+    async submitSupportRequest(body) {
+        return _request(API_URLS.submit_support_request, 'POST', body);
+    }
+
+    async getFavoriteQuestions() {
+        return _request(API_URLS.get_favorite_questions, 'GET');
     }
 
     async fetchUserStatistics(period = '30d') {

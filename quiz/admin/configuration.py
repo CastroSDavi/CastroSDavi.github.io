@@ -25,12 +25,13 @@ from quiz.models import (
     TrainingMode,
 )
 
+from .base import EnhancedModelAdmin, EnhancedStackedInline, EnhancedTabularInline
 from .inlines import QuizDefinicaoPerguntaInline
 from .score_panel import ConfiguracoesGeraisQuizForm, QuizDefinicaoAdminForm
 
 
 @admin.register(QuizDefinicao)
-class QuizDefinicaoAdmin(admin.ModelAdmin):
+class QuizDefinicaoAdmin(EnhancedModelAdmin):
     form = QuizDefinicaoAdminForm
     inlines = [QuizDefinicaoPerguntaInline]
     list_display = (
@@ -177,7 +178,7 @@ class QuizDefinicaoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ConfiguracoesGeraisQuiz)
-class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
+class ConfiguracoesGeraisQuizAdmin(EnhancedModelAdmin):
     form = ConfiguracoesGeraisQuizForm
     list_display = (
         "__str__",
@@ -267,7 +268,7 @@ class ConfiguracoesGeraisQuizAdmin(admin.ModelAdmin):
         return obj.data_modificacao.strftime("%d/%m/%Y %H:%M") if obj.data_modificacao else "-"
 
 
-class HomeProgressSectionInline(admin.StackedInline):
+class HomeProgressSectionInline(EnhancedStackedInline):
     model = HomeProgressSectionSettings
     extra = 0
     max_num = 1
@@ -289,7 +290,7 @@ class HomeProgressSectionInline(admin.StackedInline):
     )
 
 
-class HomeRecentSessionCardInline(admin.StackedInline):
+class HomeRecentSessionCardInline(EnhancedStackedInline):
     model = HomeRecentSessionCardSettings
     extra = 0
     max_num = 1
@@ -341,7 +342,7 @@ class HomeRecentSessionCardInline(admin.StackedInline):
     )
 
 
-class HomeActiveChallengeCardInline(admin.StackedInline):
+class HomeActiveChallengeCardInline(EnhancedStackedInline):
     model = HomeActiveChallengeCardSettings
     extra = 0
     max_num = 1
@@ -375,7 +376,7 @@ class HomeActiveChallengeCardInline(admin.StackedInline):
     )
 
 
-class HomeAchievementCardInline(admin.StackedInline):
+class HomeAchievementCardInline(EnhancedStackedInline):
     model = HomeAchievementCardSettings
     extra = 0
     max_num = 1
@@ -398,14 +399,14 @@ class HomeAchievementCardInline(admin.StackedInline):
     )
 
 
-class HomeHeroCTAInline(admin.TabularInline):
+class HomeHeroCTAInline(EnhancedTabularInline):
     model = HomeHeroCTA
     extra = 0
     ordering = ("audience", "position")
     fields = ("audience", "position", "label", "url", "icon", "css_class", "anchor_id", "open_in_new_tab", "is_enabled")
 
 
-class HomeHeroStatInline(admin.TabularInline):
+class HomeHeroStatInline(EnhancedTabularInline):
     model = HomeHeroStatTemplate
     extra = 0
     ordering = ("audience", "order")
@@ -423,7 +424,7 @@ class HomeHeroStatInline(admin.TabularInline):
     )
 
 
-class HomeQuickLinkInline(admin.TabularInline):
+class HomeQuickLinkInline(EnhancedTabularInline):
     model = HomeQuickLink
     extra = 0
     ordering = ("order",)
@@ -440,7 +441,7 @@ class HomeQuickLinkInline(admin.TabularInline):
     )
 
 
-class HomeIntroHighlightInline(admin.TabularInline):
+class HomeIntroHighlightInline(EnhancedTabularInline):
     model = HomeIntroHighlight
     extra = 0
     ordering = ("order",)
@@ -457,7 +458,7 @@ class HomeIntroHighlightInline(admin.TabularInline):
     )
 
 
-class HomeIntroStepInline(admin.TabularInline):
+class HomeIntroStepInline(EnhancedTabularInline):
     model = HomeIntroStep
     extra = 0
     ordering = ("order",)
@@ -465,13 +466,14 @@ class HomeIntroStepInline(admin.TabularInline):
 
 
 @admin.register(TrainingMode)
-class TrainingModeAdmin(admin.ModelAdmin):
+class TrainingModeAdmin(EnhancedModelAdmin):
     list_display = ("name", "quiz_definition", "is_active", "order", "updated_at")
     list_filter = ("is_active",)
     search_fields = ("name", "slug", "description", "meta", "quiz_definition__nome_quiz")
     prepopulated_fields = {"slug": ("name",)}
     ordering = ("order", "name")
     readonly_fields = ("created_at", "updated_at")
+    select_related_fields = ("quiz_definition",)
 
     fieldsets = (
         (
@@ -513,7 +515,7 @@ class TrainingModeAdmin(admin.ModelAdmin):
 
 
 @admin.register(HomePageSettings)
-class HomePageSettingsAdmin(admin.ModelAdmin):
+class HomePageSettingsAdmin(EnhancedModelAdmin):
     inlines = [
         HomeProgressSectionInline,
         HomeRecentSessionCardInline,
@@ -588,21 +590,21 @@ class HomePageSettingsAdmin(admin.ModelAdmin):
         return False
 
 
-class ChallengeHubHeroActionInline(admin.TabularInline):
+class ChallengeHubHeroActionInline(EnhancedTabularInline):
     model = ChallengeHubHeroAction
     extra = 0
     fields = ("key", "label", "icon", "css_class", "dom_id", "is_enabled")
     ordering = ("key",)
 
 
-class ChallengeHubHeroStatInline(admin.TabularInline):
+class ChallengeHubHeroStatInline(EnhancedTabularInline):
     model = ChallengeHubHeroStat
     extra = 0
     fields = ("order", "label", "data_source", "prefix", "suffix", "dom_id", "is_enabled")
     ordering = ("order",)
 
 
-class ChallengeHubActionCardInline(admin.TabularInline):
+class ChallengeHubActionCardInline(EnhancedTabularInline):
     model = ChallengeHubActionCard
     extra = 0
     fields = (
@@ -619,7 +621,7 @@ class ChallengeHubActionCardInline(admin.TabularInline):
     ordering = ("key",)
 
 
-class ChallengeHubResumeCardInline(admin.StackedInline):
+class ChallengeHubResumeCardInline(EnhancedStackedInline):
     model = ChallengeHubResumeCardSettings
     extra = 0
     max_num = 1
@@ -627,7 +629,7 @@ class ChallengeHubResumeCardInline(admin.StackedInline):
     fields = ("title", "description_template", "icon", "discard_label", "continue_label")
 
 
-class ChallengeHubPredefinedSectionInline(admin.StackedInline):
+class ChallengeHubPredefinedSectionInline(EnhancedStackedInline):
     model = ChallengeHubPredefinedSection
     extra = 0
     max_num = 1
@@ -635,7 +637,7 @@ class ChallengeHubPredefinedSectionInline(admin.StackedInline):
     fields = ("title", "subtitle")
 
 
-class ChallengeHubPlaceholderInline(admin.StackedInline):
+class ChallengeHubPlaceholderInline(EnhancedStackedInline):
     model = ChallengeHubPlaceholderSettings
     extra = 0
     max_num = 1
@@ -667,7 +669,7 @@ class ChallengeHubPlaceholderInline(admin.StackedInline):
 
 
 @admin.register(ChallengeHubSettings)
-class ChallengeHubSettingsAdmin(admin.ModelAdmin):
+class ChallengeHubSettingsAdmin(EnhancedModelAdmin):
     inlines = [
         ChallengeHubHeroActionInline,
         ChallengeHubHeroStatInline,

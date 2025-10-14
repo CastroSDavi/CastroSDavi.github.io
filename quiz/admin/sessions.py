@@ -7,10 +7,11 @@ from django.utils.html import format_html
 from quiz.models import RespostasUsuarioPorSessao, SessoesQuizUsuario
 
 from .inlines import RespostasUsuarioPorSessaoInline
+from .base import EnhancedModelAdmin
 
 
 @admin.register(SessoesQuizUsuario)
-class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
+class SessoesQuizUsuarioAdmin(EnhancedModelAdmin):
     list_display = (
         "id",
         "link_usuario",
@@ -62,7 +63,7 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
     autocomplete_fields = ["id_usuario", "id_quiz_definicao"]
     filter_horizontal = ("categorias_selecionadas",)
     inlines = [RespostasUsuarioPorSessaoInline]
-    list_select_related = ("id_usuario", "id_quiz_definicao")
+    select_related_fields = ("id_usuario", "id_quiz_definicao")
     date_hierarchy = "data_inicio"
 
     fieldsets = (
@@ -141,7 +142,7 @@ class SessoesQuizUsuarioAdmin(admin.ModelAdmin):
 
 
 @admin.register(RespostasUsuarioPorSessao)
-class RespostasUsuarioPorSessaoAdmin(admin.ModelAdmin):
+class RespostasUsuarioPorSessaoAdmin(EnhancedModelAdmin):
     list_display = (
         "id",
         "link_sessao_quiz_formatado",
@@ -177,7 +178,8 @@ class RespostasUsuarioPorSessaoAdmin(admin.ModelAdmin):
         "id_pergunta",
         "id_opcao_resposta_selecionada",
     ]
-    list_select_related = (
+    select_related_fields = (
+        "id_sessao_quiz",
         "id_sessao_quiz__id_usuario",
         "id_pergunta",
         "id_opcao_resposta_selecionada",

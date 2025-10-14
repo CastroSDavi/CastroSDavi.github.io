@@ -12,6 +12,8 @@ from quiz.models import (
     RespostasUsuarioPorSessao,
 )
 
+from .base import EnhancedTabularInline
+
 class OpcaoRespostaInlineFormSet(BaseInlineFormSet):
     """Ensure at least two options and one correct answer are provided."""
 
@@ -35,7 +37,7 @@ class OpcaoRespostaInlineFormSet(BaseInlineFormSet):
             raise ValidationError("Defina ao menos uma opcao como correta.")
 
 
-class OpcaoRespostaInline(admin.TabularInline):
+class OpcaoRespostaInline(EnhancedTabularInline):
     model = OpcaoResposta
     extra = 0
     min_num = 2
@@ -51,7 +53,7 @@ class OpcaoRespostaInline(admin.TabularInline):
     ]
 
 
-class RespostasUsuarioPorSessaoInline(admin.TabularInline):
+class RespostasUsuarioPorSessaoInline(EnhancedTabularInline):
     model = RespostasUsuarioPorSessao
     extra = 0
     fields = (
@@ -97,7 +99,7 @@ class RespostasUsuarioPorSessaoInline(admin.TabularInline):
         )
 
 
-class QuizDefinicaoPerguntaInline(admin.TabularInline):
+class QuizDefinicaoPerguntaInline(EnhancedTabularInline):
     model = QuizDefinicaoPergunta
     extra = 1
     autocomplete_fields = ["pergunta"]

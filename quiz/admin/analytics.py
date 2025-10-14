@@ -9,9 +9,11 @@ from quiz.models import (
     UserQuestionStudyState,
 )
 
+from .base import EnhancedModelAdmin
+
 
 @admin.register(UserQuestionStudyState)
-class UserQuestionStudyStateAdmin(admin.ModelAdmin):
+class UserQuestionStudyStateAdmin(EnhancedModelAdmin):
     list_display = (
         "user",
         "pergunta",
@@ -25,10 +27,11 @@ class UserQuestionStudyStateAdmin(admin.ModelAdmin):
     search_fields = ("user__username", "pergunta__texto_pergunta")
     autocomplete_fields = ["user", "pergunta", "last_session"]
     readonly_fields = ("created_at", "updated_at")
+    select_related_fields = ("user", "pergunta", "last_session")
 
 
 @admin.register(EstatisticasDiariasUsuario)
-class EstatisticasDiariasUsuarioAdmin(admin.ModelAdmin):
+class EstatisticasDiariasUsuarioAdmin(EnhancedModelAdmin):
     list_display = (
         "id",
         "link_usuario_stats",
@@ -59,7 +62,7 @@ class EstatisticasDiariasUsuarioAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ["id_usuario"]
     date_hierarchy = "data_estatistica"
-    list_select_related = ("id_usuario",)
+    select_related_fields = ("id_usuario",)
 
     fieldsets = (
         (None, {"fields": ("id_usuario", "data_estatistica")}),

@@ -407,10 +407,16 @@ def _build_account_profile_summary(user: User):
     total_correct_answers = aggregate_totals.get('total_correct') or 0
     total_score_all_time = aggregate_totals.get('total_score') or 0
     best_score = aggregate_totals.get('best_score') or 0
+    total_incorrect_answers = max(total_questions_answered - total_correct_answers, 0)
 
     accuracy = None
+    average_score = None
+    questions_per_session_avg = None
     if total_questions_answered:
         accuracy = round((total_correct_answers / total_questions_answered) * 100, 1)
+    if total_sessions_completed:
+        average_score = round(total_score_all_time / total_sessions_completed, 1)
+        questions_per_session_avg = round(total_questions_answered / total_sessions_completed, 1)
 
     favorite_mode = None
     if total_sessions_completed:
@@ -431,6 +437,19 @@ def _build_account_profile_summary(user: User):
     questions_last_30_days = last_thirty_days_stats.aggregate(
         total=Sum('perguntas_respondidas_dia')
     ).get('total') or 0
+    correct_last_30_days = last_thirty_days_stats.aggregate(
+        total=Sum('acertos_dia')
+    ).get('total') or 0
+    tracked_days_last_30 = last_thirty_days_stats.count()
+    active_days_last_30 = last_thirty_days_stats.filter(perguntas_respondidas_dia__gt=0).count()
+
+    accuracy_last_30 = None
+    if questions_last_30_days:
+        accuracy_last_30 = round((correct_last_30_days / questions_last_30_days) * 100, 1)
+
+    consistency_last_30_percent = None
+    if tracked_days_last_30:
+        consistency_last_30_percent = round((active_days_last_30 / tracked_days_last_30) * 100, 1)
 
     current_streak = daily_stats_qs.order_by('-data_estatistica').values_list(
         'sequencia_dias_quiz', flat=True
@@ -495,15 +514,23 @@ def _build_account_profile_summary(user: User):
         'metrics': {
             'total_sessions': total_sessions_completed,
             'total_questions_answered': total_questions_answered,
+            'total_correct_answers': total_correct_answers,
+            'total_incorrect_answers': total_incorrect_answers,
             'accuracy': accuracy,
+            'accuracy_last_30': accuracy_last_30,
             'favorite_questions_count': favorite_questions_count,
             'total_score': total_score_all_time,
             'best_score': best_score,
+            'average_score': average_score,
             'favorite_mode': favorite_mode,
             'favorite_mode_display': favorite_mode or 'Ainda não definido',
             'study_time_last_30_seconds': study_time_last_30_seconds,
             'study_time_last_30_display': _format_duration_compact(study_time_last_30_seconds) or '0 min',
             'questions_last_30_days': questions_last_30_days,
+            'correct_last_30_days': correct_last_30_days,
+            'questions_per_session_avg': questions_per_session_avg,
+            'active_days_last_30': active_days_last_30,
+            'consistency_last_30_percent': consistency_last_30_percent,
             'current_streak': current_streak,
         },
         'completion': {

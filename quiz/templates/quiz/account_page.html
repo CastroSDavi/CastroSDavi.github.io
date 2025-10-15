@@ -394,33 +394,8 @@
                 <div class="progress-analytics">
                     <section class="card card--conta-perfil progress-analytics__card">
                         <header class="progress-analytics__header">
-                            <div class="progress-analytics__intro">
-                                <span class="progress-analytics__eyebrow">Panorama atual</span>
-                                <h2 class="card__title">Central de Progresso</h2>
-                                <p class="card__subtitle">Acompanhe nível, desempenho e consistência de estudo em uma visão estratégica.</p>
-                                <div class="progress-analytics__chips" role="list">
-                                    <span class="progress-analytics__chip" role="listitem">
-                                        <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
-                                        Sequência ativa: {{ metrics.current_streak|default:0 }} dia{{ metrics.current_streak|default:0|pluralize }}
-                                    </span>
-                                    <span class="progress-analytics__chip" role="listitem">
-                                        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
-                                        {% if metrics.total_sessions|default:0 == 1 %}
-                                            Histórico: 1 sessão concluída
-                                        {% else %}
-                                            Histórico: {{ metrics.total_sessions|default:0 }} sessões concluídas
-                                        {% endif %}
-                                    </span>
-                                    {% if gamification %}
-                                    <span class="progress-analytics__chip" role="listitem">
-                                        <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
-                                        {{ gamification.achievements.total_unlocked|default_if_none:0 }}/{{ gamification.achievements.total_available|default_if_none:0 }} conquistas
-                                    </span>
-                                    {% endif %}
-                                </div>
-                            </div>
                             {% if gamification %}
-                            <div class="progress-analytics__hero-meter" role="presentation">
+                            <div class="progress-analytics__hero" role="presentation">
                                 <div class="progress-analytics__radial" style="--progress-value: {{ gamification.progress.percent|default_if_none:0|unlocalize }};">
                                     <span class="progress-analytics__radial-value">{{ gamification.progress.percent|default_if_none:0|floatformat:0 }}%</span>
                                 </div>
@@ -433,7 +408,7 @@
                                             Jornada em definição
                                         {% endif %}
                                     </strong>
-                                    <p>Conclusão do nível atual</p>
+                                    <p>Conclusão do nível</p>
                                     <small>
                                         {% if gamification.next_level %}
                                             Próximo nível: {{ gamification.next_level.nome }}
@@ -444,83 +419,198 @@
                                 </div>
                             </div>
                             {% endif %}
+                            <div class="progress-analytics__intro">
+                                <span class="progress-analytics__eyebrow">Panorama atual</span>
+                                <h2 class="card__title">Central de Progresso</h2>
+                                <p class="card__subtitle">Visualize nível, desempenho e hábitos em uma única visão minimalista e acionável.</p>
+                                <dl class="progress-analytics__hero-stats">
+                                    <div>
+                                        <dt>XP acumulado</dt>
+                                        <dd>
+                                            {% if gamification %}
+                                                {{ gamification.xp_total|default:0 }} XP
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+                                    <div>
+                                        <dt>Sequência ativa</dt>
+                                        <dd>{{ metrics.current_streak|default:0 }} dia{{ metrics.current_streak|default:0|pluralize }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Sessões concluídas</dt>
+                                        <dd>{{ metrics.total_sessions|default:0 }}</dd>
+                                    </div>
+                                    <div>
+                                        <dt>Modo favorito</dt>
+                                        <dd>{{ metrics.favorite_mode_display }}</dd>
+                                    </div>
+                                </dl>
+                                <div class="progress-analytics__chips" role="list">
+                                    <span class="progress-analytics__chip" role="listitem">
+                                        <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+                                        Sequência ativa: {{ metrics.current_streak|default:0 }} dia{{ metrics.current_streak|default:0|pluralize }}
+                                    </span>
+                                    <span class="progress-analytics__chip" role="listitem">
+                                        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+                                        {% if metrics.total_sessions|default:0 == 1 %}
+                                            1 sessão concluída
+                                        {% else %}
+                                            {{ metrics.total_sessions|default:0 }} sessões concluídas
+                                        {% endif %}
+                                    </span>
+                                    <span class="progress-analytics__chip" role="listitem">
+                                        <span class="material-symbols-outlined" aria-hidden="true">bookmarks</span>
+                                        Favoritas: {{ metrics.favorite_questions_count|default:0 }} questões
+                                    </span>
+                                    {% if gamification %}
+                                    <span class="progress-analytics__chip" role="listitem">
+                                        <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
+                                        {{ gamification.achievements.total_unlocked|default_if_none:0 }}/{{ gamification.achievements.total_available|default_if_none:0 }} conquistas
+                                    </span>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </header>
+
+                        <div class="progress-analytics__quick-grid" role="list">
+                            <article class="progress-analytics__quick-card" role="listitem">
+                                <header>
+                                    <span class="material-symbols-outlined" aria-hidden="true">target</span>
+                                    <span>Precisão geral</span>
+                                </header>
+                                <strong>
+                                    {% if metrics.accuracy is not None %}
+                                        {{ metrics.accuracy|floatformat:1 }}%
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </strong>
+                                <p>{{ metrics.total_correct_answers|default:0 }} acertos • {{ metrics.total_incorrect_answers|default:0 }} erros</p>
+                            </article>
+                            <article class="progress-analytics__quick-card" role="listitem">
+                                <header>
+                                    <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+                                    <span>Ritmo (30 dias)</span>
+                                </header>
+                                <strong>{{ metrics.study_time_last_30_display|default:"0 min" }}</strong>
+                                <p>{{ metrics.questions_last_30_days|default:0 }} {{ metrics.questions_last_30_days|default:0|pluralize:"questão revisada,questões revisadas" }}</p>
+                            </article>
+                            <article class="progress-analytics__quick-card" role="listitem">
+                                <header>
+                                    <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                                    <span>Tendência de acerto</span>
+                                </header>
+                                <strong>
+                                    {% if metrics.accuracy_last_30 is not None %}
+                                        {{ metrics.accuracy_last_30|floatformat:1 }}%
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </strong>
+                                <p>{{ metrics.correct_last_30_days|default:0 }} acertos no período</p>
+                            </article>
+                            <article class="progress-analytics__quick-card" role="listitem">
+                                <header>
+                                    <span class="material-symbols-outlined" aria-hidden="true">score</span>
+                                    <span>Pontuação média</span>
+                                </header>
+                                <strong>
+                                    {% if metrics.average_score is not None %}
+                                        {{ metrics.average_score|floatformat:1 }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </strong>
+                                <p>Melhor sessão: {{ metrics.best_score|default:0 }}</p>
+                            </article>
+                        </div>
 
                         <div class="progress-analytics__body">
                             <div class="progress-analytics__highlights" role="list">
                                 <article class="progress-analytics__highlight" role="listitem">
                                     <header class="progress-analytics__highlight-header">
-                                        <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">target</span>
-                                        <span class="progress-analytics__highlight-label">Precisão geral</span>
-                                    </header>
-                                    {% if metrics.accuracy is not None %}
-                                        <strong class="progress-analytics__highlight-value">{{ metrics.accuracy|floatformat:1 }}%</strong>
-                                    {% else %}
-                                        <strong class="progress-analytics__highlight-value">—</strong>
-                                    {% endif %}
-                                    <p class="progress-analytics__highlight-meta">{{ metrics.total_questions_answered|default:0 }} {{ metrics.total_questions_answered|default:0|pluralize:"questão analisada,questões analisadas" }}</p>
-                                </article>
-
-                                <article class="progress-analytics__highlight" role="listitem">
-                                    <header class="progress-analytics__highlight-header">
-                                        <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">trending_up</span>
-                                        <span class="progress-analytics__highlight-label">Precisão (30 dias)</span>
-                                    </header>
-                                    {% if metrics.accuracy_last_30 is not None %}
-                                        <strong class="progress-analytics__highlight-value">{{ metrics.accuracy_last_30|floatformat:1 }}%</strong>
-                                    {% else %}
-                                        <strong class="progress-analytics__highlight-value">—</strong>
-                                    {% endif %}
-                                    <p class="progress-analytics__highlight-meta">{{ metrics.questions_last_30_days|default:0 }} {{ metrics.questions_last_30_days|default:0|pluralize:"questão no período,questões no período" }}</p>
-                                </article>
-
-                                <article class="progress-analytics__highlight" role="listitem">
-                                    <header class="progress-analytics__highlight-header">
-                                        <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">score</span>
-                                        <span class="progress-analytics__highlight-label">Pontuação média</span>
-                                    </header>
-                                    {% if metrics.average_score is not None %}
-                                        <strong class="progress-analytics__highlight-value">{{ metrics.average_score|floatformat:1 }}</strong>
-                                    {% else %}
-                                        <strong class="progress-analytics__highlight-value">—</strong>
-                                    {% endif %}
-                                    <p class="progress-analytics__highlight-meta">Melhor sessão: {{ metrics.best_score|default:0 }}</p>
-                                </article>
-
-                                <article class="progress-analytics__highlight" role="listitem">
-                                    <header class="progress-analytics__highlight-header">
                                         <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">task_alt</span>
-                                        <span class="progress-analytics__highlight-label">Respostas corretas</span>
+                                        <span class="progress-analytics__highlight-label">Total de respostas</span>
                                     </header>
-                                    <strong class="progress-analytics__highlight-value">{{ metrics.total_correct_answers|default:0 }}</strong>
-                                    <p class="progress-analytics__highlight-meta">Erros acumulados: {{ metrics.total_incorrect_answers|default:0 }}</p>
+                                    <strong class="progress-analytics__highlight-value">{{ metrics.total_questions_answered|default:0 }}</strong>
+                                    <p class="progress-analytics__highlight-meta">{{ metrics.total_correct_answers|default:0 }} corretas • {{ metrics.total_incorrect_answers|default:0 }} incorretas</p>
+                                </article>
+
+                                <article class="progress-analytics__highlight" role="listitem">
+                                    <header class="progress-analytics__highlight-header">
+                                        <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">insights</span>
+                                        <span class="progress-analytics__highlight-label">Média por sessão</span>
+                                    </header>
+                                    {% if metrics.questions_per_session_avg is not None %}
+                                        <strong class="progress-analytics__highlight-value">{{ metrics.questions_per_session_avg|floatformat:1 }} questões</strong>
+                                    {% else %}
+                                        <strong class="progress-analytics__highlight-value">—</strong>
+                                    {% endif %}
+                                    <p class="progress-analytics__highlight-meta">{{ metrics.total_sessions|default:0 }} sessão{{ metrics.total_sessions|default:0|pluralize }}</p>
                                 </article>
 
                                 <article class="progress-analytics__highlight" role="listitem">
                                     <header class="progress-analytics__highlight-header">
                                         <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">pace</span>
-                                        <span class="progress-analytics__highlight-label">Consistência (30 dias)</span>
+                                        <span class="progress-analytics__highlight-label">Consistência</span>
                                     </header>
                                     {% if metrics.consistency_last_30_percent is not None %}
                                         <strong class="progress-analytics__highlight-value">{{ metrics.consistency_last_30_percent|floatformat:0 }}%</strong>
                                     {% else %}
                                         <strong class="progress-analytics__highlight-value">—</strong>
                                     {% endif %}
-                                    <p class="progress-analytics__highlight-meta">Dias ativos: {{ metrics.active_days_last_30|default:0 }}</p>
+                                    <p class="progress-analytics__highlight-meta">{{ metrics.active_days_last_30|default:0 }} dia{{ metrics.active_days_last_30|default:0|pluralize }} com atividade</p>
                                 </article>
 
                                 <article class="progress-analytics__highlight" role="listitem">
                                     <header class="progress-analytics__highlight-header">
                                         <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">hourglass_top</span>
-                                        <span class="progress-analytics__highlight-label">Tempo de estudo (30 dias)</span>
+                                        <span class="progress-analytics__highlight-label">Tempo investido</span>
                                     </header>
                                     <strong class="progress-analytics__highlight-value">{{ metrics.study_time_last_30_display|default:"0 min" }}</strong>
                                     <p class="progress-analytics__highlight-meta">{{ metrics.questions_last_30_days|default:0 }} {{ metrics.questions_last_30_days|default:0|pluralize:"questão revisada,questões revisadas" }}</p>
                                 </article>
+
+                                <article class="progress-analytics__highlight" role="listitem">
+                                    <header class="progress-analytics__highlight-header">
+                                        <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">workspace_premium</span>
+                                        <span class="progress-analytics__highlight-label">Conquistas</span>
+                                    </header>
+                                    {% if gamification %}
+                                        <strong class="progress-analytics__highlight-value">{{ gamification.achievements.total_unlocked|default_if_none:0 }}</strong>
+                                        <p class="progress-analytics__highlight-meta">de {{ gamification.achievements.total_available|default_if_none:0 }} disponíveis</p>
+                                    {% else %}
+                                        <strong class="progress-analytics__highlight-value">—</strong>
+                                        <p class="progress-analytics__highlight-meta">Aguarde os primeiros dados</p>
+                                    {% endif %}
+                                </article>
+
+                                <article class="progress-analytics__highlight" role="listitem">
+                                    <header class="progress-analytics__highlight-header">
+                                        <span class="material-symbols-outlined progress-analytics__highlight-icon" aria-hidden="true">event</span>
+                                        <span class="progress-analytics__highlight-label">Última sessão</span>
+                                    </header>
+                                    {% if profile_summary.last_session %}
+                                        <strong class="progress-analytics__highlight-value">{{ profile_summary.last_session.score|default:0 }}</strong>
+                                        <p class="progress-analytics__highlight-meta">
+                                            {{ profile_summary.last_session.question_count|default:0 }} questões •
+                                            {% if profile_summary.last_session.accuracy is not None %}
+                                                {{ profile_summary.last_session.accuracy|floatformat:1 }}% de acerto
+                                            {% else %}
+                                                precisão em cálculo
+                                            {% endif %}
+                                        </p>
+                                    {% else %}
+                                        <strong class="progress-analytics__highlight-value">—</strong>
+                                        <p class="progress-analytics__highlight-meta">Conclua um quiz para destravar histórico</p>
+                                    {% endif %}
+                                </article>
                             </div>
 
-                            {% if gamification %}
                             <div class="progress-analytics__overview">
+                                {% if gamification %}
                                 <section class="progress-analytics__level-card" aria-labelledby="progress-analytics-level-heading">
                                     <header class="progress-analytics__level-header">
                                         <div>
@@ -572,7 +662,64 @@
                                         </div>
                                     </dl>
                                 </section>
+                                {% endif %}
 
+                                <section class="progress-analytics__session-card" aria-label="Resumo da última sessão">
+                                    <header class="progress-analytics__session-header">
+                                        <span class="material-symbols-outlined" aria-hidden="true">event_upcoming</span>
+                                        <div>
+                                            <h3>Última sessão</h3>
+                                            <p>Acompanhe o desempenho mais recente e identifique tendências.</p>
+                                        </div>
+                                    </header>
+                                    {% if profile_summary.last_session %}
+                                        <dl class="progress-analytics__session-stats">
+                                            <div>
+                                                <dt>Realizada em</dt>
+                                                <dd>{{ profile_summary.last_session.date|date:"d \de F" }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>Modo</dt>
+                                                <dd>{{ profile_summary.last_session.mode|default:"—" }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>Pontuação</dt>
+                                                <dd>{{ profile_summary.last_session.score|default:0 }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>Acertos</dt>
+                                                <dd>
+                                                    {% if profile_summary.last_session.accuracy is not None %}
+                                                        {{ profile_summary.last_session.accuracy|floatformat:1 }}%
+                                                    {% else %}
+                                                        —
+                                                    {% endif %}
+                                                </dd>
+                                            </div>
+                                            <div>
+                                                <dt>Questões</dt>
+                                                <dd>{{ profile_summary.last_session.question_count|default:0 }}</dd>
+                                            </div>
+                                            <div>
+                                                <dt>Duração</dt>
+                                                <dd>{{ profile_summary.last_session.duration_display|default:"—" }}</dd>
+                                            </div>
+                                        </dl>
+                                        {% if profile_summary.last_session.quiz_name %}
+                                        <footer class="progress-analytics__session-footer">
+                                            <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>
+                                            <p>Quiz: {{ profile_summary.last_session.quiz_name }}</p>
+                                        </footer>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="progress-analytics__session-empty">
+                                            <span class="material-symbols-outlined" aria-hidden="true">hourglass_disabled</span>
+                                            <p>Conclua um quiz para ver estatísticas de sessão aqui.</p>
+                                        </div>
+                                    {% endif %}
+                                </section>
+
+                                {% if gamification %}
                                 <section class="progress-analytics__insight-card" aria-label="Reconhecimentos e atualizações">
                                     <header class="progress-analytics__insight-header">
                                         <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
@@ -599,6 +746,7 @@
                                         </li>
                                     </ul>
                                 </section>
+                                {% endif %}
                             </div>
 
                             <div class="progress-analytics__panels">
@@ -672,7 +820,7 @@
                                     </ul>
                                 </section>
 
-                                {% if gamification.daily_engagement %}
+                                {% if gamification and gamification.daily_engagement %}
                                 {% with daily=gamification.daily_engagement %}
                                 <section class="progress-analytics__panel">
                                     <header class="progress-analytics__panel-header">
@@ -722,7 +870,7 @@
                                 {% endif %}
                             </div>
 
-                            {% if gamification.levels_path %}
+                            {% if gamification and gamification.levels_path %}
                             <section class="progress-analytics__timeline" aria-label="Escala de níveis e progresso">
                                 <header class="progress-analytics__timeline-header">
                                     <h3>Mapa de níveis</h3>

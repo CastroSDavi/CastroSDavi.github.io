@@ -127,28 +127,28 @@
     grid-area: actions;
     position: relative;
     display: grid;
-    gap: clamp(14px, 2vw, 22px);
-    padding: clamp(20px, 2.4vw, 28px);
-    border-radius: clamp(22px, 3vw, 30px);
-    background:
-        linear-gradient(164deg, rgba(255, 255, 255, 0.34) 0%, rgba(255, 255, 255, 0.1) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.36);
-    box-shadow: 0 20px 48px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.24);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    gap: clamp(18px, 2.6vw, 28px);
+    padding: clamp(26px, 2.8vw, 34px);
+    border-radius: clamp(24px, 3vw, 34px);
+    background: linear-gradient(164deg, rgba(255, 255, 255, 0.32) 0%, rgba(13, 59, 102, 0.25) 48%, rgba(35, 209, 160, 0.32) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    box-shadow: 0 24px 52px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.28);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
     align-self: stretch;
     justify-self: stretch;
-    max-width: clamp(260px, 24vw, 340px);
+    max-width: clamp(320px, 32vw, 440px);
     overflow: hidden;
 }
 
 .challenge-hub__hero-actions::before {
     content: '';
     position: absolute;
-    inset: -45% -30% 55% auto;
-    background: radial-gradient(120% 120% at 100% 0%, rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.55), rgba(35, 209, 160, 0));
-    opacity: 0.9;
-    filter: blur(0.5px);
+    inset: -45% -30% 52% auto;
+    background:
+        radial-gradient(120% 120% at 100% 0%, rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.62), rgba(35, 209, 160, 0));
+    opacity: 0.85;
+    filter: blur(2px);
     mix-blend-mode: screen;
     pointer-events: none;
     z-index: 0;
@@ -159,21 +159,105 @@
     z-index: 1;
 }
 
+.hero-actions__header {
+    display: grid;
+    gap: clamp(6px, 1.2vw, 12px);
+    color: var(--color-white);
+}
+
+.hero-actions__eyebrow {
+    font-size: clamp(0.78rem, 1vw, 0.85rem);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-semibold);
+    opacity: 0.8;
+}
+
+.hero-actions__title {
+    font-size: clamp(1.32rem, 1.9vw, 1.68rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.2;
+    color: var(--color-white);
+}
+
+.hero-actions__description {
+    margin: 0;
+    color: rgba(var(--color-white-rgb, 255, 255, 255), 0.82);
+    font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+    line-height: 1.55;
+}
+
+.hero-actions__highlights {
+    list-style: none;
+    margin: 0;
+    padding: clamp(16px, 1.8vw, 20px);
+    display: grid;
+    gap: clamp(14px, 1.6vw, 18px);
+    border-radius: clamp(16px, 2vw, 22px);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0));
+}
+
+.hero-actions__highlight {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: clamp(12px, 1.2vw, 16px);
+    align-items: start;
+    padding: clamp(6px, 1vw, 10px) clamp(12px, 1.6vw, 16px);
+    border-radius: clamp(12px, 1.6vw, 16px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.hero-actions__highlight-icon {
+    font-size: 1.4rem;
+    width: clamp(38px, 2.6vw, 44px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    color: var(--color-secondary-green);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 8px 22px rgba(var(--color-secondary-green-rgb, 42, 157, 143), 0.35);
+}
+
+.hero-actions__highlight-text {
+    display: grid;
+    gap: 4px;
+}
+
+.hero-actions__highlight-title {
+    font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+    color: var(--color-white);
+    font-weight: var(--font-weight-semibold);
+}
+
+.hero-actions__highlight-description {
+    margin: 0;
+    font-size: clamp(0.88rem, 1.1vw, 0.98rem);
+    color: rgba(var(--color-white-rgb, 255, 255, 255), 0.76);
+    line-height: 1.5;
+}
+
+.hero-actions__buttons {
+    display: grid;
+    gap: clamp(12px, 1.8vw, 18px);
+}
+
 .challenge-hub__hero-actions .button,
 .challenge-hub__action-button {
     width: 100%;
     justify-content: center;
     gap: var(--spacing-xs, 10px);
-    min-height: clamp(38px, 1.6vw, 46px);
-    padding: 0 clamp(18px, 2.2vw, 26px);
+    min-height: clamp(42px, 1.8vw, 50px);
+    padding: 0 clamp(20px, 2.4vw, 28px);
     font-weight: var(--font-weight-semibold);
-    font-size: clamp(0.92rem, 1.4vw, 1.05rem);
+    font-size: clamp(0.95rem, 1.4vw, 1.08rem);
 }
 
 
 
 .challenge-hub__hero-actions .button__icon {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
 }
 
 .challenge-hub__hero-actions .button--secondary,
@@ -505,7 +589,15 @@ button.challenge-card {
 
     .challenge-hub__hero-actions {
         justify-self: end;
-        max-width: clamp(260px, 22vw, 340px);
+        max-width: clamp(340px, 30vw, 460px);
+    }
+
+    .hero-actions__buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero-actions__buttons .challenge-hub__action-button:first-child {
+        grid-column: span 2;
     }
 
     .challenge-hub__stats {
@@ -536,6 +628,10 @@ button.challenge-card {
     .challenge-hub__training-grid {
         grid-template-columns: repeat(3, minmax(300px, 1fr));
     }
+
+    .hero-actions__highlights {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 
@@ -547,7 +643,7 @@ button.challenge-card {
 
     .challenge-hub__hero-actions {
         justify-self: end;
-        max-width: clamp(260px, 24vw, 340px);
+        max-width: clamp(320px, 32vw, 420px);
     }
 }
 
@@ -581,17 +677,32 @@ button.challenge-card {
 
     .challenge-hub__hero-actions {
         width: 100%;
-        max-width: clamp(320px, 82vw, 480px);
+        max-width: clamp(320px, 82vw, 520px);
         justify-self: center;
         margin-inline: auto;
-        padding: clamp(26px, 7vw, 34px);
-        gap: clamp(18px, 6vw, 26px);
+        padding: clamp(28px, 7vw, 36px);
+        gap: clamp(20px, 6vw, 28px);
     }
 
     .challenge-hub__hero-actions .button,
     .challenge-hub__action-button {
         min-height: clamp(46px, 7vw, 58px);
         font-size: clamp(1rem, 2.4vw, 1.12rem);
+    }
+
+    .hero-actions__highlights {
+        padding: clamp(20px, 7vw, 28px);
+        gap: clamp(18px, 6vw, 26px);
+    }
+
+    .hero-actions__highlight-icon {
+        width: clamp(48px, 12vw, 60px);
+        font-size: clamp(1.6rem, 5vw, 1.9rem);
+        border-radius: 16px;
+    }
+
+    .hero-actions__buttons {
+        gap: clamp(18px, 6vw, 26px);
     }
 
     .challenge-hub__grid,

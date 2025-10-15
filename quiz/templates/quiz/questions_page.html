@@ -100,14 +100,44 @@ data-initial-question-id="{{ initial_question_id }}"
                         </ul>
                     </div>
                     <div class="challenge-hub__hero-actions">
-                        {% for action in challenge_hero_actions %}
-                        <button id="{{ action.dom_id }}" type="button" class="{{ action.css_class }}{% if 'challenge-hub__action-button' not in action.css_class %} challenge-hub__action-button{% endif %}">
-                            {% if action.icon %}
-                            <span class="material-symbols-outlined button__icon" aria-hidden="true">{{ action.icon }}</span>
-                            {% endif %}
-                            <span class="button__label">{{ action.label }}</span>
-                        </button>
-                        {% endfor %}
+                        <div class="hero-actions__header">
+                            <span class="hero-actions__eyebrow">Plano de estudos</span>
+                            <h3 class="hero-actions__title">Escolha o próximo passo</h3>
+                            <p class="hero-actions__description">Combine simulados, revise conteúdos e acompanhe seu desempenho em tempo real.</p>
+                        </div>
+                        <ul class="hero-actions__highlights" role="list">
+                            <li class="hero-actions__highlight" role="listitem">
+                                <span class="material-symbols-outlined hero-actions__highlight-icon" aria-hidden="true">rocket_launch</span>
+                                <div class="hero-actions__highlight-text">
+                                    <strong class="hero-actions__highlight-title">Roteiro inteligente</strong>
+                                    <p class="hero-actions__highlight-description">Monte simulados que se adaptam ao seu ritmo.</p>
+                                </div>
+                            </li>
+                            <li class="hero-actions__highlight" role="listitem">
+                                <span class="material-symbols-outlined hero-actions__highlight-icon" aria-hidden="true">auto_graph</span>
+                                <div class="hero-actions__highlight-text">
+                                    <strong class="hero-actions__highlight-title">Progresso visível</strong>
+                                    <p class="hero-actions__highlight-description">Acompanhe métricas atualizadas a cada desafio.</p>
+                                </div>
+                            </li>
+                            <li class="hero-actions__highlight" role="listitem">
+                                <span class="material-symbols-outlined hero-actions__highlight-icon" aria-hidden="true">checklist</span>
+                                <div class="hero-actions__highlight-text">
+                                    <strong class="hero-actions__highlight-title">Experiência guiada</strong>
+                                    <p class="hero-actions__highlight-description">Receba recomendações do que estudar em seguida.</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="hero-actions__buttons">
+                            {% for action in challenge_hero_actions %}
+                            <button id="{{ action.dom_id }}" type="button" class="{{ action.css_class }}{% if 'challenge-hub__action-button' not in action.css_class %} challenge-hub__action-button{% endif %}">
+                                {% if action.icon %}
+                                <span class="material-symbols-outlined button__icon" aria-hidden="true">{{ action.icon }}</span>
+                                {% endif %}
+                                <span class="button__label">{{ action.label }}</span>
+                            </button>
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
 

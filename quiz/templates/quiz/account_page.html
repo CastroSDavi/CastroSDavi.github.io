@@ -393,60 +393,88 @@
                 {% with metrics=profile_summary.metrics gamification=profile_summary.gamification %}
                 <div class="progress-analytics">
                     <section class="card card--conta-perfil progress-analytics__card">
-                        <header class="progress-analytics__header">
-                            <div class="progress-analytics__intro">
+                        <div class="card__header progress-analytics__header">
+                            <div class="progress-analytics__header-content">
                                 <span class="progress-analytics__eyebrow">Panorama atual</span>
                                 <h2 class="card__title">Central de Progresso</h2>
                                 <p class="card__subtitle">Acompanhe nível, desempenho e consistência de estudo em uma visão estratégica.</p>
-                                <div class="progress-analytics__chips" role="list">
-                                    <span class="progress-analytics__chip" role="listitem">
+                                <ul class="progress-analytics__chips" role="list">
+                                    <li class="progress-analytics__chip">
                                         <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
                                         Sequência ativa: {{ metrics.current_streak|default:0 }} dia{{ metrics.current_streak|default:0|pluralize }}
-                                    </span>
-                                    <span class="progress-analytics__chip" role="listitem">
+                                    </li>
+                                    <li class="progress-analytics__chip">
                                         <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
                                         {% if metrics.total_sessions|default:0 == 1 %}
                                             Histórico: 1 sessão concluída
                                         {% else %}
                                             Histórico: {{ metrics.total_sessions|default:0 }} sessões concluídas
                                         {% endif %}
-                                    </span>
+                                    </li>
                                     {% if gamification %}
-                                    <span class="progress-analytics__chip" role="listitem">
+                                    <li class="progress-analytics__chip">
                                         <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
                                         {{ gamification.achievements.total_unlocked|default_if_none:0 }}/{{ gamification.achievements.total_available|default_if_none:0 }} conquistas
-                                    </span>
+                                    </li>
                                     {% endif %}
-                                </div>
+                                </ul>
                             </div>
                             {% if gamification %}
-                            <div class="progress-analytics__hero-meter" role="presentation">
-                                <div class="progress-analytics__radial" style="--progress-value: {{ gamification.progress.percent|default_if_none:0|unlocalize }};">
-                                    <span class="progress-analytics__radial-value">{{ gamification.progress.percent|default_if_none:0|floatformat:0 }}%</span>
+                            <div class="progress-analytics__header-hero" role="presentation">
+                                <div class="progress-analytics__hero-meter">
+                                    <div class="progress-analytics__radial" style="--progress-value: {{ gamification.progress.percent|default_if_none:0|unlocalize }};">
+                                        <span class="progress-analytics__radial-value">{{ gamification.progress.percent|default_if_none:0|floatformat:0 }}%</span>
+                                    </div>
+                                    <div class="progress-analytics__hero-meta">
+                                        <span class="progress-analytics__label">Nível atual</span>
+                                        <strong>
+                                            {% if gamification.level %}
+                                                {{ gamification.level.nome }}
+                                            {% else %}
+                                                Jornada em definição
+                                            {% endif %}
+                                        </strong>
+                                        <p>Conclusão do nível atual</p>
+                                        <small>
+                                            {% if gamification.next_level %}
+                                                Próximo nível: {{ gamification.next_level.nome }}
+                                            {% else %}
+                                                Nível máximo atingido
+                                            {% endif %}
+                                        </small>
+                                    </div>
                                 </div>
-                                <div class="progress-analytics__hero-meta">
-                                    <span class="progress-analytics__label">Nível atual</span>
-                                    <strong>
-                                        {% if gamification.level %}
-                                            {{ gamification.level.nome }}
-                                        {% else %}
-                                            Jornada em definição
-                                        {% endif %}
-                                    </strong>
-                                    <p>Conclusão do nível atual</p>
-                                    <small>
-                                        {% if gamification.next_level %}
-                                            Próximo nível: {{ gamification.next_level.nome }}
-                                        {% else %}
-                                            Nível máximo atingido
-                                        {% endif %}
-                                    </small>
-                                </div>
+                                <dl class="progress-analytics__hero-summary">
+                                    <div class="progress-analytics__hero-summary-item">
+                                        <dt>XP dentro do nível</dt>
+                                        <dd>{{ gamification.progress.xp_into_level|default:0 }} XP</dd>
+                                    </div>
+                                    <div class="progress-analytics__hero-summary-item">
+                                        <dt>Próximo nível</dt>
+                                        <dd>
+                                            {% if gamification.next_level %}
+                                                {{ gamification.next_level.nome }}
+                                            {% else %}
+                                                —
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+                                    <div class="progress-analytics__hero-summary-item">
+                                        <dt>Meta atual</dt>
+                                        <dd>
+                                            {% if gamification.progress.xp_to_next_level is not None %}
+                                                Faltam {{ gamification.progress.xp_to_next_level }} XP
+                                            {% else %}
+                                                Nível máximo atingido
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+                                </dl>
                             </div>
                             {% endif %}
-                        </header>
+                        </div>
 
-                        <div class="progress-analytics__body">
+                        <div class="card__body progress-analytics__body">
                             <div class="progress-analytics__highlights" role="list">
                                 <article class="progress-analytics__highlight" role="listitem">
                                     <header class="progress-analytics__highlight-header">
@@ -728,36 +756,48 @@
                                     <h3>Mapa de níveis</h3>
                                     <p>Entenda onde você está posicionado e quais etapas ainda estão pela frente.</p>
                                 </header>
-                                <div class="progress-analytics__timeline-track" role="list">
+                                <ol class="progress-analytics__timeline-track" role="list">
                                     {% for level in gamification.levels_path %}
-                                    <article class="progress-analytics__timeline-node progress-analytics__timeline-node--{{ level.status }}{% if level.is_current %} is-current{% endif %}" role="listitem"{% if level.is_current %} aria-current="step"{% endif %}>
-                                        <div class="progress-analytics__timeline-marker" aria-hidden="true">
-                                            <span>{{ level.order }}</span>
+                                    <li class="progress-analytics__timeline-node progress-analytics__timeline-node--{{ level.status }}{% if level.is_current %} is-current{% endif %}"{% if level.is_current %} aria-current="step"{% endif %}>
+                                        <div class="progress-analytics__timeline-marker">
+                                            <span class="progress-analytics__timeline-step" aria-hidden="true">{{ level.order }}</span>
+                                            <span class="u-sr-only">Nível {{ level.order }}</span>
                                         </div>
                                         <div class="progress-analytics__timeline-content">
                                             <header>
                                                 <strong>Nível {{ level.order }}</strong>
                                                 <span>{{ level.name }}</span>
                                             </header>
-                                            <p>A partir de {{ level.xp_required }} XP{% if level.xp_max %} · até {{ level.xp_max }} XP{% endif %}</p>
+                                            <dl class="progress-analytics__timeline-range">
+                                                <div>
+                                                    <dt>Início</dt>
+                                                    <dd>{{ level.xp_required }} XP</dd>
+                                                </div>
+                                                {% if level.xp_max %}
+                                                <div>
+                                                    <dt>Limite</dt>
+                                                    <dd>{{ level.xp_max }} XP</dd>
+                                                </div>
+                                                {% endif %}
+                                            </dl>
                                             <div class="progress-analytics__timeline-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ level.progress_percent|default_if_none:0|unlocalize }}">
                                                 <span style="width: {{ level.progress_percent|default_if_none:0|unlocalize }}%;"></span>
                                             </div>
-                                            <small>
+                                            <p class="progress-analytics__timeline-status">
                                                 {% if level.is_current %}
-                                                    Em andamento
+                                                    Em andamento — {{ level.progress_percent|default_if_none:0|floatformat:0 }}% concluído
                                                 {% elif level.is_completed %}
                                                     Concluído
                                                 {% elif level.is_unlocked %}
-                                                    Disponível
+                                                    Disponível para iniciar
                                                 {% else %}
-                                                    Faltam {{ level.xp_to_unlock }} XP
+                                                    Faltam {{ level.xp_to_unlock }} XP para desbloquear
                                                 {% endif %}
-                                            </small>
+                                            </p>
                                         </div>
-                                    </article>
+                                    </li>
                                     {% endfor %}
-                                </div>
+                                </ol>
                             </section>
                             {% endif %}
                             {% else %}

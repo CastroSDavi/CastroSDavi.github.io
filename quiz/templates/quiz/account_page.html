@@ -392,6 +392,7 @@
             <div id="progression-content" class="account-content__section">
                 {% with metrics=profile_summary.metrics gamification=profile_summary.gamification %}
                 <div class="progress-analytics">
+                    {% if metrics.total_sessions or metrics.total_questions_answered or profile_summary.last_session or gamification %}
                     <section class="card card--conta-perfil progress-analytics__card">
                         <header class="progress-analytics__header">
                             {% if gamification %}
@@ -908,18 +909,18 @@
                                 </div>
                             </section>
                             {% endif %}
-                            {% else %}
-                            <section class="progress-analytics__empty" aria-live="polite">
-                                <span class="material-symbols-outlined" aria-hidden="true">insights</span>
-                                <div>
-                                    <strong>Sem dados analíticos ainda</strong>
-                                    <p>Conclua seu primeiro quiz para liberar gráficos de nível, desempenho e ritmo.</p>
-                                    <a class="button button--secondary button--small" href="{% url 'quiz:home' %}#home">Começar agora</a>
-                                </div>
-                            </section>
-                            {% endif %}
                         </div>
                     </section>
+                    {% else %}
+                    <section class="progress-analytics__empty" aria-live="polite">
+                        <span class="material-symbols-outlined" aria-hidden="true">insights</span>
+                        <div>
+                            <strong>Sem dados analíticos ainda</strong>
+                            <p>Conclua seu primeiro quiz para liberar gráficos de nível, desempenho e ritmo.</p>
+                            <a class="button button--secondary button--small" href="{% url 'quiz:home' %}#home">Começar agora</a>
+                        </div>
+                    </section>
+                    {% endif %}
                 </div>
                 {% endwith %}
             </div>

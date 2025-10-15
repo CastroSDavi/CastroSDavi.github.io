@@ -40,7 +40,7 @@
     border: 1px solid var(--color-gray-300);
     box-shadow: 0 2px 5px rgba(0,0,0,0.07);
     object-fit: contain;
-    background-color: var(--color-gray-50);
+    background-color: var(--color-gray-100);
 }
 
 /* --- ESTILOS PARA A LISTA DE RESPOSTAS E OPÇÕES --- */

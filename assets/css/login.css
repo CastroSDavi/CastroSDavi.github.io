@@ -125,7 +125,7 @@
 }
 
 .login-form .form-control {
-    background-color: var(--color-gray-50); /* Fundo do input muito sutil */
+    background-color: var(--color-gray-100); /* Fundo do input muito sutil */
     border: 1.5px solid var(--color-gray-300);
     /* Padding do input, considerando o ícone à esquerda */
     padding: var(--spacing-sm, 12px) var(--spacing-sm, 12px) var(--spacing-sm, 12px) calc(var(--spacing-sm, 12px) + 20px + var(--spacing-xs, 8px)); /* padding-left: padding-base + largura-icone + espaco-icone-input */
@@ -251,7 +251,7 @@
 }
 .social-login-btn:hover {
     border-color: var(--color-gray-400);
-    background-color: var(--color-gray-50);
+    background-color: var(--color-gray-100);
     box-shadow: 0 2px 5px rgba(0,0,0,0.06);
 }
 .social-login-btn svg {

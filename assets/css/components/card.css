@@ -69,7 +69,7 @@
     display: flex; /* */
     justify-content: center; /* */
     align-items: center; /* */
-    background-color: var(--color-gray-50); /* */
+    background-color: var(--color-gray-100); /* */
     border-color: var(--color-gray-300); /* */
     box-shadow: none; /* */
 }
@@ -85,7 +85,7 @@
 .card--question-wrap.is-transparent { opacity: 0; transition: none; } /* */
 
 .card--placeholder-filtros {
-    background-color: var(--color-gray-50); /* */
+    background-color: var(--color-gray-100); /* */
     border: 1px dashed var(--color-gray-300); /* */
     text-align: center; /* */
     padding: var(--spacing-xl, 35px) var(--spacing-lg, 30px); /* */

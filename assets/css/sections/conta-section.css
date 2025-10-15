@@ -1150,7 +1150,7 @@
 
 .progress-analytics__header {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: stretch;
     gap: clamp(var(--spacing-md, 20px), 4vw, var(--spacing-xl, 40px));
 }
@@ -1209,7 +1209,7 @@
     gap: var(--spacing-md, 20px);
     padding: var(--spacing-sm, 12px) var(--spacing-md, 20px);
     border-radius: var(--border-radius-lg);
-    background: var(--color-gray-50);
+    background: var(--color-gray-100);
     border: 1px solid var(--color-gray-200);
 }
 
@@ -3786,7 +3786,7 @@
     padding: var(--spacing-sm, 10px) var(--spacing-xs, 8px);
     border-bottom: 1px dashed var(--color-gray-200);
     font-size: 0.85rem; color: var(--color-text-primary); line-height: 1.6;
-    background-color: var(--color-gray-50);
+    background-color: var(--color-gray-100);
     border-radius: var(--border-radius-sm);
     margin-bottom: var(--spacing-xs, 8px);
 }
@@ -3806,7 +3806,7 @@
 .profile-form .form-control {
     display: block; width: 100%; padding: var(--spacing-sm, 12px) var(--spacing-md, 16px); 
     font-size: 1rem; line-height: 1.5; color: var(--color-text-primary); 
-    background-color: var(--color-gray-50); border: 1px solid var(--color-gray-300);
+    background-color: var(--color-gray-100); border: 1px solid var(--color-gray-300);
     border-radius: var(--border-radius-md);
     transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
@@ -3901,7 +3901,7 @@
     #account-section-page .data-table tr {
         margin-bottom: var(--spacing-sm, 12px); border: none;
         border-radius: var(--border-radius-md); padding: var(--spacing-sm, 12px);
-        background-color: var(--color-gray-50);
+        background-color: var(--color-gray-100);
         box-shadow: var(--shadow-xs);
         border: 1px solid var(--color-gray-200);
     }

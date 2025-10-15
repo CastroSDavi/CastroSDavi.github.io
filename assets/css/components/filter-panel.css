@@ -461,7 +461,7 @@
 }
 
 .numeric-stepper__button {
-    background-color: var(--color-gray-50);
+    background-color: var(--color-gray-100);
     color: var(--color-primary-dark);
     border: none;
     padding: 0 var(--spacing-sm, 10px);

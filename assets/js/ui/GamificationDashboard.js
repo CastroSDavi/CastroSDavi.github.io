@@ -241,9 +241,12 @@ export default class GamificationDashboard {
         const data = this.snapshot;
         const levelName = data?.level?.nome || 'Comece sua jornada';
         const xpTotal = this._formatNumber(data?.xp_total ?? 0);
-        const percent = Math.round(data?.progress?.percent ?? 0);
-        const xpIntoLevel = this._formatNumber(data?.progress?.xp_into_level ?? 0);
-        const xpToNext = data?.progress?.xp_to_next_level;
+        const progress = data?.progress || {};
+        const percent = Math.round(progress?.percent ?? 0);
+        const xpIntoLevelRaw = progress?.xp_into_level ?? 0;
+        const xpIntoLevel = this._formatNumber(xpIntoLevelRaw);
+        const xpToNextRaw = typeof progress?.xp_to_next_level === 'number' ? progress.xp_to_next_level : null;
+        const xpToNextLabel = xpToNextRaw !== null ? `${this._formatNumber(xpToNextRaw)} XP` : '—';
         const nextLevelName = data?.next_level?.nome || 'próximo nível';
         const prevLevelName = data?.previous_level?.nome || '—';
         const currentStreak = this._formatNumber(data?.current_streak ?? 0);
@@ -251,7 +254,46 @@ export default class GamificationDashboard {
         const achievementsUnlocked = this._formatNumber(data?.achievements?.total_unlocked ?? 0);
         const achievementsTotal = this._formatNumber(data?.achievements?.total_available ?? 0);
 
+        const xpRangeStartRaw = progress?.xp_range_start ?? 0;
+        const xpRangeEndRaw = progress?.xp_range_end;
+        const xpRangeLabel = typeof xpRangeEndRaw === 'number'
+            ? `${this._formatNumber(xpRangeStartRaw)} – ${this._formatNumber(xpRangeEndRaw)} XP`
+            : `${this._formatNumber(xpRangeStartRaw)}+ XP`;
+
+        const xpGainRaw = Number(data?.xp_ganho ?? 0);
+        const hasRecentSession = Number.isFinite(xpGainRaw) && xpGainRaw > 0;
+        const xpGainLabel = hasRecentSession ? `${this._formatNumber(xpGainRaw)} XP` : '—';
+        const xpGainHelp = hasRecentSession ? 'Última sessão concluída' : 'Complete uma sessão para atualizar';
+
         const daily = data?.daily_engagement;
+        const xpTodayRaw = typeof daily?.xp_today === 'number' ? daily.xp_today : null;
+        const xpTodayLabel = xpTodayRaw !== null ? `${this._formatNumber(xpTodayRaw)} XP` : '—';
+        const xpTodayHelp = xpTodayRaw !== null ? 'XP acumulado hoje' : 'Sem atividade registrada hoje.';
+        const questionsTodayRaw = typeof daily?.questions_today === 'number' ? daily.questions_today : null;
+        const correctTodayRaw = typeof daily?.correct_today === 'number' ? daily.correct_today : null;
+        const accuracyToday = questionsTodayRaw && questionsTodayRaw > 0 && typeof correctTodayRaw === 'number'
+            ? Math.round((correctTodayRaw / questionsTodayRaw) * 100)
+            : null;
+        const accuracyLabel = accuracyToday !== null ? `${this._formatNumber(accuracyToday)}%` : '—';
+        const accuracySubtitle = accuracyToday !== null
+            ? `${this._formatNumber(correctTodayRaw ?? 0)} de ${this._formatNumber(questionsTodayRaw ?? 0)} questões`
+            : 'Responda hoje para medir sua precisão.';
+        const xpPerQuestionRaw = questionsTodayRaw && questionsTodayRaw > 0 && xpTodayRaw !== null
+            ? Math.round(xpTodayRaw / questionsTodayRaw)
+            : null;
+        const xpPerQuestionLabel = xpPerQuestionRaw !== null ? `${this._formatNumber(xpPerQuestionRaw)} XP` : '—';
+        const xpPerQuestionHelp = xpPerQuestionRaw !== null
+            ? 'Média nas questões respondidas hoje'
+            : 'Responda mais questões para medir seu ritmo.';
+
+        const projectedDays = xpTodayRaw && xpTodayRaw > 0 && xpToNextRaw !== null
+            ? Math.ceil(xpToNextRaw / Math.max(xpTodayRaw, 1))
+            : null;
+        const progressionHint = xpToNextRaw === null
+            ? 'Você já alcançou o nível máximo disponível.'
+            : projectedDays !== null
+                ? `Mantendo ${this._formatNumber(xpTodayRaw)} XP/dia, sobe em ${this._formatNumber(projectedDays)} dia${projectedDays > 1 ? 's' : ''}.`
+                : 'Gere XP hoje para estimar a próxima subida de nível.';
 
         this.elements.overview.innerHTML = `
             <header class="gamification-overview__header">
@@ -259,22 +301,67 @@ export default class GamificationDashboard {
                     <span class="material-symbols-outlined" aria-hidden="true">workspace_premium</span>
                     <div>
                         <span class="gamification-overview__level-label">Nível atual</span>
-                        <strong class="gamification-overview__level-name">${levelName}</strong>
+                        <strong class="gamification-overview__level-name">${this._escapeHtml(levelName)}</strong>
                     </div>
                 </div>
                 <div class="gamification-overview__xp">
                     <span class="gamification-overview__xp-label">XP total</span>
                     <strong class="gamification-overview__xp-value">${xpTotal}</strong>
+                    <span class="gamification-overview__xp-range">Faixa do nível: ${xpRangeLabel}</span>
                 </div>
             </header>
-            <div class="gamification-overview__progress" role="group" aria-label="Progresso do nível">
-                <div class="gamification-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}">
-                    <span style="width: ${percent}%;"></span>
+            <div class="gamification-overview__progress gamification-progress-card" role="group" aria-label="Progresso do nível">
+                <div class="gamification-progress-card__main">
+                    <div class="gamification-progress-card__ring" role="img" aria-label="${percent}% do nível concluído" style="--progress-value: ${percent};">
+                        <div class="gamification-progress-card__ring-content">
+                            <strong>${percent}%</strong>
+                            <span>concluído</span>
+                        </div>
+                    </div>
+                    <div class="gamification-progress-card__summary">
+                        <span class="gamification-progress-card__summary-label">Rumo a ${this._escapeHtml(nextLevelName)}</span>
+                        <strong>${xpIntoLevel} XP</strong>
+                        <p>${xpToNextRaw !== null ? `Faltam ${this._formatNumber(xpToNextRaw)} XP para avançar` : 'Você atingiu o nível máximo disponível.'}</p>
+                    </div>
                 </div>
-                <div class="gamification-progress-meta">
-                    <span>${xpIntoLevel} XP dentro do nível</span>
-                    <span>${typeof xpToNext === 'number' ? `Faltam ${this._formatNumber(xpToNext)} XP para ${nextLevelName}` : 'Você alcançou o patamar máximo registrado.'}</span>
-                </div>
+                <dl class="gamification-progress-card__metrics">
+                    <div class="gamification-progress-card__metric">
+                        <dt>XP dentro do nível</dt>
+                        <dd>${xpIntoLevel} XP</dd>
+                        <small>Faixa atual: ${xpRangeLabel}</small>
+                    </div>
+                    <div class="gamification-progress-card__metric">
+                        <dt>XP restante</dt>
+                        <dd>${xpToNextLabel}</dd>
+                        <small>${xpToNextRaw !== null ? `Para ${this._escapeHtml(nextLevelName)}` : 'Nenhum próximo nível registrado'}</small>
+                    </div>
+                    <div class="gamification-progress-card__metric">
+                        <dt>XP recente</dt>
+                        <dd>${xpGainLabel}</dd>
+                        <small>${xpGainHelp}</small>
+                    </div>
+                </dl>
+                <ul class="gamification-progress-card__insights">
+                    <li class="gamification-progress-card__insight">
+                        <span class="gamification-progress-card__insight-label">Acurácia hoje</span>
+                        <strong>${accuracyLabel}</strong>
+                        <small>${accuracySubtitle}</small>
+                    </li>
+                    <li class="gamification-progress-card__insight">
+                        <span class="gamification-progress-card__insight-label">XP hoje</span>
+                        <strong>${xpTodayLabel}</strong>
+                        <small>${xpTodayHelp}</small>
+                    </li>
+                    <li class="gamification-progress-card__insight">
+                        <span class="gamification-progress-card__insight-label">XP por questão</span>
+                        <strong>${xpPerQuestionLabel}</strong>
+                        <small>${xpPerQuestionHelp}</small>
+                    </li>
+                </ul>
+                <p class="gamification-progress-card__footnote">
+                    <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                    ${progressionHint}
+                </p>
             </div>
             <dl class="gamification-overview__stats">
                 <div class="gamification-overview__stat">

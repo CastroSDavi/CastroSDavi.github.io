@@ -1,6 +1,6 @@
 {# Arquivo: templates/quiz/home.html #}
 {% extends "quiz/base.html" %}
-{% load static %}
+{% load static l10n %}
 {% block title %}{{ page_title|default:"MedQuiz - Início" }}{% endblock title %}
 {% block content %}
 <section id="home-section" class="home-landing">
@@ -16,8 +16,8 @@
                     <span id="home-progress-title">Nível {{ level_summary.name }}</span>
                     <span class="home-progress__percentage">{{ level_summary.progress_display }}</span>
                 </div>
-                <div class="home-progress__track" role="progressbar" aria-labelledby="home-progress-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ level_summary.progress_percent|default:0|floatformat:'0' }}">
-                    <span class="home-progress__fill" style="width: {{ level_summary.progress_percent|default:0 }}%;"></span>
+                <div class="home-progress__track" role="progressbar" aria-labelledby="home-progress-title" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ level_summary.progress_percent|default_if_none:0|floatformat:'0'|unlocalize }}">
+                    <span class="home-progress__fill" style="width: {{ level_summary.progress_percent|default_if_none:0|unlocalize }}%;"></span>
                 </div>
                 <div class="home-progress__meta">
                     <span class="home-progress__label">
@@ -137,8 +137,8 @@
                             <span class="home-card__progress-value">{{ card.progress.value }}</span>
                             {% endif %}
                         </div>
-                        <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ card.progress.percent|default:0|floatformat:'0' }}">
-                            <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default:0 }}%;"></span>
+                        <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ card.progress.percent|default_if_none:0|floatformat:'0'|unlocalize }}">
+                            <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default_if_none:0|unlocalize }}%;"></span>
                         </div>
                     </div>
                     {% if card.reward %}
@@ -168,8 +168,8 @@
                             <span class="home-card__progress-value">{{ card.progress.value }}</span>
                             {% endif %}
                         </div>
-                        <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ card.progress.percent|default:0|floatformat:'0' }}">
-                            <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default:0 }}%;"></span>
+                        <div class="home-card__progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ card.progress.percent|default_if_none:0|floatformat:'0'|unlocalize }}">
+                            <span class="home-card__progress-fill" style="width: {{ card.progress.percent|default_if_none:0|unlocalize }}%;"></span>
                         </div>
                     </div>
                 </article>

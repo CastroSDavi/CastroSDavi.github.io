@@ -1268,7 +1268,7 @@
     padding: var(--spacing-sm, 12px) var(--spacing-md, 20px);
     border-radius: var(--border-radius-lg);
     border: 1px solid var(--color-gray-200);
-    background: var(--color-white);
+    background: var(--color-gray-100);
     display: grid;
     gap: var(--spacing-xs, 10px);
 }
@@ -1701,34 +1701,6 @@
     color: var(--color-primary-medium);
     font-weight: var(--font-weight-semibold);
     font-size: 1rem;
-}
-
-.progress-analytics__timeline-marker::before,
-.progress-analytics__timeline-marker::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    width: 2px;
-    transform: translateX(-50%);
-    background: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18);
-}
-
-.progress-analytics__timeline-marker::before {
-    top: calc(var(--progress-timeline-gap) * -1);
-    height: calc(var(--progress-timeline-gap) + 4px);
-}
-
-.progress-analytics__timeline-marker::after {
-    top: 100%;
-    height: calc(var(--progress-timeline-gap) + 4px);
-}
-
-.progress-analytics__timeline-node:first-child .progress-analytics__timeline-marker::before {
-    display: none;
-}
-
-.progress-analytics__timeline-node:last-child .progress-analytics__timeline-marker::after {
-    display: none;
 }
 
 .progress-analytics__timeline-step {

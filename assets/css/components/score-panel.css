@@ -8,10 +8,17 @@
 
 /* Block: .score-panel */
 .score-panel {
+  --score-panel-toggle-size: 44px;
+  --score-panel-toggle-inset: var(--spacing-xxs, 6px);
   display: flex;
   flex-direction: column;
   gap: var(--score-panel-outer-gap, var(--spacing-md, 20px));
   padding: var(--score-panel-padding-y, var(--spacing-lg, 28px)) var(--score-panel-padding-x, var(--spacing-md, 22px));
+  padding-right: calc(
+    var(--score-panel-padding-x, var(--spacing-md, 22px))
+    + var(--score-panel-toggle-size, 44px) / 2
+    + var(--score-panel-toggle-inset)
+  );
   width: var(--score-panel-width, 260px);
   min-width: var(--score-panel-width, 260px);
   background-color: var(--score-panel-bg-color, var(--color-white));
@@ -35,6 +42,7 @@
     - var(--layout-bottom-offset, 0px)
   );
   overflow-y: auto;
+  overflow-x: visible;
   z-index: var(--z-index-sticky, 10);
   transition:
     width var(--transition-duration-medium, 0.25s) var(--transition-timing-function-ease-in-out, ease-in-out),
@@ -46,28 +54,36 @@
 .score-panel__content {
   display: flex;
   flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
   gap: var(--score-panel-main-gap, var(--spacing-lg, 24px));
   transition: opacity var(--transition-fast), visibility var(--transition-fast);
 }
 
 .score-panel__toggle {
+  position: absolute;
+  top: 50%;
+  right: calc(-1 * (var(--score-panel-toggle-size, 44px) / 2));
+  transform: translateY(-50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-xxs, 6px);
-  padding: var(--spacing-xs, 8px) var(--spacing-sm, 12px);
-  border-radius: var(--border-radius-lg, 12px);
+  width: var(--score-panel-toggle-size, 44px);
+  height: var(--score-panel-toggle-size, 44px);
+  padding: 0;
+  border-radius: 999px;
   border: 1px solid var(--score-panel-toggle-border, var(--color-gray-200));
   background-color: var(--score-panel-toggle-bg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.05));
   color: var(--score-panel-toggle-color, var(--color-primary-dark));
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm, 0.9rem);
   cursor: pointer;
+  box-shadow: var(--shadow-sm, 0 2px 6px rgba(0, 0, 0, 0.08));
   transition:
     background-color var(--transition-fast),
     color var(--transition-fast),
     border-color var(--transition-fast),
-    box-shadow var(--transition-fast);
+    box-shadow var(--transition-fast),
+    transform var(--transition-fast);
+  z-index: calc(var(--z-index-sticky, 10) + 1);
 }
 
 .score-panel__toggle:hover,
@@ -75,20 +91,17 @@
   border-color: var(--color-primary-medium);
   background-color: rgba(var(--color-primary-medium-rgb, 34, 110, 147), 0.14);
   color: var(--color-primary-dark);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .score-panel__toggle:focus-visible {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
 .score-panel__toggle-icon {
   font-size: 1.5rem;
   line-height: 1;
-}
-
-.score-panel__toggle-label {
-  white-space: nowrap;
 }
 
 .score-panel.is-collapsed {
@@ -97,18 +110,12 @@
   --score-panel-padding-y: var(--spacing-sm, 16px);
   gap: var(--spacing-sm, 12px);
   align-items: center;
+  --score-panel-toggle-inset: var(--spacing-xxs, 4px);
 }
 
 .score-panel.is-collapsed .score-panel__toggle {
-  width: 100%;
-  flex-direction: column;
-  gap: var(--spacing-xxs, 4px);
   background-color: var(--score-panel-toggle-collapsed-bg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.08));
   border-color: var(--score-panel-toggle-collapsed-border, var(--color-primary-light, #a5c6dd));
-}
-
-.score-panel.is-collapsed .score-panel__toggle-label {
-  display: none;
 }
 
 .score-panel.is-collapsed .score-panel__content {
@@ -362,6 +369,8 @@
 
 @media (max-width: 768px) {
     .score-panel {
+        --score-panel-toggle-size: 0px;
+        --score-panel-toggle-inset: 0px;
         position: sticky;
         top: var(--score-panel-sticky-top, 0);
         width: 100%;
@@ -381,6 +390,10 @@
         overflow: hidden;
         z-index: var(--z-index-sticky, 10);
         flex-direction: row;
+    }
+
+    .score-panel__toggle {
+        display: none;
     }
 
     .score-panel__content {

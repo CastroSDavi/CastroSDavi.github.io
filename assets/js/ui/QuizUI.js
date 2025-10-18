@@ -209,6 +209,7 @@ export default class QuizUI {
             questionSection: document.getElementById('question-section'),
             accountSection: document.getElementById('account-section-page'),
             scorePanel: document.querySelector('.score-panel'),
+            scorePanelToggle: document.getElementById('score-panel-toggle'),
             pontuacaoDisplay: document.getElementById('pontuacao'),
             acertosNumDisplay: document.getElementById('acertos-numero'),
             errosNumDisplay: document.getElementById('erros-numero'),

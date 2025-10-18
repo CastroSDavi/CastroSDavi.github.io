@@ -30,6 +30,7 @@ export default class ScorePanel {
         this.scorePanelRoot = this.elements.scorePanel || null;
         this.timerContainer = this.scorePanelRoot?.querySelector('.score-panel__timer') || null;
         this.statsGroupElement = this.scorePanelRoot?.querySelector('.score-panel__stats-group') || null;
+        this.contentContainer = this.scorePanelRoot?.querySelector('.score-panel__content') || null;
         this.statContainers = {
             points: this.scorePanelRoot?.querySelector('.score-panel__stat--points') || null,
             correct: this.scorePanelRoot?.querySelector('.score-panel__stat--correct') || null,
@@ -40,9 +41,14 @@ export default class ScorePanel {
 
         this.pauseControlElement = this.elements.scorePanelControls || null;
         this.endSessionButton = this.elements.btnEncerrarSessao || null;
+        this.toggleButton = this.elements.scorePanelToggle || null;
+        this.toggleLabelElement = this.toggleButton?.querySelector('.score-panel__toggle-label') || null;
+        this.toggleIconElement = this.toggleButton?.querySelector('.score-panel__toggle-icon') || null;
         this.lastShouldDisplayPanel = false;
+        this.isCollapsed = false;
 
         this._setupEventListeners();
+        this._updateCollapsedLayout(this.isCollapsed);
     }
 
     /**
@@ -168,6 +174,10 @@ export default class ScorePanel {
                 this.actionOrchestrator.resumeTimer();
             }
         });
+
+        this.toggleButton?.addEventListener('click', () => {
+            this._setCollapsedState(!this.isCollapsed);
+        });
     }
 
     /**
@@ -204,6 +214,7 @@ export default class ScorePanel {
 
     show() {
         this._applyScorePanelSettings(this.latestRawSettings, { force: true });
+        this._updateCollapsedLayout(this.isCollapsed);
     }
 
     hide() {
@@ -217,6 +228,7 @@ export default class ScorePanel {
         if (this.endSessionButton) {
             this.quizUI.hideElement(this.endSessionButton);
         }
+        this._updateCollapsedLayout(false);
     }
 
     _normalizeSettings(rawSettings = null) {
@@ -327,7 +339,47 @@ export default class ScorePanel {
             this.endSessionButton.disabled = !shouldShowFinish;
         }
 
+        if (!shouldDisplayPanel) {
+            this._updateCollapsedLayout(false);
+        } else {
+            this._updateCollapsedLayout(this.isCollapsed);
+        }
+
         return true;
+    }
+
+    _setCollapsedState(isCollapsed = false) {
+        this.isCollapsed = Boolean(isCollapsed);
+        this._updateCollapsedLayout(this.isCollapsed);
+    }
+
+    _updateCollapsedLayout(isCollapsed) {
+        const questionSection = this.quizUI?.elements?.questionSection;
+        if (this.scorePanelRoot) {
+            this.scorePanelRoot.classList.toggle('is-collapsed', Boolean(isCollapsed));
+        }
+        if (questionSection) {
+            questionSection.classList.toggle('is-score-panel-collapsed', Boolean(isCollapsed));
+        }
+
+        const expanded = !isCollapsed;
+        if (this.toggleButton) {
+            const labelText = expanded ? 'Recolher painel' : 'Expandir painel';
+            this.toggleButton.setAttribute('aria-expanded', String(expanded));
+            this.toggleButton.setAttribute('aria-label', labelText);
+            this.toggleButton.setAttribute('title', labelText);
+            if (this.toggleLabelElement) {
+                this.toggleLabelElement.textContent = labelText;
+            }
+            if (this.toggleIconElement) {
+                this.toggleIconElement.textContent = expanded ? 'chevron_left' : 'chevron_right';
+            }
+        }
+
+        if (this.contentContainer) {
+            this.contentContainer.setAttribute('aria-hidden', isCollapsed ? 'true' : 'false');
+        }
+
     }
 
     _updatePauseButton(isRunning = false, quizState = {}) {

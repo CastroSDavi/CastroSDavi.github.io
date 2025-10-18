@@ -51,6 +51,10 @@ body {
     margin-right: auto;
 }
 
+#question-section.is-score-panel-collapsed .question-section__main-content > :not(.modal):not(.session-loading-indicator-overlay):not(script) {
+    width: min(var(--layout-section-max-width-expanded, var(--layout-section-max-width, 1260px)), 100%);
+}
+
 /* ==========================================================================
   Layout Específico para #account-section-page
 ==========================================================================

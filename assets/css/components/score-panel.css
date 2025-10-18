@@ -8,7 +8,7 @@
 
 /* Block: .score-panel */
 .score-panel {
-  --score-panel-toggle-size: 44px;
+  --score-panel-toggle-width: 52px;
   --score-panel-toggle-inset: var(--spacing-xxs, 6px);
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
   padding: var(--score-panel-padding-y, var(--spacing-lg, 28px)) var(--score-panel-padding-x, var(--spacing-md, 22px));
   padding-right: calc(
     var(--score-panel-padding-x, var(--spacing-md, 22px))
-    + var(--score-panel-toggle-size, 44px) / 2
+    + var(--score-panel-toggle-width, 52px) / 2
     + var(--score-panel-toggle-inset)
   );
   width: var(--score-panel-width, 260px);
@@ -63,35 +63,56 @@
 .score-panel__toggle {
   position: absolute;
   top: 50%;
-  right: calc(-1 * (var(--score-panel-toggle-size, 44px) / 2));
+  right: calc(-1 * (var(--score-panel-toggle-width, 52px) / 2));
   transform: translateY(-50%);
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: var(--score-panel-toggle-size, 44px);
-  height: var(--score-panel-toggle-size, 44px);
-  padding: 0;
+  gap: var(--spacing-xxs, 6px);
+  width: var(--score-panel-toggle-width, 52px);
+  min-height: 112px;
+  padding: var(--spacing-sm, 12px) var(--spacing-xxs, 6px);
   border-radius: 999px;
-  border: 1px solid var(--score-panel-toggle-border, var(--color-gray-200));
-  background-color: var(--score-panel-toggle-bg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.05));
+  border: 1px solid var(--score-panel-toggle-border, rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.18));
+  background: linear-gradient(
+    180deg,
+    rgba(var(--color-white-rgb, 255, 255, 255), 0.94) 0%,
+    rgba(var(--color-primary-light-rgb, 128, 182, 219), 0.18) 100%
+  );
   color: var(--score-panel-toggle-color, var(--color-primary-dark));
   cursor: pointer;
-  box-shadow: var(--shadow-sm, 0 2px 6px rgba(0, 0, 0, 0.08));
+  box-shadow: 0 12px 24px -18px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.42);
   transition:
-    background-color var(--transition-fast),
+    background var(--transition-fast),
     color var(--transition-fast),
     border-color var(--transition-fast),
     box-shadow var(--transition-fast),
     transform var(--transition-fast);
+  overflow: hidden;
   z-index: calc(var(--z-index-sticky, 10) + 1);
+}
+
+.score-panel__toggle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(210deg, rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.16), rgba(255, 255, 255, 0));
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  pointer-events: none;
 }
 
 .score-panel__toggle:hover,
 .score-panel__toggle:focus-visible {
-  border-color: var(--color-primary-medium);
-  background-color: rgba(var(--color-primary-medium-rgb, 34, 110, 147), 0.14);
-  color: var(--color-primary-dark);
-  transform: translateY(-50%) scale(1.05);
+  border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.4);
+  box-shadow: 0 18px 32px -18px rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.55);
+  transform: translateY(-50%) scale(1.04);
+}
+
+.score-panel__toggle:hover::after,
+.score-panel__toggle:focus-visible::after {
+  opacity: 1;
 }
 
 .score-panel__toggle:focus-visible {
@@ -99,9 +120,31 @@
   outline-offset: 4px;
 }
 
+.score-panel__toggle-visual {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xxs, 6px);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
 .score-panel__toggle-icon {
   font-size: 1.5rem;
   line-height: 1;
+}
+
+.score-panel__toggle-text {
+  font-size: 0.65rem;
+  line-height: 1;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: inherit;
+  text-shadow: 0 1px 2px rgba(var(--color-white-rgb, 255, 255, 255), 0.45);
 }
 
 .score-panel.is-collapsed {
@@ -114,8 +157,29 @@
 }
 
 .score-panel.is-collapsed .score-panel__toggle {
-  background-color: var(--score-panel-toggle-collapsed-bg, rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.08));
-  border-color: var(--score-panel-toggle-collapsed-border, var(--color-primary-light, #a5c6dd));
+  background: linear-gradient(
+    160deg,
+    rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.94) 0%,
+    rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.9) 65%
+  );
+  border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.55);
+  color: var(--color-white);
+  box-shadow: 0 18px 32px -16px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.65);
+}
+
+.score-panel.is-collapsed .score-panel__toggle::after {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 65%);
+  opacity: 0.75;
+}
+
+.score-panel.is-collapsed .score-panel__toggle:hover,
+.score-panel.is-collapsed .score-panel__toggle:focus-visible {
+  border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.75);
+  box-shadow: 0 22px 36px -18px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.7);
+}
+
+.score-panel.is-collapsed .score-panel__toggle-text {
+  text-shadow: none;
 }
 
 .score-panel.is-collapsed .score-panel__content {
@@ -369,7 +433,7 @@
 
 @media (max-width: 768px) {
     .score-panel {
-        --score-panel-toggle-size: 0px;
+        --score-panel-toggle-width: 0px;
         --score-panel-toggle-inset: 0px;
         position: sticky;
         top: var(--score-panel-sticky-top, 0);

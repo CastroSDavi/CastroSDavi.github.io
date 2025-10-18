@@ -44,6 +44,7 @@ export default class ScorePanel {
         this.toggleButton = this.elements.scorePanelToggle || null;
         this.toggleLabelElement = this.toggleButton?.querySelector('.score-panel__toggle-label') || null;
         this.toggleIconElement = this.toggleButton?.querySelector('.score-panel__toggle-icon') || null;
+        this.toggleTextElement = this.toggleButton?.querySelector('.score-panel__toggle-text') || null;
         this.lastShouldDisplayPanel = false;
         this.isCollapsed = false;
 
@@ -373,6 +374,9 @@ export default class ScorePanel {
             }
             if (this.toggleIconElement) {
                 this.toggleIconElement.textContent = expanded ? 'chevron_left' : 'chevron_right';
+            }
+            if (this.toggleTextElement) {
+                this.toggleTextElement.textContent = expanded ? 'Recolher' : 'Expandir';
             }
         }
 

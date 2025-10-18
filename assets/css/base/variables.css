@@ -156,7 +156,9 @@
     --main-nav-height: 50px; /* Altura base da navegação principal */
     --footer-height: 60px; /* Ajustado */
     --score-panel-width-desktop: 260px; /* Largura do painel de score no desktop */
+    --score-panel-width-collapsed: 64px; /* Largura quando retraído */
     --layout-section-max-width: 1260px;
+    --layout-section-max-width-expanded: 1380px;
     --layout-section-padding-inline: clamp(32px, 4vw, 48px);
 }
 

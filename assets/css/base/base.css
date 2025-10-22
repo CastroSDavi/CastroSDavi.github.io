@@ -27,8 +27,8 @@ body {
 }
 
 /* Classe aplicada via JavaScript para desabilitar a rolagem principal do body,
-   útil quando modais ou painéis laterais com rolagem própria estão ativos.
-   Especificamente usada na página da conta em mobile. */
+útil quando modais ou painéis laterais com rolagem própria estão ativos.
+Especificamente usada na página da conta em mobile. */
 body.no-scroll {
     overflow-y: hidden;
     padding-right: var(--scroll-lock-compensation, 0px);
@@ -42,26 +42,42 @@ body.no-scroll {
 
 *:focus-visible {
   /* Estilo de foco visível para acessibilidade, usando variáveis CSS */
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: var(--focus-outline-offset);
+    outline: var(--focus-outline-width) solid var(--focus-outline-color);
+    outline-offset: var(--focus-outline-offset);
 }
 
 /* --- INÍCIO DA MODIFICAÇÃO --- */
 /* Regra para renderizar corretamente os ícones do Google Fonts */
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  font-size: 24px;  /* Pode ser sobrescrito por outras classes */
-  line-height: 1;
-  letter-spacing: normal;
-  text-transform: none;
-  display: inline-block;
-  white-space: nowrap;
-  word-wrap: normal;
-  direction: ltr;
-  -webkit-font-feature-settings: 'liga';
-  -webkit-font-smoothing: antialiased;
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;  /* Pode ser sobrescrito por outras classes */
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    vertical-align: middle;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    color: inherit;
+    font-variation-settings: 'FILL' var(--material-symbol-fill, 0),
+    'wght' var(--material-symbol-weight, 400),
+    'GRAD' var(--material-symbol-grade, 0),
+    'opsz' var(--material-symbol-opsz, 24);
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    transition:
+    color var(--transition-duration-medium, 0.25s)
+    var(--transition-timing-function-ease-in-out, ease-in-out),
+    font-variation-settings var(--transition-duration-fast, 0.15s)
+    var(--transition-timing-function-ease-in-out, ease-in-out);
+}
+
+:root[data-theme='dark'] .material-symbols-outlined {
+    color: inherit;
+    text-shadow: 0 6px 14px rgba(4, 9, 20, 0.45);
 }
 /* --- FIM DA MODIFICAÇÃO --- */
 

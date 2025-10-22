@@ -2383,10 +2383,12 @@
 }
 
 :root[data-theme='dark'] .quiz-history__result-badge {
-    background: rgba(18, 30, 54, 0.78);
-    color: var(--color-text-secondary);
-    border: 1px solid rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.28);
-    box-shadow: 0 20px 40px -24px rgba(3, 12, 32, 0.85);
+    background: linear-gradient(145deg,
+        rgba(22, 34, 62, 0.82) 0%,
+        rgba(10, 22, 44, 0.78) 100%);
+    color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.85);
+    border: 1px solid rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.38);
+    box-shadow: 0 24px 48px -26px rgba(3, 10, 28, 0.88);
 }
 
 :root[data-theme='dark'] .quiz-history__result-badge--correct {

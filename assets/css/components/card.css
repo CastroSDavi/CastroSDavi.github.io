@@ -1288,6 +1288,18 @@
     box-shadow: 0 20px 40px -28px rgba(var(--color-primary-dark-rgb, 13, 59, 102), 0.35);
 }
 
+:root[data-theme='dark'] .quiz-results__insights {
+    background: linear-gradient(165deg,
+        rgba(16, 28, 52, 0.92) 0%,
+        rgba(8, 18, 36, 0.88) 100%);
+    border: 1px solid rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.3);
+    box-shadow: 0 26px 52px -30px rgba(3, 12, 32, 0.85);
+}
+
+:root[data-theme='dark'] .quiz-results__insights .material-symbols-outlined {
+    color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.82);
+}
+
 .quiz-results__insights-title {
     display: inline-flex;
     align-items: center;

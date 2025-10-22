@@ -18,10 +18,18 @@ O payload segue o formato abaixo:
     "show_multiplier": true,
     "show_timer": true,
     "allow_pause": true,
-    "allow_manual_finish": true
+    "allow_manual_finish": true,
+    "timer_mode": "countup",
+    "timer_duration_seconds": null,
+    "timer_auto_finalize": true
   },
   "Por Categoria": { "allow_pause": false },
-  "Rápido": { "show_timer": false },
+  "Rápido": {
+    "show_timer": false,
+    "timer_mode": "countdown",
+    "timer_duration_seconds": 300,
+    "timer_auto_finalize": true
+  },
   "Definido": {},
   "Revisão": { "show_timer": false, "allow_pause": false }
 }
@@ -55,6 +63,9 @@ globais quanto nas definições específicas de quiz.
 | `show_timer`         | Exibe ou oculta o cronômetro do quiz.                                  |
 | `allow_pause`        | Habilita o botão de pausar/retomar (depende de `show_timer`).           |
 | `allow_manual_finish`| Exibe o botão de encerrar sessão manualmente.                          |
+| `timer_mode`         | Define se o cronômetro conta para cima (`countup`) ou faz contagem regressiva (`countdown`). |
+| `timer_duration_seconds` | Duração, em segundos, utilizada quando o modo é `countdown` (use `null` para contagem livre). |
+| `timer_auto_finalize`| Quando verdadeiro, encerra automaticamente o quiz ao chegar em zero.   |
 
 ## Fluxo de consumo
 

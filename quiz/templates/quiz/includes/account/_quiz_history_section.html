@@ -1,0 +1,61 @@
+            <div id="quiz-history-content" class="account-content__section">
+                <div class="card card--conta-perfil">
+                    <h2 class="card__title">Histórico de Quizzes</h2>
+                    <div class="card__body">
+                        <p class="quiz-history__description">
+                            Revise suas respostas anteriores, acompanhe o desempenho de cada questão e retorne rapidamente às explicações detalhadas.
+                        </p>
+
+                        <div class="quiz-history__controls">
+                            <div class="form-group quiz-history__form-group">
+                                <label for="quiz-history-session-filter" class="form-label">Filtrar por sessão</label>
+                                <select id="quiz-history-session-filter" class="form-control form-control--small">
+                                    <option value="">Todas as sessões</option>
+                                    {% for session in user_sessions %}
+                                        <option value="{{ session.pk }}">
+                                            Sessão {{ session.pk }} • {{ session.data_inicio|date:"d/m/Y H:i" }} • {{ session.modo_quiz }}{% if session.id_quiz_definicao %} • {{ session.id_quiz_definicao.nome_quiz }}{% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% if not user_sessions %}
+                                    <p class="form-help-text">As sessões mais recentes aparecerão aqui quando disponíveis.</p>
+                                {% endif %}
+                            </div>
+                            <div class="form-group quiz-history__date-filter">
+                                <label for="quiz-history-start-date" class="form-label">Data inicial</label>
+                                <input type="date" id="quiz-history-start-date" class="form-control form-control--small" />
+                            </div>
+                            <div class="form-group quiz-history__date-filter">
+                                <label for="quiz-history-end-date" class="form-label">Data final</label>
+                                <input type="date" id="quiz-history-end-date" class="form-control form-control--small" />
+                            </div>
+                            <div class="quiz-history__actions">
+                                <button id="quiz-history-filter-apply" class="button button--outline button--small" type="button">Aplicar filtros</button>
+                                <button id="quiz-history-filter-reset" class="button button--text button--small" type="button">Limpar</button>
+                            </div>
+                        </div>
+
+                        <p id="quiz-history-loading" class="quiz-history__loading placeholder-text" aria-live="polite">Carregando histórico...</p>
+
+                        <div id="quiz-history-error" class="quiz-history__error u-is-hidden" role="alert">
+                            <span class="material-symbols-outlined" aria-hidden="true">warning</span>
+                            <p data-role="error-message"></p>
+                        </div>
+
+                        <div id="quiz-history-empty" class="quiz-history__empty-state u-is-hidden" role="status">
+                            <span class="material-symbols-outlined" aria-hidden="true">quiz</span>
+                            <p data-role="empty-message">Nenhuma resposta encontrada.</p>
+                        </div>
+
+                        <div id="quiz-history-table-wrapper" class="quiz-history__results u-is-hidden" aria-live="polite">
+                            <div id="quiz-history-table-body" class="quiz-history__list" role="list"></div>
+                        </div>
+
+                        <div id="quiz-history-pagination" class="quiz-history__pagination u-is-hidden">
+                            <button id="quiz-history-prev" class="button button--outline button--small" type="button">Anterior</button>
+                            <span id="quiz-history-page-indicator" class="quiz-history__pagination-indicator">Página 1</span>
+                            <button id="quiz-history-next" class="button button--outline button--small" type="button">Próxima</button>
+                        </div>
+                    </div>
+                </div>
+            </div>

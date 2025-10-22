@@ -11,6 +11,9 @@ const DEFAULT_SCORE_PANEL_SETTINGS = {
     allow_manual_finish: true,
 };
 
+const SCORE_PANEL_COLLAPSE_STORAGE_KEY = 'medquiz:score-panel-collapsed';
+const SCORE_PANEL_DESKTOP_QUERY = '(min-width: 769px)';
+
 export default class ScorePanel {
     constructor(quizUIInstance) {
         this.quizUI = quizUIInstance;
@@ -28,6 +31,17 @@ export default class ScorePanel {
         this.latestRawSettings = null;
 
         this.scorePanelRoot = this.elements.scorePanel || null;
+        this.scorePanelContent = this.elements.scorePanelContent
+            || this.scorePanelRoot?.querySelector('.score-panel__content')
+            || null;
+        this.collapseToggleButton = this.elements.scorePanelToggle || null;
+        this.collapseToggleIcon = this.elements.scorePanelToggleIcon
+            || this.scorePanelRoot?.querySelector('.score-panel__collapse-icon')
+            || null;
+        this.collapseToggleText = this.elements.scorePanelToggleText
+            || this.scorePanelRoot?.querySelector('.score-panel__collapse-text')
+            || null;
+
         this.timerContainer = this.scorePanelRoot?.querySelector('.score-panel__timer') || null;
         this.statsGroupElement = this.scorePanelRoot?.querySelector('.score-panel__stats-group') || null;
         this.statContainers = {
@@ -42,7 +56,163 @@ export default class ScorePanel {
         this.endSessionButton = this.elements.btnEncerrarSessao || null;
         this.lastShouldDisplayPanel = false;
 
+        this.desktopMediaQuery = null;
+        this.isCollapseEnabled = false;
+        this.isCollapsed = false;
+        this._collapseStorageKey = SCORE_PANEL_COLLAPSE_STORAGE_KEY;
+
+        if (this.scorePanelRoot && !this.scorePanelRoot.dataset.collapseState) {
+            this.scorePanelRoot.dataset.collapseState = 'expanded';
+        }
+
         this._setupEventListeners();
+        this._setupCollapseFeature();
+    }
+
+    _setupCollapseFeature() {
+        if (!this.scorePanelRoot || !this.collapseToggleButton) {
+            return;
+        }
+
+        const enableCollapse = () => {
+            this.isCollapseEnabled = true;
+            this.scorePanelRoot.classList.add('score-panel--collapse-enabled');
+            const storedCollapsed = this._loadCollapseState();
+            this.setCollapsed(Boolean(storedCollapsed), {
+                skipStorage: true,
+                animate: false,
+                force: true,
+            });
+        };
+
+        const disableCollapse = () => {
+            this.isCollapseEnabled = false;
+            this.scorePanelRoot.classList.remove('score-panel--collapse-enabled');
+            this.setCollapsed(false, {
+                skipStorage: true,
+                animate: false,
+                force: true,
+            });
+        };
+
+        const applyViewportState = (matches) => {
+            if (matches) {
+                enableCollapse();
+            } else {
+                disableCollapse();
+            }
+        };
+
+        if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+            this.desktopMediaQuery = window.matchMedia(SCORE_PANEL_DESKTOP_QUERY);
+            applyViewportState(this.desktopMediaQuery.matches);
+
+            const handleChange = (event) => applyViewportState(event.matches);
+
+            if (typeof this.desktopMediaQuery.addEventListener === 'function') {
+                this.desktopMediaQuery.addEventListener('change', handleChange);
+            } else if (typeof this.desktopMediaQuery.addListener === 'function') {
+                this.desktopMediaQuery.addListener((event) => applyViewportState(event.matches));
+            }
+        } else {
+            enableCollapse();
+        }
+
+        this.collapseToggleButton.addEventListener('click', (event) => {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            if (!this.isCollapseEnabled) {
+                return;
+            }
+            this.setCollapsed(!this.isCollapsed, { userInitiated: true });
+        });
+    }
+
+    setCollapsed(shouldCollapse, {
+        skipStorage = false,
+        animate = true,
+        userInitiated = false,
+        force = false,
+    } = {}) {
+        if (!this.scorePanelRoot) return;
+
+        const nextState = Boolean(shouldCollapse);
+        if (!force && nextState === this.isCollapsed) {
+            return;
+        }
+
+        if (!animate) {
+            this.scorePanelRoot.classList.add('score-panel--collapse-initializing');
+        }
+
+        this.isCollapsed = nextState;
+        this.scorePanelRoot.classList.toggle('is-collapsed', nextState);
+        this.scorePanelRoot.dataset.collapseState = nextState ? 'collapsed' : 'expanded';
+
+        if (this.scorePanelContent) {
+            this.scorePanelContent.setAttribute('aria-hidden', nextState ? 'true' : 'false');
+        }
+
+        const expandedLabel = 'Recolher painel de pontuacao';
+        const collapsedLabel = 'Expandir painel de pontuacao';
+
+        if (this.collapseToggleButton) {
+            this.collapseToggleButton.setAttribute('aria-expanded', nextState ? 'false' : 'true');
+            this.collapseToggleButton.setAttribute('aria-label', nextState ? collapsedLabel : expandedLabel);
+            this.collapseToggleButton.setAttribute('title', nextState ? collapsedLabel : expandedLabel);
+        }
+
+        if (this.collapseToggleIcon) {
+            this.collapseToggleIcon.textContent = nextState ? 'chevron_right' : 'chevron_left';
+        }
+
+        if (this.collapseToggleText) {
+            this.collapseToggleText.textContent = nextState ? 'Expandir painel' : 'Recolher painel';
+        }
+
+        if (!skipStorage && userInitiated) {
+            this._persistCollapseState(nextState);
+        }
+
+        if (!animate) {
+            if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+                window.requestAnimationFrame(() => {
+                    this.scorePanelRoot?.classList.remove('score-panel--collapse-initializing');
+                });
+            } else {
+                this.scorePanelRoot.classList.remove('score-panel--collapse-initializing');
+            }
+        }
+
+        return this.isCollapsed;
+    }
+
+    _persistCollapseState(isCollapsed) {
+        if (typeof window === 'undefined' || !window.localStorage) {
+            return;
+        }
+        try {
+            window.localStorage.setItem(this._collapseStorageKey, isCollapsed ? '1' : '0');
+        } catch (error) {
+            console.warn('ScorePanel: nao foi possivel salvar o estado do painel.', error);
+        }
+    }
+
+    _loadCollapseState() {
+        if (typeof window === 'undefined' || !window.localStorage) {
+            return false;
+        }
+        try {
+            const storedValue = window.localStorage.getItem(this._collapseStorageKey);
+            if (storedValue === '1') return true;
+            if (storedValue === '0') return false;
+            return false;
+        } catch (error) {
+            console.warn('ScorePanel: falha ao ler estado salvo do painel.', error);
+            return false;
+        }
     }
 
     /**

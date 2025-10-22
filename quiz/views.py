@@ -451,6 +451,61 @@ def _build_account_profile_summary(user: User):
     if tracked_days_last_30:
         consistency_last_30_percent = round((active_days_last_30 / tracked_days_last_30) * 100, 1)
 
+    last_seven_days_stats = _filter_queryset_by_period(daily_stats_qs, '7d', 'data_estatistica')
+    study_time_last_7_seconds = last_seven_days_stats.aggregate(
+        total=Sum('tempo_estudo_segundos_dia')
+    ).get('total') or 0
+    questions_last_7_days = last_seven_days_stats.aggregate(
+        total=Sum('perguntas_respondidas_dia')
+    ).get('total') or 0
+    correct_last_7_days = last_seven_days_stats.aggregate(
+        total=Sum('acertos_dia')
+    ).get('total') or 0
+    tracked_days_last_7 = last_seven_days_stats.count()
+    active_days_last_7 = last_seven_days_stats.filter(perguntas_respondidas_dia__gt=0).count()
+
+    accuracy_last_7 = None
+    if questions_last_7_days:
+        accuracy_last_7 = round((correct_last_7_days / questions_last_7_days) * 100, 1)
+
+    consistency_last_7_percent = None
+    if tracked_days_last_7:
+        consistency_last_7_percent = round(
+            (active_days_last_7 / tracked_days_last_7) * 100, 1
+        )
+
+    accuracy_trend_delta = None
+    if accuracy_last_7 is not None and accuracy_last_30 is not None:
+        accuracy_trend_delta = round(accuracy_last_7 - accuracy_last_30, 1)
+
+    category_performance_all_time = _get_category_performance_data(completed_sessions_qs)
+    difficulty_performance_all_time = _get_difficulty_performance_data(completed_sessions_qs)
+
+    MIN_CATEGORY_SAMPLE = 3
+    category_sample = [
+        cat for cat in category_performance_all_time if cat.get('total', 0) >= MIN_CATEGORY_SAMPLE
+    ]
+    strongest_categories = category_sample[:3]
+    focus_categories = []
+    if category_sample:
+        focus_candidates = sorted(category_sample, key=lambda item: item['accuracy'])
+        strong_ids = {cat.get('id') for cat in strongest_categories}
+        for candidate in focus_candidates:
+            if candidate.get('id') in strong_ids:
+                continue
+            focus_categories.append(candidate)
+            if len(focus_categories) >= 3:
+                break
+
+    performance_insights = {
+        'strongest_categories': strongest_categories,
+        'focus_categories': focus_categories,
+        'difficulty_performance': difficulty_performance_all_time,
+        'has_category_data': bool(category_performance_all_time),
+        'has_difficulty_data': bool(difficulty_performance_all_time),
+        'accuracy_trend_delta': accuracy_trend_delta,
+    }
+
     current_streak = daily_stats_qs.order_by('-data_estatistica').values_list(
         'sequencia_dias_quiz', flat=True
     ).first() or 0
@@ -528,6 +583,11 @@ def _build_account_profile_summary(user: User):
             'study_time_last_30_display': _format_duration_compact(study_time_last_30_seconds) or '0 min',
             'questions_last_30_days': questions_last_30_days,
             'correct_last_30_days': correct_last_30_days,
+            'questions_last_7_days': questions_last_7_days,
+            'study_time_last_7_display': _format_duration_compact(study_time_last_7_seconds) or '0 min',
+            'accuracy_last_7': accuracy_last_7,
+            'consistency_last_7_percent': consistency_last_7_percent,
+            'accuracy_trend_delta': accuracy_trend_delta,
             'questions_per_session_avg': questions_per_session_avg,
             'active_days_last_30': active_days_last_30,
             'consistency_last_30_percent': consistency_last_30_percent,
@@ -539,6 +599,7 @@ def _build_account_profile_summary(user: User):
         },
         'last_session': last_session_info,
         'gamification': gamification_snapshot,
+        'performance': performance_insights,
     }
 
 

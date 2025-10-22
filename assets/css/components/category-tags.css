@@ -43,3 +43,28 @@
     background-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.12);
     border-color: rgba(var(--color-primary-medium-rgb, 26, 95, 158), 0.5);
 }
+
+:root[data-theme='dark'] .category-tag {
+    color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.94);
+    background: linear-gradient(140deg,
+        rgba(24, 46, 92, 0.82),
+        rgba(16, 34, 72, 0.85));
+    border-color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.38);
+    box-shadow: 0 18px 32px -22px rgba(6, 14, 32, 0.55);
+}
+
+:root[data-theme='dark'] .favorite-question-card__tags .category-tag {
+    background: linear-gradient(140deg,
+        rgba(34, 66, 128, 0.85),
+        rgba(24, 50, 102, 0.88));
+    border-color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.45);
+    color: rgba(222, 236, 255, 0.96);
+}
+
+:root[data-theme='dark'] .favorite-question-card__tags .category-tag:hover,
+:root[data-theme='dark'] .favorite-question-card__tags .category-tag:focus-visible {
+    background: linear-gradient(140deg,
+        rgba(48, 90, 168, 0.9),
+        rgba(38, 76, 150, 0.92));
+    border-color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.6);
+}

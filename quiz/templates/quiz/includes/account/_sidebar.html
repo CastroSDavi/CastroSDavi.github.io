@@ -1,0 +1,47 @@
+<aside class="account-sidebar">
+    <div class="account-sidebar__header">
+        <a href="{% url 'quiz:home' %}" class="button button--icon-only account-sidebar__back-button" aria-label="Voltar para o Início">
+            <span class="material-symbols-outlined">arrow_back_ios_new</span>
+        </a>
+    </div>
+    <nav class="account-sidebar__nav">
+        <ul>
+            <li>
+                <a href="#profile-info" class="account-sidebar__link is-active" data-target="profile-info-content">
+                    <span class="material-symbols-outlined">person</span>
+                    Informações do Perfil
+                </a>
+            </li>
+            <li>
+                <a href="#favorite-questions" class="account-sidebar__link" data-target="favorite-questions-content">
+                    <span class="material-symbols-outlined">star</span>
+                    Questões Favoritas
+                </a>
+            </li>
+            <li>
+                <a href="#quiz-history" class="account-sidebar__link" data-target="quiz-history-content">
+                    <span class="material-symbols-outlined">history</span>
+                    Histórico de Quizzes
+                </a>
+            </li>
+            <li>
+                <a href="#progression" class="account-sidebar__link" data-target="progression-content">
+                    <span class="material-symbols-outlined">insights</span>
+                    Progresso &amp; Estatísticas
+                </a>
+            </li>
+            <li>
+                <a href="#security" class="account-sidebar__link" data-target="security-content">
+                    <span class="material-symbols-outlined">security</span>
+                    Segurança e Dados
+                </a>
+            </li>
+            <li>
+                <a href="#preferences" class="account-sidebar__link" data-target="preferences-content">
+                    <span class="material-symbols-outlined">tune</span>
+                    Preferências
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>

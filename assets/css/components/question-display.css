@@ -37,10 +37,10 @@
     height: auto;
     max-height: 350px;
     border-radius: var(--border-radius-md);
-    border: 1px solid var(--color-gray-300);
+    border: 1px solid var(--border-subtle);
     box-shadow: 0 2px 5px rgba(0,0,0,0.07);
     object-fit: contain;
-    background-color: var(--color-gray-100);
+    background-color: var(--surface-card-alt);
 }
 
 /* --- ESTILOS PARA A LISTA DE RESPOSTAS E OPÇÕES --- */
@@ -59,9 +59,9 @@
   width: 100%;
   text-align: left;
   padding: var(--answer-padding-y, 14px) var(--answer-padding-x, 18px);
-  color: var(--answer-color, var(--color-gray-800));
-  background-color: var(--answer-bg-color, var(--color-white));
-  border: 1.5px solid var(--answer-border-color, var(--color-gray-300));
+  color: var(--answer-color, var(--color-text-primary));
+  background-color: var(--answer-bg-color, var(--surface-card));
+  border: 1.5px solid var(--answer-border-color, var(--border-subtle));
   border-radius: var(--border-radius-md, 8px);
   font-size: var(--answer-font-size, 0.95rem);
   font-weight: var(--font-weight-normal);
@@ -123,11 +123,30 @@
     filter: brightness(98%);
 }
 
+
+:root[data-theme='dark'] .question-display__answer-option {
+    background-color: rgba(16, 28, 52, 0.9);
+    border-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.28);
+    color: var(--color-text-primary);
+    box-shadow: 0 14px 34px -22px rgba(3, 12, 32, 0.68);
+}
+
+:root[data-theme='dark'] .question-display__answer-option:not(.question-display__answer-option--answered):hover {
+    background: linear-gradient(135deg, rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.24), rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.18));
+    border-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.48);
+    color: var(--color-text-primary);
+    box-shadow: 0 22px 48px -20px rgba(6, 18, 44, 0.78);
+}
+
+:root[data-theme='dark'] .question-display__answer-option.question-display__answer-option--answered {
+    box-shadow: none;
+}
+
 /* --- REFERÊNCIA DA QUESTÃO --- */
 .question-display__reference {
     margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-sm, 12px);
-    border-top: 1px solid var(--color-gray-200);
+    border-top: 1px solid var(--border-subtle);
     font-size: var(--font-size-sm, 0.875rem);
     color: var(--color-text-muted);
     text-align: right;
@@ -155,7 +174,7 @@
 .question-display__actions.question-display__actions--visible {
     margin-top: var(--spacing-lg, 24px);
     padding-top: var(--spacing-md, 18px);
-    border-top-color: var(--color-gray-300); /* Linha pontilhada visível */
+    border-top-color: var(--border-subtle); /* Linha pontilhada visível */
     min-height: 50px; /* Altura para o botão, ajuste se necessário */
 }
 /* O botão #btn-toggle-explanation em si é estilizado em button.css */
@@ -195,3 +214,5 @@
         font-size: 0.85rem;
     }
 }
+
+

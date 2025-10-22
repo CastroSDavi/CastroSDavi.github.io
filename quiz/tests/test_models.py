@@ -40,6 +40,9 @@ class QuizConfigCacheTests(TestCase):
         config = get_quiz_config()
         overrides = config.score_panel_config
         overrides[SessoesQuizUsuario.ModoQuiz.RAPIDO]['show_timer'] = False
+        overrides[SessoesQuizUsuario.ModoQuiz.RAPIDO]['timer_mode'] = 'countdown'
+        overrides[SessoesQuizUsuario.ModoQuiz.RAPIDO]['timer_duration_seconds'] = 10
+        overrides[SessoesQuizUsuario.ModoQuiz.RAPIDO]['timer_auto_finalize'] = False
         overrides[SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA]['allow_pause'] = False
         config.score_panel_config = overrides
         config.save(update_fields=['score_panel_config'])
@@ -47,9 +50,14 @@ class QuizConfigCacheTests(TestCase):
         default_settings = config.get_score_panel_settings_for_mode()
         self.assertTrue(default_settings['show_timer'])
         self.assertTrue(default_settings['allow_pause'])
+        self.assertEqual(default_settings['timer_mode'], 'countup')
+        self.assertTrue(default_settings['timer_auto_finalize'])
 
         fast_settings = config.get_score_panel_settings_for_mode(SessoesQuizUsuario.ModoQuiz.RAPIDO)
         self.assertFalse(fast_settings['show_timer'])
+        self.assertEqual(fast_settings['timer_mode'], 'countdown')
+        self.assertEqual(fast_settings['timer_duration_seconds'], 10)
+        self.assertFalse(fast_settings['timer_auto_finalize'])
 
         category_settings = config.get_score_panel_settings_for_mode(SessoesQuizUsuario.ModoQuiz.POR_CATEGORIA)
         self.assertFalse(category_settings['allow_pause'])

@@ -1,0 +1,139 @@
+            <div id="challenge-hub-container" class="challenge-hub">
+                <div class="challenge-hub__hero">
+                    <div class="challenge-hub__hero-info">
+                        <span class="challenge-hub__eyebrow">{{ challenge_hero.eyebrow }}</span>
+                        <h2 class="challenge-hub__title">{{ challenge_hero.title }}</h2>
+                        <p class="challenge-hub__subtitle">{{ challenge_hero.subtitle|safe }}</p>
+                        <ul class="challenge-hub__stats" role="list">
+                            {% for stat in challenge_hero_stats %}
+                            <li class="challenge-stat" role="listitem">
+                                <span class="challenge-stat__label">{{ stat.label }}</span>
+                                <span class="challenge-stat__value"{% if stat.dom_id %} id="{{ stat.dom_id }}"{% endif %}>{{ stat.value }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="challenge-hub__hero-actions">
+                        {% for action in challenge_hero_actions %}
+                        <button id="{{ action.dom_id }}" type="button" class="{{ action.css_class }}{% if 'challenge-hub__action-button' not in action.css_class %} challenge-hub__action-button{% endif %}">
+                            {% if action.icon %}
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">{{ action.icon }}</span>
+                            {% endif %}
+                            <span class="button__label">{{ action.label }}</span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="challenge-hub__grid">
+                    <div id="hub-resume-quiz-card" class="challenge-card challenge-card--resume u-is-hidden">
+                        <div class="challenge-card__header">
+                            <div class="challenge-card__icon-wrapper">
+                                <span class="material-symbols-outlined challenge-card__icon">{{ challenge_resume_card.icon }}</span>
+                            </div>
+                            <div class="challenge-card__content">
+                                <h3 class="challenge-card__title">{{ challenge_resume_card.title }}</h3>
+                                <p class="challenge-card__description" id="hub-resume-card-description">{{ challenge_resume_card.description|safe }}</p>
+                            </div>
+                        </div>
+                        <div class="challenge-card__actions">
+                            <button id="hub-discard-resume-btn" class="button button--text button--compact">{{ challenge_resume_card.discard_label }}</button>
+                            <button id="hub-confirm-resume-btn" class="button button--primary button--small">{{ challenge_resume_card.continue_label }}</button>
+                        </div>
+                    </div>
+
+                    {% for card in challenge_cards %}
+                    {% if card.quiz_definition_slug %}
+                    <a
+                        id="{{ card.dom_id }}"
+                        class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}"
+                        href="{% url 'quiz:questions' %}?predefined_slug={{ card.quiz_definition_slug|urlencode }}#challenge-hub-container"
+                        data-card-key="{{ card.key }}"
+                        {% if card.quiz_definition_id %}data-quiz-definition-id="{{ card.quiz_definition_id }}"{% endif %}
+                        {% if card.quiz_definition_generation_type %}data-quiz-generation-type="{{ card.quiz_definition_generation_type }}"{% endif %}
+                        {% if card.quiz_definition_name %}data-quiz-definition-name="{{ card.quiz_definition_name }}"{% endif %}
+                        {% if card.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ card.quiz_definition_study_method_label }}"{% endif %}
+                        data-quiz-definition-slug="{{ card.quiz_definition_slug }}"
+                    >
+                    {% else %}
+                    <button
+                        id="{{ card.dom_id }}"
+                        type="button"
+                        class="challenge-card{% if card.extra_css_class %} {{ card.extra_css_class }}{% endif %}"
+                        data-card-key="{{ card.key }}"
+                        {% if card.quiz_definition_id %}data-quiz-definition-id="{{ card.quiz_definition_id }}"{% endif %}
+                        {% if card.quiz_definition_generation_type %}data-quiz-generation-type="{{ card.quiz_definition_generation_type }}"{% endif %}
+                        {% if card.quiz_definition_name %}data-quiz-definition-name="{{ card.quiz_definition_name }}"{% endif %}
+                        {% if card.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ card.quiz_definition_study_method_label }}"{% endif %}
+                    >
+                    {% endif %}
+                        <div class="challenge-card__header">
+                            <div class="challenge-card__icon-wrapper">
+                                {% if card.icon %}
+                                <span class="material-symbols-outlined challenge-card__icon">{{ card.icon }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="challenge-card__content">
+                                <h3 class="challenge-card__title">{{ card.title }}</h3>
+                                <p class="challenge-card__description">{{ card.description }}</p>
+                            </div>
+                        </div>
+                        {% if card.meta %}
+                        <div class="challenge-card__footer">
+                            <span class="challenge-card__meta">{{ card.meta }}</span>
+                        </div>
+                    {% endif %}
+                    {% if card.quiz_definition_slug %}
+                    </a>
+                    {% else %}
+                    </button>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if training_modes %}
+                    <div class="challenge-hub__training-section">
+                        <h3 class="challenge-hub__section-title">Modos de treino</h3>
+                        <div class="challenge-hub__training-grid">
+                            {% for mode in training_modes %}
+                            <button
+                                type="button"
+                                class="challenge-card challenge-card--training{% if mode.accent_color %} challenge-card--has-accent{% endif %}"
+                                data-training-mode="{{ mode.slug }}"
+                                data-card-key="training_mode"
+                                data-quiz-definition-id="{{ mode.quiz_definition_id }}"
+                                {% if mode.quiz_definition_generation_type %}data-quiz-generation-type="{{ mode.quiz_definition_generation_type }}"{% endif %}
+                                {% if mode.quiz_definition_name %}data-quiz-definition-name="{{ mode.quiz_definition_name }}"{% endif %}
+                                {% if mode.quiz_definition_study_method_label %}data-quiz-study-method-label="{{ mode.quiz_definition_study_method_label }}"{% endif %}
+                                {% if mode.accent_color %}style="--training-mode-accent: {{ mode.accent_color }};"{% endif %}
+                            >
+                                <div class="challenge-card__header">
+                                    <div class="challenge-card__icon-wrapper">
+                                        <span class="material-symbols-outlined challenge-card__icon" aria-hidden="true">{{ mode.icon }}</span>
+                                    </div>
+                                    <div class="challenge-card__content">
+                                        <h3 class="challenge-card__title">{{ mode.title }}</h3>
+                                        {% if mode.description %}
+                                        <p class="challenge-card__description">{{ mode.description }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if mode.meta %}
+                                <div class="challenge-card__footer">
+                                    <span class="challenge-card__meta">{{ mode.meta }}</span>
+                                </div>
+                                {% endif %}
+                            </button>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div id="hub-predefined-section" class="challenge-hub__predefined u-is-hidden">
+                    <div class="challenge-hub__section-header">
+                        <h3 class="challenge-hub__section-title">{{ challenge_predefined_section.title }}</h3>
+                        <p class="challenge-hub__section-subtitle">{{ challenge_predefined_section.subtitle }}</p>
+                    </div>
+                    <div id="hub-predefined-list" class="challenge-hub__predefined-grid" role="list"></div>
+                </div>
+            </div>

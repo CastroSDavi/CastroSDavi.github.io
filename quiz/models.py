@@ -70,7 +70,7 @@ def default_streak_bonus_rules() -> List[Dict[str, int]]:
     ]
 
 
-DEFAULT_SCORE_PANEL_SETTINGS: Dict[str, bool] = {
+SCORE_PANEL_BOOLEAN_DEFAULTS: Dict[str, bool] = {
     "show_points": True,
     "show_correct": True,
     "show_incorrect": True,
@@ -81,8 +81,23 @@ DEFAULT_SCORE_PANEL_SETTINGS: Dict[str, bool] = {
     "allow_manual_finish": True,
 }
 
+SCORE_PANEL_BOOLEAN_KEYS: List[str] = list(SCORE_PANEL_BOOLEAN_DEFAULTS.keys())
 
-def default_score_panel_config() -> Dict[str, Dict[str, bool]]:
+DEFAULT_TIMER_MODE: str = "countup"
+SCORE_PANEL_TIMER_ALLOWED_MODES: Set[str] = {"countup", "countdown"}
+DEFAULT_TIMER_SETTINGS: Dict[str, Any] = {
+    "timer_mode": DEFAULT_TIMER_MODE,
+    "timer_duration_seconds": None,
+    "timer_auto_finalize": True,
+}
+
+DEFAULT_SCORE_PANEL_SETTINGS: Dict[str, Any] = {
+    **SCORE_PANEL_BOOLEAN_DEFAULTS,
+    **DEFAULT_TIMER_SETTINGS,
+}
+
+
+def default_score_panel_config() -> Dict[str, Dict[str, Any]]:
     """Retorna um dicionário padrão para todos os modos de quiz disponíveis."""
 
     config = {"default": deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)}
@@ -169,24 +184,85 @@ def _coerce_score_panel_flag(value: Any, default: bool) -> bool:
     return default
 
 
-def _coerce_score_panel_settings(data: Optional[Dict[str, Any]]) -> Dict[str, bool]:
+def _coerce_timer_mode(value: Any, default: str = DEFAULT_TIMER_MODE) -> str:
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in SCORE_PANEL_TIMER_ALLOWED_MODES:
+            return normalized
+        mode_aliases = {
+            "count-down": "countdown",
+            "count_down": "countdown",
+            "regressivo": "countdown",
+            "regressiva": "countdown",
+            "descendente": "countdown",
+            "ascendente": "countup",
+            "progressivo": "countup",
+            "progressiva": "countup",
+        }
+        if normalized in mode_aliases:
+            return mode_aliases[normalized]
+    return default
+
+
+def _coerce_timer_duration(value: Any, default: Optional[int] = None) -> Optional[int]:
+    if value in {None, "", False}:
+        return None
+    try:
+        parsed = int(float(value))
+    except (TypeError, ValueError):
+        return default
+    return parsed if parsed >= 0 else default
+
+
+def _coerce_score_panel_settings(data: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     settings = deepcopy(DEFAULT_SCORE_PANEL_SETTINGS)
     if not isinstance(data, dict):
         return settings
-    for key in settings.keys():
+
+    for key in SCORE_PANEL_BOOLEAN_KEYS:
         if key in data:
             settings[key] = _coerce_score_panel_flag(data[key], settings[key])
+
+    timer_config = data.get("timer_config")
+    timer_mode = settings["timer_mode"]
+    timer_duration = settings["timer_duration_seconds"]
+    timer_auto_finalize = settings["timer_auto_finalize"]
+
+    if isinstance(timer_config, dict):
+        if "mode" in timer_config:
+            timer_mode = _coerce_timer_mode(timer_config.get("mode"), timer_mode)
+        if "duration_seconds" in timer_config:
+            timer_duration = _coerce_timer_duration(timer_config.get("duration_seconds"), timer_duration)
+        if "auto_finalize" in timer_config:
+            timer_auto_finalize = _coerce_score_panel_flag(timer_config.get("auto_finalize"), timer_auto_finalize)
+
+    if "timer_mode" in data:
+        timer_mode = _coerce_timer_mode(data.get("timer_mode"), timer_mode)
+    if "timer_duration_seconds" in data:
+        timer_duration = _coerce_timer_duration(data.get("timer_duration_seconds"), timer_duration)
+    if "timer_limit_seconds" in data:
+        timer_duration = _coerce_timer_duration(data.get("timer_limit_seconds"), timer_duration)
+    if "duration_seconds" in data:
+        timer_duration = _coerce_timer_duration(data.get("duration_seconds"), timer_duration)
+    if "timer_auto_finalize" in data:
+        timer_auto_finalize = _coerce_score_panel_flag(data.get("timer_auto_finalize"), timer_auto_finalize)
+    if "auto_finalize_on_timeout" in data:
+        timer_auto_finalize = _coerce_score_panel_flag(data.get("auto_finalize_on_timeout"), timer_auto_finalize)
+
+    settings["timer_mode"] = timer_mode
+    settings["timer_duration_seconds"] = timer_duration
+    settings["timer_auto_finalize"] = timer_auto_finalize
     return settings
 
 
-def sanitize_score_panel_config(payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, bool]]:
+def sanitize_score_panel_config(payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     """Normaliza um payload bruto de configuração do painel de pontuação."""
 
     payload = payload or {}
     if not isinstance(payload, dict):
         payload = {}
 
-    sanitized: Dict[str, Dict[str, bool]] = {
+    sanitized: Dict[str, Dict[str, Any]] = {
         "default": _coerce_score_panel_settings(payload.get("default"))
     }
 
@@ -664,7 +740,7 @@ class QuizDefinicao(models.Model):
         self.generation_config = self._sanitize_generation_config()
         super().save(*args, **kwargs)
 
-    def get_score_panel_overrides(self) -> Dict[str, Dict[str, bool]]:
+    def get_score_panel_overrides(self) -> Dict[str, Dict[str, Any]]:
         return sanitize_score_panel_config(self.score_panel_overrides)
 
     def get_absolute_url(self):
@@ -1464,29 +1540,79 @@ class ConfiguracoesGeraisQuiz(models.Model):
                 raise ValidationError({'bonus_sequencia_acertos': f"O bônus na posição {index} deve ser numérico."})
             last_streak = streak_value
 
-    def _sanitize_score_panel_config(self, payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, bool]]:
+    def _sanitize_score_panel_config(self, payload: Optional[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
         """Mantido por compatibilidade retroativa com chamadas existentes."""
 
         return sanitize_score_panel_config(payload)
 
     @staticmethod
     def _apply_score_panel_override(
-        base_settings: Dict[str, bool],
+        base_settings: Dict[str, Any],
         override_settings: Optional[Dict[str, Any]],
-    ) -> Dict[str, bool]:
+    ) -> Dict[str, Any]:
         if not isinstance(override_settings, dict):
             return base_settings
 
-        for key in base_settings.keys():
+        for key in SCORE_PANEL_BOOLEAN_KEYS:
             if key in override_settings:
-                base_settings[key] = bool(override_settings[key])
+                default_value = base_settings.get(key, SCORE_PANEL_BOOLEAN_DEFAULTS.get(key, True))
+                base_settings[key] = _coerce_score_panel_flag(override_settings[key], bool(default_value))
+
+        timer_config = override_settings.get("timer_config")
+        if isinstance(timer_config, dict):
+            if "mode" in timer_config:
+                base_settings["timer_mode"] = _coerce_timer_mode(
+                    timer_config.get("mode"),
+                    base_settings.get("timer_mode", DEFAULT_TIMER_SETTINGS["timer_mode"]),
+                )
+            if "duration_seconds" in timer_config:
+                base_settings["timer_duration_seconds"] = _coerce_timer_duration(
+                    timer_config.get("duration_seconds"),
+                    base_settings.get("timer_duration_seconds", DEFAULT_TIMER_SETTINGS["timer_duration_seconds"]),
+                )
+            if "auto_finalize" in timer_config:
+                base_settings["timer_auto_finalize"] = _coerce_score_panel_flag(
+                    timer_config.get("auto_finalize"),
+                    bool(base_settings.get("timer_auto_finalize", DEFAULT_TIMER_SETTINGS["timer_auto_finalize"])),
+                )
+
+        if "timer_mode" in override_settings:
+            base_settings["timer_mode"] = _coerce_timer_mode(
+                override_settings.get("timer_mode"),
+                base_settings.get("timer_mode", DEFAULT_TIMER_SETTINGS["timer_mode"]),
+            )
+        if "timer_duration_seconds" in override_settings:
+            base_settings["timer_duration_seconds"] = _coerce_timer_duration(
+                override_settings.get("timer_duration_seconds"),
+                base_settings.get("timer_duration_seconds", DEFAULT_TIMER_SETTINGS["timer_duration_seconds"]),
+            )
+        if "timer_limit_seconds" in override_settings:
+            base_settings["timer_duration_seconds"] = _coerce_timer_duration(
+                override_settings.get("timer_limit_seconds"),
+                base_settings.get("timer_duration_seconds", DEFAULT_TIMER_SETTINGS["timer_duration_seconds"]),
+            )
+        if "duration_seconds" in override_settings:
+            base_settings["timer_duration_seconds"] = _coerce_timer_duration(
+                override_settings.get("duration_seconds"),
+                base_settings.get("timer_duration_seconds", DEFAULT_TIMER_SETTINGS["timer_duration_seconds"]),
+            )
+        if "timer_auto_finalize" in override_settings:
+            base_settings["timer_auto_finalize"] = _coerce_score_panel_flag(
+                override_settings.get("timer_auto_finalize"),
+                bool(base_settings.get("timer_auto_finalize", DEFAULT_TIMER_SETTINGS["timer_auto_finalize"])),
+            )
+        if "auto_finalize_on_timeout" in override_settings:
+            base_settings["timer_auto_finalize"] = _coerce_score_panel_flag(
+                override_settings.get("auto_finalize_on_timeout"),
+                bool(base_settings.get("timer_auto_finalize", DEFAULT_TIMER_SETTINGS["timer_auto_finalize"])),
+            )
         return base_settings
 
     def get_score_panel_settings_for_mode(
         self,
         mode: Optional[str] = None,
         quiz_definicao: Optional['QuizDefinicao'] = None,
-    ) -> Dict[str, bool]:
+    ) -> Dict[str, Any]:
         sanitized = sanitize_score_panel_config(self.score_panel_config)
         resolved = deepcopy(sanitized.get('default', DEFAULT_SCORE_PANEL_SETTINGS))
 

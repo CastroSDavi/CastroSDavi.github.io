@@ -1,0 +1,105 @@
+        {# Modal de ConfirmaÃ§Ã£o para Encerrar SessÃ£o (EXISTENTE) #}
+        <div id="confirm-encerrar-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="modalConfirmTitle" aria-modal="true">
+            <div id="confirm-encerrar-modal" class="card modal__dialog">
+                <div class="modal__header">
+                    <h3 id="modalConfirmTitle" class="modal__title card__title">Confirmar Encerramento</h3>
+                </div>
+                <div class="modal__body">
+                    <p>Tem certeza que deseja encerrar esta tentativa? Sua pontuaÃ§Ã£o atual serÃ¡ exibida, mas o progresso nas questÃµes serÃ¡ perdido.</p>
+                </div>
+                <div class="modal__footer modal__footer--stacked">
+                    <button id="cancel-encerrar-btn" class="button button--secondary button--modal-action">Cancelar</button>
+                    <button id="confirm-encerrar-btn" class="button button--primary button--modal-action">Confirmar</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="report-issue-overlay" class="modal u-is-hidden" role="dialog" aria-labelledby="reportIssueTitle" aria-modal="true">
+            <div id="report-issue-dialog" class="card modal__dialog">
+                <form id="report-issue-form">
+                    <div class="modal__header report-issue-header">
+                        <span class="material-symbols-outlined report-issue-header__icon" aria-hidden="true">flag_circle</span>
+                        <div class="report-issue-header__text">
+                            <h3 id="reportIssueTitle" class="modal__title card__title report-issue-title">Relatar problema</h3>
+                            <p class="report-issue-intro">Descreva o que encontrou para que possamos revisar com agilidade.</p>
+                        </div>
+                    </div>
+                    <div class="modal__body report-issue-content">
+                        <div class="report-issue-context" aria-live="polite">
+                            <span class="material-symbols-outlined report-issue-context__icon" aria-hidden="true">quiz</span>
+                            <span id="report-issue-question-label" class="report-issue-context__label"></span>
+                        </div>
+                        <fieldset class="report-issue-category" aria-describedby="report-issue-type-summary">
+                            <legend class="report-issue-section-title">Motivo</legend>
+                            <div class="report-issue-chip-list">
+                                <label class="report-issue-chip" data-summary="Informe a alternativa correta esperada e cite a justificativa ou fonte utilizada." data-icon="fact_check">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="answer_key"
+                                        checked
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">fact_check</span>
+                                    <span class="report-issue-chip__label">Gabarito</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Explique qual trecho do enunciado estÃ¡ confuso, incorreto ou incompleto." data-icon="segment">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="statement"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">segment</span>
+                                    <span class="report-issue-chip__label">Enunciado</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Aponte quais alternativas apresentam o problema e descreva o ajuste sugerido." data-icon="splitscreen">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="option_issue"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">splitscreen</span>
+                                    <span class="report-issue-chip__label">Alternativas</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Indique a referÃªncia correta ou detalhe por que a explicaÃ§Ã£o estÃ¡ desatualizada." data-icon="library_books">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="reference_issue"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">library_books</span>
+                                    <span class="report-issue-chip__label">ReferÃªncia</span>
+                                </label>
+                                <label class="report-issue-chip" data-summary="Descreva o que encontrou e, se possÃ­vel, indique o trecho ou contexto exato." data-icon="lightbulb">
+                                    <input
+                                        type="radio"
+                                        name="report-issue-category"
+                                        value="other"
+                                    >
+                                    <span class="material-symbols-outlined report-issue-chip__icon" aria-hidden="true">lightbulb</span>
+                                    <span class="report-issue-chip__label">Outro</span>
+                                </label>
+                            </div>
+                        </fieldset>
+                        <label for="report-issue-text" class="report-issue-section-title">DescriÃ§Ã£o</label>
+                        <textarea
+                            id="report-issue-text"
+                            name="descricao"
+                            rows="4"
+                            maxlength="800"
+                            required
+                            placeholder="Explique o que encontrou. Cite trechos, alternativas ou referÃªncias relevantes."
+                        ></textarea>
+                        <div class="report-issue-meta">
+                            <span id="report-issue-error" class="report-issue-error" aria-live="polite"></span>
+                            <span id="report-issue-counter" class="report-issue-counter">0/800</span>
+                        </div>
+                    </div>
+                    <div class="modal__footer report-issue-footer">
+                        <button type="button" id="report-issue-cancel" class="button button--secondary button--modal-action">Cancelar</button>
+                        <button type="submit" id="report-issue-submit" class="button button--primary button--modal-action">
+                            <span class="button__label">Enviar</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>

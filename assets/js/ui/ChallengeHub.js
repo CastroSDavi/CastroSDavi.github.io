@@ -31,8 +31,6 @@ export default class ChallengeHub {
             hubTotalQuestionsCount: this.quizUI.elements.hubTotalQuestionsCount,
             hubQuickQuizCount: this.quizUI.elements.hubQuickQuizCount,
             challengeStatTotal: this.quizUI.elements.challengeStatTotal,
-            placeholderFiltrosContainer: this.quizUI.elements.placeholderFiltrosContainer,
-            closeFiltersAndShowHubBtn: this.quizUI.elements.closeFiltersAndShowHubBtn,
             predefinedSection: this.quizUI.elements.hubPredefinedSection,
             predefinedList: this.quizUI.elements.hubPredefinedList,
 
@@ -72,10 +70,7 @@ export default class ChallengeHub {
             console.error("ChallengeHub: modalManager não encontrado para abrir painel de filtros.");
             return;
         }
-        this.hideHub();
-        if (this.elements.placeholderFiltrosContainer) {
-            this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
-        }
+        this._setHubActiveClass(true);
         this.quizUI.modalManager.toggleFilterPanel(true);
     }
 
@@ -179,8 +174,7 @@ export default class ChallengeHub {
         }
 
         this._setHubActiveClass(true);
-
-        this.quizUI.hideElement(this.elements.placeholderFiltrosContainer);
+        
         this.quizUI.hideElement(this.quizUI.elements.quizSectionContent);
         this.quizUI.hideElement(this.quizUI.elements.resultadoCard);
 

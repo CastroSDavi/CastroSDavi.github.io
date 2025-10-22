@@ -84,3 +84,27 @@ body[data-page-id="account"] .main-nav {
   }
 }
 
+:root[data-theme='dark'] .main-nav {
+  background-color: var(--surface-card);
+  border-bottom-color: var(--border-strong);
+  box-shadow: var(--shadow-elevated);
+}
+
+:root[data-theme='dark'] .main-nav__link {
+  color: var(--color-text-secondary);
+}
+
+:root[data-theme='dark'] .main-nav__link:hover:not(.main-nav__link--active) {
+  color: var(--color-text-primary);
+}
+
+:root[data-theme='dark'] .main-nav__link--active {
+  color: var(--color-text-primary);
+  border-bottom-color: var(--color-secondary-green);
+}
+
+:root[data-theme='dark'] .main-nav__link:focus-visible {
+  background-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.14);
+  color: var(--color-text-primary);
+}
+

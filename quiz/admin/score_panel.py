@@ -1,6 +1,6 @@
 """Score panel helpers shared by admin forms."""
 
-from typing import Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Tuple
 
 from django import forms
 from django.utils.text import slugify
@@ -79,14 +79,75 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
             "Mostra o multiplicador aplicado aos pontos (depende da sequência de acertos).",
         ),
     ]
+    TIMER_MODE_CHOICES = (
+        ("countup", "Contagem progressiva"),
+        ("countdown", "Contagem regressiva"),
+    )
+
+    SCORE_PANEL_TIMER_FIELDS_META = [
+        {
+            "key": "timer_mode",
+            "field_class": forms.ChoiceField,
+            "field_kwargs": {
+                "choices": TIMER_MODE_CHOICES,
+                "required": False,
+                "label": "Modo do cronometro",
+                "help_text": "Define se o cronometro avanca ou faz contagem regressiva.",
+            },
+        },
+        {
+            "key": "timer_duration_seconds",
+            "field_class": forms.IntegerField,
+            "field_kwargs": {
+                "required": False,
+                "min_value": 0,
+                "label": "Duracao padrao (segundos)",
+                "help_text": "Tempo inicial para contagem regressiva. Deixe em branco para contar livremente.",
+            },
+        },
+        {
+            "key": "timer_auto_finalize",
+            "field_class": forms.BooleanField,
+            "field_kwargs": {
+                "required": False,
+                "label": "Encerrar automaticamente",
+                "help_text": "Finaliza o quiz quando o tempo chega a zero.",
+            },
+        },
+    ]
+
 
     class Meta:
         model = ConfiguracoesGeraisQuiz
         fields = "__all__"
 
+    
     @classmethod
     def get_score_panel_modes(cls) -> Iterable[Tuple[str, str]]:
-        return get_score_panel_modes_with_labels()
+        """
+        Limit the global configuration form to the default settings, the
+        predefined-session mode, and any custom extra modes declared in
+        project settings. Other core modes are adjusted in their dedicated
+        admin screens.
+        """
+
+        allowed_values = {
+            "default",
+            SessoesQuizUsuario.ModoQuiz.DEFINIDO.value,
+        }
+        core_mode_values = {choice.value for choice in SessoesQuizUsuario.ModoQuiz}
+
+        filtered: List[Tuple[str, str]] = []
+        for mode_key, mode_label in get_score_panel_modes_with_labels():
+            if mode_key == "default":
+                filtered.append((mode_key, mode_label))
+                continue
+            if mode_key not in core_mode_values:
+                filtered.append((mode_key, mode_label))
+                continue
+            if mode_key in allowed_values:
+                filtered.append((mode_key, mode_label))
+        return filtered
 
     @classmethod
     def build_field_name(cls, mode_key: str, flag_key: str) -> str:
@@ -106,7 +167,7 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
 
         for mode_key, _mode_label in self.get_score_panel_modes():
             prefix = get_score_panel_mode_prefix(mode_key)
-            mode_settings: Dict[str, bool] = (
+            mode_settings: Dict[str, Any] = (
                 sanitized.get(mode_key)
                 or sanitized.get("default")
                 or DEFAULT_SCORE_PANEL_SETTINGS
@@ -121,6 +182,30 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
                     )
                 )
 
+            for timer_meta in self.SCORE_PANEL_TIMER_FIELDS_META:
+                timer_key = timer_meta["key"]
+                field_name = f"{prefix}_{timer_key}"
+                field = self.fields.get(field_name)
+                if not field:
+                    continue
+                if timer_key == "timer_mode":
+                    value = mode_settings.get(
+                        "timer_mode", DEFAULT_SCORE_PANEL_SETTINGS.get("timer_mode")
+                    )
+                    field.initial = value or DEFAULT_SCORE_PANEL_SETTINGS.get("timer_mode")
+                elif timer_key == "timer_duration_seconds":
+                    value = mode_settings.get(
+                        "timer_duration_seconds",
+                        DEFAULT_SCORE_PANEL_SETTINGS.get("timer_duration_seconds"),
+                    )
+                    field.initial = value
+                elif timer_key == "timer_auto_finalize":
+                    value = mode_settings.get(
+                        "timer_auto_finalize",
+                        DEFAULT_SCORE_PANEL_SETTINGS.get("timer_auto_finalize"),
+                    )
+                    field.initial = bool(value)
+
     def clean(self):
         cleaned_data = super().clean()
 
@@ -133,6 +218,24 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
                 config_payload[mode_key][flag_key] = bool(
                     cleaned_data.get(field_name, False)
                 )
+            timer_mode_field = f"{prefix}_timer_mode"
+            timer_duration_field = f"{prefix}_timer_duration_seconds"
+            timer_auto_finalize_field = f"{prefix}_timer_auto_finalize"
+
+            timer_mode_value = cleaned_data.get(timer_mode_field)
+            if isinstance(timer_mode_value, str):
+                timer_mode_value = timer_mode_value.strip().lower()
+            if timer_mode_value not in {"countdown", "countup"}:
+                timer_mode_value = DEFAULT_SCORE_PANEL_SETTINGS.get("timer_mode")
+
+            timer_duration_value = _coerce_timer_duration_value(cleaned_data.get(timer_duration_field))
+            timer_auto_finalize_value = _coerce_boolean_field(
+                cleaned_data.get(timer_auto_finalize_field, DEFAULT_SCORE_PANEL_SETTINGS.get("timer_auto_finalize"))
+            )
+
+            config_payload[mode_key]["timer_mode"] = timer_mode_value
+            config_payload[mode_key]["timer_duration_seconds"] = timer_duration_value
+            config_payload[mode_key]["timer_auto_finalize"] = timer_auto_finalize_value
 
         cleaned_data["score_panel_config"] = sanitize_score_panel_config(
             config_payload
@@ -142,6 +245,7 @@ class ConfiguracoesGeraisQuizForm(forms.ModelForm):
 
 class QuizDefinicaoAdminForm(forms.ModelForm):
     SCORE_PANEL_FIELDS = ConfiguracoesGeraisQuizForm.SCORE_PANEL_FIELDS
+    SCORE_PANEL_TIMER_FIELDS_META = ConfiguracoesGeraisQuizForm.SCORE_PANEL_TIMER_FIELDS_META
     FAVORITES_SORT_CHOICES = (
         ("recent", "Mais recentes primeiro"),
         ("oldest", "Mais antigas primeiro"),
@@ -233,7 +337,24 @@ class QuizDefinicaoAdminForm(forms.ModelForm):
 
     @classmethod
     def get_score_panel_modes(cls) -> Iterable[Tuple[str, str]]:
-        return get_score_panel_modes_with_labels()
+        """
+        Expose only the predefined-session mode plus any custom extra modes
+        added via settings. Other core modes (e.g. Rapido, Por Categoria) are
+        managed globally via the general quiz settings admin.
+        """
+        allowed_values = {SessoesQuizUsuario.ModoQuiz.DEFINIDO.value}
+        core_mode_values = {choice.value for choice in SessoesQuizUsuario.ModoQuiz}
+
+        filtered: List[Tuple[str, str]] = []
+        for mode_key, mode_label in get_score_panel_modes_with_labels():
+            if mode_key == "default":
+                continue
+            if mode_key not in core_mode_values:
+                filtered.append((mode_key, mode_label))
+                continue
+            if mode_key in allowed_values:
+                filtered.append((mode_key, mode_label))
+        return filtered
 
     @classmethod
     def build_field_name(cls, mode_key: str, flag_key: str) -> str:
@@ -269,7 +390,7 @@ class QuizDefinicaoAdminForm(forms.ModelForm):
 
         for mode_key, _mode_label in self.get_score_panel_modes():
             prefix = get_score_panel_mode_prefix(mode_key)
-            mode_settings: Dict[str, bool] = (
+            mode_settings: Dict[str, Any] = (
                 sanitized.get(mode_key)
                 or sanitized.get("default")
                 or DEFAULT_SCORE_PANEL_SETTINGS
@@ -282,6 +403,30 @@ class QuizDefinicaoAdminForm(forms.ModelForm):
                         flag_key, DEFAULT_SCORE_PANEL_SETTINGS.get(flag_key, True)
                     )
                 )
+
+            for timer_meta in self.SCORE_PANEL_TIMER_FIELDS_META:
+                timer_key = timer_meta["key"]
+                field_name = f"{prefix}_{timer_key}"
+                field = self.fields.get(field_name)
+                if not field:
+                    continue
+                if timer_key == "timer_mode":
+                    value = mode_settings.get(
+                        "timer_mode", DEFAULT_SCORE_PANEL_SETTINGS.get("timer_mode")
+                    )
+                    field.initial = value or DEFAULT_SCORE_PANEL_SETTINGS.get("timer_mode")
+                elif timer_key == "timer_duration_seconds":
+                    value = mode_settings.get(
+                        "timer_duration_seconds",
+                        DEFAULT_SCORE_PANEL_SETTINGS.get("timer_duration_seconds"),
+                    )
+                    field.initial = value
+                elif timer_key == "timer_auto_finalize":
+                    value = mode_settings.get(
+                        "timer_auto_finalize",
+                        DEFAULT_SCORE_PANEL_SETTINGS.get("timer_auto_finalize"),
+                    )
+                    field.initial = bool(value)
 
         # Inicializa campos dinâmicos com base na instância atual.
         config = {}
@@ -350,6 +495,25 @@ class QuizDefinicaoAdminForm(forms.ModelForm):
                 overrides_payload[mode_key][flag_key] = bool(
                     cleaned_data.get(field_name, False)
                 )
+            timer_mode_field = f"{prefix}_timer_mode"
+            timer_duration_field = f"{prefix}_timer_duration_seconds"
+            timer_auto_finalize_field = f"{prefix}_timer_auto_finalize"
+
+            timer_mode_value = cleaned_data.get(timer_mode_field)
+            if isinstance(timer_mode_value, str):
+                timer_mode_value = timer_mode_value.strip().lower()
+            if timer_mode_value not in {"countdown", "countup"}:
+                timer_mode_value = DEFAULT_SCORE_PANEL_SETTINGS.get("timer_mode")
+
+            timer_duration_value = _coerce_timer_duration_value(cleaned_data.get(timer_duration_field))
+            timer_auto_finalize_value = _coerce_boolean_field(
+                cleaned_data.get(timer_auto_finalize_field, DEFAULT_SCORE_PANEL_SETTINGS.get("timer_auto_finalize")),
+                DEFAULT_SCORE_PANEL_SETTINGS.get("timer_auto_finalize"),
+            )
+
+            overrides_payload[mode_key]["timer_mode"] = timer_mode_value
+            overrides_payload[mode_key]["timer_duration_seconds"] = timer_duration_value
+            overrides_payload[mode_key]["timer_auto_finalize"] = timer_auto_finalize_value
         cleaned_data["score_panel_overrides"] = sanitize_score_panel_config(
             overrides_payload
         )
@@ -417,6 +581,47 @@ class QuizDefinicaoAdminForm(forms.ModelForm):
         return cleaned_data
 
 
+def _coerce_timer_duration_value(raw_value):
+    if raw_value in (None, "", False):
+        return None
+    try:
+        number = int(raw_value)
+    except (TypeError, ValueError):
+        return None
+    return number if number >= 0 else None
+
+def _coerce_boolean_field(value, fallback=False):
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, (int, float)):
+        return value != 0
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"true", "1", "yes", "on", "sim"}:
+            return True
+        if normalized in {"false", "0", "no", "off", "nao"}:
+            return False
+    return bool(fallback)
+
+
+
+def register_score_panel_timer_fields(form_cls):
+    timer_fields = getattr(form_cls, "SCORE_PANEL_TIMER_FIELDS_META", [])
+    if not timer_fields:
+        return
+    for mode_key, _mode_label in form_cls.get_score_panel_modes():
+        for timer_meta in timer_fields:
+            key = timer_meta["key"]
+            field_name = form_cls.build_field_name(mode_key, key)
+            if field_name in form_cls.base_fields:
+                continue
+            field_kwargs = dict(timer_meta.get("field_kwargs", {}))
+            field_class = timer_meta["field_class"]
+            field = field_class(**field_kwargs)
+            form_cls.base_fields[field_name] = field
+            form_cls.declared_fields[field_name] = field
+
+
 def register_score_panel_boolean_fields(form_cls):
     for mode_key, _mode_label in form_cls.get_score_panel_modes():
         for flag_key, label, help_text in form_cls.SCORE_PANEL_FIELDS:
@@ -431,5 +636,7 @@ def register_score_panel_boolean_fields(form_cls):
                 form_cls.declared_fields[field_name] = field
 
 
+register_score_panel_timer_fields(ConfiguracoesGeraisQuizForm)
+register_score_panel_timer_fields(QuizDefinicaoAdminForm)
 register_score_panel_boolean_fields(ConfiguracoesGeraisQuizForm)
 register_score_panel_boolean_fields(QuizDefinicaoAdminForm)

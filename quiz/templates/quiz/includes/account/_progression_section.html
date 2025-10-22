@@ -1,0 +1,468 @@
+{% load l10n %}
+
+            <div id="progression-content" class="account-content__section">
+                
+{% with metrics=profile_summary.metrics gamification=profile_summary.gamification %}
+{% if gamification or metrics %}
+<div class="progress-hub">
+    <section class="card card--conta-perfil progress-hub__intro">
+        <div class="progress-hub__headline">
+            <div class="progress-hub__headline-text">
+                <h2 class="card__title">Progresso e Estatísticas</h2>
+                <p class="card__subtitle">Veja como seu aprendizado evoluiu recentemente e onde focar para subir o nível.</p>
+                <ul class="progress-hub__chips" role="list">
+                    <li class="progress-hub__chip">
+                        <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+                        Sequencia ativa: {{ metrics.current_streak|default:0 }} dia{{ metrics.current_streak|default:0|pluralize }}
+                    </li>
+                    <li class="progress-hub__chip">
+                        <span class="material-symbols-outlined" aria-hidden="true">assignment</span>
+                        {% if metrics.total_sessions|default:0 == 1 %}
+                            1 sessao concluida
+                        {% else %}
+                            {{ metrics.total_sessions|default:0 }} sessões concluídas
+                        {% endif %}
+                    </li>
+                    {% if gamification %}
+                    <li class="progress-hub__chip">
+                        <span class="material-symbols-outlined" aria-hidden="true">military_tech</span>
+                        {{ gamification.achievements.total_unlocked|default_if_none:0 }}/{{ gamification.achievements.total_available|default_if_none:0 }} conquistas
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="progress-hub__headline-score">
+                <span class="progress-hub__headline-label">Precisão recente</span>
+                <strong>
+                    {% if metrics.accuracy_last_7 is not None %}
+                        {{ metrics.accuracy_last_7|floatformat:1 }}%
+                    {% elif metrics.accuracy_last_30 is not None %}
+                        {{ metrics.accuracy_last_30|floatformat:1 }}%
+                    {% elif metrics.accuracy is not None %}
+                        {{ metrics.accuracy|floatformat:1 }}%
+                    {% else %}
+                        --
+                    {% endif %}
+                </strong>
+                {% if metrics.accuracy_trend_delta is not None %}
+                <span class="progress-hub__headline-trend {% if metrics.accuracy_trend_delta > 0 %}is-up{% elif metrics.accuracy_trend_delta < 0 %}is-down{% endif %}">
+                    <span class="material-symbols-outlined" aria-hidden="true">
+                        {% if metrics.accuracy_trend_delta > 0 %}
+                            trending_up
+                        {% elif metrics.accuracy_trend_delta < 0 %}
+                            trending_down
+                        {% else %}
+                            trending_flat
+                        {% endif %}
+                    </span>
+                    {% if metrics.accuracy_trend_delta > 0 %}
+                        +{{ metrics.accuracy_trend_delta|floatformat:1 }} pts vs 30 dias
+                    {% elif metrics.accuracy_trend_delta < 0 %}
+                        {{ metrics.accuracy_trend_delta|floatformat:1 }} pts vs 30 dias
+                    {% else %}
+                        Estável em relação aos 30 dias
+                    {% endif %}
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <section class="progress-hub__summary" aria-label="Resumo de desempenho">
+            <article class="progress-hub__summary-card">
+                <header class="progress-hub__summary-header">
+                    <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>
+                    <div>
+                        <h3>Ritmo recente</h3>
+                        <p>Visão geral do seu progresso nas últimas semanas.</p>
+                    </div>
+                </header>
+                <dl class="progress-hub__summary-grid">
+                    <div>
+                        <dt>Perguntas (7 dias)</dt>
+                        <dd>{{ metrics.questions_last_7_days|default:0 }}</dd>
+                        <small>Volume resolvido recentemente</small>
+                    </div>
+                    <div>
+                        <dt>Tempo dedicado</dt>
+                        <dd>{{ metrics.study_time_last_7_display|default:"0 min" }}</dd>
+                        <small>Somatorio dos ultimos 7 dias</small>
+                    </div>
+                    <div>
+                        <dt>Consistencia</dt>
+                        <dd>
+                            {% if metrics.consistency_last_7_percent is not None %}
+                                {{ metrics.consistency_last_7_percent|floatformat:0 }}%
+                            {% else %}
+                                --
+                            {% endif %}
+                        </dd>
+                        <small>Dias ativos nos ultimos 7 dias</small>
+                    </div>
+                    <div>
+                        <dt>Acertos acumulados</dt>
+                        <dd>{{ metrics.total_correct_answers|default:0 }}</dd>
+                        <small>{{ metrics.total_questions_answered|default:0 }} questões resolvidas ao todo</small>
+                    </div>
+                    <div>
+                        <dt>Precisao (30 dias)</dt>
+                        <dd>
+                            {% if metrics.accuracy_last_30 is not None %}
+                                {{ metrics.accuracy_last_30|floatformat:1 }}%
+                            {% else %}
+                                --
+                            {% endif %}
+                        </dd>
+                        <small>{{ metrics.questions_last_30_days|default:0 }} questões analisadas no período</small>
+                    </div>
+                    {% if gamification %}
+                    <div>
+                        <dt>XP total</dt>
+                        <dd>{{ gamification.xp_total|default:0 }} XP</dd>
+                        <small>Última atualização: {{ gamification.lifetime_stats.last_update_display|default:"--" }}</small>
+                    </div>
+                    {% endif %}
+                </dl>
+            </article>
+
+            {% if profile_summary.last_session %}
+            <article class="progress-hub__summary-card progress-hub__summary-card--session">
+                <header class="progress-hub__summary-header">
+                    <span class="material-symbols-outlined" aria-hidden="true">history</span>
+                    <div>
+                        <h3>Última sessão</h3>
+                        <p>Checkpoint mais recente para acompanhar sua evolução.</p>
+                    </div>
+                </header>
+                <dl class="progress-hub__summary-session">
+                    <div>
+                        <dt>Data</dt>
+                        <dd>{{ profile_summary.last_session.date|date:"d/m/Y H:i" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Modo</dt>
+                        <dd>{{ profile_summary.last_session.mode|default:"--" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Quiz</dt>
+                        <dd>{{ profile_summary.last_session.quiz_name|default:"--" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Precisão</dt>
+                        <dd>
+                            {% if profile_summary.last_session.accuracy is not None %}
+                                {{ profile_summary.last_session.accuracy|floatformat:1 }}%
+                            {% else %}
+                                --
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Duração</dt>
+                        <dd>{{ profile_summary.last_session.duration_display|default:"--" }}</dd>
+                    </div>
+                    <div>
+                        <dt>Pontuação</dt>
+                        <dd>{{ profile_summary.last_session.score|default:0 }}</dd>
+                    </div>
+                </dl>
+            </article>
+            {% endif %}
+        </section>
+    </section>
+
+    <div class="progress-hub__body">
+        <div class="progress-hub__column progress-hub__column--main">
+
+    <section class="progress-hub__stats-grid" aria-label="Indicadores principais">
+        <article class="card progress-hub__stat" role="listitem">
+            <header class="progress-hub__stat-header">
+                <span class="material-symbols-outlined progress-hub__stat-icon" aria-hidden="true">target</span>
+                <span class="progress-hub__stat-label">Precisão geral</span>
+            </header>
+            <div class="progress-hub__stat-main">
+                <strong class="progress-hub__stat-value">
+                    {% if metrics.accuracy is not None %}
+                        {{ metrics.accuracy|floatformat:1 }}%
+                    {% else %}
+                        --
+                    {% endif %}
+                </strong>
+                {% if metrics.accuracy_trend_delta is not None %}
+                <span class="progress-hub__trend-badge {% if metrics.accuracy_trend_delta > 0 %}is-up{% elif metrics.accuracy_trend_delta < 0 %}is-down{% endif %}">
+                    <span class="material-symbols-outlined" aria-hidden="true">
+                        {% if metrics.accuracy_trend_delta > 0 %}
+                            trending_up
+                        {% elif metrics.accuracy_trend_delta < 0 %}
+                            trending_down
+                        {% else %}
+                            trending_flat
+                        {% endif %}
+                    </span>
+                    {% if metrics.accuracy_trend_delta > 0 %}
+                        +{{ metrics.accuracy_trend_delta|floatformat:1 }} pts vs 30d
+                    {% elif metrics.accuracy_trend_delta < 0 %}
+                        {{ metrics.accuracy_trend_delta|floatformat:1 }} pts vs 30d
+                    {% else %}
+                        Estavel vs 30d
+                    {% endif %}
+                </span>
+                {% endif %}
+            </div>
+            <p class="progress-hub__stat-meta">
+                {% if metrics.accuracy_last_7 is not None %}
+                    Ultimos 7 dias: {{ metrics.accuracy_last_7|floatformat:1 }}%
+                {% else %}
+                    Sem dados recentes suficientes
+                {% endif %}
+            </p>
+        </article>
+
+        <article class="card progress-hub__stat" role="listitem">
+            <header class="progress-hub__stat-header">
+                <span class="material-symbols-outlined progress-hub__stat-icon" aria-hidden="true">insights</span>
+                <span class="progress-hub__stat-label">Precisao (30 dias)</span>
+            </header>
+            <div class="progress-hub__stat-main">
+                <strong class="progress-hub__stat-value">
+                    {% if metrics.accuracy_last_30 is not None %}
+                        {{ metrics.accuracy_last_30|floatformat:1 }}%
+                    {% else %}
+                        --
+                    {% endif %}
+                </strong>
+            </div>
+            <p class="progress-hub__stat-meta">{{ metrics.questions_last_30_days|default:0 }} {{ metrics.questions_last_30_days|default:0|pluralize:"questao no periodo,questoes no periodo" }}</p>
+        </article>
+
+        <article class="card progress-hub__stat" role="listitem">
+            <header class="progress-hub__stat-header">
+                <span class="material-symbols-outlined progress-hub__stat-icon" aria-hidden="true">schedule</span>
+                <span class="progress-hub__stat-label">Ritmo (7 dias)</span>
+            </header>
+            <div class="progress-hub__stat-main">
+                <strong class="progress-hub__stat-value">{{ metrics.questions_last_7_days|default:0 }}</strong>
+            </div>
+            <p class="progress-hub__stat-meta">Tempo dedicado: {{ metrics.study_time_last_7_display|default:"0 min" }}</p>
+        </article>
+
+        <article class="card progress-hub__stat" role="listitem">
+            <header class="progress-hub__stat-header">
+                <span class="material-symbols-outlined progress-hub__stat-icon" aria-hidden="true">score</span>
+                <span class="progress-hub__stat-label">Pontuacao media</span>
+            </header>
+            <div class="progress-hub__stat-main">
+                <strong class="progress-hub__stat-value">
+                    {% if metrics.average_score is not None %}
+                        {{ metrics.average_score|floatformat:1 }}
+                    {% else %}
+                        --
+                    {% endif %}
+                </strong>
+            </div>
+            <p class="progress-hub__stat-meta">Melhor sessão: {{ metrics.best_score|default:0 }}</p>
+        </article>
+
+        <article class="card progress-hub__stat" role="listitem">
+            <header class="progress-hub__stat-header">
+                <span class="material-symbols-outlined progress-hub__stat-icon" aria-hidden="true">pace</span>
+                <span class="progress-hub__stat-label">Consistência</span>
+            </header>
+            <div class="progress-hub__stat-main">
+                <strong class="progress-hub__stat-value">
+                    {% if metrics.consistency_last_30_percent is not None %}
+                        {{ metrics.consistency_last_30_percent|floatformat:0 }}%
+                    {% else %}
+                        --
+                    {% endif %}
+                </strong>
+            </div>
+            <p class="progress-hub__stat-meta">
+                {% if metrics.consistency_last_7_percent is not None %}
+                    7 dias: {{ metrics.consistency_last_7_percent|floatformat:0 }}% ativos
+                {% else %}
+                    Dias ativos (30d): {{ metrics.active_days_last_30|default:0 }}
+                {% endif %}
+            </p>
+        </article>
+
+        <article class="card progress-hub__stat" role="listitem">
+            <header class="progress-hub__stat-header">
+                <span class="material-symbols-outlined progress-hub__stat-icon" aria-hidden="true">task_alt</span>
+                <span class="progress-hub__stat-label">Acertos acumulados</span>
+            </header>
+            <div class="progress-hub__stat-main">
+                <strong class="progress-hub__stat-value">{{ metrics.total_correct_answers|default:0 }}</strong>
+            </div>
+            <p class="progress-hub__stat-meta">{{ metrics.total_questions_answered|default:0 }} questões resolvidas no total</p>
+        </article>
+    </section>
+
+    {% with performance=profile_summary.performance %}
+    <section class="progress-hub__insights" aria-label="Destaques de desempenho">
+        <article class="card progress-hub__insight" role="listitem">
+            <header class="progress-hub__insight-header">
+                <span class="material-symbols-outlined" aria-hidden="true">verified</span>
+                <div>
+                    <h3>Pontos fortes</h3>
+                    <p>Categorias com melhor taxa de acerto (mínimo 3 questões respondidas).</p>
+                </div>
+            </header>
+            {% if performance.strongest_categories %}
+            <ul class="progress-hub__insight-list" role="list">
+                {% for category in performance.strongest_categories %}
+                <li>
+                    <span class="progress-hub__insight-name">{{ category.name }}</span>
+                    <span class="progress-hub__insight-value">{{ category.accuracy|floatformat:0 }}%</span>
+                    <span class="progress-hub__insight-meta">{{ category.correct|default:0 }}/{{ category.total|default:0 }} acertos</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="progress-hub__insight-empty">Complete mais quizzes para identificar seus destaques.</p>
+            {% endif %}
+        </article>
+
+        <article class="card progress-hub__insight" role="listitem">
+            <header class="progress-hub__insight-header">
+                <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+                <div>
+                    <h3>Oportunidades de foco</h3>
+                    <p>Areas com menor aproveitamento, ideais para revisar.</p>
+                </div>
+            </header>
+            {% if performance.focus_categories %}
+            <ul class="progress-hub__insight-list" role="list">
+                {% for category in performance.focus_categories %}
+                <li>
+                    <span class="progress-hub__insight-name">{{ category.name }}</span>
+                    <span class="progress-hub__insight-value">{{ category.accuracy|floatformat:0 }}%</span>
+                    <span class="progress-hub__insight-meta">{{ category.correct|default:0 }}/{{ category.total|default:0 }} acertos</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="progress-hub__insight-empty">Nenhuma area critica detectada ate o momento.</p>
+            {% endif %}
+        </article>
+
+        <article class="card progress-hub__insight" role="listitem">
+            <header class="progress-hub__insight-header">
+                <span class="material-symbols-outlined" aria-hidden="true">equalizer</span>
+                <div>
+                    <h3>Dificuldade</h3>
+                    <p>Como você se sai em cada nível de questões.</p>
+                </div>
+            </header>
+            {% if performance.difficulty_performance %}
+            <ul class="progress-hub__insight-list" role="list">
+                {% for difficulty in performance.difficulty_performance %}
+                <li>
+                    <span class="progress-hub__insight-name">{{ difficulty.name }}</span>
+                    <span class="progress-hub__insight-value">{{ difficulty.accuracy|floatformat:0 }}%</span>
+                    <span class="progress-hub__insight-meta">{{ difficulty.correct|default:0 }}/{{ difficulty.total|default:0 }} acertos</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="progress-hub__insight-empty">Resolva questões em diferentes dificuldades para gerar este comparativo.</p>
+            {% endif %}
+        </article>
+    </section>
+    {% endwith %}
+
+        </div>
+        <div class="progress-hub__column progress-hub__column--aside">
+            <div class="progress-hub__panel-stack">
+        <section class="card progress-hub__panel" aria-label="Desempenho consolidado">
+            <header class="progress-hub__panel-header">
+                <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>
+                <div>
+                    <h3>Desempenho consolidado</h3>
+                    <p>Resumo de pontuação acumulada e eficiência.</p>
+                </div>
+            </header>
+            <ul class="progress-hub__panel-list">
+                <li>
+                    <span>Pontuação total</span>
+                    <strong>{{ metrics.total_score|default:0 }}</strong>
+                    <small>Melhor sessão: {{ metrics.best_score|default:0 }}</small>
+                </li>
+                <li>
+                    <span>Pontuação média</span>
+                    <strong>
+                        {% if metrics.average_score is not None %}
+                            {{ metrics.average_score|floatformat:1 }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </strong>
+                    <small>Sessões avaliadas: {{ metrics.total_sessions|default:0 }}</small>
+                </li>
+                <li>
+                    <span>Taxa de acerto</span>
+                    <strong>
+                        {% if metrics.accuracy is not None %}
+                            {{ metrics.accuracy|floatformat:1 }}%
+                        {% else %}
+                            --
+                        {% endif %}
+                    </strong>
+                    <small>{{ metrics.total_questions_answered|default:0 }} {{ metrics.total_questions_answered|default:0|pluralize:"questao respondida,questoes respondidas" }}</small>
+                </li>
+            </ul>
+        </section>
+
+        <section class="card progress-hub__panel" aria-label="Habitos de estudo">
+            <header class="progress-hub__panel-header">
+                <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+                <div>
+                    <h3>Frequência e ritmo</h3>
+                    <p>Volume recente e cadência das sessões.</p>
+                </div>
+            </header>
+            <ul class="progress-hub__panel-list">
+                <li>
+                    <span>Últimos 30 dias</span>
+                    <strong>{{ metrics.questions_last_30_days|default:0 }} {{ metrics.questions_last_30_days|default:0|pluralize:"questao,questoes" }}</strong>
+                    <small>{{ metrics.study_time_last_30_display|default:"0 min" }} dedicados</small>
+                </li>
+                <li>
+                    <span>Questões por sessão</span>
+                    <strong>
+                        {% if metrics.questions_per_session_avg is not None %}
+                            {{ metrics.questions_per_session_avg|floatformat:1 }}
+                        {% else %}
+                            --
+                        {% endif %}
+                    </strong>
+                    <small>Total de sessões: {{ metrics.total_sessions|default:0 }}</small>
+                </li>
+                <li>
+                    <span>Consistência</span>
+                    <strong>
+                        {% if metrics.consistency_last_30_percent is not None %}
+                            {{ metrics.consistency_last_30_percent|floatformat:0 }}%
+                        {% else %}
+                            --
+                        {% endif %}
+                    </strong>
+                    <small>{{ metrics.active_days_last_30|default:0 }} dia{{ metrics.active_days_last_30|default:0|pluralize }} com atividade</small>
+                </li>
+            </ul>
+        </section>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<section class="card progress-hub__empty" aria-live="polite">
+    <span class="material-symbols-outlined" aria-hidden="true">insights</span>
+    <div>
+        <strong>Sem dados de progresso ainda</strong>
+        <p>Conclua o primeiro quiz para liberar graficos de nivel, desempenho e ritmo.</p>
+        <a class="button button--secondary button--small" href="{% url 'quiz:home' %}#home">Comecar agora</a>
+    </div>
+</section>
+{% endif %}
+{% endwith %}
+            </div>

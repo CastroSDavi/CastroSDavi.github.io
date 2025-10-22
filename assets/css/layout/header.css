@@ -6,8 +6,8 @@
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 0 var(--spacing-md, 20px);
-    background-color: var(--color-white);
-    border-bottom: 1px solid var(--color-gray-300);
+    background-color: var(--surface-card);
+    border-bottom: 1px solid var(--border-strong);
     flex-shrink: 0;
     
     /* --- MODIFICAÇÃO PRINCIPAL: REMOVIDO O HEADER FIXO --- */
@@ -68,7 +68,7 @@
 
 .site-header__action-link:hover,
 .site-header__action-link:focus-visible {
-    background-color: var(--color-gray-100);
+    background-color: var(--surface-card-alt);
 }
 
 .site-header__action-link .material-symbols-outlined {

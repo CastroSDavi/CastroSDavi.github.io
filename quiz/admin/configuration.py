@@ -1,5 +1,6 @@
 """Admin registrations for configuration models."""
 
+from django import forms
 from django.contrib import admin
 
 from quiz.models import (
@@ -22,12 +23,14 @@ from quiz.models import (
     HomeActiveChallengeCardSettings,
     HomeAchievementCardSettings,
     QuizDefinicao,
+    SessoesQuizUsuario,
     TrainingMode,
 )
 
 from .base import EnhancedModelAdmin, EnhancedStackedInline, EnhancedTabularInline
 from .inlines import QuizDefinicaoPerguntaInline
 from .score_panel import ConfiguracoesGeraisQuizForm, QuizDefinicaoAdminForm
+from quiz.services.study_methods import StudyMethodRegistry
 
 
 @admin.register(QuizDefinicao)
@@ -113,23 +116,37 @@ class QuizDefinicaoAdmin(EnhancedModelAdmin):
         ]
 
         for mode_key, mode_label in self.form.get_score_panel_modes():
-            title = (
-                "Painel de Pontuação - Configuração Padrão"
-                if mode_key == "default"
-                else f"Painel de Pontuação - {mode_label}"
-            )
-            classes = () if mode_key == "default" else ("collapse",)
-            description = (
-                "Definições básicas aplicadas a todos os modos quando nenhum ajuste específico estiver definido."
-                if mode_key == "default"
-                else "Personalize os elementos do painel lateral para este modo de quiz nesta definição."
-            )
-            fields = tuple(
+            if mode_key == "default":
+                continue
+            if mode_key == SessoesQuizUsuario.ModoQuiz.DEFINIDO.value:
+                title = "Painel de Pontuação - Sessões pré-definidas"
+                classes = ()
+                description = (
+                    "Controla o painel quando este quiz roda como modo 'Definido' (listas fixas, desafios ou training modes)."
+                )
+            else:
+                title = f"Painel de Pontuação - {mode_label}"
+                classes = ("collapse",)
+                description = (
+                    "Modo adicional cadastrado nas configurações globais. Só ajuste se este quiz for iniciado com esse modo."
+                )
+            fields = [
                 self.form.build_field_name(mode_key, flag_key)
                 for flag_key, *_ in self.form.SCORE_PANEL_FIELDS
+            ]
+            fields.extend(
+                self.form.build_field_name(mode_key, timer_meta["key"])
+                for timer_meta in self.form.SCORE_PANEL_TIMER_FIELDS_META
             )
             fieldsets.append(
-                (title, {"fields": fields, "classes": classes, "description": description})
+                (
+                    title,
+                    {
+                        "fields": tuple(fields),
+                        "classes": classes,
+                        "description": description,
+                    },
+                )
             )
 
         fieldsets.append(
@@ -231,12 +248,23 @@ class ConfiguracoesGeraisQuizAdmin(EnhancedModelAdmin):
                 if mode_key == "default"
                 else "Personalize a visibilidade dos elementos do painel para este modo específico."
             )
-            fields = tuple(
+            fields = [
                 self.form.build_field_name(mode_key, flag_key)
                 for flag_key, *_ in self.form.SCORE_PANEL_FIELDS
+            ]
+            fields.extend(
+                self.form.build_field_name(mode_key, timer_meta["key"])
+                for timer_meta in self.form.SCORE_PANEL_TIMER_FIELDS_META
             )
             fieldsets.append(
-                (title, {"fields": fields, "classes": classes, "description": description})
+                (
+                    title,
+                    {
+                        "fields": tuple(fields),
+                        "classes": classes,
+                        "description": description,
+                    },
+                )
             )
 
         fieldsets.append(
@@ -465,15 +493,62 @@ class HomeIntroStepInline(EnhancedTabularInline):
     fields = ("order", "text")
 
 
+class TrainingModeAdminForm(forms.ModelForm):
+    """Provide curated choices and hints when editing training modes."""
+
+    class Meta:
+        model = TrainingMode
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        quiz_field = self.fields.get("quiz_definition")
+        if quiz_field:
+            quiz_field.queryset = QuizDefinicao.objects.order_by("nome_quiz")
+            quiz_field.help_text = (
+                "Escolha qual definição de quiz será executada ao iniciar este modo de jogo."
+            )
+
+
 @admin.register(TrainingMode)
 class TrainingModeAdmin(EnhancedModelAdmin):
-    list_display = ("name", "quiz_definition", "is_active", "order", "updated_at")
-    list_filter = ("is_active",)
-    search_fields = ("name", "slug", "description", "meta", "quiz_definition__nome_quiz")
+    form = TrainingModeAdminForm
+    list_display = (
+        "name",
+        "quiz_definition_name",
+        "quiz_generation_label",
+        "quiz_question_count",
+        "is_active",
+        "order",
+        "updated_at",
+    )
+    list_display_links = ("name",)
+    list_editable = ("is_active", "order")
+    list_filter = (
+        "is_active",
+        "quiz_definition__generation_type",
+        "quiz_definition__study_method_override",
+    )
+    search_fields = (
+        "name",
+        "slug",
+        "description",
+        "meta",
+        "quiz_definition__nome_quiz",
+        "quiz_definition__slug",
+    )
+    search_help_text = "Busque por nome, slug, descricao ou pelo quiz associado."
     prepopulated_fields = {"slug": ("name",)}
     ordering = ("order", "name")
-    readonly_fields = ("created_at", "updated_at")
+    readonly_fields = (
+        "created_at",
+        "updated_at",
+        "quiz_generation_summary",
+        "quiz_estimated_question_count_display",
+        "quiz_study_method_display",
+    )
     select_related_fields = ("quiz_definition",)
+    autocomplete_fields = ("quiz_definition",)
 
     fieldsets = (
         (
@@ -499,9 +574,15 @@ class TrainingModeAdmin(EnhancedModelAdmin):
             },
         ),
         (
-            "Comportamento",
+            "Quiz associado",
             {
-                "fields": ("quiz_definition",),
+                "fields": (
+                    "quiz_definition",
+                    "quiz_generation_summary",
+                    "quiz_estimated_question_count_display",
+                    "quiz_study_method_display",
+                ),
+                "description": "Resumo automatico da definicao executada por este modo.",
             },
         ),
         (
@@ -512,6 +593,97 @@ class TrainingModeAdmin(EnhancedModelAdmin):
             },
         ),
     )
+
+    def _build_generation_summary(self, quiz_definition):
+        if not quiz_definition:
+            return ""
+        label = quiz_definition.get_generation_type_display() or ""
+        config = {}
+        if hasattr(quiz_definition, "get_generation_config"):
+            config = quiz_definition.get_generation_config() or {}
+        details = []
+
+        limit = config.get("limit") or config.get("question_limit")
+        if isinstance(limit, int):
+            details.append(f"{limit} questoes")
+        else:
+            try:
+                limit_int = int(limit)
+            except (TypeError, ValueError):
+                limit_int = None
+            if limit_int:
+                details.append(f"{limit_int} questoes")
+
+        generation_type = getattr(quiz_definition, "generation_type", None)
+        if generation_type == QuizDefinicao.GenerationType.FAVORITES:
+            sort = config.get("sort")
+            if sort:
+                details.append(f"ordem: {sort}")
+            if config.get("include_inactive"):
+                details.append("inclui inativas")
+        elif generation_type == QuizDefinicao.GenerationType.FILTERS:
+            if config.get("shuffle"):
+                details.append("embaralha")
+            categorias = config.get("category_ids") or config.get("categorias")
+            if isinstance(categorias, (list, tuple)):
+                details.append(f"{len(categorias)} categorias")
+        elif generation_type == QuizDefinicao.GenerationType.REPEAT_LAST:
+            if config.get("include_incomplete"):
+                details.append("retoma incompletas")
+            if config.get("use_same_questions"):
+                details.append("mesmas questoes")
+
+        if details:
+            return f"{label} - {', '.join(details)}"
+        return label
+
+    def _get_question_estimate(self, obj):
+        quiz_definition = getattr(obj, "quiz_definition", None)
+        if not quiz_definition or not hasattr(quiz_definition, "get_estimated_question_count"):
+            return None
+        try:
+            estimate = quiz_definition.get_estimated_question_count()
+        except Exception:  # pragma: no cover - fallback defensivo para admin
+            return None
+        return estimate if isinstance(estimate, int) else None
+
+    @admin.display(description="Quiz", ordering="quiz_definition__nome_quiz")
+    def quiz_definition_name(self, obj):
+        return obj.quiz_definition.nome_quiz if obj.quiz_definition else "N/A"
+
+    @admin.display(description="Geracao", ordering="quiz_definition__generation_type")
+    def quiz_generation_label(self, obj):
+        if not obj.quiz_definition:
+            return "N/A"
+        return obj.quiz_definition.get_generation_type_display()
+
+    @admin.display(description="Questoes", ordering="quiz_definition__nome_quiz")
+    def quiz_question_count(self, obj):
+        estimate = self._get_question_estimate(obj)
+        return estimate if estimate is not None else "N/D"
+
+    @admin.display(description="Resumo da geracao")
+    def quiz_generation_summary(self, obj):
+        summary = self._build_generation_summary(getattr(obj, "quiz_definition", None))
+        return summary or "N/A"
+
+    @admin.display(description="Qtd estimada de questoes")
+    def quiz_estimated_question_count_display(self, obj):
+        estimate = self._get_question_estimate(obj)
+        if estimate is None:
+            return "Nao estimado"
+        return f"{estimate} questoes"
+
+    @admin.display(description="Metodo de estudo aplicado", ordering="quiz_definition__study_method_override")
+    def quiz_study_method_display(self, obj):
+        quiz_definition = getattr(obj, "quiz_definition", None)
+        if not quiz_definition:
+            return "N/A"
+        method = getattr(quiz_definition, "study_method_override", None)
+        if not method:
+            return "Padrao do usuario"
+        label = StudyMethodRegistry.get_display_name(method)
+        return label or method
 
 
 @admin.register(HomePageSettings)

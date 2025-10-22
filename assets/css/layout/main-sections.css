@@ -40,7 +40,7 @@ body {
     overflow-y: auto;
     min-height: 0;
     padding: var(--question-section-main-padding-block, var(--spacing-xl, 40px)) var(--question-section-main-padding-inline, var(--layout-section-padding-inline, clamp(32px, 4vw, 48px)));
-    background-color: var(--question-section-main-bg, var(--color-gray-200));
+    background-color: var(--question-section-main-bg, var(--surface-section));
     display: flex;
     flex-direction: column;
 }
@@ -121,3 +121,4 @@ body {
         padding: var(--spacing-md, 20px) var(--spacing-sm, 15px);
     }
 }
+

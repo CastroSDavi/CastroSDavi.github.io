@@ -1,0 +1,237 @@
+            <div id="profile-info-content" class="account-content__section is-visible">
+                <div class="card card--conta-perfil">
+                    <h2 class="card__title">Informações do Perfil</h2>
+                    <div class="card__body">
+                        <div class="profile-overview">
+                            <div class="profile-overview__header">
+                                <div class="profile-overview__avatar" aria-hidden="true">
+                                    {{ profile_summary.initials }}
+                                </div>
+                                <div class="profile-overview__headline">
+                                    <h3 class="profile-overview__title">{{ profile_summary.display_name }}</h3>
+                                    <p class="profile-overview__username">@{{ profile_summary.username }}</p>
+                                    <div class="profile-overview__badges">
+                                        <span class="profile-badge">
+                                            <span class="material-symbols-outlined" aria-hidden="true">calendar_month</span>
+                                            Membro desde {{ profile_summary.date_joined|date:"d/m/Y" }}
+                                        </span>
+                                        <span class="profile-badge">
+                                            <span class="material-symbols-outlined" aria-hidden="true">history_toggle_off</span>
+                                            {% if profile_summary.last_login %}
+                                                Último acesso {{ profile_summary.last_login|date:"d/m/Y \à\s H:i" }}
+                                            {% else %}
+                                                Ainda sem acessos registrados
+                                            {% endif %}
+                                        </span>
+                                        {% if profile_summary.metrics.current_streak %}
+                                            <span class="profile-badge profile-badge--success">
+                                                <span class="material-symbols-outlined" aria-hidden="true">local_fire_department</span>
+                                                Sequência: {{ profile_summary.metrics.current_streak }} dia{{ profile_summary.metrics.current_streak|pluralize:"s" }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="profile-overview__actions">
+                                    <button class="button button--secondary button--small profile-overview__action" type="button" data-open-account-tab="security-content">
+                                        <span class="material-symbols-outlined button__icon" aria-hidden="true">edit</span>
+                                        Atualizar dados
+                                    </button>
+                                    <a href="{% url 'password_change' %}" class="button button--text button--small profile-overview__action">
+                                        <span class="material-symbols-outlined button__icon" aria-hidden="true">lock_reset</span>
+                                        Alterar senha
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="profile-overview__body">
+                                <div class="profile-overview__main">
+                                    <div class="profile-stats-grid">
+                                        <article class="profile-stat-card">
+                                            <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">quiz</span>
+                                            <span class="profile-stat-card__value">{{ profile_summary.metrics.total_sessions }}</span>
+                                            <span class="profile-stat-card__label">Quizzes concluídos</span>
+                                        </article>
+                                        <article class="profile-stat-card">
+                                            <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">target</span>
+                                            <span class="profile-stat-card__value">
+                                                {% if profile_summary.metrics.accuracy is not None %}
+                                                    {{ profile_summary.metrics.accuracy|floatformat:1 }}%
+                                                {% else %}
+                                                    --
+                                                {% endif %}
+                                            </span>
+                                            <span class="profile-stat-card__label">Precisão geral</span>
+                                        </article>
+                                        <article class="profile-stat-card">
+                                            <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">task_alt</span>
+                                            <span class="profile-stat-card__value">{{ profile_summary.metrics.questions_last_30_days }}</span>
+                                            <span class="profile-stat-card__label">Perguntas (30 dias)</span>
+                                        </article>
+                                        <article class="profile-stat-card">
+                                            <span class="material-symbols-outlined profile-stat-card__icon" aria-hidden="true">hourglass_bottom</span>
+                                            <span class="profile-stat-card__value">{{ profile_summary.metrics.study_time_last_30_display }}</span>
+                                            <span class="profile-stat-card__label">Tempo de estudo (30 dias)</span>
+                                        </article>
+                                    </div>
+                                    <div class="profile-data-grid">
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Email</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.email|default:"Não informado" }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Nome</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.first_name|default:"Não informado" }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Sobrenome</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.last_name|default:"Não informado" }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Pontuação acumulada</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.metrics.total_score }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Melhor pontuação</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.metrics.best_score }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Modo preferido</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.metrics.favorite_mode_display }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Favoritos salvos</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.metrics.favorite_questions_count }}</span>
+                                        </div>
+                                        <div class="profile-data-item">
+                                            <span class="profile-data-item__label">Perguntas respondidas</span>
+                                            <span class="profile-data-item__value">{{ profile_summary.metrics.total_questions_answered }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-completion-card">
+                                        <div class="profile-completion-card__header">
+                                            <span class="material-symbols-outlined" aria-hidden="true">task</span>
+                                            <div>
+                                                <strong>{{ profile_summary.completion.percentage }}% do perfil completo</strong>
+                                                <p>Quanto mais completo, mais personalizadas ficam suas recomendações.</p>
+                                            </div>
+                                        </div>
+                                        <div class="profile-completion-card__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ profile_summary.completion.percentage }}">
+                                            <span style="width: {{ profile_summary.completion.percentage }}%;"></span>
+                                        </div>
+                                        {% if profile_summary.completion.missing_fields %}
+                                            <p class="profile-completion-card__hint">
+                                                Complete seu {{ profile_summary.completion.missing_fields|join:", "|lower }} para alcançar 100%.
+                                            </p>
+                                        {% else %}
+                                            <p class="profile-completion-card__hint profile-completion-card__hint--success">
+                                                Perfil completo! Continue estudando para manter o ritmo.
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <aside class="profile-overview__aside">
+                                    <div class="profile-summary-card profile-summary-card--last-session">
+                                        <div class="profile-summary-card__header">
+                                            <span class="material-symbols-outlined" aria-hidden="true">insights</span>
+                                            <div>
+                                                <span class="profile-summary-card__title">Última atividade</span>
+                                                {% if profile_summary.last_session %}
+                                                    <span class="profile-summary-card__subtitle">
+                                                        {{ profile_summary.last_session.date|date:"d/m/Y \à\s H:i" }}
+                                                        {% if profile_summary.last_session.quiz_name %}
+                                                            • {{ profile_summary.last_session.quiz_name }}
+                                                        {% endif %}
+                                                    </span>
+                                                {% else %}
+                                                    <span class="profile-summary-card__subtitle">Complete um quiz para ver um resumo aqui.</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        {% if profile_summary.last_session %}
+                                            <dl class="profile-summary-card__list">
+                                                <div class="profile-summary-card__list-item">
+                                                    <dt>Modo</dt>
+                                                    <dd>{{ profile_summary.last_session.mode }}</dd>
+                                                </div>
+                                                <div class="profile-summary-card__list-item">
+                                                    <dt>Pontuação</dt>
+                                                    <dd>{{ profile_summary.last_session.score }}</dd>
+                                                </div>
+                                                <div class="profile-summary-card__list-item">
+                                                    <dt>Precisão</dt>
+                                                    <dd>
+                                                        {% if profile_summary.last_session.accuracy is not None %}
+                                                            {{ profile_summary.last_session.accuracy|floatformat:1 }}%
+                                                        {% else %}
+                                                            --
+                                                        {% endif %}
+                                                    </dd>
+                                                </div>
+                                                <div class="profile-summary-card__list-item">
+                                                    <dt>Perguntas</dt>
+                                                    <dd>{{ profile_summary.last_session.question_count }}</dd>
+                                                </div>
+                                                <div class="profile-summary-card__list-item">
+                                                    <dt>Tempo dedicado</dt>
+                                                    <dd>{{ profile_summary.last_session.duration_display|default:"—" }}</dd>
+                                                </div>
+                                            </dl>
+                                            <button class="button button--outline button--small profile-summary-card__cta" type="button" data-open-account-tab="quiz-history-content">
+                                                Ver histórico completo
+                                            </button>
+                                        {% else %}
+                                            <div class="profile-summary-card__empty">
+                                                <span class="material-symbols-outlined" aria-hidden="true">hourglass_empty</span>
+                                                <p>Você ainda não concluiu um quiz. Experimente iniciar um agora mesmo!</p>
+                                                <a href="{% url 'quiz:home' %}#home" class="button button--secondary button--small">Ir para a página inicial</a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="profile-summary-card profile-summary-card--shortcuts">
+                                        <div class="profile-summary-card__header">
+                                            <span class="material-symbols-outlined" aria-hidden="true">rocket_launch</span>
+                                            <div>
+                                                <span class="profile-summary-card__title">Atalhos rápidos</span>
+                                                <span class="profile-summary-card__subtitle">Acesse rapidamente as áreas mais usadas.</span>
+                                            </div>
+                                        </div>
+                                        <ul class="profile-quick-links">
+                                            <li>
+                                                <button class="profile-quick-link" type="button" data-open-account-tab="favorite-questions-content">
+                                                    <span class="material-symbols-outlined" aria-hidden="true">star</span>
+                                                    <div>
+                                                        <strong>Questões favoritas</strong>
+                                                        <span>{{ profile_summary.metrics.favorite_questions_count }} salvas</span>
+                                                    </div>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="profile-quick-link" type="button" data-open-account-tab="progression-content">
+                                                    <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>
+                                                    <div>
+                                                        <strong>Painel de progresso</strong>
+                                                        <span>Conquistas, gráficos e indicadores em um só lugar</span>
+                                                    </div>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button class="profile-quick-link" type="button" data-open-account-tab="quiz-history-content">
+                                                    <span class="material-symbols-outlined" aria-hidden="true">history</span>
+                                                    <div>
+                                                        <strong>Histórico de quizzes</strong>
+                                                        <span>Revise respostas recentes em segundos</span>
+                                                    </div>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </aside>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>

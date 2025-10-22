@@ -209,6 +209,10 @@ export default class QuizUI {
             questionSection: document.getElementById('question-section'),
             accountSection: document.getElementById('account-section-page'),
             scorePanel: document.querySelector('.score-panel'),
+            scorePanelContent: document.getElementById('score-panel-content'),
+            scorePanelToggle: document.getElementById('score-panel-toggle'),
+            scorePanelToggleIcon: document.querySelector('#score-panel-toggle .score-panel__collapse-icon'),
+            scorePanelToggleText: document.querySelector('#score-panel-toggle .score-panel__collapse-text'),
             pontuacaoDisplay: document.getElementById('pontuacao'),
             acertosNumDisplay: document.getElementById('acertos-numero'),
             errosNumDisplay: document.getElementById('erros-numero'),
@@ -232,8 +236,6 @@ export default class QuizUI {
             hubRepeatLastBtn: document.getElementById('hub-repeat-last-btn'),
             hubPredefinedSection: document.getElementById('hub-predefined-section'),
             hubPredefinedList: document.getElementById('hub-predefined-list'),
-            placeholderFiltrosContainer: document.getElementById('placeholder-filtros-container'),
-            closeFiltersAndShowHubBtn: document.getElementById('close-filters-and-show-hub-btn'),
             avisoContainer: document.getElementById('aviso-container'),
             avisoTitle: document.querySelector('#aviso-container [data-role="message-title"]'),
             avisoBody: document.querySelector('#aviso-container [data-role="message-body"]'),
@@ -419,7 +421,7 @@ export default class QuizUI {
     }
     
     displayQuizLayout(showQuizLayout = true) {
-        const { placeholderFiltrosContainer, quizSectionContent } = this.elements;
+        const { quizSectionContent } = this.elements;
         const displayMode = this.store?.getState()?.quiz?.quizDisplayContext?.displayMode || 'challenge';
 
         const bodyElement = document.body;
@@ -442,7 +444,6 @@ export default class QuizUI {
             if (this.challengeHubInstance) this.challengeHubInstance.hideHub();
             this.showElement(quizSectionContent);
             this.clearInlineMessages();
-            this.hideElement(placeholderFiltrosContainer);
             if (this.resultDisplay) this.resultDisplay.hide();
             // --- INÍCIO DA ALTERAÇÃO: Remoção da chamada ao banner antigo ---
             // this.hideElement(this.elements.resumeBannerContainer);
@@ -454,7 +455,6 @@ export default class QuizUI {
             if (this.resultDisplay) this.resultDisplay.hide();
 
             if (this.challengeHubInstance) this.challengeHubInstance.showHub();
-            this.hideElement(placeholderFiltrosContainer);
         }
     }
 
@@ -494,7 +494,6 @@ export default class QuizUI {
                 this.hideElement(this.elements.challengeHubContainer);
                 this.hideElement(this.elements.quizSectionContent);
                 this.hideElement(this.elements.resultadoCard);
-                this.hideElement(this.elements.placeholderFiltrosContainer);
                 
                 // --- INÍCIO DA ALTERAÇÃO: Remoção da chamada ao banner antigo ---
                 // this.hideElement(this.elements.resumeBannerContainer);
@@ -533,12 +532,6 @@ export default class QuizUI {
     }
 
     setupGlobalEventListeners() {
-        this.elements.closeFiltersAndShowHubBtn?.addEventListener('click', () => {
-            if (this.modalManager) this.modalManager.toggleFilterPanel(false); 
-            if (this.challengeHubInstance) this.challengeHubInstance.showHub(); 
-            this.hideElement(this.elements.placeholderFiltrosContainer); 
-        });
-
         this.elements.btnToggleExplanation?.addEventListener('click', () => {
              if (this.modalManager) this.modalManager.toggleExplanationModal(true);
         });

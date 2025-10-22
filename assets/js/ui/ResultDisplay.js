@@ -96,7 +96,7 @@ export default class ResultDisplay {
         const erros = Number(user.erros) || 0;
         const totalRespondidas = Math.max(0, acertos + erros);
         const totalQuestionsInSession = state.quiz.currentQuestionsSet.length;
-        const finalSeconds = Number(state?.timer?.seconds) || 0;
+        const finalSeconds = Number(state?.timer?.elapsedSeconds) || 0;
         const tempoFormatado = this.timer ? this.timer._formatTime(Math.max(0, finalSeconds)) : '00:00';
         const accuracyPercent = totalRespondidas > 0
             ? Math.round((acertos / totalRespondidas) * 100)

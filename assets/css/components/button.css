@@ -87,6 +87,16 @@
     background-color: var(--color-gray-800);
     box-shadow: 0 5px 12px rgba(var(--color-gray-700-rgb), 0.2);
 }
+:root[data-theme='dark'] .button--secondary {
+    background-color: rgba(18, 30, 54, 0.88);
+    border-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.3);
+    color: var(--color-text-primary);
+    box-shadow: 0 14px 28px rgba(3, 10, 28, 0.4);
+}
+:root[data-theme='dark'] .button--secondary:not(:disabled):hover {
+    background-color: rgba(24, 40, 70, 0.94);
+    box-shadow: 0 16px 34px rgba(3, 10, 30, 0.48);
+}
 
 .button--outline {
     background-color: transparent;
@@ -108,6 +118,21 @@
     color: var(--color-gray-600);
     border-color: var(--color-gray-500);
     opacity: 0.6;
+}
+:root[data-theme='dark'] .button--outline {
+    color: var(--color-text-primary);
+    border-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.48);
+    background-color: transparent;
+    box-shadow: none;
+}
+:root[data-theme='dark'] .button--outline:not(:disabled):hover {
+    background-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.18);
+    color: var(--color-text-primary);
+    border-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.6);
+}
+:root[data-theme='dark'] .button--outline:not(:disabled):active {
+    background-color: rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.26);
+    transform: translateY(0);
 }
 
 /* --- BOTÃO APENAS COM ÍCONE --- */
@@ -242,6 +267,46 @@
     transform: translateY(-2px) scale(1.01);
     box-shadow: 0 5px 10px rgba(0,0,0,0.08);
     filter: none;
+}
+:root[data-theme='dark'] .button--fancy-primary {
+    background-image: linear-gradient(to right,
+        rgba(var(--color-secondary-green-rgb, 76, 214, 176), 0.92),
+        rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.82));
+    background-color: rgba(var(--color-secondary-green-rgb, 76, 214, 176), 0.88);
+    color: var(--color-white);
+    box-shadow: 0 16px 32px rgba(6, 14, 34, 0.46);
+    border: none;
+}
+:root[data-theme='dark'] .button--fancy-primary:not(:disabled):hover {
+    background-image: linear-gradient(to right,
+        rgba(var(--color-secondary-green-rgb, 76, 214, 176), 0.98),
+        rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.9));
+    box-shadow: 0 22px 40px rgba(4, 12, 30, 0.54);
+    transform: translateY(-2px) scale(1.02);
+    filter: none;
+}
+:root[data-theme='dark'] .button--fancy-primary:not(:disabled):active {
+    box-shadow: var(--shadow-inner);
+    transform: translateY(0);
+}
+:root[data-theme='dark'] .button--fancy-secondary {
+    background-image: linear-gradient(140deg,
+        rgba(18, 30, 54, 0.86),
+        rgba(26, 44, 80, 0.94));
+    color: var(--color-text-primary);
+    border: 1px solid rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.28);
+    box-shadow: 0 18px 36px rgba(3, 10, 26, 0.45);
+}
+:root[data-theme='dark'] .button--fancy-secondary:not(:disabled):hover {
+    background-image: linear-gradient(140deg,
+        rgba(22, 36, 64, 0.94),
+        rgba(30, 52, 90, 0.96));
+    box-shadow: 0 20px 42px rgba(3, 10, 28, 0.52);
+    filter: none;
+}
+:root[data-theme='dark'] .button--fancy-secondary:not(:disabled):active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-inner);
 }
 
 /* --- BOTÕES ESPECÍFICOS DE CONTEXTO --- */
@@ -396,6 +461,26 @@
     background-color: #a71f2a; /* Vermelho ainda mais escuro */
     box-shadow: var(--shadow-inner);
     filter: brightness(90%);
+}
+
+
+:root[data-theme='dark'] .button--danger-outline {
+    color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.88);
+    border-color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.56);
+    background-color: rgba(140, 24, 34, 0.14);
+    box-shadow: 0 14px 28px -16px rgba(150, 28, 38, 0.5);
+}
+
+:root[data-theme='dark'] .button--danger-outline:not(:disabled):hover {
+    background-color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.24);
+    border-color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.7);
+    color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.95);
+    box-shadow: 0 18px 36px -18px rgba(160, 32, 44, 0.52);
+}
+
+:root[data-theme='dark'] .button--danger-outline:not(:disabled):active {
+    background-color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.32);
+    border-color: rgba(var(--color-accent-red-rgb, 230, 57, 70), 0.78);
 }
 
 .button--danger-outline {

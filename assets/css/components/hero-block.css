@@ -140,3 +140,18 @@
       min-width: 200px; 
     }
   }
+
+:root[data-theme='dark'] .hero-block {
+    --hero-bg-gradient: linear-gradient(150deg,
+        rgba(var(--color-primary-dark-rgb, 79, 131, 255), 0.86) 0%,
+        rgba(var(--color-primary-medium-rgb, 111, 155, 255), 0.78) 52%,
+        rgba(var(--color-secondary-green-rgb, 76, 214, 176), 0.62) 100%);
+    --hero-text-color: var(--color-text-primary);
+    --hero-shadow: 0 28px 60px rgba(3, 10, 28, 0.46);
+}
+
+:root[data-theme='dark'] .hero-block__subtitle,
+:root[data-theme='dark'] .hero-block__cta-text {
+    color: var(--color-text-secondary);
+    opacity: 0.94;
+}

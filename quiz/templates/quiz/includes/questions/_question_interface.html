@@ -1,0 +1,172 @@
+            <div id="aviso-container" class="form-message u-is-hidden" role="alert">
+                <div class="form-message__content">
+                    <h3 class="form-message__title u-is-hidden" data-role="message-title"></h3>
+                    <p class="form-message__body" data-role="message-body"></p>
+                    <p class="form-message__supporting u-is-hidden" data-role="message-supporting"></p>
+                    <ul class="form-message__feature-list u-is-hidden" data-role="message-feature-list"></ul>
+                    <div class="form-message__actions u-is-hidden" data-role="message-actions"></div>
+                </div>
+            </div>
+
+            <section id="quiz-section" class="u-is-hidden">
+                <div id="progress-container" class="progress-bar u-is-hidden">
+                    <div id="progress-bar-fill" class="progress-bar__fill"></div>
+                </div>
+                <span id="progress-text" class="progress-bar__text u-is-hidden">0 / 0</span>
+
+                <div class="question-header-actions">
+                    <h2 id="question-title" tabindex="-1">
+                        <span id="id-questao">1</span><span id="categoria-titulo">Questão</span>
+                    </h2>
+                    <button class="favorite-star-action u-is-hidden" id="btn-toggle-favorite"
+                            aria-label="Adicionar aos Favoritos" title="Adicionar aos Favoritos">
+                        <span class="material-symbols-outlined">star_outline</span>
+                    </button>
+                    <button id="question-report-button"
+                            class="button button--text button--compact question-report-button u-is-hidden"
+                            type="button"
+                            aria-label="Relatar um problema nesta questÃ£o"
+                            title="Relatar problema">
+                        <span class="material-symbols-outlined button__icon" aria-hidden="true">flag</span>
+                        <span class="button__label">Relatar problema</span>
+                    </button>
+
+                </div>
+                
+                <div class="card card--question-wrap">
+                    <div class="card__body">
+                        <div class="question-display__text">
+                            <p id="pergunta-texto">Carregando pergunta...</p>
+                        </div>
+                        
+                        <div class="question-display__content">
+                            <div class="question-display__image-container">
+                                <img src="" alt="" id="pergunta-imagem" class="question-display__image u-is-hidden">
+                            </div>
+                            <div class="question-display__answers-list" id="respostas-container">
+                                {# As opções de resposta serão renderizadas aqui pelo JS #}
+                            </div>
+                            <span id="feedback-acessivel" class="u-sr-only" aria-live="polite" aria-atomic="true"></span>
+                        </div>
+                        <p id="referencia-questao" class="question-display__reference"></p>
+
+                        <div class="question-display__actions">
+                            <button id="btn-toggle-explanation" class="button button--analysis-link u-is-hidden" aria-expanded="false">
+                                <span class="material-symbols-outlined button__icon">manage_search</span>
+                                <span class="button__label">Analisar Resposta</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="quiz-navigation u-is-hidden">
+                    <button id="prev-btn" class="button button--secondary button--small quiz-navigation__button" disabled>Anterior</button>
+                    <button id="next-btn" class="button button--primary button--small quiz-navigation__button">Avançar</button>
+                </div>
+            </section>
+
+            <div id="question-grid-container" class="question-grid u-is-hidden">
+            </div>
+
+            <div class="card card--quiz-result u-is-hidden" aria-live="polite">
+                <div class="card__body quiz-results__body">
+                    <div class="quiz-results__header">
+                        <span class="quiz-results__badge">
+                            <span class="material-symbols-outlined" aria-hidden="true">flag</span>
+                            Sessão concluída
+                        </span>
+                        <h3 class="quiz-results__main-title" tabindex="-1">Seu Desempenho</h3>
+                        <p class="quiz-results__subtitle" id="resultado-subtitulo">Veja como vocÃª se saiu nesta rodada.</p>
+                    </div>
+
+                    <div class="quiz-results__summary">
+                        <div class="quiz-results__score-meter" id="resultado-score-meter" role="img" aria-label="PrecisÃ£o de 0%">
+                            <div class="quiz-results__score-meter-inner">
+                                <span class="quiz-results__score-meter-value" id="resultado-precisao">0%</span>
+                                <span class="quiz-results__score-meter-caption">Precisão</span>
+                            </div>
+                        </div>
+
+                        <div class="quiz-results__score-content">
+                            <div class="quiz-results__primary-score">
+                                <span class="quiz-results__primary-score-label">Pontuação total</span>
+                                <span class="quiz-results__primary-score-value" id="resultado-pontos">0</span>
+                            </div>
+
+                            <div class="quiz-results__score-breakdown">
+                                <div class="score-breakdown__item">
+                                    <span class="score-breakdown__label">Questões respondidas</span>
+                                    <span class="score-breakdown__value" id="resultado-questoes">0</span>
+                                </div>
+                                <div class="score-breakdown__item">
+                                    <span class="score-breakdown__label">Pontuação por questão</span>
+                                    <span class="score-breakdown__value" id="resultado-pontos-por-questao">0</span>
+                                </div>
+                                <div class="score-breakdown__item">
+                                    <span class="score-breakdown__label">Tempo médio</span>
+                                    <span class="score-breakdown__value" id="resultado-tempo-medio">00:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quiz-results__secondary-stats">
+                        <div class="stat-block">
+                            <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">timer</span>
+                            <span class="stat-block__label">Tempo total</span>
+                            <span class="stat-block__value" id="resultado-tempo">00:00</span>
+                        </div>
+                        <div class="stat-block stat-block--correct">
+                            <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">check_circle</span>
+                            <span class="stat-block__label">Acertos</span>
+                            <span class="stat-block__value" id="resultado-acertos">0</span>
+                        </div>
+                        <div class="stat-block stat-block--incorrect">
+                            <span class="material-symbols-outlined stat-block__icon" aria-hidden="true">cancel</span>
+                            <span class="stat-block__label">Erros</span>
+                            <span class="stat-block__value" id="resultado-erros">0</span>
+                        </div>
+                    </div>
+
+                    <div class="quiz-results__gamification" id="resultado-gamificacao">
+                    <div class="quiz-results__insights">
+                        <h4 class="quiz-results__insights-title">
+                            <span class="material-symbols-outlined" aria-hidden="true">insights</span>
+                            Insights da sessão
+                        </h4>
+                        <p class="quiz-results__message" id="resultado-mensagem-motivacional">Continue praticando!</p>
+                        <div class="quiz-results__insights-grid">
+                            <div class="insight-chip">
+                                <span class="material-symbols-outlined" aria-hidden="true">trending_up</span>
+                                <span class="insight-chip__text" id="resultado-insight-destaque-text">Aproveitamento consistente</span>
+                            </div>
+                            <div class="insight-chip">
+                                <span class="material-symbols-outlined" aria-hidden="true">flag_circle</span>
+                                <span class="insight-chip__text" id="resultado-insight-meta-text">Defina sua próxima meta a partir dos pontos fortes.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card__footer quiz-results__actions">
+                    <div class="quiz-results__primary-actions">
+                        <button id="btn-recomecar" class="button button--primary quiz-results__action-button">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">refresh</span>
+                            <span class="button__label">Nova Tentativa</span>
+                        </button>
+                        <button id="btn-explorar-mais" class="button button--outline quiz-results__action-button">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">home</span>
+                            <span class="button__label">Voltar ao Início</span>
+                        </button>
+                    </div>
+                    <div class="quiz-results__secondary-actions">
+                        <a href="{% url 'quiz:account' %}" class="button button--text quiz-results__aux-action" id="resultado-painel-link">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">dashboard</span>
+                            <span class="button__label">Painel de desempenho</span>
+                        </a>
+                        <button id="btn-compartilhar-resultado" class="button button--text quiz-results__aux-action" type="button">
+                            <span class="material-symbols-outlined button__icon" aria-hidden="true">share</span>
+                            <span class="button__label">Compartilhar resultado</span>
+                        </button>
+                    </div>
+                </div>
+            </div>

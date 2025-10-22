@@ -304,42 +304,11 @@ export default class ModalManager {
         const overlay = this.elements.filterPanelOverlay;
         if (!panel || !overlay) return;
 
-        if (show) {
-            if (this.quizUI.filterPanelInstance) {
-                // Em vez de 'loadCurrentFilters', o painel pode ser renderizado com o estado atual do store
-                this.quizUI.filterPanelInstance.render(this.store.getState());
-            }
-            if (this.elements.challengeHubContainer?.classList.contains(this.quizUI.hiddenClassName) &&
-                this.elements.quizSectionContent?.classList.contains(this.quizUI.hiddenClassName) &&
-                this.elements.resultadoCard?.classList.contains(this.quizUI.hiddenClassName)) {
-                this.quizUI.showElement(this.elements.placeholderFiltrosContainer);
-            }
-        } else {
-            const {
-                quizSectionContent,
-                resultadoCard,
-                placeholderFiltrosContainer,
-                challengeHubContainer,
-            } = this.elements;
-
-            const shouldReturnToHub = quizSectionContent?.classList.contains(this.quizUI.hiddenClassName)
-                && resultadoCard?.classList.contains(this.quizUI.hiddenClassName)
-                && !placeholderFiltrosContainer?.classList.contains(this.quizUI.hiddenClassName);
-
-            if (shouldReturnToHub) {
-                this.quizUI.hideElement(placeholderFiltrosContainer);
-
-                if (this.quizUI.challengeHubInstance && typeof this.quizUI.challengeHubInstance.showHub === 'function') {
-                    this.quizUI.challengeHubInstance.showHub();
-                } else if (challengeHubContainer) {
-                    this.quizUI.showElement(challengeHubContainer);
-                    if (typeof document !== 'undefined' && document.body) {
-                        document.body.classList.add('is-challenge-hub-active');
-                        document.body.classList.remove('is-quiz-active');
-                    }
-                }
-            }
+        if (show && this.quizUI.filterPanelInstance) {
+            // Em vez de 'loadCurrentFilters', o painel pode ser renderizado com o estado atual do store
+            this.quizUI.filterPanelInstance.render(this.store.getState());
         }
+
         this._toggleGenericModal(overlay, panel, show, panel);
     }
 

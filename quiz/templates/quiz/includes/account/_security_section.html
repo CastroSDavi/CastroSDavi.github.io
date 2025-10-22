@@ -1,0 +1,156 @@
+            <div id="security-content" class="account-content__section">
+                <div class="security-dashboard">
+                    <section class="card card--conta-perfil security-card security-card--overview">
+                        <h2 class="card__title">Segurança e Dados</h2>
+                        <div class="card__body">
+                            <div class="security-summary-grid" id="security-summary-data">
+                                <article class="security-summary-card" data-security-summary-item data-label="Email principal" data-summary-value="{{ profile_summary.email|default:'Não informado' }}">
+                                    <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">mail</span>
+                                    <div class="security-summary-card__content">
+                                        <span class="security-summary-card__label">Email principal</span>
+                                        <span class="security-summary-card__value security-summary-card__value--ellipsis">{{ profile_summary.email|default:"Não informado" }}</span>
+                                        <span class="security-summary-card__hint">Mantenha este contato atualizado para recuperar a conta com segurança.</span>
+                                    </div>
+                                </article>
+                                <article class="security-summary-card" data-security-summary-item data-label="Último acesso" data-summary-value="{% if profile_summary.last_login %}{{ profile_summary.last_login|date:'d/m/Y \à\s H:i' }}{% else %}Ainda sem acessos registrados{% endif %}">
+                                    <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">schedule</span>
+                                    <div class="security-summary-card__content">
+                                        <span class="security-summary-card__label">Último acesso</span>
+                                        <span class="security-summary-card__value">
+                                            {% if profile_summary.last_login %}
+                                                {{ profile_summary.last_login|date:"d/m/Y \à\s H:i" }}
+                                            {% else %}
+                                                Ainda sem acessos registrados
+                                            {% endif %}
+                                        </span>
+                                        <span class="security-summary-card__hint">Verifique esta data se notar algum acesso suspeito.</span>
+                                    </div>
+                                </article>
+                                <article class="security-summary-card" data-security-summary-item data-label="Histórico de estudos" data-summary-value="{{ profile_summary.metrics.total_sessions }} quizzes e {{ profile_summary.metrics.total_questions_answered }} respostas">
+                                    <span class="material-symbols-outlined security-summary-card__icon" aria-hidden="true">database</span>
+                                    <div class="security-summary-card__content">
+                                        <span class="security-summary-card__label">Histórico de estudos</span>
+                                        <span class="security-summary-card__value">{{ profile_summary.metrics.total_sessions }} quizzes • {{ profile_summary.metrics.total_questions_answered }} respostas</span>
+                                        <span class="security-summary-card__hint">Utilizamos apenas esses números para personalizar recomendações.</span>
+                                    </div>
+                                </article>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="security-dashboard__grid">
+                        <section class="card card--conta-perfil security-card security-card--form">
+                            <div class="card__body">
+                                <div class="security-card__header">
+                                    <h3 class="security-card__title">Dados pessoais</h3>
+                                    <p class="security-card__description">Atualize seu nome e email para manter a conta protegida e receber alertas importantes.</p>
+                                </div>
+
+                                {% if active_tab_on_error == 'security-content' and update_form.errors %}
+                                    <div class="form-message form-message--error" role="alert">
+                                        <p><strong>Não foi possível atualizar. Verifique os erros abaixo:</strong></p>
+                                        {% for error in update_form.non_field_errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                        {% for field in update_form %}
+                                            {% for error in field.errors %}
+                                                <p>
+                                                    <strong>{{ field.label|capfirst }}:</strong> {{ error }}
+                                                </p>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                <form method="post" action="{% url 'quiz:update_profile' %}" class="profile-form security-form">
+                                    {% csrf_token %}
+                                    <div class="security-form__grid">
+                                        <div class="form-group">
+                                            <label for="{{ update_form.first_name.id_for_label }}" class="form-label">{{ update_form.first_name.label }}</label>
+                                            {{ update_form.first_name }}
+                                            {% for error in update_form.first_name.errors %}<small class="form-text-feedback is-invalid">{{ error }}</small>{% endfor %}
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="{{ update_form.last_name.id_for_label }}" class="form-label">{{ update_form.last_name.label }}</label>
+                                            {{ update_form.last_name }}
+                                            {% for error in update_form.last_name.errors %}<small class="form-text-feedback is-invalid">{{ error }}</small>{% endfor %}
+                                        </div>
+                                        <div class="form-group security-form__full">
+                                            <label for="{{ update_form.email.id_for_label }}" class="form-label">{{ update_form.email.label }}</label>
+                                            {{ update_form.email }}
+                                            {% for error in update_form.email.errors %}<small class="form-text-feedback is-invalid">{{ error }}</small>{% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="security-form__actions">
+                                        <button type="submit" class="button button--primary">
+                                            <span class="material-symbols-outlined button__icon" aria-hidden="true">save</span>
+                                            Salvar alterações
+                                        </button>
+                                        <button type="button" class="button button--text security-card__link" data-open-account-tab="profile-info-content">
+                                            <span class="material-symbols-outlined button__icon" aria-hidden="true">visibility</span>
+                                            Ver dados do perfil
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+
+                        <section class="card card--conta-perfil security-card security-card--access">
+                            <div class="card__body">
+                                <div class="security-card__header">
+                                    <h3 class="security-card__title">Credenciais e acesso</h3>
+                                    <p class="security-card__description">Gerencie como você entra no MedQuiz e mantenha a segurança da sua conta em dia.</p>
+                                </div>
+
+                                <dl class="security-detail-list">
+                                    <div class="security-detail-list__item" data-security-summary-item data-label="Usuário" data-summary-value="{{ profile_summary.username }}">
+                                        <dt>Usuário</dt>
+                                        <dd>{{ profile_summary.username }}</dd>
+                                    </div>
+                                    <div class="security-detail-list__item" data-security-summary-item data-label="Último acesso" data-summary-value="{% if profile_summary.last_login %}{{ profile_summary.last_login|date:'d/m/Y \à\s H:i' }}{% else %}Ainda sem acessos registrados{% endif %}">
+                                        <dt>Último acesso</dt>
+                                        <dd>
+                                            {% if profile_summary.last_login %}
+                                                {{ profile_summary.last_login|date:"d/m/Y \à\s H:i" }}
+                                            {% else %}
+                                                Ainda sem acessos registrados
+                                            {% endif %}
+                                        </dd>
+                                    </div>
+                                </dl>
+
+                                <div class="security-actions">
+                                    <a href="{% url 'password_change' %}" class="button button--secondary">
+                                        <span class="material-symbols-outlined button__icon" aria-hidden="true">lock_reset</span>
+                                        Alterar senha
+                                    </a>
+                                    <form method="post" action="{% url 'logout' %}" class="security-actions__logout">
+                                        {% csrf_token %}
+                                        <button type="submit" class="button button--outline button--danger-outline">
+                                            <span class="material-symbols-outlined button__icon" aria-hidden="true">logout</span>
+                                            Encerrar sessão
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <div class="security-note">
+                                    <span class="material-symbols-outlined" aria-hidden="true">info</span>
+                                    <p>Ao sair, você desconecta o acesso deste dispositivo. Redefina a senha periodicamente e use um email confiável para manter a conta protegida.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <section class="card card--conta-perfil security-card security-card--danger">
+                        <div class="card__body">
+                            <div class="security-card__header">
+                                <h3 class="security-card__title security-card__title--danger">Zona de perigo</h3>
+                                <p class="security-card__description">Excluir sua conta remove permanentemente todo o histórico, favoritos e estatísticas.</p>
+                            </div>
+                            <button type="button" id="btn-open-delete-account-modal" class="button button--danger">
+                                <span class="material-symbols-outlined button__icon" aria-hidden="true">delete_forever</span>
+                                Deletar minha conta
+                            </button>
+                        </div>
+                    </section>
+                </div>
+            </div>

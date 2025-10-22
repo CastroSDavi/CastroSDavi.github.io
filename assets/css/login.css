@@ -5,7 +5,7 @@
     flex-direction: column;
     min-height: 100vh;
      /* Degradê radial sutil */
-    background-color: var(--color-gray-100); /* Cor de fundo sólida */
+    background-color: var(--surface-section); /* Cor de fundo sólida */
     position: relative;
     font-family: var(--font-family-sans);
     color: var(--color-text-primary);
@@ -68,12 +68,12 @@
 
 .login-card-container {
     width: 100%;
-    background-color: var(--color-white);
+    background-color: var(--surface-card);
     border-radius: var(--border-radius-lg, 12px);
     /* Padding interno do card aumentado para mais "respiro" */
     padding: var(--spacing-xl, 40px) clamp(var(--spacing-md, 25px), 6vw, var(--spacing-lg, 35px));
     box-shadow: 0 8px 25px rgba(var(--color-primary-dark-rgb), 0.08); /* Sombra mais sutil ainda */
-    border: 1px solid var(--color-gray-200);
+    border: 1px solid var(--border-subtle);
 }
 
 .login-card__title {
@@ -103,7 +103,7 @@
     display: block; /* Label fica acima */
     font-weight: var(--font-weight-medium);
     font-size: 0.85rem;
-    color: var(--color-gray-700);
+    color: var(--color-text-secondary);
     margin-bottom: var(--spacing-xs, 8px); /* Espaço entre label e input-wrapper */
     padding-left: 2px; /* Pequeno ajuste para alinhar com o input que terá padding */
     transition: color 0.2s ease-out;
@@ -119,14 +119,14 @@
     position: absolute;
     left: var(--spacing-sm, 12px);
     font-size: 1.25rem;
-    color: var(--color-gray-400);
+    color: var(--color-text-muted);
     pointer-events: none;
     transition: color 0.2s ease-out;
 }
 
 .login-form .form-control {
-    background-color: var(--color-gray-100); /* Fundo do input muito sutil */
-    border: 1.5px solid var(--color-gray-300);
+    background-color: var(--surface-section); /* Fundo do input muito sutil */
+    border: 1.5px solid var(--border-subtle);
     /* Padding do input, considerando o ícone à esquerda */
     padding: var(--spacing-sm, 12px) var(--spacing-sm, 12px) var(--spacing-sm, 12px) calc(var(--spacing-sm, 12px) + 20px + var(--spacing-xs, 8px)); /* padding-left: padding-base + largura-icone + espaco-icone-input */
     font-size: 0.95rem;
@@ -135,7 +135,7 @@
     transition: border-color 0.2s ease-out, box-shadow 0.2s ease-out;
 }
 .login-form .form-control::placeholder {
-    color: var(--color-gray-400); /* Placeholder visível e sutil */
+    color: var(--color-text-muted); /* Placeholder visível e sutil */
 }
 
 .login-form .form-group:focus-within .form-label {
@@ -145,7 +145,7 @@
     color: var(--color-primary-medium); /* Destaca o ícone */
 }
 .login-form .form-control:focus {
-    background-color: var(--color-white);
+    background-color: var(--surface-card);
     border-color: var(--color-primary-medium);
     box-shadow: 0 0 0 2px rgba(var(--color-primary-medium-rgb), 0.15);
 }
@@ -195,7 +195,7 @@
     margin-top: var(--spacing-lg, 30px);
     text-align: center;
     font-size: var(--font-size-sm, 0.85rem);
-    color: var(--color-gray-700);
+    color: var(--color-text-secondary);
 }
 .login-card__alternative-actions p:first-of-type {
     margin-bottom: var(--spacing-md, 20px);
@@ -215,7 +215,7 @@
     display: flex;
     align-items: center;
     text-align: center;
-    color: var(--color-gray-400);
+    color: var(--color-text-muted);
     font-size: var(--font-size-xs, 0.75rem);
     margin: var(--spacing-md, 20px) 0;
 }
@@ -245,13 +245,13 @@
     color: var(--color-gray-800); /* Texto mais escuro para contraste */
     font-weight: var(--font-weight-medium);
     border-radius: var(--border-radius-md, 8px);
-    background-color: var(--color-white);
+    background-color: var(--surface-card);
     box-shadow: 0 1px 3px rgba(0,0,0,0.04); /* Sombra muito sutil */
     transition: all 0.15s ease-out;
 }
 .social-login-btn:hover {
-    border-color: var(--color-gray-400);
-    background-color: var(--color-gray-100);
+    border-color: var(--color-text-muted);
+    background-color: var(--surface-section);
     box-shadow: 0 2px 5px rgba(0,0,0,0.06);
 }
 .social-login-btn svg {
@@ -268,7 +268,7 @@
     /* margin-top já está no .login-wrapper, mas podemos garantir um mínimo aqui também */
     margin-top: var(--spacing-lg, 30px); 
     font-size: var(--font-size-xs, 0.8rem);
-    color: var(--color-gray-700); /* Cor adequada para fundo claro */
+    color: var(--color-text-secondary); /* Cor adequada para fundo claro */
 }
 .login-page-footer p { margin: 0; }
 
@@ -302,3 +302,4 @@
     .input-icon-wrapper .input-icon { font-size: 1.15rem; }
     .login-page-footer { margin-top: var(--spacing-md, 20px); }
 }
+

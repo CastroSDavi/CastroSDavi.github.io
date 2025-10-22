@@ -35,10 +35,15 @@ const initialState = {
         },
         quizEnded: false,
         scorePanelSettings: null,
+        timerConfig: null,
     },
     timer: {
         isRunning: false,
         seconds: 0,
+        elapsedSeconds: 0,
+        mode: 'countup',
+        durationSeconds: null,
+        autoFinalize: true,
     },
     user: {
         pontos: 0,
@@ -330,15 +335,54 @@ export function quizReducer(state = initialState, action) {
         }
 
         // --- AÇÕES DO TIMER ---
-        case ActionTypes.START_TIMER:
-            return { ...state, timer: { ...state.timer, isRunning: true, seconds: action.payload.initialSeconds || 0 } };
+        case ActionTypes.START_TIMER: {
+            const {
+                seconds = 0,
+                elapsedSeconds = 0,
+                mode = 'countup',
+                durationSeconds = null,
+                autoFinalize = true,
+            } = action.payload || {};
+            return {
+                ...state,
+                timer: {
+                    ...state.timer,
+                    isRunning: true,
+                    seconds: Number.isFinite(seconds) ? seconds : 0,
+                    elapsedSeconds: Number.isFinite(elapsedSeconds) ? elapsedSeconds : 0,
+                    mode: mode === 'countdown' ? 'countdown' : 'countup',
+                    durationSeconds: Number.isFinite(durationSeconds) && durationSeconds >= 0
+                        ? durationSeconds
+                        : null,
+                    autoFinalize: autoFinalize !== false,
+                },
+            };
+        }
 
         case ActionTypes.STOP_TIMER:
             return { ...state, timer: { ...state.timer, isRunning: false } };
 
         case ActionTypes.TICK_TIMER:
             if (!state.timer.isRunning) return state;
-            return { ...state, timer: { ...state.timer, seconds: state.timer.seconds + 1 } };
+            if (state.timer.mode === 'countdown') {
+                const nextSeconds = Math.max(0, (state.timer.seconds ?? 0) - 1);
+                return {
+                    ...state,
+                    timer: {
+                        ...state.timer,
+                        seconds: nextSeconds,
+                        elapsedSeconds: (state.timer.elapsedSeconds ?? 0) + 1,
+                    },
+                };
+            }
+            return {
+                ...state,
+                timer: {
+                    ...state.timer,
+                    seconds: (state.timer.seconds ?? 0) + 1,
+                    elapsedSeconds: (state.timer.elapsedSeconds ?? 0) + 1,
+                },
+            };
             
         case ActionTypes.RESET_TIMER:
             return { ...state, timer: { ...initialState.timer } };
@@ -365,7 +409,15 @@ export function quizReducer(state = initialState, action) {
             };
             
         case ActionTypes.INITIALIZE_QUIZ: {
-            const { questions, mode, sessionId, quizDefId, quizDefinitionName, scorePanelSettings } = action.payload;
+            const {
+                questions,
+                mode,
+                sessionId,
+                quizDefId,
+                quizDefinitionName,
+                scorePanelSettings,
+                timerConfig,
+            } = action.payload;
             
             let displayMode = 'challenge';
             let mainQuizTitle = 'Desafio Personalizado';
@@ -393,12 +445,13 @@ export function quizReducer(state = initialState, action) {
                 quizDisplayContext: { displayMode, mainQuizTitle },
                 resumableSession: null,
                 scorePanelSettings: scorePanelSettings || null,
+                timerConfig: timerConfig || null,
             };
             return { ...state, user: { ...initialState.user }, timer: { ...initialState.timer }, quiz: newQuizState };
         }
 
         case ActionTypes.REHYDRATE_SESSION: {
-            const { resumeData } = action.payload;
+            const { resumeData, timerConfig } = action.payload;
             let displayMode = 'challenge';
             let mainQuizTitle = 'Desafio Personalizado';
             if (resumeData.modo_quiz === 'Definido' && resumeData.quiz_definition_name) {
@@ -419,6 +472,7 @@ export function quizReducer(state = initialState, action) {
                 quizEnded: false,
                 resumableSession: null,
                 scorePanelSettings: resumeData.score_panel_settings || null,
+                timerConfig: timerConfig || resumeData.timer_config || null,
             };
             return { ...state, quiz: rehydratedQuizState };
         }

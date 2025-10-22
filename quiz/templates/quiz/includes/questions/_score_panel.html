@@ -1,0 +1,72 @@
+﻿        <aside class="score-panel u-is-hidden">
+            <button id="score-panel-toggle"
+                    class="score-panel__collapse-toggle"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="score-panel-content">
+                <span class="material-symbols-outlined score-panel__collapse-icon" aria-hidden="true">chevron_left</span>
+            </button>
+            <div class="score-panel__content" id="score-panel-content">
+                <div class="score-panel__timer">
+                    <span id="timer-display" class="score-panel__timer-value">00:00</span>
+                    <span class="score-panel__timer-label">TEMPO DECORRIDO</span>
+                    <div id="score-panel-controls" class="score-panel__pause-control">
+                        <button id="btn-toggle-pausa" type="button"
+                                class="score-panel__pause-button"
+                                aria-pressed="false"
+                                aria-label="Pausar"
+                                title="Pausar">
+                            <span id="btn-toggle-pausa-icon" class="material-symbols-outlined" aria-hidden="true">pause</span>
+                            <span id="btn-toggle-pausa-label" class="u-sr-only">Pausar</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="score-panel__stats-group">
+                    <div class="score-panel__stat score-panel__stat--points">
+                        <span class="material-symbols-outlined score-panel__stat-icon">military_tech</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">PONTOS</span>
+                            <span id="pontuacao" class="score-panel__stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="score-panel__stat score-panel__stat--correct">
+                        <span class="material-symbols-outlined score-panel__stat-icon">check_circle</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">ACERTOS</span>
+                            <span id="acertos-numero" class="score-panel__stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="score-panel__stat score-panel__stat--incorrect">
+                        <span class="material-symbols-outlined score-panel__stat-icon">cancel</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">ERROS</span>
+                            <span id="erros-numero" class="score-panel__stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="score-panel__stat score-panel__stat--streak">
+                        <span class="material-symbols-outlined score-panel__stat-icon">local_fire_department</span>
+                        <div class="score-panel__stat-content">
+                            <span class="score-panel__stat-label">SEQU&Ecirc;NCIA</span>
+                            <span id="sequencia-numero" class="score-panel__stat-value">0</span>
+                            <span id="multiplicador-atual" class="score-panel__stat-extra">x1.0</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="btn-encerrar-sessao"
+                        class="button button--outline button--small score-panel__action-button u-is-hidden"
+                        aria-label="Encerrar sess&atilde;o"
+                        title="Encerrar sess&atilde;o">
+                    <span class="material-symbols-outlined score-panel__action-button-icon" aria-hidden="true">logout</span>
+                    <span class="score-panel__action-button-label">Encerrar</span>
+                </button>
+            </div>
+        </aside>
+
+
+
+
+
+
+
+
+

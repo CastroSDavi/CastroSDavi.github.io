@@ -11,6 +11,8 @@ export default class ActionOrchestrator {
         this.isFetching = false;
 
         this.timerIntervalId = null;
+        this.isAutoEndingByTimer = false;
+
 
         this.lastQuizRequest = null;
         this._restoreLastQuizRequest();
@@ -18,17 +20,239 @@ export default class ActionOrchestrator {
         this.preloadedHubSummary = null;
     }
 
-    // --- MÉTODOS DE CONTROLE DO TIMER ---
-    startTimer(initialSeconds = 0) {
+    // --- METODOS DE CONTROLE DO TIMER ---
+    _coerceBoolean(value, fallback = false) {
+        if (typeof value === 'boolean') {
+            return value;
+        }
+        if (typeof value === 'number') {
+            return value !== 0;
+        }
+        if (typeof value === 'string') {
+            const normalized = value.trim().toLowerCase();
+            if (['true', '1', 'yes', 'on', 'sim'].includes(normalized)) {
+                return true;
+            }
+            if (['false', '0', 'no', 'off', 'nao'].includes(normalized)) {
+                return false;
+            }
+        }
+        return fallback;
+    }
+
+    _resolveTimerConfiguration(scorePanelSettings, fallback = null) {
+        const defaults = fallback || {
+            mode: 'countup',
+            durationSeconds: null,
+            autoFinalize: true,
+        };
+
+        if (!scorePanelSettings || typeof scorePanelSettings !== 'object') {
+            return { ...defaults };
+        }
+
+        const nested = typeof scorePanelSettings.timer_config === 'object'
+            ? scorePanelSettings.timer_config
+            : {};
+
+        const rawMode = (nested.mode ?? scorePanelSettings.timer_mode ?? scorePanelSettings.timerMode ?? defaults.mode);
+        const normalizedMode = typeof rawMode === 'string' && rawMode.trim().toLowerCase() === 'countdown'
+            ? 'countdown'
+            : 'countup';
+
+        const rawDuration = nested.duration_seconds
+            ?? scorePanelSettings.timer_duration_seconds
+            ?? scorePanelSettings.timer_limit_seconds
+            ?? scorePanelSettings.duration_seconds
+            ?? null;
+
+        let durationSeconds = null;
+        if (rawDuration !== null && rawDuration !== '' && rawDuration !== undefined) {
+            const parsedDuration = Number(rawDuration);
+            if (Number.isFinite(parsedDuration)) {
+                durationSeconds = Math.max(0, Math.floor(parsedDuration));
+            }
+        }
+
+        const rawAutoFinalize = nested.auto_finalize
+            ?? scorePanelSettings.timer_auto_finalize
+            ?? scorePanelSettings.auto_finalize_on_timeout
+            ?? defaults.autoFinalize;
+
+        return {
+            mode: normalizedMode,
+            durationSeconds,
+            autoFinalize: this._coerceBoolean(rawAutoFinalize, defaults.autoFinalize),
+        };
+    }
+
+    _normalizeTimerStartPayload(rawOptions = null) {
+        const state = this.store?.getState?.() || {};
+        const quizConfig = state.quiz?.timerConfig || this._resolveTimerConfiguration(state.quiz?.scorePanelSettings || null);
+        let mode = quizConfig?.mode === 'countdown' ? 'countdown' : 'countup';
+        let durationSeconds = Number.isFinite(quizConfig?.durationSeconds)
+            ? Math.max(0, Math.floor(Number(quizConfig.durationSeconds)))
+            : null;
+        let autoFinalize = this._coerceBoolean(quizConfig?.autoFinalize, true);
+
+        let options;
+        if (typeof rawOptions === 'number') {
+            options = { elapsedSeconds: rawOptions };
+        } else if (rawOptions && typeof rawOptions === 'object') {
+            options = { ...rawOptions };
+        } else {
+            options = {};
+        }
+
+        if (typeof options.mode === 'string') {
+            const normalized = options.mode.trim().toLowerCase();
+            mode = normalized === 'countdown' ? 'countdown' : 'countup';
+        }
+        if (Number.isFinite(options.durationSeconds)) {
+            durationSeconds = Math.max(0, Math.floor(Number(options.durationSeconds)));
+        }
+        if (Object.prototype.hasOwnProperty.call(options, 'autoFinalize')) {
+            autoFinalize = this._coerceBoolean(options.autoFinalize, autoFinalize);
+        }
+
+        let elapsedSeconds = Number.isFinite(options.elapsedSeconds)
+            ? Math.max(0, Math.floor(Number(options.elapsedSeconds)))
+            : null;
+
+        if (mode === 'countdown' && (!Number.isFinite(durationSeconds) || durationSeconds <= 0)) {
+            mode = 'countup';
+            durationSeconds = null;
+        }
+
+        let seconds;
+        if (mode === 'countdown') {
+            let remaining = options.remainingSeconds;
+            if (!Number.isFinite(remaining)) {
+                if (Number.isFinite(options.seconds)) {
+                    remaining = options.seconds;
+                } else if (Number.isFinite(options.initialSeconds)) {
+                    remaining = options.initialSeconds;
+                } else if (Number.isFinite(durationSeconds)) {
+                    if (elapsedSeconds !== null) {
+                        remaining = durationSeconds - elapsedSeconds;
+                    } else if (Number.isFinite(state.timer?.elapsedSeconds)) {
+                        remaining = durationSeconds - state.timer.elapsedSeconds;
+                    } else {
+                        remaining = durationSeconds;
+                    }
+                } else {
+                    remaining = 0;
+                }
+            }
+            remaining = Math.max(0, Math.floor(Number(remaining)));
+            if (!Number.isFinite(remaining)) {
+                remaining = 0;
+            }
+            seconds = remaining;
+            if (elapsedSeconds === null) {
+                if (Number.isFinite(durationSeconds)) {
+                    elapsedSeconds = Math.max(0, durationSeconds - remaining);
+                } else {
+                    elapsedSeconds = 0;
+                }
+            }
+        } else {
+            if (Number.isFinite(options.seconds)) {
+                seconds = Math.max(0, Math.floor(Number(options.seconds)));
+            } else if (Number.isFinite(options.initialSeconds)) {
+                seconds = Math.max(0, Math.floor(Number(options.initialSeconds)));
+            } else if (elapsedSeconds !== null) {
+                seconds = elapsedSeconds;
+            } else if (Number.isFinite(state.timer?.elapsedSeconds)) {
+                seconds = Math.max(0, Math.floor(Number(state.timer.elapsedSeconds)));
+            } else if (Number.isFinite(state.timer?.seconds)) {
+                seconds = Math.max(0, Math.floor(Number(state.timer.seconds)));
+            } else {
+                seconds = 0;
+            }
+            if (elapsedSeconds === null) {
+                elapsedSeconds = seconds;
+            }
+            durationSeconds = null;
+        }
+
+        if (elapsedSeconds === null || !Number.isFinite(elapsedSeconds)) {
+            elapsedSeconds = 0;
+        }
+
+        if (mode === 'countdown' && Number.isFinite(durationSeconds)) {
+            if (elapsedSeconds > durationSeconds) {
+                elapsedSeconds = durationSeconds;
+            }
+            seconds = Math.max(0, Math.min(seconds, durationSeconds));
+        }
+
+        return {
+            seconds,
+            elapsedSeconds,
+            mode,
+            durationSeconds,
+            autoFinalize,
+        };
+    }
+
+    _finalizeTimerDueTimeout(autoFinalize = true) {
+        if (!autoFinalize || this.isAutoEndingByTimer) {
+            return;
+        }
+        this.isAutoEndingByTimer = true;
+        if (this.ui && typeof this.ui.showWarning === 'function') {
+            this.ui.showWarning({
+                body: 'O tempo terminou! O quiz foi finalizado automaticamente.',
+                type: 'warning',
+                icon: 'timer_off',
+            });
+        }
+        Promise.resolve(this.endQuiz())
+            .catch(error => {
+                console.error('ActionOrchestrator: erro ao finalizar quiz por tempo esgotado.', error);
+            })
+            .finally(() => {
+                this.isAutoEndingByTimer = false;
+            });
+    }
+
+    startTimer(options = null) {
         if (this.timerIntervalId) {
             this.stopTimer();
         }
-        
-        this.store.dispatch({ type: ActionTypes.START_TIMER, payload: { initialSeconds } });
 
-        this.timerIntervalId = setInterval(() => {
-            this.store.dispatch({ type: ActionTypes.TICK_TIMER });
-        }, 1000);
+        this.isAutoEndingByTimer = false;
+
+        const payload = this._normalizeTimerStartPayload(options);
+        payload.autoFinalize = this._coerceBoolean(payload.autoFinalize, true);
+        const autoFinalize = payload.autoFinalize;
+        const isCountdownExpired = payload.mode === 'countdown' && payload.seconds <= 0;
+        const shouldStartInterval = !isCountdownExpired;
+
+        this.store.dispatch({ type: ActionTypes.START_TIMER, payload });
+
+        if (shouldStartInterval) {
+            this.timerIntervalId = setInterval(() => {
+                this.store.dispatch({ type: ActionTypes.TICK_TIMER });
+
+                const timerState = this.store.getState().timer;
+                if (!timerState?.isRunning) {
+                    return;
+                }
+
+                if (timerState.mode === 'countdown' && timerState.seconds <= 0) {
+                    const shouldFinalize = this._coerceBoolean(timerState.autoFinalize, true);
+                    this.stopTimer();
+                    this._finalizeTimerDueTimeout(shouldFinalize);
+                }
+            }, 1000);
+        } else {
+            this.store.dispatch({ type: ActionTypes.STOP_TIMER });
+            if (isCountdownExpired) {
+                this._finalizeTimerDueTimeout(autoFinalize);
+            }
+        }
     }
 
     stopTimer() {
@@ -37,6 +261,7 @@ export default class ActionOrchestrator {
             this.timerIntervalId = null;
             this.store.dispatch({ type: ActionTypes.STOP_TIMER });
         }
+        this.isAutoEndingByTimer = false;
     }
 
     pauseTimer() {
@@ -59,11 +284,16 @@ export default class ActionOrchestrator {
             return;
         }
 
-        const currentSeconds = state.timer?.seconds ?? 0;
-        this.startTimer(currentSeconds);
+        const timerState = state.timer || {};
+        this.startTimer({
+            seconds: timerState.seconds,
+            elapsedSeconds: timerState.elapsedSeconds,
+            mode: timerState.mode,
+            durationSeconds: timerState.durationSeconds,
+            autoFinalize: timerState.autoFinalize,
+        });
     }
-
-    // --- MÉTODOS DE INICIALIZAÇÃO E FLUXO ---
+// --- MÉTODOS DE INICIALIZAÇÃO E FLUXO ---
     _getPreloadedHubSummary() {
         if (this.preloadedHubSummary) {
             return this.preloadedHubSummary;
@@ -207,7 +437,8 @@ export default class ActionOrchestrator {
             )
         );
         
-        this.store.dispatch(quizActions.rehydrateSession(resumableSession));
+        const timerConfig = this._resolveTimerConfiguration(resumableSession.score_panel_settings);
+        this.store.dispatch(quizActions.rehydrateSession(resumableSession, timerConfig));
         
         let elapsedSeconds = 0;
         if (resumableSession.data_inicio_sessao_iso) {
@@ -215,7 +446,7 @@ export default class ActionOrchestrator {
             const now = new Date().getTime();
             elapsedSeconds = Math.floor((now - startTime) / 1000);
         }
-        this.startTimer(elapsedSeconds);
+        this.startTimer({ elapsedSeconds });
     }
 
     launchStandaloneQuestion(questionPayload, options = {}) {
@@ -245,6 +476,7 @@ export default class ActionOrchestrator {
                     ? sanitizedQuestion.texto_pergunta.trim()
                     : 'Questão Avulsa');
         const scorePanelSettings = options.scorePanelSettings || null;
+        const timerConfig = this._resolveTimerConfiguration(scorePanelSettings);
 
         this.stopTimer();
         this.lastQuizRequest = null;
@@ -256,7 +488,8 @@ export default class ActionOrchestrator {
                 null,
                 null,
                 quizTitle,
-                scorePanelSettings
+                scorePanelSettings,
+                timerConfig
             )
         );
         this.store.dispatch(quizActions.setActiveSection('questions'));
@@ -419,6 +652,7 @@ export default class ActionOrchestrator {
             const session = await this.apiService.startQuizSession(sessionPayload);
             if (session && session.status === 'success') {
                 const scorePanelSettings = session.score_panel_settings || null;
+                const timerConfig = this._resolveTimerConfiguration(scorePanelSettings);
                 this.store.dispatch(
                     quizActions.initializeQuiz(
                         questionsArray,
@@ -426,7 +660,8 @@ export default class ActionOrchestrator {
                         session.session_id,
                         requestParams.quiz_definicao_id,
                         data.quiz_definition_name,
-                        scorePanelSettings
+                        scorePanelSettings,
+                        timerConfig
                     )
                 );
                 this.startTimer();
@@ -559,7 +794,8 @@ export default class ActionOrchestrator {
                             null,
                             null,
                             'Revisão de Favoritos',
-                            null
+                            null,
+                            this._resolveTimerConfiguration(null)
                         )
                     );
 
@@ -717,7 +953,7 @@ export default class ActionOrchestrator {
         try {
             const responseData = await this.apiService.endQuizSession({
                 session_id: sessionId,
-                tempo_total_segundos: state.timer.seconds,
+                tempo_total_segundos: state.timer.elapsedSeconds,
             });
 
             this.store.dispatch(
@@ -1083,7 +1319,8 @@ export default class ActionOrchestrator {
                     null,
                     null,
                     'Questão Favorita',
-                    null
+                    null,
+                    this._resolveTimerConfiguration(null)
                 )
             );
             return true;

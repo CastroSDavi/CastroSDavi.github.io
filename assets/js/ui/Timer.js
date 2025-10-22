@@ -59,7 +59,8 @@ export default class Timer {
      * @param {boolean} isQuizEnded - Flag que indica se o quiz terminou.
      */
     _updateDisplay(seconds, isQuizEnded) {
-        const formattedTime = this._formatTime(seconds);
+        const safeSeconds = Number.isFinite(seconds) ? Math.max(0, seconds) : 0;
+        const formattedTime = this._formatTime(safeSeconds);
         if (this.timerDisplayElement) {
             this.timerDisplayElement.textContent = formattedTime;
         }

@@ -1155,13 +1155,14 @@ main #home-section a:focus-visible {
 
 :root[data-theme='dark'] .home-hero {
     background:
-        radial-gradient(circle at 14% 18%, rgba(var(--color-primary-medium-rgb, 79, 141, 255), 0.38) 0%, rgba(var(--color-primary-medium-rgb, 79, 141, 255), 0) 56%),
-        radial-gradient(circle at 82% 12%, rgba(124, 196, 255, 0.28) 0%, rgba(124, 196, 255, 0) 52%),
-        radial-gradient(circle at 52% 115%, rgba(164, 116, 255, 0.28) 0%, rgba(164, 116, 255, 0) 62%),
-        linear-gradient(162deg, rgba(8, 14, 32, 0.97) 0%, rgba(18, 36, 74, 0.95) 48%, rgba(28, 62, 126, 0.9) 100%);
-    border: 1px solid rgba(var(--color-primary-medium-rgb, 79, 141, 255), 0.26);
-    box-shadow: 0 44px 86px -46px rgba(4, 12, 32, 0.72);
+        radial-gradient(circle at 25% 20%, rgba(var(--color-primary-medium-rgb), 0.35) 0%, rgba(var(--color-primary-medium-rgb), 0) 60%),
+        radial-gradient(circle at 80% 25%, rgba(var(--color-secondary-green-rgb), 0.25) 0%, rgba(var(--color-secondary-green-rgb), 0) 65%),
+        radial-gradient(circle at 50% 120%, rgba(13, 59, 102, 0.3) 0%, rgba(13, 59, 102, 0) 70%),
+        linear-gradient(160deg, rgba(6, 12, 28, 0.97) 0%, rgba(10, 20, 45, 0.95) 50%, rgba(16, 35, 75, 0.92) 100%);
+    border: 1px solid rgba(var(--color-primary-medium-rgb), 0.25);
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7);
 }
+
 
 :root[data-theme='dark'] .home-hero__eyebrow {
     background: linear-gradient(120deg, rgba(var(--color-secondary-green-rgb, 76, 214, 176), 0.28), rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.22));

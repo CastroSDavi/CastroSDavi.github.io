@@ -820,7 +820,7 @@ button.challenge-card {
 
 :root[data-theme='dark'] .challenge-hub__hero-actions .button--primary,
 :root[data-theme='dark'] .challenge-hub__hero-actions .button--fancy-primary {
-    background: linear-gradient(135deg, rgba(82, 132, 255, 0.96), rgba(118, 82, 255, 0.92));
+    background-image: linear-gradient(to right, rgba(var(--color-secondary-green-rgb), 0.92), rgba(var(--color-primary-medium-rgb), 0.82));
     border: 1px solid rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.52);
     color: rgba(250, 252, 255, 0.96);
     box-shadow: 0 30px 58px -24px rgba(8, 20, 54, 0.76);
@@ -828,7 +828,7 @@ button.challenge-card {
 
 :root[data-theme='dark'] .challenge-hub__hero-actions .button--primary:not(:disabled):hover,
 :root[data-theme='dark'] .challenge-hub__hero-actions .button--fancy-primary:not(:disabled):hover {
-    background: linear-gradient(135deg, rgba(102, 152, 255, 0.98), rgba(138, 102, 255, 0.94));
+    background-image: linear-gradient(to right, rgba(var(--color-secondary-green-rgb), 0.92), rgba(var(--color-primary-medium-rgb), 0.82));
     border-color: rgba(var(--color-primary-light-rgb, 155, 193, 255), 0.6);
     box-shadow: 0 38px 70px -26px rgba(10, 24, 60, 0.82);
 }
